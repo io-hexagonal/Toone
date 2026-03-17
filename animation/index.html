@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toone</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #141622; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #mode-label {
+    position: fixed; bottom: 16px; right: 16px;
+    font-family: monospace; font-size: 11px;
+    color: rgba(255,255,255,0.25); pointer-events: none;
+    z-index: 10;
+  }
+  #hint {
+    position: fixed; bottom: 16px; left: 16px;
+    font-family: monospace; font-size: 11px;
+    color: rgba(255,255,255,0.20); pointer-events: none;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="mode-label"></div>
+<div id="hint">click or press space to cycle</div>
+<script>
+// ─── Toone Pixel Field Animation ─────────────────────────────────────
+// Faithful port of SplashPixelField.swift from TooneMobile
+// https://github.com/io-hexagonal/Toone
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const modeLabel = document.getElementById('mode-label');
+
+// ─── Constants ───────────────────────────────────────────────────────
+
+const DOT_SIZE = 2.5;
+const DOT_SPACING = 3.5;
+const CYCLE_DURATION = 6.0;
+const BG_COLOR = [0.078, 0.086, 0.118]; // OceanDepth.darkBase
+
+const NEON_PALETTES = [
+  { primary: [0.1, 0.4, 1.0],   secondary: [0.0, 0.6, 0.8] },
+  { primary: [1.0, 0.15, 0.45], secondary: [0.7, 0.0, 0.9] },
+  { primary: [0.0, 0.85, 0.3],  secondary: [0.0, 0.6, 0.2] },
+  { primary: [1.0, 0.65, 0.0],  secondary: [0.9, 0.3, 0.0] },
+  { primary: [0.55, 0.1, 1.0],  secondary: [0.9, 0.2, 0.55] },
+  { primary: [0.0, 0.7, 0.6],   secondary: [0.0, 0.5, 0.4] },
+];
+
+const COLOR_STORY = [
+  [0.05, 0.15, 0.45], [0.1, 0.4, 1.0],   [0.0, 0.6, 0.8],
+  [0.0, 0.7, 0.4],    [0.0, 0.85, 0.3],   [0.5, 0.9, 0.1],
+  [1.0, 0.65, 0.0],   [1.0, 0.15, 0.45],  [0.7, 0.0, 0.9],
+  [0.55, 0.1, 1.0],   [0.0, 0.5, 0.9],    [0.0, 0.7, 0.6],
+];
+
+// ─── Animation Modes ─────────────────────────────────────────────────
+
+const MODES = {
+  tunnel:  { bandCount: 5,  bandWidth: 0.38, trailWidth: 0.22, speed: 0.10,  primaryOpacity: 0.70, trailOpacity: 0.45, primaryFade: 0.4 },
+  pulse:   { bandCount: 4,  bandWidth: 0.30, trailWidth: 0.35, speed: -0.08, primaryOpacity: 0.60, trailOpacity: 0.40, primaryFade: 0.6 },
+  cascade: { bandCount: 10, bandWidth: 0.12, trailWidth: 0.08, speed: 0.18,  primaryOpacity: 0.55, trailOpacity: 0.30, primaryFade: 0.8 },
+  breathe: { bandCount: 3,  bandWidth: 0.55, trailWidth: 0.35, speed: 0.04,  primaryOpacity: 0.50, trailOpacity: 0.40, primaryFade: 0.2 },
+  warp:    { bandCount: 6,  bandWidth: 0.32, trailWidth: 0.30, speed: 0.12,  primaryOpacity: 0.75, trailOpacity: 0.55, primaryFade: 0.3 },
+  outline: { bandCount: 0,  bandWidth: 0,    trailWidth: 0,    speed: 0,     primaryOpacity: 0,    trailOpacity: 0,    primaryFade: 0 },
+};
+
+const MODE_NAMES = Object.keys(MODES);
+let currentModeIdx = Math.floor(Math.random() * MODE_NAMES.length);
+let currentMode = MODE_NAMES[currentModeIdx];
+
+// ─── Pixel data (loaded async) ───────────────────────────────────────
+
+let pixelData = null;
+let fieldData = null;
+
+// ─── Helpers ─────────────────────────────────────────────────────────
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function lerpRGB(a, b, t) {
+  return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+}
+
+function rgba(c, a) {
+  return `rgba(${(c[0]*255)|0},${(c[1]*255)|0},${(c[2]*255)|0},${a})`;
+}
+
+function mod(n, m) { return ((n % m) + m) % m; }
+
+// ─── Field Data Builder ──────────────────────────────────────────────
+
+function buildFieldData(w, h) {
+  const cols = Math.ceil(w / DOT_SPACING) + 1;
+  const rows = Math.ceil(h / DOT_SPACING) + 1;
+  const maxRing = Math.floor(Math.min(cols, rows) / 2);
+
+  // Edge-distance rings
+  const ringCells = new Array(maxRing + 1);
+  for (let i = 0; i <= maxRing; i++) ringCells[i] = [];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const ring = Math.min(r, c, rows - 1 - r, cols - 1 - c, maxRing);
+      ringCells[ring].push({ col: c, row: r });
+    }
+  }
+
+  // Text pixels
+  let textEdgeCells = [];
+  let textInteriorCells = [];
+  const textSet = new Set();
+
+  if (pixelData) {
+    const textCols = pixelData.gridCols;
+    const textRows = pixelData.gridRows;
+    const colOffset = Math.floor((cols - textCols) / 2);
+    const rowOffset = Math.floor((rows - textRows) / 2);
+
+    for (const p of pixelData.pixels) {
+      const sc = p.col + colOffset;
+      const sr = p.row + rowOffset;
+      if (sc >= 0 && sc < cols && sr >= 0 && sr < rows) {
+        textSet.add(sr * cols + sc);
+      }
+    }
+
+    for (const idx of textSet) {
+      const r = Math.floor(idx / cols);
+      const c = idx % cols;
+      let isEdge = false;
+      for (let dr = -1; dr <= 1 && !isEdge; dr++) {
+        for (let dc = -1; dc <= 1 && !isEdge; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr, nc = c + dc;
+          if (nr < 0 || nr >= rows || nc < 0 || nc >= cols || !textSet.has(nr * cols + nc)) {
+            isEdge = true;
+          }
+        }
+      }
+      (isEdge ? textEdgeCells : textInteriorCells).push({ col: c, row: r });
+    }
+  }
+
+  // BFS distance from text
+  const totalCells = cols * rows;
+  const distance = new Int32Array(totalCells).fill(-1);
+  const queue = [];
+
+  for (const idx of textSet) {
+    distance[idx] = 0;
+    queue.push(idx);
+  }
+
+  let head = 0;
+  while (head < queue.length) {
+    const idx = queue[head++];
+    const r = Math.floor(idx / cols);
+    const c = idx % cols;
+    const d = distance[idx];
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = r + dr, nc = c + dc;
+        if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+        const nIdx = nr * cols + nc;
+        if (distance[nIdx] === -1) {
+          distance[nIdx] = d + 1;
+          queue.push(nIdx);
+        }
+      }
+    }
+  }
+
+  let maxTextDist = 0;
+  for (let i = 0; i < totalCells; i++) {
+    if (distance[i] > maxTextDist) maxTextDist = distance[i];
+  }
+
+  // Sector x Layer grouping for kaleidoscope
+  const numSectors = 12;
+  const layerThickness = 20;
+  const numLayers = Math.floor(maxTextDist / layerThickness) + 1;
+  const centerCol = Math.floor(cols / 2);
+  const centerRow = Math.floor(rows / 2);
+
+  const sectorLayerCells = [];
+  for (let s = 0; s < numSectors; s++) {
+    sectorLayerCells[s] = [];
+    for (let l = 0; l < numLayers; l++) sectorLayerCells[s][l] = [];
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const d = distance[r * cols + c];
+      if (d <= 0) continue;
+      const layer = Math.min(Math.floor(d / layerThickness), numLayers - 1);
+      const dx = c - centerCol;
+      const dy = r - centerRow;
+      let angle = Math.atan2(dy, dx);
+      if (angle < 0) angle += 2 * Math.PI;
+      const sector = Math.min(Math.floor(angle / (2 * Math.PI) * numSectors), numSectors - 1);
+      sectorLayerCells[sector][layer].push({ col: c, row: r });
+    }
+  }
+
+  return {
+    cols, rows, maxRing, ringCells,
+    textEdgeCells, textInteriorCells,
+    numSectors, numLayers, sectorLayerCells,
+    centerCol, centerRow,
+  };
+}
+
+// ─── Renderers ───────────────────────────────────────────────────────
+
+function renderBands(elapsed, anim, pri, sec) {
+  if (!fieldData || fieldData.maxRing <= 0) return;
+
+  const { maxRing, ringCells } = fieldData;
+  const { bandCount, bandWidth, trailWidth, speed, primaryOpacity, trailOpacity, primaryFade } = anim;
+
+  for (let ring = 0; ring <= maxRing; ring++) {
+    const normalized = ring / maxRing;
+    let phase = mod(normalized * bandCount - elapsed * speed, 1.0);
+
+    let opacity, color;
+    if (phase < bandWidth) {
+      const t = phase / bandWidth;
+      opacity = (1.0 - t * primaryFade) * primaryOpacity;
+      color = pri;
+    } else if (phase < bandWidth + trailWidth) {
+      const t = (phase - bandWidth) / trailWidth;
+      opacity = (1.0 - t) * trailOpacity;
+      color = sec;
+    } else {
+      continue;
+    }
+
+    if (opacity < 0.008 || !ringCells[ring] || ringCells[ring].length === 0) continue;
+
+    ctx.fillStyle = rgba(color, opacity);
+    for (const cell of ringCells[ring]) {
+      ctx.fillRect(cell.col * DOT_SPACING - DOT_SIZE / 2, cell.row * DOT_SPACING - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+    }
+  }
+
+  renderText(elapsed, pri);
+}
+
+function renderOutline(elapsed) {
+  if (!fieldData || fieldData.numSectors <= 0) return;
+
+  const { numSectors, numLayers, sectorLayerCells } = fieldData;
+  const halfSectors = Math.floor(numSectors / 2);
+  const storyCount = COLOR_STORY.length;
+
+  // Lissajous sweep
+  const sweepX = Math.sin(elapsed * 1.3);
+  const sweepY = Math.cos(elapsed * 0.7);
+  let sweepAngle = Math.atan2(sweepY, sweepX);
+  if (sweepAngle < 0) sweepAngle += 2 * Math.PI;
+
+  // Organic color drift
+  const colorDrift = elapsed * 0.4 + Math.sin(elapsed * 0.3) * 2.0 + Math.sin(elapsed * 0.13) * 1.5;
+  // Rotation easing
+  const rotatePhase = elapsed * 0.35 + Math.sin(elapsed * 0.5) * 0.8 + Math.cos(elapsed * 0.19) * 0.5;
+
+  for (let sector = 0; sector < numSectors; sector++) {
+    const sectorAngle = (sector + 0.5) / numSectors * 2 * Math.PI;
+    const mirrorSector = sector < halfSectors ? sector : (numSectors - 1 - sector);
+
+    // Sweep glow
+    let angleDiff = Math.abs(sectorAngle - sweepAngle);
+    if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+    const sweepGlow = Math.max(0, 1.0 - angleDiff * 2.0);
+
+    const sectorColorOffset = mirrorSector + rotatePhase;
+
+    for (let layer = 0; layer < numLayers; layer++) {
+      const cells = sectorLayerCells[sector][layer];
+      if (!cells || cells.length === 0) continue;
+
+      // Parallax depth
+      const depthNorm = (numLayers - layer) / numLayers;
+      const depthFactor = 1.0 + depthNorm * depthNorm * 1.8;
+      let colorPos = mod(sectorColorOffset * depthFactor + colorDrift + layer * 0.7, storyCount);
+      const cIdx = Math.floor(colorPos) % storyCount;
+      const nextCIdx = (cIdx + 1) % storyCount;
+      const blend = colorPos - Math.floor(colorPos);
+      const layerColor = lerpRGB(COLOR_STORY[cIdx], COLOR_STORY[nextCIdx], blend);
+
+      // Breathing pulse
+      const breathe = Math.sin(elapsed * 1.2 + layer * 0.4);
+      const breatheBoost = breathe * 0.12;
+
+      const distFade = layer / numLayers;
+      const baseOpacity = Math.max(0.15, 0.65 - distFade * 0.30 + breatheBoost);
+      const opacity = Math.min(0.85, baseOpacity + sweepGlow * 0.35);
+
+      // CRT scanlines: bright rows + dim rows
+      const brightStyle = rgba(layerColor, opacity);
+      const dimStyle = rgba(layerColor, opacity * 0.55);
+
+      ctx.fillStyle = brightStyle;
+      for (const cell of cells) {
+        if (cell.row % 2 === 0) {
+          ctx.fillRect(cell.col * DOT_SPACING - DOT_SIZE / 2, cell.row * DOT_SPACING - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+        }
+      }
+      ctx.fillStyle = dimStyle;
+      for (const cell of cells) {
+        if (cell.row % 2 !== 0) {
+          ctx.fillRect(cell.col * DOT_SPACING - DOT_SIZE / 2, cell.row * DOT_SPACING - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+        }
+      }
+    }
+  }
+
+  renderText(elapsed, COLOR_STORY[2]); // cyan
+}
+
+function renderText(elapsed, pri) {
+  if (!fieldData) return;
+  const base = [1.0, 1.0, 1.0]; // white
+  const textPulse = (Math.sin(elapsed * 2.0) + 1.0) / 2.0;
+  const neonMix = textPulse * 0.3;
+
+  if (fieldData.textInteriorCells.length > 0) {
+    const m = neonMix * 0.5;
+    const c = [base[0] * (1 - m) + pri[0] * m, base[1] * (1 - m) + pri[1] * m, base[2] * (1 - m) + pri[2] * m];
+    ctx.fillStyle = rgba(c, 0.85);
+    for (const cell of fieldData.textInteriorCells) {
+      ctx.fillRect(cell.col * DOT_SPACING - DOT_SIZE / 2, cell.row * DOT_SPACING - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+    }
+  }
+
+  if (fieldData.textEdgeCells.length > 0) {
+    const c = [base[0] * (1 - neonMix) + pri[0] * neonMix, base[1] * (1 - neonMix) + pri[1] * neonMix, base[2] * (1 - neonMix) + pri[2] * neonMix];
+    ctx.fillStyle = rgba(c, 0.85);
+    for (const cell of fieldData.textEdgeCells) {
+      ctx.fillRect(cell.col * DOT_SPACING - DOT_SIZE / 2, cell.row * DOT_SPACING - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+    }
+  }
+}
+
+// ─── Main Loop ───────────────────────────────────────────────────────
+
+let startTime = null;
+
+function frame(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = (timestamp - startTime) / 1000;
+
+  // Clear with background
+  ctx.fillStyle = rgba(BG_COLOR, 1);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (!fieldData) {
+    requestAnimationFrame(frame);
+    return;
+  }
+
+  const anim = MODES[currentMode];
+
+  if (currentMode === 'outline') {
+    renderOutline(elapsed);
+  } else {
+    // Palette blending
+    const palCount = NEON_PALETTES.length;
+    const palIdx = Math.floor(elapsed / CYCLE_DURATION) % palCount;
+    const nextIdx = (palIdx + 1) % palCount;
+    const palMix = (elapsed / CYCLE_DURATION) % 1.0;
+
+    const pri = lerpRGB(NEON_PALETTES[palIdx].primary, NEON_PALETTES[nextIdx].primary, palMix);
+    const sec = lerpRGB(NEON_PALETTES[palIdx].secondary, NEON_PALETTES[nextIdx].secondary, palMix);
+    renderBands(elapsed, anim, pri, sec);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ─── Resize ──────────────────────────────────────────────────────────
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  fieldData = buildFieldData(window.innerWidth, window.innerHeight);
+}
+
+// ─── Cycle Modes ─────────────────────────────────────────────────────
+
+function cycleMode() {
+  currentModeIdx = (currentModeIdx + 1) % MODE_NAMES.length;
+  currentMode = MODE_NAMES[currentModeIdx];
+  modeLabel.textContent = currentMode;
+}
+
+window.addEventListener('resize', resize);
+window.addEventListener('click', cycleMode);
+window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); cycleMode(); } });
+
+// ─── Init ────────────────────────────────────────────────────────────
+
+modeLabel.textContent = currentMode;
+
+fetch('../assets/design-tokens/toone-pixels.json')
+  .then(r => r.json())
+  .then(data => { pixelData = data; resize(); requestAnimationFrame(frame); })
+  .catch(() => { resize(); requestAnimationFrame(frame); });
+</script>
+</body>
+</html>
