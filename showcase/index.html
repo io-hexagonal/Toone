@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showcase — Toone</title>
+<meta name="description" content="See what Toone can do — agent teams, browser integrations, meeting capture, and mobile companion.">
+<link rel="icon" type="image/png" href="../assets/profiles/toone-icon-light-512.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0b11; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+
+  /* ── Carousel ── */
+  .carousel {
+    position: fixed; inset: 0;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: scale(1.02);
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .slide.leaving {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  .slide-bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) saturate(1.4) brightness(0.3);
+    transform: scale(1.15);
+  }
+
+  .slide-img {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 82vw;
+    max-height: 76vh;
+    border-radius: 14px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+    z-index: 2;
+  }
+
+
+  /* ── Navigation arrows ── */
+  .nav-arrow {
+    position: fixed; top: 50%; z-index: 20;
+    transform: translateY(-50%);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  }
+  .nav-arrow:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.8);
+    border-color: rgba(255,255,255,0.18);
+  }
+  .nav-arrow:active { transform: translateY(-50%) scale(0.95); }
+  .nav-arrow svg { width: 20px; height: 20px; fill: currentColor; }
+  .nav-prev { left: 20px; }
+  .nav-next { right: 20px; }
+
+  /* ── Progress dots ── */
+  .dots {
+    position: fixed;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex; gap: 8px;
+    align-items: center;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .dot:hover { background: rgba(255,255,255,0.3); }
+  .dot.active {
+    background: rgba(255,255,255,0.7);
+    transform: scale(1.3);
+  }
+
+  /* ── Progress bar on active dot ── */
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .dot.active::after {
+    border-color: rgba(255,255,255,0.2);
+    animation: dot-progress 5s linear forwards;
+  }
+  @keyframes dot-progress {
+    0% { clip-path: polygon(50% 0%, 50% 50%, 50% 0%, 50% 0%, 50% 0%, 50% 0%); }
+    12.5% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 0%, 100% 0%, 100% 0%); }
+    25% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 100% 100%, 100% 100%); }
+    37.5% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 50% 100%, 50% 100%); }
+    50% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%, 0% 100%); }
+    62.5% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%, 0% 50%); }
+    75% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%, 0% 0%); }
+    100% { clip-path: polygon(50% 0%, 50% 50%, 100% 0%, 100% 100%, 0% 100%, 0% 0%); }
+  }
+
+  /* ── Top nav ── */
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    background: linear-gradient(to bottom, rgba(10,11,17,0.6) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .top-bar a { pointer-events: auto; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none; font-size: 13px;
+    letter-spacing: 0.04em; transition: color 0.2s;
+  }
+  .back:hover { color: rgba(255,255,255,0.6); }
+  .back svg { width: 14px; height: 14px; fill: currentColor; }
+  .dl-link {
+    color: rgba(255,255,255,0.35);
+    text-decoration: none; font-size: 12px;
+    font-weight: 500; letter-spacing: 0.04em;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .dl-link:hover {
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.16);
+  }
+
+  /* ── Counter ── */
+  .counter {
+    position: fixed; bottom: 28px; right: 24px;
+    z-index: 20;
+    font-size: 11px; color: rgba(255,255,255,0.2);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Pause indicator ── */
+  .paused-badge {
+    position: fixed; bottom: 28px; left: 24px;
+    z-index: 20;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .paused-badge.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <a class="back" href="../">
+    <svg viewBox="0 0 16 16"><path d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"/></svg>
+    Toone
+  </a>
+  <a class="dl-link" href="https://github.com/io-hexagonal/Toone/releases">Download</a>
+</div>
+
+<!-- Carousel -->
+<div class="carousel" id="carousel"></div>
+
+<!-- Arrows -->
+<button class="nav-arrow nav-prev" onclick="go(-1)" aria-label="Previous">
+  <svg viewBox="0 0 16 16"><path d="M9.78 3.47a.75.75 0 010 1.06L6.81 7.5h5.44a.75.75 0 010 1.5H6.81l2.97 2.97a.75.75 0 11-1.06 1.06l-4.25-4.25a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0z"/></svg>
+</button>
+<button class="nav-arrow nav-next" onclick="go(1)" aria-label="Next">
+  <svg viewBox="0 0 16 16"><path d="M6.22 3.47a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.19 9H3.75a.75.75 0 010-1.5h5.44L6.22 4.53a.75.75 0 010-1.06z"/></svg>
+</button>
+
+<!-- Dots -->
+<div class="dots" id="dots"></div>
+
+<!-- Counter -->
+<div class="counter" id="counter"></div>
+
+<!-- Pause badge -->
+<div class="paused-badge" id="paused">Paused</div>
+
+<script>
+const SLIDES = [
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---agent-thread.jpg',
+    label: 'Desktop',
+    title: 'Agent Conversations',
+    desc: 'Chat with specialized agents across departments. They plan, research, and hand off context to each other — like a real team.'
+  },
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---agent-template-thread-media---hook-analysis.jpg',
+    label: 'Desktop',
+    title: 'Content Analysis',
+    desc: 'Agents analyze social media posts, score hooks, classify patterns, and surface what makes content perform.'
+  },
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---browser-integrations.jpg',
+    label: 'Desktop',
+    title: 'Browser Integrations',
+    desc: 'Built-in browser panel. Point an agent at any site and let it work directly with what\'s on screen.'
+  },
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---recording-agent-thread.jpg',
+    label: 'Desktop',
+    title: 'Meeting Capture',
+    desc: 'Dual audio recording with live transcription. Agents listen, process, and organize meeting content in real time.'
+  },
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---mobile.jpg',
+    label: 'Mobile',
+    title: 'Work From Anywhere',
+    desc: 'Take your agents with you. Chat, browse your org, and trigger routines — all from your phone.'
+  },
+  {
+    img: '../assets/screenshots/desktop/desktop---sample-i---mobile---connect-ai-provider-byk.jpg',
+    label: 'Mobile',
+    title: 'Bring Your Own Keys',
+    desc: 'Use your existing OpenAI, Claude, or Gemini account. No middleman, no markup — your keys, your data.'
+  }
+];
+
+const INTERVAL = 5000;
+let current = 0;
+let timer = null;
+let paused = false;
+
+const carousel = document.getElementById('carousel');
+const dotsEl = document.getElementById('dots');
+const counterEl = document.getElementById('counter');
+const pausedEl = document.getElementById('paused');
+
+// Build slides
+SLIDES.forEach((s, i) => {
+  const slide = document.createElement('div');
+  slide.className = 'slide' + (i === 0 ? ' active' : '');
+  slide.innerHTML = `
+    <div class="slide-bg" style="background-image:url('${s.img}')"></div>
+    <img class="slide-img" src="${s.img}" alt="${s.title}" loading="${i < 2 ? 'eager' : 'lazy'}">
+  `;
+  carousel.appendChild(slide);
+
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => goTo(i);
+  dotsEl.appendChild(dot);
+});
+
+updateCounter();
+startTimer();
+
+function goTo(idx) {
+  if (idx === current) return;
+  const slides = carousel.querySelectorAll('.slide');
+  const dots = dotsEl.querySelectorAll('.dot');
+
+  slides[current].classList.remove('active');
+  slides[current].classList.add('leaving');
+  dots[current].classList.remove('active');
+
+  setTimeout(() => slides[current === idx ? current : current].classList.remove('leaving'), 50);
+
+  const prev = current;
+  current = idx;
+
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  updateCounter();
+
+  setTimeout(() => slides[prev].classList.remove('leaving'), 800);
+
+  resetTimer();
+}
+
+function go(dir) {
+  const next = (current + dir + SLIDES.length) % SLIDES.length;
+  goTo(next);
+}
+
+function updateCounter() {
+  counterEl.textContent = `${current + 1} / ${SLIDES.length}`;
+}
+
+function startTimer() {
+  if (paused) return;
+  clearInterval(timer);
+  timer = setInterval(() => go(1), INTERVAL);
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  // Restart dot animation
+  const dots = dotsEl.querySelectorAll('.dot');
+  dots.forEach(d => { d.style.animation = 'none'; d.offsetHeight; d.style.animation = ''; });
+  startTimer();
+}
+
+function togglePause() {
+  paused = !paused;
+  pausedEl.classList.toggle('visible', paused);
+  if (paused) {
+    clearInterval(timer);
+  } else {
+    startTimer();
+  }
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') go(-1);
+  else if (e.key === 'ArrowRight') go(1);
+  else if (e.key === ' ') { e.preventDefault(); togglePause(); }
+});
+
+// Pause on hover over arrows
+document.querySelectorAll('.nav-arrow').forEach(btn => {
+  btn.addEventListener('mouseenter', () => { clearInterval(timer); });
+  btn.addEventListener('mouseleave', () => { if (!paused) startTimer(); });
+});
+</script>
+</body>
+</html>
