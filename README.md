@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Your new way to interact with Agent teams.</strong>
+  <strong>AI teams that run your work</strong>
 </p>
 
 <p align="center">
@@ -15,10 +15,9 @@
 ---
 
 Toone gives you a team of AI agents — organized into departments, assigned to projects, and running routines on your behalf.
-Instead of managing tasks yourself, you define the structure. Toone handles the rest.
-Either choose a template or craft your own organization with custom rules.
+Instead of managing tasks yourself, you define the structure. Toone handles everything else.
+Either choose a template or craft your own project with custom rules.
 
-<!-- hero: outline animation screenshot or GIF -->
 
 ## Desktop
 
