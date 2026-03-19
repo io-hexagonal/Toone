@@ -91,7 +91,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-[MIT](LICENSE)
+- **Open source content** (assets, animations, docs) — [MIT](LICENSE)
+- **Toone application binary** — [Proprietary EULA](LICENSE-BINARY)
 
 ---
 
