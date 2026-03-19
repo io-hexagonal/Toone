@@ -45,7 +45,7 @@
 
   /* ── Requirements tooltip ── */
   .tooltip {
-    position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%);
+    position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%);
     background: rgba(20,22,34,0.95); backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
     padding: 14px 18px; min-width: 220px;
@@ -55,8 +55,8 @@
     white-space: nowrap;
   }
   .tooltip::after {
-    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-    border: 6px solid transparent; border-top-color: rgba(255,255,255,0.12);
+    content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-bottom-color: rgba(255,255,255,0.12);
   }
   .dl-btn-wrap { position: relative; }
   .dl-btn-wrap:hover .tooltip { opacity: 1; }
