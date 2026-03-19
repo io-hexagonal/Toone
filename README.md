@@ -21,7 +21,7 @@ Either choose a template or craft your own project with custom rules.
 
 ## Desktop
 
-Start here. Toone Desktop is where you set up your org, chat with agents, and get things done.
+Start here. Toone Desktop is where you set up your org, chat with agents, and get things done. *Actual screenshots in Zen Mode (- commentary)
 
 <p align="center">
   <img src="assets/screenshots/desktop/desktop---sample-i---agent-thread.jpg" width="720" alt="Toone Desktop — Agent Conversations" />
