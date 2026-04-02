@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Galereya",
+    "privacy": "Konfidentsialnost",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Skachat v",
+    "appStore": "App Store",
+    "downloadFor": "Skachat dlya",
+    "macOS": "macOS",
+    "requirements": "Trebovaniya",
+    "req1": "macOS 14.0 (Sonoma) ili novee",
+    "req2": "Akkaunt Anthropic ili OpenAI",
+    "soon": "Skoro"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Chitat dalee",
+    "publishedOn": "Opublikovano",
+    "by": "avtor",
+    "tags": "Tegi",
+    "relatedPosts": "Pohozhie stati",
+    "comments": "Kommentarii",
+    "previous": "Nazad",
+    "next": "Dalee",
+    "pageOf": "Stranitsa {page} iz {total}",
+    "noPosts": "Statei poka net.",
+    "downloadCTA": "Sozdavayte avtonomnye komandy II s Toone",
+    "downloadCTADescription": "Skaychate Toone dlya macOS i sozdavayte komandy II, kotorye vypolnyayut vashu rabotu.",
+    "categories": {
+      "all": "Все",
+      "ai-models": "ИИ и LLM",
+      "development": "Разработка",
+      "business": "Бизнес и маркетинг",
+      "data-finance": "Данные и финансы",
+      "guides": "Руководства",
+      "tools": "Инструменты и проекты"
+    }
+  },
+  "footer": {
+    "terms": "Usloviya",
+    "privacy": "Konfidentsialnost"
+  },
+  "meta": {
+    "siteTitle": "Toone — Komandy II, kotorye vypolnyayut vashu rabotu",
+    "siteDescription": "Sozdavayte avtonomnye komandy II dlya kontenta, rosta, inzhiniringa i mnogogo drugogo."
+  }
+}

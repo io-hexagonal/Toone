@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Galerie",
+    "privacy": "Datenschutz",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Laden im",
+    "appStore": "App Store",
+    "downloadFor": "Laden fur",
+    "macOS": "macOS",
+    "requirements": "Voraussetzungen",
+    "req1": "macOS 14.0 (Sonoma) oder neuer",
+    "req2": "Anthropic- oder OpenAI-Konto",
+    "soon": "Bald"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Weiterlesen",
+    "publishedOn": "Veroffentlicht am",
+    "by": "von",
+    "tags": "Tags",
+    "relatedPosts": "Verwandte Beitrage",
+    "comments": "Kommentare",
+    "previous": "Zuruck",
+    "next": "Weiter",
+    "pageOf": "Seite {page} von {total}",
+    "noPosts": "Noch keine Beitrage.",
+    "downloadCTA": "Erstelle autonome KI-Teams mit Toone",
+    "downloadCTADescription": "Lade Toone fur macOS herunter und erstelle KI-Teams, die deine Arbeit erledigen.",
+    "categories": {
+      "all": "Alle",
+      "ai-models": "KI und LLMs",
+      "development": "Entwicklung",
+      "business": "Business und Marketing",
+      "data-finance": "Daten und Finanzen",
+      "guides": "Anleitungen und Tutorials",
+      "tools": "Tools und Projekte"
+    }
+  },
+  "footer": {
+    "terms": "AGB",
+    "privacy": "Datenschutz"
+  },
+  "meta": {
+    "siteTitle": "Toone — KI-Teams, die deine Arbeit erledigen",
+    "siteDescription": "Erstelle autonome KI-Teams fur Content, Wachstum, Engineering und mehr."
+  }
+}

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Department — Toone</title>
+<meta name="description" content="AI-powered growth operations. Acquisition funnels, conversion experiments, outreach, and partnership management — all running autonomously.">
+<meta property="og:title" content="Toone: Growth Department">
+<meta property="og:description" content="AI-powered growth operations. Acquisition funnels, conversion experiments, outreach, and partnership management — all running autonomously.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://io-hexagonal.github.io/Toone/growth/">
+<link rel="icon" type="image/png" href="../assets/profiles/toone-icon-light-512.png">
+
+<style>
+  @font-face { font-family: '10Pixel'; src: url('../assets/fonts/10Pixel-Bold.ttf') format('truetype'); font-weight: 700; }
+  @font-face { font-family: '10Pixel'; src: url('../assets/fonts/10Pixel-Regular.ttf') format('truetype'); font-weight: 400; }
+  @font-face { font-family: '10Pixel'; src: url('../assets/fonts/10Pixel-Thin.ttf') format('truetype'); font-weight: 300; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; background: #0d0f1a; color: rgba(255,255,255,0.9); }
+  body { overflow: hidden; font-family: '10Pixel', 'SF Mono', 'Fira Code', monospace; }
+  #c { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+  /* ── Top nav ── */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px; pointer-events: none;
+  }
+  .top-nav a, .top-nav div { pointer-events: auto; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.3); text-decoration: none;
+    font-size: 11px; letter-spacing: 0.06em; transition: color 0.2s;
+    font-family: '10Pixel', monospace;
+  }
+  .back:hover { color: rgba(255,255,255,0.55); }
+  .back svg { width: 12px; height: 12px; fill: currentColor; }
+  .nav-right a {
+    color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-right a:hover { color: rgba(255,255,255,0.45); }
+  .nav-right svg { width: 22px; height: 22px; fill: currentColor; display: block; }
+
+  /* ── Content ── */
+  .content {
+    position: relative; z-index: 10;
+    height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 24px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .content > * { pointer-events: auto; }
+
+  .logo-group {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+  }
+  .logo-canvas {
+    display: block;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+  }
+
+  .badge {
+    font-family: '10Pixel', monospace;
+    font-size: 10px; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(52,211,153,0.7);
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-family: '10Pixel', monospace;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    image-rendering: pixelated;
+  }
+  h1 .accent { color: rgba(52,211,153,0.95); }
+
+  .subtitle {
+    font-family: '10Pixel', monospace;
+    font-size: clamp(12px, 1.8vw, 15px);
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    max-width: 500px; line-height: 1.7;
+    margin-bottom: 40px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Features: transparent, text only ── */
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    max-width: 660px; width: 100%;
+    margin-bottom: 40px;
+    gap: 4px;
+  }
+  .feature {
+    padding: 24px 18px 20px;
+    text-align: center;
+  }
+  .feature h3 {
+    font-family: '10Pixel', monospace;
+    font-size: 12px; font-weight: 700;
+    margin-bottom: 8px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── CTA ── */
+  .cta-group {
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .dl-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 250px; padding: 14px 0; border-radius: 0;
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.15);
+    color: rgba(255,255,255,0.85); text-decoration: none;
+    font-family: '10Pixel', monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    cursor: pointer;
+  }
+  .dl-btn:hover {
+    background: rgba(52,211,153,0.14);
+    border-color: rgba(52,211,153,0.3);
+    transform: translateY(-1px);
+  }
+  .dl-btn:active { transform: translateY(0); }
+  .dl-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+
+  .ph-badge { margin-top: 4px; }
+  .ph-badge img { display: block; }
+
+  .footer-note {
+    margin-top: 32px;
+    font-family: '10Pixel', monospace;
+    font-size: 9px; font-weight: 300;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 640px) {
+    .features { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<nav class="top-nav">
+  <a class="back" href="../">
+    <svg viewBox="0 0 16 16"><path d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"/></svg>
+    toone
+  </a>
+  <div class="nav-right">
+    <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="content">
+  <div class="logo-group">
+    <img src="../assets/profiles/toone-icon-dark-512.png" alt="Toone" class="logo-icon">
+    <canvas id="logo-canvas" class="logo-canvas"></canvas>
+  </div>
+  <h1>growth <span class="accent">department</span></h1>
+
+  <p class="subtitle">
+    AI agents that run your growth — acquisition, conversion, outreach, and partnership management.
+  </p>
+
+
+  <div class="cta-group">
+    <a class="dl-btn" href="/Toone-1.0.3.dmg" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      download for macOS
+    </a>
+    <div class="ph-badge">
+      <a href="https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone" target="_blank" rel="noopener noreferrer"><img alt="Toone - AI teams that run your work | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=dark&t=1774512921035"></a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Helpers ─────────────────────────────────────────────────────────
+function lerp(a, b, t) { return a + (b - a) * t; }
+function lerpRGB(a, b, t) { return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)]; }
+function rgba(c, a) { return `rgba(${(c[0]*255)|0},${(c[1]*255)|0},${(c[2]*255)|0},${a})`; }
+function mod(n, m) { return ((n % m) + m) % m; }
+
+const COLOR_STORY = [
+  [0.05, 0.15, 0.45], [0.1, 0.4, 1.0],   [0.0, 0.6, 0.8],
+  [0.0, 0.7, 0.4],    [0.0, 0.85, 0.3],   [0.5, 0.9, 0.1],
+  [1.0, 0.65, 0.0],   [1.0, 0.15, 0.45],  [0.7, 0.0, 0.9],
+  [0.55, 0.1, 1.0],   [0.0, 0.5, 0.9],    [0.0, 0.7, 0.6],
+];
+
+const DS = 2.5;          // dot size
+const SP = 3.5;          // dot spacing
+const GAP = SP * 3;      // bold gap between cells (3 dot-rows wide)
+const BG = [0.051, 0.059, 0.102];
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+let W, H, COLS, ROWS;
+
+function computeGrid() {
+  const target = 140;
+  COLS = Math.max(3, Math.round(W / target));
+  ROWS = Math.max(3, Math.round(H / target));
+}
+
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  computeGrid();
+}
+
+// ── Animation modes ──────────────────────────────────────────────────
+// 0: independent cells — grid ON
+// 1: horizontal sweep — no grid
+// 2: vertical sweep — no grid
+// 3: diagonal — no grid
+// 4: radial — grid ON
+// 5: horizontal sweep — grid ON
+// 6: diagonal — no grid (reversed)
+const NUM_MODES = 7;
+const MODE_DURATION = 5;
+const FADE_DURATION = 1.0;
+const sC = COLOR_STORY.length;
+const MODE_HAS_GRID = [true, false, false, false, true, true, false];
+
+function getCellColor(row, col, t, mode) {
+  const speed = 1.5;
+  let cp;
+  switch (mode) {
+    case 0: cp = mod(t * speed + (row * COLS + col) * 1.7, sC); break;
+    case 1: cp = mod(t * speed + col * (sC / COLS), sC); break;
+    case 2: cp = mod(t * speed + row * (sC / ROWS), sC); break;
+    case 3: cp = mod(t * speed + (col + row) * 1.5, sC); break;
+    case 4: {
+      const dr = row - (ROWS - 1) / 2, dc = col - (COLS - 1) / 2;
+      cp = mod(t * speed + Math.sqrt(dr*dr + dc*dc) * 2.5, sC);
+      break;
+    }
+    case 5: cp = mod(t * speed + col * (sC / COLS) + row * 0.5, sC); break;
+    case 6: cp = mod(t * speed + (COLS - col + ROWS - row) * 1.5, sC); break;
+  }
+  const ci = Math.floor(cp) % sC;
+  return lerpRGB(COLOR_STORY[ci], COLOR_STORY[(ci + 1) % sC], cp - Math.floor(cp));
+}
+
+// ── Render ───────────────────────────────────────────────────────────
+let startTime = null;
+
+function frame(ts) {
+  if (!startTime) startTime = ts;
+  const t = (ts - startTime) / 1000;
+
+  // clear with dark background
+  ctx.fillStyle = rgba(BG, 1);
+  ctx.fillRect(0, 0, W, H);
+
+  // mode blending
+  const cyclePos = t / MODE_DURATION;
+  const curMode = Math.floor(cyclePos) % NUM_MODES;
+  const nxtMode = (curMode + 1) % NUM_MODES;
+  const modeT = cyclePos - Math.floor(cyclePos);
+  const fadeStart = 1 - FADE_DURATION / MODE_DURATION;
+  const blend = modeT > fadeStart ? (modeT - fadeStart) / (1 - fadeStart) : 0;
+
+  // grid lines: on or off, snaps at mode boundary
+  const showGrid = blend < 0.5 ? MODE_HAS_GRID[curMode] : MODE_HAS_GRID[nxtMode];
+  const gap = showGrid ? GAP : 0;
+  const cellW = (W - (COLS - 1) * gap) / COLS;
+  const cellH = (H - (ROWS - 1) * gap) / ROWS;
+
+  // draw dots across the full viewport, colored by which cell they belong to
+  const totalDotCols = Math.floor(W / SP);
+  const totalDotRows = Math.floor(H / SP);
+
+  for (let dr = 0; dr < totalDotRows; dr++) {
+    const py = dr * SP + (SP - DS) / 2;
+    // which cell row?
+    let cellRow, insideGapY = false;
+    if (showGrid) {
+      // with gap: find cell row accounting for gaps
+      cellRow = Math.floor(py / (cellH + gap));
+      if (cellRow >= ROWS) cellRow = ROWS - 1;
+      const cellTopY = cellRow * (cellH + gap);
+      if (py >= cellTopY + cellH && py < cellTopY + cellH + gap) insideGapY = true;
+    } else {
+      cellRow = Math.min(Math.floor(dr / (totalDotRows / ROWS)), ROWS - 1);
+    }
+
+    for (let dc = 0; dc < totalDotCols; dc++) {
+      const px = dc * SP + (SP - DS) / 2;
+      let cellCol, insideGapX = false;
+      if (showGrid) {
+        cellCol = Math.floor(px / (cellW + gap));
+        if (cellCol >= COLS) cellCol = COLS - 1;
+        const cellLeftX = cellCol * (cellW + gap);
+        if (px >= cellLeftX + cellW && px < cellLeftX + cellW + gap) insideGapX = true;
+      } else {
+        cellCol = Math.min(Math.floor(dc / (totalDotCols / COLS)), COLS - 1);
+      }
+
+      // skip dots inside grid gaps
+      if (insideGapX || insideGapY) continue;
+
+      let color = getCellColor(cellRow, cellCol, t, curMode);
+      if (blend > 0) {
+        color = lerpRGB(color, getCellColor(cellRow, cellCol, t, nxtMode), blend);
+      }
+
+      const scanDim = dr % 2 === 0 ? 1 : 0.55;
+      ctx.fillStyle = rgba(color, 0.35 * scanDim);
+      ctx.fillRect(px, py, DS, DS);
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(frame);
+
+// ─── Logo: pixel-dot TOONE text (inlined data, same as index.html) ──
+const logoCvs = document.getElementById('logo-canvas');
+const logoCtx = logoCvs.getContext('2d');
+const LOGO_PX = 4;
+
+const LOGO_DATA = {"gridCols":58,"gridRows":20,"pixels":[{"col":0,"row":0},{"col":1,"row":0},{"col":2,"row":0},{"col":3,"row":0},{"col":4,"row":0},{"col":5,"row":0},{"col":6,"row":0},{"col":7,"row":0},{"col":8,"row":0},{"col":9,"row":0},{"col":10,"row":0},{"col":11,"row":0},{"col":14,"row":0},{"col":15,"row":0},{"col":16,"row":0},{"col":17,"row":0},{"col":18,"row":0},{"col":19,"row":0},{"col":20,"row":0},{"col":21,"row":0},{"col":26,"row":0},{"col":27,"row":0},{"col":28,"row":0},{"col":29,"row":0},{"col":30,"row":0},{"col":31,"row":0},{"col":32,"row":0},{"col":33,"row":0},{"col":36,"row":0},{"col":37,"row":0},{"col":38,"row":0},{"col":39,"row":0},{"col":40,"row":0},{"col":41,"row":0},{"col":42,"row":0},{"col":43,"row":0},{"col":44,"row":0},{"col":45,"row":0},{"col":48,"row":0},{"col":49,"row":0},{"col":50,"row":0},{"col":51,"row":0},{"col":52,"row":0},{"col":53,"row":0},{"col":54,"row":0},{"col":55,"row":0},{"col":56,"row":0},{"col":57,"row":0},{"col":0,"row":1},{"col":1,"row":1},{"col":2,"row":1},{"col":3,"row":1},{"col":4,"row":1},{"col":5,"row":1},{"col":6,"row":1},{"col":7,"row":1},{"col":8,"row":1},{"col":9,"row":1},{"col":10,"row":1},{"col":11,"row":1},{"col":13,"row":1},{"col":14,"row":1},{"col":15,"row":1},{"col":16,"row":1},{"col":17,"row":1},{"col":18,"row":1},{"col":19,"row":1},{"col":20,"row":1},{"col":21,"row":1},{"col":22,"row":1},{"col":25,"row":1},{"col":26,"row":1},{"col":27,"row":1},{"col":28,"row":1},{"col":29,"row":1},{"col":30,"row":1},{"col":31,"row":1},{"col":32,"row":1},{"col":33,"row":1},{"col":34,"row":1},{"col":36,"row":1},{"col":37,"row":1},{"col":38,"row":1},{"col":39,"row":1},{"col":40,"row":1},{"col":41,"row":1},{"col":42,"row":1},{"col":43,"row":1},{"col":44,"row":1},{"col":45,"row":1},{"col":46,"row":1},{"col":48,"row":1},{"col":49,"row":1},{"col":50,"row":1},{"col":51,"row":1},{"col":52,"row":1},{"col":53,"row":1},{"col":54,"row":1},{"col":55,"row":1},{"col":56,"row":1},{"col":57,"row":1},{"col":0,"row":2},{"col":1,"row":2},{"col":2,"row":2},{"col":3,"row":2},{"col":4,"row":2},{"col":5,"row":2},{"col":6,"row":2},{"col":7,"row":2},{"col":8,"row":2},{"col":9,"row":2},{"col":10,"row":2},{"col":11,"row":2},{"col":12,"row":2},{"col":13,"row":2},{"col":14,"row":2},{"col":15,"row":2},{"col":16,"row":2},{"col":17,"row":2},{"col":18,"row":2},{"col":19,"row":2},{"col":20,"row":2},{"col":21,"row":2},{"col":22,"row":2},{"col":23,"row":2},{"col":24,"row":2},{"col":25,"row":2},{"col":26,"row":2},{"col":27,"row":2},{"col":28,"row":2},{"col":29,"row":2},{"col":30,"row":2},{"col":31,"row":2},{"col":32,"row":2},{"col":33,"row":2},{"col":34,"row":2},{"col":35,"row":2},{"col":36,"row":2},{"col":37,"row":2},{"col":38,"row":2},{"col":39,"row":2},{"col":40,"row":2},{"col":41,"row":2},{"col":42,"row":2},{"col":43,"row":2},{"col":44,"row":2},{"col":45,"row":2},{"col":46,"row":2},{"col":47,"row":2},{"col":48,"row":2},{"col":49,"row":2},{"col":50,"row":2},{"col":51,"row":2},{"col":52,"row":2},{"col":53,"row":2},{"col":54,"row":2},{"col":55,"row":2},{"col":56,"row":2},{"col":57,"row":2},{"col":0,"row":3},{"col":1,"row":3},{"col":2,"row":3},{"col":3,"row":3},{"col":4,"row":3},{"col":5,"row":3},{"col":6,"row":3},{"col":7,"row":3},{"col":8,"row":3},{"col":9,"row":3},{"col":10,"row":3},{"col":11,"row":3},{"col":12,"row":3},{"col":13,"row":3},{"col":14,"row":3},{"col":15,"row":3},{"col":16,"row":3},{"col":17,"row":3},{"col":18,"row":3},{"col":19,"row":3},{"col":20,"row":3},{"col":21,"row":3},{"col":22,"row":3},{"col":23,"row":3},{"col":24,"row":3},{"col":25,"row":3},{"col":26,"row":3},{"col":27,"row":3},{"col":28,"row":3},{"col":29,"row":3},{"col":30,"row":3},{"col":31,"row":3},{"col":32,"row":3},{"col":33,"row":3},{"col":34,"row":3},{"col":35,"row":3},{"col":36,"row":3},{"col":37,"row":3},{"col":38,"row":3},{"col":39,"row":3},{"col":40,"row":3},{"col":41,"row":3},{"col":42,"row":3},{"col":43,"row":3},{"col":44,"row":3},{"col":45,"row":3},{"col":46,"row":3},{"col":47,"row":3},{"col":48,"row":3},{"col":49,"row":3},{"col":50,"row":3},{"col":51,"row":3},{"col":52,"row":3},{"col":53,"row":3},{"col":54,"row":3},{"col":55,"row":3},{"col":56,"row":3},{"col":57,"row":3},{"col":4,"row":4},{"col":5,"row":4},{"col":6,"row":4},{"col":7,"row":4},{"col":12,"row":4},{"col":13,"row":4},{"col":14,"row":4},{"col":15,"row":4},{"col":20,"row":4},{"col":21,"row":4},{"col":22,"row":4},{"col":23,"row":4},{"col":24,"row":4},{"col":25,"row":4},{"col":26,"row":4},{"col":27,"row":4},{"col":32,"row":4},{"col":33,"row":4},{"col":34,"row":4},{"col":35,"row":4},{"col":36,"row":4},{"col":37,"row":4},{"col":38,"row":4},{"col":39,"row":4},{"col":44,"row":4},{"col":45,"row":4},{"col":46,"row":4},{"col":47,"row":4},{"col":48,"row":4},{"col":49,"row":4},{"col":50,"row":4},{"col":51,"row":4},{"col":4,"row":5},{"col":5,"row":5},{"col":6,"row":5},{"col":7,"row":5},{"col":12,"row":5},{"col":13,"row":5},{"col":14,"row":5},{"col":15,"row":5},{"col":20,"row":5},{"col":21,"row":5},{"col":22,"row":5},{"col":23,"row":5},{"col":24,"row":5},{"col":25,"row":5},{"col":26,"row":5},{"col":27,"row":5},{"col":32,"row":5},{"col":33,"row":5},{"col":34,"row":5},{"col":35,"row":5},{"col":36,"row":5},{"col":37,"row":5},{"col":38,"row":5},{"col":39,"row":5},{"col":44,"row":5},{"col":45,"row":5},{"col":46,"row":5},{"col":47,"row":5},{"col":48,"row":5},{"col":49,"row":5},{"col":50,"row":5},{"col":51,"row":5},{"col":4,"row":6},{"col":5,"row":6},{"col":6,"row":6},{"col":7,"row":6},{"col":12,"row":6},{"col":13,"row":6},{"col":14,"row":6},{"col":15,"row":6},{"col":20,"row":6},{"col":21,"row":6},{"col":22,"row":6},{"col":23,"row":6},{"col":24,"row":6},{"col":25,"row":6},{"col":26,"row":6},{"col":27,"row":6},{"col":32,"row":6},{"col":33,"row":6},{"col":34,"row":6},{"col":35,"row":6},{"col":36,"row":6},{"col":37,"row":6},{"col":38,"row":6},{"col":39,"row":6},{"col":44,"row":6},{"col":45,"row":6},{"col":46,"row":6},{"col":47,"row":6},{"col":48,"row":6},{"col":49,"row":6},{"col":50,"row":6},{"col":51,"row":6},{"col":4,"row":7},{"col":5,"row":7},{"col":6,"row":7},{"col":7,"row":7},{"col":12,"row":7},{"col":13,"row":7},{"col":14,"row":7},{"col":15,"row":7},{"col":20,"row":7},{"col":21,"row":7},{"col":22,"row":7},{"col":23,"row":7},{"col":24,"row":7},{"col":25,"row":7},{"col":26,"row":7},{"col":27,"row":7},{"col":32,"row":7},{"col":33,"row":7},{"col":34,"row":7},{"col":35,"row":7},{"col":36,"row":7},{"col":37,"row":7},{"col":38,"row":7},{"col":39,"row":7},{"col":44,"row":7},{"col":45,"row":7},{"col":46,"row":7},{"col":47,"row":7},{"col":48,"row":7},{"col":49,"row":7},{"col":50,"row":7},{"col":51,"row":7},{"col":4,"row":8},{"col":5,"row":8},{"col":6,"row":8},{"col":7,"row":8},{"col":12,"row":8},{"col":13,"row":8},{"col":14,"row":8},{"col":15,"row":8},{"col":20,"row":8},{"col":21,"row":8},{"col":22,"row":8},{"col":23,"row":8},{"col":24,"row":8},{"col":25,"row":8},{"col":26,"row":8},{"col":27,"row":8},{"col":32,"row":8},{"col":33,"row":8},{"col":34,"row":8},{"col":35,"row":8},{"col":36,"row":8},{"col":37,"row":8},{"col":38,"row":8},{"col":39,"row":8},{"col":44,"row":8},{"col":45,"row":8},{"col":46,"row":8},{"col":47,"row":8},{"col":48,"row":8},{"col":49,"row":8},{"col":50,"row":8},{"col":51,"row":8},{"col":52,"row":8},{"col":53,"row":8},{"col":54,"row":8},{"col":55,"row":8},{"col":56,"row":8},{"col":57,"row":8},{"col":4,"row":9},{"col":5,"row":9},{"col":6,"row":9},{"col":7,"row":9},{"col":12,"row":9},{"col":13,"row":9},{"col":14,"row":9},{"col":15,"row":9},{"col":20,"row":9},{"col":21,"row":9},{"col":22,"row":9},{"col":23,"row":9},{"col":24,"row":9},{"col":25,"row":9},{"col":26,"row":9},{"col":27,"row":9},{"col":32,"row":9},{"col":33,"row":9},{"col":34,"row":9},{"col":35,"row":9},{"col":36,"row":9},{"col":37,"row":9},{"col":38,"row":9},{"col":39,"row":9},{"col":44,"row":9},{"col":45,"row":9},{"col":46,"row":9},{"col":47,"row":9},{"col":48,"row":9},{"col":49,"row":9},{"col":50,"row":9},{"col":51,"row":9},{"col":52,"row":9},{"col":53,"row":9},{"col":54,"row":9},{"col":55,"row":9},{"col":56,"row":9},{"col":57,"row":9},{"col":4,"row":10},{"col":5,"row":10},{"col":6,"row":10},{"col":7,"row":10},{"col":12,"row":10},{"col":13,"row":10},{"col":14,"row":10},{"col":15,"row":10},{"col":20,"row":10},{"col":21,"row":10},{"col":22,"row":10},{"col":23,"row":10},{"col":24,"row":10},{"col":25,"row":10},{"col":26,"row":10},{"col":27,"row":10},{"col":32,"row":10},{"col":33,"row":10},{"col":34,"row":10},{"col":35,"row":10},{"col":36,"row":10},{"col":37,"row":10},{"col":38,"row":10},{"col":39,"row":10},{"col":44,"row":10},{"col":45,"row":10},{"col":46,"row":10},{"col":47,"row":10},{"col":48,"row":10},{"col":49,"row":10},{"col":50,"row":10},{"col":51,"row":10},{"col":52,"row":10},{"col":53,"row":10},{"col":54,"row":10},{"col":55,"row":10},{"col":56,"row":10},{"col":57,"row":10},{"col":4,"row":11},{"col":5,"row":11},{"col":6,"row":11},{"col":7,"row":11},{"col":12,"row":11},{"col":13,"row":11},{"col":14,"row":11},{"col":15,"row":11},{"col":20,"row":11},{"col":21,"row":11},{"col":22,"row":11},{"col":23,"row":11},{"col":24,"row":11},{"col":25,"row":11},{"col":26,"row":11},{"col":27,"row":11},{"col":32,"row":11},{"col":33,"row":11},{"col":34,"row":11},{"col":35,"row":11},{"col":36,"row":11},{"col":37,"row":11},{"col":38,"row":11},{"col":39,"row":11},{"col":44,"row":11},{"col":45,"row":11},{"col":46,"row":11},{"col":47,"row":11},{"col":48,"row":11},{"col":49,"row":11},{"col":50,"row":11},{"col":51,"row":11},{"col":52,"row":11},{"col":53,"row":11},{"col":54,"row":11},{"col":55,"row":11},{"col":56,"row":11},{"col":57,"row":11},{"col":4,"row":12},{"col":5,"row":12},{"col":6,"row":12},{"col":7,"row":12},{"col":12,"row":12},{"col":13,"row":12},{"col":14,"row":12},{"col":15,"row":12},{"col":20,"row":12},{"col":21,"row":12},{"col":22,"row":12},{"col":23,"row":12},{"col":24,"row":12},{"col":25,"row":12},{"col":26,"row":12},{"col":27,"row":12},{"col":32,"row":12},{"col":33,"row":12},{"col":34,"row":12},{"col":35,"row":12},{"col":36,"row":12},{"col":37,"row":12},{"col":38,"row":12},{"col":39,"row":12},{"col":44,"row":12},{"col":45,"row":12},{"col":46,"row":12},{"col":47,"row":12},{"col":48,"row":12},{"col":49,"row":12},{"col":50,"row":12},{"col":51,"row":12},{"col":4,"row":13},{"col":5,"row":13},{"col":6,"row":13},{"col":7,"row":13},{"col":12,"row":13},{"col":13,"row":13},{"col":14,"row":13},{"col":15,"row":13},{"col":20,"row":13},{"col":21,"row":13},{"col":22,"row":13},{"col":23,"row":13},{"col":24,"row":13},{"col":25,"row":13},{"col":26,"row":13},{"col":27,"row":13},{"col":32,"row":13},{"col":33,"row":13},{"col":34,"row":13},{"col":35,"row":13},{"col":36,"row":13},{"col":37,"row":13},{"col":38,"row":13},{"col":39,"row":13},{"col":44,"row":13},{"col":45,"row":13},{"col":46,"row":13},{"col":47,"row":13},{"col":48,"row":13},{"col":49,"row":13},{"col":50,"row":13},{"col":51,"row":13},{"col":4,"row":14},{"col":5,"row":14},{"col":6,"row":14},{"col":7,"row":14},{"col":12,"row":14},{"col":13,"row":14},{"col":14,"row":14},{"col":15,"row":14},{"col":20,"row":14},{"col":21,"row":14},{"col":22,"row":14},{"col":23,"row":14},{"col":24,"row":14},{"col":25,"row":14},{"col":26,"row":14},{"col":27,"row":14},{"col":32,"row":14},{"col":33,"row":14},{"col":34,"row":14},{"col":35,"row":14},{"col":36,"row":14},{"col":37,"row":14},{"col":38,"row":14},{"col":39,"row":14},{"col":44,"row":14},{"col":45,"row":14},{"col":46,"row":14},{"col":47,"row":14},{"col":48,"row":14},{"col":49,"row":14},{"col":50,"row":14},{"col":51,"row":14},{"col":4,"row":15},{"col":5,"row":15},{"col":6,"row":15},{"col":7,"row":15},{"col":12,"row":15},{"col":13,"row":15},{"col":14,"row":15},{"col":15,"row":15},{"col":20,"row":15},{"col":21,"row":15},{"col":22,"row":15},{"col":23,"row":15},{"col":24,"row":15},{"col":25,"row":15},{"col":26,"row":15},{"col":27,"row":15},{"col":32,"row":15},{"col":33,"row":15},{"col":34,"row":15},{"col":35,"row":15},{"col":36,"row":15},{"col":37,"row":15},{"col":38,"row":15},{"col":39,"row":15},{"col":44,"row":15},{"col":45,"row":15},{"col":46,"row":15},{"col":47,"row":15},{"col":48,"row":15},{"col":49,"row":15},{"col":50,"row":15},{"col":51,"row":15},{"col":4,"row":16},{"col":5,"row":16},{"col":6,"row":16},{"col":7,"row":16},{"col":12,"row":16},{"col":13,"row":16},{"col":14,"row":16},{"col":15,"row":16},{"col":16,"row":16},{"col":17,"row":16},{"col":18,"row":16},{"col":19,"row":16},{"col":20,"row":16},{"col":21,"row":16},{"col":22,"row":16},{"col":23,"row":16},{"col":24,"row":16},{"col":25,"row":16},{"col":26,"row":16},{"col":27,"row":16},{"col":28,"row":16},{"col":29,"row":16},{"col":30,"row":16},{"col":31,"row":16},{"col":32,"row":16},{"col":33,"row":16},{"col":34,"row":16},{"col":35,"row":16},{"col":36,"row":16},{"col":37,"row":16},{"col":38,"row":16},{"col":39,"row":16},{"col":44,"row":16},{"col":45,"row":16},{"col":46,"row":16},{"col":47,"row":16},{"col":48,"row":16},{"col":49,"row":16},{"col":50,"row":16},{"col":51,"row":16},{"col":52,"row":16},{"col":53,"row":16},{"col":54,"row":16},{"col":55,"row":16},{"col":56,"row":16},{"col":57,"row":16},{"col":4,"row":17},{"col":5,"row":17},{"col":6,"row":17},{"col":7,"row":17},{"col":12,"row":17},{"col":13,"row":17},{"col":14,"row":17},{"col":15,"row":17},{"col":16,"row":17},{"col":17,"row":17},{"col":18,"row":17},{"col":19,"row":17},{"col":20,"row":17},{"col":21,"row":17},{"col":22,"row":17},{"col":23,"row":17},{"col":24,"row":17},{"col":25,"row":17},{"col":26,"row":17},{"col":27,"row":17},{"col":28,"row":17},{"col":29,"row":17},{"col":30,"row":17},{"col":31,"row":17},{"col":32,"row":17},{"col":33,"row":17},{"col":34,"row":17},{"col":35,"row":17},{"col":36,"row":17},{"col":37,"row":17},{"col":38,"row":17},{"col":39,"row":17},{"col":44,"row":17},{"col":45,"row":17},{"col":46,"row":17},{"col":47,"row":17},{"col":48,"row":17},{"col":49,"row":17},{"col":50,"row":17},{"col":51,"row":17},{"col":52,"row":17},{"col":53,"row":17},{"col":54,"row":17},{"col":55,"row":17},{"col":56,"row":17},{"col":57,"row":17},{"col":4,"row":18},{"col":5,"row":18},{"col":6,"row":18},{"col":7,"row":18},{"col":13,"row":18},{"col":14,"row":18},{"col":15,"row":18},{"col":16,"row":18},{"col":17,"row":18},{"col":18,"row":18},{"col":19,"row":18},{"col":20,"row":18},{"col":21,"row":18},{"col":22,"row":18},{"col":25,"row":18},{"col":26,"row":18},{"col":27,"row":18},{"col":28,"row":18},{"col":29,"row":18},{"col":30,"row":18},{"col":31,"row":18},{"col":32,"row":18},{"col":33,"row":18},{"col":34,"row":18},{"col":36,"row":18},{"col":37,"row":18},{"col":38,"row":18},{"col":39,"row":18},{"col":44,"row":18},{"col":45,"row":18},{"col":46,"row":18},{"col":47,"row":18},{"col":48,"row":18},{"col":49,"row":18},{"col":50,"row":18},{"col":51,"row":18},{"col":52,"row":18},{"col":53,"row":18},{"col":54,"row":18},{"col":55,"row":18},{"col":56,"row":18},{"col":57,"row":18},{"col":4,"row":19},{"col":5,"row":19},{"col":6,"row":19},{"col":7,"row":19},{"col":14,"row":19},{"col":15,"row":19},{"col":16,"row":19},{"col":17,"row":19},{"col":18,"row":19},{"col":19,"row":19},{"col":20,"row":19},{"col":21,"row":19},{"col":26,"row":19},{"col":27,"row":19},{"col":28,"row":19},{"col":29,"row":19},{"col":30,"row":19},{"col":31,"row":19},{"col":32,"row":19},{"col":33,"row":19},{"col":36,"row":19},{"col":37,"row":19},{"col":38,"row":19},{"col":39,"row":19},{"col":44,"row":19},{"col":45,"row":19},{"col":46,"row":19},{"col":47,"row":19},{"col":48,"row":19},{"col":49,"row":19},{"col":50,"row":19},{"col":51,"row":19},{"col":52,"row":19},{"col":53,"row":19},{"col":54,"row":19},{"col":55,"row":19},{"col":56,"row":19},{"col":57,"row":19}]};
+
+(function renderLogo() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = LOGO_DATA.gridCols * LOGO_PX;
+  const h = LOGO_DATA.gridRows * LOGO_PX;
+  logoCvs.width = w * dpr;
+  logoCvs.height = h * dpr;
+  logoCvs.style.width = w + 'px';
+  logoCvs.style.height = h + 'px';
+  logoCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  for (const p of LOGO_DATA.pixels) {
+    const scanDim = p.row % 2 === 0 ? 1 : 0.55;
+    logoCtx.fillStyle = rgba([1, 1, 1], 0.95 * scanDim);
+    logoCtx.fillRect(p.col * LOGO_PX, p.row * LOGO_PX, LOGO_PX, LOGO_PX);
+  }
+})();
+</script>
+</body>
+</html>

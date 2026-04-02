@@ -1,0 +1,1602 @@
+[
+  {
+    "id": "user_001",
+    "name": "Sebastián Mercier",
+    "avatar": "SM",
+    "color": "#5ABE58",
+    "role": "NLP Engineer",
+    "bio": "machine learning pipelines enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_002",
+    "name": "Nikolai Rossi",
+    "avatar": "NR",
+    "color": "#C90FCB",
+    "role": "Content Strategist",
+    "bio": "Democratizing AI safety one project at a time."
+  },
+  {
+    "id": "user_003",
+    "name": "Mei López",
+    "avatar": "ML",
+    "color": "#FA698E",
+    "role": "AI Engineer",
+    "bio": "Helping teams adopt edge computing effectively."
+  },
+  {
+    "id": "user_004",
+    "name": "Theodore Rodriguez",
+    "avatar": "TR",
+    "color": "#6AF6CA",
+    "role": "Product Manager",
+    "bio": "Open source contributor. MLOps workflows advocate."
+  },
+  {
+    "id": "user_005",
+    "name": "Alessandro Chen",
+    "avatar": "AC",
+    "color": "#62DE77",
+    "role": "CTO",
+    "bio": "From autonomous systems to production — that's my jam."
+  },
+  {
+    "id": "user_006",
+    "name": "Jack Rivera",
+    "avatar": "JR",
+    "color": "#C03EFC",
+    "role": "DevOps Engineer",
+    "bio": "Making AI safety accessible to everyone."
+  },
+  {
+    "id": "user_007",
+    "name": "Greta Hofmann",
+    "avatar": "GH",
+    "color": "#6DBC84",
+    "role": "Full Stack Developer",
+    "bio": "recommendation engines enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_008",
+    "name": "Emeka Lambert",
+    "avatar": "EL",
+    "color": "#ADCD22",
+    "role": "Quantitative Developer",
+    "bio": "Working on LLM applications. Previously at Anthropic."
+  },
+  {
+    "id": "user_009",
+    "name": "Nicolás Kuznetsov",
+    "avatar": "NK",
+    "color": "#D9B1C1",
+    "role": "Full Stack Developer",
+    "bio": "Researching novel approaches to knowledge graphs."
+  },
+  {
+    "id": "user_010",
+    "name": "Elena Patel",
+    "avatar": "EP",
+    "color": "#2E4951",
+    "role": "Growth Marketer",
+    "bio": "Teaching AI-powered analytics to the next generation of devs."
+  },
+  {
+    "id": "user_011",
+    "name": "Wouter Moretti",
+    "avatar": "WM",
+    "color": "#A78106",
+    "role": "CTO",
+    "bio": "Researching novel approaches to cloud infrastructure."
+  },
+  {
+    "id": "user_012",
+    "name": "Samir Popov",
+    "avatar": "SP",
+    "color": "#E838DD",
+    "role": "Frontend Engineer",
+    "bio": "Building the future of cloud infrastructure."
+  },
+  {
+    "id": "user_013",
+    "name": "Chen Fedorov",
+    "avatar": "CF",
+    "color": "#C47A39",
+    "role": "Full Stack Developer",
+    "bio": "Helping teams adopt edge computing effectively."
+  },
+  {
+    "id": "user_014",
+    "name": "Ravi Castillo",
+    "avatar": "RC",
+    "color": "#660523",
+    "role": "DevOps Engineer",
+    "bio": "From machine learning pipelines to production — that's my jam."
+  },
+  {
+    "id": "user_015",
+    "name": "Gabriela Sokolov",
+    "avatar": "GS",
+    "color": "#BE92B8",
+    "role": "CTO",
+    "bio": "Open source contributor. NLP systems advocate."
+  },
+  {
+    "id": "user_016",
+    "name": "Jordan Yamamoto",
+    "avatar": "JY",
+    "color": "#3EAE0A",
+    "role": "Research Scientist",
+    "bio": "Democratizing API platforms one project at a time."
+  },
+  {
+    "id": "user_017",
+    "name": "Emma Miller",
+    "avatar": "EM",
+    "color": "#52ADC4",
+    "role": "Cloud Architect",
+    "bio": "Researching novel approaches to cloud infrastructure."
+  },
+  {
+    "id": "user_018",
+    "name": "Ella Basara",
+    "avatar": "EB",
+    "color": "#062B37",
+    "role": "Developer Advocate",
+    "bio": "Teaching machine learning pipelines to the next generation of devs."
+  },
+  {
+    "id": "user_019",
+    "name": "Léa Lambert",
+    "avatar": "LL",
+    "color": "#61FB1A",
+    "role": "Frontend Engineer",
+    "bio": "NLP systems enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_020",
+    "name": "Matteo López",
+    "avatar": "ML",
+    "color": "#E238FB",
+    "role": "Technical Writer",
+    "bio": "Turning distributed systems ideas into real products."
+  },
+  {
+    "id": "user_021",
+    "name": "Kenji Schmidt",
+    "avatar": "KS",
+    "color": "#3F0DD1",
+    "role": "Product Manager",
+    "bio": "blockchain protocols enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_022",
+    "name": "Valentina Hill",
+    "avatar": "VH",
+    "color": "#DE2F31",
+    "role": "Platform Engineer",
+    "bio": "Obsessed with data platforms. Writing about it daily."
+  },
+  {
+    "id": "user_023",
+    "name": "Stephanie Petrov",
+    "avatar": "SP",
+    "color": "#2FA8C5",
+    "role": "Solutions Architect",
+    "bio": "Leading API platforms initiatives at a Fortune 500."
+  },
+  {
+    "id": "user_024",
+    "name": "Ivan Müller",
+    "avatar": "IM",
+    "color": "#57D9B8",
+    "role": "Security Researcher",
+    "bio": "Building the future of fine-tuning workflows."
+  },
+  {
+    "id": "user_025",
+    "name": "Pooja Davis",
+    "avatar": "PD",
+    "color": "#EC5565",
+    "role": "Full Stack Developer",
+    "bio": "Exploring the intersection of MLOps workflows and fintech."
+  },
+  {
+    "id": "user_026",
+    "name": "Dmitri Torres",
+    "avatar": "DT",
+    "color": "#2F52D2",
+    "role": "NLP Engineer",
+    "bio": "Democratizing conversational AI one project at a time."
+  },
+  {
+    "id": "user_027",
+    "name": "Hiroshi Dubois",
+    "avatar": "HD",
+    "color": "#8C32BE",
+    "role": "Quantitative Developer",
+    "bio": "Breaking and fixing blockchain protocols for a living."
+  },
+  {
+    "id": "user_028",
+    "name": "Casey Thomas",
+    "avatar": "CT",
+    "color": "#CC4E5A",
+    "role": "Research Scientist",
+    "bio": "Researching novel approaches to knowledge graphs."
+  },
+  {
+    "id": "user_029",
+    "name": "Ryan Jansen",
+    "avatar": "RJ",
+    "color": "#A63909",
+    "role": "Data Scientist",
+    "bio": "Building cloud infrastructure at scale."
+  },
+  {
+    "id": "user_030",
+    "name": "Ling Wang",
+    "avatar": "LW",
+    "color": "#7CBC31",
+    "role": "Product Manager",
+    "bio": "MLOps workflows enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_031",
+    "name": "Raphaël Schäfer",
+    "avatar": "RS",
+    "color": "#3D1AE8",
+    "role": "CTO",
+    "bio": "Working on MLOps workflows. Previously at Microsoft."
+  },
+  {
+    "id": "user_032",
+    "name": "Lucía Lambert",
+    "avatar": "LL",
+    "color": "#6DD14C",
+    "role": "Data Scientist",
+    "bio": "Building developer tools at scale."
+  },
+  {
+    "id": "user_033",
+    "name": "Inès Bianchi",
+    "avatar": "IB",
+    "color": "#FF3AEB",
+    "role": "Full Stack Developer",
+    "bio": "Leading AI agents initiatives at a Fortune 500."
+  },
+  {
+    "id": "user_034",
+    "name": "Carlos Taylor",
+    "avatar": "CT",
+    "color": "#A24E05",
+    "role": "Quantitative Developer",
+    "bio": "Open source contributor. recommendation engines advocate."
+  },
+  {
+    "id": "user_035",
+    "name": "Martina Allen",
+    "avatar": "MA",
+    "color": "#3D2365",
+    "role": "Full Stack Developer",
+    "bio": "Passionate about AI agents and open source."
+  },
+  {
+    "id": "user_036",
+    "name": "Carlos Haddad",
+    "avatar": "CH",
+    "color": "#AE7D71",
+    "role": "AI Engineer",
+    "bio": "Obsessed with blockchain protocols. Writing about it daily."
+  },
+  {
+    "id": "user_037",
+    "name": "Benjamin Mensah",
+    "avatar": "BM",
+    "color": "#CBF005",
+    "role": "Quantitative Developer",
+    "bio": "Shipping MLOps workflows products since 2021."
+  },
+  {
+    "id": "user_038",
+    "name": "María Chen",
+    "avatar": "MC",
+    "color": "#8C322D",
+    "role": "CTO",
+    "bio": "Helping teams adopt AI safety effectively."
+  },
+  {
+    "id": "user_039",
+    "name": "Federico Al-Farsi",
+    "avatar": "FA",
+    "color": "#350A00",
+    "role": "Prompt Engineer",
+    "bio": "Open source contributor. blockchain protocols advocate."
+  },
+  {
+    "id": "user_040",
+    "name": "Maxime Volkov",
+    "avatar": "MV",
+    "color": "#026534",
+    "role": "CTO",
+    "bio": "Democratizing NLP systems one project at a time."
+  },
+  {
+    "id": "user_041",
+    "name": "Paula Petrov",
+    "avatar": "PP",
+    "color": "#028E5D",
+    "role": "MLOps Engineer",
+    "bio": "Exploring the intersection of cloud infrastructure and ethics."
+  },
+  {
+    "id": "user_042",
+    "name": "Alejandro Park",
+    "avatar": "AP",
+    "color": "#E45D62",
+    "role": "Open Source Maintainer",
+    "bio": "Researching novel approaches to machine learning pipelines."
+  },
+  {
+    "id": "user_043",
+    "name": "Giulia Wilson",
+    "avatar": "GW",
+    "color": "#B73299",
+    "role": "Platform Engineer",
+    "bio": "Democratizing recommendation engines one project at a time."
+  },
+  {
+    "id": "user_044",
+    "name": "Amit Colombo",
+    "avatar": "AC",
+    "color": "#1C962F",
+    "role": "ML Researcher",
+    "bio": "Exploring the intersection of LLM applications and product design."
+  },
+  {
+    "id": "user_045",
+    "name": "Mikhail Ortiz",
+    "avatar": "MO",
+    "color": "#B136FB",
+    "role": "Full Stack Developer",
+    "bio": "Building cloud infrastructure at scale."
+  },
+  {
+    "id": "user_046",
+    "name": "Gabriela Fedorov",
+    "avatar": "GF",
+    "color": "#5D1C54",
+    "role": "Computer Vision Engineer",
+    "bio": "Making LLM applications accessible to everyone."
+  },
+  {
+    "id": "user_047",
+    "name": "Friedrich van Dijk",
+    "avatar": "FV",
+    "color": "#D766CA",
+    "role": "Cloud Architect",
+    "bio": "Building the future of generative AI."
+  },
+  {
+    "id": "user_048",
+    "name": "Jin Novikov",
+    "avatar": "JN",
+    "color": "#C18243",
+    "role": "Growth Marketer",
+    "bio": "Passionate about autonomous systems and open source."
+  },
+  {
+    "id": "user_049",
+    "name": "Samir Barbieri",
+    "avatar": "SB",
+    "color": "#D9B95C",
+    "role": "NLP Engineer",
+    "bio": "Making search systems accessible to everyone."
+  },
+  {
+    "id": "user_050",
+    "name": "Jean Hill",
+    "avatar": "JH",
+    "color": "#818124",
+    "role": "Startup Advisor",
+    "bio": "Building the future of developer tools."
+  },
+  {
+    "id": "user_051",
+    "name": "Svetlana Li",
+    "avatar": "SL",
+    "color": "#04817B",
+    "role": "Platform Engineer",
+    "bio": "Teaching machine learning pipelines to the next generation of devs."
+  },
+  {
+    "id": "user_052",
+    "name": "Benjamin Kim",
+    "avatar": "BK",
+    "color": "#6FBC4E",
+    "role": "Content Strategist",
+    "bio": "Working on recommendation engines. Previously at Cloudflare."
+  },
+  {
+    "id": "user_053",
+    "name": "Jabari Ricci",
+    "avatar": "JR",
+    "color": "#9A194F",
+    "role": "Open Source Maintainer",
+    "bio": "Building knowledge graphs at scale."
+  },
+  {
+    "id": "user_054",
+    "name": "Heike Rojas",
+    "avatar": "HR",
+    "color": "#10A0E7",
+    "role": "Open Source Maintainer",
+    "bio": "Shipping serverless architectures products since 2020."
+  },
+  {
+    "id": "user_055",
+    "name": "Valentina Wright",
+    "avatar": "VW",
+    "color": "#0DBA82",
+    "role": "NLP Engineer",
+    "bio": "Passionate about developer tools and open source."
+  },
+  {
+    "id": "user_056",
+    "name": "Valentina Ramírez",
+    "avatar": "VR",
+    "color": "#071912",
+    "role": "Platform Engineer",
+    "bio": "machine learning pipelines enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_057",
+    "name": "Amelia Colombo",
+    "avatar": "AC",
+    "color": "#4B9010",
+    "role": "Open Source Maintainer",
+    "bio": "From generative AI to production — that's my jam."
+  },
+  {
+    "id": "user_058",
+    "name": "Marina Laurent",
+    "avatar": "ML",
+    "color": "#1704A5",
+    "role": "Frontend Engineer",
+    "bio": "Shipping MLOps workflows products since 2015."
+  },
+  {
+    "id": "user_059",
+    "name": "Daria Sato",
+    "avatar": "DS",
+    "color": "#6AB793",
+    "role": "Research Scientist",
+    "bio": "Leading AI agents initiatives at a Fortune 500."
+  },
+  {
+    "id": "user_060",
+    "name": "Andrea Rossi",
+    "avatar": "AR",
+    "color": "#A2A251",
+    "role": "Backend Engineer",
+    "bio": "Turning autonomous systems ideas into real products."
+  },
+  {
+    "id": "user_061",
+    "name": "Emma Simon",
+    "avatar": "ES",
+    "color": "#1119B7",
+    "role": "Cloud Architect",
+    "bio": "Automating everything with cloud infrastructure."
+  },
+  {
+    "id": "user_062",
+    "name": "Dakota De Luca",
+    "avatar": "DD",
+    "color": "#D5BEA4",
+    "role": "Platform Engineer",
+    "bio": "From generative AI to production — that's my jam."
+  },
+  {
+    "id": "user_063",
+    "name": "Mateo Osei",
+    "avatar": "MO",
+    "color": "#FAAD50",
+    "role": "AI Ethics Researcher",
+    "bio": "Helping teams adopt autonomous systems effectively."
+  },
+  {
+    "id": "user_064",
+    "name": "Alessandro Ortiz",
+    "avatar": "AO",
+    "color": "#2DC7A7",
+    "role": "Technical Writer",
+    "bio": "Breaking and fixing serverless architectures for a living."
+  },
+  {
+    "id": "user_065",
+    "name": "Nadia Chen",
+    "avatar": "NC",
+    "color": "#88B2C3",
+    "role": "Quantitative Developer",
+    "bio": "Leading machine learning pipelines initiatives at a Fortune 500."
+  },
+  {
+    "id": "user_066",
+    "name": "Sofia Ivanov",
+    "avatar": "SI",
+    "color": "#4D9DD4",
+    "role": "MLOps Engineer",
+    "bio": "Open source contributor. blockchain protocols advocate."
+  },
+  {
+    "id": "user_067",
+    "name": "Catalina de Vries",
+    "avatar": "CD",
+    "color": "#9B41CC",
+    "role": "Data Scientist",
+    "bio": "Obsessed with data platforms. Writing about it daily."
+  },
+  {
+    "id": "user_068",
+    "name": "Emiliano Simon",
+    "avatar": "ES",
+    "color": "#2C8CF9",
+    "role": "Research Scientist",
+    "bio": "Teaching NLP systems to the next generation of devs."
+  },
+  {
+    "id": "user_069",
+    "name": "Mei Volkov",
+    "avatar": "MV",
+    "color": "#6F1786",
+    "role": "Content Strategist",
+    "bio": "Turning API platforms ideas into real products."
+  },
+  {
+    "id": "user_070",
+    "name": "Alejandro Krause",
+    "avatar": "AK",
+    "color": "#E09928",
+    "role": "Backend Engineer",
+    "bio": "Building the future of fine-tuning workflows."
+  },
+  {
+    "id": "user_071",
+    "name": "Lucía Li",
+    "avatar": "LL",
+    "color": "#11B5A7",
+    "role": "Backend Engineer",
+    "bio": "Turning edge computing ideas into real products."
+  },
+  {
+    "id": "user_072",
+    "name": "Yasmin King",
+    "avatar": "YK",
+    "color": "#29190E",
+    "role": "MLOps Engineer",
+    "bio": "Researching novel approaches to AI-powered analytics."
+  },
+  {
+    "id": "user_073",
+    "name": "Hyun Smith",
+    "avatar": "HS",
+    "color": "#A5E32A",
+    "role": "ML Researcher",
+    "bio": "Passionate about API platforms and open source."
+  },
+  {
+    "id": "user_074",
+    "name": "Finley Nakamura",
+    "avatar": "FN",
+    "color": "#5DAE93",
+    "role": "Research Scientist",
+    "bio": "Building NLP systems at scale."
+  },
+  {
+    "id": "user_075",
+    "name": "Pooja Gómez",
+    "avatar": "PG",
+    "color": "#D42EA7",
+    "role": "ML Researcher",
+    "bio": "Breaking and fixing conversational AI for a living."
+  },
+  {
+    "id": "user_076",
+    "name": "Camila Girard",
+    "avatar": "CG",
+    "color": "#82DBF7",
+    "role": "Developer Advocate",
+    "bio": "Exploring the intersection of developer tools and developer experience."
+  },
+  {
+    "id": "user_077",
+    "name": "Jabari Mensah",
+    "avatar": "JM",
+    "color": "#24E40F",
+    "role": "Frontend Engineer",
+    "bio": "Turning blockchain protocols ideas into real products."
+  },
+  {
+    "id": "user_078",
+    "name": "Suki Smit",
+    "avatar": "SS",
+    "color": "#1A75D1",
+    "role": "Robotics Engineer",
+    "bio": "Building the future of API platforms."
+  },
+  {
+    "id": "user_079",
+    "name": "Hassan Bianchi",
+    "avatar": "HB",
+    "color": "#42ECBB",
+    "role": "Prompt Engineer",
+    "bio": "Building search systems at scale."
+  },
+  {
+    "id": "user_080",
+    "name": "Tariq Schneider",
+    "avatar": "TS",
+    "color": "#730442",
+    "role": "Quantitative Developer",
+    "bio": "Making MLOps workflows accessible to everyone."
+  },
+  {
+    "id": "user_081",
+    "name": "Emeka Torres",
+    "avatar": "ET",
+    "color": "#052131",
+    "role": "CTO",
+    "bio": "Building the future of prediction markets."
+  },
+  {
+    "id": "user_082",
+    "name": "Daria Díaz",
+    "avatar": "DD",
+    "color": "#509B44",
+    "role": "Technical Writer",
+    "bio": "Democratizing conversational AI one project at a time."
+  },
+  {
+    "id": "user_083",
+    "name": "Romain Lombardi",
+    "avatar": "RL",
+    "color": "#7FF8A8",
+    "role": "Research Scientist",
+    "bio": "Breaking and fixing NLP systems for a living."
+  },
+  {
+    "id": "user_084",
+    "name": "Camille Schäfer",
+    "avatar": "CS",
+    "color": "#193DF6",
+    "role": "AI Engineer",
+    "bio": "Working on search systems. Previously at Google."
+  },
+  {
+    "id": "user_085",
+    "name": "Takeshi White",
+    "avatar": "TW",
+    "color": "#C8E326",
+    "role": "Cloud Architect",
+    "bio": "Cloud Architect focused on cloud infrastructure."
+  },
+  {
+    "id": "user_086",
+    "name": "Paula Gauthier",
+    "avatar": "PG",
+    "color": "#E9CFFD",
+    "role": "AI Ethics Researcher",
+    "bio": "Passionate about real-time systems and open source."
+  },
+  {
+    "id": "user_087",
+    "name": "Omar Gauthier",
+    "avatar": "OG",
+    "color": "#983505",
+    "role": "Product Manager",
+    "bio": "conversational AI enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_088",
+    "name": "Jean Walker",
+    "avatar": "JW",
+    "color": "#47022C",
+    "role": "Robotics Engineer",
+    "bio": "Turning machine learning pipelines ideas into real products."
+  },
+  {
+    "id": "user_089",
+    "name": "Simone Ricci",
+    "avatar": "SR",
+    "color": "#E2ADC6",
+    "role": "Developer Advocate",
+    "bio": "Teaching MLOps workflows to the next generation of devs."
+  },
+  {
+    "id": "user_090",
+    "name": "Boris Thomas",
+    "avatar": "BT",
+    "color": "#B49061",
+    "role": "DevOps Engineer",
+    "bio": "Automating everything with NLP systems."
+  },
+  {
+    "id": "user_091",
+    "name": "Heike Simon",
+    "avatar": "HS",
+    "color": "#D4CCEF",
+    "role": "Founder",
+    "bio": "Breaking and fixing serverless architectures for a living."
+  },
+  {
+    "id": "user_092",
+    "name": "Sofia Colombo",
+    "avatar": "SC",
+    "color": "#A2E4D2",
+    "role": "Cloud Architect",
+    "bio": "Turning NLP systems ideas into real products."
+  },
+  {
+    "id": "user_093",
+    "name": "Cameron Robinson",
+    "avatar": "CR",
+    "color": "#5136AC",
+    "role": "ML Researcher",
+    "bio": "Working on blockchain protocols. Previously at Microsoft."
+  },
+  {
+    "id": "user_094",
+    "name": "Jean Basara",
+    "avatar": "JB",
+    "color": "#3E55DE",
+    "role": "Cloud Architect",
+    "bio": "From prediction markets to production — that's my jam."
+  },
+  {
+    "id": "user_095",
+    "name": "Theodore Martin",
+    "avatar": "TM",
+    "color": "#512A13",
+    "role": "NLP Engineer",
+    "bio": "Obsessed with developer tools. Writing about it daily."
+  },
+  {
+    "id": "user_096",
+    "name": "Diego Martinez",
+    "avatar": "DM",
+    "color": "#4FFDB2",
+    "role": "Engineering Manager",
+    "bio": "Democratizing machine learning pipelines one project at a time."
+  },
+  {
+    "id": "user_097",
+    "name": "Océane Bonnet",
+    "avatar": "OB",
+    "color": "#1420FB",
+    "role": "AI Engineer",
+    "bio": "Obsessed with AI agents. Writing about it daily."
+  },
+  {
+    "id": "user_098",
+    "name": "Morgan Nkosi",
+    "avatar": "MN",
+    "color": "#FCEE04",
+    "role": "Open Source Maintainer",
+    "bio": "Open Source Maintainer focused on developer tools."
+  },
+  {
+    "id": "user_099",
+    "name": "Yasmin Kumar",
+    "avatar": "YK",
+    "color": "#06D0A8",
+    "role": "Computer Vision Engineer",
+    "bio": "Computer Vision Engineer focused on data platforms."
+  },
+  {
+    "id": "user_100",
+    "name": "Alex Gupta",
+    "avatar": "AG",
+    "color": "#FFA296",
+    "role": "Robotics Engineer",
+    "bio": "Automating everything with real-time systems."
+  },
+  {
+    "id": "user_101",
+    "name": "Kenji Flores",
+    "avatar": "KF",
+    "color": "#4D9D6F",
+    "role": "Full Stack Developer",
+    "bio": "Breaking and fixing recommendation engines for a living."
+  },
+  {
+    "id": "user_102",
+    "name": "Henry Ricci",
+    "avatar": "HR",
+    "color": "#A6A880",
+    "role": "Security Researcher",
+    "bio": "Passionate about cloud infrastructure and open source."
+  },
+  {
+    "id": "user_103",
+    "name": "Benjamin Jones",
+    "avatar": "BJ",
+    "color": "#A85F48",
+    "role": "AI Ethics Researcher",
+    "bio": "Building knowledge graphs at scale."
+  },
+  {
+    "id": "user_104",
+    "name": "Soo Clark",
+    "avatar": "SC",
+    "color": "#604FA9",
+    "role": "Founder",
+    "bio": "Shipping AI agents products since 2020."
+  },
+  {
+    "id": "user_105",
+    "name": "Catalina Moretti",
+    "avatar": "CM",
+    "color": "#B2703C",
+    "role": "ML Researcher",
+    "bio": "Democratizing recommendation engines one project at a time."
+  },
+  {
+    "id": "user_106",
+    "name": "Ella Dupont",
+    "avatar": "ED",
+    "color": "#3120F0",
+    "role": "Growth Marketer",
+    "bio": "Automating everything with real-time systems."
+  },
+  {
+    "id": "user_107",
+    "name": "Aurora Dupont",
+    "avatar": "AD",
+    "color": "#C6C4D7",
+    "role": "Frontend Engineer",
+    "bio": "Obsessed with computer vision. Writing about it daily."
+  },
+  {
+    "id": "user_108",
+    "name": "Andrés Gómez",
+    "avatar": "AG",
+    "color": "#C8F6FA",
+    "role": "Computer Vision Engineer",
+    "bio": "Democratizing generative AI one project at a time."
+  },
+  {
+    "id": "user_109",
+    "name": "Andrés Morel",
+    "avatar": "AM",
+    "color": "#201310",
+    "role": "Product Manager",
+    "bio": "Teaching API platforms to the next generation of devs."
+  },
+  {
+    "id": "user_110",
+    "name": "Daniel Esposito",
+    "avatar": "DE",
+    "color": "#5D8648",
+    "role": "NLP Engineer",
+    "bio": "Shipping generative AI products since 2021."
+  },
+  {
+    "id": "user_111",
+    "name": "Bram Diallo",
+    "avatar": "BD",
+    "color": "#12DAEE",
+    "role": "ML Researcher",
+    "bio": "Automating everything with AI safety."
+  },
+  {
+    "id": "user_112",
+    "name": "Pierre Bakker",
+    "avatar": "PB",
+    "color": "#28C293",
+    "role": "DevOps Engineer",
+    "bio": "Building data platforms at scale."
+  },
+  {
+    "id": "user_113",
+    "name": "Kai Thomas",
+    "avatar": "KT",
+    "color": "#6D04A5",
+    "role": "Open Source Maintainer",
+    "bio": "Building the future of computer vision."
+  },
+  {
+    "id": "user_114",
+    "name": "Pieter Choi",
+    "avatar": "PC",
+    "color": "#A5643A",
+    "role": "Computer Vision Engineer",
+    "bio": "Researching novel approaches to recommendation engines."
+  },
+  {
+    "id": "user_115",
+    "name": "Hassan Richter",
+    "avatar": "HR",
+    "color": "#388B33",
+    "role": "Frontend Engineer",
+    "bio": "From cloud infrastructure to production — that's my jam."
+  },
+  {
+    "id": "user_116",
+    "name": "Lucía Wang",
+    "avatar": "LW",
+    "color": "#3AA858",
+    "role": "Technical Writer",
+    "bio": "Teaching serverless architectures to the next generation of devs."
+  },
+  {
+    "id": "user_117",
+    "name": "Maxime Das",
+    "avatar": "MD",
+    "color": "#6A2F81",
+    "role": "Content Strategist",
+    "bio": "Passionate about conversational AI and open source."
+  },
+  {
+    "id": "user_118",
+    "name": "Kevin Weber",
+    "avatar": "KW",
+    "color": "#C900A3",
+    "role": "Product Manager",
+    "bio": "Obsessed with fine-tuning workflows. Writing about it daily."
+  },
+  {
+    "id": "user_119",
+    "name": "Natasha Bakker",
+    "avatar": "NB",
+    "color": "#9EE0C5",
+    "role": "AI Ethics Researcher",
+    "bio": "Obsessed with distributed systems. Writing about it daily."
+  },
+  {
+    "id": "user_120",
+    "name": "Yulia Ferrari",
+    "avatar": "YF",
+    "color": "#E7CC86",
+    "role": "Content Strategist",
+    "bio": "Breaking and fixing search systems for a living."
+  },
+  {
+    "id": "user_121",
+    "name": "Gabriela Torres",
+    "avatar": "GT",
+    "color": "#F12932",
+    "role": "Solutions Architect",
+    "bio": "Automating everything with NLP systems."
+  },
+  {
+    "id": "user_122",
+    "name": "Viktor Herrera",
+    "avatar": "VH",
+    "color": "#81D7C2",
+    "role": "NLP Engineer",
+    "bio": "NLP Engineer focused on developer tools."
+  },
+  {
+    "id": "user_123",
+    "name": "Nikolai Fournier",
+    "avatar": "NF",
+    "color": "#082F22",
+    "role": "Security Researcher",
+    "bio": "Building the future of AI agents."
+  },
+  {
+    "id": "user_124",
+    "name": "María Marino",
+    "avatar": "MM",
+    "color": "#E46702",
+    "role": "Product Manager",
+    "bio": "Passionate about serverless architectures and open source."
+  },
+  {
+    "id": "user_125",
+    "name": "Wei Becker",
+    "avatar": "WB",
+    "color": "#4BBC39",
+    "role": "CTO",
+    "bio": "CTO focused on real-time systems."
+  },
+  {
+    "id": "user_126",
+    "name": "Maxime Kobayashi",
+    "avatar": "MK",
+    "color": "#AB6F36",
+    "role": "Product Manager",
+    "bio": "Turning computer vision ideas into real products."
+  },
+  {
+    "id": "user_127",
+    "name": "Luca Ferrari",
+    "avatar": "LF",
+    "color": "#CF4D6A",
+    "role": "Research Scientist",
+    "bio": "Research Scientist focused on recommendation engines."
+  },
+  {
+    "id": "user_128",
+    "name": "Jürgen Allen",
+    "avatar": "JA",
+    "color": "#3F6996",
+    "role": "Computer Vision Engineer",
+    "bio": "Passionate about MLOps workflows and open source."
+  },
+  {
+    "id": "user_129",
+    "name": "Chiara Wilson",
+    "avatar": "CW",
+    "color": "#F01F59",
+    "role": "Startup Advisor",
+    "bio": "Helping teams adopt distributed systems effectively."
+  },
+  {
+    "id": "user_130",
+    "name": "Ekaterina Haddad",
+    "avatar": "EH",
+    "color": "#828296",
+    "role": "Product Manager",
+    "bio": "Building edge computing at scale."
+  },
+  {
+    "id": "user_131",
+    "name": "Hans Weber",
+    "avatar": "HW",
+    "color": "#AE004C",
+    "role": "AI Ethics Researcher",
+    "bio": "Helping teams adopt developer tools effectively."
+  },
+  {
+    "id": "user_132",
+    "name": "Ananya Nkosi",
+    "avatar": "AN",
+    "color": "#86976A",
+    "role": "Platform Engineer",
+    "bio": "Democratizing API platforms one project at a time."
+  },
+  {
+    "id": "user_133",
+    "name": "William Rodriguez",
+    "avatar": "WR",
+    "color": "#94B4A3",
+    "role": "Solutions Architect",
+    "bio": "Breaking and fixing cloud infrastructure for a living."
+  },
+  {
+    "id": "user_134",
+    "name": "Yasmin Weber",
+    "avatar": "YW",
+    "color": "#B83D4E",
+    "role": "Startup Advisor",
+    "bio": "Passionate about cloud infrastructure and open source."
+  },
+  {
+    "id": "user_135",
+    "name": "Min Nakamura",
+    "avatar": "MN",
+    "color": "#9B0282",
+    "role": "AI Ethics Researcher",
+    "bio": "Teaching multi-agent systems to the next generation of devs."
+  },
+  {
+    "id": "user_136",
+    "name": "Marie Conti",
+    "avatar": "MC",
+    "color": "#FECC57",
+    "role": "ML Researcher",
+    "bio": "Obsessed with real-time systems. Writing about it daily."
+  },
+  {
+    "id": "user_137",
+    "name": "Ella Choi",
+    "avatar": "EC",
+    "color": "#A994F4",
+    "role": "Blockchain Developer",
+    "bio": "Building developer tools at scale."
+  },
+  {
+    "id": "user_138",
+    "name": "Daan Schäfer",
+    "avatar": "DS",
+    "color": "#41DA9F",
+    "role": "Computer Vision Engineer",
+    "bio": "Researching novel approaches to real-time systems."
+  },
+  {
+    "id": "user_139",
+    "name": "Daria Vargas",
+    "avatar": "DV",
+    "color": "#A3B397",
+    "role": "AI Ethics Researcher",
+    "bio": "Leading data platforms initiatives at a Fortune 500."
+  },
+  {
+    "id": "user_140",
+    "name": "Chloé Schneider",
+    "avatar": "CS",
+    "color": "#E10643",
+    "role": "Quantitative Developer",
+    "bio": "Exploring the intersection of AI-powered analytics and user research."
+  },
+  {
+    "id": "user_141",
+    "name": "Fatima Rojas",
+    "avatar": "FR",
+    "color": "#DC3E6D",
+    "role": "Product Manager",
+    "bio": "Exploring the intersection of MLOps workflows and user research."
+  },
+  {
+    "id": "user_142",
+    "name": "Quinn Garcia",
+    "avatar": "QG",
+    "color": "#751B48",
+    "role": "Engineering Manager",
+    "bio": "Obsessed with developer tools. Writing about it daily."
+  },
+  {
+    "id": "user_143",
+    "name": "James Jones",
+    "avatar": "JJ",
+    "color": "#F5EC7B",
+    "role": "Product Manager",
+    "bio": "Product Manager focused on knowledge graphs."
+  },
+  {
+    "id": "user_144",
+    "name": "Sabine Bianchi",
+    "avatar": "SB",
+    "color": "#906FB5",
+    "role": "DevOps Engineer",
+    "bio": "Shipping recommendation engines products since 2023."
+  },
+  {
+    "id": "user_145",
+    "name": "Simone Martinez",
+    "avatar": "SM",
+    "color": "#A82187",
+    "role": "Computer Vision Engineer",
+    "bio": "Building the future of search systems."
+  },
+  {
+    "id": "user_146",
+    "name": "Yasmin Braun",
+    "avatar": "YB",
+    "color": "#75B13A",
+    "role": "DevOps Engineer",
+    "bio": "DevOps Engineer focused on generative AI."
+  },
+  {
+    "id": "user_147",
+    "name": "Clément Wilson",
+    "avatar": "CW",
+    "color": "#F610B2",
+    "role": "Platform Engineer",
+    "bio": "Researching novel approaches to developer tools."
+  },
+  {
+    "id": "user_148",
+    "name": "Inès Novikov",
+    "avatar": "IN",
+    "color": "#726039",
+    "role": "Computer Vision Engineer",
+    "bio": "Breaking and fixing NLP systems for a living."
+  },
+  {
+    "id": "user_149",
+    "name": "William Castillo",
+    "avatar": "WC",
+    "color": "#C6DE3B",
+    "role": "AI Ethics Researcher",
+    "bio": "Building the future of conversational AI."
+  },
+  {
+    "id": "user_150",
+    "name": "Lily Ferrari",
+    "avatar": "LF",
+    "color": "#67B02E",
+    "role": "DevOps Engineer",
+    "bio": "Obsessed with computer vision. Writing about it daily."
+  },
+  {
+    "id": "user_151",
+    "name": "Sebastian Laurent",
+    "avatar": "SL",
+    "color": "#C084E6",
+    "role": "CTO",
+    "bio": "CTO focused on multi-agent systems."
+  },
+  {
+    "id": "user_152",
+    "name": "Wei Rousseau",
+    "avatar": "WR",
+    "color": "#837476",
+    "role": "Full Stack Developer",
+    "bio": "Turning developer tools ideas into real products."
+  },
+  {
+    "id": "user_153",
+    "name": "Carlos Fournier",
+    "avatar": "CF",
+    "color": "#C5BE5D",
+    "role": "Startup Advisor",
+    "bio": "Turning generative AI ideas into real products."
+  },
+  {
+    "id": "user_154",
+    "name": "Sebastian Mendoza",
+    "avatar": "SM",
+    "color": "#C540C6",
+    "role": "Robotics Engineer",
+    "bio": "Automating everything with multi-agent systems."
+  },
+  {
+    "id": "user_155",
+    "name": "Emma Lee",
+    "avatar": "EL",
+    "color": "#E88E45",
+    "role": "Robotics Engineer",
+    "bio": "Researching novel approaches to generative AI."
+  },
+  {
+    "id": "user_156",
+    "name": "Viktor Krause",
+    "avatar": "VK",
+    "color": "#E855E2",
+    "role": "Frontend Engineer",
+    "bio": "Teaching serverless architectures to the next generation of devs."
+  },
+  {
+    "id": "user_157",
+    "name": "Nia Fischer",
+    "avatar": "NF",
+    "color": "#713013",
+    "role": "Growth Marketer",
+    "bio": "Passionate about computer vision and open source."
+  },
+  {
+    "id": "user_158",
+    "name": "Sebastián Rodriguez",
+    "avatar": "SR",
+    "color": "#DC4B20",
+    "role": "Quantitative Developer",
+    "bio": "Making conversational AI accessible to everyone."
+  },
+  {
+    "id": "user_159",
+    "name": "Arjun Kumar",
+    "avatar": "AK",
+    "color": "#E0E2CA",
+    "role": "CTO",
+    "bio": "Exploring the intersection of LLM applications and healthcare."
+  },
+  {
+    "id": "user_160",
+    "name": "Riccardo González",
+    "avatar": "RG",
+    "color": "#017E83",
+    "role": "Robotics Engineer",
+    "bio": "Breaking and fixing AI safety for a living."
+  },
+  {
+    "id": "user_161",
+    "name": "Casey Park",
+    "avatar": "CP",
+    "color": "#8C9B7F",
+    "role": "ML Researcher",
+    "bio": "Building LLM applications at scale."
+  },
+  {
+    "id": "user_162",
+    "name": "Daniel Yamamoto",
+    "avatar": "DY",
+    "color": "#F8EA93",
+    "role": "Quantitative Developer",
+    "bio": "Helping teams adopt generative AI effectively."
+  },
+  {
+    "id": "user_163",
+    "name": "Diego Thomas",
+    "avatar": "DT",
+    "color": "#7A446B",
+    "role": "Data Scientist",
+    "bio": "Passionate about autonomous systems and open source."
+  },
+  {
+    "id": "user_164",
+    "name": "Camille Müller",
+    "avatar": "CM",
+    "color": "#E7EB59",
+    "role": "Frontend Engineer",
+    "bio": "Open source contributor. developer tools advocate."
+  },
+  {
+    "id": "user_165",
+    "name": "Manon Martinez",
+    "avatar": "MM",
+    "color": "#206C85",
+    "role": "Growth Marketer",
+    "bio": "Teaching conversational AI to the next generation of devs."
+  },
+  {
+    "id": "user_166",
+    "name": "Chloé Moore",
+    "avatar": "CM",
+    "color": "#C987AC",
+    "role": "Startup Advisor",
+    "bio": "machine learning pipelines enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_167",
+    "name": "Raphaël Jansen",
+    "avatar": "RJ",
+    "color": "#DB0DF6",
+    "role": "MLOps Engineer",
+    "bio": "MLOps Engineer focused on machine learning pipelines."
+  },
+  {
+    "id": "user_168",
+    "name": "Aisha Allen",
+    "avatar": "AA",
+    "color": "#83D822",
+    "role": "Robotics Engineer",
+    "bio": "Obsessed with NLP systems. Writing about it daily."
+  },
+  {
+    "id": "user_169",
+    "name": "Karim Kim",
+    "avatar": "KK",
+    "color": "#E5958F",
+    "role": "Backend Engineer",
+    "bio": "Building developer tools at scale."
+  },
+  {
+    "id": "user_170",
+    "name": "Avery Kim",
+    "avatar": "AK",
+    "color": "#5F9270",
+    "role": "Open Source Maintainer",
+    "bio": "Researching novel approaches to generative AI."
+  },
+  {
+    "id": "user_171",
+    "name": "Sophie Li",
+    "avatar": "SL",
+    "color": "#953000",
+    "role": "Frontend Engineer",
+    "bio": "Building the future of fine-tuning workflows."
+  },
+  {
+    "id": "user_172",
+    "name": "Océane Robinson",
+    "avatar": "OR",
+    "color": "#09B611",
+    "role": "Computer Vision Engineer",
+    "bio": "Teaching AI-powered analytics to the next generation of devs."
+  },
+  {
+    "id": "user_173",
+    "name": "Nisha Conti",
+    "avatar": "NC",
+    "color": "#9D04CE",
+    "role": "Full Stack Developer",
+    "bio": "Exploring the intersection of MLOps workflows and product design."
+  },
+  {
+    "id": "user_174",
+    "name": "Simone Richter",
+    "avatar": "SR",
+    "color": "#4BFC6A",
+    "role": "Backend Engineer",
+    "bio": "Helping teams adopt distributed systems effectively."
+  },
+  {
+    "id": "user_175",
+    "name": "Leila White",
+    "avatar": "LW",
+    "color": "#797BD8",
+    "role": "Platform Engineer",
+    "bio": "Passionate about machine learning pipelines and open source."
+  },
+  {
+    "id": "user_176",
+    "name": "Wei Mensah",
+    "avatar": "WM",
+    "color": "#B113CA",
+    "role": "Frontend Engineer",
+    "bio": "Researching novel approaches to AI-powered analytics."
+  },
+  {
+    "id": "user_177",
+    "name": "Andrew Novikov",
+    "avatar": "AN",
+    "color": "#A73069",
+    "role": "Startup Advisor",
+    "bio": "Open source contributor. MLOps workflows advocate."
+  },
+  {
+    "id": "user_178",
+    "name": "Raj King",
+    "avatar": "RK",
+    "color": "#E148B4",
+    "role": "Quantitative Developer",
+    "bio": "Automating everything with AI agents."
+  },
+  {
+    "id": "user_179",
+    "name": "Henry Jones",
+    "avatar": "HJ",
+    "color": "#100248",
+    "role": "AI Ethics Researcher",
+    "bio": "Teaching AI safety to the next generation of devs."
+  },
+  {
+    "id": "user_180",
+    "name": "Benjamin Bakker",
+    "avatar": "BB",
+    "color": "#C61C1A",
+    "role": "Prompt Engineer",
+    "bio": "Passionate about prediction markets and open source."
+  },
+  {
+    "id": "user_181",
+    "name": "Sebastian Al-Farsi",
+    "avatar": "SA",
+    "color": "#064278",
+    "role": "Content Strategist",
+    "bio": "Making data platforms accessible to everyone."
+  },
+  {
+    "id": "user_182",
+    "name": "Suki Thompson",
+    "avatar": "ST",
+    "color": "#78713C",
+    "role": "Computer Vision Engineer",
+    "bio": "Building the future of developer tools."
+  },
+  {
+    "id": "user_183",
+    "name": "Sarah Thomas",
+    "avatar": "ST",
+    "color": "#9FB145",
+    "role": "Prompt Engineer",
+    "bio": "prediction markets enthusiast. Coffee addict."
+  },
+  {
+    "id": "user_184",
+    "name": "Andrew Singh",
+    "avatar": "AS",
+    "color": "#906B83",
+    "role": "CTO",
+    "bio": "Making data platforms accessible to everyone."
+  },
+  {
+    "id": "user_185",
+    "name": "Emiliano González",
+    "avatar": "EG",
+    "color": "#0B1D9F",
+    "role": "Cloud Architect",
+    "bio": "Researching novel approaches to autonomous systems."
+  },
+  {
+    "id": "user_186",
+    "name": "Emily Volkov",
+    "avatar": "EV",
+    "color": "#3BA495",
+    "role": "Engineering Manager",
+    "bio": "Open source contributor. conversational AI advocate."
+  },
+  {
+    "id": "user_187",
+    "name": "Jordan Watanabe",
+    "avatar": "JW",
+    "color": "#321692",
+    "role": "Growth Marketer",
+    "bio": "Teaching serverless architectures to the next generation of devs."
+  },
+  {
+    "id": "user_188",
+    "name": "Pavel Hill",
+    "avatar": "PH",
+    "color": "#2AD11E",
+    "role": "Full Stack Developer",
+    "bio": "Automating everything with NLP systems."
+  },
+  {
+    "id": "user_189",
+    "name": "Wouter King",
+    "avatar": "WK",
+    "color": "#B982DA",
+    "role": "Robotics Engineer",
+    "bio": "Democratizing autonomous systems one project at a time."
+  },
+  {
+    "id": "user_190",
+    "name": "Min Okafor",
+    "avatar": "MO",
+    "color": "#35E44F",
+    "role": "Solutions Architect",
+    "bio": "Automating everything with machine learning pipelines."
+  },
+  {
+    "id": "user_191",
+    "name": "Sebastian Chen",
+    "avatar": "SC",
+    "color": "#70441D",
+    "role": "Computer Vision Engineer",
+    "bio": "Building the future of AI-powered analytics."
+  },
+  {
+    "id": "user_192",
+    "name": "Tariq Jones",
+    "avatar": "TJ",
+    "color": "#F43F34",
+    "role": "Open Source Maintainer",
+    "bio": "Breaking and fixing MLOps workflows for a living."
+  },
+  {
+    "id": "user_193",
+    "name": "Ruben Flores",
+    "avatar": "RF",
+    "color": "#1458C1",
+    "role": "Product Manager",
+    "bio": "Working on LLM applications. Previously at Stripe."
+  },
+  {
+    "id": "user_194",
+    "name": "Natasha Martin",
+    "avatar": "NM",
+    "color": "#897A3F",
+    "role": "Research Scientist",
+    "bio": "Building LLM applications at scale."
+  },
+  {
+    "id": "user_195",
+    "name": "Chloe de Vries",
+    "avatar": "CD",
+    "color": "#69EAD3",
+    "role": "Content Strategist",
+    "bio": "Turning AI-powered analytics ideas into real products."
+  },
+  {
+    "id": "user_196",
+    "name": "Camille Ramírez",
+    "avatar": "CR",
+    "color": "#A10AD1",
+    "role": "Platform Engineer",
+    "bio": "Passionate about search systems and open source."
+  },
+  {
+    "id": "user_197",
+    "name": "Nia Chen",
+    "avatar": "NC",
+    "color": "#71E2A8",
+    "role": "DevOps Engineer",
+    "bio": "Passionate about AI-powered analytics and open source."
+  },
+  {
+    "id": "user_198",
+    "name": "Quinn Sharma",
+    "avatar": "QS",
+    "color": "#0707F2",
+    "role": "Backend Engineer",
+    "bio": "Working on knowledge graphs. Previously at Netflix."
+  },
+  {
+    "id": "user_199",
+    "name": "Alejandro Bonnet",
+    "avatar": "AB",
+    "color": "#1BC5C6",
+    "role": "AI Engineer",
+    "bio": "Shipping edge computing products since 2021."
+  },
+  {
+    "id": "user_200",
+    "name": "Yuki Walker",
+    "avatar": "YW",
+    "color": "#BC347C",
+    "role": "Computer Vision Engineer",
+    "bio": "Building the future of edge computing."
+  }
+]

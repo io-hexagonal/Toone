@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Galeria",
+    "privacy": "Privacidad",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Descargar en la",
+    "appStore": "App Store",
+    "downloadFor": "Descargar para",
+    "macOS": "macOS",
+    "requirements": "Requisitos",
+    "req1": "macOS 14.0 (Sonoma) o posterior",
+    "req2": "Cuenta de Anthropic u OpenAI",
+    "soon": "Pronto"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Leer mas",
+    "publishedOn": "Publicado el",
+    "by": "por",
+    "tags": "Etiquetas",
+    "relatedPosts": "Publicaciones relacionadas",
+    "comments": "Comentarios",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Pagina {page} de {total}",
+    "noPosts": "Aun no hay publicaciones.",
+    "downloadCTA": "Crea equipos de IA autonomos con Toone",
+    "downloadCTADescription": "Descarga Toone para macOS y comienza a construir equipos de IA que manejen tu trabajo.",
+    "categories": {
+      "all": "Todo",
+      "ai-models": "IA y LLMs",
+      "development": "Desarrollo",
+      "business": "Negocios y Marketing",
+      "data-finance": "Datos y Finanzas",
+      "guides": "Guías y Tutoriales",
+      "tools": "Herramientas y Proyectos"
+    }
+  },
+  "footer": {
+    "terms": "Terminos",
+    "privacy": "Privacidad"
+  },
+  "meta": {
+    "siteTitle": "Toone — Equipos de IA que gestionan tu trabajo",
+    "siteDescription": "Crea equipos de IA autonomos que gestionan contenido, crecimiento, ingenieria y mas."
+  }
+}

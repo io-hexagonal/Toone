@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Galerie",
+    "privacy": "Privacy",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Download in de",
+    "appStore": "App Store",
+    "downloadFor": "Download voor",
+    "macOS": "macOS",
+    "requirements": "Vereisten",
+    "req1": "macOS 14.0 (Sonoma) of nieuwer",
+    "req2": "Anthropic- of OpenAI-account",
+    "soon": "Binnenkort"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Lees meer",
+    "publishedOn": "Gepubliceerd op",
+    "by": "door",
+    "tags": "Tags",
+    "relatedPosts": "Gerelateerde berichten",
+    "comments": "Reacties",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "pageOf": "Pagina {page} van {total}",
+    "noPosts": "Nog geen berichten.",
+    "downloadCTA": "Bouw autonome AI-teams met Toone",
+    "downloadCTADescription": "Download Toone voor macOS en bouw AI-teams die je werk beheren.",
+    "categories": {
+      "all": "Alles",
+      "ai-models": "AI en LLMs",
+      "development": "Ontwikkeling",
+      "business": "Business en Marketing",
+      "data-finance": "Data en Financiën",
+      "guides": "Gidsen en Tutorials",
+      "tools": "Tools en Projecten"
+    }
+  },
+  "footer": {
+    "terms": "Voorwaarden",
+    "privacy": "Privacy"
+  },
+  "meta": {
+    "siteTitle": "Toone — AI-teams die je werk beheren",
+    "siteDescription": "Bouw autonome AI-teams die content, groei, engineering en meer beheren."
+  }
+}

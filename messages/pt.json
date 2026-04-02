@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Galeria",
+    "privacy": "Privacidade",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Baixar na",
+    "appStore": "App Store",
+    "downloadFor": "Baixar para",
+    "macOS": "macOS",
+    "requirements": "Requisitos",
+    "req1": "macOS 14.0 (Sonoma) ou superior",
+    "req2": "Conta Anthropic ou OpenAI",
+    "soon": "Em breve"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Leia mais",
+    "publishedOn": "Publicado em",
+    "by": "por",
+    "tags": "Tags",
+    "relatedPosts": "Posts relacionados",
+    "comments": "Comentarios",
+    "previous": "Anterior",
+    "next": "Proximo",
+    "pageOf": "Pagina {page} de {total}",
+    "noPosts": "Nenhum post ainda.",
+    "downloadCTA": "Crie equipes de IA autonomas com o Toone",
+    "downloadCTADescription": "Baixe o Toone para macOS e comece a montar equipes de IA que cuidam do seu trabalho.",
+    "categories": {
+      "all": "Tudo",
+      "ai-models": "IA e LLMs",
+      "development": "Desenvolvimento",
+      "business": "Negócios e Marketing",
+      "data-finance": "Dados e Finanças",
+      "guides": "Guias e Tutoriais",
+      "tools": "Ferramentas e Projetos"
+    }
+  },
+  "footer": {
+    "terms": "Termos",
+    "privacy": "Privacidade"
+  },
+  "meta": {
+    "siteTitle": "Toone — Equipes de IA que fazem seu trabalho",
+    "siteDescription": "Crie equipes de IA autonomas que cuidam de conteudo, crescimento, engenharia e mais."
+  }
+}

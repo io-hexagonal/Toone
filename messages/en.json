@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "polymarket": "Polymarket",
+    "showcase": "Showcase",
+    "privacy": "Privacy",
+    "blog": "AI Digest",
+    "github": "GitHub"
+  },
+  "landing": {
+    "downloadOn": "Download on the",
+    "appStore": "App Store",
+    "downloadFor": "Download for",
+    "macOS": "macOS",
+    "requirements": "Requirements",
+    "req1": "macOS 14.0 (Sonoma) or later",
+    "req2": "Anthropic or OpenAI account",
+    "soon": "Soon"
+  },
+  "blog": {
+    "blog": "AI Digest",
+    "readMore": "Read more",
+    "publishedOn": "Published on",
+    "by": "by",
+    "tags": "Tags",
+    "relatedPosts": "Related Posts",
+    "comments": "Comments",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "noPosts": "No posts yet.",
+    "downloadCTA": "Build autonomous AI teams with Toone",
+    "downloadCTADescription": "Download Toone for macOS and start building AI teams that handle your work.",
+    "categories": {
+      "all": "All",
+      "ai-models": "AI & LLMs",
+      "development": "Development",
+      "business": "Business & Marketing",
+      "data-finance": "Data & Finance",
+      "guides": "Guides & Tutorials",
+      "tools": "Tools & Projects"
+    }
+  },
+  "footer": {
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "meta": {
+    "siteTitle": "Toone — AI Teams That Run Your Work",
+    "siteDescription": "Build autonomous AI teams that handle content, growth, engineering and more."
+  }
+}
