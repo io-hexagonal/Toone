@@ -49,13 +49,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // Showcase pages
+  // Showcase / Media & Marketing pages
   for (const locale of locales) {
     entries.push({
       url: `${baseUrl}/${locale}/showcase`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
+      changeFrequency: "weekly",
+      priority: 0.8,
     });
   }
 

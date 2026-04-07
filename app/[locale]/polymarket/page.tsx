@@ -10,9 +10,9 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Toone x Polymarket",
+  title: "Polymarket Integration — Join Waiting List",
   description:
-    "World's first crowd prediction intelligence — a distributed agent network that lets every user's signal detection become everyone's edge.",
+    "World's first crowd prediction intelligence — a distributed agent network that lets every user's signal detection become everyone's edge. Join the waiting list.",
 };
 
 export default async function PolymarketPage({ params }: Props) {

@@ -41,9 +41,9 @@ const SLIDES = [
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Showcase",
+    title: "Media & Marketing — Showcase",
     description:
-      "See what Toone can do — agent teams, browser integrations, meeting capture, and mobile companion.",
+      "See Toone in action — AI agent teams for content creation, social strategy, analytics, browser integrations, and meeting capture. Templates for professionals.",
   };
 }
 
