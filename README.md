@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/typography/toone-dots.svg" width="360" alt="Toone" />
+  <img src="assets/typography/toone-typography@2x.png" width="360" alt="Toone" />
 </p>
 
 <p align="center">
-  <strong>AI teams that run your work</strong>
+  <strong>Your new way to interact with Agent teams.</strong>
 </p>
 
 <p align="center">
@@ -14,26 +14,16 @@
 
 ---
 
-Toone gives you a team of AI agents — organized into departments, assigned to projects, and running routines on your behalf.
-Instead of managing tasks yourself, you define the structure. Toone handles everything else.
-Either choose a template or craft your own project with custom rules.
+Toone lets you build and run teams of AI agents on your Mac — organized into departments, each with defined roles, routines, and context. You bring your own AI account. Toone handles the rest.
 
+<!-- hero: outline animation screenshot or GIF -->
 
 ## Desktop
 
-Start here. Toone Desktop is where you set up your org, chat with agents, and get things done. *Actual screenshots in Zen Mode (- commentary)
+Start here. Toone Desktop is where you set up your org, chat with agents, and get things done.
 
 <p align="center">
-  <img src="assets/screenshots/desktop/desktop---sample-i---agent-thread.jpg" width="720" alt="Toone Desktop — Agent Conversations" />
-</p>
-
-<p align="center">
-  <img src="assets/screenshots/desktop/desktop---sample-i---agent-template-thread-media---hook-analysis.jpg" width="360" alt="Toone Desktop — Content Analysis" />
-  <img src="assets/screenshots/desktop/desktop---sample-i---browser-integrations.jpg" width="360" alt="Toone Desktop — Browser Integrations" />
-</p>
-
-<p align="center">
-  <img src="assets/screenshots/desktop/desktop---sample-i---recording-agent-thread.jpg" width="720" alt="Toone Desktop — Meeting Capture" />
+  <img src="assets/screenshots/desktop-chat.png" width="720" alt="Toone Desktop" />
 </p>
 
 - **Agents as a team** — Departments with specialized agents that route tasks to each other and hand off context
@@ -43,7 +33,7 @@ Start here. Toone Desktop is where you set up your org, chat with agents, and ge
 - **Meeting capture** — Dual audio (mic + system), live transcription, straight into your chat
 - **Planning** — Agents break work into steps, track progress, hand off between stages
 - **Layout & hotkeys** — Customizable panel layout, global hotkeys, and menu bar integration
-- **Zen mode** — Strip it down to just the chat and a relaxing video as background when you need to focus
+- **Zen mode** — Strip it down to just the chat when you need to focus
 
 ### Requirements
 
@@ -59,7 +49,11 @@ Download the latest build from [Releases](https://github.com/io-hexagonal/Toone/
 Once your desktop is running, grab [Toone Mobile](https://github.com/io-hexagonal/toone-mobile) to take your agents with you.
 
 <p align="center">
-  <img src="assets/screenshots/desktop/desktop---sample-i---mobile.jpg" width="720" alt="Toone Mobile — Chat, Agents, and Project Explorer" />
+  <img src="assets/screenshots/mobile-chat.png" width="200" alt="Toone Mobile — Chat" />
+  &nbsp;&nbsp;
+  <img src="assets/screenshots/mobile-agents.png" width="200" alt="Toone Mobile — Agents" />
+  &nbsp;&nbsp;
+  <img src="assets/screenshots/mobile-explorer.png" width="200" alt="Toone Mobile — Project Explorer" />
 </p>
 
 - **Chat** — Full conversation with any agent, markdown and code blocks included
@@ -91,8 +85,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-- **Open source content** (assets, animations, docs) — [MIT](LICENSE)
-- **Toone application binary** — [Proprietary EULA](LICENSE-BINARY)
+[MIT](LICENSE)
 
 ---
 

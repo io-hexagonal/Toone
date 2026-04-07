@@ -3,5 +3,3 @@
 *.swo
 node_modules/
 .env
-.vercel
-.next/
