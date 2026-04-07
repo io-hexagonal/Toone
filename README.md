@@ -1,9 +1,11 @@
 <p align="center">
-  <img src="assets/typography/toone-typography@2x.png" width="360" alt="Toone" />
+  <img src="assets/profiles/toone-icon-dark-512.png" width="64" alt="Toone" />
+  &nbsp;&nbsp;
+  <img src="assets/typography/toone-dots.svg" width="280" alt="Toone" />
 </p>
 
 <p align="center">
-  <strong>Your new way to interact with Agent teams.</strong>
+  <strong>AI teams that run your work.</strong>
 </p>
 
 <p align="center">
@@ -16,15 +18,13 @@
 
 Toone lets you build and run teams of AI agents on your Mac — organized into departments, each with defined roles, routines, and context. You bring your own AI account. Toone handles the rest.
 
-<!-- hero: outline animation screenshot or GIF -->
+<p align="center">
+  <img src="assets/screenshots/desktop/desktop---sample-i---agent-template-thread-media---hook-analysis.jpg" width="720" alt="Toone Desktop" />
+</p>
 
 ## Desktop
 
 Start here. Toone Desktop is where you set up your org, chat with agents, and get things done.
-
-<p align="center">
-  <img src="assets/screenshots/desktop-chat.png" width="720" alt="Toone Desktop" />
-</p>
 
 - **Agents as a team** — Departments with specialized agents that route tasks to each other and hand off context
 - **Templates** — Pick a starting org or build your own from scratch
