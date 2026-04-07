@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: locale === "en" ? "en_US" : locale,
       images: [
         {
-          url: "https://trytoone.com/assets/screenshots/desktop-chat.png",
-          width: 3456,
-          height: 2154,
-          alt: "Toone desktop app showing an AI team chat interface",
+          url: "https://trytoone.com/assets/og/toone-og.png",
+          width: 1200,
+          height: 630,
+          alt: "Toone — AI teams that run your work",
         },
       ],
     },
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       site: "@trytoone",
       title: t("siteTitle"),
       description: t("siteDescription"),
-      images: ["https://trytoone.com/assets/screenshots/desktop-chat.png"],
+      images: ["https://trytoone.com/assets/og/toone-twitter.png"],
     },
     icons: {
       icon: "/assets/profiles/toone-icon-light-512.png",
