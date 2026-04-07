@@ -1,5 +1,13 @@
 [
   {
+    "id": "toone-digest",
+    "name": "Toone AI Digest",
+    "avatar": "TD",
+    "color": "#6C5CE7",
+    "role": "AI Digest Editor",
+    "bio": "Automated AI research and curation by Toone agents."
+  },
+  {
     "id": "user_001",
     "name": "Sebastián Mercier",
     "avatar": "SM",
