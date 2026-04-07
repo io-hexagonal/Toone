@@ -28,6 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: `%s | Toone`,
     },
     description: t("siteDescription"),
+    keywords: ["AI agents", "AI teams", "autonomous agents", "macOS AI", "agent orchestration", "Toone", "AI productivity"],
+    applicationName: "Toone",
     metadataBase: new URL("https://trytoone.com"),
     alternates: {
       canonical: `https://trytoone.com/${locale}`,
@@ -37,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       url: `https://trytoone.com/${locale}`,
       title: t("siteTitle"),
-      description: t("siteDescription"),
+      description: t("ogDescription"),
       siteName: "Toone",
       locale: locale === "en" ? "en_US" : locale,
       images: [
@@ -52,17 +54,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       site: "@trytoone",
+      creator: "@trytoone",
       title: t("siteTitle"),
-      description: t("siteDescription"),
-      images: ["https://trytoone.com/assets/og/toone-twitter.png"],
+      description: t("ogDescription"),
+      images: [
+        {
+          url: "https://trytoone.com/assets/og/toone-twitter.png",
+          width: 1200,
+          height: 600,
+          alt: "Toone — AI teams that run your work",
+        },
+      ],
     },
     icons: {
       icon: "/assets/profiles/toone-icon-light-512.png",
+      apple: "/assets/profiles/toone-icon-light-512.png",
     },
     robots: { index: true, follow: true },
     other: {
-      "theme-color": "#141622",
       "apple-mobile-web-app-title": "Toone",
+      "apple-mobile-web-app-capable": "yes",
+      "msapplication-TileColor": "#141622",
+      "msapplication-TileImage": "/assets/profiles/toone-icon-light-512.png",
     },
   };
 }
@@ -87,6 +100,42 @@ export default async function LocaleLayout({ children, params }: Props) {
           rel="alternate"
           hrefLang="x-default"
           href="https://trytoone.com/en"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  name: "Toone",
+                  url: "https://trytoone.com",
+                  description: "Build and run autonomous AI teams on your Mac.",
+                  publisher: {
+                    "@type": "Organization",
+                    name: "Hexagonal.io",
+                    url: "https://hexagonal.io",
+                  },
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  name: "Toone",
+                  operatingSystem: "macOS",
+                  applicationCategory: "ProductivityApplication",
+                  description: "AI teams that run your work — organized into departments with defined roles, routines, and context.",
+                  url: "https://trytoone.com",
+                  downloadUrl: "https://github.com/io-hexagonal/Toone/releases",
+                  image: "https://trytoone.com/assets/og/toone-og.png",
+                  offers: {
+                    "@type": "Offer",
+                    price: "0",
+                    priceCurrency: "USD",
+                  },
+                },
+              ],
+            }),
+          }}
         />
       </head>
       <body

@@ -46,6 +46,7 @@
   },
   "meta": {
     "siteTitle": "Toone — Des equipes IA qui gerent votre travail",
-    "siteDescription": "Creez des equipes IA autonomes qui gerent contenu, croissance, ingenierie et plus."
+    "siteDescription": "Creez des equipes IA autonomes qui gerent contenu, croissance, ingenierie et plus.",
+    "ogDescription": "Lancez des equipes IA autonomes sur votre Mac. Departements, routines, navigateur, calendrier — vos agents gerent tout."
   }
 }

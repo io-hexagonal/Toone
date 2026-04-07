@@ -46,6 +46,7 @@
   },
   "meta": {
     "siteTitle": "Toone — AI Teams That Run Your Work",
-    "siteDescription": "Build autonomous AI teams that handle content, growth, engineering and more."
+    "siteDescription": "Build autonomous AI teams that handle content, growth, engineering and more.",
+    "ogDescription": "Run autonomous AI teams on your Mac. Departments, routines, browser, calendar — your agents handle it."
   }
 }

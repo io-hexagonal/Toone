@@ -46,6 +46,7 @@
   },
   "meta": {
     "siteTitle": "Toone — AI-teams die je werk beheren",
-    "siteDescription": "Bouw autonome AI-teams die content, groei, engineering en meer beheren."
+    "siteDescription": "Bouw autonome AI-teams die content, groei, engineering en meer beheren.",
+    "ogDescription": "Draai autonome AI-teams op je Mac. Afdelingen, routines, browser, agenda — je agents regelen het."
   }
 }
