@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
 import LandingCanvas from "@/components/LandingCanvas";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -6,6 +7,16 @@ import Footer from "@/components/Footer";
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+
+  return {
+    title: t("siteTitle"),
+    description: t("siteDescription"),
+  };
+}
 
 export default async function LandingPage({ params }: Props) {
   const { locale } = await params;
