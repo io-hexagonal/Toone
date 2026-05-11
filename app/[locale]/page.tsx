@@ -130,7 +130,7 @@ export default async function LandingPage({ params }: Props) {
           <div className="dl-btn-wrap desktop-only">
             <a
               className="dl-btn"
-              href="/Toone-1.0.3.dmg"
+              href="/Toone-1.0.4.dmg"
               target="_blank"
               rel="noopener"
             >

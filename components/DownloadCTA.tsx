@@ -40,7 +40,7 @@ export default function DownloadCTA() {
         </div>
       </div>
       <a
-        href="/Toone-1.0.3.dmg"
+        href="/Toone-1.0.4.dmg"
         target="_blank"
         rel="noopener"
         style={{
