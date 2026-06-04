@@ -20,25 +20,6 @@ export default function Navigation() {
       }}
     >
       <Link
-        href="/polymarket"
-        style={{
-          color: "rgba(139,92,246,0.5)",
-          textDecoration: "none",
-          fontSize: 12,
-          letterSpacing: "0.04em",
-          fontWeight: 500,
-          transition: "color 0.2s",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.color = "rgba(139,92,246,0.8)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.color = "rgba(139,92,246,0.5)")
-        }
-      >
-        {t("polymarket")}
-      </Link>
-      <Link
         href="/showcase"
         style={{
           color: "rgba(255,255,255,0.25)",

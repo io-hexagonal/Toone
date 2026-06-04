@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import type { Metadata } from "next";
+import ShowcaseCarousel from "@/components/ShowcaseCarousel";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -166,106 +167,7 @@ export default async function ShowcasePage({ params }: Props) {
         </a>
       </div>
 
-      {/* Carousel */}
-      <div className="carousel" id="carousel">
-        {SLIDES.map((s, i) => (
-          <div key={i} className={`slide${i === 0 ? " active" : ""}`}>
-            <div
-              className="slide-bg"
-              style={{ backgroundImage: `url('${s.img}')` }}
-            />
-            <img
-              className="slide-img"
-              src={s.img}
-              alt={s.title}
-              loading={i < 2 ? "eager" : "lazy"}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Arrows */}
-      <button className="nav-arrow nav-prev" id="btn-prev" aria-label="Previous">
-        <svg viewBox="0 0 16 16">
-          <path d="M9.78 3.47a.75.75 0 010 1.06L6.81 7.5h5.44a.75.75 0 010 1.5H6.81l2.97 2.97a.75.75 0 11-1.06 1.06l-4.25-4.25a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0z" />
-        </svg>
-      </button>
-      <button className="nav-arrow nav-next" id="btn-next" aria-label="Next">
-        <svg viewBox="0 0 16 16">
-          <path d="M6.22 3.47a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.19 9H3.75a.75.75 0 010-1.5h5.44L6.22 4.53a.75.75 0 010-1.06z" />
-        </svg>
-      </button>
-
-      {/* Dots */}
-      <div className="dots" id="dots">
-        {SLIDES.map((_, i) => (
-          <div
-            key={i}
-            className={`dot-indicator${i === 0 ? " active" : ""}`}
-            data-index={i}
-          />
-        ))}
-      </div>
-
-      {/* Counter */}
-      <div className="counter" id="counter">
-        1 / {SLIDES.length}
-      </div>
-
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-(function(){
-  var TOTAL = ${SLIDES.length};
-  var INTERVAL = 5000;
-  var current = 0;
-  var timer = null;
-  var carousel = document.getElementById('carousel');
-  var dotsEl = document.getElementById('dots');
-  var counterEl = document.getElementById('counter');
-
-  function goTo(idx) {
-    if (idx === current) return;
-    var slides = carousel.querySelectorAll('.slide');
-    var dots = dotsEl.querySelectorAll('.dot-indicator');
-    slides[current].classList.remove('active');
-    slides[current].classList.add('leaving');
-    dots[current].classList.remove('active');
-    var prev = current;
-    current = idx;
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
-    counterEl.textContent = (current + 1) + ' / ' + TOTAL;
-    setTimeout(function(){ slides[prev].classList.remove('leaving'); }, 800);
-    resetTimer();
-  }
-
-  function go(dir) {
-    goTo((current + dir + TOTAL) % TOTAL);
-  }
-
-  function startTimer() {
-    clearInterval(timer);
-    timer = setInterval(function(){ go(1); }, INTERVAL);
-  }
-  function resetTimer() { clearInterval(timer); startTimer(); }
-
-  document.getElementById('btn-prev').onclick = function(){ go(-1); };
-  document.getElementById('btn-next').onclick = function(){ go(1); };
-
-  var dotEls = dotsEl.querySelectorAll('.dot-indicator');
-  dotEls.forEach(function(d, i){ d.onclick = function(){ goTo(i); }; });
-
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'ArrowLeft') go(-1);
-    else if (e.key === 'ArrowRight') go(1);
-  });
-
-  startTimer();
-})();
-          `,
-        }}
-      />
+      <ShowcaseCarousel slides={SLIDES} />
     </>
   );
 }

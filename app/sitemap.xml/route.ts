@@ -37,11 +37,6 @@ export async function GET() {
       );
     }
 
-    // Polymarket
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}/polymarket</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>`
-    );
-
     // Showcase
     lines.push(
       `<url><loc>${baseUrl}/${locale}/showcase</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`

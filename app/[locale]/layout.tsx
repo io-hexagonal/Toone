@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: `%s | Toone`,
     },
     description: t("siteDescription"),
-    keywords: ["AI agents", "AI teams", "autonomous agents", "macOS AI", "agent orchestration", "Toone", "AI productivity", "Claude Code", "Codex", "MCP tools", "AI routines", "AI integrations", "Media Marketing AI", "Polymarket AI"],
+    keywords: ["AI agents", "AI teams", "autonomous agents", "macOS AI", "agent orchestration", "Toone", "AI productivity", "Claude Code", "Codex", "MCP tools", "AI routines", "AI integrations", "Media Marketing AI", "Software Engineering AI"],
     applicationName: "Toone",
     metadataBase: new URL("https://trytoone.com"),
     alternates: {
@@ -139,12 +139,6 @@ export default async function LocaleLayout({ children, params }: Props) {
                   name: "Media & Marketing",
                   description: "AI agent templates for content creation, social strategy, and analytics",
                   url: `https://trytoone.com/${locale}/showcase`,
-                },
-                {
-                  "@type": "SiteNavigationElement",
-                  name: "Polymarket",
-                  description: "Crowd prediction intelligence — distributed agent network for market signals",
-                  url: `https://trytoone.com/${locale}/polymarket`,
                 },
                 {
                   "@type": "SiteNavigationElement",
