@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { locales } from "@/i18n/routing";
 import type { Metadata } from "next";
+import Script from "next/script";
 import "../globals.css";
 
 type Props = {
@@ -155,6 +156,14 @@ export default async function LocaleLayout({ children, params }: Props) {
               ],
             }),
           }}
+        />
+        {/* Self-hosted, cookieless Umami analytics (see /privacy). data-domains
+            keeps localhost/preview traffic out of the production website. */}
+        <Script
+          src="https://analytics.truleaf.org/script.js"
+          data-website-id="70c91dbc-6116-453f-9702-cbd942760e51"
+          data-domains="trytoone.com,www.trytoone.com"
+          strategy="afterInteractive"
         />
       </head>
       <body

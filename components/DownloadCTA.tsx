@@ -41,6 +41,8 @@ export default function DownloadCTA() {
       </div>
       <a
         href="/Toone-1.0.4.dmg"
+        data-umami-event="download-dmg"
+        data-umami-event-placement="blog-cta"
         target="_blank"
         rel="noopener"
         style={{

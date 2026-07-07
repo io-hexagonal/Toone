@@ -19,8 +19,13 @@ export default function WaitlistForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, source: "website" }),
       });
-      if (res.ok) setStatus("success");
-      else setStatus("error");
+      if (res.ok) {
+        setStatus("success");
+        // Umami conversion event — fired on confirmed signup only, never
+        // with the email itself (cookieless, no PII).
+        (window as unknown as { umami?: { track: (n: string) => void } })
+          .umami?.track("waitlist-signup");
+      } else setStatus("error");
     } catch {
       setStatus("error");
     }

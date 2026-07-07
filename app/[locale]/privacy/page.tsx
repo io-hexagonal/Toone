@@ -110,7 +110,6 @@ export default async function PrivacyPage({ params }: Props) {
           <li style={{ marginBottom: 6 }}>
             Personal information (name, email, location)
           </li>
-          <li style={{ marginBottom: 6 }}>Usage analytics or telemetry</li>
           <li style={{ marginBottom: 6 }}>
             Conversation content or chat history
           </li>
@@ -119,6 +118,31 @@ export default async function PrivacyPage({ params }: Props) {
             Keystrokes, screenshots, or screen recordings
           </li>
         </ul>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Anonymous Usage Analytics
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          The Toone desktop app sends anonymous usage telemetry (feature usage
+          events such as &quot;an organization was created&quot; — never
+          conversation content, file contents, prompts, or anything that
+          identifies you) to our own self-hosted, privacy-focused analytics
+          (Umami). Events are tied to a random per-install identifier, not to
+          your name or email. You can turn this off at any time in Settings.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          This website uses the same self-hosted, cookieless analytics to count
+          visits and clicks. It sets no cookies, does not track you across
+          sites, and does not share data with any third party.
+        </p>
 
         <h2
           style={{
