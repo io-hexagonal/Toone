@@ -40,7 +40,7 @@ export default function DownloadCTA() {
         </div>
       </div>
       <a
-        href="/Toone-1.0.4.dmg"
+        href="https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg"
         data-umami-event="download-dmg"
         data-umami-event-placement="blog-cta"
         target="_blank"
