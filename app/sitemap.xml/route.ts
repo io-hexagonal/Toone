@@ -1,11 +1,6 @@
 import { locales } from "@/i18n/routing";
-import { getAllPosts } from "@/lib/posts";
 
 export const dynamic = "force-static";
-
-function escapeXml(str: string): string {
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
 
 export async function GET() {
   const baseUrl = "https://trytoone.com";
@@ -22,24 +17,9 @@ export async function GET() {
       `<url><loc>${baseUrl}/${locale}</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`
     );
 
-    // AI Digest listing
+    // Showcases
     lines.push(
-      `<url><loc>${baseUrl}/${locale}/ai-digest</loc><lastmod>${now}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>`
-    );
-
-    // AI Digest posts
-    const posts = getAllPosts(locale);
-    for (const post of posts) {
-      const slug = escapeXml(post.slug);
-      const date = new Date(post.date).toISOString();
-      lines.push(
-        `<url><loc>${baseUrl}/${locale}/ai-digest/${slug}</loc><lastmod>${date}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`
-      );
-    }
-
-    // Showcase
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}/showcase</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
+      `<url><loc>${baseUrl}/${locale}/showcases</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`
     );
 
     // Privacy
