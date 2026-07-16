@@ -65,6 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   for (const l of locales) {
     languages[l] = `https://trytoone.com/${l}`;
   }
+  languages["x-default"] = "https://trytoone.com/en";
 
   return {
     title: {
@@ -155,19 +156,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${playfair.variable} ${pixel.variable} ${rubik.variable}`}>
       <head>
-        {locales.map((l) => (
-          <link
-            key={l}
-            rel="alternate"
-            hrefLang={l}
-            href={`https://trytoone.com/${l}`}
-          />
-        ))}
-        <link
-          rel="alternate"
-          hrefLang="x-default"
-          href="https://trytoone.com/en"
-        />
+        {/* hreflang comes from the metadata API (alternates.languages),
+            which subpages override with their own URLs — a hardcoded block
+            here would stamp home-page alternates onto every route. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

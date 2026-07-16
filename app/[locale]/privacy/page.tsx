@@ -1,15 +1,30 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
+import { locales } from "@/i18n/routing";
 import type { Metadata } from "next";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
+  const languages: Record<string, string> = {};
+  for (const l of locales) {
+    languages[l] = `https://trytoone.com/${l}/privacy`;
+  }
+  languages["x-default"] = "https://trytoone.com/en/privacy";
+
   return {
     title: "Privacy Policy",
     description: "Toone Privacy Policy",
+    // Without this the page inherits the layout's canonical, which points
+    // at the home page.
+    alternates: {
+      canonical: `https://trytoone.com/${locale}/privacy`,
+      languages,
+    },
   };
 }
 

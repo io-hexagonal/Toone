@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import TruleafWordmark from "@/components/TruleafWordmark";
 import { Link } from "@/lib/navigation";
+import { locales } from "@/i18n/routing";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -29,10 +30,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const url = `https://trytoone.com/${locale}/showcases`;
 
+  const languages: Record<string, string> = {};
+  for (const l of locales) {
+    languages[l] = `https://trytoone.com/${l}/showcases`;
+  }
+  languages["x-default"] = "https://trytoone.com/en/showcases";
+
   return {
     title: t("metaTitle"),
     description: t("metaDescription"),
-    alternates: { canonical: url },
+    alternates: { canonical: url, languages },
     // Without this the page inherits the root card, whose og:url points at the
     // landing page rather than at the URL actually being shared.
     openGraph: {
