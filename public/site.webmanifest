@@ -1,0 +1,21 @@
+{
+  "name": "Toone",
+  "short_name": "Toone",
+  "description": "AI teams that run your work.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#141413",
+  "theme_color": "#141413",
+  "icons": [
+    {
+      "src": "/assets/profiles/toone-icon-light-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
