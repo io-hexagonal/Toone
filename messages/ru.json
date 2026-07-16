@@ -1,9 +1,9 @@
 {
   "nav": {
-    "showcase": "Galereya",
     "privacy": "Konfidentsialnost",
-    "blog": "AI Digest",
-    "github": "GitHub"
+    "github": "GitHub",
+    "showcases": "Showcases",
+    "download": "Скачать"
   },
   "landing": {
     "downloadOn": "Skachat v",
@@ -13,39 +13,176 @@
     "requirements": "Trebovaniya",
     "req1": "macOS 14.0 (Sonoma) ili novee",
     "req2": "Akkaunt Anthropic ili OpenAI",
-    "soon": "Skoro"
-  },
-  "blog": {
-    "blog": "AI Digest",
-    "readMore": "Chitat dalee",
-    "publishedOn": "Opublikovano",
-    "by": "avtor",
-    "tags": "Tegi",
-    "relatedPosts": "Pohozhie stati",
-    "comments": "Kommentarii",
-    "previous": "Nazad",
-    "next": "Dalee",
-    "pageOf": "Stranitsa {page} iz {total}",
-    "noPosts": "Statei poka net.",
-    "downloadCTA": "Sozdavayte avtonomnye komandy II s Toone",
-    "downloadCTADescription": "Skaychate Toone dlya macOS i sozdavayte komandy II, kotorye vypolnyayut vashu rabotu.",
-    "categories": {
-      "all": "Все",
-      "ai-models": "ИИ и LLM",
-      "development": "Разработка",
-      "business": "Бизнес и маркетинг",
-      "data-finance": "Данные и финансы",
-      "guides": "Руководства",
-      "tools": "Инструменты и проекты"
-    }
+    "soon": "Skoro",
+    "heroTitle": "AI teams that run your work",
+    "heroTagline": "Toone turns businesses into AI-native companies. It captures how your organization works, including its processes, knowledge and tools, then operates all of it with a swarm of AI agents under human governance.",
+    "heroCta": "Bring us your organization",
+    "pillarsTitle": "What AI-native means",
+    "pillarsSub": "Seven things become true once your organization runs on Toone.",
+    "p1t": "Your processes are encoded",
+    "p1d": "Playbooks that run themselves as routines, sub-routines and schedules. Crafting one is deterministic work, much like wiring an n8n flow, except you write it in natural language. Every run stays debuggable, with agents diagnosing how it is going while it happens.",
+    "p2t": "Knowledge accumulates structurally",
+    "p2d": "An organizational knowledge graph that outlives every chat and every employee.",
+    "p3t": "Agents work as staff",
+    "p3d": "They hold roles in departments, keep schedules, produce artefacts, and escalate to a human when it matters.",
+    "p4t": "The organization operates as one",
+    "p4d": "Routines are written to delegate. Work moves between departments in clean compartments, so every agent holds a narrow remit and the whole organization behaves like one body.",
+    "p5t": "The web is operable",
+    "p5d": "Your external tools are mapped as replayable workflows and treated as first-class integrations, scoped to what your company actually needs. Anything missing gets built custom.",
+    "partnersBandLabel": "Companies going AI-native on Toone",
+    "partnersBandCta": "See exactly what they automated",
+    "p6t": "Humans govern",
+    "p6d": "Gates, approvals, drafts-only outbound and redaction. Autonomy inside the boundaries you set, with accountability for every action an agent takes.",
+    "p7t": "A complete set of tools",
+    "p7d": "Recommended templates, MCP tools, processes and integrations, assembled for your use case. Today that covers software engineering, SEO and growth, outreach and support, product strategy, science and research, and headquarters.",
+    "techLabel": "Built on",
+    "authGoogle": "Продолжить с Google",
+    "authOr": "или",
+    "authEmailPh": "Введите ваш e-mail",
+    "authContinue": "Продолжить с e-mail",
+    "authJoined": "Вы в списке — мы скоро свяжемся с вами.",
+    "authError": "Что-то пошло не так — попробуйте ещё раз.",
+    "authNote": "Ранний доступ — запишитесь в список или скачайте приложение сейчас.",
+    "heroTag2": "Сделайте вашу компанию AI-native."
   },
   "footer": {
     "terms": "Usloviya",
-    "privacy": "Konfidentsialnost"
+    "privacy": "Konfidentsialnost",
+    "product": "Продукт",
+    "how": "Как это работает",
+    "proof": "Кейсы",
+    "company": "Компания",
+    "contact": "Контакты",
+    "rights": "Все права защищены."
   },
   "meta": {
-    "siteTitle": "Toone — AI-agenty, kotorye vypolnyayut vashu rabotu | Na baze Claude Code© i Codex©",
-    "siteDescription": "S Toone rabotat s komandami AI-agentov — prosto. Shablony s MCP-instrumentami, agentami, rutinami i integratsiyami — instrumenty dlya professionalov.",
-    "ogDescription": "Zapuskajte avtonomnye komandy II na vashem Mac. Otdely, rutiny, brauzer, kalendar — vashi agenty spravyatsya."
+    "siteTitle": "Toone: AI Teams That Run Your Work | Built on Claude Code & Codex",
+    "siteDescription": "Toone turns businesses into AI-native companies. It encodes how your organization works, then operates it with a swarm of AI agents under human governance.",
+    "ogDescription": "Toone turns businesses into AI-native companies. Your processes encoded as routines, operated by AI agents under human governance.",
+    "ogTitle": "Toone: AI teams that run your work"
+  },
+  "showcases": {
+    "metaTitle": "Showcases: how companies became AI-native on Toone",
+    "metaDescription": "Live organizations running on Toone today: Truleaf.org and micoo. Their processes encoded as routines, operated by agents, under human governance.",
+    "eyebrow": "Showcases",
+    "title": "How real companies became AI-native",
+    "sub": "These are live organizations running on Toone right now. Their processes are encoded as routines and operated by agents on a schedule, under human governance.",
+    "processesLabel": "What runs on Toone",
+    "ctaTitle": "Bring us your organization",
+    "ctaSub": "Give us one process that hurts. We encode it, run it on Toone, and you watch your own company operate itself.",
+    "ctaBtn": "Start a conversation",
+    "backHome": "← Back home",
+    "note": "Department and routine counts reflect the organizations each partner runs on Toone as of July 2026.",
+    "cases": [
+      {
+        "id": "truleaf",
+        "name": "Truleaf.org",
+        "role": "Deployment #1",
+        "sector": "Biological crop protection R&D",
+        "url": "https://truleaf.org",
+        "logo": "truleaf",
+        "lede": "Truleaf turns published science into decision-ready evidence for teams developing pesticide-free crop protection. That work traditionally costs a research team four to eight weeks of manual literature review per agent. Its research pipeline, its go-to-market and its engineering all run as Toone organizations, and it becomes the first white-label deployment: the same engine, their brand, their domain.",
+        "stats": [
+          {
+            "n": "3",
+            "l": "organizations"
+          },
+          {
+            "n": "21",
+            "l": "departments"
+          },
+          {
+            "n": "107",
+            "l": "routines in production"
+          }
+        ],
+        "blocks": [
+          {
+            "t": "Research pipeline",
+            "d": "Literature ingestion, performance extraction across strains and conditions, contradiction resolution, regulatory-readiness scoring, and a provenance audit that locks every claim to its original source. Weeks of manual review become hours."
+          },
+          {
+            "t": "Product strategy",
+            "d": "A competitor radar walks named competitors' sites, changelogs and pricing every week. Market trends, customer voice and review mining all feed one evidence gate, where a bet advances only once its evidence is recorded in the knowledge graph."
+          },
+          {
+            "t": "Organic growth",
+            "d": "Daily rank tracking through mapped analytics sessions, query mining, cannibalization and index-bloat audits, and a content pipeline that runs from brief intake through to a publish-readiness check."
+          },
+          {
+            "t": "Engineering",
+            "d": "Bug triage, review queue and release readiness run on cadence. Architecture-drift scans, dependency hygiene, dead-code sweeps and a debt register keep the codebase healthy between releases."
+          }
+        ]
+      },
+      {
+        "id": "micoo",
+        "name": "micoo",
+        "role": "Design partner #1",
+        "sector": "Microcredential platform",
+        "url": "",
+        "logo": "micoo",
+        "lede": "micoo is the reference case for the transformation motion: a working business encoded into templates and routines. Its engineering organization now runs itself from intake through to the delivery brief, and its people spend their time on decisions.",
+        "stats": [
+          {
+            "n": "1",
+            "l": "organization"
+          },
+          {
+            "n": "7",
+            "l": "departments"
+          },
+          {
+            "n": "38",
+            "l": "routines in production"
+          }
+        ],
+        "blocks": [
+          {
+            "t": "Delivery reports itself",
+            "d": "A daily brief covers the delta across every in-flight item: what moved, what is blocked and on whom, and where reality drifted from the plan. Blockers escalate to the departments that own them. If nothing moved, the brief says so in three lines."
+          },
+          {
+            "t": "Intake and decomposition",
+            "d": "Incoming work is triaged, planned and broken into sub-routines automatically, then checked against an explicit definition of done before anything gets called finished."
+          },
+          {
+            "t": "Hygiene on cadence",
+            "d": "Architecture-drift scans, dependency hygiene, consistency audits and dead-code sweeps run on a schedule. This is the maintenance work every team intends to do and never gets to."
+          },
+          {
+            "t": "Radar and research",
+            "d": "A tech radar watches releases, deprecations and security advisories. The research department turns those raw signals into evaluated positions and spike proposals, so technology choices arrive early enough to be decisions."
+          }
+        ]
+      }
+    ]
+  },
+  "faq": {
+    "title": "Вопросы и ответы.",
+    "sub": "Коротко обо всём, что у нас спрашивают.",
+    "q1": "Что такое Toone?",
+    "a1": "Приложение для macOS, которое запускает организацию ИИ-агентов для вашей компании — отделы, агенты с ролями и плановые рутины на основе графа знаний компании.",
+    "q2": "Чем это отличается от чат-бота?",
+    "a2": "Чат-бот отвечает, когда вы спрашиваете. Агенты Toone имеют роли, выполняют рутины по расписанию, делятся памятью через граф и передают работу друг другу — результат приходит без запроса.",
+    "q3": "Что такое рутины?",
+    "a3": "Повторяющиеся задачи — дайджесты, контент-пайплайны, мониторинг, исследования — описанные в простых файлах, которые агенты выполняют по расписанию с проверяемыми артефактами.",
+    "q4": "Нужно ли уметь программировать?",
+    "a4": "Нет. Организации создаются из шаблонов, а рутины — это файлы на естественном языке. Технические пользователи могут просматривать всё вплоть до файлов.",
+    "q5": "Где хранятся мои данные?",
+    "a5": "На вашем Mac. Ваша организация — это папка с читаемыми файлами, агенты работают локально — машину покидают только вызовы модели.",
+    "q6": "Какие модели ИИ используются?",
+    "a6": "Семейство Claude от Anthropic через Claude Code. Каждый тред может закрепить свою модель.",
+    "q7": "Только macOS?",
+    "a7": "Десктопное приложение сегодня доступно для macOS прямой загрузкой. Другие платформы — в планах.",
+    "q8": "Сколько это стоит?",
+    "a8": "Toone бесплатен на этапе раннего доступа. Агенты работают на вашей подписке Anthropic.",
+    "q9": "Может ли работать под брендом моей компании?",
+    "a9": "Да — Toone поддерживает white-label: тот же движок с конфигурацией вашего бренда."
+  },
+  "statement": {
+    "title": "Ваша компания уже знает, как ей работать.",
+    "lead": "Знания уже есть — в файлах, инструментах и головах. Toone даёт им структуру: живой граф знаний компании и организацию ИИ-агентов, которая запускает их в работу по расписанию.",
+    "cta": "Посмотрите, как это работает"
   }
 }

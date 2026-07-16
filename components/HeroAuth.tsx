@@ -1,0 +1,221 @@
+"use client";
+
+import { useState, FormEvent } from "react";
+import { useTranslations } from "next-intl";
+
+const DMG_URL =
+  "https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg";
+
+/**
+ * Full-screen hero. Left column centered (claude.ai-style): headline, one
+ * short line, auth card, one download button. Right: the film panel filling
+ * the hero's height. The email flow is the real waitlist endpoint; Google
+ * sign-in is visual until auth ships. Drop the fal-generated film URL into
+ * FILM_SRC and the <video> takes over from the mark placeholder.
+ */
+const FILM_SRC = ""; // fal image-to-video hero film, when ready
+
+export default function HeroAuth() {
+  const t = useTranslations("landing");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!email || status === "loading") return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "hero-auth" }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        (window as unknown as { umami?: { track: (n: string) => void } })
+          .umami?.track("waitlist-signup");
+      } else setStatus("error");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .hero-auth {
+              position: relative; z-index: 5;
+              min-height: 100svh; background: #141413;
+              display: grid; align-items: center;
+              /* film's right edge aligns with the header's last element (10vw
+                 inset, same as the flat header); auth column centres in the rest */
+              grid-template-columns: 1fr auto;
+              gap: 32px; padding: 0 10vw 0 22px;
+            }
+            @media (max-width: 980px) {
+              .hero-auth { grid-template-columns: 1fr; padding: 0 20px; }
+            }
+
+            .ha-left {
+              text-align: center; display: flex; flex-direction: column; align-items: center;
+              justify-self: center; max-width: 460px; padding: 96px 12px 40px;
+            }
+            .ha-title {
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-weight: 600; letter-spacing: -0.02em; line-height: 1.06;
+              color: rgba(255,255,255,0.95);
+              font-size: clamp(34px, 3.6vw, 48px);
+              margin-bottom: 14px; text-wrap: balance;
+            }
+            .ha-tag {
+              color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
+              max-width: 30ch; margin-bottom: 30px; text-wrap: balance;
+            }
+
+            .ha-card {
+              width: 100%; max-width: 400px;
+              border: 1px solid rgba(255,255,255,0.11); border-radius: 16px;
+              background: rgba(255,255,255,0.03);
+              padding: 22px; display: flex; flex-direction: column; gap: 12px;
+            }
+            .ha-google {
+              display: flex; align-items: center; justify-content: center; gap: 10px;
+              width: 100%; padding: 12px; border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.15); background: transparent;
+              color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500;
+              cursor: default; position: relative;
+            }
+            .ha-google svg { width: 17px; height: 17px; }
+            .ha-google .soon {
+              position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+              font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+              color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.16);
+              border-radius: 999px; padding: 2px 8px;
+            }
+            .ha-or {
+              text-align: center; color: rgba(255,255,255,0.35);
+              font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+            }
+            .ha-email {
+              width: 100%; padding: 12px 14px; border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.13);
+              background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
+              font-size: 14px; outline: none;
+            }
+            .ha-email::placeholder { color: rgba(255,255,255,0.35); }
+            .ha-email:focus { border-color: rgba(255,255,255,0.35); }
+            .ha-continue {
+              width: 100%; padding: 12px; border-radius: 10px; border: none;
+              background: #f0ede6; color: #1d1c19; cursor: pointer;
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
+              transition: transform 0.15s ease;
+            }
+            .ha-continue:hover { transform: scale(1.015); }
+            .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
+            .ha-note { color: rgba(255,255,255,0.38); font-size: 12px; text-align: center; }
+            .ha-joined { color: rgba(255,255,255,0.85); font-size: 14.5px; text-align: center; padding: 16px 0; }
+
+            .ha-dl {
+              display: inline-flex; align-items: center; gap: 9px;
+              margin-top: 20px; padding: 12px 22px; border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.13); color: rgba(255,255,255,0.85);
+              text-decoration: none; font-size: 14px; font-weight: 500;
+              transition: background 0.2s, border-color 0.2s;
+            }
+            .ha-dl:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); }
+            .ha-dl svg { width: 18px; height: 18px; fill: currentColor; }
+
+            .ha-film {
+              position: relative; justify-self: end; align-self: end;
+              /* top edge meets the header (~90px), bottom keeps a 22px margin */
+              height: calc(100svh - 112px);
+              margin-bottom: 22px;
+              aspect-ratio: 4 / 5;            /* portrait, like a filmed scene */
+              width: auto; max-width: 48vw;
+              border-radius: 20px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.09);
+              background:
+                radial-gradient(ellipse 60% 50% at 50% 44%,
+                  rgba(199,199,199,0.10) 0%, rgba(199,199,199,0.03) 45%, transparent 72%),
+                #101010;
+              box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+              display: flex; align-items: center; justify-content: center;
+            }
+            .ha-film video { width: 100%; height: 100%; object-fit: cover; display: block; }
+            .ha-film .mark { width: 96px; height: 96px; opacity: 0.9; }
+            @media (max-width: 980px) {
+              .ha-film { height: 52svh; max-width: min(86vw, 440px); margin: 0 auto 24px; align-self: center; }
+            }
+          `,
+        }}
+      />
+
+      <section className="hero-auth">
+        <div className="ha-left">
+          <h1 className="ha-title">{t("heroTitle")}</h1>
+          <p className="ha-tag">{t("heroTag2")}</p>
+
+          <div className="ha-card">
+            {status === "success" ? (
+              <p className="ha-joined">{t("authJoined")}</p>
+            ) : (
+              <>
+                <button className="ha-google" type="button" aria-disabled="true">
+                  <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                  </svg>
+                  {t("authGoogle")}
+                  <span className="soon">{t("soon")}</span>
+                </button>
+                <div className="ha-or">{t("authOr")}</div>
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <input
+                    className="ha-email"
+                    type="email"
+                    placeholder={t("authEmailPh")}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <button className="ha-continue" type="submit" disabled={status === "loading"}>
+                    {status === "loading" ? "…" : t("authContinue")}
+                  </button>
+                </form>
+                <p className="ha-note">
+                  {status === "error" ? t("authError") : t("authNote")}
+                </p>
+              </>
+            )}
+          </div>
+
+          <a
+            className="ha-dl"
+            href={DMG_URL}
+            data-umami-event="download-dmg"
+            data-umami-event-placement="hero"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+            </svg>
+            {t("downloadFor")} {t("macOS")}
+          </a>
+        </div>
+
+        <div className="ha-film" aria-hidden={FILM_SRC === ""}>
+          {FILM_SRC ? (
+            <video src={FILM_SRC} autoPlay muted loop playsInline />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="mark" src="/assets/brand/toone-mark.svg" alt="" />
+          )}
+        </div>
+      </section>
+    </>
+  );
+}

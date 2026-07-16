@@ -1,7 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
-import LandingCanvas from "@/components/LandingCanvas";
-import Navigation from "@/components/Navigation";
+import SiteHeader from "@/components/SiteHeader";
+import HeroAuth from "@/components/HeroAuth";
+import StatementSection from "@/components/StatementSection";
+import FaqSection from "@/components/FaqSection";
+import TechStrip from "@/components/TechStrip";
+import PartnerBand from "@/components/PartnerBand";
 import Footer from "@/components/Footer";
 
 type Props = {
@@ -29,151 +33,176 @@ export default async function LandingPage({ params }: Props) {
         dangerouslySetInnerHTML={{
           __html: `
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { width: 100%; height: 100%; overflow: hidden; background: #141622; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+            html, body { width: 100%; overflow-x: hidden; background: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
 
-            .overlay {
-              position: fixed; left: 50%; top: 50%;
-              transform: translate(-50%, 0);
-              z-index: 10; display: flex; flex-direction: column;
-              align-items: center; pointer-events: none;
-              margin-top: 160px;
+            /* --- tech strip (substrate credibility) --- */
+            .ts-wrap { position: relative; text-align: center; padding: 78px 0 0; }
+            .ts-label {
+              color: rgba(29,28,25,0.42); font-size: 10.5px; font-weight: 600;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px;
             }
-            .actions { pointer-events: auto; display: flex; flex-direction: column; gap: 12px; align-items: center; }
-
-            .dl-btn {
-              display: flex; align-items: center; justify-content: center; gap: 10px;
-              padding: 16px 32px; border-radius: 12px; min-width: 240px;
-              background: rgba(255,255,255,0.08);
-              backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-              border: 1px solid rgba(255,255,255,0.12);
-              color: rgba(255,255,255,0.9); text-decoration: none;
-              font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
-              transition: background 0.2s, border-color 0.2s, transform 0.15s;
-              cursor: pointer; user-select: none;
+            .ts-row {
+              display: flex; align-items: center; justify-content: center;
+              gap: 14px 32px; flex-wrap: wrap; list-style: none;
             }
-            .dl-btn:hover {
-              background: rgba(255,255,255,0.14);
-              border-color: rgba(255,255,255,0.25);
-              transform: translateY(-1px);
+            .ts-item {
+              display: flex; align-items: center; gap: 9px;
+              color: rgba(29,28,25,0.55); font-size: 14.5px; font-weight: 500;
+              letter-spacing: 0.01em; white-space: nowrap;
+              text-decoration: none;
+              transition: color 0.2s, opacity 0.2s;
             }
-            .dl-btn:active { transform: translateY(0); }
-            .dl-btn svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; margin-left: -2px; }
-            .dl-btn .label { display: flex; flex-direction: column; line-height: 1.2; }
-            .dl-btn .label small { font-size: 10px; opacity: 0.6; font-weight: 400; }
-
-            .tooltip {
-              position: absolute; top: 50%; left: calc(100% + 12px); transform: translateY(-50%);
-              background: rgba(20,22,34,0.95); backdrop-filter: blur(16px);
-              border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
-              padding: 14px 18px; min-width: 220px;
-              color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.6;
-              opacity: 0; pointer-events: none;
-              transition: opacity 0.2s;
-              white-space: nowrap;
+            .ts-item:hover { color: rgba(29,28,25,0.95); }
+            .ts-icon {
+              width: 19px; height: 19px; flex-shrink: 0; display: block;
             }
-            .tooltip::after {
-              content: ''; position: absolute; top: 50%; right: 100%; transform: translateY(-50%);
-              border: 6px solid transparent; border-right-color: rgba(255,255,255,0.12);
+            /* Context7 ships only a full-colour raster tile; greyscale it so it
+               sits with the monochrome marks, and it is a filled square so it
+               reads heavier than the line marks at equal size. */
+            .ts-raster {
+              width: 17px; height: 17px; border-radius: 3px;
+              filter: grayscale(1) brightness(0.4);
+              opacity: 0.72; transition: filter 0.2s, opacity 0.2s;
             }
-            .dl-btn-wrap:hover .tooltip { opacity: 1; }
-
-            .tooltip .req { display: flex; align-items: center; gap: 6px; }
-            .tooltip .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); flex-shrink: 0; }
-            .tooltip .title { font-weight: 600; margin-bottom: 6px; color: rgba(255,255,255,0.95); font-size: 13px; }
-
-            .dl-btn-wrap { position: relative; overflow: hidden; border-radius: 12px; }
-            .soon-ribbon {
-              position: absolute; top: 10px; right: -28px;
-              background: rgba(255,255,255,0.12);
-              color: rgba(255,255,255,0.7);
-              font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-              padding: 3px 32px;
-              transform: rotate(35deg);
-              pointer-events: none;
-              z-index: 2;
-            }
-
-            .desktop-only { display: flex; }
+            .ts-item:hover .ts-raster { filter: none; opacity: 1; }
             @media (max-width: 640px) {
-              .desktop-only { display: none !important; }
-              .overlay { padding-bottom: 15vh; }
-              .actions { flex-direction: column; }
+              .ts-row { gap: 12px 18px; }
+              .ts-item { font-size: 12.5px; gap: 7px; }
+              .ts-icon { width: 16px; height: 16px; }
+              .ts-raster { width: 15px; height: 15px; }
+            }
+            /* The light editorial world: everything between the dark hero and
+               the dark footer sits on cream with ink text. */
+            .sections {
+              position: relative; z-index: 5; background: #f0ede6; color: #1d1c19;
+              padding: 0 24px 120px;
+              overflow: hidden;
+            }
+            /* lantern wash — stops the section reading as one flat slab */
+            .sections::before {
+              content: ''; position: absolute; left: 50%; top: 300px;
+              transform: translateX(-50%);
+              width: 1200px; height: 760px; pointer-events: none;
+              background: radial-gradient(ellipse at center,
+                rgba(29,28,25,0.045) 0%, rgba(29,28,25,0.015) 42%, transparent 70%);
+            }
+            /* --- partner band (static: two real partners, no loop) --- */
+            .pb-wrap { position: relative; text-align: center; padding: 66px 0 4px; }
+            .pb-label {
+              color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 36px;
+            }
+            .pb-row {
+              display: flex; align-items: center; justify-content: center;
+              gap: 54px; flex-wrap: wrap;
+            }
+            .pb-item {
+              display: flex; align-items: center; justify-content: center; gap: 13px;
+              height: 34px; text-decoration: none;
+              opacity: 0.62; transition: opacity 0.25s;
+              /* the partner marks are white-on-transparent assets; on cream
+                 they render as ink silhouettes */
+              filter: brightness(0);
+            }
+            a.pb-item:hover { opacity: 1; }
+            .pb-sep { width: 1px; height: 26px; background: rgba(29,28,25,0.16); }
+            .pb-foot { margin-top: 38px; }
+            .pb-cta {
+              display: inline-block; color: rgba(29,28,25,0.55); font-size: 13px;
+              text-decoration: none; border-bottom: 1px solid rgba(29,28,25,0.2);
+              padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
+            }
+            .pb-cta:hover { color: #1d1c19; border-color: rgba(29,28,25,0.5); }
+            @media (max-width: 640px) {
+              .pb-row { gap: 26px; }
+              .pb-sep { display: none; }
+              .pb-label { font-size: 10px; letter-spacing: 0.14em; }
+            }
+
+            .section { position: relative; max-width: 1000px; margin: 0 auto; padding-top: 104px; }
+            .section h2 {
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              color: #1d1c19; font-size: 27px; font-weight: 600;
+              letter-spacing: -0.02em; margin-bottom: 9px;
+            }
+            .section .sub { color: rgba(29,28,25,0.55); font-size: 14.5px; margin-bottom: 40px; }
+
+            /* The pillars, as a numbered rail. A wrapping card grid left a hole
+               and gave equal-weight boxes no reading order; the rail is ordered,
+               ragged-free, and scales as the list grows. */
+            .pillars { display: flex; flex-direction: column; gap: 10px; }
+            .pillar {
+              display: grid; grid-template-columns: 46px 1fr 1.25fr; gap: 26px;
+              align-items: center; padding: 19px 26px 19px 20px;
+              border: 1px solid rgba(29,28,25,0.1); border-radius: 14px;
+              background: rgba(255,255,255,0.45);
+              transition: border-color 0.28s, transform 0.28s;
+            }
+            .pillar:hover { border-color: rgba(29,28,25,0.32); transform: translateX(4px); }
+            /* hexagon + lantern gradient: the mark's own geometry, reused */
+            .phex {
+              width: 40px; height: 44px;
+              clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+              background: rgba(29,28,25,0.08);
+              display: flex; align-items: center; justify-content: center;
+              color: rgba(29,28,25,0.6); font-size: 12.5px; font-weight: 700;
+              transition: background 0.28s, color 0.28s;
+            }
+            .pillar:hover .phex {
+              background: #141311;
+              color: #f0ede6;
+            }
+            .pillar h3 {
+              color: rgba(29,28,25,0.92); font-size: 15.5px; font-weight: 600;
+              letter-spacing: -0.005em;
+            }
+            .pillar p { color: rgba(29,28,25,0.6); font-size: 14px; line-height: 1.6; }
+
+            @media (max-width: 760px) {
+              .pillar { grid-template-columns: 40px 1fr; gap: 14px 18px; padding: 18px; }
+              .pillar p { grid-column: 2; }
+              .phex { width: 34px; height: 38px; font-size: 11px; }
             }
           `,
         }}
       />
 
-      <LandingCanvas />
+      <SiteHeader />
 
-      <Navigation />
+      <HeroAuth />
 
-      <div className="overlay">
-        <div className="actions">
-          {/* App Store (mobile) */}
-          <div className="dl-btn-wrap">
-            <span
-              className="dl-btn"
-              style={{ cursor: "default" }}
-            >
-              <svg viewBox="0 0 24 24">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-              </svg>
-              <span className="label">
-                <small>{t("downloadOn")}</small>
-                {t("appStore")}
-              </span>
-            </span>
-            <span className="soon-ribbon">{t("soon")}</span>
-          </div>
+      <StatementSection />
 
-          {/* macOS Desktop */}
-          <div className="dl-btn-wrap desktop-only">
-            <a
-              className="dl-btn"
-              href="https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg"
-              target="_blank"
-              rel="noopener"
-              data-umami-event="download-dmg"
-              data-umami-event-placement="hero"
-            >
-              <svg viewBox="0 0 24 24">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-              </svg>
-              <span className="label">
-                <small>{t("downloadFor")}</small>
-                {t("macOS")}
-              </span>
-            </a>
-            <div className="tooltip">
-              <div className="title">{t("requirements")}</div>
-              <div className="req">
-                <span className="dot" />
-                {t("req1")}
+      <div className="sections">
+        <TechStrip />
+        <PartnerBand />
+
+        <section className="section" id="how">
+          <h2>{t("pillarsTitle")}</h2>
+          <p className="sub">{t("pillarsSub")}</p>
+          <div className="pillars">
+            {(
+              [
+                ["p1t", "p1d"],
+                ["p2t", "p2d"],
+                ["p3t", "p3d"],
+                ["p4t", "p4d"],
+                ["p5t", "p5d"],
+                ["p6t", "p6d"],
+                ["p7t", "p7d"],
+              ] as const
+            ).map(([titleKey, descKey], i) => (
+              <div className="pillar" key={titleKey}>
+                <div className="phex">{String(i + 1).padStart(2, "0")}</div>
+                <h3>{t(titleKey)}</h3>
+                <p>{t(descKey)}</p>
               </div>
-              <div className="req">
-                <span className="dot" />
-                {t("req2")}
-              </div>
-            </div>
+            ))}
           </div>
+        </section>
 
-          {/* Product Hunt */}
-          <div style={{ marginTop: 16 }}>
-            <a
-              href="https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-umami-event="producthunt-click"
-            >
-              <img
-                alt="Toone - AI teams that run your work | Product Hunt"
-                width={250}
-                height={54}
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=dark&t=1774512921035"
-              />
-            </a>
-          </div>
-        </div>
+        <FaqSection />
+
       </div>
 
       <Footer />

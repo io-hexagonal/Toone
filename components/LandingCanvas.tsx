@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 
 const DOT_SIZE = 2.5;
 const DOT_SPACING = 3.5;
-const BG_COLOR: [number, number, number] = [0.078, 0.086, 0.118];
+// #141413 — the dark-mode field, matching the page background exactly.
+const BG_COLOR: [number, number, number] = [0.078431, 0.078431, 0.07451];
 const PROXIMITY_RADIUS = 8;
 
 const COLOR_STORY: [number, number, number][] = [
