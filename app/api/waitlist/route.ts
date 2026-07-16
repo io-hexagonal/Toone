@@ -1,28 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
 
-const WAITLIST_FILE = path.join(process.cwd(), "data", "waitlist.json");
-
-interface WaitlistEntry {
-  email: string;
-  source: string;
-  timestamp: string;
-}
-
-async function readWaitlist(): Promise<WaitlistEntry[]> {
-  try {
-    const data = await fs.readFile(WAITLIST_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
-
-async function writeWaitlist(entries: WaitlistEntry[]): Promise<void> {
-  await fs.mkdir(path.dirname(WAITLIST_FILE), { recursive: true });
-  await fs.writeFile(WAITLIST_FILE, JSON.stringify(entries, null, 2));
-}
+/**
+ * Proxies signups to the Toone backend (POST /v1/waitlist, Postgres-backed).
+ *
+ * The previous implementation wrote to a local JSON file, which throws on
+ * Vercel's read-only serverless filesystem — every production signup 500'd.
+ *
+ * WAITLIST_UPSTREAM is a Vercel env var rather than a hardcoded URL because
+ * the backend is currently only reachable at a NodePort address
+ * (api.trytoone.com has no DNS record yet); when a TLS hostname lands, flip
+ * the env var — no code change.
+ */
+const UPSTREAM = process.env.WAITLIST_UPSTREAM;
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,25 +23,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    const sanitized = email.toLowerCase().trim();
-
-    const entries = await readWaitlist();
-
-    if (entries.some((e) => e.email === sanitized)) {
-      return NextResponse.json({ message: "Already registered" });
+    if (!UPSTREAM) {
+      console.error("[waitlist] WAITLIST_UPSTREAM is not configured");
+      return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 
-    entries.push({
-      email: sanitized,
-      source: source || "unknown",
-      timestamp: new Date().toISOString(),
+    const res = await fetch(UPSTREAM, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email.toLowerCase().trim(),
+        source: typeof source === "string" && source ? source : "landing",
+      }),
+      signal: AbortSignal.timeout(10_000),
     });
 
-    await writeWaitlist(entries);
+    // 409 = already on the waitlist; that's a success from the visitor's
+    // point of view, same as the old route's "Already registered" path.
+    if (res.ok || res.status === 409) {
+      return NextResponse.json({ message: "Added to waitlist" });
+    }
 
-    console.log(`[waitlist] New signup: ${sanitized} (${source})`);
-
-    return NextResponse.json({ message: "Added to waitlist" });
+    console.error(`[waitlist] Upstream responded ${res.status}`);
+    return NextResponse.json({ error: "Server error" }, { status: 502 });
   } catch (err) {
     console.error("[waitlist] Error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
