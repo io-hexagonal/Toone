@@ -3,20 +3,14 @@
     "privacy": "Privacy",
     "github": "GitHub",
     "showcases": "Showcases",
-    "download": "Download"
+    "download": "Download",
+    "signin": "Sign in"
   },
   "landing": {
-    "downloadOn": "Download on the",
-    "appStore": "App Store",
     "downloadFor": "Download for",
     "macOS": "macOS",
-    "requirements": "Requirements",
-    "req1": "macOS 14.0 (Sonoma) or later",
-    "req2": "Anthropic or OpenAI account",
     "soon": "Soon",
     "heroTitle": "AI teams that run your work",
-    "heroTagline": "Toone turns businesses into AI-native companies. It captures how your organization works, including its processes, knowledge and tools, then operates all of it with a swarm of AI agents under human governance.",
-    "heroCta": "Bring us your organization",
     "pillarsTitle": "What AI-native means",
     "pillarsSub": "Seven things become true once your organization runs on Toone.",
     "p1t": "Your processes are encoded",
@@ -46,7 +40,6 @@
     "heroTag2": "Make your company AI-native."
   },
   "footer": {
-    "terms": "Terms",
     "privacy": "Privacy",
     "product": "Product",
     "how": "How it works",
@@ -184,5 +177,31 @@
     "title": "Your company already knows how to run itself.",
     "lead": "The knowledge is all there — in files, tools, and heads. Toone gives it structure: a living graph of what your company knows, and an organization of AI agents that puts it to work on schedule.",
     "cta": "See how it works"
+  },
+  "auth": {
+    "signinTitle": "Sign in to Toone",
+    "signupTitle": "Create your Toone account",
+    "signinSub": "Welcome back.",
+    "signupSub": "Your account works in the desktop app.",
+    "googleBtn": "Continue with Google",
+    "soon": "Soon",
+    "or": "or",
+    "namePh": "Name (optional)",
+    "emailPh": "Email",
+    "passwordPh": "Password",
+    "signinBtn": "Sign in",
+    "signupBtn": "Create account",
+    "haveAccount": "Already have an account?",
+    "signinLink": "Sign in",
+    "newHere": "New to Toone?",
+    "signupLink": "Create account",
+    "successTitle": "You're signed in as {email}",
+    "successNote": "Toone runs on your Mac — download the app and sign in there.",
+    "downloadMac": "Download for macOS",
+    "errGeneric": "Something went wrong — please try again.",
+    "errPasswordLength": "Password must be 8–72 characters.",
+    "errExists": "An account with this email already exists — try signing in.",
+    "errInvalid": "Invalid email or password.",
+    "errRate": "Too many attempts — try again in a minute."
   }
 }

@@ -3,38 +3,32 @@
     "privacy": "Confidentialite",
     "github": "GitHub",
     "showcases": "Showcases",
-    "download": "Télécharger"
+    "download": "Télécharger",
+    "signin": "Se connecter"
   },
   "landing": {
-    "downloadOn": "Telecharger sur l'",
-    "appStore": "App Store",
     "downloadFor": "Telecharger pour",
     "macOS": "macOS",
-    "requirements": "Configuration requise",
-    "req1": "macOS 14.0 (Sonoma) ou ulterieur",
-    "req2": "Compte Anthropic ou OpenAI",
     "soon": "Bientot",
-    "heroTitle": "AI teams that run your work",
-    "heroTagline": "Toone turns businesses into AI-native companies. It captures how your organization works, including its processes, knowledge and tools, then operates all of it with a swarm of AI agents under human governance.",
-    "heroCta": "Bring us your organization",
-    "pillarsTitle": "What AI-native means",
-    "pillarsSub": "Seven things become true once your organization runs on Toone.",
-    "p1t": "Your processes are encoded",
-    "p1d": "Playbooks that run themselves as routines, sub-routines and schedules. Crafting one is deterministic work, much like wiring an n8n flow, except you write it in natural language. Every run stays debuggable, with agents diagnosing how it is going while it happens.",
-    "p2t": "Knowledge accumulates structurally",
-    "p2d": "An organizational knowledge graph that outlives every chat and every employee.",
-    "p3t": "Agents work as staff",
-    "p3d": "They hold roles in departments, keep schedules, produce artefacts, and escalate to a human when it matters.",
-    "p4t": "The organization operates as one",
-    "p4d": "Routines are written to delegate. Work moves between departments in clean compartments, so every agent holds a narrow remit and the whole organization behaves like one body.",
-    "p5t": "The web is operable",
-    "p5d": "Your external tools are mapped as replayable workflows and treated as first-class integrations, scoped to what your company actually needs. Anything missing gets built custom.",
-    "partnersBandLabel": "Companies going AI-native on Toone",
-    "partnersBandCta": "See exactly what they automated",
-    "p6t": "Humans govern",
-    "p6d": "Gates, approvals, drafts-only outbound and redaction. Autonomy inside the boundaries you set, with accountability for every action an agent takes.",
-    "p7t": "A complete set of tools",
-    "p7d": "Recommended templates, MCP tools, processes and integrations, assembled for your use case. Today that covers software engineering, SEO and growth, outreach and support, product strategy, science and research, and headquarters.",
+    "heroTitle": "Des équipes d'IA qui font tourner votre travail",
+    "pillarsTitle": "Ce que veut dire AI-native",
+    "pillarsSub": "Sept choses deviennent vraies dès que votre organisation tourne sur Toone.",
+    "p1t": "Vos processus sont encodés",
+    "p1d": "Des playbooks qui s'exécutent seuls sous forme de routines, sous-routines et calendriers. En créer un est un travail déterministe, un peu comme câbler un flux n8n, sauf que vous l'écrivez en langage naturel. Chaque exécution reste débogable, avec des agents qui diagnostiquent son déroulement en temps réel.",
+    "p2t": "Le savoir s'accumule structurellement",
+    "p2d": "Un graphe de connaissances organisationnel qui survit à chaque conversation et à chaque employé.",
+    "p3t": "Les agents travaillent comme des collaborateurs",
+    "p3d": "Ils tiennent des rôles dans des départements, suivent des calendriers, produisent des artefacts et escaladent vers un humain quand il le faut.",
+    "p4t": "L'organisation opère comme un tout",
+    "p4d": "Les routines sont écrites pour déléguer. Le travail circule entre départements en compartiments nets : chaque agent garde un périmètre étroit et l'organisation entière se comporte comme un seul corps.",
+    "p5t": "Le web devient opérable",
+    "p5d": "Vos outils externes sont cartographiés en workflows rejouables et traités comme des intégrations de premier rang, limités à ce dont votre entreprise a réellement besoin. Ce qui manque est construit sur mesure.",
+    "partnersBandLabel": "Les entreprises qui deviennent AI-native sur Toone",
+    "partnersBandCta": "Voyez exactement ce qu'elles ont automatisé",
+    "p6t": "Les humains gouvernent",
+    "p6d": "Portes de validation, approbations, envois en brouillon uniquement et caviardage des données sensibles. De l'autonomie dans les limites que vous fixez, avec une traçabilité pour chaque action d'un agent.",
+    "p7t": "Une panoplie complète d'outils",
+    "p7d": "Modèles recommandés, outils MCP, processus et intégrations, assemblés pour votre cas d'usage. Aujourd'hui, cela couvre l'ingénierie logicielle, le SEO et la croissance, la prospection et le support, la stratégie produit, la science et la recherche, et le quartier général.",
     "techLabel": "Built on",
     "authGoogle": "Continuer avec Google",
     "authOr": "ou",
@@ -46,7 +40,6 @@
     "heroTag2": "Rendez votre entreprise AI-native."
   },
   "footer": {
-    "terms": "Conditions",
     "privacy": "Confidentialite",
     "product": "Produit",
     "how": "Comment ça marche",
@@ -56,103 +49,103 @@
     "rights": "Tous droits réservés."
   },
   "meta": {
-    "siteTitle": "Toone: AI Teams That Run Your Work | Built on Claude Code & Codex",
-    "siteDescription": "Toone turns businesses into AI-native companies. It encodes how your organization works, then operates it with a swarm of AI agents under human governance.",
-    "ogDescription": "Toone turns businesses into AI-native companies. Your processes encoded as routines, operated by AI agents under human governance.",
-    "ogTitle": "Toone: AI teams that run your work"
+    "siteTitle": "Toone: des équipes d'IA qui font tourner votre travail | Construit sur Claude Code & Codex",
+    "siteDescription": "Toone transforme les entreprises en sociétés AI-native. Il encode le fonctionnement de votre organisation, puis l'opère avec un essaim d'agents IA sous gouvernance humaine.",
+    "ogDescription": "Toone transforme les entreprises en sociétés AI-native. Vos processus encodés en routines, opérés par des agents IA sous gouvernance humaine.",
+    "ogTitle": "Toone: des équipes d'IA qui font tourner votre travail"
   },
   "showcases": {
-    "metaTitle": "Showcases: how companies became AI-native on Toone",
-    "metaDescription": "Live organizations running on Toone today: Truleaf.org and micoo. Their processes encoded as routines, operated by agents, under human governance.",
+    "metaTitle": "Showcases : comment des entreprises sont devenues AI-native sur Toone",
+    "metaDescription": "Des organisations vivantes qui tournent sur Toone aujourd'hui : Truleaf.org et micoo. Leurs processus encodés en routines, opérés par des agents, sous gouvernance humaine.",
     "eyebrow": "Showcases",
-    "title": "How real companies became AI-native",
-    "sub": "These are live organizations running on Toone right now. Their processes are encoded as routines and operated by agents on a schedule, under human governance.",
-    "processesLabel": "What runs on Toone",
-    "ctaTitle": "Bring us your organization",
-    "ctaSub": "Give us one process that hurts. We encode it, run it on Toone, and you watch your own company operate itself.",
-    "ctaBtn": "Start a conversation",
-    "backHome": "← Back home",
-    "note": "Department and routine counts reflect the organizations each partner runs on Toone as of July 2026.",
+    "title": "Comment de vraies entreprises sont devenues AI-native",
+    "sub": "Ce sont des organisations vivantes qui tournent sur Toone en ce moment même. Leurs processus sont encodés en routines et opérés par des agents selon un calendrier, sous gouvernance humaine.",
+    "processesLabel": "Ce qui tourne sur Toone",
+    "ctaTitle": "Apportez-nous votre organisation",
+    "ctaSub": "Donnez-nous un processus qui fait mal. Nous l'encodons, le faisons tourner sur Toone, et vous regardez votre propre entreprise s'opérer elle-même.",
+    "ctaBtn": "Engager la conversation",
+    "backHome": "← Retour à l'accueil",
+    "note": "Les nombres de départements et de routines reflètent les organisations que chaque partenaire fait tourner sur Toone en juillet 2026.",
     "cases": [
       {
         "id": "truleaf",
         "name": "Truleaf.org",
-        "role": "Deployment #1",
-        "sector": "Biological crop protection R&D",
+        "role": "Déploiement n° 1",
+        "sector": "R&D en protection biologique des cultures",
         "url": "https://truleaf.org",
         "logo": "truleaf",
-        "lede": "Truleaf turns published science into decision-ready evidence for teams developing pesticide-free crop protection. That work traditionally costs a research team four to eight weeks of manual literature review per agent. Its research pipeline, its go-to-market and its engineering all run as Toone organizations, and it becomes the first white-label deployment: the same engine, their brand, their domain.",
+        "lede": "Truleaf transforme la science publiée en preuves prêtes pour la décision, pour les équipes qui développent une protection des cultures sans pesticides. Ce travail coûte traditionnellement à une équipe de recherche quatre à huit semaines de revue de littérature manuelle par agent. Son pipeline de recherche, son go-to-market et son ingénierie tournent tous comme des organisations Toone, et elle devient le premier déploiement white-label : le même moteur, leur marque, leur domaine.",
         "stats": [
           {
             "n": "3",
-            "l": "organizations"
+            "l": "organisations"
           },
           {
             "n": "21",
-            "l": "departments"
+            "l": "départements"
           },
           {
             "n": "107",
-            "l": "routines in production"
+            "l": "routines en production"
           }
         ],
         "blocks": [
           {
-            "t": "Research pipeline",
-            "d": "Literature ingestion, performance extraction across strains and conditions, contradiction resolution, regulatory-readiness scoring, and a provenance audit that locks every claim to its original source. Weeks of manual review become hours."
+            "t": "Pipeline de recherche",
+            "d": "Ingestion de littérature, extraction de performance entre souches et conditions, résolution des contradictions, score de maturité réglementaire, et un audit de provenance qui verrouille chaque affirmation à sa source d'origine. Des semaines de revue manuelle deviennent des heures."
           },
           {
-            "t": "Product strategy",
-            "d": "A competitor radar walks named competitors' sites, changelogs and pricing every week. Market trends, customer voice and review mining all feed one evidence gate, where a bet advances only once its evidence is recorded in the knowledge graph."
+            "t": "Stratégie produit",
+            "d": "Un radar concurrentiel parcourt chaque semaine les sites, changelogs et tarifs de concurrents nommés. Tendances de marché, voix du client et analyse des avis alimentent une seule porte de preuve, où un pari n'avance que lorsque sa preuve est inscrite dans le graphe de connaissances."
           },
           {
-            "t": "Organic growth",
-            "d": "Daily rank tracking through mapped analytics sessions, query mining, cannibalization and index-bloat audits, and a content pipeline that runs from brief intake through to a publish-readiness check."
+            "t": "Croissance organique",
+            "d": "Suivi quotidien des positions via des sessions d'analytics cartographiées, exploration des requêtes, audits de cannibalisation et d'inflation d'index, et un pipeline de contenu qui va de la réception du brief jusqu'au contrôle de publication."
           },
           {
-            "t": "Engineering",
-            "d": "Bug triage, review queue and release readiness run on cadence. Architecture-drift scans, dependency hygiene, dead-code sweeps and a debt register keep the codebase healthy between releases."
+            "t": "Ingénierie",
+            "d": "Triage des bugs, file de revue et préparation des releases tournent en cadence. Scans de dérive d'architecture, hygiène des dépendances, balayages de code mort et un registre de dette gardent la base de code saine entre les releases."
           }
         ]
       },
       {
         "id": "micoo",
         "name": "micoo",
-        "role": "Design partner #1",
-        "sector": "Microcredential platform",
+        "role": "Partenaire design n° 1",
+        "sector": "Plateforme de microcertifications",
         "url": "",
         "logo": "micoo",
-        "lede": "micoo is the reference case for the transformation motion: a working business encoded into templates and routines. Its engineering organization now runs itself from intake through to the delivery brief, and its people spend their time on decisions.",
+        "lede": "micoo est le cas de référence du mouvement de transformation : une entreprise en activité encodée en modèles et en routines. Son organisation d'ingénierie se pilote désormais seule, de la réception du travail jusqu'au brief de livraison, et ses équipes passent leur temps sur les décisions.",
         "stats": [
           {
             "n": "1",
-            "l": "organization"
+            "l": "organisation"
           },
           {
             "n": "7",
-            "l": "departments"
+            "l": "départements"
           },
           {
             "n": "38",
-            "l": "routines in production"
+            "l": "routines en production"
           }
         ],
         "blocks": [
           {
-            "t": "Delivery reports itself",
-            "d": "A daily brief covers the delta across every in-flight item: what moved, what is blocked and on whom, and where reality drifted from the plan. Blockers escalate to the departments that own them. If nothing moved, the brief says so in three lines."
+            "t": "La livraison rend compte d'elle-même",
+            "d": "Un brief quotidien couvre le delta de chaque sujet en cours : ce qui a bougé, ce qui est bloqué et par qui, et où la réalité s'est écartée du plan. Les blocages escaladent vers les départements qui en sont responsables. Si rien n'a bougé, le brief le dit en trois lignes."
           },
           {
-            "t": "Intake and decomposition",
-            "d": "Incoming work is triaged, planned and broken into sub-routines automatically, then checked against an explicit definition of done before anything gets called finished."
+            "t": "Réception et décomposition",
+            "d": "Le travail entrant est trié, planifié et découpé en sous-routines automatiquement, puis vérifié contre une définition explicite du terminé avant que quoi que ce soit soit déclaré fini."
           },
           {
-            "t": "Hygiene on cadence",
-            "d": "Architecture-drift scans, dependency hygiene, consistency audits and dead-code sweeps run on a schedule. This is the maintenance work every team intends to do and never gets to."
+            "t": "Hygiène en cadence",
+            "d": "Scans de dérive d'architecture, hygiène des dépendances, audits de cohérence et balayages de code mort tournent selon un calendrier. C'est la maintenance que chaque équipe compte faire et ne fait jamais."
           },
           {
-            "t": "Radar and research",
-            "d": "A tech radar watches releases, deprecations and security advisories. The research department turns those raw signals into evaluated positions and spike proposals, so technology choices arrive early enough to be decisions."
+            "t": "Radar et recherche",
+            "d": "Un radar technologique surveille les releases, dépréciations et alertes de sécurité. Le département recherche transforme ces signaux bruts en positions évaluées et en propositions de spike, pour que les choix technologiques arrivent assez tôt pour être des décisions."
           }
         ]
       }
@@ -184,5 +177,31 @@
     "title": "Votre entreprise sait déjà comment tourner.",
     "lead": "Le savoir est déjà là — dans les fichiers, les outils et les têtes. Toone lui donne une structure : un graphe vivant de ce que sait votre entreprise, et une organisation d'agents IA qui le met au travail selon un calendrier.",
     "cta": "Voir comment ça marche"
+  },
+  "auth": {
+    "signinTitle": "Connectez-vous à Toone",
+    "signupTitle": "Créez votre compte Toone",
+    "signinSub": "Bon retour.",
+    "signupSub": "Votre compte fonctionne dans l'app de bureau.",
+    "googleBtn": "Continuer avec Google",
+    "soon": "Bientôt",
+    "or": "ou",
+    "namePh": "Nom (facultatif)",
+    "emailPh": "E-mail",
+    "passwordPh": "Mot de passe",
+    "signinBtn": "Se connecter",
+    "signupBtn": "Créer un compte",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signinLink": "Connectez-vous",
+    "newHere": "Nouveau sur Toone ?",
+    "signupLink": "Créez un compte",
+    "successTitle": "Vous êtes connecté en tant que {email}",
+    "successNote": "Toone tourne sur votre Mac — téléchargez l'app et connectez-vous là-bas.",
+    "downloadMac": "Télécharger pour macOS",
+    "errGeneric": "Une erreur est survenue — réessayez.",
+    "errPasswordLength": "Le mot de passe doit contenir entre 8 et 72 caractères.",
+    "errExists": "Un compte existe déjà avec cet e-mail — essayez de vous connecter.",
+    "errInvalid": "E-mail ou mot de passe invalide.",
+    "errRate": "Trop de tentatives — réessayez dans une minute."
   }
 }
