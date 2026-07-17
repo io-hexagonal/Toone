@@ -17,10 +17,11 @@ import { useEffect, useRef } from "react";
  * with shock-triggered second-generation births, lazy pairwise gravity,
  * binary capture and constellation moments. Rare events: comets, a black
  * hole, a galaxy sprite drifting behind the gas.
- * Interaction: hover = lantern warmth (+ ignition bias), click = kindle at
- * the densest nearby gas, hold ~1.2 s (stationary) = collapse-and-burst,
- * drag = carve a bright gas furrow that sows embers along the path. Nothing
- * chases the cursor; the star cap never rises with interaction.
+ * Interaction: click = kindle at the densest nearby gas, hold ~1.2 s
+ * (stationary) = collapse-and-burst, drag = carve a bright gas furrow that
+ * sows embers along the path. Hovering leaves no mark — only deliberate
+ * gestures touch the gas. Nothing chases the cursor; the star cap never
+ * rises with interaction.
  * Kinship rule (life-like, continuous — deliberately not Conway): every
  * promoted star responds to its neighborhood. Isolation fades a star early,
  * 2–3 companions sustain it and occasionally seed an ember between them,
@@ -444,14 +445,13 @@ class Cosmos {
     if (P.x >= 0) {
       const moved = P.lx >= 0 ? Math.hypot(P.x - P.lx, P.y - P.ly) : 0;
       const dragging = P.down > 0 && P.dragDist + moved > 8;
-      if (P.lx >= 0) {
+      // hover leaves no mark — only a pressed pointer touches the gas
+      if (dragging && P.lx >= 0) {
         const steps = Math.max(1, (moved / 8) | 0);
-        // a drag carves a furrow: tighter, brighter gas than hover warmth
-        const sigma = dragging ? 2.2 : 3;
-        const amp = dragging ? 0.55 : 0.3;
+        // a drag carves a furrow of tight, bright gas
         for (let k = 0; k <= steps; k++)
-          this.stamp(P.lx + ((P.x - P.lx) * k) / steps, P.ly + ((P.y - P.ly) * k) / steps, sigma, amp / (steps * 0.6 + 1));
-      } else this.stamp(P.x, P.y, 3, 0.3);
+          this.stamp(P.lx + ((P.x - P.lx) * k) / steps, P.ly + ((P.y - P.ly) * k) / steps, 2.2, 0.55 / (steps * 0.6 + 1));
+      }
       if (P.down > 0) {
         P.dragDist += moved;
         // sow the furrow: every ~14 px of drag seeds an ember slightly behind
