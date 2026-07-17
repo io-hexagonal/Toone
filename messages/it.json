@@ -198,10 +198,13 @@
     "successTitle": "Hai effettuato l'accesso come {email}",
     "successNote": "Toone gira sul tuo Mac — scarica l'app e accedi lì.",
     "downloadMac": "Scarica per macOS",
+    "signOut": "Esci",
     "errGeneric": "Qualcosa è andato storto — riprova.",
     "errPasswordLength": "La password deve avere tra 8 e 72 caratteri.",
     "errExists": "Esiste già un account con questa email — prova ad accedere.",
+    "errExistsGoogle": "Questa email ha già un account con password — accedi con email e password.",
     "errInvalid": "Email o password non validi.",
-    "errRate": "Troppi tentativi — riprova tra un minuto."
+    "errRate": "Troppi tentativi — riprova tra un minuto.",
+    "errInvalidInput": "Controlla la tua email e la password e riprova."
   }
 }

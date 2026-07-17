@@ -198,10 +198,13 @@
     "successTitle": "Has iniciado sesión como {email}",
     "successNote": "Toone funciona en tu Mac — descarga la app e inicia sesión allí.",
     "downloadMac": "Descargar para macOS",
+    "signOut": "Cerrar sesión",
     "errGeneric": "Algo salió mal — inténtalo de nuevo.",
     "errPasswordLength": "La contraseña debe tener entre 8 y 72 caracteres.",
     "errExists": "Ya existe una cuenta con este correo — intenta iniciar sesión.",
+    "errExistsGoogle": "Este correo ya tiene una cuenta con contraseña — inicia sesión con tu correo y contraseña.",
     "errInvalid": "Correo o contraseña no válidos.",
-    "errRate": "Demasiados intentos — inténtalo de nuevo en un minuto."
+    "errRate": "Demasiados intentos — inténtalo de nuevo en un minuto.",
+    "errInvalidInput": "Comprueba tu correo y contraseña e inténtalo de nuevo."
   }
 }

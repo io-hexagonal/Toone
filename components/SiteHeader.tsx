@@ -121,6 +121,7 @@ export default function SiteHeader() {
           <a href="https://github.com/mattwebhub/toone" target="_blank" rel="noopener" data-optional>
             {t("github")}
           </a>
+          <Link href="/signin">{t("signin")}</Link>
           <a
             className="dl"
             href={DMG_URL}

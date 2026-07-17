@@ -198,10 +198,13 @@
     "successTitle": "Você entrou como {email}",
     "successNote": "O Toone roda no seu Mac — baixe o app e entre por lá.",
     "downloadMac": "Baixar para macOS",
+    "signOut": "Sair",
     "errGeneric": "Algo deu errado — tente novamente.",
     "errPasswordLength": "A senha deve ter entre 8 e 72 caracteres.",
     "errExists": "Já existe uma conta com este e-mail — tente entrar.",
+    "errExistsGoogle": "Este e-mail já tem uma conta com senha — entre com seu e-mail e senha.",
     "errInvalid": "E-mail ou senha inválidos.",
-    "errRate": "Muitas tentativas — tente novamente em um minuto."
+    "errRate": "Muitas tentativas — tente novamente em um minuto.",
+    "errInvalidInput": "Verifique seu e-mail e senha e tente novamente."
   }
 }

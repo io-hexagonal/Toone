@@ -198,10 +198,13 @@
     "successTitle": "Vous êtes connecté en tant que {email}",
     "successNote": "Toone tourne sur votre Mac — téléchargez l'app et connectez-vous là-bas.",
     "downloadMac": "Télécharger pour macOS",
+    "signOut": "Se déconnecter",
     "errGeneric": "Une erreur est survenue — réessayez.",
     "errPasswordLength": "Le mot de passe doit contenir entre 8 et 72 caractères.",
     "errExists": "Un compte existe déjà avec cet e-mail — essayez de vous connecter.",
+    "errExistsGoogle": "Cet e-mail a déjà un compte avec mot de passe — connectez-vous avec votre e-mail et votre mot de passe.",
     "errInvalid": "E-mail ou mot de passe invalide.",
-    "errRate": "Trop de tentatives — réessayez dans une minute."
+    "errRate": "Trop de tentatives — réessayez dans une minute.",
+    "errInvalidInput": "Vérifiez votre e-mail et votre mot de passe, puis réessayez."
   }
 }

@@ -198,10 +198,13 @@
     "successTitle": "You're signed in as {email}",
     "successNote": "Toone runs on your Mac — download the app and sign in there.",
     "downloadMac": "Download for macOS",
+    "signOut": "Sign out",
     "errGeneric": "Something went wrong — please try again.",
     "errPasswordLength": "Password must be 8–72 characters.",
     "errExists": "An account with this email already exists — try signing in.",
+    "errExistsGoogle": "This email already has a password account — sign in with your email & password instead.",
     "errInvalid": "Invalid email or password.",
-    "errRate": "Too many attempts — try again in a minute."
+    "errRate": "Too many attempts — try again in a minute.",
+    "errInvalidInput": "Please check your email address and password and try again."
   }
 }

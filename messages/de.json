@@ -198,10 +198,13 @@
     "successTitle": "Du bist angemeldet als {email}",
     "successNote": "Toone läuft auf deinem Mac — lade die App herunter und melde dich dort an.",
     "downloadMac": "Für macOS herunterladen",
+    "signOut": "Abmelden",
     "errGeneric": "Etwas ist schiefgelaufen — bitte versuche es erneut.",
     "errPasswordLength": "Das Passwort muss 8–72 Zeichen lang sein.",
     "errExists": "Mit dieser E-Mail existiert bereits ein Konto — melde dich stattdessen an.",
+    "errExistsGoogle": "Für diese E-Mail existiert bereits ein Konto mit Passwort — melde dich stattdessen mit E-Mail und Passwort an.",
     "errInvalid": "E-Mail oder Passwort ungültig.",
-    "errRate": "Zu viele Versuche — versuche es in einer Minute erneut."
+    "errRate": "Zu viele Versuche — versuche es in einer Minute erneut.",
+    "errInvalidInput": "Bitte überprüfe deine E-Mail-Adresse und dein Passwort und versuche es erneut."
   }
 }

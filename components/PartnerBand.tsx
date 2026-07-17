@@ -26,13 +26,15 @@ export default async function PartnerBand() {
           data-umami-event="partner-click"
           data-umami-event-partner="truleaf"
         >
+          {/* Transparent variant: the band inks marks via brightness(0), so
+              the solid rounded-square icon would render as a black box */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/partners/truleaf-icon.svg"
+            src="/assets/partners/truleaf-icon-transparent.svg"
             alt=""
             width={32}
             height={32}
-            style={{ display: "block", borderRadius: 7 }}
+            style={{ display: "block" }}
           />
           <TruleafWordmark size={22} />
         </a>

@@ -2,18 +2,21 @@
 
 import { useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/lib/navigation";
+import HeroCosmos from "@/components/HeroCosmos";
 
 const DMG_URL =
   "https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg";
 
+/** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
+const GOOGLE_AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+
 /**
  * Full-screen hero. Left column centered (claude.ai-style): headline, one
- * short line, auth card, one download button. Right: the film panel filling
- * the hero's height. The email flow is the real waitlist endpoint; Google
- * sign-in is visual until auth ships. Drop the fal-generated film URL into
- * FILM_SRC and the <video> takes over from the mark placeholder.
+ * short line, auth card, one download button. Right: the Toone Cosmos —
+ * a procedural pixel-art living nebula (see HeroCosmos.tsx) that blends
+ * into the page background: no border, no shadow, no fill.
  */
-const FILM_SRC = ""; // fal image-to-video hero film, when ready
 
 export default function HeroAuth() {
   const t = useTranslations("landing");
@@ -88,6 +91,14 @@ export default function HeroAuth() {
               cursor: default; position: relative;
             }
             .ha-google svg { width: 17px; height: 17px; }
+            .ha-google.live {
+              cursor: pointer; text-decoration: none;
+              transition: border-color 0.2s ease, background 0.2s ease;
+            }
+            .ha-google.live:hover {
+              border-color: rgba(255,255,255,0.35);
+              background: rgba(255,255,255,0.05);
+            }
             .ha-google .soon {
               position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
               font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
@@ -133,19 +144,11 @@ export default function HeroAuth() {
               /* top edge meets the header (~90px), bottom keeps a 22px margin */
               height: calc(100svh - 112px);
               margin-bottom: 22px;
-              aspect-ratio: 4 / 5;            /* portrait, like a filmed scene */
+              aspect-ratio: 4 / 5;            /* matches the 160×200 pixel grid */
               width: auto; max-width: 48vw;
-              border-radius: 20px; overflow: hidden;
-              border: 1px solid rgba(255,255,255,0.09);
-              background:
-                radial-gradient(ellipse 60% 50% at 50% 44%,
-                  rgba(199,199,199,0.10) 0%, rgba(199,199,199,0.03) 45%, transparent 72%),
-                #101010;
-              box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-              display: flex; align-items: center; justify-content: center;
+              /* no border, no shadow, no fill — the cosmos fades into the
+                 page background (#141413) at its own edges */
             }
-            .ha-film video { width: 100%; height: 100%; object-fit: cover; display: block; }
-            .ha-film .mark { width: 96px; height: 96px; opacity: 0.9; }
             @media (max-width: 980px) {
               .ha-film { height: 52svh; max-width: min(86vw, 440px); margin: 0 auto 24px; align-self: center; }
             }
@@ -163,16 +166,32 @@ export default function HeroAuth() {
               <p className="ha-joined">{t("authJoined")}</p>
             ) : (
               <>
-                <button className="ha-google" type="button" aria-disabled="true">
-                  <svg viewBox="0 0 48 48" aria-hidden="true">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-                  </svg>
-                  {t("authGoogle")}
-                  <span className="soon">{t("soon")}</span>
-                </button>
+                {(() => {
+                  const googleMark = (
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                    </svg>
+                  );
+                  return GOOGLE_AUTH_ENABLED ? (
+                    <Link
+                      className="ha-google live"
+                      href="/signin"
+                      data-umami-event="hero-google-signin"
+                    >
+                      {googleMark}
+                      {t("authGoogle")}
+                    </Link>
+                  ) : (
+                    <button className="ha-google" type="button" aria-disabled="true">
+                      {googleMark}
+                      {t("authGoogle")}
+                      <span className="soon">{t("soon")}</span>
+                    </button>
+                  );
+                })()}
                 <div className="ha-or">{t("authOr")}</div>
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   <input
@@ -207,13 +226,8 @@ export default function HeroAuth() {
           </a>
         </div>
 
-        <div className="ha-film" aria-hidden={FILM_SRC === ""}>
-          {FILM_SRC ? (
-            <video src={FILM_SRC} autoPlay muted loop playsInline />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="mark" src="/assets/brand/toone-mark.svg" alt="" />
-          )}
+        <div className="ha-film" aria-hidden="true">
+          <HeroCosmos />
         </div>
       </section>
     </>

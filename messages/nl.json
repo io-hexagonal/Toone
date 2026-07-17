@@ -198,10 +198,13 @@
     "successTitle": "Je bent ingelogd als {email}",
     "successNote": "Toone draait op je Mac — download de app en log daar in.",
     "downloadMac": "Downloaden voor macOS",
+    "signOut": "Uitloggen",
     "errGeneric": "Er ging iets mis — probeer het opnieuw.",
     "errPasswordLength": "Het wachtwoord moet 8–72 tekens lang zijn.",
     "errExists": "Er bestaat al een account met dit e-mailadres — probeer in te loggen.",
+    "errExistsGoogle": "Dit e-mailadres heeft al een account met wachtwoord — log in met je e-mailadres en wachtwoord.",
     "errInvalid": "Ongeldig e-mailadres of wachtwoord.",
-    "errRate": "Te veel pogingen — probeer het over een minuut opnieuw."
+    "errRate": "Te veel pogingen — probeer het over een minuut opnieuw.",
+    "errInvalidInput": "Controleer je e-mailadres en wachtwoord en probeer het opnieuw."
   }
 }

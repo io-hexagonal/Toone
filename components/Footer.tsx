@@ -87,6 +87,7 @@ export default function Footer() {
             </div>
             <div>
               <h4>{t("company")}</h4>
+              <Link href="/signin">{nav("signin")}</Link>
               <a href="mailto:hello@trytoone.com">{t("contact")}</a>
               <Link href="/privacy">{t("privacy")}</Link>
               <a href="https://github.com/mattwebhub/toone" target="_blank" rel="noopener">
