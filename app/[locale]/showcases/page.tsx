@@ -157,6 +157,38 @@ export default async function ShowcasesPage({ params }: Props) {
               color: rgba(255,255,255,0.42); font-size: 13.5px; line-height: 1.62;
             }
 
+            /* Ghost card after the live cases: same silhouette as a case card
+               but dashed and dimmed, so it reads as a seat being prepared
+               rather than an empty promise. */
+            .sc-more {
+              display: flex; flex-direction: column; align-items: center;
+              justify-content: center; text-align: center; gap: 10px;
+              border: 1px dashed rgba(255,255,255,0.13); border-radius: 18px;
+              background: rgba(255,255,255,0.012);
+              padding: 44px 30px; margin-bottom: 26px;
+            }
+            .sc-more-title {
+              display: flex; align-items: center; gap: 10px;
+              color: rgba(255,255,255,0.55); font-size: 15px; font-weight: 600;
+              letter-spacing: 0.02em;
+            }
+            .sc-more-dot {
+              width: 7px; height: 7px; border-radius: 50%;
+              background: #C7C7C7; flex-shrink: 0;
+              animation: sc-more-pulse 2.4s ease-in-out infinite;
+            }
+            @keyframes sc-more-pulse {
+              0%, 100% { opacity: 0.35; box-shadow: 0 0 0 0 rgba(199,199,199,0.25); }
+              50% { opacity: 1; box-shadow: 0 0 10px 2px rgba(199,199,199,0.18); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .sc-more-dot { animation: none; opacity: 0.8; }
+            }
+            .sc-more p {
+              color: rgba(255,255,255,0.32); font-size: 13.5px; line-height: 1.6;
+              max-width: 46ch;
+            }
+
             /* Brand moment: the mark + Toone's pixel wordmark, lit by the
                lantern gradient. The plain bordered box that was here read as
                dead space at the end of the page. */
@@ -294,10 +326,24 @@ export default async function ShowcasesPage({ params }: Props) {
           </article>
         ))}
 
+        <div className="sc-more" aria-label={t("moreTitle")}>
+          <div className="sc-more-title">
+            <span className="sc-more-dot" aria-hidden="true" />
+            {t("moreTitle")}
+          </div>
+          <p>{t("moreSub")}</p>
+        </div>
+
         <section className="sc-cta">
           <div className="sc-lockup">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/brand/toone-mark.svg" alt="" width={44} height={44} />
+            <img
+              src="/assets/brand/toone-mark-pixel.svg"
+              alt=""
+              width={44}
+              height={44}
+              style={{ imageRendering: "pixelated" }}
+            />
             <span className="sc-wordmark">toone</span>
           </div>
           <h2>{t("ctaTitle")}</h2>
