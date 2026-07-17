@@ -206,5 +206,21 @@
     "errInvalid": "Email o password non validi.",
     "errRate": "Troppi tentativi — riprova tra un minuto.",
     "errInvalidInput": "Controlla la tua email e la password e riprova."
+  },
+  "contact": {
+    "title": "Portaci la tua organizzazione",
+    "sub": "Raccontaci un processo che fa male. Ti risponderemo entro un giorno.",
+    "nameLabel": "Nome",
+    "namePh": "Il tuo nome",
+    "emailLabel": "Email",
+    "emailPh": "tu@azienda.com",
+    "companyLabel": "Azienda (opzionale)",
+    "companyPh": "Azienda o progetto",
+    "messageLabel": "Messaggio",
+    "messagePh": "Cosa vorresti far girare su Toone?",
+    "send": "Invia messaggio",
+    "done": "Grazie — il tuo messaggio è in arrivo. Ti risponderemo presto.",
+    "error": "Qualcosa è andato storto. Riprova.",
+    "close": "Chiudi"
   }
 }

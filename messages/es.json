@@ -206,5 +206,21 @@
     "errInvalid": "Correo o contraseña no válidos.",
     "errRate": "Demasiados intentos — inténtalo de nuevo en un minuto.",
     "errInvalidInput": "Comprueba tu correo y contraseña e inténtalo de nuevo."
+  },
+  "contact": {
+    "title": "Tráenos tu organización",
+    "sub": "Cuéntanos sobre un proceso que duele. Te responderemos en un día.",
+    "nameLabel": "Nombre",
+    "namePh": "Tu nombre",
+    "emailLabel": "Email",
+    "emailPh": "tu@empresa.com",
+    "companyLabel": "Empresa (opcional)",
+    "companyPh": "Empresa o proyecto",
+    "messageLabel": "Mensaje",
+    "messagePh": "¿Qué te gustaría ejecutar en Toone?",
+    "send": "Enviar mensaje",
+    "done": "Gracias — tu mensaje está en camino. Te responderemos pronto.",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "close": "Cerrar"
   }
 }

@@ -206,5 +206,21 @@
     "errInvalid": "Invalid email or password.",
     "errRate": "Too many attempts — try again in a minute.",
     "errInvalidInput": "Please check your email address and password and try again."
+  },
+  "contact": {
+    "title": "Bring us your organization",
+    "sub": "Tell us about one process that hurts. We'll get back to you within a day.",
+    "nameLabel": "Name",
+    "namePh": "Your name",
+    "emailLabel": "Email",
+    "emailPh": "you@company.com",
+    "companyLabel": "Company (optional)",
+    "companyPh": "Company or project",
+    "messageLabel": "Message",
+    "messagePh": "What would you like to run on Toone?",
+    "send": "Send message",
+    "done": "Thanks — your message is on its way. We'll get back to you shortly.",
+    "error": "Something went wrong. Please try again.",
+    "close": "Close"
   }
 }

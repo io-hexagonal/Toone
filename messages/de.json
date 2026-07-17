@@ -206,5 +206,21 @@
     "errInvalid": "E-Mail oder Passwort ungültig.",
     "errRate": "Zu viele Versuche — versuche es in einer Minute erneut.",
     "errInvalidInput": "Bitte überprüfe deine E-Mail-Adresse und dein Passwort und versuche es erneut."
+  },
+  "contact": {
+    "title": "Bringen Sie uns Ihre Organisation",
+    "sub": "Erzählen Sie uns von einem Prozess, der schmerzt. Wir melden uns innerhalb eines Tages.",
+    "nameLabel": "Name",
+    "namePh": "Ihr Name",
+    "emailLabel": "E-Mail",
+    "emailPh": "sie@firma.com",
+    "companyLabel": "Unternehmen (optional)",
+    "companyPh": "Unternehmen oder Projekt",
+    "messageLabel": "Nachricht",
+    "messagePh": "Was möchten Sie auf Toone laufen lassen?",
+    "send": "Nachricht senden",
+    "done": "Danke — Ihre Nachricht ist unterwegs. Wir melden uns in Kürze.",
+    "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "close": "Schließen"
   }
 }

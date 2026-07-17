@@ -206,5 +206,21 @@
     "errInvalid": "E-mail ou mot de passe invalide.",
     "errRate": "Trop de tentatives — réessayez dans une minute.",
     "errInvalidInput": "Vérifiez votre e-mail et votre mot de passe, puis réessayez."
+  },
+  "contact": {
+    "title": "Confiez-nous votre organisation",
+    "sub": "Parlez-nous d'un processus qui fait mal. Nous vous répondrons sous un jour.",
+    "nameLabel": "Nom",
+    "namePh": "Votre nom",
+    "emailLabel": "Email",
+    "emailPh": "vous@entreprise.com",
+    "companyLabel": "Entreprise (optionnel)",
+    "companyPh": "Entreprise ou projet",
+    "messageLabel": "Message",
+    "messagePh": "Que souhaitez-vous faire tourner sur Toone ?",
+    "send": "Envoyer le message",
+    "done": "Merci — votre message est en route. Nous vous répondrons rapidement.",
+    "error": "Une erreur s'est produite. Veuillez réessayer.",
+    "close": "Fermer"
   }
 }

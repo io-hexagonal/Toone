@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ContactCta from "@/components/ContactModal";
 import TruleafWordmark from "@/components/TruleafWordmark";
 import { Link } from "@/lib/navigation";
 import { locales } from "@/i18n/routing";
@@ -190,6 +191,7 @@ export default async function ShowcasesPage({ params }: Props) {
               max-width: 54ch; margin: 0 auto 28px;
             }
             .sc-btn {
+              font-family: inherit; cursor: pointer;
               display: inline-block; padding: 14px 30px; border-radius: 12px;
               background: rgba(255,255,255,0.08);
               border: 1px solid rgba(255,255,255,0.14);
@@ -300,13 +302,9 @@ export default async function ShowcasesPage({ params }: Props) {
           </div>
           <h2>{t("ctaTitle")}</h2>
           <p>{t("ctaSub")}</p>
-          <a
-            className="sc-btn"
-            href="mailto:hello@trytoone.com"
-            data-umami-event="showcase-bring-us-your-org"
-          >
+          <ContactCta className="sc-btn" source="showcases">
             {t("ctaBtn")}
-          </a>
+          </ContactCta>
           <div>
             <Link className="sc-back" href="/">
               {t("backHome")}

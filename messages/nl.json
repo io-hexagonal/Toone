@@ -206,5 +206,21 @@
     "errInvalid": "Ongeldig e-mailadres of wachtwoord.",
     "errRate": "Te veel pogingen — probeer het over een minuut opnieuw.",
     "errInvalidInput": "Controleer je e-mailadres en wachtwoord en probeer het opnieuw."
+  },
+  "contact": {
+    "title": "Breng ons je organisatie",
+    "sub": "Vertel ons over één proces dat pijn doet. We reageren binnen een dag.",
+    "nameLabel": "Naam",
+    "namePh": "Je naam",
+    "emailLabel": "E-mail",
+    "emailPh": "jij@bedrijf.com",
+    "companyLabel": "Bedrijf (optioneel)",
+    "companyPh": "Bedrijf of project",
+    "messageLabel": "Bericht",
+    "messagePh": "Wat wil je op Toone laten draaien?",
+    "send": "Bericht versturen",
+    "done": "Bedankt — je bericht is onderweg. We reageren snel.",
+    "error": "Er is iets misgegaan. Probeer het opnieuw.",
+    "close": "Sluiten"
   }
 }
