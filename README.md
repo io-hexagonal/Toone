@@ -1,7 +1,10 @@
 <p align="center">
-  <img src="assets/profiles/toone-icon-dark-512.png" width="64" alt="Toone" />
+  <img src="assets/profiles/toone-profile-512.png" width="64" alt="Toone" />
   &nbsp;&nbsp;
-  <img src="assets/typography/toone-dots.svg" width="280" alt="Toone" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/typography/toone-typography-dark.png">
+    <img src="assets/typography/toone-typography-light.png" width="280" alt="Toone" />
+  </picture>
 </p>
 
 <p align="center">
