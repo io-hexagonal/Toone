@@ -2,8 +2,8 @@
   <img src="assets/profiles/toone-profile-512.png" width="64" alt="Toone" />
   &nbsp;&nbsp;
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/typography/toone-typography-dark.png">
-    <img src="assets/typography/toone-typography-light.png" width="280" alt="Toone" />
+    <source media="(prefers-color-scheme: dark)" srcset="assets/typography/toone-wordmark-dark.png">
+    <img src="assets/typography/toone-wordmark-light.png" width="200" alt="Toone" />
   </picture>
 </p>
 
