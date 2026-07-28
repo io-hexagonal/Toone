@@ -95,8 +95,10 @@ export default function SiteHeader() {
             .hdr2[data-scrolled="true"] .dl { background: #141311; color: #f0ede6; }
 
             @media (max-width: 720px) {
-              .hdr2 { padding: 16px 20px; }
-              .hdr2 .links a[data-optional] { display: none; }
+              .hdr2 { padding: 16px 20px; gap: 14px; }
+              .hdr2 .links { gap: 16px; }
+              .hdr2 .links a[data-optional],
+              .hdr2 .links .dl { display: none; }
             }
           `,
         }}
@@ -113,7 +115,7 @@ export default function SiteHeader() {
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
-          <Link href="/showcases">{t("showcases")}</Link>
+          <Link href="/showcases" data-optional>{t("showcases")}</Link>
           <Link href="/privacy" data-optional>{t("privacy")}</Link>
           <a href="https://github.com/mattwebhub/toone" target="_blank" rel="noopener" data-optional>
             {t("github")}

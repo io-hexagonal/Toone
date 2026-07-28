@@ -133,6 +133,24 @@ export default function HeroAuth() {
             .ha-dl:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); }
             .ha-dl svg { width: 18px; height: 18px; fill: currentColor; }
 
+            .ha-product-hunt {
+              position: fixed; z-index: 35; left: 24px; bottom: 24px;
+              display: inline-flex; border-radius: 12px; overflow: hidden;
+              opacity: 0.8; box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+              transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+            }
+            .ha-product-hunt:hover {
+              opacity: 1; transform: translateY(-2px);
+              box-shadow: 0 14px 36px rgba(0,0,0,0.32);
+            }
+            .ha-product-hunt:focus-visible {
+              outline: 2px solid rgba(255,255,255,0.9);
+              outline-offset: 4px; opacity: 1;
+            }
+            .ha-product-hunt img {
+              display: block; width: 250px; height: auto;
+            }
+
             .ha-film {
               position: relative; justify-self: end; align-self: end;
               /* top edge meets the header (~90px), bottom keeps a 22px margin */
@@ -149,6 +167,15 @@ export default function HeroAuth() {
                 width: min(86vw, calc(52svh * 0.8), 440px);
                 height: auto; margin: 0 auto 24px; align-self: center;
               }
+            }
+            @media (max-width: 720px) {
+              .ha-dl { display: none; }
+              .ha-product-hunt {
+                position: static; margin-top: 20px;
+                transform: none; opacity: 0.82;
+              }
+              .ha-product-hunt:hover { transform: translateY(-2px); }
+              .ha-product-hunt img { width: min(210px, 58vw); }
             }
           `,
         }}
@@ -244,6 +271,22 @@ export default function HeroAuth() {
             </svg>
             {t("downloadFor")} {t("macOS")}
           </Link>
+
+          <a
+            className="ha-product-hunt"
+            href="https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Toone on Product Hunt"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=dark&t=1774512921035"
+              alt="Toone on Product Hunt"
+              width={250}
+              height={54}
+            />
+          </a>
         </div>
 
         <div className="ha-film" aria-hidden="true">

@@ -49,6 +49,7 @@ export default function Footer() {
             @media (max-width: 640px) {
               .ftr-wrap { flex-direction: column; }
               .ftr-cols { gap: 40px; }
+              .ftr-download { display: none !important; }
             }
           `,
         }}
@@ -71,6 +72,7 @@ export default function Footer() {
               <Link href="/#how">{t("how")}</Link>
               <Link href="/#faq">FAQ</Link>
               <Link
+                className="ftr-download"
                 href="/download"
                 data-umami-event="open-download-chooser"
                 data-umami-event-placement="footer"
