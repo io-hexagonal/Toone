@@ -3,9 +3,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 
-const DMG_URL =
-  "https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg";
-
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
  * Brand lockup + legal on the left, three link columns on the right.
@@ -73,13 +70,13 @@ export default function Footer() {
               <h4>{t("product")}</h4>
               <Link href="/#how">{t("how")}</Link>
               <Link href="/#faq">FAQ</Link>
-              <a
-                href={DMG_URL}
-                data-umami-event="download-dmg"
+              <Link
+                href="/download"
+                data-umami-event="open-download-chooser"
                 data-umami-event-placement="footer"
               >
                 {nav("download")}
-              </a>
+              </Link>
             </div>
             <div>
               <h4>{t("proof")}</h4>

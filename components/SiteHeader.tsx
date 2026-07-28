@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 
-const DMG_URL =
-  "https://github.com/io-hexagonal/Toone/releases/latest/download/Toone.dmg";
-
 /**
  * Morphing landing header — one element, two states.
  *
@@ -122,14 +119,14 @@ export default function SiteHeader() {
             {t("github")}
           </a>
           <Link href="/signin">{t("signin")}</Link>
-          <a
+          <Link
             className="dl"
-            href={DMG_URL}
-            data-umami-event="download-dmg"
+            href="/download"
+            data-umami-event="open-download-chooser"
             data-umami-event-placement="header"
           >
             {t("download")}
-          </a>
+          </Link>
         </nav>
       </header>
     </>
