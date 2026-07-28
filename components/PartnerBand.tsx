@@ -3,10 +3,10 @@ import TruleafWordmark from "@/components/TruleafWordmark";
 import { Link } from "@/lib/navigation";
 
 /**
- * Partner band — the two real partners, static.
+ * Partner band — the real partners, static.
  *
- * Deliberately not a marquee: with exactly two partners, a loop repeats them
- * across the viewport and reads as padding. Two logos, centred, is the honest
+ * Deliberately not a marquee: with this few partners, a loop repeats them
+ * across the viewport and reads as padding. Centred logos are the honest
  * shape — and it stays honest as the list grows.
  */
 export default async function PartnerBand() {
@@ -41,15 +41,8 @@ export default async function PartnerBand() {
 
         <span className="pb-sep" aria-hidden="true" />
 
-        {/* micoo has no public URL on file yet — renders unlinked until it does */}
-        <span className="pb-item">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/partners/micoo-wordmark.svg"
-            alt="micoo"
-            style={{ height: 23, width: "auto", display: "block" }}
-          />
-        </span>
+        {/* Partners in onboarding who can't be named publicly yet */}
+        <span className="pb-more">{t("partnersBandMore")}</span>
       </div>
 
       <div className="pb-foot">

@@ -22,6 +22,11 @@ export async function GET() {
       `<url><loc>${baseUrl}/${locale}/showcases</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`
     );
 
+    // Two-build macOS download chooser
+    lines.push(
+      `<url><loc>${baseUrl}/${locale}/download</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`
+    );
+
     // Privacy
     lines.push(
       `<url><loc>${baseUrl}/${locale}/privacy</loc><lastmod>${now}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>`

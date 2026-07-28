@@ -15,7 +15,8 @@ export default async function StatementSection() {
             .stmt {
               position: relative; z-index: 5;
               background: #f0ede6; color: #1d1c19;
-              text-align: center; padding: 118px 24px;
+              text-align: center;
+              padding: clamp(88px, 10vw, 118px) 24px clamp(56px, 6vw, 72px);
             }
             .stmt h2 {
               font-family: var(--font-wordmark), system-ui, sans-serif;
@@ -38,10 +39,12 @@ export default async function StatementSection() {
           `,
         }}
       />
-      <section className="stmt">
+      <section className="stmt" id="statement">
         <h2>{t("title")}</h2>
         <p>{t("lead")}</p>
-        <a className="pill" href="#how">{t("cta")}</a>
+        <a className="pill" href="#how">
+          {t("cta")}
+        </a>
       </section>
     </>
   );
