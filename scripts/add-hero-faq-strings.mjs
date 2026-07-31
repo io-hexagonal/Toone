@@ -40,7 +40,7 @@ const STRINGS = {
       q7: "Is it macOS only?",
       a7: "The desktop app is macOS today, distributed as a direct download. More platforms are on the roadmap.",
       q8: "What does it cost?",
-      a8: "Toone is free to download during early access. Agents run on your own Anthropic subscription.",
+      a8: "Toone is free to download during early access. Agents run on your own AI Provider account.",
       q9: "Can it run under my company's brand?",
       a9: "Yes — Toone white-labels: the same engine with your brand configuration.",
     },
