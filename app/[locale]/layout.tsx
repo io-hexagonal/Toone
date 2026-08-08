@@ -185,7 +185,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                   url: "https://trytoone.com",
                   downloadUrl: "https://github.com/io-hexagonal/Toone/releases",
                   image: "https://trytoone.com/assets/og/toone-og.png",
-                  featureList: "Custom MCP Tools, AI Agents, Routines, Custom Integrations, Browser Automation, Meeting Capture, Calendar, Planning",
+                  featureList: "Project History, Local Checkpoints, Live Collaboration, Custom MCP Tools, AI Agents, Routines, Custom Integrations, Browser Automation, Meeting Capture, Calendar, Planning",
                   offers: {
                     "@type": "Offer",
                     price: "0",

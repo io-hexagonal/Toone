@@ -306,6 +306,7 @@ export default async function LandingPage({ params }: Props) {
                 ["collaborationTitle", "collaborationDescription"],
                 ["p1t", "p1d"],
                 ["p2t", "p2d"],
+                ["p8t", "p8d"],
                 ["p3t", "p3d"],
                 ["p4t", "p4d"],
                 ["p5t", "p5d"],
