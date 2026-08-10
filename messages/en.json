@@ -211,6 +211,8 @@
     "signinSub": "Welcome back.",
     "signupSub": "Your account works in the desktop app.",
     "googleBtn": "Continue with Google",
+    "googleLoading": "Loading Google sign-in",
+    "googleBrowserRequired": "Google sign-in isn't available here. Open this page in Safari, or use email below.",
     "soon": "Soon",
     "or": "or",
     "namePh": "Name (optional)",

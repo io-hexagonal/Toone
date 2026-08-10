@@ -211,6 +211,8 @@
     "signinSub": "Bon retour.",
     "signupSub": "Votre compte fonctionne dans l'app de bureau.",
     "googleBtn": "Continuer avec Google",
+    "googleLoading": "Chargement de la connexion Google",
+    "googleBrowserRequired": "La connexion Google n'est pas disponible ici. Ouvrez cette page dans Safari ou utilisez votre e-mail ci-dessous.",
     "soon": "Bientôt",
     "or": "ou",
     "namePh": "Nom (facultatif)",

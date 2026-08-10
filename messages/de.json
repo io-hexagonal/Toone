@@ -211,6 +211,8 @@
     "signinSub": "Willkommen zurück.",
     "signupSub": "Dein Konto funktioniert in der Desktop-App.",
     "googleBtn": "Weiter mit Google",
+    "googleLoading": "Google-Anmeldung wird geladen",
+    "googleBrowserRequired": "Die Google-Anmeldung ist hier nicht verfügbar. Öffne diese Seite in Safari oder verwende unten deine E-Mail-Adresse.",
     "soon": "Bald",
     "or": "oder",
     "namePh": "Name (optional)",

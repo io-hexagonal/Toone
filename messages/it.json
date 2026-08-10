@@ -211,6 +211,8 @@
     "signinSub": "Bentornato.",
     "signupSub": "Il tuo account funziona nell'app desktop.",
     "googleBtn": "Continua con Google",
+    "googleLoading": "Caricamento dell'accesso con Google",
+    "googleBrowserRequired": "L'accesso con Google non è disponibile qui. Apri questa pagina in Safari o usa l'email qui sotto.",
     "soon": "Presto",
     "or": "oppure",
     "namePh": "Nome (facoltativo)",

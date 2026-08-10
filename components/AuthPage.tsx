@@ -15,6 +15,20 @@ import {
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
+const GSI_RENDER_TIMEOUT_MS = 5_000;
+
+type GoogleButtonState = "loading" | "ready" | "unavailable";
+
+function isUnsupportedIOSWebView(): boolean {
+  const ua = navigator.userAgent;
+  const isIOS =
+    /iPhone|iPad|iPod/i.test(ua) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  // Threads identifies itself as Barcelona; the other tokens cover Meta's
+  // sibling in-app browsers, which have the same unsupported GIS environment.
+  return isIOS && /Threads|Barcelona|Instagram|FBAN|FBAV/i.test(ua);
+}
 
 /** Minimal surface of Google Identity Services we use (ID-token flow). */
 type GoogleId = {
@@ -56,6 +70,8 @@ export default function AuthPage({ mode }: { mode: Mode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<ToneSession | null>(null);
+  const [googleButtonState, setGoogleButtonState] =
+    useState<GoogleButtonState>("loading");
   const googleRef = useRef<HTMLDivElement>(null);
   // Refs so the GIS callback (registered once) sees fresh state without
   // re-initializing the button on every render.
@@ -138,33 +154,60 @@ export default function AuthPage({ mode }: { mode: Mode }) {
     if (!GOOGLE_CLIENT_ID) return;
 
     let cancelled = false;
+    let renderTimeout: number | undefined;
+
+    const unavailable = () => {
+      if (!cancelled) setGoogleButtonState("unavailable");
+    };
+
+    if (isUnsupportedIOSWebView()) {
+      unavailable();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setGoogleButtonState("loading");
+    renderTimeout = window.setTimeout(unavailable, GSI_RENDER_TIMEOUT_MS);
 
     const init = () => {
       const gsi = window.google?.accounts?.id;
       const parent = googleRef.current;
       if (cancelled || !gsi || !parent) return;
-      gsi.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: (response) => {
-          if (busyRef.current) return;
-          void finish(loginGoogle(response.credential), "auth-google", true);
-        },
-      });
-      parent.innerHTML = "";
-      gsi.renderButton(parent, {
-        theme: "filled_black",
-        size: "large",
-        shape: "rectangular",
-        text: mode === "signup" ? "signup_with" : "signin_with",
-        logo_alignment: "left",
-        width: Math.min(356, Math.max(200, parent.clientWidth || 356)),
-      });
+      try {
+        gsi.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: (response) => {
+            if (busyRef.current) return;
+            void finish(loginGoogle(response.credential), "auth-google", true);
+          },
+        });
+        parent.innerHTML = "";
+        gsi.renderButton(parent, {
+          theme: "filled_black",
+          size: "large",
+          shape: "rectangular",
+          text: mode === "signup" ? "signup_with" : "signin_with",
+          logo_alignment: "left",
+          width: Math.min(356, Math.max(200, parent.clientWidth || 356)),
+        });
+
+        if (parent.childElementCount > 0) {
+          window.clearTimeout(renderTimeout);
+          setGoogleButtonState("ready");
+        } else {
+          unavailable();
+        }
+      } catch {
+        unavailable();
+      }
     };
 
     if (window.google?.accounts?.id) {
       init();
       return () => {
         cancelled = true;
+        window.clearTimeout(renderTimeout);
       };
     }
 
@@ -178,9 +221,12 @@ export default function AuthPage({ mode }: { mode: Mode }) {
       document.head.appendChild(script);
     }
     script.addEventListener("load", init);
+    script.addEventListener("error", unavailable);
     return () => {
       cancelled = true;
+      window.clearTimeout(renderTimeout);
       script?.removeEventListener("load", init);
+      script?.removeEventListener("error", unavailable);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
@@ -223,6 +269,19 @@ export default function AuthPage({ mode }: { mode: Mode }) {
             }
             .auth-gsi { display: flex; justify-content: center; min-height: 40px; }
             .auth-gsi > div { color-scheme: light; }
+            .auth-gsi[aria-busy="true"]::after {
+              content: ""; width: 18px; height: 18px; margin: auto;
+              border: 2px solid rgba(255,255,255,0.2);
+              border-top-color: rgba(255,255,255,0.72); border-radius: 50%;
+              animation: auth-spin 0.8s linear infinite;
+            }
+            @keyframes auth-spin { to { transform: rotate(360deg); } }
+            .auth-google-unavailable {
+              min-height: 40px; padding: 11px 14px; border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.13);
+              background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.72);
+              font-size: 12.5px; line-height: 1.45; text-align: center;
+            }
             .auth-google-soon {
               display: flex; align-items: center; justify-content: center; gap: 10px;
               width: 100%; padding: 12px; border-radius: 10px;
@@ -342,7 +401,24 @@ export default function AuthPage({ mode }: { mode: Mode }) {
           ) : (
             <>
               {GOOGLE_CLIENT_ID ? (
-                <div className="auth-gsi" ref={googleRef} />
+                <>
+                  <div
+                    className="auth-gsi"
+                    ref={googleRef}
+                    hidden={googleButtonState === "unavailable"}
+                    aria-busy={googleButtonState === "loading"}
+                    aria-label={
+                      googleButtonState === "loading"
+                        ? t("googleLoading")
+                        : undefined
+                    }
+                  />
+                  {googleButtonState === "unavailable" && (
+                    <p className="auth-google-unavailable" role="status">
+                      {t("googleBrowserRequired")}
+                    </p>
+                  )}
+                </>
               ) : (
                 <button
                   className="auth-google-soon"

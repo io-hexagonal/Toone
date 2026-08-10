@@ -211,6 +211,8 @@
     "signinSub": "Welkom terug.",
     "signupSub": "Je account werkt in de desktop-app.",
     "googleBtn": "Doorgaan met Google",
+    "googleLoading": "Google-aanmelding laden",
+    "googleBrowserRequired": "Google-aanmelding is hier niet beschikbaar. Open deze pagina in Safari of gebruik hieronder je e-mailadres.",
     "soon": "Binnenkort",
     "or": "of",
     "namePh": "Naam (optioneel)",
