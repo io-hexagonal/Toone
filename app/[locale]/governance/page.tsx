@@ -46,7 +46,11 @@ export default async function GovernancePage({ params }: Props) {
     datePublished: publication.published,
     dateModified: publication.updated,
     mainEntityOfPage: "https://trytoone.com/en/governance",
-    author: { "@type": "Organization", name: "Toone", url: "https://trytoone.com/en/about" },
+    author: {
+      "@type": "Organization",
+      name: publication.author,
+      url: "https://trytoone.com/en/editorial-policy",
+    },
     publisher: { "@id": "https://trytoone.com/#organization" },
   };
   const breadcrumbSchema: WithContext<BreadcrumbList> = {
