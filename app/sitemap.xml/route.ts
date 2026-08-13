@@ -5,6 +5,7 @@ export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
 const LOCALIZED_ROUTES = ["", "/showcases", "/download"] as const;
+const DOWNLOAD_LAST_MODIFIED = "2026-08-13";
 
 function alternates(path: string): string {
   const links = locales.map(
@@ -17,8 +18,23 @@ function alternates(path: string): string {
   return links.join("");
 }
 
-function url(loc: string, path: string, changefreq: string, priority: string) {
-  return `<url><loc>${loc}</loc>${alternates(path)}<changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
+function englishAlternates(path: string): string {
+  const href = `${BASE_URL}/en${path}`;
+  return [
+    `<xhtml:link rel="alternate" hreflang="en" href="${href}"/>`,
+    `<xhtml:link rel="alternate" hreflang="x-default" href="${href}"/>`,
+  ].join("");
+}
+
+function url(
+  loc: string,
+  path: string,
+  changefreq: string,
+  priority: string,
+  lastModified?: string,
+) {
+  const lastmod = lastModified ? `<lastmod>${lastModified}</lastmod>` : "";
+  return `<url><loc>${loc}</loc>${lastmod}${alternates(path)}<changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
 }
 
 export async function GET() {
@@ -31,7 +47,8 @@ export async function GET() {
     for (const path of LOCALIZED_ROUTES) {
       const changefreq = path === "/showcases" ? "monthly" : "weekly";
       const priority = path === "" ? "1.0" : path === "/download" ? "0.9" : "0.8";
-      lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority));
+      const lastModified = path === "/download" ? DOWNLOAD_LAST_MODIFIED : undefined;
+      lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority, lastModified));
     }
   }
 
@@ -44,7 +61,7 @@ export async function GET() {
   }
   for (const publication of getPublications()) {
     lines.push(
-      `<url><loc>${BASE_URL}/en${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      `<url><loc>${BASE_URL}/en${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod>${englishAlternates(publication.canonicalPath)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
     );
   }
   lines.push("</urlset>");

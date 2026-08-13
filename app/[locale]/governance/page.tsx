@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { Article, WithContext } from "schema-dts";
+import type { Article, BreadcrumbList, WithContext } from "schema-dts";
 import { notFound, permanentRedirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import ArticlePage from "@/components/ArticlePage";
@@ -49,12 +49,37 @@ export default async function GovernancePage({ params }: Props) {
     author: { "@type": "Organization", name: "Toone", url: "https://trytoone.com/en/about" },
     publisher: { "@id": "https://trytoone.com/#organization" },
   };
+  const breadcrumbSchema: WithContext<BreadcrumbList> = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://trytoone.com/en" },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Resources",
+        item: "https://trytoone.com/en/resources",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: publication.title,
+        item: "https://trytoone.com/en/governance",
+      },
+    ],
+  };
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema).replace(/</g, "\\u003c"),
+        }}
       />
       <ArticlePage publication={publication} />
     </>
