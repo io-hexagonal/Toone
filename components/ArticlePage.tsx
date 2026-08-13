@@ -57,10 +57,11 @@ export default function ArticlePage({ publication }: Props) {
             }
             .article-hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
             .article-breadcrumb {
-              display: inline-flex; gap: 8px; color: rgba(255,255,255,0.55);
-              font-size: 12px; text-decoration: none; margin-bottom: 40px;
+              display: flex; flex-wrap: wrap; gap: 8px; color: rgba(255,255,255,0.55);
+              font-size: 12px; margin-bottom: 40px;
             }
-            .article-breadcrumb:hover { color: rgba(255,255,255,0.9); }
+            .article-breadcrumb a { color: inherit; text-decoration: none; }
+            .article-breadcrumb a:hover { color: rgba(255,255,255,0.9); }
             .article-eyebrow {
               color: #aebaf4; font-size: 11px; font-weight: 750;
               letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 18px;
@@ -162,7 +163,13 @@ export default function ArticlePage({ publication }: Props) {
         <SiteHeader />
         <header className="article-hero">
           <div className="article-hero-inner">
-            <Link href="/resources" className="article-breadcrumb">← Resources</Link>
+            <nav className="article-breadcrumb" aria-label="Breadcrumb">
+              <Link href="/">Home</Link>
+              <span aria-hidden="true">→</span>
+              <Link href="/resources">Resources</Link>
+              <span aria-hidden="true">→</span>
+              <span aria-current="page">{publication.title}</span>
+            </nav>
             <p className="article-eyebrow">{publication.eyebrow}</p>
             <h1>{publication.title}</h1>
             <p className="article-deck">{publication.description}</p>

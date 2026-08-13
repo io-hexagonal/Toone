@@ -204,6 +204,11 @@ export default async function LandingPage({ params }: Props) {
               transition: border-color 0.28s, transform 0.28s;
             }
             .pillar:hover { border-color: rgba(29,28,25,0.32); transform: translateX(4px); }
+            .pillar-governance-link {
+              display: inline-block; margin-top: 6px; color: rgba(29,28,25,0.72);
+              text-underline-offset: 3px;
+            }
+            .pillar-governance-link:hover { color: #1d1c19; }
             .pillar--collaboration {
               border-color: rgba(92,124,114,0.3);
               background:
@@ -325,7 +330,17 @@ export default async function LandingPage({ params }: Props) {
                   <h3>{t(titleKey)}</h3>
                   {i === 0 && <span className="pillar-beta">Beta</span>}
                 </div>
-                <p>{t(descKey)}</p>
+                <p>
+                  {t(descKey)}
+                  {locale === "en" && titleKey === "p6t" && (
+                    <>
+                      {" "}
+                      <a className="pillar-governance-link" href="/en/governance">
+                        Read the practical AI agent governance model.
+                      </a>
+                    </>
+                  )}
+                </p>
               </div>
             ))}
           </div>

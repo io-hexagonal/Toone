@@ -21,6 +21,7 @@
     {
       "id": "CNT-brief-f37a981a",
       "source": "content/active/ai-agent-governance.md",
+      "sourceSha256": "24b00612150bf10262d70293806de540d948fcb8c68d2324b0a7a410e232e148",
       "sourceHeading": "Publication copy",
       "destination": "content/guides/ai-agent-governance.md",
       "slug": "ai-agent-governance",

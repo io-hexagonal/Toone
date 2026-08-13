@@ -51,6 +51,11 @@ for (const item of manifest.items) {
 
   const source = fs.readFileSync(sourcePath, "utf8");
   const sourceSha256 = crypto.createHash("sha256").update(source).digest("hex");
+  if (item.sourceSha256 && item.sourceSha256 !== sourceSha256) {
+    throw new Error(
+      `Source checksum mismatch for ${item.id}: expected ${item.sourceSha256}, received ${sourceSha256}`,
+    );
+  }
   const frontmatter = [
     "---",
     `slug: ${yamlString(item.slug)}`,
