@@ -3,6 +3,8 @@
     "privacy": "Konfidentsialnost",
     "github": "GitHub",
     "showcases": "Showcases",
+    "resources": "Материалы",
+    "governance": "Управление",
     "download": "Скачать",
     "signin": "Войти"
   },
@@ -16,14 +18,14 @@
     "standardBadge": "Совместимая",
     "standardTitle": "Toone",
     "standardRequirement": "Требуется macOS 14 или новее",
-    "standardDescription": "Стандартная сборка со всеми существующими темами Toone. Для Sonoma, Sequoia или Tahoe.",
+    "standardDescription": "Стандартный пакет указывает macOS 14.0 как минимальную версию системы.",
     "standardButton": "Скачать стандартную",
     "liquidBadge": "Нативная для Tahoe",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Требуется macOS 26 или новее",
-    "liquidDescription": "Все возможности стандартной сборки плюс нативная тема Liquid Glass на новой системе материалов Tahoe.",
+    "liquidDescription": "Этот пакет указывает macOS 26.0 и включает тему Liquid Glass.",
     "liquidButton": "Скачать Liquid Glass",
-    "compatibilityNote": "Обе сборки используют одну учетную запись, проекты и локальную историю."
+    "compatibilityNote": "Требования взяты из опубликованных пакетов. Тест перехода между версиями не заявляется."
   },
   "landing": {
     "downloadFor": "Skachat dlya",
@@ -62,10 +64,13 @@
     "authJoined": "Вы в списке — мы скоро свяжемся с вами.",
     "authError": "Что-то пошло не так — попробуйте ещё раз.",
     "authNote": "Ранний доступ — запишитесь в список или скачайте приложение сейчас.",
+    "productLanguageDisclosure": "Десктопное приложение сейчас доступно только на английском языке.",
     "heroTag2": "Сделайте вашу компанию AI-native."
   },
   "footer": {
     "privacy": "Konfidentsialnost",
+    "about": "О нас",
+    "editorialPolicy": "Редакционная политика",
     "product": "Продукт",
     "how": "Как это работает",
     "proof": "Кейсы",

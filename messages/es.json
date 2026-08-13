@@ -3,6 +3,8 @@
     "privacy": "Privacidad",
     "github": "GitHub",
     "showcases": "Showcases",
+    "resources": "Recursos",
+    "governance": "Gobernanza",
     "download": "Descargar",
     "signin": "Iniciar sesión"
   },
@@ -16,14 +18,14 @@
     "standardBadge": "Compatible",
     "standardTitle": "Toone",
     "standardRequirement": "Requiere macOS 14 o posterior",
-    "standardDescription": "La versión estándar con todos los temas actuales de Toone. Elígela para Sonoma, Sequoia o Tahoe.",
+    "standardDescription": "El artefacto estándar declara macOS 14.0 como versión mínima del sistema.",
     "standardButton": "Descargar estándar",
     "liquidBadge": "Nativo en Tahoe",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Requiere macOS 26 o posterior",
-    "liquidDescription": "Todo lo de la versión estándar, más un tema Liquid Glass nativo con el nuevo sistema de materiales de Tahoe.",
+    "liquidDescription": "Este artefacto declara macOS 26.0 e incluye el tema Liquid Glass.",
     "liquidButton": "Descargar Liquid Glass",
-    "compatibilityNote": "Ambas versiones usan la misma cuenta, proyectos e historial local. Puedes instalar una sobre la otra."
+    "compatibilityNote": "Los requisitos proceden de los paquetes publicados. No se afirma haber probado el cambio entre versiones."
   },
   "landing": {
     "downloadFor": "Descargar para",
@@ -62,10 +64,13 @@
     "authJoined": "Estás en la lista — te avisaremos pronto.",
     "authError": "Algo salió mal — inténtalo de nuevo.",
     "authNote": "Acceso anticipado — únete a la lista o descarga la app ahora.",
+    "productLanguageDisclosure": "La aplicación de escritorio está disponible actualmente solo en inglés.",
     "heroTag2": "Haz que tu empresa sea AI-native."
   },
   "footer": {
     "privacy": "Privacidad",
+    "about": "Acerca de",
+    "editorialPolicy": "Política editorial",
     "product": "Producto",
     "how": "Cómo funciona",
     "proof": "Referencias",

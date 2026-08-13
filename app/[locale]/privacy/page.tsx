@@ -1,7 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
-import { locales } from "@/i18n/routing";
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -10,30 +10,27 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
-  const languages: Record<string, string> = {};
-  for (const l of locales) {
-    languages[l] = `https://trytoone.com/${l}/privacy`;
-  }
-  languages["x-default"] = "https://trytoone.com/en/privacy";
-
   return {
     title: "Privacy Policy",
-    description: "Toone Privacy Policy",
-    // Without this the page inherits the layout's canonical, which points
-    // at the home page.
+    description: "How Toone handles website, account, product, and analytics data.",
     alternates: {
-      canonical: `https://trytoone.com/${locale}/privacy`,
-      languages,
+      canonical: "https://trytoone.com/en/privacy",
+      languages: {
+        en: "https://trytoone.com/en/privacy",
+        "x-default": "https://trytoone.com/en/privacy",
+      },
     },
+    robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
 export default async function PrivacyPage({ params }: Props) {
   const { locale } = await params;
+  if (locale !== "en") permanentRedirect("/en/privacy");
   setRequestLocale(locale);
 
   return (
-    <div
+    <main
       style={{
         minHeight: "100vh",
         background: "#141622",
@@ -92,12 +89,13 @@ export default async function PrivacyPage({ params }: Props) {
             letterSpacing: "0.02em",
           }}
         >
-          Effective date: March 18, 2025
+          Updated: August 10, 2026
         </p>
 
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          Toone is built to work locally on your machine. We believe your data is
-          yours, and our architecture reflects that.
+          Toone is built around local organization files and working context. This
+          policy distinguishes that local product data from information you choose
+          to submit through the website, waitlist, contact form, or account service.
         </p>
 
         <h2
@@ -109,10 +107,11 @@ export default async function PrivacyPage({ params }: Props) {
             marginBottom: 12,
           }}
         >
-          What Toone Does Not Collect
+          Local Product Data
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          Toone does not collect, transmit, or store any of the following:
+          Toone does not receive your local organization files or working context
+          merely because you use the desktop app. That includes:
         </p>
         <ul
           style={{
@@ -123,16 +122,42 @@ export default async function PrivacyPage({ params }: Props) {
           }}
         >
           <li style={{ marginBottom: 6 }}>
-            Personal information (name, email, location)
+            Conversation content and chat history stored in your organization
           </li>
           <li style={{ marginBottom: 6 }}>
-            Conversation content or chat history
+            File contents and project data stored on your device
           </li>
-          <li style={{ marginBottom: 6 }}>File contents or project data</li>
+          <li style={{ marginBottom: 6 }}>Local checkpoints and organization history</li>
           <li style={{ marginBottom: 6 }}>
             Keystrokes, screenshots, or screen recordings
           </li>
         </ul>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Information You Submit
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          We receive information you deliberately provide when you create or sign
+          in to an account, join the early-access waitlist, or send a contact
+          request. Depending on the action, this can include your name, email,
+          company, message, and authentication data. Waitlist entries are sent to
+          the Toone backend, contact requests are delivered to the team&apos;s
+          communications system, and account data is processed by the Toone account
+          service. We use this information to provide the requested service, respond
+          to you, protect the service, and administer early access.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          Website analytics events do not include form text, names, email addresses,
+          passwords, authentication tokens, or account identifiers.
+        </p>
 
         <h2
           style={{
@@ -172,9 +197,10 @@ export default async function PrivacyPage({ params }: Props) {
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           All conversations, files, and project data remain on your device. Toone
-          does not operate any backend servers that receive or process your data.
-          The desktop and mobile apps communicate directly with each other over
-          your local network via an encrypted WebSocket tunnel.
+          does not upload that local working context to its account, website, or
+          analytics services. Account data, waitlist requests, contact requests,
+          and optional relay connections are handled separately as described in
+          this policy.
         </p>
 
         <h2
@@ -239,10 +265,12 @@ export default async function PrivacyPage({ params }: Props) {
           Mobile Companion App
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          The Toone mobile app connects to a running Toone Desktop instance on
-          the same network. The connection uses a secure, authenticated WebSocket
-          tunnel. No data from the mobile app is sent to Toone or any third party
-          — all communication stays between your devices.
+          The Toone mobile app connects to a running Toone Desktop instance over
+          a direct local-network WebSocket or the optional Toone cloud relay. The
+          cloud-relay transport uses TLS plus application-level end-to-end
+          encryption, so the relay forwards encrypted application frames rather
+          than readable conversation or project content. AI execution and project
+          access remain on the Mac.
         </p>
 
         <h2
@@ -334,7 +362,7 @@ export default async function PrivacyPage({ params }: Props) {
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           If you have questions about this policy, open an issue on our{" "}
           <a
-            href="https://github.com/mattwebhub/toone"
+              href="https://github.com/io-hexagonal/Toone"
             target="_blank"
             rel="noopener"
             style={{ color: "rgba(100,180,255,0.8)", textDecoration: "none" }}
@@ -351,9 +379,9 @@ export default async function PrivacyPage({ params }: Props) {
             marginTop: 48,
           }}
         >
-          Toone-oss is an open-source project by hexagonal.io
+          Toone is published by Hexagonal.io.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

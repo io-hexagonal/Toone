@@ -7,6 +7,7 @@ import FaqSection from "@/components/FaqSection";
 import TechStrip from "@/components/TechStrip";
 import PartnerBand from "@/components/PartnerBand";
 import Footer from "@/components/Footer";
+import ResourcesSection from "@/components/ResourcesSection";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -261,13 +262,14 @@ export default async function LandingPage({ params }: Props) {
 
       <SiteHeader />
 
-      <HeroAuth />
+      <main>
+        <HeroAuth />
 
-      <StatementSection />
+        <StatementSection />
 
-      <div className="sections">
-        <TechStrip />
-        <PartnerBand />
+        <div className="sections">
+          <TechStrip />
+          <PartnerBand />
 
         <section className="section ai-native-section" id="how">
           <h2>{t("pillarsTitle")}</h2>
@@ -329,8 +331,10 @@ export default async function LandingPage({ params }: Props) {
           </div>
         </section>
 
-        <FaqSection />
-      </div>
+          <ResourcesSection />
+          <FaqSection />
+        </div>
+      </main>
 
       <Footer />
     </>

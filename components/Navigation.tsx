@@ -1,31 +1,31 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 
-const linkStyle: React.CSSProperties = {
-  color: "rgba(255,255,255,0.25)",
-  textDecoration: "none",
-  fontSize: 12,
-  letterSpacing: "0.04em",
-  fontWeight: 500,
-  transition: "color 0.2s",
-};
-
-export default function Navigation() {
-  const t = useTranslations("nav");
-
-  const hoverIn = (e: React.MouseEvent<HTMLElement>) =>
-    (e.currentTarget.style.color = "rgba(255,255,255,0.5)");
-  const hoverOut = (e: React.MouseEvent<HTMLElement>) =>
-    (e.currentTarget.style.color = "rgba(255,255,255,0.25)");
+export default async function Navigation() {
+  const t = await getTranslations("nav");
 
   return (
     <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .minimal-brand { opacity: 0.85; transition: opacity 0.2s; }
+            .minimal-brand:hover { opacity: 1; }
+            .minimal-link {
+              color: rgba(255,255,255,0.68); text-decoration: none;
+              font-size: 12px; letter-spacing: 0.04em; font-weight: 500;
+              transition: color 0.2s;
+            }
+            .minimal-link:hover { color: rgba(255,255,255,0.95); }
+            .minimal-github { font-size: 0; }
+          `,
+        }}
+      />
       {/* Brand lockup — site identity, top left */}
       <Link
         href="/"
         aria-label="Toone"
+        className="minimal-brand"
         style={{
           position: "fixed",
           top: 14,
@@ -36,11 +36,7 @@ export default function Navigation() {
           gap: 9,
           textDecoration: "none",
           pointerEvents: "auto",
-          opacity: 0.85,
-          transition: "opacity 0.2s",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.85")}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -76,34 +72,21 @@ export default function Navigation() {
           pointerEvents: "auto",
         }}
       >
+        <a href="/en/resources" className="minimal-link">
+          {t("resources")}
+        </a>
         <Link
           href="/showcases"
-          style={linkStyle}
-          onMouseEnter={hoverIn}
-          onMouseLeave={hoverOut}
+          className="minimal-link"
         >
           {t("showcases")}
         </Link>
-        <Link
-          href="/privacy"
-          style={linkStyle}
-          onMouseEnter={hoverIn}
-          onMouseLeave={hoverOut}
-        >
-          {t("privacy")}
-        </Link>
         <a
-          href="https://github.com/mattwebhub/toone"
+          href="https://github.com/io-hexagonal/Toone"
           target="_blank"
           rel="noopener"
           aria-label="GitHub"
-          style={{
-            color: "rgba(255,255,255,0.25)",
-            textDecoration: "none",
-            transition: "color 0.2s",
-          }}
-          onMouseEnter={hoverIn}
-          onMouseLeave={hoverOut}
+          className="minimal-link minimal-github"
         >
           <svg
             viewBox="0 0 16 16"

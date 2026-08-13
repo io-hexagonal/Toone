@@ -2,6 +2,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { locales } from "@/i18n/routing";
 import type { Metadata, Viewport } from "next";
+import type { Graph } from "schema-dts";
+import { notFound } from "next/navigation";
 import Script from "next/script";
 import { Playfair_Display, Rubik } from "next/font/google";
 import localFont from "next/font/local";
@@ -33,6 +35,7 @@ const pixel = localFont({
   src: "../../public/assets/fonts/10Pixel-Bold.ttf",
   variable: "--font-pixel",
   display: "swap",
+  preload: false,
 });
 
 /**
@@ -46,6 +49,7 @@ const playfair = Playfair_Display({
   weight: ["700"],
   variable: "--font-playfair",
   display: "swap",
+  preload: false,
 });
 
 type Props = {
@@ -57,8 +61,52 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+function isSupportedLocale(locale: string): locale is (typeof locales)[number] {
+  return locales.includes(locale as (typeof locales)[number]);
+}
+
+const siteSchema: Graph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://trytoone.com/#organization",
+      name: "Toone",
+      url: "https://trytoone.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://trytoone.com/assets/profiles/toone-icon-light-512.png",
+        width: "512",
+        height: "512",
+      },
+      description: "Toone is a local-first, governed AI operating layer for companies and small teams.",
+      sameAs: [
+        "https://github.com/io-hexagonal/Toone",
+        "https://www.producthunt.com/products/toone",
+        "https://x.com/trytoone",
+      ],
+      parentOrganization: {
+        "@type": "Organization",
+        "@id": "https://hexagonal.io/#organization",
+        name: "Hexagonal.io",
+        url: "https://hexagonal.io",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://trytoone.com/#website",
+      name: "Toone",
+      url: "https://trytoone.com",
+      description: "Toone turns businesses into AI-native companies. Built on Claude Code and Codex.",
+      inLanguage: [...locales],
+      publisher: { "@id": "https://trytoone.com/#organization" },
+    },
+  ],
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (!isSupportedLocale(locale)) notFound();
   const t = await getTranslations({ locale, namespace: "meta" });
 
   const languages: Record<string, string> = {};
@@ -150,8 +198,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
+  if (!isSupportedLocale(locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
+  const clientMessages = {
+    auth: messages.auth,
+    contact: messages.contact,
+    footer: messages.footer,
+    landing: messages.landing,
+    nav: messages.nav,
+  };
 
   return (
     <html lang={locale} className={`${playfair.variable} ${pixel.variable} ${rubik.variable}`}>
@@ -162,38 +218,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "WebSite",
-                  name: "Toone",
-                  url: "https://trytoone.com",
-                  description: "Toone turns businesses into AI-native companies. Built on Claude Code and Codex.",
-                  publisher: {
-                    "@type": "Organization",
-                    name: "Hexagonal.io",
-                    url: "https://hexagonal.io",
-                  },
-                },
-                {
-                  "@type": "SoftwareApplication",
-                  name: "Toone",
-                  operatingSystem: "macOS",
-                  applicationCategory: "ProductivityApplication",
-                  description: "Toone turns businesses into AI-native companies: your processes encoded as routines, your knowledge in a graph, your tools operable, all run by AI agents under human governance. Built on Claude Code and Codex.",
-                  url: "https://trytoone.com",
-                  downloadUrl: "https://github.com/io-hexagonal/Toone/releases",
-                  image: "https://trytoone.com/assets/og/toone-og.png",
-                  featureList: "Project History, Local Checkpoints, Live Collaboration, Custom MCP Tools, AI Agents, Routines, Custom Integrations, Browser Automation, Meeting Capture, Calendar, Planning",
-                  offers: {
-                    "@type": "Offer",
-                    price: "0",
-                    priceCurrency: "USD",
-                  },
-                },
-              ],
-            }),
+            __html: JSON.stringify(siteSchema).replace(/</g, "\\u003c"),
           }}
         />
         {/* Self-hosted, cookieless Umami analytics (see /privacy). data-domains
@@ -214,7 +239,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
         }}
       >
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={clientMessages}>
           {children}
         </NextIntlClientProvider>
       </body>

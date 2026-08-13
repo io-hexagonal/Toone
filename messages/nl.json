@@ -3,6 +3,8 @@
     "privacy": "Privacy",
     "github": "GitHub",
     "showcases": "Showcases",
+    "resources": "Bronnen",
+    "governance": "Governance",
     "download": "Downloaden",
     "signin": "Inloggen"
   },
@@ -16,14 +18,14 @@
     "standardBadge": "Compatibel",
     "standardTitle": "Toone",
     "standardRequirement": "Vereist macOS 14 of nieuwer",
-    "standardDescription": "De standaardversie met alle bestaande Toone-thema’s. Kies deze voor Sonoma, Sequoia of Tahoe.",
+    "standardDescription": "Het standaardartefact vermeldt macOS 14.0 als minimale systeemversie.",
     "standardButton": "Download standaard",
     "liquidBadge": "Native voor Tahoe",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Vereist macOS 26 of nieuwer",
-    "liquidDescription": "Alles uit de standaardversie, plus een native Liquid Glass-thema met het nieuwe materiaalsysteem van Tahoe.",
+    "liquidDescription": "Dit artefact vermeldt macOS 26.0 en bevat het Liquid Glass-thema.",
     "liquidButton": "Download Liquid Glass",
-    "compatibilityNote": "Beide versies gebruiken hetzelfde account, dezelfde projecten en lokale geschiedenis."
+    "compatibilityNote": "De vereisten komen uit de gepubliceerde pakketten. Er wordt geen wisseltest tussen versies geclaimd."
   },
   "landing": {
     "downloadFor": "Download voor",
@@ -62,10 +64,13 @@
     "authJoined": "Je staat op de lijst — we laten snel van ons horen.",
     "authError": "Er ging iets mis — probeer het opnieuw.",
     "authNote": "Early access — zet je op de lijst of download de app direct.",
+    "productLanguageDisclosure": "De desktop-app is momenteel alleen beschikbaar in het Engels.",
     "heroTag2": "Maak je bedrijf AI-native."
   },
   "footer": {
     "privacy": "Privacy",
+    "about": "Over Toone",
+    "editorialPolicy": "Redactioneel beleid",
     "product": "Product",
     "how": "Zo werkt het",
     "proof": "Referenties",

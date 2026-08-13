@@ -1,6 +1,4 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 
 /**
@@ -8,9 +6,9 @@ import { Link } from "@/lib/navigation";
  * Brand lockup + legal on the left, three link columns on the right.
  * Anchor links go through "/" so they work from any page.
  */
-export default function Footer() {
-  const t = useTranslations("footer");
-  const nav = useTranslations("nav");
+export default async function Footer() {
+  const t = await getTranslations("footer");
+  const nav = await getTranslations("nav");
 
   return (
     <>
@@ -34,11 +32,11 @@ export default function Footer() {
               font-weight: 600; letter-spacing: -0.03em; text-transform: lowercase;
               color: rgba(255,255,255,0.92); font-size: 19px;
             }
-            .ftr-legal { margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.32); }
+            .ftr-legal { margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.64); }
             .ftr-cols { display: flex; gap: 64px; flex-wrap: wrap; }
-            .ftr-cols h4 {
+            .ftr-heading {
               font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em;
-              text-transform: uppercase; color: rgba(255,255,255,0.35);
+              text-transform: uppercase; color: rgba(255,255,255,0.66);
               margin-bottom: 14px;
             }
             .ftr-cols a {
@@ -68,7 +66,7 @@ export default function Footer() {
           </div>
           <div className="ftr-cols">
             <div>
-              <h4>{t("product")}</h4>
+              <p className="ftr-heading">{t("product")}</p>
               <Link href="/#how">{t("how")}</Link>
               <Link href="/#faq">FAQ</Link>
               <Link
@@ -81,15 +79,19 @@ export default function Footer() {
               </Link>
             </div>
             <div>
-              <h4>{t("proof")}</h4>
+              <p className="ftr-heading">{t("proof")}</p>
+              <a href="/en/resources">{nav("resources")}</a>
+              <a href="/en/governance">{nav("governance")}</a>
               <Link href="/showcases">{nav("showcases")}</Link>
             </div>
             <div>
-              <h4>{t("company")}</h4>
+              <p className="ftr-heading">{t("company")}</p>
+              <Link href="/about">{t("about")}</Link>
+              <Link href="/editorial-policy">{t("editorialPolicy")}</Link>
               <Link href="/signin">{nav("signin")}</Link>
               <a href="mailto:hello@trytoone.com">{t("contact")}</a>
               <Link href="/privacy">{t("privacy")}</Link>
-              <a href="https://github.com/mattwebhub/toone" target="_blank" rel="noopener">
+              <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener">
                 {nav("github")}
               </a>
             </div>

@@ -3,12 +3,14 @@
     "privacy": "Privacy",
     "github": "GitHub",
     "showcases": "Showcases",
+    "resources": "Resources",
+    "governance": "Governance",
     "download": "Download",
     "signin": "Sign in"
   },
   "downloadPage": {
     "metaTitle": "Download Toone for macOS",
-    "metaDescription": "Choose the standard macOS 14 build or the native Liquid Glass build for macOS Tahoe.",
+    "metaDescription": "Compare Toone's two macOS artifacts, their declared system requirements, and the local and external data boundary before downloading.",
     "eyebrow": "Two native builds",
     "title": "Choose your Toone",
     "subtitle": "The same Toone organization engine, packaged for the Mac you are running.",
@@ -16,14 +18,14 @@
     "standardBadge": "Compatible",
     "standardTitle": "Toone",
     "standardRequirement": "Requires macOS 14 or later",
-    "standardDescription": "The standard build with every established Toone theme. Choose this for Sonoma, Sequoia, or Tahoe.",
+    "standardDescription": "The standard artifact declares macOS 14.0 as its minimum system version.",
     "standardButton": "Download standard",
     "liquidBadge": "Tahoe native",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Requires macOS 26 or later",
-    "liquidDescription": "Everything in the standard build, plus a native Liquid Glass theme rendered with Tahoe's new material system.",
+    "liquidDescription": "This artifact declares macOS 26.0 and includes the Liquid Glass theme.",
     "liquidButton": "Download Liquid Glass",
-    "compatibilityNote": "Both builds use the same account, projects, and local history. You can install either over the other."
+    "compatibilityNote": "System requirements are taken from the shipped bundles. No cross-version install or build-switching test is claimed here."
   },
   "landing": {
     "downloadFor": "Download for",
@@ -62,10 +64,13 @@
     "authJoined": "You're on the list — we'll be in touch soon.",
     "authError": "Something went wrong — please try again.",
     "authNote": "Early access — join the list, or download the app now.",
+    "productLanguageDisclosure": "The desktop app is currently available in English.",
     "heroTag2": "Make your company AI-native."
   },
   "footer": {
     "privacy": "Privacy",
+    "about": "About",
+    "editorialPolicy": "Editorial policy",
     "product": "Product",
     "how": "How it works",
     "proof": "Proof",

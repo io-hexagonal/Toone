@@ -43,6 +43,7 @@ export default async function DownloadPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "downloadPage" });
+  const landing = await getTranslations({ locale, namespace: "landing" });
 
   return (
     <>
@@ -66,6 +67,10 @@ export default async function DownloadPage({ params }: Props) {
             .download-head p {
               color: rgba(255,255,255,0.5); font-size: 17px;
               line-height: 1.6; margin: 0 auto; max-width: 58ch;
+            }
+            .download-language {
+              max-width: 62ch; margin: -28px auto 32px; text-align: center;
+              color: rgba(255,255,255,0.72); font-size: 13px; line-height: 1.55;
             }
             .download-grid {
               display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -121,13 +126,52 @@ export default async function DownloadPage({ params }: Props) {
               background: rgba(206,232,255,0.94);
             }
             .download-note {
-              color: rgba(255,255,255,0.3); text-align: center;
+              color: rgba(255,255,255,0.58); text-align: center;
               font-size: 12px; line-height: 1.6; margin-top: 28px;
+            }
+            .download-answer {
+              max-width: 760px; margin: -22px auto 40px; padding: 20px 24px;
+              border: 1px solid rgba(255,255,255,0.11); border-radius: 14px;
+              background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.72);
+              font-size: 14px; line-height: 1.7; text-align: center;
+            }
+            .download-evidence {
+              margin-top: 76px; padding-top: 64px;
+              border-top: 1px solid rgba(255,255,255,0.1);
+            }
+            .download-evidence h2 {
+              max-width: 16ch; font-size: clamp(30px,4vw,44px); line-height: 1.08;
+              letter-spacing: -0.035em; margin-bottom: 18px;
+            }
+            .download-evidence-intro {
+              max-width: 680px; color: rgba(255,255,255,0.6);
+              font-size: 15px; line-height: 1.7; margin-bottom: 28px;
+            }
+            .download-boundary {
+              width: 100%; border-spacing: 0; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+              background: rgba(255,255,255,0.03);
+            }
+            .download-boundary th, .download-boundary td {
+              padding: 16px 18px; text-align: left; vertical-align: top;
+              border-bottom: 1px solid rgba(255,255,255,0.08);
+              color: rgba(255,255,255,0.62); font-size: 13px; line-height: 1.6;
+            }
+            .download-boundary th { color: rgba(255,255,255,0.88); font-weight: 650; }
+            .download-boundary tr:last-child th, .download-boundary tr:last-child td { border-bottom: 0; }
+            .download-proof-links {
+              display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px;
+            }
+            .download-proof-links a {
+              color: rgba(255,255,255,0.78); text-underline-offset: 3px;
+              font-size: 13px;
             }
             @media (max-width: 720px) {
               .download-page { padding-top: 110px; }
               .download-grid { grid-template-columns: 1fr; }
               .download-card { min-height: 290px; }
+              .download-boundary { display: block; overflow-x: auto; }
+              .download-boundary th, .download-boundary td { min-width: 200px; }
             }
           `,
         }}
@@ -139,6 +183,19 @@ export default async function DownloadPage({ params }: Props) {
           <h1>{t("title")}</h1>
           <p>{t("subtitle")}</p>
         </header>
+
+        {locale === "en" && (
+          <p className="download-answer">
+            The Standard artifact declares macOS 14.0 as its minimum system version. The Liquid
+            Glass artifact declares macOS 26.0. These are requirements encoded in the shipped
+            bundles, not hands-on compatibility results. Toone connects through your Anthropic or
+            OpenAI account.
+          </p>
+        )}
+
+        {locale !== "en" && (
+          <p className="download-language">{landing("productLanguageDisclosure")}</p>
+        )}
 
         <section className="download-grid" aria-label={t("choicesLabel")}>
           <article className="download-card">
@@ -199,6 +256,45 @@ export default async function DownloadPage({ params }: Props) {
         </section>
 
         <p className="download-note">{t("compatibilityNote")}</p>
+
+        {locale === "en" && (
+          <section className="download-evidence" aria-labelledby="data-boundary-title">
+            <h2 id="data-boundary-title">Know the data boundary before downloading</h2>
+            <p className="download-evidence-intro">
+              Toone is local-first, not offline. Organization files and local history stay on your
+              Mac, while model requests and enabled network services cross the device boundary.
+            </p>
+            <table className="download-boundary">
+              <tbody>
+                <tr>
+                  <th scope="row">Organization and project files</th>
+                  <td>Stored in the project directory you select on your Mac.</td>
+                  <td>Provider sessions or tools can receive file-derived context when an action includes it.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Chats and local history</th>
+                  <td>Persisted in local application storage.</td>
+                  <td>Model requests transmit the conversation context included in that request.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Model requests</th>
+                  <td>Run through your connected Anthropic or OpenAI account.</td>
+                  <td>The selected provider receives the prompt and context sent for that session.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Desktop telemetry</th>
+                  <td>Can be disabled in Toone settings.</td>
+                  <td>When enabled, low-cardinality product events go to Toone&apos;s self-hosted analytics service.</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="download-proof-links">
+              <a href="/en/privacy">Read the complete privacy boundary</a>
+              <a href="https://github.com/io-hexagonal/Toone/releases/latest">Inspect the current release</a>
+              <a href="https://github.com/io-hexagonal/Toone">Inspect the public repository</a>
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </>

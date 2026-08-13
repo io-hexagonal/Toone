@@ -1,12 +1,39 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useRef, useState, FormEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import HeroCosmos from "@/components/HeroCosmos";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 const GOOGLE_AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+const WAITLIST_SOURCE = "hero-auth";
+
+type WaitlistOutcome =
+  | {
+      outcome_id: string;
+      outcome_state: "created";
+      source: typeof WAITLIST_SOURCE;
+    }
+  | {
+      outcome_state: "already_registered";
+      source: typeof WAITLIST_SOURCE;
+    };
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isWaitlistOutcome(value: unknown): value is WaitlistOutcome {
+  if (!value || typeof value !== "object") return false;
+  const outcome = value as Record<string, unknown>;
+  if (outcome.source !== WAITLIST_SOURCE) return false;
+  if (outcome.outcome_state === "already_registered") return true;
+  return (
+    outcome.outcome_state === "created" &&
+    typeof outcome.outcome_id === "string" &&
+    UUID_PATTERN.test(outcome.outcome_id)
+  );
+}
 
 /**
  * Full-screen hero. Left column centered (claude.ai-style): headline, one
@@ -17,28 +44,50 @@ const GOOGLE_AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 
 export default function HeroAuth() {
   const t = useTranslations("landing");
+  const locale = useLocale();
   const [email, setEmail] = useState("");
+  const submissionRef = useRef(false);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!email || status === "loading") return;
+    if (!email || submissionRef.current || !e.currentTarget.checkValidity()) {
+      return;
+    }
+    submissionRef.current = true;
     setStatus("loading");
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "hero-auth" }),
+        body: JSON.stringify({ email, source: WAITLIST_SOURCE }),
       });
-      if (res.ok) {
+      const outcome: unknown = await res.json().catch(() => null);
+      if (res.ok && isWaitlistOutcome(outcome)) {
         setStatus("success");
-        (
-          window as unknown as { umami?: { track: (n: string) => void } }
-        ).umami?.track("waitlist-signup");
-      } else setStatus("error");
+        if (outcome.outcome_state === "created") {
+          (
+            window as unknown as {
+              umami?: {
+                track: (name: string, data?: Record<string, string>) => void;
+              };
+            }
+          ).umami?.track("waitlist-signup", {
+            outcome_id: outcome.outcome_id,
+            outcome_state: outcome.outcome_state,
+            source: outcome.source,
+            locale,
+            page_url: `https://trytoone.com/${locale}`,
+          });
+        }
+      } else {
+        submissionRef.current = false;
+        setStatus("error");
+      }
     } catch {
+      submissionRef.current = false;
       setStatus("error");
     }
   }
@@ -76,6 +125,10 @@ export default function HeroAuth() {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
               max-width: 30ch; margin-bottom: 30px; text-wrap: balance;
             }
+            .ha-language {
+              max-width: 42ch; margin: -16px 0 20px; color: rgba(255,255,255,0.72);
+              font-size: 12.5px; line-height: 1.5;
+            }
 
             .ha-card {
               width: 100%; max-width: 400px;
@@ -100,7 +153,7 @@ export default function HeroAuth() {
               background: rgba(255,255,255,0.05);
             }
             .ha-or {
-              text-align: center; color: rgba(255,255,255,0.35);
+              text-align: center; color: rgba(255,255,255,0.66);
               font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
             }
             .ha-email {
@@ -109,7 +162,7 @@ export default function HeroAuth() {
               background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
-            .ha-email::placeholder { color: rgba(255,255,255,0.35); }
+            .ha-email::placeholder { color: rgba(255,255,255,0.62); }
             .ha-email:focus { border-color: rgba(255,255,255,0.35); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
@@ -120,7 +173,7 @@ export default function HeroAuth() {
             }
             .ha-continue:hover { transform: scale(1.015); }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
-            .ha-note { color: rgba(255,255,255,0.38); font-size: 12px; text-align: center; }
+            .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
             .ha-joined { color: rgba(255,255,255,0.85); font-size: 14.5px; text-align: center; padding: 16px 0; }
 
             .ha-dl {
@@ -135,7 +188,10 @@ export default function HeroAuth() {
 
             .ha-product-hunt {
               position: fixed; z-index: 35; left: 24px; bottom: 24px;
-              display: inline-flex; border-radius: 12px; overflow: hidden;
+              display: inline-flex; align-items: center; gap: 9px;
+              min-height: 48px; padding: 8px 12px; border-radius: 12px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.12); background: #201e1d;
+              color: rgba(255,255,255,0.9); text-decoration: none;
               opacity: 0.8; box-shadow: 0 10px 30px rgba(0,0,0,0.22);
               transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
             }
@@ -147,9 +203,14 @@ export default function HeroAuth() {
               outline: 2px solid rgba(255,255,255,0.9);
               outline-offset: 4px; opacity: 1;
             }
-            .ha-product-hunt img {
-              display: block; width: 250px; height: auto;
+            .ha-product-hunt-mark {
+              display: grid; place-items: center; width: 28px; height: 28px;
+              border-radius: 50%; background: #ff6154; color: #fff;
+              font-size: 15px; font-weight: 750;
             }
+            .ha-product-hunt-copy { display: flex; flex-direction: column; text-align: left; }
+            .ha-product-hunt-copy small { font-size: 8px; letter-spacing: 0.12em; color: rgba(255,255,255,0.66); }
+            .ha-product-hunt-copy strong { font-size: 12.5px; line-height: 1.25; }
 
             .ha-film {
               position: relative; justify-self: end; align-self: end;
@@ -175,7 +236,6 @@ export default function HeroAuth() {
                 transform: none; opacity: 0.82;
               }
               .ha-product-hunt:hover { transform: translateY(-2px); }
-              .ha-product-hunt img { width: min(210px, 58vw); }
             }
           `,
         }}
@@ -185,6 +245,9 @@ export default function HeroAuth() {
         <div className="ha-left">
           <h1 className="ha-title">{t("heroTitle")}</h1>
           <p className="ha-tag">{t("heroTag2")}</p>
+          {locale !== "en" && (
+            <p className="ha-language">{t("productLanguageDisclosure")}</p>
+          )}
 
           <div className="ha-card">
             {status === "success" ? (
@@ -240,6 +303,7 @@ export default function HeroAuth() {
                   <input
                     className="ha-email"
                     type="email"
+                    aria-label={t("authEmailPh")}
                     placeholder={t("authEmailPh")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -279,13 +343,11 @@ export default function HeroAuth() {
             rel="noopener noreferrer"
             aria-label="View Toone on Product Hunt"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=dark&t=1774512921035"
-              alt="Toone on Product Hunt"
-              width={250}
-              height={54}
-            />
+            <span className="ha-product-hunt-mark" aria-hidden="true">P</span>
+            <span className="ha-product-hunt-copy">
+              <small>FEATURED ON</small>
+              <strong>Product Hunt</strong>
+            </span>
           </a>
         </div>
 

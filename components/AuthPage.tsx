@@ -297,7 +297,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
               border-radius: 999px; padding: 2px 8px;
             }
             .auth-or {
-              text-align: center; color: rgba(255,255,255,0.35);
+              text-align: center; color: rgba(255,255,255,0.65);
               font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
             }
             .auth-input {
@@ -306,7 +306,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
               background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
-            .auth-input::placeholder { color: rgba(255,255,255,0.35); }
+            .auth-input::placeholder { color: rgba(255,255,255,0.62); }
             .auth-input:focus { border-color: rgba(255,255,255,0.35); }
             .auth-submit {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
@@ -322,7 +322,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
               text-align: center; margin: 0;
             }
             .auth-switch {
-              color: rgba(255,255,255,0.45); font-size: 13.5px;
+              color: rgba(255,255,255,0.65); font-size: 13.5px;
               text-align: center; margin-top: 20px;
             }
             .auth-switch a { color: rgba(255,255,255,0.88); text-decoration: none; }
@@ -334,7 +334,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
               margin-bottom: 6px; overflow-wrap: anywhere;
             }
             .auth-success .note {
-              color: rgba(255,255,255,0.45); font-size: 13px; margin-bottom: 18px;
+              color: rgba(255,255,255,0.65); font-size: 13px; margin-bottom: 18px;
             }
             .auth-dl {
               display: inline-flex; align-items: center; justify-content: center; gap: 9px;
@@ -349,14 +349,14 @@ export default function AuthPage({ mode }: { mode: Mode }) {
             .auth-signout {
               display: inline-block; margin-top: 16px;
               background: none; border: none; padding: 0; cursor: pointer;
-              color: rgba(255,255,255,0.45); font-size: 12.5px;
+              color: rgba(255,255,255,0.65); font-size: 12.5px;
             }
             .auth-signout:hover { color: rgba(255,255,255,0.75); text-decoration: underline; }
           `,
         }}
       />
 
-      <div className="auth-page">
+      <main className="auth-page">
         <Link href="/" aria-label="Toone" className="auth-brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/brand/toone-mark.svg" alt="" />
@@ -446,6 +446,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                   <input
                     className="auth-input"
                     type="text"
+                    aria-label={t("namePh")}
                     autoComplete="name"
                     placeholder={t("namePh")}
                     value={name}
@@ -455,6 +456,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                 <input
                   className="auth-input"
                   type="email"
+                  aria-label={t("emailPh")}
                   autoComplete="email"
                   placeholder={t("emailPh")}
                   value={email}
@@ -464,6 +466,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                 <input
                   className="auth-input"
                   type="password"
+                  aria-label={t("passwordPh")}
                   autoComplete={
                     mode === "signup" ? "new-password" : "current-password"
                   }
@@ -501,7 +504,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
             )}
           </p>
         )}
-      </div>
+      </main>
     </>
   );
 }

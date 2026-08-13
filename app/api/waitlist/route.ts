@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -28,20 +29,42 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 
+    const normalizedSource = ["desktop", "general", "hero-auth", "web"].includes(
+      source,
+    )
+      ? source
+      : "general";
+
     const res = await fetch(UPSTREAM, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email.toLowerCase().trim(),
-        source: typeof source === "string" && source ? source : "landing",
+        source: normalizedSource,
       }),
       signal: AbortSignal.timeout(10_000),
     });
 
-    // 409 = already on the waitlist; that's a success from the visitor's
-    // point of view, same as the old route's "Already registered" path.
-    if (res.ok || res.status === 409) {
-      return NextResponse.json({ message: "Added to waitlist" });
+    if (res.status === 201) {
+      return NextResponse.json(
+        {
+          message: "Added to waitlist",
+          outcome_id: randomUUID(),
+          outcome_state: "created",
+          source: normalizedSource,
+        },
+        { status: 201 },
+      );
+    }
+
+    // A duplicate is still visitor-visible success, but the distinct outcome
+    // prevents the client from counting it as a new signup.
+    if (res.status === 409) {
+      return NextResponse.json({
+        message: "Already registered",
+        outcome_state: "already_registered",
+        source: normalizedSource,
+      });
     }
 
     console.error(`[waitlist] Upstream responded ${res.status}`);

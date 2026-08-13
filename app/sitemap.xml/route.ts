@@ -1,38 +1,52 @@
 import { locales } from "@/i18n/routing";
+import { getPublications } from "@/lib/content";
 
 export const dynamic = "force-static";
 
+const BASE_URL = "https://trytoone.com";
+const LOCALIZED_ROUTES = ["", "/showcases", "/download"] as const;
+
+function alternates(path: string): string {
+  const links = locales.map(
+    (locale) =>
+      `<xhtml:link rel="alternate" hreflang="${locale}" href="${BASE_URL}/${locale}${path}"/>`,
+  );
+  links.push(
+    `<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`,
+  );
+  return links.join("");
+}
+
+function url(loc: string, path: string, changefreq: string, priority: string) {
+  return `<url><loc>${loc}</loc>${alternates(path)}<changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
+}
+
 export async function GET() {
-  const baseUrl = "https://trytoone.com";
   const lines: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
   ];
 
   for (const locale of locales) {
-    const now = new Date().toISOString();
-
-    // Landing page
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`
-    );
-
-    // Showcases
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}/showcases</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`
-    );
-
-    // Two-build macOS download chooser
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}/download</loc><lastmod>${now}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`
-    );
-
-    // Privacy
-    lines.push(
-      `<url><loc>${baseUrl}/${locale}/privacy</loc><lastmod>${now}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>`
-    );
+    for (const path of LOCALIZED_ROUTES) {
+      const changefreq = path === "/showcases" ? "monthly" : "weekly";
+      const priority = path === "" ? "1.0" : path === "/download" ? "0.9" : "0.8";
+      lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority));
+    }
   }
 
+  // These trust surfaces are currently reviewed in English only. Their
+  // non-English routes redirect until qualified translations are approved.
+  for (const path of ["/privacy", "/about", "/editorial-policy", "/resources"] as const) {
+    lines.push(
+      `<url><loc>${BASE_URL}/en${path}</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>`,
+    );
+  }
+  for (const publication of getPublications()) {
+    lines.push(
+      `<url><loc>${BASE_URL}/en${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+    );
+  }
   lines.push("</urlset>");
 
   return new Response(lines.join("\n"), {

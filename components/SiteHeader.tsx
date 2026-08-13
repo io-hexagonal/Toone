@@ -14,6 +14,7 @@ import { Link } from "@/lib/navigation";
  */
 export default function SiteHeader() {
   const t = useTranslations("nav");
+  const footer = useTranslations("footer");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -115,9 +116,10 @@ export default function SiteHeader() {
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
+          <Link href="/#how" data-optional>{footer("how")}</Link>
+          <a href="/en/resources" data-optional>{t("resources")}</a>
           <Link href="/showcases" data-optional>{t("showcases")}</Link>
-          <Link href="/privacy" data-optional>{t("privacy")}</Link>
-          <a href="https://github.com/mattwebhub/toone" target="_blank" rel="noopener" data-optional>
+          <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" data-optional>
             {t("github")}
           </a>
           <Link href="/signin">{t("signin")}</Link>

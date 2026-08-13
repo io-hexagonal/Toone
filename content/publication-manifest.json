@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceRoot": "../toone-org/toone-growth/.toone/organization",
+  "items": [
+    {
+      "id": "CNT-brief-14072353",
+      "source": "content/active/ai-native-company.md",
+      "destination": "content/guides/ai-native-company.md",
+      "slug": "ai-native-company",
+      "canonicalPath": "/guides/ai-native-company",
+      "title": "What Is an AI-Native Company? An Operating-Model Diagnostic",
+      "description": "Compare AI-enabled, AI-assisted, and AI-native operations, then assess one process with five evidence checks.",
+      "eyebrow": "Operating model guide",
+      "author": "Toone Content",
+      "published": "2026-08-13",
+      "updated": "2026-08-13",
+      "readTime": "10 min read",
+      "featured": true,
+      "state": "publishable"
+    },
+    {
+      "id": "CNT-brief-f37a981a",
+      "source": "content/active/ai-agent-governance.md",
+      "sourceHeading": "Publication copy",
+      "destination": "content/guides/ai-agent-governance.md",
+      "slug": "ai-agent-governance",
+      "canonicalPath": "/governance",
+      "title": "AI Agent Governance: A Practical Control Model",
+      "description": "Design roles, action boundaries, approvals, evidence, and recovery into agent work before an agent can affect customers or systems.",
+      "eyebrow": "Governance guide",
+      "author": "Toone Content",
+      "published": "2026-08-13",
+      "updated": "2026-08-13",
+      "readTime": "8 min read",
+      "featured": true,
+      "state": "publishable"
+    }
+  ]
+}
