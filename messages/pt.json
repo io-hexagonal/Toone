@@ -241,6 +241,28 @@
     "errRate": "Muitas tentativas — tente novamente em um minuto.",
     "errInvalidInput": "Verifique seu e-mail e senha e tente novamente."
   },
+  "resources": {
+    "metaTitle": "Recursos para criar uma empresa nativa em IA",
+    "metaDescription": "Guias práticos da Toone sobre modelos operacionais nativos em IA, governança de agentes, evidências e decisões de implementação.",
+    "ogTitle": "Recursos da Toone",
+    "ogDescription": "Guias práticos para criar operações nativas em IA com agentes responsáveis.",
+    "eyebrow": "Guias práticos da Toone",
+    "heading": "Desenhe o trabalho, não apenas o prompt.",
+    "intro": "Guias baseados em evidências para codificar operações, governar ações de agentes e decidir onde a IA faz sentido.",
+    "empty": "Os guias em português estão sendo preparados."
+  },
+  "article": {
+    "breadcrumb": "Navegação estrutural",
+    "home": "Início",
+    "resources": "Recursos",
+    "by": "Por",
+    "published": "Publicado em",
+    "updated": "Atualizado em",
+    "onThisPage": "Nesta página",
+    "continueTitle": "Continue com evidências",
+    "continueDescription": "Veja o que já funciona na Toone antes de decidir se o modelo operacional se adapta ao seu trabalho.",
+    "continueAction": "Ver casos da Toone"
+  },
   "contact": {
     "title": "Traga-nos a sua organização",
     "sub": "Conte-nos sobre um processo que dói. Responderemos em um dia.",

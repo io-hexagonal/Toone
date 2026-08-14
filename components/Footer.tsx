@@ -80,7 +80,7 @@ export default async function Footer() {
             </div>
             <div>
               <p className="ftr-heading">{t("proof")}</p>
-              <a href="/en/resources">{nav("resources")}</a>
+              <Link href="/resources">{nav("resources")}</Link>
               <a href="/en/governance">{nav("governance")}</a>
               <Link href="/showcases">{nav("showcases")}</Link>
             </div>
@@ -89,7 +89,7 @@ export default async function Footer() {
               <Link href="/about">{t("about")}</Link>
               <Link href="/editorial-policy">{t("editorialPolicy")}</Link>
               <Link href="/signin">{nav("signin")}</Link>
-              <a href="mailto:hello@trytoone.com">{t("contact")}</a>
+              <Link href="/contact">{t("contact")}</Link>
               <Link href="/privacy">{t("privacy")}</Link>
               <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener">
                 {nav("github")}

@@ -241,6 +241,28 @@
     "errRate": "Zu viele Versuche — versuche es in einer Minute erneut.",
     "errInvalidInput": "Bitte überprüfe deine E-Mail-Adresse und dein Passwort und versuche es erneut."
   },
+  "resources": {
+    "metaTitle": "Ressourcen für den Aufbau eines KI-nativen Unternehmens",
+    "metaDescription": "Praxisnahe Toone-Leitfäden zu KI-nativen Betriebsmodellen, Agenten-Governance, Nachweisen und Umsetzungsentscheidungen.",
+    "ogTitle": "Toone Ressourcen",
+    "ogDescription": "Praxisnahe Leitfäden für KI-native Abläufe mit verantwortbaren Agenten.",
+    "eyebrow": "Toone Praxisleitfäden",
+    "heading": "Gestalte die Arbeit, nicht nur den Prompt.",
+    "intro": "Evidenzbasierte Leitfäden zum Abbilden von Abläufen, Steuern von Agentenaktionen und Einordnen sinnvoller KI-Einsätze.",
+    "empty": "Die deutschen Leitfäden werden vorbereitet."
+  },
+  "article": {
+    "breadcrumb": "Brotkrümelnavigation",
+    "home": "Startseite",
+    "resources": "Ressourcen",
+    "by": "Von",
+    "published": "Veröffentlicht am",
+    "updated": "Aktualisiert am",
+    "onThisPage": "Auf dieser Seite",
+    "continueTitle": "Mit Nachweisen weiterarbeiten",
+    "continueDescription": "Sieh dir an, was bereits auf Toone läuft, bevor du entscheidest, ob das Betriebsmodell zu deiner Arbeit passt.",
+    "continueAction": "Toone Beispiele ansehen"
+  },
   "contact": {
     "title": "Bringen Sie uns Ihre Organisation",
     "sub": "Erzählen Sie uns von einem Prozess, der schmerzt. Wir melden uns innerhalb eines Tages.",

@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "content:sync": "node scripts/content/sync-growth-drafts.mjs",
-    "content:check": "node scripts/content/sync-growth-drafts.mjs --check"
+    "content:validate": "node scripts/content/validate-publications.mjs",
+    "content:check-routes": "node scripts/content/check-built-routes.mjs",
+    "content:check": "node scripts/content/sync-growth-drafts.mjs --check && npm run content:validate",
+    "prebuild": "npm run content:validate",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run content:check && npm run typecheck"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

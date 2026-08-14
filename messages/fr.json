@@ -241,6 +241,28 @@
     "errRate": "Trop de tentatives — réessayez dans une minute.",
     "errInvalidInput": "Vérifiez votre e-mail et votre mot de passe, puis réessayez."
   },
+  "resources": {
+    "metaTitle": "Ressources pour créer une entreprise native de l’IA",
+    "metaDescription": "Guides pratiques de Toone sur les modèles opérationnels natifs de l’IA, la gouvernance des agents, les preuves et les choix de mise en œuvre.",
+    "ogTitle": "Ressources Toone",
+    "ogDescription": "Guides pratiques pour concevoir des opérations natives de l’IA avec des agents responsables.",
+    "eyebrow": "Guides pratiques Toone",
+    "heading": "Concevez le travail, pas seulement le prompt.",
+    "intro": "Des guides fondés sur des preuves pour encoder les opérations, encadrer les actions des agents et décider où l’IA a sa place.",
+    "empty": "Les guides en français sont en préparation."
+  },
+  "article": {
+    "breadcrumb": "Fil d’Ariane",
+    "home": "Accueil",
+    "resources": "Ressources",
+    "by": "Par",
+    "published": "Publié le",
+    "updated": "Mis à jour le",
+    "onThisPage": "Sur cette page",
+    "continueTitle": "Poursuivez avec des preuves",
+    "continueDescription": "Découvrez ce qui fonctionne déjà sur Toone avant de décider si le modèle opérationnel convient à votre travail.",
+    "continueAction": "Voir les exemples Toone"
+  },
   "contact": {
     "title": "Confiez-nous votre organisation",
     "sub": "Parlez-nous d'un processus qui fait mal. Nous vous répondrons sous un jour.",

@@ -117,7 +117,7 @@ export default function SiteHeader() {
         </Link>
         <nav className="links" aria-label="Primary">
           <Link href="/#how" data-optional>{footer("how")}</Link>
-          <a href="/en/resources" data-optional>{t("resources")}</a>
+          <Link href="/resources" data-optional>{t("resources")}</Link>
           <Link href="/showcases" data-optional>{t("showcases")}</Link>
           <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" data-optional>
             {t("github")}

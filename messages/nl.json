@@ -241,6 +241,28 @@
     "errRate": "Te veel pogingen — probeer het over een minuut opnieuw.",
     "errInvalidInput": "Controleer je e-mailadres en wachtwoord en probeer het opnieuw."
   },
+  "resources": {
+    "metaTitle": "Bronnen voor het bouwen van een AI-native bedrijf",
+    "metaDescription": "Praktische Toone-gidsen over AI-native bedrijfsmodellen, agentgovernance, bewijs en implementatiekeuzes.",
+    "ogTitle": "Toone Bronnen",
+    "ogDescription": "Praktische gidsen voor AI-native processen met verantwoordelijke agents.",
+    "eyebrow": "Praktische Toone-gidsen",
+    "heading": "Ontwerp het werk, niet alleen de prompt.",
+    "intro": "Op bewijs gebaseerde gidsen voor het coderen van processen, het besturen van agentacties en het kiezen waar AI past.",
+    "empty": "De Nederlandse gidsen worden voorbereid."
+  },
+  "article": {
+    "breadcrumb": "Kruimelpad",
+    "home": "Home",
+    "resources": "Bronnen",
+    "by": "Door",
+    "published": "Gepubliceerd op",
+    "updated": "Bijgewerkt op",
+    "onThisPage": "Op deze pagina",
+    "continueTitle": "Ga verder met bewijs",
+    "continueDescription": "Bekijk wat al op Toone draait voordat je beslist of het bedrijfsmodel bij je werk past.",
+    "continueAction": "Bekijk Toone-voorbeelden"
+  },
   "contact": {
     "title": "Breng ons je organisatie",
     "sub": "Vertel ons over één proces dat pijn doet. We reageren binnen een dag.",

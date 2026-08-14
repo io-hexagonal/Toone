@@ -4,9 +4,10 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import ArticlePage, { type ArticleUi } from "@/components/ArticlePage";
 import {
-  getGuideSlugs,
   getPublication,
   getPublicationLocales,
+  getRootEditorialSlugs,
+  isRootEditorialPublication,
   publicationAlternates,
   publicationUrl,
 } from "@/lib/content";
@@ -17,7 +18,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getGuideSlugs().map((slug) => ({ slug }));
+  return getRootEditorialSlugs().map((slug) => ({ slug }));
 }
 
 function absoluteUrl(value: string): string {
@@ -43,8 +44,10 @@ async function articleUi(locale: Locale): Promise<ArticleUi> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam as Locale;
-  const publication = getPublication(slug, locale);
-  const englishPublication = getPublication(slug, "en");
+  const localized = getPublication(slug, locale);
+  const english = getPublication(slug, "en");
+  const publication = localized && isRootEditorialPublication(localized) ? localized : null;
+  const englishPublication = english && isRootEditorialPublication(english) ? english : null;
   if (!publication && !englishPublication) return {};
 
   const resolvedPublication = publication ?? englishPublication!;
@@ -58,7 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: url,
       languages: publication
         ? publicationAlternates(slug, resolvedPublication.canonicalPath)
-        : { en: publicationUrl(resolvedPublication, "en"), "x-default": publicationUrl(resolvedPublication, "en") },
+        : {
+            en: publicationUrl(resolvedPublication, "en"),
+            "x-default": publicationUrl(resolvedPublication, "en"),
+          },
     },
     robots: publication ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
@@ -83,18 +89,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function GuidePage({ params }: Props) {
+export default async function RootEditorialPage({ params }: Props) {
   const { locale: localeParam, slug } = await params;
   const locale = localeParam as Locale;
-  const publication = getPublication(slug, locale);
-  const englishPublication = getPublication(slug, "en");
+  const localized = getPublication(slug, locale);
+  const english = getPublication(slug, "en");
+  const publication = localized && isRootEditorialPublication(localized) ? localized : null;
+  const englishPublication = english && isRootEditorialPublication(english) ? english : null;
   if (!publication) {
-    if (englishPublication?.canonicalPath.startsWith("/guides/")) {
-      permanentRedirect(`/en${englishPublication.canonicalPath}`);
-    }
+    if (englishPublication) permanentRedirect(`/en${englishPublication.canonicalPath}`);
     notFound();
   }
-  if (!publication.canonicalPath.startsWith("/guides/")) notFound();
   setRequestLocale(locale);
 
   const ui = await articleUi(locale);
