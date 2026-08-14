@@ -1,37 +1,54 @@
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
+import { locales, type Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const url = "https://trytoone.com/en/resources";
+  const { locale: localeParam } = await params;
+  const locale = localeParam as Locale;
+  const t = await getTranslations({ locale, namespace: "resources" });
+  const url = `https://trytoone.com/${locale}/resources`;
+  const languages = Object.fromEntries(
+    locales.map((alternateLocale) => [alternateLocale, `https://trytoone.com/${alternateLocale}/resources`]),
+  );
   return {
-    title: "Resources for Building an AI-Native Company",
-    description: "Practical Toone guides for AI-native operating models, agent governance, evidence, and implementation decisions.",
-    alternates: { canonical: url, languages: { en: url, "x-default": url } },
-    robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: {
+      canonical: url,
+      languages: { ...languages, "x-default": "https://trytoone.com/en/resources" },
+    },
+    robots: { index: true, follow: true },
     openGraph: {
       type: "website",
       url,
-      title: "Toone Resources",
-      description: "Practical guides for designing AI-native operations with accountable agents.",
+      title: t("ogTitle"),
+      description: t("ogDescription"),
       siteName: "Toone",
+      locale,
+      alternateLocale: locales.filter((alternateLocale) => alternateLocale !== locale),
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },
   };
 }
 
 export default async function ResourcesPage({ params }: Props) {
-  const { locale } = await params;
-  if (locale !== "en") permanentRedirect("/en/resources");
+  const { locale: localeParam } = await params;
+  const locale = localeParam as Locale;
   setRequestLocale(locale);
-  const publications = getPublications();
+  const t = await getTranslations({ locale, namespace: "resources" });
+  const publications = getPublications(locale);
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
 
   return (
     <>
@@ -103,19 +120,20 @@ export default async function ResourcesPage({ params }: Props) {
         <SiteHeader />
         <header className="resources-hero">
           <div className="resources-hero-inner">
-            <p className="resources-eyebrow">Toone field guides</p>
-            <h1>Design the work, not only the prompt.</h1>
-            <p>Evidence-led guides for encoding company operations, governing agent actions, and deciding where AI belongs.</p>
+            <p className="resources-eyebrow">{t("eyebrow")}</p>
+            <h1>{t("heading")}</h1>
+            <p>{t("intro")}</p>
           </div>
         </header>
         <main className="resources-grid">
+          {publications.length === 0 ? <p>{t("empty")}</p> : null}
           {publications.map((publication) => (
             <Link key={publication.slug} href={publication.canonicalPath} className="resource-card">
               <span className="resource-card-meta">{publication.eyebrow}</span>
               <h2>{publication.title}</h2>
               <p>{publication.description}</p>
               <span className="resource-card-foot">
-                <span>{publication.updated}</span>
+                <span>{dateFormatter.format(new Date(`${publication.updated}T00:00:00Z`))}</span>
                 <span>{publication.readTime}</span>
               </span>
             </Link>

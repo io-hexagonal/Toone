@@ -2,6 +2,7 @@
 slug: "ai-agent-governance"
 canonicalPath: "/governance"
 title: "AI Agent Governance: A Practical Control Model"
+heading: "AI Agent Governance: A Practical Control Model"
 description: "Design roles, action boundaries, approvals, evidence, and recovery into agent work before an agent can affect customers or systems."
 eyebrow: "Governance guide"
 author: "Toone Content"

@@ -1,10 +1,15 @@
 import { locales } from "@/i18n/routing";
-import { getPublications } from "@/lib/content";
+import {
+  getGuideSlugs,
+  getPublication,
+  getPublicationLocales,
+  getRootEditorialSlugs,
+} from "@/lib/content";
 
 export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
-const LOCALIZED_ROUTES = ["", "/showcases", "/download"] as const;
+const LOCALIZED_ROUTES = ["", "/showcases", "/download", "/resources"] as const;
 const DOWNLOAD_LAST_MODIFIED = "2026-08-13";
 
 function alternates(path: string): string {
@@ -24,6 +29,17 @@ function englishAlternates(path: string): string {
     `<xhtml:link rel="alternate" hreflang="en" href="${href}"/>`,
     `<xhtml:link rel="alternate" hreflang="x-default" href="${href}"/>`,
   ].join("");
+}
+
+function publicationAlternateLinks(path: string, availableLocales: readonly string[]): string {
+  const links = availableLocales.map(
+    (locale) =>
+      `<xhtml:link rel="alternate" hreflang="${locale}" href="${BASE_URL}/${locale}${path}"/>`,
+  );
+  if (availableLocales.includes("en")) {
+    links.push(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`);
+  }
+  return links.join("");
 }
 
 function url(
@@ -54,14 +70,28 @@ export async function GET() {
 
   // These trust surfaces are currently reviewed in English only. Their
   // non-English routes redirect until qualified translations are approved.
-  for (const path of ["/privacy", "/about", "/editorial-policy", "/resources"] as const) {
+  for (const path of ["/privacy", "/about", "/contact", "/editorial-policy"] as const) {
     lines.push(
       `<url><loc>${BASE_URL}/en${path}</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>`,
     );
   }
-  for (const publication of getPublications()) {
+  for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {
+    const availableLocales = getPublicationLocales(slug);
+    for (const locale of availableLocales) {
+      const publication = getPublication(slug, locale);
+      if (!publication) continue;
+      lines.push(
+        `<url><loc>${BASE_URL}/${locale}${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod>${publicationAlternateLinks(publication.canonicalPath, availableLocales)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      );
+    }
+  }
+
+  // Preserve English-only editorial surfaces whose canonical route is not in
+  // the locale guide family (currently /governance).
+  const governance = getPublication("ai-agent-governance", "en");
+  if (governance) {
     lines.push(
-      `<url><loc>${BASE_URL}/en${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod>${englishAlternates(publication.canonicalPath)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      `<url><loc>${BASE_URL}/en${governance.canonicalPath}</loc><lastmod>${governance.updated}</lastmod>${englishAlternates(governance.canonicalPath)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
     );
   }
   lines.push("</urlset>");

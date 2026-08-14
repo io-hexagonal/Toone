@@ -2,6 +2,7 @@
 slug: "ai-native-company"
 canonicalPath: "/guides/ai-native-company"
 title: "What Is an AI-Native Company? An Operating-Model Diagnostic"
+heading: "What Is an AI-Native Company? An Operating-Model Diagnostic"
 description: "Compare AI-enabled, AI-assisted, and AI-native operations, then assess one process with five evidence checks."
 eyebrow: "Operating model guide"
 author: "Toone Content"

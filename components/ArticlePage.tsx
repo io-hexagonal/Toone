@@ -10,14 +10,37 @@ import {
   headingId,
   type Publication,
 } from "@/lib/content";
+import type { Locale } from "@/i18n/routing";
 
-const markdownComponents: Components = {
+export type ArticleUi = {
+  breadcrumb: string;
+  home: string;
+  resources: string;
+  by: string;
+  published: string;
+  updated: string;
+  onThisPage: string;
+  continueTitle: string;
+  continueDescription: string;
+  continueAction: string;
+};
+
+function localizedHref(href: string, locale: Locale): string {
+  if (!href.startsWith("/") || href.startsWith("/assets/") || href.startsWith("/_next/")) {
+    return href;
+  }
+  if (/^\/(?:en|pt|es|fr|de|it|nl|ru)(?:\/|$)/.test(href)) return href;
+  return `/${locale}${href}`;
+}
+
+function markdownComponents(locale: Locale): Components {
+  return {
   h2: ({ children }) => <h2 id={headingId(String(children))}>{children}</h2>,
   h3: ({ children }) => <h3 id={headingId(String(children))}>{children}</h3>,
   a: ({ href = "", children }) => {
     const external = href.startsWith("http");
     return (
-      <a href={href} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
+      <a href={localizedHref(href, locale)} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
         {children}
       </a>
     );
@@ -32,12 +55,44 @@ const markdownComponents: Components = {
       sizes="(max-width: 860px) calc(100vw - 48px), 760px"
     />
   ),
+  code: ({ className, children }) => {
+    if (className === "language-mermaid") {
+      return (
+        <code className="article-mermaid" role="img" aria-label="Mermaid roadmap source">
+          {children}
+        </code>
+      );
+    }
+    return <code className={className}>{children}</code>;
+  },
+  };
+}
+
+type Props = { publication: Publication; locale?: Locale; ui?: ArticleUi };
+
+const ENGLISH_UI: ArticleUi = {
+  breadcrumb: "Breadcrumb",
+  home: "Home",
+  resources: "Resources",
+  by: "By",
+  published: "Published",
+  updated: "Updated",
+  onThisPage: "On this page",
+  continueTitle: "Continue with evidence",
+  continueDescription: "See what currently runs on Toone before deciding whether the operating model fits your work.",
+  continueAction: "View Toone showcases",
 };
 
-type Props = { publication: Publication };
-
-export default function ArticlePage({ publication }: Props) {
+export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_UI }: Props) {
   const toc = getTableOfContents(publication.body).filter((item) => item.level === 2);
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+  const published = dateFormatter.format(new Date(`${publication.published}T00:00:00Z`));
+  const updated = dateFormatter.format(new Date(`${publication.updated}T00:00:00Z`));
 
   return (
     <>
@@ -123,10 +178,19 @@ export default function ArticlePage({ publication }: Props) {
             }
             .article-body th { color: #1d1c19; background: rgba(29,28,25,0.045); font-weight: 700; }
             .article-body tr:last-child td { border-bottom: 0; }
+            .article-body pre {
+              max-width: 100%; overflow-x: auto;
+            }
             .article-image {
               width: 100%; height: auto; margin: 32px 0 10px; border-radius: 20px;
               box-shadow: 0 18px 60px rgba(20,19,17,0.1);
             }
+            .article-body pre:has(.article-mermaid) {
+              overflow-x: auto; margin: 30px 0 14px; padding: 22px;
+              border: 1px solid rgba(29,28,25,0.13); border-radius: 14px;
+              background: #1d1c19; color: rgba(255,255,255,0.88);
+            }
+            .article-mermaid { white-space: pre; font-size: 12px; line-height: 1.65; }
             .article-toc { position: sticky; top: 30px; }
             .article-toc-title {
               color: rgba(29,28,25,0.45); font-size: 10px; font-weight: 750;
@@ -163,37 +227,37 @@ export default function ArticlePage({ publication }: Props) {
         <SiteHeader />
         <header className="article-hero">
           <div className="article-hero-inner">
-            <nav className="article-breadcrumb" aria-label="Breadcrumb">
-              <Link href="/">Home</Link>
+            <nav className="article-breadcrumb" aria-label={ui.breadcrumb}>
+              <Link href="/">{ui.home}</Link>
               <span aria-hidden="true">→</span>
-              <Link href="/resources">Resources</Link>
+              <Link href="/resources">{ui.resources}</Link>
               <span aria-hidden="true">→</span>
               <span aria-current="page">{publication.title}</span>
             </nav>
             <p className="article-eyebrow">{publication.eyebrow}</p>
-            <h1>{publication.title}</h1>
+            <h1>{publication.heading}</h1>
             <p className="article-deck">{publication.description}</p>
             <div className="article-byline">
-              <span>By {publication.author}</span>
-              <span>Published {publication.published}</span>
-              <span>Updated {publication.updated}</span>
+              <span>{ui.by} {publication.author}</span>
+              <span>{ui.published} {published}</span>
+              <span>{ui.updated} {updated}</span>
               <span>{publication.readTime}</span>
             </div>
           </div>
         </header>
         <main className="article-layout">
           <article className="article-body">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(locale)}>
               {publication.body}
             </ReactMarkdown>
             <aside className="article-close">
-              <h2>Continue with evidence</h2>
-              <p>See what currently runs on Toone before deciding whether the operating model fits your work.</p>
-              <Link href="/showcases">View Toone showcases</Link>
+              <h2>{ui.continueTitle}</h2>
+              <p>{ui.continueDescription}</p>
+              <Link href="/showcases">{ui.continueAction}</Link>
             </aside>
           </article>
-          <aside className="article-toc" aria-label="On this page">
-            <p className="article-toc-title">On this page</p>
+          <aside className="article-toc" aria-label={ui.onThisPage}>
+            <p className="article-toc-title">{ui.onThisPage}</p>
             {toc.map((item) => (
               <a key={item.id} href={`#${item.id}`}>{item.label}</a>
             ))}

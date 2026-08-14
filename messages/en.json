@@ -241,6 +241,28 @@
     "errRate": "Too many attempts — try again in a minute.",
     "errInvalidInput": "Please check your email address and password and try again."
   },
+  "resources": {
+    "metaTitle": "Resources for Building an AI-Native Company",
+    "metaDescription": "Practical Toone guides for AI-native operating models, agent governance, evidence, and implementation decisions.",
+    "ogTitle": "Toone Resources",
+    "ogDescription": "Practical guides for designing AI-native operations with accountable agents.",
+    "eyebrow": "Toone field guides",
+    "heading": "Design the work, not only the prompt.",
+    "intro": "Evidence-led guides for encoding company operations, governing agent actions, and deciding where AI belongs.",
+    "empty": "Localized guides are being prepared."
+  },
+  "article": {
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "resources": "Resources",
+    "by": "By",
+    "published": "Published",
+    "updated": "Updated",
+    "onThisPage": "On this page",
+    "continueTitle": "Continue with evidence",
+    "continueDescription": "See what currently runs on Toone before deciding whether the operating model fits your work.",
+    "continueAction": "View Toone showcases"
+  },
   "contact": {
     "title": "Bring us your organization",
     "sub": "Tell us about one process that hurts. We'll get back to you within a day.",

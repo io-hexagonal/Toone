@@ -3,6 +3,9 @@ import { permanentRedirect } from "next/navigation";
 
 export const metadata: Metadata = { robots: { index: false, follow: true } };
 
-export default function GuidesIndex() {
-  permanentRedirect("/en/resources");
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function GuidesIndex({ params }: Props) {
+  const { locale } = await params;
+  permanentRedirect(`/${locale}/resources`);
 }

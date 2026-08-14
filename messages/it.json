@@ -241,6 +241,28 @@
     "errRate": "Troppi tentativi — riprova tra un minuto.",
     "errInvalidInput": "Controlla la tua email e la password e riprova."
   },
+  "resources": {
+    "metaTitle": "Risorse per creare un’azienda AI-native",
+    "metaDescription": "Guide pratiche di Toone su modelli operativi AI-native, governance degli agenti, evidenze e decisioni di implementazione.",
+    "ogTitle": "Risorse Toone",
+    "ogDescription": "Guide pratiche per progettare operazioni AI-native con agenti responsabili.",
+    "eyebrow": "Guide pratiche Toone",
+    "heading": "Progetta il lavoro, non solo il prompt.",
+    "intro": "Guide basate su evidenze per codificare le operazioni, governare le azioni degli agenti e decidere dove impiegare l’IA.",
+    "empty": "Le guide in italiano sono in preparazione."
+  },
+  "article": {
+    "breadcrumb": "Percorso di navigazione",
+    "home": "Home",
+    "resources": "Risorse",
+    "by": "Di",
+    "published": "Pubblicato il",
+    "updated": "Aggiornato il",
+    "onThisPage": "In questa pagina",
+    "continueTitle": "Continua con le evidenze",
+    "continueDescription": "Scopri cosa funziona già su Toone prima di decidere se il modello operativo è adatto al tuo lavoro.",
+    "continueAction": "Vedi gli esempi Toone"
+  },
   "contact": {
     "title": "Portaci la tua organizzazione",
     "sub": "Raccontaci un processo che fa male. Ti risponderemo entro un giorno.",
