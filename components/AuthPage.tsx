@@ -90,6 +90,8 @@ export default function AuthPage({ mode }: { mode: Mode }) {
           return t("errInvalidInput");
         case "rate_limit_exceeded":
           return t("errRate");
+        case "registration_closed":
+          return t("errRegistrationClosed");
       }
     }
     return t("errGeneric");

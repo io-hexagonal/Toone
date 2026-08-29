@@ -9,7 +9,7 @@ import {
 export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
-const LOCALIZED_ROUTES = ["", "/showcases", "/download", "/resources"] as const;
+const LOCALIZED_ROUTES = ["", "/business", "/showcases", "/download", "/resources"] as const;
 const DOWNLOAD_LAST_MODIFIED = "2026-08-13";
 
 function alternates(path: string): string {

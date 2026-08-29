@@ -10,7 +10,7 @@ const sourceRoot = path.resolve(repositoryRoot, manifest.sourceRoot);
 const checkOnly = process.argv.includes("--check");
 const supportedLocales = manifest.supportedLocales ?? ["en", "pt", "es", "fr", "de", "it", "nl", "ru"];
 const reservedRootEditorialSlugs = new Set([
-  "about", "contact", "download", "editorial-policy", "governance", "guides", "privacy",
+  "about", "business", "contact", "download", "editorial-policy", "governance", "guides", "privacy",
   "resources", "showcases", "signin", "signup",
 ]);
 

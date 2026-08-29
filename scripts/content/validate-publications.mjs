@@ -10,7 +10,7 @@ const errors = [];
 const generatedDestinations = new Set();
 const publications = [];
 const reservedRootEditorialSlugs = new Set([
-  "about", "contact", "download", "editorial-policy", "governance", "guides", "privacy",
+  "about", "business", "contact", "download", "editorial-policy", "governance", "guides", "privacy",
   "resources", "showcases", "signin", "signup",
 ]);
 const rootCanonicalExamples = [

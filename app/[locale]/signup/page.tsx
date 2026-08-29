@@ -1,4 +1,4 @@
-import AuthPage from "@/components/AuthPage";
+import WaitlistPage from "@/components/WaitlistPage";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -6,10 +6,10 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "auth" });
+  const t = await getTranslations({ locale, namespace: "landing" });
   return {
-    title: t("signupTitle"),
-    description: t("signupSub"),
+    title: t("waitlistTitle"),
+    description: t("waitlistSub"),
     alternates: { canonical: `https://trytoone.com/${locale}/signup` },
     robots: { index: false, follow: true },
   };
@@ -18,5 +18,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SignUpPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AuthPage mode="signup" />;
+  return <WaitlistPage />;
 }

@@ -4,6 +4,7 @@ import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import HeroCosmos from "@/components/HeroCosmos";
+import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 const GOOGLE_AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
@@ -42,7 +43,11 @@ function isWaitlistOutcome(value: unknown): value is WaitlistOutcome {
  * no shadow, no fill.
  */
 
-export default function HeroAuth() {
+type Props = {
+  audience?: LandingAudience;
+};
+
+export default function HeroAuth({ audience = "business" }: Props) {
   const t = useTranslations("landing");
   const locale = useLocale();
   const [email, setEmail] = useState("");
@@ -243,8 +248,12 @@ export default function HeroAuth() {
 
       <section className="hero-auth">
         <div className="ha-left">
-          <h1 className="ha-title">{t("heroTitle")}</h1>
-          <p className="ha-tag">{t("heroTag2")}</p>
+          <h1 className="ha-title">
+            {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
+          </h1>
+          <p className="ha-tag">
+            {t(audience === "personal" ? "personal.heroTag" : "heroTag2")}
+          </p>
           {locale !== "en" && (
             <p className="ha-language">{t("productLanguageDisclosure")}</p>
           )}

@@ -4,9 +4,13 @@ import { Link } from "@/lib/navigation";
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
  * Brand lockup + legal on the left, three link columns on the right.
- * Anchor links go through "/" so they work from any page.
+ * Anchor links return to the active Personal or Business landing route.
  */
-export default async function Footer() {
+type Props = {
+  landingPath?: "/" | "/business";
+};
+
+export default async function Footer({ landingPath = "/" }: Props) {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
 
@@ -67,8 +71,8 @@ export default async function Footer() {
           <div className="ftr-cols">
             <div>
               <p className="ftr-heading">{t("product")}</p>
-              <Link href="/#how">{t("how")}</Link>
-              <Link href="/#faq">FAQ</Link>
+              <Link href={`${landingPath}#how`}>{t("how")}</Link>
+              <Link href={`${landingPath}#faq`}>FAQ</Link>
               <Link
                 className="ftr-download"
                 href="/download"

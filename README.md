@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/io-hexagonal/Toone/releases">Download</a> &bull;
+  <a href="https://trytoone.com/en/download">Download</a> &bull;
   <a href="https://github.com/io-hexagonal/Toone/issues">Issues</a> &bull;
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
@@ -45,7 +45,7 @@ Start here. Toone Desktop is where you set up your org, chat with agents, and ge
 
 ### Install
 
-Download the latest build from [Releases](https://github.com/io-hexagonal/Toone/releases). Open the app — the setup wizard walks you through connecting your AI account.
+Existing users can sign in and download the latest build at [trytoone.com](https://trytoone.com/en/download). New users can join the waitlist there. Open the app — the setup wizard walks you through connecting your AI account.
 
 ## Mobile
 

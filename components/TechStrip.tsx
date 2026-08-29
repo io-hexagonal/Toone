@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /**
  * The substrate Toone runs on, stated for credibility, above the partner band.
@@ -90,14 +91,21 @@ const ITEMS: Item[] = [
   },
 ];
 
-export default async function TechStrip() {
+type Props = {
+  audience?: LandingAudience;
+};
+
+export default async function TechStrip({ audience = "business" }: Props) {
   const t = await getTranslations("landing");
+  const items = audience === "personal"
+    ? ITEMS.filter((item) => item.name === "OpenAI" || item.name === "Anthropic")
+    : ITEMS;
 
   return (
     <div className="ts-wrap">
       <p className="ts-label">{t("techLabel")}</p>
       <ul className="ts-row">
-        {ITEMS.map((item) => (
+        {items.map((item) => (
           <li key={item.name}>
             <a
               className="ts-item"

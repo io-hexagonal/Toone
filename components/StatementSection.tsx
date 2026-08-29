@@ -1,11 +1,17 @@
 import { getTranslations } from "next-intl/server";
+import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /**
  * The cream statement block right after the dark hero — the first beat of the
  * light editorial world: one big Rubik line, a short lead, one black pill.
  */
-export default async function StatementSection() {
-  const t = await getTranslations("statement");
+type Props = {
+  audience?: LandingAudience;
+};
+
+export default async function StatementSection({ audience = "business" }: Props) {
+  const namespace = audience === "personal" ? "landing.personal.statement" : "statement";
+  const t = await getTranslations(namespace);
 
   return (
     <>

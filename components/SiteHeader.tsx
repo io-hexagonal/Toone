@@ -12,7 +12,11 @@ import { Link } from "@/lib/navigation";
  * DOM nodes stay put and every property tweens, so the elements visibly
  * "stay" while the chrome contracts around them.
  */
-export default function SiteHeader() {
+type Props = {
+  landingPath?: "/" | "/business";
+};
+
+export default function SiteHeader({ landingPath = "/" }: Props) {
   const t = useTranslations("nav");
   const footer = useTranslations("footer");
   const [scrolled, setScrolled] = useState(false);
@@ -32,7 +36,7 @@ export default function SiteHeader() {
           __html: `
             .hdr2 {
               position: fixed; z-index: 40;
-              top: 0; left: 50%; transform: translateX(-50%);
+              top: 36px; left: 50%; transform: translateX(-50%);
               width: 100%;
               display: flex; align-items: center; gap: 28px;
               padding: 24px 10vw;
@@ -116,7 +120,7 @@ export default function SiteHeader() {
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
-          <Link href="/#how" data-optional>{footer("how")}</Link>
+          <Link href={`${landingPath}#how`} data-optional>{footer("how")}</Link>
           <Link href="/resources" data-optional>{t("resources")}</Link>
           <Link href="/showcases" data-optional>{t("showcases")}</Link>
           <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" data-optional>

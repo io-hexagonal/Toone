@@ -35,6 +35,7 @@ const DEFAULT_IMAGE = "/assets/og/toone-og.png";
 const DEFAULT_IMAGE_ALT = "Toone";
 export const RESERVED_ROOT_EDITORIAL_SLUGS = [
   "about",
+  "business",
   "contact",
   "download",
   "editorial-policy",

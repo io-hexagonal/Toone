@@ -28,6 +28,55 @@
     "compatibilityNote": "Les exigences proviennent des paquets publiés. Aucun test de passage entre versions n'est revendiqué."
   },
   "landing": {
+    "personal": {
+      "heroTitle": "The native workspace for agentic workflows.",
+      "heroTag": "Build sophisticated workflows in natural language, debug, and watch them operate live.",
+      "featuresTitle": "Everything your agents need to work with you",
+      "featuresSub": "Fast at the surface. Deeply orchestrated underneath.",
+      "statement": {
+        "title": "The native macOS agent orchestration app.",
+        "lead": "Bring every agent into one native workspace, then call, resize, delegate, automate, browse, share, and speak without breaking your flow.",
+        "cta": "Explore the experience"
+      },
+      "features": {
+        "spotlight": {
+          "title": "Spotlight for your agents",
+          "description": "Summon any agent from anywhere with a Spotlight-like interface. Jump straight into a thread without breaking focus."
+        },
+        "windows": {
+          "title": "Windows that move with the work",
+          "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
+        },
+        "browser": {
+          "title": "Your browser, already signed in",
+          "description": "Bring authenticated sessions from your default browser into Toone so agents can work with the accounts you already use."
+        },
+        "routines": {
+          "title": "Routines as complex as the work",
+          "description": "Describe sophisticated processes in natural language. Schedule work, delegate across departments, call sub-routines, use tools, enforce approvals, and diagnose runs live."
+        },
+        "liveShare": {
+          "title": "Live Share, governed by you",
+          "description": "Invite someone into an organization and follow agents, threads, files, and presence together—read-only by default and expanded only with host approval."
+        },
+        "orchestration": {
+          "title": "Flawless agentic orchestration",
+          "description": "Run agents in parallel, hand context off cleanly, fan results back in, recover from failures, and escalate decisions to you as one continuous operation."
+        },
+        "voice": {
+          "title": "Voice in. Meetings captured.",
+          "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
+        },
+        "providers": {
+          "title": "Built on OpenAI and Anthropic",
+          "description": "Choose OpenAI Codex or Anthropic Claude while Toone keeps your agents, routines, tools, and governance working as one."
+        }
+      }
+    },
+
+    "audienceLabel": "Choisissez une expérience Toone",
+    "audiencePersonal": "Personnel",
+    "audienceBusiness": "Entreprise",
     "downloadFor": "Telecharger pour",
     "macOS": "macOS",
     "soon": "Bientot",
@@ -63,7 +112,11 @@
     "authContinue": "Continuer par e-mail",
     "authJoined": "Vous êtes sur la liste — à très vite.",
     "authError": "Un problème est survenu — réessayez.",
-    "authNote": "Accès anticipé — inscrivez-vous ou téléchargez l'app dès maintenant.",
+    "authNote": "Accès anticipé — inscrivez-vous. Les utilisateurs existants peuvent se connecter pour télécharger.",
+    "waitlistTitle": "Rejoignez la liste d’attente Toone",
+    "waitlistSub": "Les nouveaux comptes sont temporairement suspendus. Laissez votre e-mail et nous vous préviendrons à la réouverture.",
+    "waitlistExisting": "Vous avez déjà un compte Toone ?",
+    "waitlistSignIn": "Se connecter",
     "productLanguageDisclosure": "L’application de bureau est actuellement disponible uniquement en anglais.",
     "heroTag2": "Rendez votre entreprise AI-native."
   },
@@ -228,7 +281,7 @@
     "haveAccount": "Vous avez déjà un compte ?",
     "signinLink": "Connectez-vous",
     "newHere": "Nouveau sur Toone ?",
-    "signupLink": "Créez un compte",
+    "signupLink": "Rejoindre la liste",
     "successTitle": "Vous êtes connecté en tant que {email}",
     "successNote": "Toone tourne sur votre Mac — téléchargez l'app et connectez-vous là-bas.",
     "downloadMac": "Télécharger pour macOS",
@@ -239,7 +292,8 @@
     "errExistsGoogle": "Cet e-mail a déjà un compte avec mot de passe — connectez-vous avec votre e-mail et votre mot de passe.",
     "errInvalid": "E-mail ou mot de passe invalide.",
     "errRate": "Trop de tentatives — réessayez dans une minute.",
-    "errInvalidInput": "Vérifiez votre e-mail et votre mot de passe, puis réessayez."
+    "errInvalidInput": "Vérifiez votre e-mail et votre mot de passe, puis réessayez.",
+    "errRegistrationClosed": "Les nouveaux comptes sont suspendus. Rejoignez la liste et nous vous préviendrons à la réouverture."
   },
   "resources": {
     "metaTitle": "Ressources pour créer une entreprise native de l’IA",

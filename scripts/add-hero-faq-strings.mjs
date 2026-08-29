@@ -20,7 +20,7 @@ const STRINGS = {
       authContinue: "Continue with email",
       authJoined: "You're on the list — we'll be in touch soon.",
       authError: "Something went wrong — please try again.",
-      authNote: "Early access — join the list, or download the app now.",
+      authNote: "Early access — join the list. Existing users can sign in to download.",
     },
     faq: {
       title: "Questions, answered.",
@@ -54,7 +54,7 @@ const STRINGS = {
       authContinue: "Mit E-Mail fortfahren",
       authJoined: "Du stehst auf der Liste — wir melden uns bald.",
       authError: "Etwas ist schiefgelaufen — bitte erneut versuchen.",
-      authNote: "Early Access — trag dich ein oder lade die App direkt herunter.",
+      authNote: "Early Access — trag dich ein. Bestehende Nutzer können sich zum Download anmelden.",
     },
     faq: {
       title: "Fragen, beantwortet.",
@@ -88,7 +88,7 @@ const STRINGS = {
       authContinue: "Continuar con correo",
       authJoined: "Estás en la lista — te avisaremos pronto.",
       authError: "Algo salió mal — inténtalo de nuevo.",
-      authNote: "Acceso anticipado — únete a la lista o descarga la app ahora.",
+      authNote: "Acceso anticipado — únete a la lista. Los usuarios existentes pueden iniciar sesión para descargar.",
     },
     faq: {
       title: "Preguntas, respondidas.",

@@ -72,6 +72,7 @@ assert(legacyGuideAlias.status === 404, "English AI-native guide must not acquir
 
 for (const [route, expectedStatus] of [
   ["/en/about", 200],
+  ["/en/business", 200],
   ["/en/download", 200],
   ["/en/editorial-policy", 200],
   ["/en/governance", 200],
@@ -101,6 +102,14 @@ for (const canonicalPath of approvedCanonicalExamples) {
   );
 }
 for (const locale of locales) {
+  const businessRecord = new RegExp(
+    `<loc>https://trytoone.com/${locale}/business</loc>`,
+    "g",
+  );
+  assert(
+    (sitemap.match(businessRecord) ?? []).length === 1,
+    `${locale} Business must occur once in the sitemap`,
+  );
   const resourcesRecord = new RegExp(
     `<loc>https://trytoone.com/${locale}/resources</loc>`,
     "g",

@@ -8,6 +8,9 @@ import TechStrip from "@/components/TechStrip";
 import PartnerBand from "@/components/PartnerBand";
 import Footer from "@/components/Footer";
 import ResourcesSection from "@/components/ResourcesSection";
+import LandingAudienceBar, {
+  type LandingAudience,
+} from "@/components/LandingAudienceBar";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -23,10 +26,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function LandingPage({ params }: Props) {
+type TooneLandingPageProps = Props & {
+  audience: LandingAudience;
+};
+
+/** Shared presentation shell. Business keeps today's landing verbatim while
+ * Personal can be replaced independently as its product story is written. */
+export async function TooneLandingPage({
+  params,
+  audience,
+}: TooneLandingPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "landing" });
+  const landingPath = audience === "business" ? "/business" : "/";
 
   return (
     <>
@@ -265,21 +278,24 @@ export default async function LandingPage({ params }: Props) {
         }}
       />
 
-      <SiteHeader />
+      <LandingAudienceBar activeAudience={audience} />
+      <SiteHeader landingPath={landingPath} />
 
       <main>
-        <HeroAuth />
+        <HeroAuth audience={audience} />
 
-        <StatementSection />
+        <StatementSection audience={audience} />
 
         <div className="sections">
-          <TechStrip />
-          <PartnerBand />
+          <TechStrip audience={audience} />
+          {audience === "business" && <PartnerBand />}
 
         <section className="section ai-native-section" id="how">
-          <h2>{t("pillarsTitle")}</h2>
-          <p className="sub">{t("pillarsSub")}</p>
-          <div className="collab-presence" aria-hidden="true">
+          <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
+          <p className="sub">
+            {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
+          </p>
+          {audience === "business" && <div className="collab-presence" aria-hidden="true">
             <div className="collab-cursor collab-cursor--one">
               <svg viewBox="0 0 34 42" role="presentation">
                 <path
@@ -306,33 +322,50 @@ export default async function LandingPage({ params }: Props) {
                 <span className="collab-tooltip-beta">Beta</span>
               </span>
             </div>
-          </div>
+          </div>}
           <div className="pillars">
             {(
-              [
-                ["collaborationTitle", "collaborationDescription"],
-                ["p1t", "p1d"],
-                ["p2t", "p2d"],
-                ["p8t", "p8d"],
-                ["p3t", "p3d"],
-                ["p4t", "p4d"],
-                ["p5t", "p5d"],
-                ["p6t", "p6d"],
-                ["p7t", "p7d"],
-              ] as const
+              audience === "personal"
+                ? [
+                    ["personal.features.spotlight.title", "personal.features.spotlight.description"],
+                    ["personal.features.windows.title", "personal.features.windows.description"],
+                    ["personal.features.browser.title", "personal.features.browser.description"],
+                    ["personal.features.routines.title", "personal.features.routines.description"],
+                    ["personal.features.liveShare.title", "personal.features.liveShare.description"],
+                    ["personal.features.orchestration.title", "personal.features.orchestration.description"],
+                    ["personal.features.voice.title", "personal.features.voice.description"],
+                    ["personal.features.providers.title", "personal.features.providers.description"],
+                  ] as const
+                : [
+                    ["collaborationTitle", "collaborationDescription"],
+                    ["p1t", "p1d"],
+                    ["p2t", "p2d"],
+                    ["p8t", "p8d"],
+                    ["p3t", "p3d"],
+                    ["p4t", "p4d"],
+                    ["p5t", "p5d"],
+                    ["p6t", "p6d"],
+                    ["p7t", "p7d"],
+                  ] as const
             ).map(([titleKey, descKey], i) => (
               <div
-                className={`pillar${i === 0 ? " pillar--collaboration" : ""}`}
+                className={`pillar${
+                  (audience === "personal" ? i === 4 : i === 0)
+                    ? " pillar--collaboration"
+                    : ""
+                }`}
                 key={titleKey}
               >
                 <div className="phex">{String(i + 1).padStart(2, "0")}</div>
                 <div className="pillar-heading">
                   <h3>{t(titleKey)}</h3>
-                  {i === 0 && <span className="pillar-beta">Beta</span>}
+                  {(audience === "personal" ? i === 4 : i === 0) && (
+                    <span className="pillar-beta">Beta</span>
+                  )}
                 </div>
                 <p>
                   {t(descKey)}
-                  {locale === "en" && titleKey === "p6t" && (
+                  {audience === "business" && locale === "en" && titleKey === "p6t" && (
                     <>
                       {" "}
                       <a className="pillar-governance-link" href="/en/governance">
@@ -351,7 +384,11 @@ export default async function LandingPage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
+      <Footer landingPath={landingPath} />
     </>
   );
+}
+
+export default async function PersonalLandingPage(props: Props) {
+  return TooneLandingPage({ ...props, audience: "personal" });
 }

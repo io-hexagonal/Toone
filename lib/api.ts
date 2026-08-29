@@ -69,6 +69,11 @@ type RawAuthPayload = {
   IsNewUser?: boolean;
 };
 
+type RawDesktopDownload = {
+  URL: string;
+  ExpiresAt: string;
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${apiBase()}${path}`, init);
   if (res.status === 204) return undefined as T;
@@ -194,6 +199,17 @@ export async function getMe(token: string): Promise<ToneUser> {
     headers: { Authorization: `Bearer ${token}` },
   });
   return { id: raw.ID, email: raw.Email, name: raw.Name };
+}
+
+export async function getDesktopDownload(
+  variant: "standard" | "liquid-glass",
+  token: string,
+): Promise<{ url: string; expiresAt: string }> {
+  const raw = await request<RawDesktopDownload>(`/downloads/desktop/${variant}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return { url: raw.URL, expiresAt: raw.ExpiresAt };
 }
 
 export async function logout(token: string): Promise<void> {
