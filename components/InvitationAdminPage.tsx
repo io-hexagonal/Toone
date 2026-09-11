@@ -18,7 +18,16 @@ function formatDate(value: string | null) {
 export default function InvitationAdminPage() {
   const [session, setSession] = useState<ToneSession | null>(null);
   const [ready, setReady] = useState(false);
-  useEffect(() => { setSession(loadSession()); setReady(true); }, []);
+  useEffect(() => {
+    const syncSession = () => setSession(loadSession());
+    syncSession();
+    setReady(true);
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "toone.session" || event.key === null) syncSession();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const endSession = useCallback(() => { clearSession(); setSession(null); }, []);
   if (!ready) return <main className={styles.page}><p role="status">Checking your account…</p></main>;

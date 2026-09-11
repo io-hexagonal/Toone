@@ -9,14 +9,22 @@ export default function InvitationAdminLink({ token, className }: { token?: stri
   const [allowed, setAllowed] = useState(false);
   useEffect(() => {
     let cancelled = false;
-    setAllowed(false);
-    const currentToken = token || loadSession()?.token;
-    if (currentToken) {
-      canManageInvitations(currentToken)
-        .then(value => { if (!cancelled) setAllowed(value); })
-        .catch(() => { if (!cancelled) setAllowed(false); });
-    }
-    return () => { cancelled = true; };
+    let generation = 0;
+    const check = (currentToken?: string) => {
+      const request = ++generation;
+      setAllowed(false);
+      if (currentToken) {
+        canManageInvitations(currentToken)
+          .then(value => { if (!cancelled && request === generation) setAllowed(value); })
+          .catch(() => { if (!cancelled && request === generation) setAllowed(false); });
+      }
+    };
+    check(token || loadSession()?.token);
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "toone.session" || event.key === null) check(loadSession()?.token);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => { cancelled = true; window.removeEventListener("storage", onStorage); };
   }, [token]);
   return allowed ? <Link href="/admin/invitations" className={className}>Invitations</Link> : null;
 }
