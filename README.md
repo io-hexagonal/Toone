@@ -1,97 +1,17 @@
-<p align="center">
-  <img src="assets/profiles/toone-profile-512.png" width="64" alt="Toone" />
-  &nbsp;&nbsp;
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/typography/toone-wordmark-dark.png">
-    <img src="assets/typography/toone-wordmark-light.png" width="200" alt="Toone" />
-  </picture>
-</p>
+# Toone
 
-<p align="center">
-  <strong>AI teams that run your work.</strong>
-</p>
+Repeatable workflows. Specialised agents. Results you can review.
 
-<p align="center">
-  <a href="https://trytoone.com/en/download">Download</a> &bull;
-  <a href="https://github.com/io-hexagonal/Toone/issues">Issues</a> &bull;
-  <a href="CONTRIBUTING.md">Contributing</a>
-</p>
+Toone is a macOS workspace for recurring work, focused AI assistance, and useful outputs. Explore product screenshots and examples at [trytoone.com](https://trytoone.com).
 
----
+[Request Early Access](https://trytoone.com/en/early-access) · [Existing user sign-in](https://trytoone.com/en/signin) · [Redeem an invitation](https://trytoone.com/en/invite)
 
-Toone lets you build and run teams of AI agents on your Mac — organized into departments, each with defined roles, routines, and context. You bring your own AI account. Toone handles the rest.
+Public registration and public installer distribution are closed. Existing account holders can keep using their installed applications and obtain installers after signing in. An invitation code lets its recipient create an account without opening public registration.
 
-<p align="center">
-  <img src="assets/screenshots/desktop/desktop---sample-i---agent-template-thread-media---hook-analysis.jpg" width="720" alt="Toone Desktop" />
-</p>
+This repository contains the public website and product introductions. The desktop application is proprietary; its implementation and installers are maintained separately.
 
-## Desktop
+## Website development
 
-Start here. Toone Desktop is where you set up your org, chat with agents, and get things done.
+Use Node.js 24. Run `npm ci`, `npm run dev`, and `npm run build`. `npm test` validates the product content and types; `npm run content:check-routes` checks the built routes.
 
-- **Agents as a team** — Departments with specialized agents that route tasks to each other and hand off context
-- **Templates** — Pick a starting org or build your own from scratch
-- **Calendar** — Markdown-based, baked into your org. Agents read it, propose events, schedule around conflicts
-- **Browser** — Built-in browser panel. Point an agent at any website and let it work
-- **Meeting capture** — Dual audio (mic + system), live transcription, straight into your chat
-- **Planning** — Agents break work into steps, track progress, hand off between stages
-- **Layout & hotkeys** — Customizable panel layout, global hotkeys, and menu bar integration
-- **Zen mode** — Strip it down to just the chat when you need to focus
-
-### Requirements
-
-- macOS 14.0 (Sonoma) or later
-- Anthropic or OpenAI account
-
-### Install
-
-Existing users can sign in and download the latest build at [trytoone.com](https://trytoone.com/en/download). New users can join the waitlist there. Open the app — the setup wizard walks you through connecting your AI account.
-
-## Mobile
-
-Once your desktop is running, grab [Toone Mobile](https://github.com/io-hexagonal/toone-mobile) to take your agents with you.
-
-<p align="center">
-  <img src="assets/screenshots/mobile-chat.png" width="200" alt="Toone Mobile — Chat" />
-  &nbsp;&nbsp;
-  <img src="assets/screenshots/mobile-agents.png" width="200" alt="Toone Mobile — Agents" />
-  &nbsp;&nbsp;
-  <img src="assets/screenshots/mobile-explorer.png" width="200" alt="Toone Mobile — Project Explorer" />
-</p>
-
-- **Chat** — Full conversation with any agent, markdown and code blocks included
-- **Agents & departments** — Browse your whole org, switch agents, view session history
-- **Project explorer** — Read-only file tree of your desktop project
-- **Routines** — Trigger on-demand routines from your phone
-- **Themes** — Six visual themes with matching app icons
-
-Connects over local network or cloud relay with a 6-character pairing code.
-
-### Requirements
-
-- iOS 17.0+
-- Toone Desktop running on your Mac
-
-## Templates
-
-| Template | What it does | Availability |
-|----------|-------------|--------------|
-| **Toone Media** | Content creation, social strategy, analytics | Free |
-| **Minimal** | Lightweight starter — a few agents, no fluff | Free |
-| **Toone HomeKit** | Personal life ops — trips, meals, groceries, finances | Share to unlock |
-
-> Share Toone with a friend to unlock the HomeKit template.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## License
-
-[MIT](LICENSE)
-
----
-
-<p align="center">
-  <sub>Toone is an independent product by <a href="https://hexagonal.io">Hexagonal.io</a>. Not affiliated with Anthropic or OpenAI. All trademarks belong to their respective owners.</sub>
-</p>
+Questions and support: [hello@trytoone.com](mailto:hello@trytoone.com).

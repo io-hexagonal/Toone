@@ -1,18 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * Proxies signups to the Toone backend (POST /v1/waitlist, Postgres-backed).
- *
- * The previous implementation wrote to a local JSON file, which throws on
- * Vercel's read-only serverless filesystem — every production signup 500'd.
- *
- * WAITLIST_UPSTREAM is a Vercel env var rather than a hardcoded URL because
- * the backend is currently only reachable at a NodePort address
- * (api.trytoone.com has no DNS record yet); when a TLS hostname lands, flip
- * the env var — no code change.
- */
-const UPSTREAM = process.env.WAITLIST_UPSTREAM;
+/** Forward early-access requests to the configured Toone waitlist endpoint. */
+const UPSTREAM = process.env.WAITLIST_UPSTREAM || "https://api.trytoone.com/v1/waitlist";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,11 +12,6 @@ export async function POST(req: NextRequest) {
 
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
-    }
-
-    if (!UPSTREAM) {
-      console.error("[waitlist] WAITLIST_UPSTREAM is not configured");
-      return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 
     const normalizedSource = ["desktop", "general", "hero-auth", "web"].includes(

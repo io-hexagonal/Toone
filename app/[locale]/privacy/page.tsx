@@ -311,8 +311,9 @@ export default async function PrivacyPage({ params }: Props) {
           Updates
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          Desktop releases are distributed through GitHub Releases. The app may
-          check for new versions by querying the GitHub API, which is subject to{" "}
+          Desktop installers are available through authenticated Toone downloads.
+          The service receives your account credentials and ordinary connection information to authorise delivery.
+          Existing apps check public update feeds hosted by GitHub, which is subject to{" "}
           <a
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
             target="_blank"
@@ -321,7 +322,7 @@ export default async function PrivacyPage({ params }: Props) {
           >
             GitHub&apos;s privacy policy
           </a>
-          . No personal data is transmitted during this check.
+          . GitHub receives ordinary connection information such as your IP address during an update check. Toone does not send your account credentials to GitHub for that check.
         </p>
 
         <h2
@@ -360,14 +361,14 @@ export default async function PrivacyPage({ params }: Props) {
           Contact
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          If you have questions about this policy, open an issue on our{" "}
+          If you have questions about this policy, contact our{" "}
           <a
-              href="https://github.com/io-hexagonal/Toone"
+              href="mailto:hello@trytoone.com"
             target="_blank"
             rel="noopener"
             style={{ color: "rgba(100,180,255,0.8)", textDecoration: "none" }}
           >
-            GitHub repository
+            support email
           </a>{" "}
           or reach out to the maintainers directly.
         </p>

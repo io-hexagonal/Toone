@@ -124,7 +124,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Note: every major engine has ignored the keywords meta since 2009; kept
     // only because it costs nothing. "Media Marketing AI" was dropped — it
     // named the toone-media template, deleted 2026-07-09.
-    keywords: ["AI-native", "AI-native business", "AI operating engine", "AI agents", "AI teams", "autonomous agents", "agent orchestration", "Toone", "AI productivity", "Claude Code", "Codex", "MCP tools", "AI routines", "AI integrations", "knowledge graph", "Software Engineering AI", "Science Research AI"],
+    keywords: ["Toone", "repeatable workflows", "specialised agents", "AI teams", "macOS", "early access"],
     applicationName: "Toone",
     metadataBase: new URL("https://trytoone.com"),
     alternates: {

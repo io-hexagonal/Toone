@@ -70,7 +70,7 @@ export default async function AboutPage({ params }: Props) {
           <p>
             Toone is an independent product published by{` `}
             <a href="https://hexagonal.io">Hexagonal.io</a>. It is not affiliated with Anthropic or
-            OpenAI. Product, architecture, privacy, and release claims are checked against current
+            OpenAI. Product, privacy, and release claims are checked against current
             product, repository, and release evidence before publication.
           </p>
         </section>
@@ -89,8 +89,7 @@ export default async function AboutPage({ params }: Props) {
           <h2>Contact</h2>
           <p>
             For product or policy questions, email{` `}
-            <a href="mailto:hello@trytoone.com">hello@trytoone.com</a>. For public technical issues,
-            use the <a href="https://github.com/io-hexagonal/Toone">Toone GitHub repository</a>.
+            <a href="mailto:hello@trytoone.com">hello@trytoone.com</a>. Existing users can also ask for help with access and downloads.
           </p>
         </section>
     </TrustPage>

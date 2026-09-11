@@ -2,7 +2,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import ContactCta from "@/components/ContactModal";
 import TruleafWordmark from "@/components/TruleafWordmark";
 import { Link } from "@/lib/navigation";
 import { locales } from "@/i18n/routing";
@@ -348,9 +347,9 @@ export default async function ShowcasesPage({ params }: Props) {
           </div>
           <h2>{t("ctaTitle")}</h2>
           <p>{t("ctaSub")}</p>
-          <ContactCta className="sc-btn" source="showcases">
+          <Link className="sc-btn" href="/early-access">
             {t("ctaBtn")}
-          </ContactCta>
+          </Link>
           <div>
             <Link className="sc-back" href="/">
               {t("backHome")}

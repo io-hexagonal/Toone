@@ -102,8 +102,8 @@ export default function SiteHeader({ landingPath = "/" }: Props) {
             @media (max-width: 720px) {
               .hdr2 { padding: 16px 20px; gap: 14px; }
               .hdr2 .links { gap: 16px; }
-              .hdr2 .links a[data-optional],
-              .hdr2 .links .dl { display: none; }
+              .hdr2 .links a[data-optional] { display: none; }
+              .hdr2 .dl { padding: 10px 14px; font-size: 12px; }
             }
           `,
         }}
@@ -123,14 +123,11 @@ export default function SiteHeader({ landingPath = "/" }: Props) {
           <Link href={`${landingPath}#how`} data-optional>{footer("how")}</Link>
           <Link href="/resources" data-optional>{t("resources")}</Link>
           <Link href="/showcases" data-optional>{t("showcases")}</Link>
-          <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" data-optional>
-            {t("github")}
-          </a>
           <Link href="/signin">{t("signin")}</Link>
           <Link
             className="dl"
-            href="/download"
-            data-umami-event="open-download-chooser"
+            href="/early-access"
+            data-umami-event="request-early-access"
             data-umami-event-placement="header"
           >
             {t("download")}
