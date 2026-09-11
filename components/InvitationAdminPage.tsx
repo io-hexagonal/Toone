@@ -76,6 +76,10 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
     return () => { active.current = false; };
   }, [refresh]);
 
+  useEffect(() => {
+    document.title = authorized ? "Invitations | Toone" : denied ? "Page not found | Toone" : "Account | Toone";
+  }, [authorized, denied]);
+
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (creating.current) return;
@@ -115,6 +119,22 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
   const query = search.trim().toLowerCase();
   const filtered = records.filter(record => `${record.recipient_name} ${record.email} ${record.account_name} ${record.code_hint}`.toLowerCase().includes(query));
 
+  if (denied) return (
+    <main className={`${styles.page} ${styles.restricted}`}>
+      <h1>Page not found</h1>
+      <p>The page you’re looking for is unavailable.</p>
+      <Link href="/">Return to Toone</Link>
+    </main>
+  );
+  if (!authorized) return (
+    <main className={`${styles.page} ${styles.restricted}`}>
+      {checking ? <p role="status">Checking your account…</p> : <>
+        <p role="alert">Could not verify access. Please try again.</p>
+        <button onClick={() => void refresh()} disabled={loading}>{loading ? "Checking…" : "Try again"}</button>
+      </>}
+    </main>
+  );
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -126,10 +146,6 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
           <div className={styles.account}><span>{session.user.email}</span><button onClick={() => void signOut()} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button></div>
         </header>
         <div className={styles.title}><p className={styles.eyebrow}>Early access</p><h1>Invitations</h1><p>Invite someone by name. See their signup email when they join.</p></div>
-        {checking ? <p role="status">Checking admin access…</p> : denied ? (
-          <section className={styles.panel}><h2>Admin access required</h2><p>This account cannot manage invitations. Sign out and use your admin account.</p></section>
-        ) : (
-          <>
             {error && <div className={styles.error} role="alert">{error} <button onClick={() => void refresh()} disabled={loading}>Try again</button></div>}
             {authorized && <>
               <section className={styles.createGrid} aria-label="Create and share an invitation">
@@ -168,8 +184,6 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
                 <p className={styles.notice}>Showing the latest 500 invitations. “Signed up” means the account was created; it does not confirm a download.</p>
               </section>
             </>}
-          </>
-        )}
       </div>
     </main>
   );

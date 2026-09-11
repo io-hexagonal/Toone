@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import InvitationAdminPage from "@/components/InvitationAdminPage";
 
 export const metadata: Metadata = {
-  title: "Invitations",
+  title: "Account",
   robots: { index: false, follow: false },
   referrer: "no-referrer",
 };

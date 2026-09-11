@@ -8,8 +8,6 @@ Toone is a macOS workspace for recurring work, focused AI assistance, and useful
 
 Public registration and public installer distribution are closed. Existing account holders can keep using their installed applications and obtain installers after signing in. Each personal invitation is labelled with the recipient’s name. They enter their code and their own email to create an account and download Toone; the signup is recorded against that invitation.
 
-Platform administrators can use [Invitations](https://trytoone.com/en/admin/invitations) to create a personal code from a name, copy the link and code together, and track signup emails and dates. Access is enforced by the backend on each request. Full codes are shown only when created; history retains a code ending.
-
 This repository contains the public website and product introductions. The desktop application is proprietary; its implementation and installers are maintained separately.
 
 ## Website development
