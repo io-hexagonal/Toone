@@ -191,6 +191,51 @@ export async function getMe(token: string): Promise<ToneUser> {
   return { id: raw.ID, email: raw.Email, name: raw.Name };
 }
 
+export type InvitationRecord = {
+  id: string;
+  recipient_name: string;
+  code_hint: string;
+  status: "pending" | "redeemed" | "expired" | "revoked";
+  email: string;
+  user_id: string;
+  account_name: string;
+  created_at: string;
+  expires_at: string;
+  used_at: string | null;
+};
+
+export type CreatedInvitation = {
+  id: string;
+  recipient_name: string;
+  code: string;
+  expires_at: string;
+  signup_url: string;
+};
+
+export async function canManageInvitations(token: string): Promise<boolean> {
+  const result = await request<{ capabilities: string[] }>("/me/capabilities", {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
+  return result.capabilities.includes("invitation.manage");
+}
+
+export async function listInvitations(token: string): Promise<InvitationRecord[]> {
+  return request<InvitationRecord[]>("/admin/invitations", {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
+}
+
+export async function createInvitation(
+  token: string,
+  input: { recipient_name: string; code: string; days: number },
+): Promise<CreatedInvitation> {
+  return request<CreatedInvitation>("/admin/invitations", {
+    ...jsonPost(input),
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+}
+
 export async function logout(token: string): Promise<void> {
   try {
     // Best-effort server-side revocation — the local session is cleared

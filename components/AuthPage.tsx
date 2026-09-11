@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
+import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
   loadSession,
@@ -62,7 +63,7 @@ type Mode = "signin" | "invite";
  * "you're signed in" panel pointing at the macOS download — the desktop app
  * is where the account is used.
  */
-export default function AuthPage({ mode }: { mode: Mode }) {
+export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
   const t = useTranslations("auth");
   const router = useRouter();
   const [code, setCode] = useState("");
@@ -112,6 +113,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
     try {
       const s = await promise;
       setSession(s);
+      onAuthenticated?.(s);
       track(event);
       if (mode === "invite") router.replace("/downloads");
     } catch (e) {
@@ -161,8 +163,11 @@ export default function AuthPage({ mode }: { mode: Mode }) {
   // success panel instead of a blank form. loadSession() drops expired ones.
   useEffect(() => {
     const s = loadSession();
-    if (s) setSession(s);
-  }, []);
+    if (s) {
+      setSession(s);
+      onAuthenticated?.(s);
+    }
+  }, [onAuthenticated]);
 
   // Google Identity Services — loaded on the auth pages only.
   useEffect(() => {
@@ -403,6 +408,9 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                 </svg>
                 {t("downloadMac")}
               </Link>
+              <div>
+                <InvitationAdminLink token={session.token} className="auth-signout" />
+              </div>
               <div>
                 <button
                   className="auth-signout"
