@@ -1,12 +1,13 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function WaitlistPage() {
+  const locale = useLocale();
   const t = useTranslations("landing");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -25,6 +26,12 @@ export default function WaitlistPage() {
         body: JSON.stringify({ email, source: "web" }),
       });
       if (!response.ok) throw new Error("waitlist request failed");
+      const outcome = await response.json();
+      if (outcome.outcome_state === "created" && outcome.outcome_id) {
+        (window as unknown as { umami?: { track: (name: string, data: Record<string, string>) => void } }).umami?.track(
+          "waitlist-signup", { source: "web", locale, outcome_id: outcome.outcome_id },
+        );
+      }
       setStatus("success");
     } catch {
       submitting.current = false;
@@ -121,6 +128,7 @@ export default function WaitlistPage() {
       <p className="waitlist-existing">
         {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>
       </p>
+      <p className="waitlist-existing"><Link href="/invite">{t("haveInvitation")}</Link></p>
     </main>
   );
 }

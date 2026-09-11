@@ -4,7 +4,6 @@ import SiteHeader from "@/components/SiteHeader";
 import HeroAuth from "@/components/HeroAuth";
 import StatementSection from "@/components/StatementSection";
 import FaqSection from "@/components/FaqSection";
-import TechStrip from "@/components/TechStrip";
 import PartnerBand from "@/components/PartnerBand";
 import Footer from "@/components/Footer";
 import ResourcesSection from "@/components/ResourcesSection";
@@ -287,7 +286,6 @@ export async function TooneLandingPage({
         <StatementSection audience={audience} />
 
         <div className="sections">
-          <TechStrip audience={audience} />
           {audience === "business" && <PartnerBand />}
 
         <section className="section ai-native-section" id="how">

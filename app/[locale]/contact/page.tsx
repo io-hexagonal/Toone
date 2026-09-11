@@ -42,10 +42,10 @@ export default async function ContactPage({ params }: Props) {
       </section>
 
       <section>
-        <h2>Public software issues</h2>
+        <h2>Product support</h2>
         <p>
-          Reproducible defects in the open-source desktop app can also be filed through{" "}
-          <a href="https://github.com/io-hexagonal/Toone/issues">GitHub Issues</a>.
+          Questions about the desktop app and existing-user access can be sent to{" "}
+          <a href="mailto:hello@trytoone.com">hello@trytoone.com</a>.
         </p>
       </section>
 

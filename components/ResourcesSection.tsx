@@ -56,7 +56,7 @@ export default function ResourcesSection() {
       <div className="resource-preview-head">
         <div>
           <h2 id="resources-title">Ideas you can put to work</h2>
-          <p className="sub">Practical guides for designing AI-native operations with evidence and accountable boundaries.</p>
+          <p className="sub">Choose a useful workflow, work with specialised agents, and review the results.</p>
         </div>
         <a href="/en/resources" className="resource-preview-all">Browse all resources</a>
       </div>

@@ -1,15 +1,6 @@
-/**
- * Tiny typed client for the Toone auth API (Go backend, hexagonal).
- *
- * Base URL comes from NEXT_PUBLIC_API_BASE_URL and defaults to the
- * api.truleaf.org route — the only DNS-live path to the backend today.
- * Success responses are `{"data": {...}}` with Go-style Capitalized keys
- * (structs without json tags); this module is the boundary where those get
- * normalized to lowercase, and where the session is persisted to
- * localStorage under `toone.session`.
- */
+/** Typed client for account authentication and private desktop downloads. */
 
-const DEFAULT_API_BASE = "https://api.truleaf.org/api/v1/toone";
+const DEFAULT_API_BASE = "https://api.trytoone.com/v1";
 
 const SESSION_KEY = "toone.session";
 
@@ -152,18 +143,22 @@ export function clearSession(): void {
 
 /* ---- auth calls (each stores the session on success) */
 
-export async function signupEmail(
-  email: string,
-  password: string,
-  name?: string,
-): Promise<ToneSession> {
-  const raw = await request<RawAuthPayload>(
-    "/auth/email/signup",
-    jsonPost({ email, password, ...(name ? { name } : {}) }),
-  );
-  const session = normalizeSession(raw);
-  saveSession(session);
-  return session;
+export async function signupInvitation(email: string, password: string, name: string, code: string): Promise<ToneSession> {
+ const raw = await request<RawAuthPayload>("/auth/invite", jsonPost({ email, password, name, code }));
+ const session = normalizeSession(raw);
+ saveSession(session);
+ return session;
+}
+
+export async function downloadDesktop(token: string, variant: "standard" | "liquid-glass"): Promise<Blob> {
+ const res = await fetch(`${apiBase()}/downloads/desktop/${variant}/file`, {
+  headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+ });
+ if (!res.ok) {
+  const error = await res.json().catch(() => ({}));
+  throw new ApiError(error.code || "unknown", error.message || "Download unavailable", res.status);
+ }
+ return res.blob();
 }
 
 export async function loginEmail(
