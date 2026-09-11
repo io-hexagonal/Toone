@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 import {
   ApiError,
   loadSession,
@@ -64,6 +64,7 @@ type Mode = "signin" | "invite";
  */
 export default function AuthPage({ mode }: { mode: Mode }) {
   const t = useTranslations("auth");
+  const router = useRouter();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -112,6 +113,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
       const s = await promise;
       setSession(s);
       track(event);
+      if (mode === "invite") router.replace("/downloads");
     } catch (e) {
       setError(friendlyError(e, viaGoogle));
     } finally {
