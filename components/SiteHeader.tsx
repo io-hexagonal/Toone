@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
+import InvitationAdminLink from "@/components/InvitationAdminLink";
 
 /**
  * Morphing landing header — one element, two states.
@@ -124,6 +125,7 @@ export default function SiteHeader({ landingPath = "/" }: Props) {
           <Link href="/resources" data-optional>{t("resources")}</Link>
           <Link href="/showcases" data-optional>{t("showcases")}</Link>
           <Link href="/signin">{t("signin")}</Link>
+          <InvitationAdminLink />
           <Link
             className="dl"
             href="/early-access"
