@@ -8,9 +8,13 @@ import { Link } from "@/lib/navigation";
  */
 type Props = {
   landingPath?: "/" | "/business";
+  showcasesPath?: "/how-to" | "/business/showcases";
 };
 
-export default async function Footer({ landingPath = "/" }: Props) {
+export default async function Footer({
+  landingPath = "/",
+  showcasesPath = "/how-to",
+}: Props) {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
 
@@ -59,7 +63,7 @@ export default async function Footer({ landingPath = "/" }: Props) {
       <footer className="ftr">
         <div className="ftr-wrap">
           <div>
-            <Link href="/" aria-label="Toone" className="ftr-brand">
+            <Link href={landingPath} aria-label="Toone" className="ftr-brand">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/assets/brand/toone-mark.svg" alt="" />
               <span className="wm">toone</span>
@@ -86,7 +90,9 @@ export default async function Footer({ landingPath = "/" }: Props) {
               <p className="ftr-heading">{t("proof")}</p>
               <Link href="/resources">{nav("resources")}</Link>
               <a href="/en/governance">{nav("governance")}</a>
-              <Link href="/showcases">{nav("showcases")}</Link>
+              <Link href={showcasesPath}>
+                {nav(showcasesPath === "/how-to" ? "howTo" : "showcases")}
+              </Link>
             </div>
             <div>
               <p className="ftr-heading">{t("company")}</p>

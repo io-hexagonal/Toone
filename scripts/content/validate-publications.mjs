@@ -6,7 +6,7 @@ const manifest = JSON.parse(fs.readFileSync("content/publication-manifest.json",
 const errors = [];
 const declared = new Set();
 const forbidden = /WRITE_UNCERTAIN|sourceSha256|translationQaSha256|Content-owned implementation notes|checksum-bound|fan[- ](?:out|in)|bounded retries/i;
-const reserved = new Set(["early-access", "invite", "download", "downloads", "signin", "signup"]);
+const reserved = new Set(["early-access", "invite", "download", "downloads", "how-to", "signin", "signup"]);
 for (const item of manifest.items) {
   if (!/^[a-z0-9-]+$/.test(item.slug) || reserved.has(item.slug)) errors.push(`Invalid editorial slug: ${item.slug}`);
   for (const locale of item.locales) {

@@ -1,7 +1,7 @@
 {
   "name": "Toone",
   "short_name": "Toone",
-  "description": "AI teams that run your work.",
+  "description": "The native workspace for agentic workflows.",
   "start_url": "/",
   "display": "browser",
   "background_color": "#141413",

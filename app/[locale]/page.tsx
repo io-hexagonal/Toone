@@ -10,6 +10,7 @@ import ResourcesSection from "@/components/ResourcesSection";
 import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
+import CollaborationPresence from "@/components/CollaborationPresence";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -146,8 +147,8 @@ export async function TooneLandingPage({
             }
             .section .sub { color: rgba(29,28,25,0.55); font-size: 14.5px; margin-bottom: 40px; }
 
-            /* Live collaboration is the first AI-native pillar. The cursors
-               make shared presence tangible without taking control of the page. */
+            /* The highlighted collaboration row makes shared presence tangible
+               without letting the decorative cursors take control of the page. */
             .ai-native-section { isolation: isolate; }
             .ai-native-section > h2,
             .ai-native-section > .sub,
@@ -155,8 +156,8 @@ export async function TooneLandingPage({
               position: relative; z-index: 2;
             }
             .collab-presence {
-              position: absolute; z-index: 4; inset: 150px -48px auto;
-              height: 170px; pointer-events: none;
+              position: absolute; z-index: 4; inset: -18px -48px;
+              pointer-events: none;
             }
             .collab-cursor {
               position: absolute; width: 34px; height: 42px;
@@ -222,6 +223,7 @@ export async function TooneLandingPage({
             }
             .pillar-governance-link:hover { color: #1d1c19; }
             .pillar--collaboration {
+              position: relative;
               border-color: rgba(92,124,114,0.3);
               background:
                 linear-gradient(100deg, rgba(92,124,114,0.1), rgba(255,255,255,0.5) 42%),
@@ -251,7 +253,7 @@ export async function TooneLandingPage({
             .pillar p { color: rgba(29,28,25,0.6); font-size: 14px; line-height: 1.6; }
 
             @media (max-width: 760px) {
-              .collab-presence { inset: 156px -12px auto; height: 132px; }
+              .collab-presence { inset: -12px; }
               .collab-cursor { width: 29px; height: 36px; }
               .collab-cursor--one { left: 2%; }
               .collab-cursor--two { right: 8%; top: 76px; }
@@ -278,7 +280,10 @@ export async function TooneLandingPage({
       />
 
       <LandingAudienceBar activeAudience={audience} />
-      <SiteHeader landingPath={landingPath} />
+      <SiteHeader
+        landingPath={landingPath}
+        showcasesPath={audience === "business" ? "/business/showcases" : "/how-to"}
+      />
 
       <main>
         <HeroAuth audience={audience} />
@@ -288,43 +293,15 @@ export async function TooneLandingPage({
         <div className="sections">
           {audience === "business" && <PartnerBand />}
 
-        <section className="section ai-native-section" id="how">
-          <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
-          <p className="sub">
-            {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
-          </p>
-          {audience === "business" && <div className="collab-presence" aria-hidden="true">
-            <div className="collab-cursor collab-cursor--one">
-              <svg viewBox="0 0 34 42" role="presentation">
-                <path
-                  d="M4 2.5 29 25.2h-11l6 12.2-6.2 2.9-5.8-12.1-7.9 8.1L4 2.5Z"
-                  fill="currentColor"
-                  stroke="#f8f5ee"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-            <div className="collab-cursor collab-cursor--two">
-              <svg viewBox="0 0 34 42" role="presentation">
-                <path
-                  d="M4 2.5 29 25.2h-11l6 12.2-6.2 2.9-5.8-12.1-7.9 8.1L4 2.5Z"
-                  fill="currentColor"
-                  stroke="#f8f5ee"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-              <span className="collab-tooltip">
-                {t("collaborationTooltip")}
-                <span className="collab-tooltip-beta">Beta</span>
-              </span>
-            </div>
-          </div>}
-          <div className="pillars">
-            {(
-              audience === "personal"
-                ? [
+          <section className="section ai-native-section" id="how">
+            <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
+            <p className="sub">
+              {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
+            </p>
+            <div className="pillars">
+              {(
+                audience === "personal"
+                  ? [
                     ["personal.features.spotlight.title", "personal.features.spotlight.description"],
                     ["personal.features.windows.title", "personal.features.windows.description"],
                     ["personal.features.browser.title", "personal.features.browser.description"],
@@ -334,7 +311,7 @@ export async function TooneLandingPage({
                     ["personal.features.voice.title", "personal.features.voice.description"],
                     ["personal.features.providers.title", "personal.features.providers.description"],
                   ] as const
-                : [
+                  : [
                     ["collaborationTitle", "collaborationDescription"],
                     ["p1t", "p1d"],
                     ["p2t", "p2d"],
@@ -345,44 +322,48 @@ export async function TooneLandingPage({
                     ["p6t", "p6d"],
                     ["p7t", "p7d"],
                   ] as const
-            ).map(([titleKey, descKey], i) => (
-              <div
-                className={`pillar${
-                  (audience === "personal" ? i === 4 : i === 0)
-                    ? " pillar--collaboration"
-                    : ""
-                }`}
-                key={titleKey}
-              >
-                <div className="phex">{String(i + 1).padStart(2, "0")}</div>
-                <div className="pillar-heading">
-                  <h3>{t(titleKey)}</h3>
-                  {(audience === "personal" ? i === 4 : i === 0) && (
-                    <span className="pillar-beta">Beta</span>
-                  )}
-                </div>
-                <p>
-                  {t(descKey)}
-                  {audience === "business" && locale === "en" && titleKey === "p6t" && (
-                    <>
-                      {" "}
-                      <a className="pillar-governance-link" href="/en/governance">
-                        Read the practical AI agent governance model.
-                      </a>
-                    </>
-                  )}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+              ).map(([titleKey, descKey], i) => {
+                const isCollaboration = audience === "personal" ? i === 4 : i === 0;
+
+                return (
+                  <div
+                    className={`pillar${isCollaboration ? " pillar--collaboration" : ""}`}
+                    key={titleKey}
+                  >
+                    {isCollaboration && (
+                      <CollaborationPresence tooltip={t("collaborationTooltip")} />
+                    )}
+                    <div className="phex">{String(i + 1).padStart(2, "0")}</div>
+                    <div className="pillar-heading">
+                      <h3>{t(titleKey)}</h3>
+                      {isCollaboration && <span className="pillar-beta">Beta</span>}
+                    </div>
+                    <p>
+                      {t(descKey)}
+                      {audience === "business" && locale === "en" && titleKey === "p6t" && (
+                        <>
+                          {" "}
+                          <a className="pillar-governance-link" href="/en/governance">
+                            Read the practical AI agent governance model.
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
 
           <ResourcesSection />
           <FaqSection />
         </div>
       </main>
 
-      <Footer landingPath={landingPath} />
+      <Footer
+        landingPath={landingPath}
+        showcasesPath={audience === "business" ? "/business/showcases" : "/how-to"}
+      />
     </>
   );
 }

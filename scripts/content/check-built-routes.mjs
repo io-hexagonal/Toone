@@ -4,6 +4,7 @@ const prerender = JSON.parse(fs.readFileSync(".next/prerender-manifest.json", "u
 const routes = Object.keys(prerender.routes);
 const expected = manifest.items.flatMap(item => item.locales.map(locale => `/${locale}${item.canonicalPath}`));
 expected.push(...manifest.supportedLocales.flatMap(locale => [`/${locale}/early-access`, `/${locale}/invite`, `/${locale}/downloads`]));
+expected.push("/en/how-to", "/en/how-to/getting-started", "/en/how-to/concepts");
 const missing = expected.filter(route => !routes.includes(route));
 if (missing.length) { console.error("Missing built routes:", missing); process.exit(1); }
 console.log(`Verified ${expected.length} content and access routes.`);

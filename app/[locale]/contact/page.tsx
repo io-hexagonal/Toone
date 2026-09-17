@@ -31,13 +31,16 @@ export default async function ContactPage({ params }: Props) {
       eyebrow="Contact"
       title="Contact Toone"
       lede="Send product questions, partnership enquiries, support requests, and factual corrections to the Toone team."
-      updated="August 14, 2026"
+      updated="August 30, 2026"
     >
       <section>
-        <h2>Email</h2>
+        <h2>LinkedIn</h2>
         <p>
-          Write to <a href="mailto:hello@trytoone.com">hello@trytoone.com</a>. Include the page URL
-          and supporting evidence when reporting a correction.
+          Reach out to{" "}
+          <a href="https://www.linkedin.com/in/matheusbparanhos/">
+            Matheus Paranhos on LinkedIn
+          </a>
+          . Include the page URL and supporting evidence when reporting a correction.
         </p>
       </section>
 

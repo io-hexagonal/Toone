@@ -1,7 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 
-export default async function Navigation() {
+type Props = {
+  homePath?: "/" | "/business";
+  showcasesPath?: "/how-to" | "/business/showcases";
+};
+
+export default async function Navigation({
+  homePath = "/",
+  showcasesPath = "/how-to",
+}: Props) {
   const t = await getTranslations("nav");
 
   return (
@@ -23,7 +31,7 @@ export default async function Navigation() {
       />
       {/* Brand lockup — site identity, top left */}
       <Link
-        href="/"
+        href={homePath}
         aria-label="Toone"
         className="minimal-brand"
         style={{
@@ -76,10 +84,10 @@ export default async function Navigation() {
           {t("resources")}
         </a>
         <Link
-          href="/showcases"
+          href={showcasesPath}
           className="minimal-link"
         >
-          {t("showcases")}
+          {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
         </Link>
         <Link href="/early-access" className="minimal-link">{t("download")}</Link>
 
