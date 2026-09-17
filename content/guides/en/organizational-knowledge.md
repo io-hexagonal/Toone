@@ -114,7 +114,7 @@ Once the lifecycle fields are clear, decide who may approve updates, resolve con
 
 For binding information about product data handling, use the [privacy documentation](/en/privacy). To design when governed context enters scheduled or recurring work, continue to [AI agent routines](/en/ai-agent-routines). These pages own those decisions so this guide can keep its focus on the knowledge record itself.
 
-If you are evaluating evidence before a product decision, inspect the [Toone showcases](/en/showcases) and keep each proof claim within its stated scope. A showcase does not prove that the organizational-knowledge lifecycle in this guide is implemented by the product.
+If you are evaluating evidence before a product decision, inspect the [Toone showcases](/en/business/showcases) and keep each proof claim within its stated scope. A showcase does not prove that the organizational-knowledge lifecycle in this guide is implemented by the product.
 
 ## Sources
 

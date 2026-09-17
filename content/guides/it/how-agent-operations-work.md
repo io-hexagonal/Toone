@@ -233,7 +233,7 @@ Questi registri mostrano ciò che l'organizzazione ha progettato e documentato. 
 
 ## Scegli il prossimo responsabile in base alla domanda ancora aperta
 
-Se la domanda irrisolta riguarda chi possa approvare un'azione o accettare il rischio residuo, consulta la pagina sulla [governance degli agenti AI, in inglese](/en/governance). Se il team ha prima bisogno di un quadro della categoria, leggi la [guida alle aziende AI-native, in inglese](/en/guides/ai-native-company). Usa le [presentazioni di casi, in inglese](/en/showcases) solo per le prove documentate in quelle pagine.
+Se la domanda irrisolta riguarda chi possa approvare un'azione o accettare il rischio residuo, consulta la pagina sulla [governance degli agenti AI, in inglese](/en/governance). Se il team ha prima bisogno di un quadro della categoria, leggi la [guida alle aziende AI-native, in inglese](/en/guides/ai-native-company). Usa le [presentazioni di casi, in inglese](/en/business/showcases) solo per le prove documentate in quelle pagine.
 
 I riferimenti correlati per conoscenza organizzativa, organizzazioni di agenti, routine, valutazione e osservabilità dovranno essere collegati qui quando le rispettive rotte canoniche saranno attive. Questa bozza non tratta le rotte pianificate come prove attuali.
 

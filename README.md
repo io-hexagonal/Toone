@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <strong>AI teams that run your work.</strong>
+  <strong>The native workspace for agentic workflows.</strong>
 </p>
 
 <p align="center">

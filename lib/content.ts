@@ -41,6 +41,7 @@ export const RESERVED_ROOT_EDITORIAL_SLUGS = [
   "editorial-policy",
   "governance",
   "guides",
+  "how-to",
   "privacy",
   "resources",
   "showcases",

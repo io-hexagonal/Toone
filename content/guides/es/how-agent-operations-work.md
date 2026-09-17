@@ -233,7 +233,7 @@ Esos registros muestran lo que la organización diseñó y registró. No demuest
 
 ## Elija al siguiente responsable según la pregunta pendiente
 
-Si la pregunta sin resolver es quién puede aprobar una acción o aceptar el riesgo residual, consulte [Gobernanza de agentes de IA (en inglés)](/en/governance). Si el equipo necesita primero contexto sobre la categoría, lea la [Guía de empresas nativas de IA (en inglés)](/en/guides/ai-native-company). Use los [casos documentados (en inglés)](/en/showcases) solo como prueba de lo que esas páginas documenten.
+Si la pregunta sin resolver es quién puede aprobar una acción o aceptar el riesgo residual, consulte [Gobernanza de agentes de IA (en inglés)](/en/governance). Si el equipo necesita primero contexto sobre la categoría, lea la [Guía de empresas nativas de IA (en inglés)](/en/guides/ai-native-company). Use los [casos documentados (en inglés)](/en/business/showcases) solo como prueba de lo que esas páginas documenten.
 
 Los responsables de conceptos relacionados con el conocimiento organizativo, las organizaciones de agentes, las rutinas, la evaluación y la observabilidad deben enlazarse aquí cuando sus rutas canónicas estén publicadas. Este borrador no trata las rutas planificadas como prueba vigente.
 

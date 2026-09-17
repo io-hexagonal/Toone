@@ -3,6 +3,7 @@
     "privacy": "Privacidad",
     "github": "GitHub",
     "showcases": "Showcases",
+    "howTo": "How to",
     "resources": "Recursos",
     "governance": "Gobernanza",
     "download": "Descargar",
@@ -30,7 +31,7 @@
   "landing": {
     "personal": {
       "heroTitle": "The native workspace for agentic workflows.",
-      "heroTag": "Build sophisticated workflows in natural language, debug, and watch them operate live.",
+      "heroTag": "Build sophisticated AI workflows and routines in natural language, debug, and watch them operate live.",
       "featuresTitle": "Everything your agents need to work with you",
       "featuresSub": "Fast at the surface. Deeply orchestrated underneath.",
       "statement": {
@@ -57,7 +58,7 @@
         },
         "liveShare": {
           "title": "Live Share, governed by you",
-          "description": "Invite someone into an organization and follow agents, threads, files, and presence together—read-only by default and expanded only with host approval."
+          "description": "Invite someone into a project and follow agents, threads, files, and presence together—read-only by default and expanded only with host approval."
         },
         "orchestration": {
           "title": "Flawless agentic orchestration",

@@ -253,7 +253,7 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
             <aside className="article-close">
               <h2>{ui.continueTitle}</h2>
               <p>{ui.continueDescription}</p>
-              <Link href="/showcases">{ui.continueAction}</Link>
+              <Link href="/how-to">{ui.continueAction}</Link>
             </aside>
           </article>
           <aside className="article-toc" aria-label={ui.onThisPage}>

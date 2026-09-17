@@ -121,7 +121,7 @@ The same company can use different states for different processes. Apply the dia
 
 ## See current proof and decide what to do next
 
-Review the [current Toone showcases](/en/showcases) before drawing product conclusions from this category guide. If the operating model fits the work you want to encode, continue to the [current Toone download options](/en/download).
+Review the [current Toone showcases](/en/business/showcases) before drawing product conclusions from this category guide. If the operating model fits the work you want to encode, continue to the [current Toone download options](/en/download).
 
 ## About this guide
 

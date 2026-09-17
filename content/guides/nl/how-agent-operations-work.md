@@ -233,7 +233,7 @@ Deze verslagen tonen wat de organisatie heeft ontworpen en vastgelegd. Ze bewijz
 
 ## Kies de volgende eigenaar op basis van de openstaande vraag
 
-Als de openstaande vraag is wie een actie mag goedkeuren of restrisico mag accepteren, ga dan naar [governance voor AI-agents, in het Engels](/en/governance). Als het team eerst context over de categorie nodig heeft, lees dan de [gids over AI-native bedrijven, in het Engels](/en/guides/ai-native-company). Gebruik [praktijkvoorbeelden, in het Engels](/en/showcases) alleen voor bewijs dat op die pagina's is vastgelegd.
+Als de openstaande vraag is wie een actie mag goedkeuren of restrisico mag accepteren, ga dan naar [governance voor AI-agents, in het Engels](/en/governance). Als het team eerst context over de categorie nodig heeft, lees dan de [gids over AI-native bedrijven, in het Engels](/en/guides/ai-native-company). Gebruik [praktijkvoorbeelden, in het Engels](/en/business/showcases) alleen voor bewijs dat op die pagina's is vastgelegd.
 
 Gerelateerde conceptpagina's over organisatiekennis, agentorganisaties, routines, evaluatie en waarneembaarheid moeten hier worden gekoppeld zodra hun canonieke routes beschikbaar zijn. Dit concept behandelt geplande routes niet als actueel bewijs.
 

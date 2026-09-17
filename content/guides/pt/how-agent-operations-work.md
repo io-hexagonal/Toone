@@ -233,7 +233,7 @@ Esses registos mostram o que a organização desenhou e registou. Não demonstra
 
 ## Escolha o responsável seguinte de acordo com a questão ainda por resolver
 
-Se a questão não resolvida for quem pode aprovar uma ação ou aceitar risco residual, continue para [governação de agentes de IA, em inglês](/en/governance). Se a equipa precisar primeiro de contexto sobre a categoria, leia o [guia da empresa nativa de IA, em inglês](/en/guides/ai-native-company). Use as [demonstrações, em inglês](/en/showcases) apenas para provas documentadas nessas páginas.
+Se a questão não resolvida for quem pode aprovar uma ação ou aceitar risco residual, continue para [governação de agentes de IA, em inglês](/en/governance). Se a equipa precisar primeiro de contexto sobre a categoria, leia o [guia da empresa nativa de IA, em inglês](/en/guides/ai-native-company). Use as [demonstrações, em inglês](/en/business/showcases) apenas para provas documentadas nessas páginas.
 
 Os responsáveis por conceitos relacionados com conhecimento organizacional, organizações de agentes, rotinas, avaliação e observabilidade devem ser ligados aqui quando os respetivos URL canónicos estiverem ativos. Este rascunho não trata rotas planeadas como prova atual.
 

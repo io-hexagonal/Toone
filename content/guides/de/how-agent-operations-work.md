@@ -233,7 +233,7 @@ Diese Aufzeichnungen zeigen, was die Organisation entworfen und dokumentiert hat
 
 ## Wählen Sie die nächste verantwortliche Person anhand der offenen Frage
 
-Wenn die offene Frage lautet, wer eine Handlung genehmigen oder ein verbleibendes Risiko akzeptieren darf, lesen Sie unter [Governance für KI-Agenten (Englisch)](/en/governance) weiter. Wenn das Team zuerst Kontext zur Kategorie benötigt, lesen Sie den [Leitfaden zum KI-nativen Unternehmen (Englisch)](/en/guides/ai-native-company). Nutzen Sie die [Fallbeispiele (Englisch)](/en/showcases) nur für Nachweise, die auf diesen Seiten dokumentiert sind.
+Wenn die offene Frage lautet, wer eine Handlung genehmigen oder ein verbleibendes Risiko akzeptieren darf, lesen Sie unter [Governance für KI-Agenten (Englisch)](/en/governance) weiter. Wenn das Team zuerst Kontext zur Kategorie benötigt, lesen Sie den [Leitfaden zum KI-nativen Unternehmen (Englisch)](/en/guides/ai-native-company). Nutzen Sie die [Fallbeispiele (Englisch)](/en/business/showcases) nur für Nachweise, die auf diesen Seiten dokumentiert sind.
 
 Verwandte Referenzseiten für Organisationswissen, Agentenorganisationen, Routinen, Evaluation und Beobachtbarkeit sollten hier verlinkt werden, sobald ihre kanonischen Routen verfügbar sind. Dieser Entwurf behandelt geplante Routen nicht als aktuelle Nachweise.
 

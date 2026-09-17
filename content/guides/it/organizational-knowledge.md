@@ -117,7 +117,7 @@ Una volta chiariti i campi del ciclo di vita, decidi chi può approvare gli aggi
 
 Per informazioni vincolanti sul trattamento dei dati del prodotto, consulta la [documentazione sulla privacy, in inglese](/en/privacy). Per progettare quando il contesto governato entra nel lavoro programmato o ricorrente, prosegui con le [routine degli agenti IA, in inglese](/en/ai-agent-routines). Queste pagine sono responsabili di tali decisioni, così la presente guida può restare incentrata sul record di conoscenza.
 
-Se stai valutando le evidenze prima di una decisione sul prodotto, esamina gli [showcase di Toone, in inglese](/en/showcases) e mantieni ogni affermazione probatoria entro l'ambito dichiarato. Uno showcase non dimostra che il ciclo di vita della conoscenza organizzativa descritto in questa guida sia implementato nel prodotto.
+Se stai valutando le evidenze prima di una decisione sul prodotto, esamina gli [showcase di Toone, in inglese](/en/business/showcases) e mantieni ogni affermazione probatoria entro l'ambito dichiarato. Uno showcase non dimostra che il ciclo di vita della conoscenza organizzativa descritto in questa guida sia implementato nel prodotto.
 
 ## Fonti
 

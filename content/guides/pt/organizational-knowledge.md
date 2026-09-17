@@ -117,7 +117,7 @@ Depois de clarificar os campos do ciclo de vida, decida quem pode aprovar atuali
 
 Para informações vinculativas sobre o tratamento de dados do produto, consulte a [documentação de privacidade, em inglês](/en/privacy). Para definir quando o contexto governado entra em trabalho agendado ou recorrente, prossiga para [rotinas de agentes de IA, em inglês](/en/ai-agent-routines). Estas páginas são responsáveis por essas decisões, permitindo que este guia mantenha o foco no próprio registo de conhecimento.
 
-Se estiver a avaliar evidências antes de uma decisão sobre o produto, consulte as [demonstrações da Toone, em inglês](/en/showcases) e mantenha cada afirmação de prova dentro do respetivo âmbito declarado. Uma demonstração não prova que o ciclo de vida do conhecimento organizacional apresentado neste guia esteja implementado no produto.
+Se estiver a avaliar evidências antes de uma decisão sobre o produto, consulte as [demonstrações da Toone, em inglês](/en/business/showcases) e mantenha cada afirmação de prova dentro do respetivo âmbito declarado. Uma demonstração não prova que o ciclo de vida do conhecimento organizacional apresentado neste guia esteja implementado no produto.
 
 ## Fontes
 

@@ -117,7 +117,7 @@ Wenn die Lebenszyklusfelder klar sind, entscheiden Sie, wer Aktualisierungen gen
 
 Verbindliche Informationen zur Verarbeitung von Produktdaten finden Sie in der [Datenschutzdokumentation, auf Englisch](/en/privacy). Um festzulegen, wann geregelter Kontext in geplante oder wiederkehrende Arbeit einfließt, lesen Sie weiter bei den [Routinen für KI-Agenten, auf Englisch](/en/ai-agent-routines). Diese Seiten sind für die entsprechenden Entscheidungen maßgeblich, damit dieser Leitfaden seinen Schwerpunkt auf den Wissensdatensatz selbst legen kann.
 
-Wenn Sie Belege vor einer Produktentscheidung bewerten, prüfen Sie die [Toone-Showcases, auf Englisch](/en/showcases) und beachten Sie für jede belegte Aussage den angegebenen Geltungsbereich. Ein Showcase beweist nicht, dass der in diesem Leitfaden beschriebene Lebenszyklus für Organisationswissen im Produkt implementiert ist.
+Wenn Sie Belege vor einer Produktentscheidung bewerten, prüfen Sie die [Toone-Showcases, auf Englisch](/en/business/showcases) und beachten Sie für jede belegte Aussage den angegebenen Geltungsbereich. Ein Showcase beweist nicht, dass der in diesem Leitfaden beschriebene Lebenszyklus für Organisationswissen im Produkt implementiert ist.
 
 ## Quellen
 

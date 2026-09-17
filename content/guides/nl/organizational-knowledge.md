@@ -117,7 +117,7 @@ Bepaal nadat de levenscyclusvelden duidelijk zijn wie updates mag goedkeuren, co
 
 Gebruik voor bindende informatie over de verwerking van productgegevens de [Engelstalige privacydocumentatie](/en/privacy). Ga verder met de [Engelstalige AI-agentroutines](/en/ai-agent-routines) om te ontwerpen wanneer beheerde context in gepland of terugkerend werk terechtkomt. Deze pagina's zijn eigenaar van die beslissingen, zodat deze gids gericht kan blijven op het kennisrecord zelf.
 
-Als je bewijs beoordeelt voordat je een productbeslissing neemt, bekijk dan de [Engelstalige Toone-showcases](/en/showcases) en houd elke bewijsclaim binnen de vermelde reikwijdte. Een showcase bewijst niet dat de levenscyclus voor organisatiekennis uit deze gids in het product is geïmplementeerd.
+Als je bewijs beoordeelt voordat je een productbeslissing neemt, bekijk dan de [Engelstalige Toone-showcases](/en/business/showcases) en houd elke bewijsclaim binnen de vermelde reikwijdte. Een showcase bewijst niet dat de levenscyclus voor organisatiekennis uit deze gids in het product is geïmplementeerd.
 
 ## Bronnen
 

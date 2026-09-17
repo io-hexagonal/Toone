@@ -230,7 +230,7 @@ Those records show what the organization designed and recorded. They do not esta
 
 ## Choose the next owner by the question you still have
 
-If the unresolved question is who may approve an action or accept residual risk, continue to [AI agent governance](/en/governance). If the team needs category context first, read the [AI-native company guide](/en/guides/ai-native-company). Use [showcases](/en/showcases) only for proof documented on those pages.
+If the unresolved question is who may approve an action or accept residual risk, continue to [AI agent governance](/en/governance). If the team needs category context first, read the [AI-native company guide](/en/guides/ai-native-company). Use [showcases](/en/business/showcases) only for proof documented on those pages.
 
 Related concept owners for organizational knowledge, agent organizations, routines, evaluation, and observability should be linked here once their canonical routes are live. This draft does not treat planned routes as current proof.
 

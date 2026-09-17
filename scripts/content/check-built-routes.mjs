@@ -77,9 +77,10 @@ for (const [route, expectedStatus] of [
   ["/en/editorial-policy", 200],
   ["/en/governance", 200],
   ["/en/guides", 308],
+  ["/en/how-to", 200],
   ["/en/privacy", 200],
   ["/en/resources", 200],
-  ["/en/showcases", 200],
+  ["/en/showcases", 308],
   ["/en/signin", 200],
   ["/en/signup", 200],
 ]) {

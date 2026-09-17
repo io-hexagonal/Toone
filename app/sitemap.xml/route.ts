@@ -5,11 +5,18 @@ import {
   getPublicationLocales,
   getRootEditorialSlugs,
 } from "@/lib/content";
+import { getProductGuideSlugs } from "@/lib/product-showcase";
 
 export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
-const LOCALIZED_ROUTES = ["", "/business", "/showcases", "/download", "/resources"] as const;
+const LOCALIZED_ROUTES = [
+  "",
+  "/business",
+  "/business/showcases",
+  "/download",
+  "/resources",
+] as const;
 const DOWNLOAD_LAST_MODIFIED = "2026-08-13";
 
 function alternates(path: string): string {
@@ -61,11 +68,18 @@ export async function GET() {
 
   for (const locale of locales) {
     for (const path of LOCALIZED_ROUTES) {
-      const changefreq = path === "/showcases" ? "monthly" : "weekly";
+      const changefreq = path === "/business/showcases" ? "monthly" : "weekly";
       const priority = path === "" ? "1.0" : path === "/download" ? "0.9" : "0.8";
       const lastModified = path === "/download" ? DOWNLOAD_LAST_MODIFIED : undefined;
       lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority, lastModified));
     }
+  }
+
+  for (const slug of ["", ...getProductGuideSlugs()]) {
+    const path = `/how-to${slug ? `/${slug}` : ""}`;
+    lines.push(
+      `<url><loc>${BASE_URL}/en${path}</loc>${englishAlternates(path)}<changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+    );
   }
 
   // These trust surfaces are currently reviewed in English only. Their

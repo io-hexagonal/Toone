@@ -127,7 +127,7 @@ It is a poor fit when the organization cannot name an accountable owner, cannot 
 
 Choose one recurring process. List its role, routine, resources, action classes, approval rules, evidence, and recovery owner. Remove any authority that cannot be explained in those fields. Then test one denied action and one uncertain-write scenario before expanding the scope.
 
-See the [AI-native operating-model diagnostic](/en/guides/ai-native-company) to place that routine in the wider company design, or review [current Toone examples](/en/showcases) before evaluating product fit.
+See the [AI-native operating-model diagnostic](/en/guides/ai-native-company) to place that routine in the wider company design, or review [current Toone examples](/en/business/showcases) before evaluating product fit.
 
 ## About this guide
 

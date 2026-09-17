@@ -34,8 +34,8 @@ export default function LandingAudienceBar({ activeAudience }: Props) {
               background: #f0ede6;
             }
             .landing-audience-inner {
-              width: min(1080px, calc(100% - 32px)); height: 100%;
-              margin: 0 auto; display: flex; align-items: center;
+              width: 100%; height: 100%; padding-inline: 10vw;
+              display: flex; align-items: center;
             }
             .landing-audience-tabs {
               display: flex; align-items: center; gap: 4px;
@@ -54,8 +54,10 @@ export default function LandingAudienceBar({ activeAudience }: Props) {
               color: #1d1c19; font-weight: 600;
               background: rgba(29,28,25,0.09);
             }
+            @media (max-width: 720px) {
+              .landing-audience-inner { padding-inline: 20px; }
+            }
             @media (max-width: 640px) {
-              .landing-audience-inner { width: calc(100% - 24px); }
               .landing-audience-tab { padding-inline: 10px; font-size: 11.5px; }
             }
           `,

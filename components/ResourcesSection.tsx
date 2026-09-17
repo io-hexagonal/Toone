@@ -1,7 +1,13 @@
-import { getPublications } from "@/lib/content";
+import { getProductGuidePage } from "@/lib/product-showcase";
+
+const FEATURED_GUIDE_SLUGS = ["getting-started", "getting-started/create-a-routine"];
 
 export default function ResourcesSection() {
-  const publications = getPublications().filter((publication) => publication.featured).slice(0, 2);
+  const guides = FEATURED_GUIDE_SLUGS.map((slug) => {
+    const page = getProductGuidePage(slug);
+    if (!page) throw new Error(`Missing featured product guide page: ${slug}`);
+    return page;
+  });
 
   return (
     <section className="section resource-preview" aria-labelledby="resources-title">
@@ -55,18 +61,20 @@ export default function ResourcesSection() {
       ` }} />
       <div className="resource-preview-head">
         <div>
-          <h2 id="resources-title">Ideas you can put to work</h2>
-          <p className="sub">Practical guides for designing AI-native operations with evidence and accountable boundaries.</p>
+          <h2 id="resources-title">Get started with Toone</h2>
+          <p className="sub">Short guides that take you from a fresh install to a routine you can run and inspect.</p>
         </div>
-        <a href="/en/resources" className="resource-preview-all">Browse all resources</a>
+        <a href="/en/how-to" className="resource-preview-all">Browse the full guide</a>
       </div>
       <div className="resource-preview-grid">
-        {publications.map((publication) => (
-          <a key={publication.slug} href={`/en${publication.canonicalPath}`} className="resource-preview-card">
-            <span className="resource-preview-type">{publication.eyebrow}</span>
-            <h3>{publication.title}</h3>
-            <p>{publication.description}</p>
-            <span className="resource-preview-meta">{publication.readTime}</span>
+        {guides.map((guide) => (
+          <a key={guide.slug} href={`/en/how-to/${guide.slug}`} className="resource-preview-card">
+            <span className="resource-preview-type">{guide.eyebrow}</span>
+            <h3>{guide.title}</h3>
+            <p>{guide.description}</p>
+            {guide.estimatedTime ? (
+              <span className="resource-preview-meta">{guide.estimatedTime}</span>
+            ) : null}
           </a>
         ))}
       </div>

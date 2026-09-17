@@ -233,7 +233,7 @@ Ces dossiers montrent ce que l’organisation a conçu et consigné. Ils n’ét
 
 ## Choisissez le prochain responsable en fonction de la question en suspens
 
-Si la question non résolue porte sur la personne autorisée à approuver une action ou à accepter un risque résiduel, consultez la page [Gouvernance des agents d’IA (en anglais)](/en/governance). Si l’équipe a d’abord besoin de comprendre la catégorie, lisez le [Guide de l’entreprise AI-native (en anglais)](/en/guides/ai-native-company). N’utilisez les [cas documentés (en anglais)](/en/showcases) que comme preuves de ce qui est documenté sur ces pages.
+Si la question non résolue porte sur la personne autorisée à approuver une action ou à accepter un risque résiduel, consultez la page [Gouvernance des agents d’IA (en anglais)](/en/governance). Si l’équipe a d’abord besoin de comprendre la catégorie, lisez le [Guide de l’entreprise AI-native (en anglais)](/en/guides/ai-native-company). N’utilisez les [cas documentés (en anglais)](/en/business/showcases) que comme preuves de ce qui est documenté sur ces pages.
 
 Les pages de référence associées à la connaissance organisationnelle, aux organisations d’agents, aux routines, à l’évaluation et à l’observabilité devront être liées ici lorsque leurs routes canoniques seront publiées. Ce brouillon ne traite pas les routes prévues comme des preuves actuelles.
 

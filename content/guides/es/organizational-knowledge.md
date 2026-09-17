@@ -117,7 +117,7 @@ Una vez que los campos del ciclo de vida estén claros, decide quién puede apro
 
 Para obtener información vinculante sobre el tratamiento de datos del producto, consulta la [documentación de privacidad, en inglés](/en/privacy). Para diseñar cuándo entra el contexto gobernado en el trabajo programado o recurrente, continúa con las [rutinas de agentes de IA, en inglés](/en/ai-agent-routines). Esas páginas son las responsables de estas decisiones, para que esta guía pueda mantener su foco en el propio registro de conocimiento.
 
-Si estás evaluando evidencia antes de tomar una decisión sobre un producto, examina los [casos de muestra de Toone, en inglés](/en/showcases) y mantén cada afirmación probatoria dentro de su alcance declarado. Un caso de muestra no demuestra que el ciclo de vida del conocimiento organizacional de esta guía esté implementado en el producto.
+Si estás evaluando evidencia antes de tomar una decisión sobre un producto, examina los [casos de muestra de Toone, en inglés](/en/business/showcases) y mantén cada afirmación probatoria dentro de su alcance declarado. Un caso de muestra no demuestra que el ciclo de vida del conocimiento organizacional de esta guía esté implementado en el producto.
 
 ## Fuentes
 

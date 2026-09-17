@@ -46,7 +46,7 @@ export default async function PartnerBand() {
       </div>
 
       <div className="pb-foot">
-        <Link href="/showcases" className="pb-cta">
+        <Link href="/business/showcases" className="pb-cta">
           {t("partnersBandCta")}
         </Link>
       </div>

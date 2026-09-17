@@ -117,7 +117,7 @@ Une fois les champs du cycle de vie définis, déterminez qui peut approuver les
 
 Pour obtenir des informations contraignantes sur le traitement des données du produit, consultez la [documentation relative à la confidentialité, en anglais](/en/privacy). Pour définir à quel moment le contexte gouverné intervient dans un travail planifié ou récurrent, poursuivez avec les [routines des agents d’IA, en anglais](/en/ai-agent-routines). Ces pages sont responsables de ces décisions afin que ce guide puisse rester centré sur l’enregistrement de connaissances lui-même.
 
-Si vous évaluez des éléments probants avant de prendre une décision concernant un produit, consultez les [showcases de Toone, en anglais](/en/showcases) et maintenez chaque affirmation probante dans les limites de sa portée déclarée. Un showcase ne prouve pas que le cycle de vie des connaissances organisationnelles présenté dans ce guide est mis en œuvre dans le produit.
+Si vous évaluez des éléments probants avant de prendre une décision concernant un produit, consultez les [showcases de Toone, en anglais](/en/business/showcases) et maintenez chaque affirmation probante dans les limites de sa portée déclarée. Un showcase ne prouve pas que le cycle de vie des connaissances organisationnelles présenté dans ce guide est mis en œuvre dans le produit.
 
 ## Sources
 

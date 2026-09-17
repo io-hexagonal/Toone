@@ -14,20 +14,26 @@ import { Link } from "@/lib/navigation";
  */
 type Props = {
   landingPath?: "/" | "/business";
+  showcasesPath?: "/how-to" | "/business/showcases";
+  scrollThreshold?: number;
 };
 
-export default function SiteHeader({ landingPath = "/" }: Props) {
+export default function SiteHeader({
+  landingPath = "/",
+  showcasesPath = "/how-to",
+  scrollThreshold,
+}: Props) {
   const t = useTranslations("nav");
   const footer = useTranslations("footer");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () =>
-      setScrolled(window.scrollY > window.innerHeight * 0.72);
+      setScrolled(window.scrollY > (scrollThreshold ?? window.innerHeight * 0.72));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [scrollThreshold]);
 
   return (
     <>
@@ -110,7 +116,7 @@ export default function SiteHeader({ landingPath = "/" }: Props) {
       />
 
       <header className="hdr2" data-scrolled={scrolled}>
-        <Link href="/" aria-label="Toone" className="brand">
+        <Link href={landingPath} aria-label="Toone" className="brand">
           <span className="mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="on-dark" src="/assets/brand/toone-mark.svg" alt="" />
@@ -122,7 +128,9 @@ export default function SiteHeader({ landingPath = "/" }: Props) {
         <nav className="links" aria-label="Primary">
           <Link href={`${landingPath}#how`} data-optional>{footer("how")}</Link>
           <Link href="/resources" data-optional>{t("resources")}</Link>
-          <Link href="/showcases" data-optional>{t("showcases")}</Link>
+          <Link href={showcasesPath} data-optional>
+            {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
+          </Link>
           <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener" data-optional>
             {t("github")}
           </a>
