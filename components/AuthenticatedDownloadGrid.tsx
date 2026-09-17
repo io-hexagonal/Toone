@@ -8,6 +8,7 @@ import {
   clearSession,
   getMe,
   downloadDesktop,
+  resolveDesktopDownload,
   loadSession,
   type ToneSession,
 } from "@/lib/api";
@@ -78,6 +79,21 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
     if (!session || downloading) return;
     setDownloading(variant);
     setDownloadError(false);
+    // Prefer the brokered signed link: the bytes then come from GitHub's CDN instead of
+    // the API host. Any failure other than an expired session falls back to the stream.
+    try {
+      const artifact = await resolveDesktopDownload(session.token, variant);
+      window.location.assign(artifact.url);
+      window.setTimeout(() => setDownloading(null), 4000);
+      return;
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        clearSession();
+        setSession(null);
+        setDownloading(null);
+        return;
+      }
+    }
     try {
       const blob = await downloadDesktop(session.token, variant);
       const url = URL.createObjectURL(blob);
