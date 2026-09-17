@@ -288,11 +288,18 @@
     "errRegistrationClosed": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
     "inviteTitle": "Je uitnodiging gebruiken",
     "inviteSub": "Vul je persoonlijke code in en maak een account met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
-    "inviteCode": "Uitnodigingscode",
+    "inviteCode": "Toegangscode",
     "errInvitation": "Deze code is ongeldig, verlopen of al gebruikt. Controleer de code of vraag om een nieuwe uitnodiging.",
     "requestAccess": "Vroege toegang aanvragen",
     "downloading": "Download voorbereiden…",
-    "downloadUnavailable": "Downloads zijn tijdelijk niet beschikbaar. Probeer het opnieuw of neem contact op via hello@trytoone.com."
+    "downloadUnavailable": "Downloads zijn tijdelijk niet beschikbaar. Probeer het opnieuw of neem contact op via hello@trytoone.com.",
+    "inviteCodeTitle": "Voer je toegangscode in",
+    "inviteCodeSub": "Voer de code in die je hebt ontvangen om je Toone-account te ontgrendelen.",
+    "inviteCodeContinue": "Doorgaan",
+    "inviteAccountTitle": "Maak je account aan",
+    "inviteAccountSub": "Je code is geldig. Meld je aan met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
+    "inviteAccountSubLabel": "Je {label}-code is geldig. Meld je aan met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
+    "inviteChangeCode": "Andere code gebruiken"
   },
   "resources": {
     "metaTitle": "Praktisch werken met Toone",

@@ -288,11 +288,18 @@
     "errRegistrationClosed": "Leave your email to request early access. We will contact you when a place is available.",
     "inviteTitle": "Redeem your invitation",
     "inviteSub": "Enter your personal code, then sign up with your own email and password to download Toone.",
-    "inviteCode": "Invitation code",
+    "inviteCode": "Access code",
     "errInvitation": "This code is invalid, expired, or already used. Check the code or ask for a new invitation.",
     "requestAccess": "Request Early Access",
     "downloading": "Preparing your download…",
-    "downloadUnavailable": "Downloads are temporarily unavailable. Please try again or contact hello@trytoone.com."
+    "downloadUnavailable": "Downloads are temporarily unavailable. Please try again or contact hello@trytoone.com.",
+    "inviteCodeTitle": "Enter your access code",
+    "inviteCodeSub": "Enter the code you received to unlock your Toone account.",
+    "inviteCodeContinue": "Continue",
+    "inviteAccountTitle": "Create your account",
+    "inviteAccountSub": "Your code is valid. Sign up with your own email and password to download Toone.",
+    "inviteAccountSubLabel": "Your {label} code is valid. Sign up with your own email and password to download Toone.",
+    "inviteChangeCode": "Use a different code"
   },
   "resources": {
     "metaTitle": "Practical ways to work with Toone",

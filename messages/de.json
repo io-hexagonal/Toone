@@ -288,11 +288,18 @@
     "errRegistrationClosed": "Hinterlassen Sie Ihre E-Mail-Adresse für den Frühzugang. Wir melden uns, sobald ein Platz verfügbar ist.",
     "inviteTitle": "Einladung einlösen",
     "inviteSub": "Gib deinen persönlichen Code ein und erstelle mit deiner eigenen E-Mail-Adresse und einem Passwort ein Konto, um Toone herunterzuladen.",
-    "inviteCode": "Einladungscode",
+    "inviteCode": "Zugangscode",
     "errInvitation": "Dieser Code ist ungültig, abgelaufen oder wurde bereits verwendet. Prüfe ihn oder bitte um eine neue Einladung.",
     "requestAccess": "Frühzugang anfragen",
     "downloading": "Download wird vorbereitet…",
-    "downloadUnavailable": "Downloads sind vorübergehend nicht verfügbar. Versuchen Sie es erneut oder kontaktieren Sie hello@trytoone.com."
+    "downloadUnavailable": "Downloads sind vorübergehend nicht verfügbar. Versuchen Sie es erneut oder kontaktieren Sie hello@trytoone.com.",
+    "inviteCodeTitle": "Geben Sie Ihren Zugangscode ein",
+    "inviteCodeSub": "Geben Sie den erhaltenen Code ein, um Ihr Toone-Konto freizuschalten.",
+    "inviteCodeContinue": "Weiter",
+    "inviteAccountTitle": "Konto erstellen",
+    "inviteAccountSub": "Ihr Code ist gültig. Registrieren Sie sich mit Ihrer E-Mail-Adresse und einem Passwort, um Toone herunterzuladen.",
+    "inviteAccountSubLabel": "Ihr {label}-Code ist gültig. Registrieren Sie sich mit Ihrer E-Mail-Adresse und einem Passwort, um Toone herunterzuladen.",
+    "inviteChangeCode": "Anderen Code verwenden"
   },
   "resources": {
     "metaTitle": "Praktisch mit Toone arbeiten",

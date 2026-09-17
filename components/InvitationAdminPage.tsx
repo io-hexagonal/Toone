@@ -15,6 +15,17 @@ function formatDate(value: string | null) {
   return value ? new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "—";
 }
 
+function formatDateTime(value: string | null) {
+  return value ? new Date(value).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+}
+
+function usesLabel(record: { max_uses: number; use_count: number }) {
+  if (record.max_uses === 1) return "1 person";
+  return `${record.use_count} signup${record.use_count === 1 ? "" : "s"}${record.max_uses ? ` of ${record.max_uses}` : " · unlimited"}`;
+}
+
+const MAX_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
+
 export default function InvitationAdminPage() {
   const [session, setSession] = useState<ToneSession | null>(null);
   const [ready, setReady] = useState(false);
@@ -46,6 +57,8 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
   const [name, setName] = useState("");
   const [customCode, setCustomCode] = useState("");
   const [days, setDays] = useState(7);
+  const [shared, setShared] = useState(false);
+  const [expiresAt, setExpiresAt] = useState("");
   const [search, setSearch] = useState("");
   const [created, setCreated] = useState<CreatedInvitation | null>(null);
   const [error, setError] = useState("");
@@ -97,12 +110,25 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
       setFormError("Use 12–64 letters or digits for a custom code. Spaces and hyphens are allowed.");
       return;
     }
+    let expiresAtISO: string | undefined;
+    if (expiresAt) {
+      const instant = new Date(expiresAt).getTime();
+      if (!Number.isFinite(instant) || instant <= Date.now() || instant > Date.now() + MAX_VALIDITY_MS) {
+        setFormError("The exact expiry must be in the future and within 30 days.");
+        return;
+      }
+      expiresAtISO = new Date(instant).toISOString();
+    }
     creating.current = true;
     setBusy(true); setFormError(""); setCopyFeedback("");
     try {
-      const result = await createInvitation(session.token, { recipient_name: name.trim(), code: customCode, days });
+      const result = await createInvitation(session.token, {
+        recipient_name: name.trim(), code: customCode, days,
+        ...(shared ? { max_uses: 0 } : {}),
+        ...(expiresAtISO ? { expires_at: expiresAtISO } : {}),
+      });
       if (!active.current) return;
-      setCreated(result); setName(""); setCustomCode("");
+      setCreated(result); setName(""); setCustomCode(""); setExpiresAt("");
       await refresh();
     } catch (caught) {
       if (!active.current || handleAccessError(caught)) return;
@@ -124,7 +150,13 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
     onSessionEnded();
   }
 
-  const message = created ? `Hi ${created.recipient_name},\nYou're invited to try Toone.\n\nSign up: ${created.signup_url}\nYour personal code: ${created.code}\n\nEnter your code, then create an account with your own email and password to download Toone.\nThis code can be used once and expires on ${formatDate(created.expires_at)}.` : "";
+  const linkWithCode = created ? `${created.signup_url}#code=${encodeURIComponent(created.code)}` : "";
+  const createdShared = created ? created.max_uses !== 1 : false;
+  const message = created
+    ? createdShared
+      ? `You're invited to try Toone.\n\nSign up: ${linkWithCode}\nAccess code: ${created.code}\n\nOpen the link (or enter the code), then create an account with your own email and password to download Toone.\nThis code expires on ${formatDateTime(created.expires_at)}.`
+      : `Hi ${created.recipient_name},\nYou're invited to try Toone.\n\nSign up: ${linkWithCode}\nYour personal code: ${created.code}\n\nOpen the link (or enter your code), then create an account with your own email and password to download Toone.\nThis code can be used once and expires on ${formatDate(created.expires_at)}.`
+    : "";
   const query = search.trim().toLowerCase();
   const filtered = records.filter(record => `${record.recipient_name} ${record.email} ${record.account_name} ${record.code_hint}`.toLowerCase().includes(query));
 
@@ -159,24 +191,31 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
             {authorized && <>
               <section className={styles.createGrid} aria-label="Create and share an invitation">
                 <form className={styles.panel} onSubmit={submit}>
-                  <h2>New invitation</h2><p>All you need is their name.</p>
-                  <label htmlFor="recipient-name">Person’s name</label>
-                  <input id="recipient-name" value={name} onChange={event => setName(event.target.value)} placeholder="e.g. Jane Doe" maxLength={160} required disabled={busy} autoComplete="off" />
+                  <h2>New invitation</h2><p>{shared ? "One code that many people can use, for a launch or a community." : "All you need is their name."}</p>
+                  <label htmlFor="invitation-uses">Who can use it</label>
+                  <select id="invitation-uses" value={shared ? "shared" : "personal"} onChange={event => setShared(event.target.value === "shared")} disabled={busy}>
+                    <option value="personal">One person (single use)</option>
+                    <option value="shared">Shared campaign code (unlimited uses)</option>
+                  </select>
+                  <label htmlFor="recipient-name">{shared ? "Campaign name" : "Person’s name"}</label>
+                  <input id="recipient-name" value={name} onChange={event => setName(event.target.value)} placeholder={shared ? "e.g. Product Hunt" : "e.g. Jane Doe"} maxLength={160} required disabled={busy} autoComplete="off" />
                   <label htmlFor="custom-code">Custom code <span className={styles.muted}>(optional)</span></label>
                   <input id="custom-code" value={customCode} onChange={event => setCustomCode(event.target.value)} placeholder="Generate automatically" maxLength={80} autoComplete="off" spellCheck={false} disabled={busy} aria-describedby="code-help" />
                   <small id="code-help">Leave blank for a personal code. Custom codes need at least 12 letters or digits.</small>
                   <label htmlFor="invitation-expiry">Code expires in</label>
-                  <select id="invitation-expiry" value={days} onChange={event => setDays(Number(event.target.value))} disabled={busy}><option value={7}>7 days</option><option value={14}>14 days</option><option value={30}>30 days</option></select>
+                  <select id="invitation-expiry" value={days} onChange={event => setDays(Number(event.target.value))} disabled={busy || Boolean(expiresAt)}><option value={1}>1 day</option><option value={7}>7 days</option><option value={14}>14 days</option><option value={30}>30 days</option></select>
+                  <label htmlFor="invitation-expires-at">Exact expiry <span className={styles.muted}>(optional, overrides the days above)</span></label>
+                  <input id="invitation-expires-at" type="datetime-local" value={expiresAt} onChange={event => setExpiresAt(event.target.value)} disabled={busy} />
                   {formError && <p className={styles.formError} role="alert">{formError}</p>}
                   <button className={styles.primary} type="submit" disabled={busy || !name.trim()}>{busy ? "Creating…" : "Generate invitation"}</button>
                 </form>
                 <div className={`${styles.panel} ${styles.share}`} aria-live="polite">
                   {created ? <>
-                    <p className={styles.eyebrow}>Ready to share</p><h2>Invitation for {created.recipient_name}</h2>
-                    <p>Send the link and code together.</p>
-                    <label htmlFor="signup-link">Signup link</label><div className={styles.copyRow}><input id="signup-link" value={created.signup_url} readOnly /><button onClick={() => void copy(created.signup_url, "Link")}>Copy link</button></div>
-                    <label htmlFor="personal-code">Personal code</label><div className={styles.copyRow}><input id="personal-code" className={styles.code} value={created.code} readOnly /><button onClick={() => void copy(created.code, "Code")}>Copy code</button></div>
-                    <small>One use · Expires {formatDate(created.expires_at)}</small>
+                    <p className={styles.eyebrow}>Ready to share</p><h2>{createdShared ? `Campaign code: ${created.recipient_name}` : `Invitation for ${created.recipient_name}`}</h2>
+                    <p>{createdShared ? "Share the link; it carries the code and skips straight to signup." : "Send the link and code together."}</p>
+                    <label htmlFor="signup-link">Signup link with code</label><div className={styles.copyRow}><input id="signup-link" value={linkWithCode} readOnly /><button onClick={() => void copy(linkWithCode, "Link")}>Copy link</button></div>
+                    <label htmlFor="personal-code">{createdShared ? "Access code" : "Personal code"}</label><div className={styles.copyRow}><input id="personal-code" className={styles.code} value={created.code} readOnly /><button onClick={() => void copy(created.code, "Code")}>Copy code</button></div>
+                    <small>{createdShared ? "Unlimited uses" : "One use"} · Expires {formatDateTime(created.expires_at)}</small>
                     <button className={styles.primary} onClick={() => void copy(message, "Invitation")}>Copy invitation message</button>
                     <p className={styles.notice}>Copy this invitation before leaving or creating another. The full code is only shown now.</p>
                     <p className={styles.feedback} role="status">{copyFeedback}</p>
@@ -186,9 +225,9 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
               <section className={styles.history} aria-labelledby="history-heading">
                 <div className={styles.historyHeading}><div><h2 id="history-heading">Invitation history</h2><p>{records.length} invitation{records.length === 1 ? "" : "s"} · {records.filter(item => item.status === "redeemed").length} signed up</p></div><button onClick={() => void refresh()} disabled={loading || busy}>{loading ? "Refreshing…" : "Refresh"}</button></div>
                 {records.length > 0 && <input className={styles.search} aria-label="Search invitations" placeholder="Search by name or email" value={search} onChange={event => setSearch(event.target.value)} />}
-                {records.length === 0 ? <div className={styles.emptyHistory}><h3>No invitations yet</h3><p>Your first invitation will appear here. Their email is added when they sign up.</p></div> : <div className={styles.tableScroll}><table><thead><tr><th>Person invited</th><th>Status</th><th>Signup email</th><th>Signed up</th><th>Code expires</th></tr></thead><tbody>
-                  {filtered.map(record => <tr key={record.id}><td><strong>{record.recipient_name}</strong><small>Code ending {record.code_hint || "—"}</small></td><td><span className={styles.status} data-status={record.status}>{statusLabels[record.status]}</span></td><td>{record.email || "—"}</td><td>{formatDate(record.used_at)}</td><td>{formatDate(record.expires_at)}</td></tr>)}
-                  {filtered.length === 0 && <tr><td colSpan={5}>No invitations match your search.</td></tr>}
+                {records.length === 0 ? <div className={styles.emptyHistory}><h3>No invitations yet</h3><p>Your first invitation will appear here. Their email is added when they sign up.</p></div> : <div className={styles.tableScroll}><table><thead><tr><th>Person or campaign</th><th>Status</th><th>Uses</th><th>Signup email</th><th>Signed up</th><th>Code expires</th></tr></thead><tbody>
+                  {filtered.map(record => <tr key={record.id}><td><strong>{record.recipient_name}</strong><small>Code ending {record.code_hint || "—"}</small></td><td><span className={styles.status} data-status={record.status}>{record.max_uses !== 1 && record.status === "pending" ? "Active" : statusLabels[record.status]}</span></td><td>{usesLabel(record)}</td><td>{record.email || (record.max_uses !== 1 ? "many" : "—")}</td><td>{formatDate(record.used_at)}</td><td>{formatDateTime(record.expires_at)}</td></tr>)}
+                  {filtered.length === 0 && <tr><td colSpan={6}>No invitations match your search.</td></tr>}
                 </tbody></table></div>}
                 <p className={styles.notice}>Showing the latest 500 invitations. “Signed up” means the account was created; it does not confirm a download.</p>
               </section>
