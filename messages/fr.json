@@ -31,12 +31,12 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Des processus réutilisables. Des agents spécialisés.",
+      "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
       "heroTag": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
-      "featuresTitle": "Des processus réutilisables. Des agents spécialisés.",
+      "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "statement": {
-        "title": "Des processus réutilisables. Des agents spécialisés.",
+        "title": "L’espace de travail IA pour vos workflows agentiques",
         "lead": "Un espace pour vos agents, vos processus et vos résultats.",
         "cta": "Découvrir Toone"
       },
@@ -81,8 +81,8 @@
     "downloadFor": "Demander un accès anticipé",
     "macOS": "macOS",
     "soon": "Bientot",
-    "heroTitle": "Des processus réutilisables. Des agents spécialisés.",
-    "pillarsTitle": "Des processus réutilisables. Des agents spécialisés.",
+    "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
+    "pillarsTitle": "L’espace de travail IA pour vos workflows agentiques",
     "pillarsSub": "Un espace pour vos agents, vos processus et vos résultats.",
     "collaborationTitle": "Votre équipe travaille ensemble en direct",
     "collaborationTooltip": "Collaboration en direct",
@@ -134,10 +134,10 @@
     "rights": "Tous droits réservés."
   },
   "meta": {
-    "siteTitle": "Toone | Des processus réutilisables. Des agents spécialisés.",
+    "siteTitle": "Toone | L’espace de travail IA pour vos workflows agentiques",
     "siteDescription": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
     "ogDescription": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
-    "ogTitle": "Toone | Des processus réutilisables. Des agents spécialisés."
+    "ogTitle": "Toone | L’espace de travail IA pour vos workflows agentiques"
   },
   "showcases": {
     "metaTitle": "Showcases : comment des entreprises sont devenues AI-native sur Toone",
@@ -251,7 +251,7 @@
     "a4": "Utilisez votre code personnel sur le site pour créer un compte avec email et mot de passe, puis connectez-vous dans l’application."
   },
   "statement": {
-    "title": "Des processus réutilisables. Des agents spécialisés.",
+    "title": "L’espace de travail IA pour vos workflows agentiques",
     "lead": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
     "cta": "Découvrir Toone"
   },

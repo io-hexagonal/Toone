@@ -31,12 +31,12 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Repeatable workflows. Specialised agents.",
+      "heroTitle": "The AI workspace for your agentic workflows",
       "heroTag": "Turn recurring work into useful results, with specialist agents and you in control.",
-      "featuresTitle": "Repeatable workflows. Specialised agents.",
+      "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "statement": {
-        "title": "Repeatable workflows. Specialised agents.",
+        "title": "The AI workspace for your agentic workflows",
         "lead": "One workspace for your agents, your workflows, and the results that matter.",
         "cta": "Explore Toone"
       },
@@ -81,8 +81,8 @@
     "downloadFor": "Request Early Access",
     "macOS": "macOS",
     "soon": "Soon",
-    "heroTitle": "Repeatable workflows. Specialised agents.",
-    "pillarsTitle": "Repeatable workflows. Specialised agents.",
+    "heroTitle": "The AI workspace for your agentic workflows",
+    "pillarsTitle": "The AI workspace for your agentic workflows",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
     "collaborationTitle": "Your team works together live",
     "collaborationTooltip": "Live collaboration",
@@ -134,10 +134,10 @@
     "rights": "All rights reserved."
   },
   "meta": {
-    "siteTitle": "Toone | Repeatable workflows. Specialised agents.",
+    "siteTitle": "Toone | The AI workspace for your agentic workflows",
     "siteDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
-    "ogTitle": "Toone | Repeatable workflows. Specialised agents."
+    "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
   "showcases": {
     "metaTitle": "Showcases: how companies became AI-native on Toone",
@@ -251,7 +251,7 @@
     "a4": "Redeem your personal code on the website to create an email and password account, then use it in the desktop app."
   },
   "statement": {
-    "title": "Repeatable workflows. Specialised agents.",
+    "title": "The AI workspace for your agentic workflows",
     "lead": "Turn recurring work into useful results, with specialist agents and you in control.",
     "cta": "Explore Toone"
   },
