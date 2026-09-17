@@ -6,38 +6,39 @@
     "howTo": "How to",
     "resources": "Recursos",
     "governance": "Governança",
-    "download": "Baixar",
+    "download": "Pedir acesso antecipado",
     "signin": "Entrar"
   },
   "downloadPage": {
     "metaTitle": "Baixar o Toone para macOS",
-    "metaDescription": "Escolha a versão padrão para macOS 14 ou a versão Liquid Glass nativa para macOS Tahoe.",
+    "metaDescription": "Escolha a versão para o seu Mac. Instale o Toone e entre com a mesma conta que usa neste site.",
     "eyebrow": "Duas versões nativas",
     "title": "Escolha o seu Toone",
-    "subtitle": "O mesmo motor organizacional do Toone, preparado para o Mac que você usa.",
+    "subtitle": "Escolha a versão para o seu Mac.",
     "choicesLabel": "Opções de download do Toone",
     "standardBadge": "Compatível",
     "standardTitle": "Toone",
     "standardRequirement": "Requer macOS 14 ou posterior",
-    "standardDescription": "O artefato padrão declara o macOS 14.0 como versão mínima do sistema.",
+    "standardDescription": "A interface padrão do Toone.",
     "standardButton": "Baixar versão padrão",
     "liquidBadge": "Nativo no Tahoe",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Requer macOS 26 ou posterior",
-    "liquidDescription": "Este artefato declara o macOS 26.0 e inclui o tema Liquid Glass.",
+    "liquidDescription": "Os mesmos fluxos de trabalho do Toone com o visual Liquid Glass.",
     "liquidButton": "Baixar Liquid Glass",
-    "compatibilityNote": "Os requisitos vêm dos pacotes publicados. Nenhum teste de troca entre versões é alegado aqui."
+    "compatibilityNote": "Instale o Toone e entre com a mesma conta que usa neste site.",
+    "repoLink": "Entrar"
   },
   "landing": {
     "personal": {
-      "heroTitle": "The native workspace for agentic workflows.",
-      "heroTag": "Build sophisticated AI workflows and routines in natural language, debug, and watch them operate live.",
-      "featuresTitle": "Everything your agents need to work with you",
-      "featuresSub": "Fast at the surface. Deeply orchestrated underneath.",
+      "heroTitle": "Fluxos repetíveis. Agentes especializados.",
+      "heroTag": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+      "featuresTitle": "Fluxos repetíveis. Agentes especializados.",
+      "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
       "statement": {
-        "title": "The native macOS agent orchestration app.",
-        "lead": "Bring every agent into one native workspace, then call, resize, delegate, automate, browse, share, and speak without breaking your flow.",
-        "cta": "Explore the experience"
+        "title": "Fluxos repetíveis. Agentes especializados.",
+        "lead": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
+        "cta": "Explorar o Toone"
       },
       "features": {
         "spotlight": {
@@ -49,107 +50,107 @@
           "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
         },
         "browser": {
-          "title": "Your browser, already signed in",
-          "description": "Bring authenticated sessions from your default browser into Toone so agents can work with the accounts you already use."
+          "title": "As suas ferramentas",
+          "description": "Trabalhe com as ferramentas e contas que já utiliza."
         },
         "routines": {
-          "title": "Routines as complex as the work",
-          "description": "Describe sophisticated processes in natural language. Schedule work, delegate across departments, call sub-routines, use tools, enforce approvals, and diagnose runs live."
+          "title": "Fluxos repetíveis",
+          "description": "Descreva o trabalho que repete e transforme-o numa rotina que pode voltar a utilizar."
         },
         "liveShare": {
-          "title": "Live Share, governed by you",
-          "description": "Invite someone into a project and follow agents, threads, files, and presence together—read-only by default and expanded only with host approval."
+          "title": "O controlo é seu",
+          "description": "Reveja decisões importantes e escolha a responsabilidade que atribui aos agentes."
         },
         "orchestration": {
-          "title": "Flawless agentic orchestration",
-          "description": "Run agents in parallel, hand context off cleanly, fan results back in, recover from failures, and escalate decisions to you as one continuous operation."
+          "title": "Agentes especializados",
+          "description": "Confie tarefas específicas a agentes com responsabilidades claras."
         },
         "voice": {
           "title": "Voice in. Meetings captured.",
           "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
         },
         "providers": {
-          "title": "Built on OpenAI and Anthropic",
-          "description": "Choose OpenAI Codex or Anthropic Claude while Toone keeps your agents, routines, tools, and governance working as one."
+          "title": "Um ponto de partida",
+          "description": "Comece com um fluxo prático para investigação, engenharia, crescimento ou operações diárias."
         }
       }
     },
-
     "audienceLabel": "Escolha uma experiência Toone",
     "audiencePersonal": "Pessoal",
     "audienceBusiness": "Empresas",
-    "downloadFor": "Baixar para",
+    "downloadFor": "Pedir acesso antecipado",
     "macOS": "macOS",
     "soon": "Em breve",
-    "heroTitle": "Equipes de IA que executam o seu trabalho",
-    "pillarsTitle": "O que significa ser AI-native",
-    "pillarsSub": "Nove coisas se tornam verdade quando sua organização roda no Toone.",
+    "heroTitle": "Fluxos repetíveis. Agentes especializados.",
+    "pillarsTitle": "Fluxos repetíveis. Agentes especializados.",
+    "pillarsSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
     "collaborationTitle": "Sua equipe trabalha junta ao vivo",
     "collaborationTooltip": "Colaboração ao vivo",
-    "collaborationDescription": "Convide colegas para uma organização compartilhada sem exigir que aprendam Git. Acompanhem juntos agentes, conversas, arquivos e presença com acesso limitado, aprovado pelo anfitrião e somente leitura por padrão.",
-    "p1t": "Seus processos ficam codificados",
-    "p1d": "Playbooks que rodam sozinhos como rotinas, sub-rotinas e agendamentos. Criar um é trabalho determinístico, parecido com montar um fluxo no n8n, só que você escreve em linguagem natural. Cada execução continua depurável, com agentes diagnosticando o andamento enquanto ela acontece.",
-    "p2t": "O conhecimento se acumula com estrutura",
-    "p2d": "Um grafo de conhecimento organizacional que sobrevive a cada chat e a cada funcionário.",
-    "p8t": "O histórico do projeto continua compreensível",
-    "p8d": "Checkpoints locais mostram o que mudou, quem fez a alteração e o que precisa de revisão. Navegue por uma linha do tempo visual, peça a um agente para explicar qualquer checkpoint e configure o Git ou o acesso ao GitHub apenas quando quiser.",
-    "p3t": "Agentes trabalham como equipe",
-    "p3d": "Eles ocupam papéis em departamentos, cumprem cronogramas, produzem artefatos e escalam para um humano quando importa.",
-    "p4t": "A organização opera como uma só",
-    "p4d": "As rotinas são escritas para delegar. O trabalho circula entre departamentos em compartimentos limpos, então cada agente tem um escopo estreito e a organização inteira se comporta como um único corpo.",
-    "p5t": "A web se torna operável",
-    "p5d": "Suas ferramentas externas são mapeadas como fluxos reproduzíveis e tratadas como integrações de primeira classe, no escopo do que sua empresa realmente precisa. O que faltar, construímos sob medida.",
+    "collaborationDescription": "Reúna trabalho relacionado e veja o que precisa da sua atenção.",
+    "p1t": "Fluxos repetíveis",
+    "p1d": "Descreva o trabalho que repete e transforme-o numa rotina que pode voltar a utilizar.",
+    "p2t": "Contexto partilhado",
+    "p2d": "Mantenha a informação de que a equipa precisa perto do trabalho.",
+    "p8t": "Resultados para rever",
+    "p8d": "Acompanhe o progresso, reveja os resultados e decida os próximos passos.",
+    "p3t": "Agentes especializados",
+    "p3d": "Confie tarefas específicas a agentes com responsabilidades claras.",
+    "p4t": "Trabalho que avança",
+    "p4d": "Reúna trabalho relacionado e veja o que precisa da sua atenção.",
+    "p5t": "As suas ferramentas",
+    "p5d": "Trabalhe com as ferramentas e contas que já utiliza.",
     "partnersBandLabel": "Empresas se tornando AI-native no Toone",
     "partnersBandCta": "Veja exatamente o que elas automatizaram",
     "partnersBandMore": "e mais empresas em onboarding — ainda não públicas",
-    "p6t": "Humanos governam",
-    "p6d": "Gates, aprovações, envios apenas como rascunho e redação de dados sensíveis. Autonomia dentro dos limites que você define, com responsabilidade por cada ação de um agente.",
-    "p7t": "Um conjunto completo de ferramentas",
-    "p7d": "Templates recomendados, ferramentas MCP, processos e integrações, montados para o seu caso de uso. Hoje isso cobre engenharia de software, SEO e crescimento, outreach e suporte, estratégia de produto, ciência e pesquisa, e headquarters.",
+    "p6t": "O controlo é seu",
+    "p6d": "Reveja decisões importantes e escolha a responsabilidade que atribui aos agentes.",
+    "p7t": "Um ponto de partida",
+    "p7d": "Comece com um fluxo prático para investigação, engenharia, crescimento ou operações diárias.",
     "techLabel": "Built on",
     "authGoogle": "Continuar com o Google",
     "authOr": "ou",
     "authEmailPh": "Digite seu e-mail",
-    "authContinue": "Continuar com e-mail",
-    "authJoined": "Você está na lista — falaremos com você em breve.",
+    "authContinue": "Pedir acesso antecipado",
+    "authJoined": "O seu pedido ficou registado. Entraremos em contacto quando houver acesso disponível.",
     "authError": "Algo deu errado — tente novamente.",
-    "authNote": "Acesso antecipado — entre na lista. Usuários existentes podem entrar para baixar.",
-    "waitlistTitle": "Entre na lista de espera do Toone",
-    "waitlistSub": "Novas contas estão pausadas por enquanto. Deixe seu e-mail e avisaremos quando o acesso for reaberto.",
-    "waitlistExisting": "Já tem uma conta Toone?",
+    "authNote": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
+    "waitlistTitle": "Pedir acesso antecipado",
+    "waitlistSub": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
+    "waitlistExisting": "Já utiliza o Toone?",
     "waitlistSignIn": "Entrar",
     "productLanguageDisclosure": "O aplicativo desktop está disponível atualmente apenas em inglês.",
-    "heroTag2": "Torne sua empresa AI-native."
+    "heroTag2": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+    "haveInvitation": "Tem um código de convite?"
   },
   "footer": {
     "privacy": "Privacidade",
     "about": "Sobre",
     "editorialPolicy": "Política editorial",
     "product": "Produto",
-    "how": "Como funciona",
+    "how": "Explorar o Toone",
     "proof": "Referências",
     "company": "Empresa",
     "contact": "Contato",
     "rights": "Todos os direitos reservados."
   },
   "meta": {
-    "siteTitle": "Toone: equipes de IA que executam o seu trabalho | Construído com Claude Code & Codex",
-    "siteDescription": "O Toone transforma negócios em empresas AI-native. Ele codifica como sua organização funciona e a opera com um enxame de agentes de IA sob governança humana.",
-    "ogDescription": "O Toone transforma negócios em empresas AI-native. Seus processos codificados como rotinas, operados por agentes de IA sob governança humana.",
-    "ogTitle": "Toone: equipes de IA que executam o seu trabalho"
+    "siteTitle": "Toone | Fluxos repetíveis. Agentes especializados.",
+    "siteDescription": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+    "ogDescription": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+    "ogTitle": "Toone | Fluxos repetíveis. Agentes especializados."
   },
   "showcases": {
     "metaTitle": "Showcases: como empresas se tornaram AI-native no Toone",
-    "metaDescription": "Organizações vivas rodando no Toone hoje: Truleaf.org e micoo. Seus processos codificados como rotinas, operados por agentes, sob governança humana.",
+    "metaDescription": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
     "eyebrow": "Showcases",
     "title": "Como empresas reais se tornaram AI-native",
-    "sub": "Estas são organizações vivas rodando no Toone agora mesmo. Seus processos estão codificados como rotinas e são operados por agentes no cronograma, sob governança humana.",
+    "sub": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
     "processesLabel": "O que roda no Toone",
     "moreTitle": "Mais a caminho",
-    "moreSub": "Novas organizações estão sendo integradas ao Toone agora mesmo. A sua pode ser a próxima.",
+    "moreSub": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
     "ctaTitle": "Traga sua organização para nós",
-    "ctaSub": "Nos dê um processo que dói. Nós o codificamos, rodamos no Toone e você vê a sua própria empresa operar sozinha.",
-    "ctaBtn": "Comece uma conversa",
+    "ctaSub": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
+    "ctaBtn": "Pedir acesso antecipado",
     "backHome": "← Voltar ao início",
     "note": "Os números de departamentos e rotinas refletem as organizações que cada parceiro roda no Toone em julho de 2026.",
     "cases": [
@@ -160,7 +161,7 @@
         "sector": "P&D em proteção biológica de cultivos",
         "url": "https://truleaf.org",
         "logo": "truleaf",
-        "lede": "A Truleaf transforma ciência publicada em evidência pronta para decisão para equipes que desenvolvem proteção de cultivos sem pesticidas. Tradicionalmente, esse trabalho custa a uma equipe de pesquisa de quatro a oito semanas de revisão manual de literatura por agente. Seu pipeline de pesquisa, seu go-to-market e sua engenharia rodam como organizações Toone, e ela se torna a primeira implantação white-label: o mesmo motor, a marca deles, o domínio deles.",
+        "lede": "A Truleaf usa o Toone em pesquisa, estratégia de produto, crescimento e engenharia para desenvolver proteção de culturas sem pesticidas. As equipas transformam ciência publicada em evidências que podem avaliar e utilizar.",
         "stats": [
           {
             "n": "3",
@@ -178,19 +179,19 @@
         "blocks": [
           {
             "t": "Pipeline de pesquisa",
-            "d": "Ingestão de literatura, extração de desempenho entre cepas e condições, resolução de contradições, pontuação de prontidão regulatória e uma auditoria de proveniência que amarra cada afirmação à sua fonte original. Semanas de revisão manual viram horas."
+            "d": "Mantenha a informação de que a equipa precisa perto do trabalho."
           },
           {
             "t": "Estratégia de produto",
-            "d": "Um radar de concorrentes percorre toda semana os sites, changelogs e preços de concorrentes nomeados. Tendências de mercado, voz do cliente e mineração de reviews alimentam um único gate de evidência, onde uma aposta só avança quando sua evidência está registrada no grafo de conhecimento."
+            "d": "Acompanhe o progresso, reveja os resultados e decida os próximos passos."
           },
           {
             "t": "Crescimento orgânico",
-            "d": "Acompanhamento diário de rankings por sessões de analytics mapeadas, mineração de queries, auditorias de canibalização e de inchaço de índice, e um pipeline de conteúdo que vai da entrada do briefing até a checagem de prontidão para publicar."
+            "d": "Descreva o trabalho que repete e transforme-o numa rotina que pode voltar a utilizar."
           },
           {
             "t": "Engenharia",
-            "d": "Triagem de bugs, fila de revisão e prontidão de release rodam em cadência. Varreduras de desvio de arquitetura, higiene de dependências, limpeza de código morto e um registro de débito técnico mantêm a base de código saudável entre releases."
+            "d": "Reúna trabalho relacionado e veja o que precisa da sua atenção."
           }
         ]
       },
@@ -201,7 +202,7 @@
         "sector": "Plataforma de microcredenciais",
         "url": "",
         "logo": "micoo",
-        "lede": "A micoo é o caso de referência do movimento de transformação: um negócio em funcionamento codificado em templates e rotinas. Sua organização de engenharia agora roda sozinha da entrada do trabalho ao briefing de entrega, e as pessoas passam o tempo tomando decisões.",
+        "lede": "A micoo usa o Toone para apoiar a engenharia da sua plataforma de microcredenciais. Fluxos de trabalho repetíveis dão visibilidade ao progresso, aos impedimentos e à manutenção, para que a equipa se concentre nas decisões.",
         "stats": [
           {
             "n": "1",
@@ -219,19 +220,19 @@
         "blocks": [
           {
             "t": "A entrega se reporta sozinha",
-            "d": "Um briefing diário cobre o delta de cada item em andamento: o que avançou, o que está bloqueado e por quem, e onde a realidade se distanciou do plano. Bloqueios escalam para os departamentos responsáveis. Se nada avançou, o briefing diz isso em três linhas."
+            "d": "Mantenha a informação de que a equipa precisa perto do trabalho."
           },
           {
-            "t": "Entrada e decomposição",
-            "d": "O trabalho que chega é triado, planejado e quebrado em sub-rotinas automaticamente, e depois conferido contra uma definição explícita de pronto antes de qualquer coisa ser dada como concluída."
+            "t": "Fluxos repetíveis",
+            "d": "Acompanhe o progresso, reveja os resultados e decida os próximos passos."
           },
           {
             "t": "Higiene em cadência",
-            "d": "Varreduras de desvio de arquitetura, higiene de dependências, auditorias de consistência e limpeza de código morto rodam no cronograma. É o trabalho de manutenção que toda equipe pretende fazer e nunca consegue."
+            "d": "Descreva o trabalho que repete e transforme-o numa rotina que pode voltar a utilizar."
           },
           {
             "t": "Radar e pesquisa",
-            "d": "Um radar de tecnologia acompanha releases, deprecações e alertas de segurança. O departamento de pesquisa transforma esses sinais brutos em posições avaliadas e propostas de spike, para que as escolhas de tecnologia cheguem cedo o bastante para serem decisões."
+            "d": "Reúna trabalho relacionado e veja o que precisa da sua atenção."
           }
         ]
       }
@@ -241,28 +242,18 @@
     "title": "Perguntas, respondidas.",
     "sub": "A versão curta de tudo o que nos perguntam.",
     "q1": "O que é o Toone?",
-    "a1": "Um app para macOS que opera uma organização de agentes de IA para a sua empresa — departamentos, agentes com papéis e rotinas agendadas, sobre um grafo de conhecimento da empresa.",
-    "q2": "Qual a diferença para um chatbot?",
-    "a2": "Um chatbot responde quando você pergunta. Os agentes do Toone têm papéis, seguem rotinas agendadas, compartilham memória pelo grafo e passam trabalho entre si — o resultado chega sem você pedir.",
-    "q3": "O que são rotinas?",
-    "a3": "Trabalhos recorrentes — resumos, pipelines de conteúdo, monitoramento, pesquisa — definidos em arquivos simples que os agentes executam no cronograma, com artefatos auditáveis.",
-    "q4": "Preciso programar?",
-    "a4": "Não. As organizações partem de templates e as rotinas são arquivos em linguagem natural. Quem é técnico pode inspecionar tudo no nível de arquivo.",
-    "q5": "Onde ficam meus dados?",
-    "a5": "No seu Mac. Sua organização é uma pasta de arquivos legíveis e os agentes rodam localmente — apenas as chamadas ao modelo saem da máquina.",
-    "q6": "Quais modelos de IA ele usa?",
-    "a6": "A família Claude da Anthropic via Claude Code ou modelos da OpenAI via Codex. Você escolhe o provedor durante a configuração, e cada conversa pode fixar o próprio modelo.",
-    "q7": "É só para macOS?",
-    "a7": "O app desktop é para macOS hoje, por download direto. Mais plataformas estão no roadmap.",
-    "q8": "Quanto custa?",
-    "a8": "O Toone é gratuito durante o acesso antecipado. Os agentes usam a sua própria conta do Claude Code ou Codex.",
-    "q9": "Pode rodar com a marca da minha empresa?",
-    "a9": "Sim — o Toone é white-label: o mesmo motor com a configuração da sua marca."
+    "a1": "O Toone é um espaço de trabalho para macOS com fluxos repetíveis e agentes de IA especializados.",
+    "q2": "Como posso obter acesso?",
+    "a2": "Peça acesso antecipado com o seu email. O acesso é disponibilizado por convite.",
+    "q3": "Posso continuar a usar a minha aplicação?",
+    "a3": "Sim. Quem já tem conta pode continuar a entrar com o método habitual.",
+    "q4": "Como funcionam os convites?",
+    "a4": "Utilize o seu código pessoal no site para criar uma conta com email e palavra-passe e entre com ela na aplicação."
   },
   "statement": {
-    "title": "Sua empresa já sabe como funcionar.",
-    "lead": "O conhecimento já está lá — em arquivos, ferramentas e cabeças. O Toone dá estrutura a ele: um grafo vivo do que sua empresa sabe e uma organização de agentes de IA que o coloca para trabalhar no cronograma.",
-    "cta": "Veja como funciona"
+    "title": "Fluxos repetíveis. Agentes especializados.",
+    "lead": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+    "cta": "Explorar o Toone"
   },
   "auth": {
     "signinTitle": "Entre no Toone",
@@ -278,11 +269,11 @@
     "emailPh": "E-mail",
     "passwordPh": "Senha",
     "signinBtn": "Entrar",
-    "signupBtn": "Criar conta",
+    "signupBtn": "Criar conta e descarregar",
     "haveAccount": "Já tem uma conta?",
     "signinLink": "Entre",
     "newHere": "Novo no Toone?",
-    "signupLink": "Entre na lista",
+    "signupLink": "Pedir acesso antecipado",
     "successTitle": "Você entrou como {email}",
     "successNote": "O Toone roda no seu Mac — baixe o app e entre por lá.",
     "downloadMac": "Baixar para macOS",
@@ -294,16 +285,23 @@
     "errInvalid": "E-mail ou senha inválidos.",
     "errRate": "Muitas tentativas — tente novamente em um minuto.",
     "errInvalidInput": "Verifique seu e-mail e senha e tente novamente.",
-    "errRegistrationClosed": "Novas contas estão pausadas. Entre na lista e avisaremos quando o acesso for reaberto."
+    "errRegistrationClosed": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
+    "inviteTitle": "Utilizar o convite",
+    "inviteSub": "Introduza o seu código pessoal e crie uma conta com o seu email e uma palavra-passe para descarregar o Toone.",
+    "inviteCode": "Código de convite",
+    "errInvitation": "Este código é inválido, expirou ou já foi utilizado. Verifique o código ou peça um novo convite.",
+    "requestAccess": "Pedir acesso antecipado",
+    "downloading": "A preparar a transferência…",
+    "downloadUnavailable": "As transferências estão temporariamente indisponíveis. Tente novamente ou contacte hello@trytoone.com."
   },
   "resources": {
-    "metaTitle": "Recursos para criar uma empresa nativa em IA",
-    "metaDescription": "Guias práticos da Toone sobre modelos operacionais nativos em IA, governança de agentes, evidências e decisões de implementação.",
-    "ogTitle": "Recursos da Toone",
-    "ogDescription": "Guias práticos para criar operações nativas em IA com agentes responsáveis.",
+    "metaTitle": "Formas práticas de trabalhar com o Toone",
+    "metaDescription": "Escolha um fluxo útil, reúna o contexto necessário e reveja os resultados.",
+    "ogTitle": "Formas práticas de trabalhar com o Toone",
+    "ogDescription": "Escolha um fluxo útil, reúna o contexto necessário e reveja os resultados.",
     "eyebrow": "Guias práticos da Toone",
-    "heading": "Desenhe o trabalho, não apenas o prompt.",
-    "intro": "Guias baseados em evidências para codificar operações, governar ações de agentes e decidir onde a IA faz sentido.",
+    "heading": "Formas práticas de trabalhar com o Toone",
+    "intro": "Escolha um fluxo útil, reúna o contexto necessário e reveja os resultados.",
     "empty": "Os guias em português estão sendo preparados."
   },
   "article": {
@@ -314,9 +312,9 @@
     "published": "Publicado em",
     "updated": "Atualizado em",
     "onThisPage": "Nesta página",
-    "continueTitle": "Continue com evidências",
-    "continueDescription": "Veja o que já funciona na Toone antes de decidir se o modelo operacional se adapta ao seu trabalho.",
-    "continueAction": "Ver casos da Toone"
+    "continueTitle": "Explorar o Toone",
+    "continueDescription": "Escolha um fluxo útil, reúna o contexto necessário e reveja os resultados.",
+    "continueAction": "Pedir acesso antecipado"
   },
   "contact": {
     "title": "Traga-nos a sua organização",

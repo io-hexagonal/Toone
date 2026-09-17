@@ -6,8 +6,8 @@ import { Link } from "@/lib/navigation";
 import {
   ApiError,
   clearSession,
-  getDesktopDownload,
   getMe,
+  downloadDesktop,
   loadSession,
   type ToneSession,
 } from "@/lib/api";
@@ -39,10 +39,10 @@ function AppleLogo() {
 export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
   const auth = useTranslations("auth");
   const [session, setSession] = useState<ToneSession | null>(null);
+  const [downloading, setDownloading] = useState<Variant | null>(null);
+  const [downloadError, setDownloadError] = useState(false);
   const [checking, setChecking] = useState(true);
   const [validationError, setValidationError] = useState(false);
-  const [preparing, setPreparing] = useState<Variant | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const persisted = loadSession();
@@ -75,23 +75,25 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
   }, []);
 
   async function download(variant: Variant) {
-    if (!session || preparing) return;
-    setPreparing(variant);
-    setError(null);
+    if (!session || downloading) return;
+    setDownloading(variant);
+    setDownloadError(false);
     try {
-      const artifact = await getDesktopDownload(variant, session.token);
-      window.location.assign(artifact.url);
-    } catch (caught) {
-      if (
-        caught instanceof ApiError &&
-        ["unauthorized", "invalid_token", "token_expired"].includes(caught.code)
-      ) {
+      const blob = await downloadDesktop(session.token, variant);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = variant === "standard" ? "Toone.dmg" : "Toone-Liquid-Glass.dmg";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
         clearSession();
         setSession(null);
-      }
-      setError(auth("errGeneric"));
-      setPreparing(null);
-    }
+      } else setDownloadError(true);
+    } finally { setDownloading(null); }
   }
 
   if (checking) {
@@ -112,13 +114,14 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
         <h2>{auth("signinTitle")}</h2>
         <p>{auth("signinSub")}</p>
         <Link className="download-button" href="/signin">{auth("signinBtn")}</Link>
-        <Link className="download-waitlist-link" href="/signup">{auth("signupLink")}</Link>
+        <Link className="download-waitlist-link" href="/early-access">{auth("requestAccess")}</Link>
       </div>
     );
   }
 
   return (
     <>
+      {downloadError && <p role="alert" className="download-error">{auth("downloadUnavailable")}</p>}
       <section className="download-grid" aria-label={copy.choicesLabel}>
         <article className="download-card">
           <div className="download-badge">{copy.standardBadge}</div>
@@ -137,14 +140,14 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
           <div className="download-requirement"><AppleLogo />{copy.standardRequirement}</div>
           <p>{copy.standardDescription}</p>
           <button
-            className="download-button"
             type="button"
-            disabled={preparing !== null}
+            className="download-button"
+            disabled={downloading !== null}
             onClick={() => void download("standard")}
             data-umami-event="download-dmg-standard"
             data-umami-event-placement="download-page"
           >
-            {preparing === "standard" ? "…" : copy.standardButton}
+            {downloading === "standard" ? auth("downloading") : copy.standardButton}
           </button>
         </article>
 
@@ -165,18 +168,17 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
           <div className="download-requirement"><AppleLogo />{copy.liquidRequirement}</div>
           <p>{copy.liquidDescription}</p>
           <button
-            className="download-button"
             type="button"
-            disabled={preparing !== null}
+            className="download-button"
+            disabled={downloading !== null}
             onClick={() => void download("liquid-glass")}
             data-umami-event="download-dmg-liquid-glass"
             data-umami-event-placement="download-page"
           >
-            {preparing === "liquid-glass" ? "…" : copy.liquidButton}
+            {downloading === "liquid-glass" ? auth("downloading") : copy.liquidButton}
           </button>
         </article>
       </section>
-      {error && <p className="download-error" role="alert">{error}</p>}
     </>
   );
 }

@@ -6,38 +6,39 @@
     "howTo": "How to",
     "resources": "Bronnen",
     "governance": "Governance",
-    "download": "Downloaden",
+    "download": "Vroege toegang aanvragen",
     "signin": "Inloggen"
   },
   "downloadPage": {
     "metaTitle": "Download Toone voor macOS",
-    "metaDescription": "Kies de standaardversie voor macOS 14 of de native Liquid Glass-versie voor macOS Tahoe.",
+    "metaDescription": "Kies de versie voor je Mac. Installeer Toone en meld je aan met hetzelfde account dat je op deze website gebruikt.",
     "eyebrow": "Twee native versies",
     "title": "Kies je Toone",
-    "subtitle": "Dezelfde Toone-organisatie-engine, verpakt voor de Mac die je gebruikt.",
+    "subtitle": "Kies de versie voor je Mac.",
     "choicesLabel": "Toone-downloads",
     "standardBadge": "Compatibel",
     "standardTitle": "Toone",
     "standardRequirement": "Vereist macOS 14 of nieuwer",
-    "standardDescription": "Het standaardartefact vermeldt macOS 14.0 als minimale systeemversie.",
+    "standardDescription": "De standaardinterface van Toone.",
     "standardButton": "Download standaard",
     "liquidBadge": "Native voor Tahoe",
     "liquidTitle": "Toone Liquid Glass",
     "liquidRequirement": "Vereist macOS 26 of nieuwer",
-    "liquidDescription": "Dit artefact vermeldt macOS 26.0 en bevat het Liquid Glass-thema.",
+    "liquidDescription": "Dezelfde Toone-werkprocessen met de Liquid Glass-vormgeving.",
     "liquidButton": "Download Liquid Glass",
-    "compatibilityNote": "De vereisten komen uit de gepubliceerde pakketten. Er wordt geen wisseltest tussen versies geclaimd."
+    "compatibilityNote": "Installeer Toone en meld je aan met hetzelfde account dat je op deze website gebruikt.",
+    "repoLink": "Inloggen"
   },
   "landing": {
     "personal": {
-      "heroTitle": "The native workspace for agentic workflows.",
-      "heroTag": "Build sophisticated AI workflows and routines in natural language, debug, and watch them operate live.",
-      "featuresTitle": "Everything your agents need to work with you",
-      "featuresSub": "Fast at the surface. Deeply orchestrated underneath.",
+      "heroTitle": "Herhaalbare workflows. Gespecialiseerde agents.",
+      "heroTag": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+      "featuresTitle": "Herhaalbare workflows. Gespecialiseerde agents.",
+      "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "statement": {
-        "title": "The native macOS agent orchestration app.",
-        "lead": "Bring every agent into one native workspace, then call, resize, delegate, automate, browse, share, and speak without breaking your flow.",
-        "cta": "Explore the experience"
+        "title": "Herhaalbare workflows. Gespecialiseerde agents.",
+        "lead": "Eén werkplek voor je agents, je workflows en je resultaten.",
+        "cta": "Ontdek Toone"
       },
       "features": {
         "spotlight": {
@@ -49,107 +50,107 @@
           "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
         },
         "browser": {
-          "title": "Your browser, already signed in",
-          "description": "Bring authenticated sessions from your default browser into Toone so agents can work with the accounts you already use."
+          "title": "Je vertrouwde tools",
+          "description": "Werk met de tools en accounts die je al gebruikt."
         },
         "routines": {
-          "title": "Routines as complex as the work",
-          "description": "Describe sophisticated processes in natural language. Schedule work, delegate across departments, call sub-routines, use tools, enforce approvals, and diagnose runs live."
+          "title": "Herhaalbare workflows",
+          "description": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van."
         },
         "liveShare": {
-          "title": "Live Share, governed by you",
-          "description": "Invite someone into a project and follow agents, threads, files, and presence together—read-only by default and expanded only with host approval."
+          "title": "Jij houdt de controle",
+          "description": "Beoordeel belangrijke beslissingen en bepaal hoeveel verantwoordelijkheid je agents krijgen."
         },
         "orchestration": {
-          "title": "Flawless agentic orchestration",
-          "description": "Run agents in parallel, hand context off cleanly, fan results back in, recover from failures, and escalate decisions to you as one continuous operation."
+          "title": "Gespecialiseerde agents",
+          "description": "Geef gerichte taken aan agents met duidelijke verantwoordelijkheden."
         },
         "voice": {
           "title": "Voice in. Meetings captured.",
           "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
         },
         "providers": {
-          "title": "Built on OpenAI and Anthropic",
-          "description": "Choose OpenAI Codex or Anthropic Claude while Toone keeps your agents, routines, tools, and governance working as one."
+          "title": "Een startpunt",
+          "description": "Begin met een praktische workflow voor onderzoek, ontwikkeling, groei of dagelijkse taken."
         }
       }
     },
-
     "audienceLabel": "Kies een Toone-ervaring",
     "audiencePersonal": "Persoonlijk",
     "audienceBusiness": "Zakelijk",
-    "downloadFor": "Download voor",
+    "downloadFor": "Vroege toegang aanvragen",
     "macOS": "macOS",
     "soon": "Binnenkort",
-    "heroTitle": "AI-teams die je werk draaien",
-    "pillarsTitle": "Wat AI-native betekent",
-    "pillarsSub": "Negen dingen worden waar zodra je organisatie op Toone draait.",
+    "heroTitle": "Herhaalbare workflows. Gespecialiseerde agents.",
+    "pillarsTitle": "Herhaalbare workflows. Gespecialiseerde agents.",
+    "pillarsSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
     "collaborationTitle": "Je team werkt live samen",
     "collaborationTooltip": "Live samenwerking",
-    "collaborationDescription": "Nodig teamleden uit in een gedeelde organisatie zonder dat ze Git hoeven te leren. Volg samen agents, threads, bestanden en aanwezigheid met afgebakende, door de host goedgekeurde toegang die standaard alleen-lezen is.",
-    "p1t": "Je processen zijn vastgelegd",
-    "p1d": "Playbooks die zichzelf uitvoeren als routines, subroutines en schema's. Er een bouwen is deterministisch werk, vergelijkbaar met het bedraden van een n8n-flow, alleen schrijf je het in gewone taal. Elke run blijft debugbaar, met agents die tijdens de uitvoering diagnosticeren hoe het loopt.",
-    "p2t": "Kennis stapelt zich gestructureerd op",
-    "p2d": "Een organisatiebrede kennisgraaf die elke chat en elke medewerker overleeft.",
-    "p8t": "De projectgeschiedenis blijft begrijpelijk",
-    "p8d": "Lokale checkpoints laten zien wat er veranderde, wie het veranderde en wat moet worden nagekeken. Bekijk een visuele tijdlijn, laat een agent elk checkpoint uitleggen en stel Git of GitHub-aanmelding alleen in wanneer jij dat wilt.",
-    "p3t": "Agents werken als personeel",
-    "p3d": "Ze vervullen rollen in afdelingen, houden schema's aan, leveren artefacten op en escaleren naar een mens wanneer het ertoe doet.",
-    "p4t": "De organisatie opereert als één geheel",
-    "p4d": "Routines zijn geschreven om te delegeren. Werk beweegt tussen afdelingen in schone compartimenten, zodat elke agent een smal mandaat heeft en de hele organisatie zich als één lichaam gedraagt.",
-    "p5t": "Het web is bedienbaar",
-    "p5d": "Je externe tools worden in kaart gebracht als herhaalbare workflows en behandeld als volwaardige integraties, beperkt tot wat je bedrijf echt nodig heeft. Wat ontbreekt wordt op maat gebouwd.",
+    "collaborationDescription": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft.",
+    "p1t": "Herhaalbare workflows",
+    "p1d": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van.",
+    "p2t": "Gedeelde context",
+    "p2d": "Houd de informatie die je team nodig heeft dicht bij het werk.",
+    "p8t": "Resultaten om te beoordelen",
+    "p8d": "Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.",
+    "p3t": "Gespecialiseerde agents",
+    "p3d": "Geef gerichte taken aan agents met duidelijke verantwoordelijkheden.",
+    "p4t": "Werk dat vooruitgaat",
+    "p4d": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft.",
+    "p5t": "Je vertrouwde tools",
+    "p5d": "Werk met de tools en accounts die je al gebruikt.",
     "partnersBandLabel": "Bedrijven die AI-native worden op Toone",
     "partnersBandCta": "Zie precies wat ze hebben geautomatiseerd",
     "partnersBandMore": "en meer bedrijven in onboarding — nog niet publiek",
-    "p6t": "Mensen houden de regie",
-    "p6d": "Gates, goedkeuringen, uitgaand werk alleen als concept en het afschermen van gevoelige gegevens. Autonomie binnen de grenzen die jij stelt, met verantwoording voor elke actie van een agent.",
-    "p7t": "Een complete set tools",
-    "p7d": "Aanbevolen templates, MCP-tools, processen en integraties, samengesteld voor jouw use case. Vandaag dekt dat software engineering, SEO en groei, outreach en support, productstrategie, wetenschap en onderzoek, en headquarters.",
+    "p6t": "Jij houdt de controle",
+    "p6d": "Beoordeel belangrijke beslissingen en bepaal hoeveel verantwoordelijkheid je agents krijgen.",
+    "p7t": "Een startpunt",
+    "p7d": "Begin met een praktische workflow voor onderzoek, ontwikkeling, groei of dagelijkse taken.",
     "techLabel": "Built on",
     "authGoogle": "Doorgaan met Google",
     "authOr": "of",
     "authEmailPh": "Vul je e-mailadres in",
-    "authContinue": "Doorgaan met e-mail",
-    "authJoined": "Je staat op de lijst — we laten snel van ons horen.",
+    "authContinue": "Vroege toegang aanvragen",
+    "authJoined": "Je aanvraag staat op de lijst. We nemen contact op zodra toegang beschikbaar is.",
     "authError": "Er ging iets mis — probeer het opnieuw.",
-    "authNote": "Early access — zet je op de lijst. Bestaande gebruikers kunnen inloggen om te downloaden.",
-    "waitlistTitle": "Meld je aan voor de Toone-wachtlijst",
-    "waitlistSub": "Nieuwe accounts zijn voorlopig gepauzeerd. Laat je e-mailadres achter en we laten weten wanneer toegang weer opent.",
-    "waitlistExisting": "Heb je al een Toone-account?",
+    "authNote": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
+    "waitlistTitle": "Vroege toegang aanvragen",
+    "waitlistSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
+    "waitlistExisting": "Gebruik je Toone al?",
     "waitlistSignIn": "Inloggen",
     "productLanguageDisclosure": "De desktop-app is momenteel alleen beschikbaar in het Engels.",
-    "heroTag2": "Maak je bedrijf AI-native."
+    "heroTag2": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+    "haveInvitation": "Heb je een uitnodigingscode?"
   },
   "footer": {
     "privacy": "Privacy",
     "about": "Over Toone",
     "editorialPolicy": "Redactioneel beleid",
     "product": "Product",
-    "how": "Zo werkt het",
+    "how": "Ontdek Toone",
     "proof": "Referenties",
     "company": "Bedrijf",
     "contact": "Contact",
     "rights": "Alle rechten voorbehouden."
   },
   "meta": {
-    "siteTitle": "Toone: AI-teams die je werk draaien | Gebouwd op Claude Code & Codex",
-    "siteDescription": "Toone maakt van bedrijven AI-native ondernemingen. Het legt vast hoe je organisatie werkt en laat dat vervolgens draaien met een zwerm AI-agents onder menselijk toezicht.",
-    "ogDescription": "Toone maakt van bedrijven AI-native ondernemingen. Je processen vastgelegd als routines, uitgevoerd door AI-agents onder menselijk toezicht.",
-    "ogTitle": "Toone: AI-teams die je werk draaien"
+    "siteTitle": "Toone | Herhaalbare workflows. Gespecialiseerde agents.",
+    "siteDescription": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+    "ogDescription": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+    "ogTitle": "Toone | Herhaalbare workflows. Gespecialiseerde agents."
   },
   "showcases": {
     "metaTitle": "Showcases: hoe bedrijven AI-native werden op Toone",
-    "metaDescription": "Live organisaties die vandaag op Toone draaien: Truleaf.org en micoo. Hun processen vastgelegd als routines, uitgevoerd door agents, onder menselijk toezicht.",
+    "metaDescription": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "eyebrow": "Showcases",
     "title": "Hoe echte bedrijven AI-native werden",
-    "sub": "Dit zijn live organisaties die op dit moment op Toone draaien. Hun processen zijn vastgelegd als routines en worden op schema uitgevoerd door agents, onder menselijk toezicht.",
+    "sub": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "processesLabel": "Wat draait op Toone",
     "moreTitle": "Meer op komst",
-    "moreSub": "Op dit moment worden nieuwe organisaties op Toone opgezet. Die van jou kan de volgende zijn.",
+    "moreSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
     "ctaTitle": "Breng ons je organisatie",
-    "ctaSub": "Geef ons één proces dat pijn doet. Wij leggen het vast, laten het draaien op Toone, en jij ziet je eigen bedrijf zichzelf runnen.",
-    "ctaBtn": "Begin een gesprek",
+    "ctaSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
+    "ctaBtn": "Vroege toegang aanvragen",
     "backHome": "← Terug naar home",
     "note": "De aantallen afdelingen en routines weerspiegelen de organisaties die elke partner in juli 2026 op Toone draait.",
     "cases": [
@@ -160,7 +161,7 @@
         "sector": "R&D in biologische gewasbescherming",
         "url": "https://truleaf.org",
         "logo": "truleaf",
-        "lede": "Truleaf zet gepubliceerde wetenschap om in beslissingsklaar bewijs voor teams die pesticidevrije gewasbescherming ontwikkelen. Dat werk kost een onderzoeksteam van oudsher vier tot acht weken handmatig literatuuronderzoek per agent. Zijn onderzoekspipeline, go-to-market en engineering draaien allemaal als Toone-organisaties, en het wordt het eerste white-label deployment: dezelfde engine, hun merk, hun domein.",
+        "lede": "Truleaf gebruikt Toone voor onderzoek, productstrategie, groei en engineering bij de ontwikkeling van gewasbescherming zonder pesticiden. De teams zetten wetenschappelijke publicaties om in inzichten die ze kunnen beoordelen en gebruiken.",
         "stats": [
           {
             "n": "3",
@@ -178,19 +179,19 @@
         "blocks": [
           {
             "t": "Onderzoekspipeline",
-            "d": "Literatuur-ingestie, extractie van prestaties over stammen en omstandigheden heen, het oplossen van tegenstrijdigheden, scoring van regelgevingsgereedheid en een herkomstaudit die elke claim aan zijn oorspronkelijke bron koppelt. Weken handmatig doorlichten worden uren."
+            "d": "Houd de informatie die je team nodig heeft dicht bij het werk."
           },
           {
             "t": "Productstrategie",
-            "d": "Een concurrentieradar loopt wekelijks de sites, changelogs en prijzen van met naam genoemde concurrenten af. Markttrends, klantfeedback en review-mining voeden één bewijspoort, waar een bet pas doorgaat zodra het bewijs in de kennisgraaf is vastgelegd."
+            "d": "Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen."
           },
           {
             "t": "Organische groei",
-            "d": "Dagelijkse ranktracking via in kaart gebrachte analytics-sessies, query-mining, audits op kannibalisatie en index-bloat, en een contentpipeline die loopt van brief-intake tot een publicatiegereedheidscheck."
+            "d": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van."
           },
           {
             "t": "Engineering",
-            "d": "Bugtriage, reviewwachtrij en releasegereedheid draaien op cadans. Architectuurdrift-scans, dependency-hygiëne, dead-code-opruimingen en een schuldregister houden de codebase gezond tussen releases."
+            "d": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft."
           }
         ]
       },
@@ -201,7 +202,7 @@
         "sector": "Microcredential-platform",
         "url": "",
         "logo": "micoo",
-        "lede": "micoo is de referentiecase voor de transformatiebeweging: een draaiend bedrijf vastgelegd in templates en routines. Zijn engineering-organisatie draait nu zichzelf, van intake tot en met de opleveringsbriefing, en de mensen besteden hun tijd aan beslissingen.",
+        "lede": "micoo gebruikt Toone ter ondersteuning van de ontwikkeling van zijn platform voor microcredentials. Herhaalbare werkprocessen maken voortgang, blokkades en onderhoud zichtbaar, zodat het team zich op beslissingen kan richten.",
         "stats": [
           {
             "n": "1",
@@ -219,19 +220,19 @@
         "blocks": [
           {
             "t": "Oplevering rapporteert zichzelf",
-            "d": "Een dagelijkse briefing dekt de delta over elk lopend item: wat bewoog, wat geblokkeerd is en door wie, en waar de realiteit van het plan afweek. Blokkades escaleren naar de afdelingen die erover gaan. Als er niets bewoog, zegt de briefing dat in drie regels."
+            "d": "Houd de informatie die je team nodig heeft dicht bij het werk."
           },
           {
-            "t": "Intake en decompositie",
-            "d": "Binnenkomend werk wordt automatisch getrieerd, gepland en opgeknipt in subroutines, en daarna getoetst aan een expliciete definition of done voordat iets af wordt genoemd."
+            "t": "Herhaalbare workflows",
+            "d": "Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen."
           },
           {
             "t": "Hygiëne op cadans",
-            "d": "Architectuurdrift-scans, dependency-hygiëne, consistentie-audits en dead-code-opruimingen draaien op schema. Dit is het onderhoud dat elk team van plan is te doen en waar het nooit aan toekomt."
+            "d": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van."
           },
           {
             "t": "Radar en onderzoek",
-            "d": "Een techradar volgt releases, deprecaties en beveiligingswaarschuwingen. De onderzoeksafdeling zet die ruwe signalen om in beoordeelde standpunten en spike-voorstellen, zodat technologiekeuzes vroeg genoeg aankomen om beslissingen te zijn."
+            "d": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft."
           }
         ]
       }
@@ -241,28 +242,18 @@
     "title": "Vragen, beantwoord.",
     "sub": "De korte versie van alles wat men ons vraagt.",
     "q1": "Wat is Toone?",
-    "a1": "Een macOS-app die een organisatie van AI-agents voor je bedrijf draait — afdelingen, agents met rollen en geplande routines, gebouwd op een kennisgraaf van je bedrijf.",
-    "q2": "Hoe verschilt het van een chatbot?",
-    "a2": "Een chatbot antwoordt als je iets vraagt. Toone's agents hebben rollen, volgen routines op schema, delen geheugen via de graaf en geven werk aan elkaar door — af werk verschijnt zonder dat je erom vraagt.",
-    "q3": "Wat zijn routines?",
-    "a3": "Terugkerende taken — samenvattingen, contentpipelines, monitoring, onderzoek — vastgelegd in eenvoudige bestanden die agents op schema uitvoeren, met controleerbare artefacten.",
-    "q4": "Moet ik kunnen programmeren?",
-    "a4": "Nee. Organisaties starten vanuit templates en routines zijn bestanden in gewone taal. Technische gebruikers kunnen alles tot op bestandsniveau inzien.",
-    "q5": "Waar staan mijn gegevens?",
-    "a5": "Op je Mac. Je organisatie is een map met leesbare bestanden en agents draaien lokaal — alleen de modelaanroepen verlaten je machine.",
-    "q6": "Welke AI-modellen gebruikt het?",
-    "a6": "Anthropics Claude-familie via Claude Code of OpenAI-modellen via Codex. Je kiest de provider tijdens de configuratie en elke thread kan zijn eigen model vastzetten.",
-    "q7": "Alleen macOS?",
-    "a7": "De desktop-app is vandaag voor macOS, als directe download. Meer platformen staan op de roadmap.",
-    "q8": "Wat kost het?",
-    "a8": "Toone is gratis tijdens early access. Agents draaien op je eigen Claude Code- of Codex-account.",
-    "q9": "Kan het onder ons eigen merk draaien?",
-    "a9": "Ja — Toone is white-label: dezelfde engine met jouw merkconfiguratie."
+    "a1": "Toone is een macOS-werkplek voor herhaalbare workflows en gespecialiseerde AI-agents.",
+    "q2": "Hoe krijg ik toegang?",
+    "a2": "Vraag vroege toegang aan met je e-mailadres. Toegang wordt op uitnodiging aangeboden.",
+    "q3": "Kan ik mijn bestaande app blijven gebruiken?",
+    "a3": "Ja. Bestaande accounthouders kunnen met hun gebruikelijke methode blijven inloggen.",
+    "q4": "Hoe werken uitnodigingen?",
+    "a4": "Gebruik je persoonlijke code op de website om een account met e-mail en wachtwoord te maken en log daarmee in bij de app."
   },
   "statement": {
-    "title": "Je bedrijf weet allang hoe het moet draaien.",
-    "lead": "De kennis is er al — in bestanden, tools en hoofden. Toone geeft er structuur aan: een levende graaf van wat je bedrijf weet, en een organisatie van AI-agents die het volgens schema aan het werk zet.",
-    "cta": "Zo werkt het"
+    "title": "Herhaalbare workflows. Gespecialiseerde agents.",
+    "lead": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+    "cta": "Ontdek Toone"
   },
   "auth": {
     "signinTitle": "Inloggen bij Toone",
@@ -278,11 +269,11 @@
     "emailPh": "E-mail",
     "passwordPh": "Wachtwoord",
     "signinBtn": "Inloggen",
-    "signupBtn": "Account aanmaken",
+    "signupBtn": "Account maken en downloaden",
     "haveAccount": "Heb je al een account?",
     "signinLink": "Log in",
     "newHere": "Nieuw bij Toone?",
-    "signupLink": "Naar de wachtlijst",
+    "signupLink": "Vroege toegang aanvragen",
     "successTitle": "Je bent ingelogd als {email}",
     "successNote": "Toone draait op je Mac — download de app en log daar in.",
     "downloadMac": "Downloaden voor macOS",
@@ -294,16 +285,23 @@
     "errInvalid": "Ongeldig e-mailadres of wachtwoord.",
     "errRate": "Te veel pogingen — probeer het over een minuut opnieuw.",
     "errInvalidInput": "Controleer je e-mailadres en wachtwoord en probeer het opnieuw.",
-    "errRegistrationClosed": "Nieuwe accounts zijn gepauzeerd. Meld je aan voor de wachtlijst en we laten weten wanneer toegang opent."
+    "errRegistrationClosed": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
+    "inviteTitle": "Je uitnodiging gebruiken",
+    "inviteSub": "Vul je persoonlijke code in en maak een account met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
+    "inviteCode": "Uitnodigingscode",
+    "errInvitation": "Deze code is ongeldig, verlopen of al gebruikt. Controleer de code of vraag om een nieuwe uitnodiging.",
+    "requestAccess": "Vroege toegang aanvragen",
+    "downloading": "Download voorbereiden…",
+    "downloadUnavailable": "Downloads zijn tijdelijk niet beschikbaar. Probeer het opnieuw of neem contact op via hello@trytoone.com."
   },
   "resources": {
-    "metaTitle": "Bronnen voor het bouwen van een AI-native bedrijf",
-    "metaDescription": "Praktische Toone-gidsen over AI-native bedrijfsmodellen, agentgovernance, bewijs en implementatiekeuzes.",
-    "ogTitle": "Toone Bronnen",
-    "ogDescription": "Praktische gidsen voor AI-native processen met verantwoordelijke agents.",
+    "metaTitle": "Praktisch werken met Toone",
+    "metaDescription": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
+    "ogTitle": "Praktisch werken met Toone",
+    "ogDescription": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
     "eyebrow": "Praktische Toone-gidsen",
-    "heading": "Ontwerp het werk, niet alleen de prompt.",
-    "intro": "Op bewijs gebaseerde gidsen voor het coderen van processen, het besturen van agentacties en het kiezen waar AI past.",
+    "heading": "Praktisch werken met Toone",
+    "intro": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
     "empty": "De Nederlandse gidsen worden voorbereid."
   },
   "article": {
@@ -314,9 +312,9 @@
     "published": "Gepubliceerd op",
     "updated": "Bijgewerkt op",
     "onThisPage": "Op deze pagina",
-    "continueTitle": "Ga verder met bewijs",
-    "continueDescription": "Bekijk wat al op Toone draait voordat je beslist of het bedrijfsmodel bij je werk past.",
-    "continueAction": "Bekijk Toone-voorbeelden"
+    "continueTitle": "Ontdek Toone",
+    "continueDescription": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
+    "continueAction": "Vroege toegang aanvragen"
   },
   "contact": {
     "title": "Breng ons je organisatie",

@@ -14,10 +14,10 @@ const LOCALIZED_ROUTES = [
   "",
   "/business",
   "/business/showcases",
-  "/download",
+  "/early-access",
   "/resources",
 ] as const;
-const DOWNLOAD_LAST_MODIFIED = "2026-08-13";
+const DOWNLOAD_LAST_MODIFIED = "2026-09-11";
 
 function alternates(path: string): string {
   const links = locales.map(
@@ -69,8 +69,8 @@ export async function GET() {
   for (const locale of locales) {
     for (const path of LOCALIZED_ROUTES) {
       const changefreq = path === "/business/showcases" ? "monthly" : "weekly";
-      const priority = path === "" ? "1.0" : path === "/download" ? "0.9" : "0.8";
-      const lastModified = path === "/download" ? DOWNLOAD_LAST_MODIFIED : undefined;
+      const priority = path === "" ? "1.0" : path === "/early-access" ? "0.9" : "0.8";
+      const lastModified = path === "/early-access" ? DOWNLOAD_LAST_MODIFIED : undefined;
       lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority, lastModified));
     }
   }

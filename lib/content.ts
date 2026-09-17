@@ -22,11 +22,6 @@ export type Publication = {
   featured: boolean;
   image: string;
   imageAlt: string;
-  sourceWorkId: string;
-  sourceSha256: string;
-  englishSourceSha256?: string;
-  translationManifestSha256?: string;
-  translationQaSha256?: string;
   body: string;
 };
 
@@ -38,6 +33,9 @@ export const RESERVED_ROOT_EDITORIAL_SLUGS = [
   "business",
   "contact",
   "download",
+  "downloads",
+  "early-access",
+  "invite",
   "editorial-policy",
   "governance",
   "guides",
@@ -55,13 +53,7 @@ function isLocale(value: string): value is Locale {
   return locales.includes(value as Locale);
 }
 
-function defaultImage(slug: string): { image: string; imageAlt: string } {
-  if (slug === "ai-native-company") {
-    return {
-      image: "/assets/guides/ai-native-company-diagnostic.png",
-      imageAlt: "Five checks in the Toone AI-native operating-model diagnostic",
-    };
-  }
+function defaultImage(): { image: string; imageAlt: string } {
   return { image: DEFAULT_IMAGE, imageAlt: DEFAULT_IMAGE_ALT };
 }
 
@@ -78,8 +70,6 @@ function readPublication(filePath: string, expectedLocale: Locale): Publication 
     "published",
     "updated",
     "readTime",
-    "sourceWorkId",
-    "sourceSha256",
   ];
 
   for (const key of required) {
@@ -93,7 +83,7 @@ function readPublication(filePath: string, expectedLocale: Locale): Publication 
   }
 
   const slug = String(data.slug);
-  const fallbackImage = defaultImage(slug);
+  const fallbackImage = defaultImage();
   const authorType = data.authorType ? String(data.authorType) : "Organization";
   if (authorType !== "Organization" && authorType !== "Person") {
     throw new Error(`Invalid authorType '${authorType}' in ${filePath}`);
@@ -116,17 +106,6 @@ function readPublication(filePath: string, expectedLocale: Locale): Publication 
     featured: Boolean(data.featured),
     image: String(data.image || fallbackImage.image),
     imageAlt: String(data.imageAlt || fallbackImage.imageAlt),
-    sourceWorkId: String(data.sourceWorkId),
-    sourceSha256: String(data.sourceSha256),
-    englishSourceSha256: data.englishSourceSha256
-      ? String(data.englishSourceSha256)
-      : undefined,
-    translationManifestSha256: data.translationManifestSha256
-      ? String(data.translationManifestSha256)
-      : undefined,
-    translationQaSha256: data.translationQaSha256
-      ? String(data.translationQaSha256)
-      : undefined,
     body: content.trim(),
   };
 }
@@ -147,15 +126,7 @@ function hasCompleteLocalizedSet(slug: string): boolean {
   if (!hasAnyNonEnglish) return false;
   if (localizedFiles.some((filePath) => !fs.existsSync(filePath))) return false;
 
-  return locales.every((locale) => {
-    const publication = readPublication(localizedFilePath(locale, slug), locale);
-    if (locale === "en") return true;
-    return Boolean(
-      publication.englishSourceSha256 &&
-      publication.translationManifestSha256 &&
-      publication.translationQaSha256,
-    );
-  });
+  return locales.every((locale) => readPublication(localizedFilePath(locale, slug), locale).locale === locale);
 }
 
 function safeSlug(value: string): string | null {

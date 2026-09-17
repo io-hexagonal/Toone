@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+import { Link, useRouter } from "@/lib/navigation";
+import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
   loadSession,
   loginEmail,
   loginGoogle,
   logout,
-  signupEmail,
+  signupInvitation,
   type ToneSession,
 } from "@/lib/api";
 
@@ -52,7 +53,7 @@ function track(event: string) {
   );
 }
 
-type Mode = "signin" | "signup";
+type Mode = "signin" | "invite";
 
 /**
  * Shared sign-in / sign-up page: dark ground, brand lockup, one card in the
@@ -62,8 +63,10 @@ type Mode = "signin" | "signup";
  * "you're signed in" panel pointing at the macOS download — the desktop app
  * is where the account is used.
  */
-export default function AuthPage({ mode }: { mode: Mode }) {
+export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
   const t = useTranslations("auth");
+  const router = useRouter();
+  const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -90,6 +93,8 @@ export default function AuthPage({ mode }: { mode: Mode }) {
           return t("errInvalidInput");
         case "rate_limit_exceeded":
           return t("errRate");
+        case "invalid_invitation":
+          return t("errInvitation");
         case "registration_closed":
           return t("errRegistrationClosed");
       }
@@ -108,7 +113,9 @@ export default function AuthPage({ mode }: { mode: Mode }) {
     try {
       const s = await promise;
       setSession(s);
+      onAuthenticated?.(s);
       track(event);
+      if (mode === "invite") router.replace("/downloads");
     } catch (e) {
       setError(friendlyError(e, viaGoogle));
     } finally {
@@ -130,30 +137,41 @@ export default function AuthPage({ mode }: { mode: Mode }) {
     // The server enforces password bounds in BYTES (bcrypt's 72-byte limit),
     // so measure UTF-8 bytes, not UTF-16 units. maxLength stays as a soft cap.
     const passwordBytes = new TextEncoder().encode(password).length;
-    if (mode === "signup" && (passwordBytes < 8 || passwordBytes > 72)) {
+    if (mode === "invite" && (passwordBytes < 8 || passwordBytes > 72)) {
       setError(t("errPasswordLength"));
       return;
     }
-    if (mode === "signup") {
+    if (mode === "invite") {
       await finish(
-        signupEmail(email, password, name.trim() || undefined),
-        "auth-signup-email",
+        signupInvitation(email, password, name.trim(), code),
+        "auth-invitation-redeemed",
       );
     } else {
       await finish(loginEmail(email, password), "auth-signin-email");
     }
   }
 
+  useEffect(() => {
+    if (mode !== "invite") return;
+    const invitation = new URLSearchParams(window.location.hash.slice(1));
+    setCode(invitation.get("code") || "");
+    setEmail(invitation.get("email") || "");
+    if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
+  }, [mode]);
+
   // Consume a persisted session: a returning signed-in visitor sees the
   // success panel instead of a blank form. loadSession() drops expired ones.
   useEffect(() => {
     const s = loadSession();
-    if (s) setSession(s);
-  }, []);
+    if (s) {
+      setSession(s);
+      onAuthenticated?.(s);
+    }
+  }, [onAuthenticated]);
 
   // Google Identity Services — loaded on the auth pages only.
   useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
+    if (mode === "invite" || !GOOGLE_CLIENT_ID) return;
 
     let cancelled = false;
     let renderTimeout: number | undefined;
@@ -189,7 +207,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
           theme: "filled_black",
           size: "large",
           shape: "rectangular",
-          text: mode === "signup" ? "signup_with" : "signin_with",
+          text: "signin_with",
           logo_alignment: "left",
           width: Math.min(356, Math.max(200, parent.clientWidth || 356)),
         });
@@ -366,10 +384,10 @@ export default function AuthPage({ mode }: { mode: Mode }) {
         </Link>
 
         <h1 className="auth-title">
-          {mode === "signup" ? t("signupTitle") : t("signinTitle")}
+          {mode === "invite" ? t("inviteTitle") : t("signinTitle")}
         </h1>
         <p className="auth-sub">
-          {mode === "signup" ? t("signupSub") : t("signinSub")}
+          {mode === "invite" ? t("inviteSub") : t("signinSub")}
         </p>
 
         <div className="auth-card">
@@ -381,7 +399,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
               <p className="note">{t("successNote")}</p>
               <Link
                 className="auth-dl"
-                href="/download"
+                href="/downloads"
                 data-umami-event="open-download-chooser"
                 data-umami-event-placement="auth-success"
               >
@@ -390,6 +408,9 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                 </svg>
                 {t("downloadMac")}
               </Link>
+              <div>
+                <InvitationAdminLink token={session.token} className="auth-signout" />
+              </div>
               <div>
                 <button
                   className="auth-signout"
@@ -402,6 +423,7 @@ export default function AuthPage({ mode }: { mode: Mode }) {
             </div>
           ) : (
             <>
+              {mode === "signin" && <>
               {GOOGLE_CLIENT_ID ? (
                 <>
                   <div
@@ -440,11 +462,16 @@ export default function AuthPage({ mode }: { mode: Mode }) {
 
               <div className="auth-or">{t("or")}</div>
 
+              </>}
               <form
                 onSubmit={handleSubmit}
                 style={{ display: "flex", flexDirection: "column", gap: 12 }}
               >
-                {mode === "signup" && (
+                {mode === "invite" && <input className="auth-input" type="text"
+                  aria-label={t("inviteCode")} placeholder={t("inviteCode")}
+                  value={code} onChange={(event) => setCode(event.target.value)}
+                  autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required />}
+                {mode === "invite" && (
                   <input
                     className="auth-input"
                     type="text"
@@ -470,19 +497,19 @@ export default function AuthPage({ mode }: { mode: Mode }) {
                   type="password"
                   aria-label={t("passwordPh")}
                   autoComplete={
-                    mode === "signup" ? "new-password" : "current-password"
+                    mode === "invite" ? "new-password" : "current-password"
                   }
                   placeholder={t("passwordPh")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={mode === "signup" ? 8 : undefined}
+                  minLength={mode === "invite" ? 8 : undefined}
                   maxLength={72}
                 />
                 <button className="auth-submit" type="submit" disabled={loading}>
                   {loading
                     ? "…"
-                    : mode === "signup"
+                    : mode === "invite"
                       ? t("signupBtn")
                       : t("signinBtn")}
                 </button>
@@ -495,13 +522,13 @@ export default function AuthPage({ mode }: { mode: Mode }) {
 
         {!session && (
           <p className="auth-switch">
-            {mode === "signup" ? (
+            {mode === "invite" ? (
               <>
                 {t("haveAccount")} <Link href="/signin">{t("signinLink")}</Link>
               </>
             ) : (
               <>
-                {t("newHere")} <Link href="/signup">{t("signupLink")}</Link>
+                {t("newHere")} <Link href="/early-access">{t("requestAccess")}</Link>
               </>
             )}
           </p>

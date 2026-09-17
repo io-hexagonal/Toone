@@ -1,15 +1,6 @@
-/**
- * Tiny typed client for the Toone auth API (Go backend, hexagonal).
- *
- * Base URL comes from NEXT_PUBLIC_API_BASE_URL and defaults to the
- * api.truleaf.org route — the only DNS-live path to the backend today.
- * Success responses are `{"data": {...}}` with Go-style Capitalized keys
- * (structs without json tags); this module is the boundary where those get
- * normalized to lowercase, and where the session is persisted to
- * localStorage under `toone.session`.
- */
+/** Typed client for account authentication and private desktop downloads. */
 
-const DEFAULT_API_BASE = "https://api.truleaf.org/api/v1/toone";
+const DEFAULT_API_BASE = "https://api.trytoone.com/v1";
 
 const SESSION_KEY = "toone.session";
 
@@ -67,11 +58,6 @@ type RawAuthPayload = {
   User: RawUser;
   Session: RawSession;
   IsNewUser?: boolean;
-};
-
-type RawDesktopDownload = {
-  URL: string;
-  ExpiresAt: string;
 };
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -157,18 +143,22 @@ export function clearSession(): void {
 
 /* ---- auth calls (each stores the session on success) */
 
-export async function signupEmail(
-  email: string,
-  password: string,
-  name?: string,
-): Promise<ToneSession> {
-  const raw = await request<RawAuthPayload>(
-    "/auth/email/signup",
-    jsonPost({ email, password, ...(name ? { name } : {}) }),
-  );
-  const session = normalizeSession(raw);
-  saveSession(session);
-  return session;
+export async function signupInvitation(email: string, password: string, name: string, code: string): Promise<ToneSession> {
+ const raw = await request<RawAuthPayload>("/auth/invite", jsonPost({ email, password, name, code }));
+ const session = normalizeSession(raw);
+ saveSession(session);
+ return session;
+}
+
+export async function downloadDesktop(token: string, variant: "standard" | "liquid-glass"): Promise<Blob> {
+ const res = await fetch(`${apiBase()}/downloads/desktop/${variant}/file`, {
+  headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+ });
+ if (!res.ok) {
+  const error = await res.json().catch(() => ({}));
+  throw new ApiError(error.code || "unknown", error.message || "Download unavailable", res.status);
+ }
+ return res.blob();
 }
 
 export async function loginEmail(
@@ -201,15 +191,49 @@ export async function getMe(token: string): Promise<ToneUser> {
   return { id: raw.ID, email: raw.Email, name: raw.Name };
 }
 
-export async function getDesktopDownload(
-  variant: "standard" | "liquid-glass",
-  token: string,
-): Promise<{ url: string; expiresAt: string }> {
-  const raw = await request<RawDesktopDownload>(`/downloads/desktop/${variant}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+export type InvitationRecord = {
+  id: string;
+  recipient_name: string;
+  code_hint: string;
+  status: "pending" | "redeemed" | "expired" | "revoked";
+  email: string;
+  user_id: string;
+  account_name: string;
+  created_at: string;
+  expires_at: string;
+  used_at: string | null;
+};
+
+export type CreatedInvitation = {
+  id: string;
+  recipient_name: string;
+  code: string;
+  expires_at: string;
+  signup_url: string;
+};
+
+export async function canManageInvitations(token: string): Promise<boolean> {
+  const result = await request<{ capabilities: string[] }>("/me/capabilities", {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
   });
-  return { url: raw.URL, expiresAt: raw.ExpiresAt };
+  return result.capabilities.includes("invitation.manage");
+}
+
+export async function listInvitations(token: string): Promise<InvitationRecord[]> {
+  return request<InvitationRecord[]>("/admin/invitations", {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
+}
+
+export async function createInvitation(
+  token: string,
+  input: { recipient_name: string; code: string; days: number },
+): Promise<CreatedInvitation> {
+  return request<CreatedInvitation>("/admin/invitations", {
+    ...jsonPost(input),
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
 }
 
 export async function logout(token: string): Promise<void> {

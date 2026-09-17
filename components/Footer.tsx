@@ -55,7 +55,7 @@ export default async function Footer({
             @media (max-width: 640px) {
               .ftr-wrap { flex-direction: column; }
               .ftr-cols { gap: 40px; }
-              .ftr-download { display: none !important; }
+
             }
           `,
         }}
@@ -79,8 +79,8 @@ export default async function Footer({
               <Link href={`${landingPath}#faq`}>FAQ</Link>
               <Link
                 className="ftr-download"
-                href="/download"
-                data-umami-event="open-download-chooser"
+                href="/early-access"
+                data-umami-event="request-early-access"
                 data-umami-event-placement="footer"
               >
                 {nav("download")}
@@ -101,9 +101,7 @@ export default async function Footer({
               <Link href="/signin">{nav("signin")}</Link>
               <Link href="/contact">{t("contact")}</Link>
               <Link href="/privacy">{t("privacy")}</Link>
-              <a href="https://github.com/io-hexagonal/Toone" target="_blank" rel="noopener">
-                {nav("github")}
-              </a>
+
             </div>
           </div>
         </div>
