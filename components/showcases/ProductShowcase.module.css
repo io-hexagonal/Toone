@@ -58,23 +58,39 @@
 
 .sideNav,
 .toc {
+  /* Both columns scroll independently of the page when they are taller than
+     the viewport. The inner padding plus the mask fade keep a partially
+     scrolled entry from being sliced off at the container's edge; the
+     negative top margin cancels the padding so the first row still lines up
+     with the article meta line when nothing is scrolled. */
+  --nav-fade: 18px;
   position: sticky;
-  top: 96px;
+  top: calc(96px - var(--nav-fade));
+  max-height: calc(100vh - 116px + var(--nav-fade));
+  margin-top: calc(-1 * var(--nav-fade));
+  padding-top: var(--nav-fade);
+  padding-bottom: 32px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(29, 28, 25, 0.18) transparent;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--nav-fade),
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--nav-fade),
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
 }
 
 .sideNav {
-  max-height: calc(100vh - 116px);
   padding-right: 8px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(29, 28, 25, 0.18) transparent;
-}
-
-.toc {
-  max-height: calc(100vh - 116px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(29, 28, 25, 0.18) transparent;
 }
 
 .navSection + .navSection {

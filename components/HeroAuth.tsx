@@ -179,6 +179,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-continue:hover { transform: scale(1.015); }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
             .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
+            .ha-existing { margin-top: 22px; font-size: 13px; }
+            .ha-existing a { color: rgba(255,255,255,0.9); text-decoration: none; }
+            .ha-existing a:hover { text-decoration: underline; }
             .ha-joined { color: rgba(255,255,255,0.85); font-size: 14.5px; text-align: center; padding: 16px 0; }
 
             .ha-dl {
@@ -291,7 +294,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
             )}
           </div>
 
-          <p className="ha-note">{t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link></p>
+          <p className="ha-note ha-existing">
+            {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>
+          </p>
 
           <a
             className="ha-product-hunt"
