@@ -143,6 +143,13 @@ export function clearSession(): void {
 
 /* ---- auth calls (each stores the session on success) */
 
+export type InvitationPreview = { valid: boolean; shared: boolean; label: string; expires_at: string };
+
+/** Confirms a code is still redeemable without consuming it; 403 invalid_invitation otherwise. */
+export async function checkInvitation(code: string): Promise<InvitationPreview> {
+  return request<InvitationPreview>("/auth/invite/check", { ...jsonPost({ code }), cache: "no-store" });
+}
+
 export async function signupInvitation(email: string, password: string, name: string, code: string): Promise<ToneSession> {
  const raw = await request<RawAuthPayload>("/auth/invite", jsonPost({ email, password, name, code }));
  const session = normalizeSession(raw);
@@ -202,6 +209,9 @@ export type InvitationRecord = {
   created_at: string;
   expires_at: string;
   used_at: string | null;
+  /** 0 means unlimited; 1 is a personal single-use code. */
+  max_uses: number;
+  use_count: number;
 };
 
 export type CreatedInvitation = {
@@ -209,6 +219,8 @@ export type CreatedInvitation = {
   recipient_name: string;
   code: string;
   expires_at: string;
+  /** 0 means unlimited; 1 is a personal single-use code. */
+  max_uses: number;
   signup_url: string;
 };
 
@@ -227,7 +239,7 @@ export async function listInvitations(token: string): Promise<InvitationRecord[]
 
 export async function createInvitation(
   token: string,
-  input: { recipient_name: string; code: string; days: number },
+  input: { recipient_name: string; code: string; days: number; max_uses?: number; expires_at?: string },
 ): Promise<CreatedInvitation> {
   return request<CreatedInvitation>("/admin/invitations", {
     ...jsonPost(input),

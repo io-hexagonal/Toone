@@ -6,11 +6,13 @@ import { Link, useRouter } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
+  checkInvitation,
   loadSession,
   loginEmail,
   loginGoogle,
   logout,
   signupInvitation,
+  type InvitationPreview,
   type ToneSession,
 } from "@/lib/api";
 
@@ -67,6 +69,10 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   const t = useTranslations("auth");
   const router = useRouter();
   const [code, setCode] = useState("");
+  // Invite mode asks for the code first and only reveals the account form once
+  // the server confirms it is still redeemable.
+  const [step, setStep] = useState<"code" | "account">(mode === "invite" ? "code" : "account");
+  const [preview, setPreview] = useState<InvitationPreview | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,10 +124,39 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       if (mode === "invite") router.replace("/downloads");
     } catch (e) {
       setError(friendlyError(e, viaGoogle));
+      // The code can expire or run out between the check and the signup.
+      if (mode === "invite" && e instanceof ApiError && e.code === "invalid_invitation") {
+        setPreview(null);
+        setStep("code");
+      }
     } finally {
       busyRef.current = false;
       setLoading(false);
     }
+  }
+
+  async function verifyCode(value: string): Promise<void> {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await checkInvitation(value.trim());
+      setPreview(result);
+      setStep("account");
+      track("auth-invitation-checked");
+    } catch (e) {
+      setError(friendlyError(e));
+    } finally {
+      busyRef.current = false;
+      setLoading(false);
+    }
+  }
+
+  function changeCode() {
+    setPreview(null);
+    setError(null);
+    setStep("code");
   }
 
   async function handleSignOut() {
@@ -134,6 +169,10 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (busyRef.current) return;
+    if (mode === "invite" && step === "code") {
+      await verifyCode(code);
+      return;
+    }
     // The server enforces password bounds in BYTES (bcrypt's 72-byte limit),
     // so measure UTF-8 bytes, not UTF-16 units. maxLength stays as a soft cap.
     const passwordBytes = new TextEncoder().encode(password).length;
@@ -154,9 +193,13 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   useEffect(() => {
     if (mode !== "invite") return;
     const invitation = new URLSearchParams(window.location.hash.slice(1));
-    setCode(invitation.get("code") || "");
+    const linkedCode = invitation.get("code") || "";
+    setCode(linkedCode);
     setEmail(invitation.get("email") || "");
     if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
+    // A link that carries the code skips straight to the account form when it is valid.
+    if (linkedCode) void verifyCode(linkedCode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   // Consume a persisted session: a returning signed-in visitor sees the
@@ -384,10 +427,18 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
         </Link>
 
         <h1 className="auth-title">
-          {mode === "invite" ? t("inviteTitle") : t("signinTitle")}
+          {mode === "invite"
+            ? step === "code" ? t("inviteCodeTitle") : t("inviteAccountTitle")
+            : t("signinTitle")}
         </h1>
         <p className="auth-sub">
-          {mode === "invite" ? t("inviteSub") : t("signinSub")}
+          {mode === "invite"
+            ? step === "code"
+              ? t("inviteCodeSub")
+              : preview?.shared && preview.label
+                ? t("inviteAccountSubLabel", { label: preview.label })
+                : t("inviteAccountSub")
+            : t("signinSub")}
         </p>
 
         <div className="auth-card">
@@ -467,11 +518,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                 onSubmit={handleSubmit}
                 style={{ display: "flex", flexDirection: "column", gap: 12 }}
               >
-                {mode === "invite" && <input className="auth-input" type="text"
+                {mode === "invite" && step === "code" && <input className="auth-input" type="text"
                   aria-label={t("inviteCode")} placeholder={t("inviteCode")}
                   value={code} onChange={(event) => setCode(event.target.value)}
-                  autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required />}
-                {mode === "invite" && (
+                  autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required autoFocus />}
+                {mode === "invite" && step === "account" && (
                   <input
                     className="auth-input"
                     type="text"
@@ -482,7 +533,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                     onChange={(e) => setName(e.target.value)}
                   />
                 )}
-                <input
+                {step === "account" && <input
                   className="auth-input"
                   type="email"
                   aria-label={t("emailPh")}
@@ -491,8 +542,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                />
-                <input
+                />}
+                {step === "account" && <input
                   className="auth-input"
                   type="password"
                   aria-label={t("passwordPh")}
@@ -505,17 +556,24 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                   required
                   minLength={mode === "invite" ? 8 : undefined}
                   maxLength={72}
-                />
+                />}
                 <button className="auth-submit" type="submit" disabled={loading}>
                   {loading
                     ? "…"
                     : mode === "invite"
-                      ? t("signupBtn")
+                      ? step === "code" ? t("inviteCodeContinue") : t("signupBtn")
                       : t("signinBtn")}
                 </button>
               </form>
 
               {error && <p className="auth-error">{error}</p>}
+              {mode === "invite" && step === "account" && (
+                <div style={{ textAlign: "center" }}>
+                  <button className="auth-signout" type="button" onClick={changeCode} style={{ marginTop: 4 }}>
+                    {t("inviteChangeCode")}
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>

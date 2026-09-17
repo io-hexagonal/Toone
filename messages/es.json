@@ -288,11 +288,18 @@
     "errRegistrationClosed": "Deja tu email para solicitar acceso anticipado. Te contactaremos cuando haya una plaza disponible.",
     "inviteTitle": "Canjear invitación",
     "inviteSub": "Introduce tu código personal y crea una cuenta con tu propio correo y contraseña para descargar Toone.",
-    "inviteCode": "Código de invitación",
+    "inviteCode": "Código de acceso",
     "errInvitation": "Este código no es válido, ha caducado o ya se ha utilizado. Revísalo o solicita una nueva invitación.",
     "requestAccess": "Solicitar acceso anticipado",
     "downloading": "Preparando la descarga…",
-    "downloadUnavailable": "Las descargas no están disponibles temporalmente. Inténtalo de nuevo o contacta con hello@trytoone.com."
+    "downloadUnavailable": "Las descargas no están disponibles temporalmente. Inténtalo de nuevo o contacta con hello@trytoone.com.",
+    "inviteCodeTitle": "Introduce tu código de acceso",
+    "inviteCodeSub": "Introduce el código que recibiste para desbloquear tu cuenta de Toone.",
+    "inviteCodeContinue": "Continuar",
+    "inviteAccountTitle": "Crea tu cuenta",
+    "inviteAccountSub": "Tu código es válido. Regístrate con tu email y contraseña para descargar Toone.",
+    "inviteAccountSubLabel": "Tu código {label} es válido. Regístrate con tu email y contraseña para descargar Toone.",
+    "inviteChangeCode": "Usar otro código"
   },
   "resources": {
     "metaTitle": "Formas prácticas de trabajar con Toone",
