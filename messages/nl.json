@@ -297,9 +297,18 @@
     "inviteCodeSub": "Voer de code in die je hebt ontvangen om je Toone-account te ontgrendelen.",
     "inviteCodeContinue": "Doorgaan",
     "inviteAccountTitle": "Maak je account aan",
-    "inviteAccountSub": "Je code is geldig. Meld je aan met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
-    "inviteAccountSubLabel": "Je {label}-code is geldig. Meld je aan met je eigen e-mailadres en wachtwoord om Toone te downloaden.",
-    "inviteChangeCode": "Andere code gebruiken"
+    "inviteAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden.",
+    "inviteAccountSubLabel": "Je {label}-code is geldig. Meld je aan met Google of je e-mailadres om Toone te downloaden.",
+    "inviteChangeCode": "Andere code gebruiken",
+    "handleTitle": "Kies je handle",
+    "handleSub": "Kies de @naam waaronder anderen je in Toone kennen.",
+    "handlePh": "jouwnaam",
+    "handleBtn": "Vastleggen en downloaden",
+    "handleSkip": "Voorlopig overslaan",
+    "errHandleTaken": "Die handle is al bezet. Probeer een andere.",
+    "errHandleInvalid": "Gebruik 3–20 letters, cijfers of underscores.",
+    "launchAccountTitle": "Welkom, legende 😸",
+    "launchAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden."
   },
   "resources": {
     "metaTitle": "Praktisch werken met Toone",

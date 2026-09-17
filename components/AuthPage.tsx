@@ -7,6 +7,7 @@ import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
   checkInvitation,
+  claimHandle,
   loadSession,
   loginEmail,
   loginGoogle,
@@ -71,9 +72,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   const [code, setCode] = useState("");
   // Invite mode asks for the code first and only reveals the account form once
   // the server confirms it is still redeemable.
-  const [step, setStep] = useState<"code" | "account">(mode === "invite" ? "code" : "account");
+  const [step, setStep] = useState<"code" | "account" | "handle">(mode === "invite" ? "code" : "account");
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
-  const [name, setName] = useState("");
+  const [handle, setHandle] = useState("");
+  const codeRef = useRef("");
+  codeRef.current = code;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -103,6 +106,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           return t("errInvitation");
         case "registration_closed":
           return t("errRegistrationClosed");
+        case "already_exists":
+          return viaGoogle ? t("errExistsGoogle") : t("errExists");
       }
     }
     return t("errGeneric");
@@ -121,7 +126,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       setSession(s);
       onAuthenticated?.(s);
       track(event);
-      if (mode === "invite") router.replace("/downloads");
+      if (mode === "invite") setStep("handle");
     } catch (e) {
       setError(friendlyError(e, viaGoogle));
       // The code can expire or run out between the check and the signup.
@@ -142,6 +147,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     setError(null);
     try {
       const result = await checkInvitation(value.trim());
+      // Pin the verified code so a later state reset (or a double-run effect) cannot drop it.
+      setCode(value.trim());
       setPreview(result);
       setStep("account");
       track("auth-invitation-checked");
@@ -158,6 +165,29 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     setError(null);
     setStep("code");
   }
+
+  async function submitHandle(e: FormEvent) {
+    e.preventDefault();
+    if (busyRef.current || !session) return;
+    busyRef.current = true;
+    setLoading(true);
+    setError(null);
+    try {
+      const updated = await claimHandle(session, handle);
+      setSession(updated);
+      track("auth-handle-claimed");
+      router.replace("/downloads");
+    } catch (err) {
+      if (err instanceof ApiError && err.code === "already_exists") setError(t("errHandleTaken"));
+      else if (err instanceof ApiError && err.code === "invalid_input") setError(t("errHandleInvalid"));
+      else setError(friendlyError(err));
+    } finally {
+      busyRef.current = false;
+      setLoading(false);
+    }
+  }
+
+  const isLaunchCode = Boolean(preview?.shared && /product\s*hunt/i.test(preview.label));
 
   async function handleSignOut() {
     const token = session?.token;
@@ -182,7 +212,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     }
     if (mode === "invite") {
       await finish(
-        signupInvitation(email, password, name.trim(), code),
+        signupInvitation(email, password, "", code),
         "auth-invitation-redeemed",
       );
     } else {
@@ -194,8 +224,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     if (mode !== "invite") return;
     const invitation = new URLSearchParams(window.location.hash.slice(1));
     const linkedCode = invitation.get("code") || "";
-    setCode(linkedCode);
-    setEmail(invitation.get("email") || "");
+    if (linkedCode) setCode(linkedCode);
+    if (invitation.get("email")) setEmail(invitation.get("email") || "");
     if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
     // A link that carries the code skips straight to the account form when it is valid.
     if (linkedCode) void verifyCode(linkedCode);
@@ -212,9 +242,10 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     }
   }, [onAuthenticated]);
 
-  // Google Identity Services — loaded on the auth pages only.
+  // Google Identity Services — on the sign-in page, and on the invite page once the code is valid.
+  const googleVisible = mode === "signin" || step === "account";
   useEffect(() => {
-    if (mode === "invite" || !GOOGLE_CLIENT_ID) return;
+    if (!googleVisible || !GOOGLE_CLIENT_ID) return;
 
     let cancelled = false;
     let renderTimeout: number | undefined;
@@ -242,7 +273,12 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           client_id: GOOGLE_CLIENT_ID,
           callback: (response) => {
             if (busyRef.current) return;
-            void finish(loginGoogle(response.credential), "auth-google", true);
+            const invitationCode = mode === "invite" ? codeRef.current.trim() : undefined;
+            void finish(
+              loginGoogle(response.credential, invitationCode),
+              mode === "invite" ? "auth-invitation-google" : "auth-google",
+              true,
+            );
           },
         });
         parent.innerHTML = "";
@@ -292,7 +328,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       script?.removeEventListener("error", unavailable);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [mode, googleVisible]);
 
   return (
     <>
@@ -415,6 +451,33 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               color: rgba(255,255,255,0.65); font-size: 12.5px;
             }
             .auth-signout:hover { color: rgba(255,255,255,0.75); text-decoration: underline; }
+
+            .auth-kitty {
+              width: 132px; height: 132px; display: block; margin: -6px auto 14px;
+              animation: auth-kitty-float 4s ease-in-out infinite;
+            }
+            @keyframes auth-kitty-float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-6px); }
+            }
+            @media (prefers-reduced-motion: reduce) { .auth-kitty { animation: none; } }
+            .auth-handle {
+              display: flex; align-items: center; gap: 2px;
+              padding: 6px 16px; border-radius: 12px;
+              border: 1px solid rgba(255,255,255,0.13); background: rgba(255,255,255,0.05);
+            }
+            .auth-handle:focus-within { border-color: rgba(255,255,255,0.35); }
+            .auth-handle .at {
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-weight: 600; font-size: 26px; letter-spacing: -0.02em;
+              color: rgba(255,255,255,0.55);
+            }
+            .auth-handle input {
+              flex: 1; min-width: 0; padding: 8px 4px; border: none; background: transparent; outline: none;
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-weight: 600; font-size: 26px; letter-spacing: -0.02em; color: rgba(255,255,255,0.95);
+            }
+            .auth-handle input::placeholder { color: rgba(255,255,255,0.32); font-weight: 500; }
           `,
         }}
       />
@@ -426,23 +489,67 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           <span className="wm">toone</span>
         </Link>
 
+        {mode === "invite" && step !== "code" && isLaunchCode && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img className="auth-kitty" src="/assets/launch/ph-kitty.png" alt="" width={132} height={132} />
+        )}
         <h1 className="auth-title">
           {mode === "invite"
-            ? step === "code" ? t("inviteCodeTitle") : t("inviteAccountTitle")
+            ? step === "code"
+              ? t("inviteCodeTitle")
+              : step === "handle"
+                ? t("handleTitle")
+                : isLaunchCode
+                  ? t("launchAccountTitle")
+                  : t("inviteAccountTitle")
             : t("signinTitle")}
         </h1>
         <p className="auth-sub">
           {mode === "invite"
             ? step === "code"
               ? t("inviteCodeSub")
-              : preview?.shared && preview.label
-                ? t("inviteAccountSubLabel", { label: preview.label })
-                : t("inviteAccountSub")
+              : step === "handle"
+                ? t("handleSub")
+                : isLaunchCode
+                  ? t("launchAccountSub")
+                  : preview?.shared && preview.label
+                    ? t("inviteAccountSubLabel", { label: preview.label })
+                    : t("inviteAccountSub")
             : t("signinSub")}
         </p>
 
         <div className="auth-card">
-          {session ? (
+          {mode === "invite" && step === "handle" && session ? (
+            <>
+              <form onSubmit={submitHandle} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label className="auth-handle">
+                  <span className="at" aria-hidden="true">@</span>
+                  <input
+                    type="text"
+                    aria-label={t("handleTitle")}
+                    placeholder={t("handlePh")}
+                    value={handle}
+                    onChange={(event) => setHandle(event.target.value.replace(/^@/, ""))}
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    maxLength={21}
+                    required
+                    autoFocus
+                  />
+                </label>
+                <button className="auth-submit" type="submit" disabled={loading}>
+                  {loading ? "…" : t("handleBtn")}
+                </button>
+              </form>
+              {error && <p className="auth-error">{error}</p>}
+              <div style={{ textAlign: "center" }}>
+                <Link className="auth-signout" href="/downloads" style={{ marginTop: 4, textDecoration: "none" }}>
+                  {t("handleSkip")}
+                </Link>
+              </div>
+            </>
+          ) : session ? (
             <div className="auth-success">
               <p className="who">
                 {t("successTitle", { email: session.user.email })}
@@ -474,7 +581,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
             </div>
           ) : (
             <>
-              {mode === "signin" && <>
+              {googleVisible && <>
               {GOOGLE_CLIENT_ID ? (
                 <>
                   <div
@@ -522,17 +629,6 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                   aria-label={t("inviteCode")} placeholder={t("inviteCode")}
                   value={code} onChange={(event) => setCode(event.target.value)}
                   autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required autoFocus />}
-                {mode === "invite" && step === "account" && (
-                  <input
-                    className="auth-input"
-                    type="text"
-                    aria-label={t("namePh")}
-                    autoComplete="name"
-                    placeholder={t("namePh")}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                )}
                 {step === "account" && <input
                   className="auth-input"
                   type="email"

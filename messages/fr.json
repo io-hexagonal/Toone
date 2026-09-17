@@ -297,9 +297,18 @@
     "inviteCodeSub": "Saisissez le code reçu pour débloquer votre compte Toone.",
     "inviteCodeContinue": "Continuer",
     "inviteAccountTitle": "Créez votre compte",
-    "inviteAccountSub": "Votre code est valide. Inscrivez-vous avec votre e-mail et un mot de passe pour télécharger Toone.",
-    "inviteAccountSubLabel": "Votre code {label} est valide. Inscrivez-vous avec votre e-mail et un mot de passe pour télécharger Toone.",
-    "inviteChangeCode": "Utiliser un autre code"
+    "inviteAccountSub": "Inscrivez-vous avec Google ou votre e-mail pour télécharger Toone.",
+    "inviteAccountSubLabel": "Votre code {label} est valide. Inscrivez-vous avec Google ou votre e-mail pour télécharger Toone.",
+    "inviteChangeCode": "Utiliser un autre code",
+    "handleTitle": "Choisissez votre pseudo",
+    "handleSub": "Choisissez le @nom sous lequel les autres vous connaîtront dans Toone.",
+    "handlePh": "votrenom",
+    "handleBtn": "Réserver et télécharger",
+    "handleSkip": "Passer pour l’instant",
+    "errHandleTaken": "Ce pseudo est déjà pris. Essayez-en un autre.",
+    "errHandleInvalid": "Utilisez 3 à 20 lettres, chiffres ou tirets bas.",
+    "launchAccountTitle": "Bienvenue, légende 😸",
+    "launchAccountSub": "Inscrivez-vous avec Google ou votre e-mail pour télécharger Toone."
   },
   "resources": {
     "metaTitle": "Travailler concrètement avec Toone",

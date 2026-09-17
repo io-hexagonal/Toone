@@ -297,9 +297,18 @@
     "inviteCodeSub": "Enter the code you received to unlock your Toone account.",
     "inviteCodeContinue": "Continue",
     "inviteAccountTitle": "Create your account",
-    "inviteAccountSub": "Your code is valid. Sign up with your own email and password to download Toone.",
-    "inviteAccountSubLabel": "Your {label} code is valid. Sign up with your own email and password to download Toone.",
-    "inviteChangeCode": "Use a different code"
+    "inviteAccountSub": "Sign up with Google or your email to download Toone.",
+    "inviteAccountSubLabel": "Your {label} code is valid. Sign up with Google or your email to download Toone.",
+    "inviteChangeCode": "Use a different code",
+    "handleTitle": "Claim your handle",
+    "handleSub": "Pick the @name others will know you by in Toone.",
+    "handlePh": "yourname",
+    "handleBtn": "Claim and download",
+    "handleSkip": "Skip for now",
+    "errHandleTaken": "That handle is already taken. Try another.",
+    "errHandleInvalid": "Use 3–20 letters, digits or underscores.",
+    "launchAccountTitle": "Welcome, legend 😸",
+    "launchAccountSub": "Sign up with Google or your email to download Toone."
   },
   "resources": {
     "metaTitle": "Practical ways to work with Toone",
