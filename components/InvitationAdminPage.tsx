@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import AuthPage from "@/components/AuthPage";
 import { Link } from "@/lib/navigation";
 import {
-  ApiError, clearSession, createInvitation, listInvitations, loadSession, logout,
+  ApiError, clearSession, createInvitation, listInvitations, loadSession, logout, revokeInvitation,
   type CreatedInvitation, type InvitationRecord, type ToneSession,
 } from "@/lib/api";
 import styles from "./InvitationAdminPage.module.css";
@@ -106,8 +106,9 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
     event.preventDefault();
     if (creating.current) return;
     const canonical = customCode.toUpperCase().replace(/[\s-]/g, "");
-    if (customCode && !/^[A-Z0-9]{12,64}$/.test(canonical)) {
-      setFormError("Use 12–64 letters or digits for a custom code. Spaces and hyphens are allowed.");
+    const minimum = shared ? 6 : 12;
+    if (customCode && !new RegExp(`^[A-Z0-9]{${minimum},64}$`).test(canonical)) {
+      setFormError(`Use ${minimum}–64 letters or digits for a custom code. Spaces and hyphens are allowed.`);
       return;
     }
     let expiresAtISO: string | undefined;
@@ -142,6 +143,20 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
   async function copy(value: string, label: string) {
     try { await navigator.clipboard.writeText(value); setCopyFeedback(`${label} copied.`); }
     catch { setCopyFeedback("Copy was unavailable. Select and copy the link and code below."); }
+  }
+
+  const [revoking, setRevoking] = useState("");
+  async function revoke(record: InvitationRecord) {
+    if (revoking) return;
+    const label = record.max_uses === 1 ? `the invitation for ${record.recipient_name}` : `the shared code for ${record.recipient_name}`;
+    if (!window.confirm(`Revoke ${label}? Nobody can use it after this. Accounts already created keep working.`)) return;
+    setRevoking(record.id); setError("");
+    try {
+      await revokeInvitation(session.token, record.id);
+      await refresh();
+    } catch (caught) {
+      if (active.current && !handleAccessError(caught)) setError("Could not revoke that invitation. Refresh and try again.");
+    } finally { if (active.current) setRevoking(""); }
   }
 
   async function signOut() {
@@ -201,7 +216,7 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
                   <input id="recipient-name" value={name} onChange={event => setName(event.target.value)} placeholder={shared ? "e.g. Product Hunt" : "e.g. Jane Doe"} maxLength={160} required disabled={busy} autoComplete="off" />
                   <label htmlFor="custom-code">Custom code <span className={styles.muted}>(optional)</span></label>
                   <input id="custom-code" value={customCode} onChange={event => setCustomCode(event.target.value)} placeholder="Generate automatically" maxLength={80} autoComplete="off" spellCheck={false} disabled={busy} aria-describedby="code-help" />
-                  <small id="code-help">Leave blank for a personal code. Custom codes need at least 12 letters or digits.</small>
+                  <small id="code-help">Leave blank for a generated code. Custom codes need at least {shared ? 6 : 12} letters or digits.</small>
                   <label htmlFor="invitation-expiry">Code expires in</label>
                   <select id="invitation-expiry" value={days} onChange={event => setDays(Number(event.target.value))} disabled={busy || Boolean(expiresAt)}><option value={1}>1 day</option><option value={7}>7 days</option><option value={14}>14 days</option><option value={30}>30 days</option></select>
                   <label htmlFor="invitation-expires-at">Exact expiry <span className={styles.muted}>(optional, overrides the days above)</span></label>
@@ -225,9 +240,9 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
               <section className={styles.history} aria-labelledby="history-heading">
                 <div className={styles.historyHeading}><div><h2 id="history-heading">Invitation history</h2><p>{records.length} invitation{records.length === 1 ? "" : "s"} · {records.filter(item => item.status === "redeemed").length} signed up</p></div><button onClick={() => void refresh()} disabled={loading || busy}>{loading ? "Refreshing…" : "Refresh"}</button></div>
                 {records.length > 0 && <input className={styles.search} aria-label="Search invitations" placeholder="Search by name or email" value={search} onChange={event => setSearch(event.target.value)} />}
-                {records.length === 0 ? <div className={styles.emptyHistory}><h3>No invitations yet</h3><p>Your first invitation will appear here. Their email is added when they sign up.</p></div> : <div className={styles.tableScroll}><table><thead><tr><th>Person or campaign</th><th>Status</th><th>Uses</th><th>Signup email</th><th>Signed up</th><th>Code expires</th></tr></thead><tbody>
-                  {filtered.map(record => <tr key={record.id}><td><strong>{record.recipient_name}</strong><small>Code ending {record.code_hint || "—"}</small></td><td><span className={styles.status} data-status={record.status}>{record.max_uses !== 1 && record.status === "pending" ? "Active" : statusLabels[record.status]}</span></td><td>{usesLabel(record)}</td><td>{record.email || (record.max_uses !== 1 ? "many" : "—")}</td><td>{formatDate(record.used_at)}</td><td>{formatDateTime(record.expires_at)}</td></tr>)}
-                  {filtered.length === 0 && <tr><td colSpan={6}>No invitations match your search.</td></tr>}
+                {records.length === 0 ? <div className={styles.emptyHistory}><h3>No invitations yet</h3><p>Your first invitation will appear here. Their email is added when they sign up.</p></div> : <div className={styles.tableScroll}><table><thead><tr><th>Person or campaign</th><th>Status</th><th>Uses</th><th>Signup email</th><th>Signed up</th><th>Code expires</th><th></th></tr></thead><tbody>
+                  {filtered.map(record => <tr key={record.id}><td><strong>{record.recipient_name}</strong><small>Code ending {record.code_hint || "—"}</small></td><td><span className={styles.status} data-status={record.status}>{record.max_uses !== 1 && record.status === "pending" ? "Active" : statusLabels[record.status]}</span></td><td>{usesLabel(record)}</td><td>{record.email || (record.max_uses !== 1 ? "many" : "—")}</td><td>{formatDate(record.used_at)}</td><td>{formatDateTime(record.expires_at)}</td><td>{record.status === "pending" ? <button type="button" onClick={() => void revoke(record)} disabled={Boolean(revoking)}>{revoking === record.id ? "Revoking…" : "Revoke"}</button> : null}</td></tr>)}
+                  {filtered.length === 0 && <tr><td colSpan={7}>No invitations match your search.</td></tr>}
                 </tbody></table></div>}
                 <p className={styles.notice}>Showing the latest 500 invitations. “Signed up” means the account was created; it does not confirm a download.</p>
               </section>

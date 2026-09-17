@@ -279,6 +279,13 @@ export async function createInvitation(
   });
 }
 
+/** Stops an invitation from admitting further signups; accounts already created keep working. */
+export async function revokeInvitation(token: string, id: string): Promise<void> {
+  await request<void>(`/admin/invitations/${encodeURIComponent(id)}`, {
+    method: "DELETE", headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
+}
+
 export async function logout(token: string): Promise<void> {
   try {
     // Best-effort server-side revocation — the local session is cleared
