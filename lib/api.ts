@@ -157,6 +157,19 @@ export async function signupInvitation(email: string, password: string, name: st
  return session;
 }
 
+type RawDesktopDownload = { URL: string; ExpiresAt: string };
+
+/**
+ * Asks the backend to broker a short-lived signed link to the private release asset.
+ * Fails with 503 when the broker is not configured; callers fall back to the stream.
+ */
+export async function resolveDesktopDownload(token: string, variant: "standard" | "liquid-glass"): Promise<{ url: string; expiresAt: string }> {
+  const raw = await request<RawDesktopDownload>(`/downloads/desktop/${variant}`, {
+    method: "POST", headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
+  return { url: raw.URL, expiresAt: raw.ExpiresAt };
+}
+
 export async function downloadDesktop(token: string, variant: "standard" | "liquid-glass"): Promise<Blob> {
  const res = await fetch(`${apiBase()}/downloads/desktop/${variant}/file`, {
   headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
