@@ -297,9 +297,18 @@
     "inviteCodeSub": "Введите полученный код, чтобы открыть доступ к аккаунту Toone.",
     "inviteCodeContinue": "Продолжить",
     "inviteAccountTitle": "Создайте аккаунт",
-    "inviteAccountSub": "Код действителен. Зарегистрируйтесь со своим email и паролем, чтобы скачать Toone.",
-    "inviteAccountSubLabel": "Код {label} действителен. Зарегистрируйтесь со своим email и паролем, чтобы скачать Toone.",
-    "inviteChangeCode": "Использовать другой код"
+    "inviteAccountSub": "Зарегистрируйтесь через Google или по email, чтобы скачать Toone.",
+    "inviteAccountSubLabel": "Код {label} действителен. Зарегистрируйтесь через Google или по email, чтобы скачать Toone.",
+    "inviteChangeCode": "Использовать другой код",
+    "handleTitle": "Выберите свой хендл",
+    "handleSub": "Выберите @имя, под которым вас будут знать в Toone.",
+    "handlePh": "vashe_imya",
+    "handleBtn": "Занять и скачать",
+    "handleSkip": "Пропустить",
+    "errHandleTaken": "Этот хендл уже занят. Попробуйте другой.",
+    "errHandleInvalid": "Используйте 3–20 букв, цифр или подчёркиваний.",
+    "launchAccountTitle": "Добро пожаловать, легенда 😸",
+    "launchAccountSub": "Зарегистрируйтесь через Google или по email, чтобы скачать Toone."
   },
   "resources": {
     "metaTitle": "Практическая работа с Toone",

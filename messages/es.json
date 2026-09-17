@@ -297,9 +297,18 @@
     "inviteCodeSub": "Introduce el código que recibiste para desbloquear tu cuenta de Toone.",
     "inviteCodeContinue": "Continuar",
     "inviteAccountTitle": "Crea tu cuenta",
-    "inviteAccountSub": "Tu código es válido. Regístrate con tu email y contraseña para descargar Toone.",
-    "inviteAccountSubLabel": "Tu código {label} es válido. Regístrate con tu email y contraseña para descargar Toone.",
-    "inviteChangeCode": "Usar otro código"
+    "inviteAccountSub": "Regístrate con Google o tu email para descargar Toone.",
+    "inviteAccountSubLabel": "Tu código {label} es válido. Regístrate con Google o tu email para descargar Toone.",
+    "inviteChangeCode": "Usar otro código",
+    "handleTitle": "Elige tu handle",
+    "handleSub": "Elige el @nombre con el que te conocerán en Toone.",
+    "handlePh": "tunombre",
+    "handleBtn": "Reservar y descargar",
+    "handleSkip": "Omitir por ahora",
+    "errHandleTaken": "Ese handle ya está en uso. Prueba otro.",
+    "errHandleInvalid": "Usa 3–20 letras, dígitos o guiones bajos.",
+    "launchAccountTitle": "Bienvenido, leyenda 😸",
+    "launchAccountSub": "Regístrate con Google o tu email para descargar Toone."
   },
   "resources": {
     "metaTitle": "Formas prácticas de trabajar con Toone",

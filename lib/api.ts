@@ -22,6 +22,8 @@ export class ApiError extends Error {
 }
 
 export type ToneUser = {
+  /** Public @handle, empty until claimed. */
+  handle?: string;
   id: string;
   email: string;
   name: string;
@@ -40,6 +42,7 @@ type RawUser = {
   ID: string;
   Email: string;
   Name: string;
+  Handle?: string;
   AvatarURL?: string;
   Provider?: string;
   ProviderID?: string;
@@ -99,6 +102,7 @@ function normalizeSession(raw: RawAuthPayload): ToneSession {
       id: raw.User.ID,
       email: raw.User.Email,
       name: raw.User.Name,
+      handle: raw.User.Handle || "",
     },
   };
 }
@@ -194,10 +198,11 @@ export async function loginEmail(
   return session;
 }
 
-export async function loginGoogle(idToken: string): Promise<ToneSession> {
+/** Google sign-in; with an invitation code a brand-new identity may register while signup is closed. */
+export async function loginGoogle(idToken: string, code?: string): Promise<ToneSession> {
   const raw = await request<RawAuthPayload>(
     "/auth/google",
-    jsonPost({ id_token: idToken }),
+    jsonPost(code ? { id_token: idToken, code } : { id_token: idToken }),
   );
   const session = normalizeSession(raw);
   saveSession(session);
@@ -208,7 +213,20 @@ export async function getMe(token: string): Promise<ToneUser> {
   const raw = await request<RawUser>("/me", {
     headers: { Authorization: `Bearer ${token}` },
   });
-  return { id: raw.ID, email: raw.Email, name: raw.Name };
+  return { id: raw.ID, email: raw.Email, name: raw.Name, handle: raw.Handle || "" };
+}
+
+/** Claims the public @handle for the signed-in account and refreshes the stored session. */
+export async function claimHandle(session: ToneSession, handle: string): Promise<ToneSession> {
+  const raw = await request<RawUser>("/me/handle", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.token}` },
+    body: JSON.stringify({ handle }),
+    cache: "no-store",
+  });
+  const updated = { ...session, user: { ...session.user, handle: raw.Handle || "" } };
+  saveSession(updated);
+  return updated;
 }
 
 export type InvitationRecord = {
