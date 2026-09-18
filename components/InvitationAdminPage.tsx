@@ -56,6 +56,7 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
   const [signingOut, setSigningOut] = useState(false);
   const [name, setName] = useState("");
   const [customCode, setCustomCode] = useState("");
+  const [email, setEmail] = useState("");
   const [days, setDays] = useState(7);
   const [shared, setShared] = useState(false);
   const [expiresAt, setExpiresAt] = useState("");
@@ -120,6 +121,11 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
       }
       expiresAtISO = new Date(instant).toISOString();
     }
+    const deliveryEmail = email.trim();
+    if (deliveryEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(deliveryEmail)) {
+      setFormError("Enter a valid email address, or leave it blank to share the invitation yourself.");
+      return;
+    }
     creating.current = true;
     setBusy(true); setFormError(""); setCopyFeedback("");
     try {
@@ -127,14 +133,15 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
         recipient_name: name.trim(), code: customCode, days,
         ...(shared ? { max_uses: 0 } : {}),
         ...(expiresAtISO ? { expires_at: expiresAtISO } : {}),
+        ...(deliveryEmail ? { email: deliveryEmail } : {}),
       });
       if (!active.current) return;
-      setCreated(result); setName(""); setCustomCode(""); setExpiresAt("");
+      setCreated(result); setName(""); setCustomCode(""); setEmail(""); setExpiresAt("");
       await refresh();
     } catch (caught) {
       if (!active.current || handleAccessError(caught)) return;
       if (caught instanceof ApiError && caught.status === 409) setFormError("That code has already been used for an invitation. Choose another code.");
-      else if (caught instanceof ApiError && caught.status === 400) setFormError("Check the name, code and expiry, then try again.");
+      else if (caught instanceof ApiError && caught.status === 400) setFormError("Check the name, email, code and expiry, then try again.");
       else if (caught instanceof ApiError && caught.status === 429) setFormError("Too many requests. Wait a minute, then try again.");
       else setFormError("Could not confirm creation. Refresh the history before trying again; an invitation may have been created.");
     } finally { creating.current = false; if (active.current) setBusy(false); }
@@ -214,6 +221,9 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
                   </select>
                   <label htmlFor="recipient-name">{shared ? "Campaign name" : "Person’s name"}</label>
                   <input id="recipient-name" value={name} onChange={event => setName(event.target.value)} placeholder={shared ? "e.g. Product Hunt" : "e.g. Jane Doe"} maxLength={160} required disabled={busy} autoComplete="off" />
+                  <label htmlFor="invitation-email">Email it to <span className={styles.muted}>(optional)</span></label>
+                  <input id="invitation-email" type="email" value={email} onChange={event => setEmail(event.target.value)} placeholder="Leave blank to share it yourself" maxLength={254} autoComplete="off" disabled={busy} aria-describedby="email-help" />
+                  <small id="email-help">Toone emails the link and code from invites@trytoone.com. They can still sign up with a different email.</small>
                   <label htmlFor="custom-code">Custom code <span className={styles.muted}>(optional)</span></label>
                   <input id="custom-code" value={customCode} onChange={event => setCustomCode(event.target.value)} placeholder="Generate automatically" maxLength={80} autoComplete="off" spellCheck={false} disabled={busy} aria-describedby="code-help" />
                   <small id="code-help">Leave blank for a generated code. Custom codes need at least {shared ? 6 : 12} letters or digits.</small>
@@ -227,6 +237,7 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
                 <div className={`${styles.panel} ${styles.share}`} aria-live="polite">
                   {created ? <>
                     <p className={styles.eyebrow}>Ready to share</p><h2>{createdShared ? `Campaign code: ${created.recipient_name}` : `Invitation for ${created.recipient_name}`}</h2>
+                    {created.email ? <p className={styles.notice}>{created.email_queued ? `Emailed to ${created.email}. Keep a copy below in case it lands in spam.` : `Email is not enabled on the server, so nothing was sent to ${created.email}. Send the message below yourself.`}</p> : null}
                     <p>{createdShared ? "Share the link; it carries the code and skips straight to signup." : "Send the link and code together."}</p>
                     <label htmlFor="signup-link">Signup link with code</label><div className={styles.copyRow}><input id="signup-link" value={linkWithCode} readOnly /><button onClick={() => void copy(linkWithCode, "Link")}>Copy link</button></div>
                     <label htmlFor="personal-code">{createdShared ? "Access code" : "Personal code"}</label><div className={styles.copyRow}><input id="personal-code" className={styles.code} value={created.code} readOnly /><button onClick={() => void copy(created.code, "Code")}>Copy code</button></div>
