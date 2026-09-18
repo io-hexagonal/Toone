@@ -253,6 +253,10 @@ export type CreatedInvitation = {
   /** 0 means unlimited; 1 is a personal single-use code. */
   max_uses: number;
   signup_url: string;
+  /** Delivery address given at creation, when any. */
+  email?: string;
+  /** True when the server handed an email to the mailer (delivery is best-effort). */
+  email_queued?: boolean;
 };
 
 export async function canManageInvitations(token: string): Promise<boolean> {
@@ -270,7 +274,7 @@ export async function listInvitations(token: string): Promise<InvitationRecord[]
 
 export async function createInvitation(
   token: string,
-  input: { recipient_name: string; code: string; days: number; max_uses?: number; expires_at?: string },
+  input: { recipient_name: string; code: string; days: number; max_uses?: number; expires_at?: string; email?: string },
 ): Promise<CreatedInvitation> {
   return request<CreatedInvitation>("/admin/invitations", {
     ...jsonPost(input),
