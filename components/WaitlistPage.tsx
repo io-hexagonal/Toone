@@ -2,6 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -96,6 +97,8 @@ export default function WaitlistPage() {
         <img src="/assets/brand/toone-mark.svg" alt="" />
         <span>toone</span>
       </Link>
+
+      <AccessAvatar />
 
       <h1 className="waitlist-title">{t("waitlistTitle")}</h1>
       <p className="waitlist-sub">{t("waitlistSub")}</p>
