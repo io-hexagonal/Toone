@@ -67,3 +67,10 @@
   .emptyShare { margin: 18px auto; }
   .page .search { max-width: none; }
 }
+
+.requests { margin: 28px 0 40px; }
+.requestSearch { display: flex; gap: 10px; max-width: 460px; margin-bottom: 20px; }
+.requestPagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+.requestPagination > div { display: flex; gap: 8px; }
+.requestPagination .notice { margin: 0 !important; }
+.requests td:nth-child(3) { min-width: auto; }

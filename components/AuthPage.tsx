@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
+import AccessAvatar from "@/components/AccessAvatar";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
@@ -452,15 +453,6 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
             }
             .auth-signout:hover { color: rgba(255,255,255,0.75); text-decoration: underline; }
 
-            .auth-kitty {
-              width: 132px; height: 132px; display: block; margin: -6px auto 14px;
-              animation: auth-kitty-float 4s ease-in-out infinite;
-            }
-            @keyframes auth-kitty-float {
-              0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(-6px); }
-            }
-            @media (prefers-reduced-motion: reduce) { .auth-kitty { animation: none; } }
             .auth-handle {
               display: flex; align-items: center; gap: 2px;
               padding: 6px 16px; border-radius: 12px;
@@ -489,10 +481,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           <span className="wm">toone</span>
         </Link>
 
-        {mode === "invite" && step !== "code" && isLaunchCode && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img className="auth-kitty" src="/assets/launch/ph-kitty.png" alt="" width={132} height={132} />
-        )}
+        {mode === "invite" && !session && <AccessAvatar />}
         <h1 className="auth-title">
           {mode === "invite"
             ? step === "code"
@@ -680,9 +669,9 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               <>
                 {step === "code" && (
                   <>
-                    {t("newHere")}{" "}
+                    {t("noCode")}{" "}
                     <Link
-                      href="/early-access"
+                      href="/request-access"
                       data-umami-event="request-early-access"
                       data-umami-event-placement="invite"
                     >

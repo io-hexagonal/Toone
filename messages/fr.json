@@ -273,6 +273,7 @@
     "haveAccount": "Vous avez déjà un compte ?",
     "signinLink": "Connectez-vous",
     "newHere": "Nouveau sur Toone ?",
+    "noCode": "Vous n’avez pas de code ?",
     "signupLink": "Demander un accès anticipé",
     "successTitle": "Vous êtes connecté en tant que {email}",
     "successNote": "Toone tourne sur votre Mac — téléchargez l'app et connectez-vous là-bas.",
