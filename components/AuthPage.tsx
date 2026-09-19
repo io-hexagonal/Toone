@@ -678,6 +678,19 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           <p className="auth-switch">
             {mode === "invite" ? (
               <>
+                {step === "code" && (
+                  <>
+                    {t("newHere")}{" "}
+                    <Link
+                      href="/early-access"
+                      data-umami-event="request-early-access"
+                      data-umami-event-placement="invite"
+                    >
+                      {t("requestAccess")}
+                    </Link>
+                    <br />
+                  </>
+                )}
                 {t("haveAccount")} <Link href="/signin">{t("signinLink")}</Link>
               </>
             ) : (
