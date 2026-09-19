@@ -304,3 +304,23 @@ export async function logout(token: string): Promise<void> {
     clearSession();
   }
 }
+
+export type EarlyAccessRequest = {
+  id: string;
+  email: string;
+  source: string;
+  created_at: string;
+};
+
+export type EarlyAccessRequestPage = {
+  entries: EarlyAccessRequest[];
+  has_more: boolean;
+  limit: number;
+};
+
+export async function listEarlyAccessRequests(token: string, search: string, offset: number, signal?: AbortSignal): Promise<EarlyAccessRequestPage> {
+  const query = new URLSearchParams({ search, offset: String(offset) });
+  return request<EarlyAccessRequestPage>(`/admin/waitlist?${query}`, {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store", signal,
+  });
+}

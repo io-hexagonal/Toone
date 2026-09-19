@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import EarlyAccessRequests from "@/components/EarlyAccessRequests";
 import AuthPage from "@/components/AuthPage";
 import { Link } from "@/lib/navigation";
 import {
@@ -208,9 +209,10 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
           </Link>
           <div className={styles.account}><span>{session.user.email}</span><button onClick={() => void signOut()} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button></div>
         </header>
-        <div className={styles.title}><p className={styles.eyebrow}>Early access</p><h1>Invitations</h1><p>Invite someone by name. See their signup email when they join.</p></div>
+        <div className={styles.title}><p className={styles.eyebrow}>Early access</p><h1>Invitations</h1><p>Review early-access requests, create invitations, and see who has signed up.</p></div>
             {error && <div className={styles.error} role="alert">{error} <button onClick={() => void refresh()} disabled={loading}>Try again</button></div>}
             {authorized && <>
+              <EarlyAccessRequests token={session.token} onAccessError={handleAccessError} />
               <section className={styles.createGrid} aria-label="Create and share an invitation">
                 <form className={styles.panel} onSubmit={submit}>
                   <h2>New invitation</h2><p>{shared ? "One code that many people can use, for a launch or a community." : "All you need is their name."}</p>
