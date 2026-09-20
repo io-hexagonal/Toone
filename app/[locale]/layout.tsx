@@ -214,6 +214,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     manifest: "/site.webmanifest",
     robots: { index: true, follow: true },
     other: {
+      // Ahrefs Webmaster Tools ownership proof (server-rendered on every locale
+      // route because the bare root redirects and Ahrefs does not run JS).
+      "ahrefs-site-verification":
+        "4085885d162ed3dabcea3d63dcd15d39eb8d58506c768dc7887eeef3228e1d92",
       "apple-mobile-web-app-title": "Toone",
       "apple-mobile-web-app-capable": "yes",
       "msapplication-TileColor": "#141413",
