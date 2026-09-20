@@ -8,7 +8,7 @@ import Script from "next/script";
 import { Playfair_Display, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
-import AnnouncementModal from "@/components/AnnouncementModal";
+import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
 export const viewport: Viewport = {
