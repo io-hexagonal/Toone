@@ -310,7 +310,12 @@ export type EarlyAccessRequest = {
   email: string;
   source: string;
   created_at: string;
+  /** Set once an administrator has sent an invitation for this request. */
+  invitation_id?: string;
+  invited_at?: string;
 };
+
+export type EarlyAccessRequestStatus = "" | "pending" | "invited";
 
 export type EarlyAccessRequestPage = {
   entries: EarlyAccessRequest[];
@@ -318,9 +323,18 @@ export type EarlyAccessRequestPage = {
   limit: number;
 };
 
-export async function listEarlyAccessRequests(token: string, search: string, offset: number, signal?: AbortSignal): Promise<EarlyAccessRequestPage> {
-  const query = new URLSearchParams({ search, offset: String(offset) });
+export async function listEarlyAccessRequests(
+  token: string, search: string, status: EarlyAccessRequestStatus, offset: number, signal?: AbortSignal,
+): Promise<EarlyAccessRequestPage> {
+  const query = new URLSearchParams({ search, status, offset: String(offset) });
   return request<EarlyAccessRequestPage>(`/admin/waitlist?${query}`, {
     headers: { Authorization: `Bearer ${token}` }, cache: "no-store", signal,
+  });
+}
+
+/** Issues a personal invitation for one request and emails it to the requester. */
+export async function inviteEarlyAccessRequest(token: string, id: string): Promise<CreatedInvitation> {
+  return request<CreatedInvitation>(`/admin/waitlist/${encodeURIComponent(id)}/invite`, {
+    method: "POST", headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
   });
 }

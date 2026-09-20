@@ -212,7 +212,7 @@ function InvitationWorkspace({ session, onSessionEnded }: { session: ToneSession
         <div className={styles.title}><p className={styles.eyebrow}>Early access</p><h1>Invitations</h1><p>Review early-access requests, create invitations, and see who has signed up.</p></div>
             {error && <div className={styles.error} role="alert">{error} <button onClick={() => void refresh()} disabled={loading}>Try again</button></div>}
             {authorized && <>
-              <EarlyAccessRequests token={session.token} onAccessError={handleAccessError} />
+              <EarlyAccessRequests token={session.token} onAccessError={handleAccessError} onInvited={() => void refresh()} />
               <section className={styles.createGrid} aria-label="Create and share an invitation">
                 <form className={styles.panel} onSubmit={submit}>
                   <h2>New invitation</h2><p>{shared ? "One code that many people can use, for a launch or a community." : "All you need is their name."}</p>
