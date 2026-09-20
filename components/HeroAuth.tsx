@@ -4,6 +4,7 @@ import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import HeroGlitter from "@/components/HeroGlitter";
+import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
@@ -228,12 +229,14 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-email:focus { border-color: rgba(255,255,255,0.35); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
+              display: inline-flex; align-items: center; justify-content: center; gap: 9px;
               background: #f0ede6; color: #1d1c19; cursor: pointer;
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
               transition: transform 0.15s ease;
             }
             .ha-continue:hover { transform: scale(1.015); }
+            .ha-continue svg { width: 16px; height: 16px; fill: currentColor; margin-top: -2px; flex: none; }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
             .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
             .ha-existing { margin-top: 22px; font-size: 13px; }
@@ -328,7 +331,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                     type="submit"
                     disabled={status === "loading"}
                   >
-                    {status === "loading" ? "…" : t("authContinue")}
+                    {status === "loading" ? "…" : <><AppleLogo />{t("authContinue")}</>}
                   </button>
                 </form>
                 <p className="ha-note">
