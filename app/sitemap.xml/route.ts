@@ -14,9 +14,9 @@ const BASE_URL = "https://trytoone.com";
 
 /**
  * Only indexable 200 canonicals belong here (TECH-013, audit P2-8/P3-2).
- * `/early-access` was removed 2026-09-20: it is an access-code gate that now
- * ships `noindex` and emitted zero hreflang while this file claimed nine
- * alternates for it.
+ * `/early-access` stays out: it is the invitation-code gate and ships
+ * `noindex`. The public request form it links to lives at `/request-access`
+ * and is listed below, English only.
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
@@ -40,6 +40,13 @@ const ENGLISH_ONLY_ROUTES = [
   { path: "/about", source: "app/[locale]/about/page.tsx" },
   { path: "/contact", source: "app/[locale]/contact/page.tsx" },
   { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
+  // `/request-access` is the public request page of the invitation-only funnel
+  // (request -> personal code -> account). `/early-access` is the code gate
+  // itself and stays `noindex`, so it is still absent from this list. Only
+  // `/en/request-access` qualifies: the seven other locales render form-only
+  // copy and stay `noindex`, so they get neither a sitemap entry nor a
+  // hreflang alternate (TECH-010, TECH-013).
+  { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
 ] as const;
 
 /**

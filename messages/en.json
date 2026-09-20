@@ -120,7 +120,16 @@
     "waitlistSignIn": "Sign in",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
     "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
-    "haveInvitation": "Have an invitation code?"
+    "haveInvitation": "Have an invitation code?",
+    "eaIntro": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control. Access is by invitation — leave your email and we send you a personal code when a place opens. Places are released in small batches, so every new team gets attention.",
+    "eaBeforeTitle": "Before you request",
+    "eaBefore1": "macOS 14 or later",
+    "eaBefore2": "An Anthropic or OpenAI account — you bring your own provider access",
+    "eaBefore3": "Your Mac stays online while routines run",
+    "eaHowTitle": "How it works",
+    "eaStep1": "Request access with your email.",
+    "eaStep2": "We send a personal code when a place opens.",
+    "eaStep3": "Redeem the code, create your account and download Toone."
   },
   "footer": {
     "privacy": "Privacy",
