@@ -134,8 +134,8 @@ export default function HeroAuth({ audience = "business" }: Props) {
                the edge samples the raw light loop behind it, brighter and more
                saturated, so the colour appears to refract through the rim. */
             .ha-card {
-              --ha-rim: 7px;
-              position: relative; isolation: isolate;
+              --ha-rim: 12px;
+              position: relative; isolation: isolate; overflow: hidden;
               width: 100%; max-width: 400px;
               /* no solid border: the rim's refracted colour is the edge */
               border: 1px solid transparent; border-radius: 16px;
@@ -152,17 +152,19 @@ export default function HeroAuth({ audience = "business" }: Props) {
               -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
               mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
               -webkit-mask-composite: xor; mask-composite: exclude;
-              backdrop-filter: blur(3px) saturate(2.4) brightness(1.7) contrast(1.15);
-              -webkit-backdrop-filter: blur(3px) saturate(2.4) brightness(1.7) contrast(1.15);
+              backdrop-filter: blur(6px) saturate(2.2) brightness(1.5) contrast(1.1);
+              -webkit-backdrop-filter: blur(6px) saturate(2.2) brightness(1.5) contrast(1.1);
               background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.06));
             }
             .ha-card::after {
-              /* the frosted interior */
+              /* the frosted interior; its same-colour glow bleeds outward over the
+                 rim so the refracted colour fades in instead of stopping at a line */
               content: ""; position: absolute; inset: var(--ha-rim); z-index: -1;
-              border-radius: calc(16px - var(--ha-rim) + 2px); pointer-events: none;
+              border-radius: calc(16px - var(--ha-rim) + 4px); pointer-events: none;
               background: rgba(20,20,19,0.58);
               backdrop-filter: blur(22px) saturate(1.25);
               -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              box-shadow: 0 0 14px 5px rgba(20,20,19,0.6);
             }
             .ha-google {
               display: flex; align-items: center; justify-content: center; gap: 10px;
