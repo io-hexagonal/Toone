@@ -130,22 +130,48 @@ export default function HeroAuth({ audience = "business" }: Props) {
               font-size: 12.5px; line-height: 1.5;
             }
 
-            /* Glass card, three layers under the content:
-               ::after   the frosted interior (dark fill + heavy backdrop blur)
-               ::before  the refracting rim: the loop sampled bright and saturated,
-                         masked so it is strongest at the edge and fades inward
-               .ha-card-fringe  a 2px chromatic fringe on the outermost edge
+            /* Glass card.
+               .ha-glass::before  a halo outside the card: the same treatment as the
+                                  rim, fading out over --ha-halo so the glass throws
+                                  light past its own edge instead of stopping dead
+               .ha-card::after    the frosted interior, fading IN from the edge over
+                                  --ha-fade so the rim never sits on a dark step
+               .ha-card::before   the refracting rim, fading OUT toward the centre
+               .ha-card-fringe    a 2px chromatic fringe on the outermost edge
                A top bevel of light and a bottom bevel of shadow give the pane thickness. */
+            .ha-glass {
+              --ha-fade: 34px;
+              --ha-halo: 30px;
+              --ha-glass-filter: blur(6px) saturate(2.2) brightness(1.55) contrast(1.08);
+              position: relative; width: 100%; max-width: 400px;
+            }
+            .ha-glass::before {
+              content: ""; position: absolute; inset: calc(-1 * var(--ha-halo)); z-index: 0;
+              border-radius: calc(16px + var(--ha-halo)); pointer-events: none;
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
+              /* alpha rises from 0 at the outer edge to 1 at the card edge */
+              -webkit-mask:
+                linear-gradient(to bottom, transparent, #000 var(--ha-halo)),
+                linear-gradient(to top, transparent, #000 var(--ha-halo)),
+                linear-gradient(to right, transparent, #000 var(--ha-halo)),
+                linear-gradient(to left, transparent, #000 var(--ha-halo));
+              -webkit-mask-composite: source-in;
+              mask:
+                linear-gradient(to bottom, transparent, #000 var(--ha-halo)),
+                linear-gradient(to top, transparent, #000 var(--ha-halo)),
+                linear-gradient(to right, transparent, #000 var(--ha-halo)),
+                linear-gradient(to left, transparent, #000 var(--ha-halo));
+              mask-composite: intersect;
+            }
             .ha-card {
-              --ha-fade: 30px;
-              position: relative; isolation: isolate; overflow: hidden;
-              width: 100%; max-width: 400px;
+              position: relative; z-index: 1; isolation: isolate; overflow: hidden;
+              width: 100%;
               border: 1px solid transparent; border-radius: 16px;
               background: transparent;
               box-shadow:
                 inset 0 1px 0 rgba(255,255,255,0.16),
-                inset 0 -1px 0 rgba(0,0,0,0.35),
-                0 24px 70px rgba(0,0,0,0.45);
+                inset 0 -1px 0 rgba(0,0,0,0.35);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
             .ha-card::after {
@@ -153,9 +179,22 @@ export default function HeroAuth({ audience = "business" }: Props) {
               pointer-events: none;
               background:
                 linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 62%, rgba(255,255,255,0.04) 100%),
-                rgba(20,20,19,0.58);
+                rgba(20,20,19,0.6);
               backdrop-filter: blur(22px) saturate(1.25);
               -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              /* fade in from the edge so the glass edge is not a dark step */
+              -webkit-mask:
+                linear-gradient(to bottom, transparent, #000 var(--ha-fade)),
+                linear-gradient(to top, transparent, #000 var(--ha-fade)),
+                linear-gradient(to right, transparent, #000 var(--ha-fade)),
+                linear-gradient(to left, transparent, #000 var(--ha-fade));
+              -webkit-mask-composite: source-in;
+              mask:
+                linear-gradient(to bottom, transparent, #000 var(--ha-fade)),
+                linear-gradient(to top, transparent, #000 var(--ha-fade)),
+                linear-gradient(to right, transparent, #000 var(--ha-fade)),
+                linear-gradient(to left, transparent, #000 var(--ha-fade));
+              mask-composite: intersect;
             }
             .ha-card::before {
               content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
@@ -171,9 +210,8 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 linear-gradient(to top, #000, transparent var(--ha-fade)),
                 linear-gradient(to right, #000, transparent var(--ha-fade)),
                 linear-gradient(to left, #000, transparent var(--ha-fade));
-              /* the interior fill sits behind this layer, so brightness compensates for it */
-              backdrop-filter: blur(6px) saturate(2.4) brightness(2.1) contrast(1.1);
-              -webkit-backdrop-filter: blur(6px) saturate(2.4) brightness(2.1) contrast(1.1);
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
             }
             .ha-card-fringe {
               position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
@@ -181,9 +219,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
               -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
               mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
               -webkit-mask-composite: xor; mask-composite: exclude;
-              backdrop-filter: hue-rotate(28deg) saturate(3) brightness(2.4);
-              -webkit-backdrop-filter: hue-rotate(28deg) saturate(3) brightness(2.4);
-              opacity: 0.85;
+              backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
+              -webkit-backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
+              opacity: 0.7;
             }
             .ha-email {
               width: 100%; padding: 12px 14px; border-radius: 10px;
@@ -269,6 +307,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
             <p className="ha-language">{t("productLanguageDisclosure")}</p>
           )}
 
+          <div className="ha-glass">
           <div className="ha-card">
             <span className="ha-card-fringe" aria-hidden="true" />
             {status === "success" ? (
@@ -302,6 +341,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 </p>
               </>
             )}
+          </div>
           </div>
 
           <p className="ha-note ha-existing">
