@@ -20,9 +20,19 @@ const BASE_URL = "https://trytoone.com";
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
-  { path: "/business", source: "app/[locale]/business/page.tsx" },
   { path: "/business/showcases", source: "app/[locale]/business/showcases/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
+] as const;
+
+/**
+ * `/business` still serves in all eight locales, but only `/en/business` is a
+ * distinct canonical. The seven non-English variants duplicate their locale
+ * home verbatim and now canonicalise to it (G2 follow-up 1), so they are
+ * non-canonical URLs and must not appear here (TECH-013) or in anyone's
+ * hreflang set (TECH-010).
+ */
+const CANONICAL_ENGLISH_LOCALIZED_ROUTES = [
+  { path: "/business", source: "app/[locale]/business/page.tsx" },
 ] as const;
 
 const ENGLISH_ONLY_ROUTES = [
@@ -111,6 +121,12 @@ export async function GET() {
         ),
       );
     }
+  }
+
+  for (const route of CANONICAL_ENGLISH_LOCALIZED_ROUTES) {
+    lines.push(
+      url(`${BASE_URL}/en${route.path}`, lastModified(route.source), englishAlternates(route.path)),
+    );
   }
 
   for (const slug of ["", ...getProductGuideSlugs()]) {
