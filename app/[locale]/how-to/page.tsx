@@ -15,7 +15,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const canonical = "https://trytoone.com/en/how-to";
   return {
-    title: `${page.title} | Toone product guide`,
+    // "How Toone works | Product guide" already carries the brand; the root
+    // template used to append a second "| Toone" (audit P2-5).
+    title: { absolute: `${page.title} | Product guide` },
     description: page.description,
     alternates: {
       canonical,

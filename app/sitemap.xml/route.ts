@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { locales } from "@/i18n/routing";
 import {
   getGuideSlugs,
@@ -5,19 +6,60 @@ import {
   getPublicationLocales,
   getRootEditorialSlugs,
 } from "@/lib/content";
-import { getProductGuideSlugs } from "@/lib/product-showcase";
+import { getProductGuideSlugs, getProductGuideSourcePath } from "@/lib/product-showcase";
 
 export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
+
+/**
+ * Only indexable 200 canonicals belong here (TECH-013, audit P2-8/P3-2).
+ * `/early-access` was removed 2026-09-20: it is an access-code gate that now
+ * ships `noindex` and emitted zero hreflang while this file claimed nine
+ * alternates for it.
+ */
 const LOCALIZED_ROUTES = [
-  "",
-  "/business",
-  "/business/showcases",
-  "/early-access",
-  "/resources",
+  { path: "", source: "app/[locale]/page.tsx" },
+  { path: "/business", source: "app/[locale]/business/page.tsx" },
+  { path: "/business/showcases", source: "app/[locale]/business/showcases/page.tsx" },
+  { path: "/resources", source: "app/[locale]/resources/page.tsx" },
 ] as const;
-const DOWNLOAD_LAST_MODIFIED = "2026-09-11";
+
+const ENGLISH_ONLY_ROUTES = [
+  { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
+  { path: "/about", source: "app/[locale]/about/page.tsx" },
+  { path: "/contact", source: "app/[locale]/contact/page.tsx" },
+  { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
+] as const;
+
+/** Fallback when git history is unavailable (e.g. a shallow CI checkout). */
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
+const lastModifiedCache = new Map<string, string>();
+
+/**
+ * Real `lastmod` for a route: the date of the last commit that touched the
+ * file backing it, falling back to the build date. `changefreq`/`priority`
+ * were dropped — Google has ignored both since 2023 (audit P3-2).
+ */
+function lastModified(sourcePath: string | null): string {
+  if (!sourcePath) return BUILD_DATE;
+  const cached = lastModifiedCache.get(sourcePath);
+  if (cached) return cached;
+
+  let value = BUILD_DATE;
+  try {
+    const out = execFileSync("git", ["log", "-1", "--format=%cs", "--", sourcePath], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(out)) value = out;
+  } catch {
+    // git is not guaranteed on the build host; BUILD_DATE is the contract.
+  }
+  lastModifiedCache.set(sourcePath, value);
+  return value;
+}
 
 function alternates(path: string): string {
   const links = locales.map(
@@ -49,15 +91,8 @@ function publicationAlternateLinks(path: string, availableLocales: readonly stri
   return links.join("");
 }
 
-function url(
-  loc: string,
-  path: string,
-  changefreq: string,
-  priority: string,
-  lastModified?: string,
-) {
-  const lastmod = lastModified ? `<lastmod>${lastModified}</lastmod>` : "";
-  return `<url><loc>${loc}</loc>${lastmod}${alternates(path)}<changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
+function url(loc: string, lastmod: string, alternateLinks: string) {
+  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod>${alternateLinks}</url>`;
 }
 
 export async function GET() {
@@ -67,35 +102,47 @@ export async function GET() {
   ];
 
   for (const locale of locales) {
-    for (const path of LOCALIZED_ROUTES) {
-      const changefreq = path === "/business/showcases" ? "monthly" : "weekly";
-      const priority = path === "" ? "1.0" : path === "/early-access" ? "0.9" : "0.8";
-      const lastModified = path === "/early-access" ? DOWNLOAD_LAST_MODIFIED : undefined;
-      lines.push(url(`${BASE_URL}/${locale}${path}`, path, changefreq, priority, lastModified));
+    for (const route of LOCALIZED_ROUTES) {
+      lines.push(
+        url(
+          `${BASE_URL}/${locale}${route.path}`,
+          lastModified(route.source),
+          alternates(route.path),
+        ),
+      );
     }
   }
 
   for (const slug of ["", ...getProductGuideSlugs()]) {
     const path = `/how-to${slug ? `/${slug}` : ""}`;
     lines.push(
-      `<url><loc>${BASE_URL}/en${path}</loc>${englishAlternates(path)}<changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+      url(
+        `${BASE_URL}/en${path}`,
+        lastModified(getProductGuideSourcePath(slug)),
+        englishAlternates(path),
+      ),
     );
   }
 
   // These trust surfaces are currently reviewed in English only. Their
   // non-English routes redirect until qualified translations are approved.
-  for (const path of ["/privacy", "/about", "/contact", "/editorial-policy"] as const) {
+  for (const route of ENGLISH_ONLY_ROUTES) {
     lines.push(
-      `<url><loc>${BASE_URL}/en${path}</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>`,
+      url(`${BASE_URL}/en${route.path}`, lastModified(route.source), englishAlternates(route.path)),
     );
   }
+
   for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {
     const availableLocales = getPublicationLocales(slug);
     for (const locale of availableLocales) {
       const publication = getPublication(slug, locale);
       if (!publication) continue;
       lines.push(
-        `<url><loc>${BASE_URL}/${locale}${publication.canonicalPath}</loc><lastmod>${publication.updated}</lastmod>${publicationAlternateLinks(publication.canonicalPath, availableLocales)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+        url(
+          `${BASE_URL}/${locale}${publication.canonicalPath}`,
+          publication.updated,
+          publicationAlternateLinks(publication.canonicalPath, availableLocales),
+        ),
       );
     }
   }
@@ -105,7 +152,11 @@ export async function GET() {
   const governance = getPublication("ai-agent-governance", "en");
   if (governance) {
     lines.push(
-      `<url><loc>${BASE_URL}/en${governance.canonicalPath}</loc><lastmod>${governance.updated}</lastmod>${englishAlternates(governance.canonicalPath)}<changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+      url(
+        `${BASE_URL}/en${governance.canonicalPath}`,
+        governance.updated,
+        englishAlternates(governance.canonicalPath),
+      ),
     );
   }
   lines.push("</urlset>");
