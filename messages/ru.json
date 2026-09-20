@@ -2,12 +2,13 @@
   "nav": {
     "privacy": "Konfidentsialnost",
     "github": "GitHub",
-    "showcases": "Showcases",
-    "howTo": "How to",
+    "showcases": "Примеры",
+    "howTo": "Инструкции",
     "resources": "Материалы",
     "governance": "Управление",
     "download": "Запросить ранний доступ",
-    "signin": "Войти"
+    "signin": "Войти",
+    "invitations": "Приглашения"
   },
   "downloadPage": {
     "metaTitle": "Скачать Toone для macOS",
@@ -42,12 +43,12 @@
       },
       "features": {
         "spotlight": {
-          "title": "Spotlight for your agents",
-          "description": "Summon any agent from anywhere with a Spotlight-like interface. Jump straight into a thread without breaking focus."
+          "title": "Spotlight для ваших агентов",
+          "description": "Вызывайте любого агента откуда угодно через интерфейс в духе Spotlight. Переходите прямо в нужный тред, не теряя фокус."
         },
         "windows": {
-          "title": "Windows that move with the work",
-          "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
+          "title": "Окна, которые следуют за работой",
+          "description": "Меняйте размер Toone от компактного помощника до рабочего пространства во всю высоту прямо во время работы, не перестраивая рабочий стол."
         },
         "browser": {
           "title": "Привычные инструменты",
@@ -66,8 +67,8 @@
           "description": "Поручайте конкретные задачи агентам с чёткими обязанностями."
         },
         "voice": {
-          "title": "Voice in. Meetings captured.",
-          "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
+          "title": "Голос на входе. Встречи сохранены.",
+          "description": "Говорите с агентами напрямую, записывайте микрофон и системный звук, помечайте участников и превращайте встречи в общий контекст и следующие шаги."
         },
         "providers": {
           "title": "С чего начать",
@@ -106,7 +107,7 @@
     "p6d": "Проверяйте важные решения и определяйте ответственность агентов.",
     "p7t": "С чего начать",
     "p7d": "Начните с полезного процесса для исследований, разработки, роста или повседневных задач.",
-    "techLabel": "Built on",
+    "techLabel": "Работает на базе",
     "authGoogle": "Продолжить с Google",
     "authOr": "или",
     "authEmailPh": "Введите ваш e-mail",
@@ -120,7 +121,16 @@
     "waitlistSignIn": "Войти",
     "productLanguageDisclosure": "Десктопное приложение сейчас доступно только на английском языке.",
     "heroTag2": "Превращайте повторяющуюся работу в полезные результаты с помощью специализированных агентов, сохраняя контроль.",
-    "haveInvitation": "Есть код приглашения?"
+    "haveInvitation": "Есть код приглашения?",
+    "eaIntro": "Toone — это ИИ-рабочее пространство для ваших агентных процессов: приложение для macOS, в котором специализированные агенты выполняют ваши процессы и рутины под вашим контролем. Доступ по приглашению: оставьте email, и мы пришлём персональный код, когда освободится место. Места открываются небольшими группами, чтобы каждой новой команде уделить внимание.",
+    "eaBeforeTitle": "Перед тем как запросить",
+    "eaBefore1": "macOS 14 или новее",
+    "eaBefore2": "Аккаунт Anthropic или OpenAI: доступ к провайдеру вы предоставляете сами",
+    "eaBefore3": "Ваш Mac остаётся в сети, пока выполняются рутины",
+    "eaHowTitle": "Как это работает",
+    "eaStep1": "Запросите доступ, указав email.",
+    "eaStep2": "Мы пришлём персональный код, когда освободится место.",
+    "eaStep3": "Активируйте код, создайте аккаунт и скачайте Toone."
   },
   "footer": {
     "privacy": "Konfidentsialnost",
@@ -142,7 +152,7 @@
   "showcases": {
     "metaTitle": "Showcases: как компании стали AI-native на Toone",
     "metaDescription": "Превращайте повторяющуюся работу в полезные результаты с помощью специализированных агентов, сохраняя контроль.",
-    "eyebrow": "Showcases",
+    "eyebrow": "Примеры",
     "title": "Как настоящие компании стали AI-native",
     "sub": "Превращайте повторяющуюся работу в полезные результаты с помощью специализированных агентов, сохраняя контроль.",
     "processesLabel": "Что работает на Toone",
@@ -338,7 +348,7 @@
     "sub": "Расскажите об одном процессе, который причиняет боль. Ответим в течение дня.",
     "nameLabel": "Имя",
     "namePh": "Ваше имя",
-    "emailLabel": "Email",
+    "emailLabel": "Эл. почта",
     "emailPh": "vy@kompania.com",
     "companyLabel": "Компания (необязательно)",
     "companyPh": "Компания или проект",

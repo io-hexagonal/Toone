@@ -7,7 +7,8 @@
     "resources": "Resources",
     "governance": "Governance",
     "download": "Request Early Access",
-    "signin": "Sign in"
+    "signin": "Sign in",
+    "invitations": "Invitations"
   },
   "downloadPage": {
     "metaTitle": "Download Toone for macOS",
