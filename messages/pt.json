@@ -2,12 +2,13 @@
   "nav": {
     "privacy": "Privacidade",
     "github": "GitHub",
-    "showcases": "Showcases",
-    "howTo": "How to",
+    "showcases": "Demonstrações",
+    "howTo": "Como fazer",
     "resources": "Recursos",
     "governance": "Governança",
     "download": "Pedir acesso antecipado",
-    "signin": "Entrar"
+    "signin": "Entrar",
+    "invitations": "Convites"
   },
   "downloadPage": {
     "metaTitle": "Baixar o Toone para macOS",
@@ -42,12 +43,12 @@
       },
       "features": {
         "spotlight": {
-          "title": "Spotlight for your agents",
-          "description": "Summon any agent from anywhere with a Spotlight-like interface. Jump straight into a thread without breaking focus."
+          "title": "Spotlight para os seus agentes",
+          "description": "Invoque qualquer agente de qualquer lugar com uma interface tipo Spotlight. Entre diretamente numa conversa sem perder o foco."
         },
         "windows": {
-          "title": "Windows that move with the work",
-          "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
+          "title": "Janelas que acompanham o trabalho",
+          "description": "Redimensione o Toone de um companheiro compacto para um espaço de trabalho a toda a altura enquanto trabalha, sem reorganizar o seu desktop."
         },
         "browser": {
           "title": "As suas ferramentas",
@@ -66,8 +67,8 @@
           "description": "Confie tarefas específicas a agentes com responsabilidades claras."
         },
         "voice": {
-          "title": "Voice in. Meetings captured.",
-          "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
+          "title": "Voz a entrar. Reuniões captadas.",
+          "description": "Fale diretamente com os seus agentes, grave o microfone e o áudio do sistema, identifique os oradores e transforme reuniões em contexto partilhado e próximos passos."
         },
         "providers": {
           "title": "Um ponto de partida",
@@ -106,7 +107,7 @@
     "p6d": "Reveja decisões importantes e escolha a responsabilidade que atribui aos agentes.",
     "p7t": "Um ponto de partida",
     "p7d": "Comece com um fluxo prático para investigação, engenharia, crescimento ou operações diárias.",
-    "techLabel": "Built on",
+    "techLabel": "Construído sobre",
     "authGoogle": "Continuar com o Google",
     "authOr": "ou",
     "authEmailPh": "Digite seu e-mail",
@@ -120,7 +121,16 @@
     "waitlistSignIn": "Entrar",
     "productLanguageDisclosure": "O aplicativo desktop está disponível atualmente apenas em inglês.",
     "heroTag2": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
-    "haveInvitation": "Tem um código de convite?"
+    "haveInvitation": "Tem um código de convite?",
+    "eaIntro": "O Toone é o espaço de trabalho de IA para os seus fluxos agênticos: uma app para macOS onde agentes especializados executam os seus fluxos e rotinas sob o seu controlo. O acesso é por convite: deixe o seu email e enviamos-lhe um código pessoal quando surgir uma vaga. As vagas são libertadas em pequenos lotes, para que cada nova equipa receba atenção.",
+    "eaBeforeTitle": "Antes de pedir",
+    "eaBefore1": "macOS 14 ou posterior",
+    "eaBefore2": "Uma conta Anthropic ou OpenAI: o acesso ao fornecedor é seu",
+    "eaBefore3": "O seu Mac mantém-se ligado enquanto as rotinas correm",
+    "eaHowTitle": "Como funciona",
+    "eaStep1": "Peça acesso com o seu email.",
+    "eaStep2": "Enviamos um código pessoal quando surgir uma vaga.",
+    "eaStep3": "Resgate o código, crie a sua conta e descarregue o Toone."
   },
   "footer": {
     "privacy": "Privacidade",
@@ -142,7 +152,7 @@
   "showcases": {
     "metaTitle": "Showcases: como empresas se tornaram AI-native no Toone",
     "metaDescription": "Showcases: como empresas se tornaram AI-native no Toone. Um espaço para os seus agentes, fluxos de trabalho e resultados.",
-    "eyebrow": "Showcases",
+    "eyebrow": "Demonstrações",
     "title": "Como empresas reais se tornaram AI-native",
     "sub": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
     "processesLabel": "O que roda no Toone",
@@ -347,6 +357,15 @@
     "send": "Enviar mensagem",
     "done": "Obrigado — sua mensagem está a caminho. Responderemos em breve.",
     "error": "Algo deu errado. Tente novamente.",
+    "close": "Fechar"
+  },
+  "announcement": {
+    "yourCode": "O seu código",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "validUntil": "Válido até {date}",
+    "daysLeft": "{count, plural, one {# dia restante} other {# dias restantes}}",
+    "lastDay": "último dia",
     "close": "Fechar"
   }
 }

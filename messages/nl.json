@@ -2,12 +2,13 @@
   "nav": {
     "privacy": "Privacy",
     "github": "GitHub",
-    "showcases": "Showcases",
-    "howTo": "How to",
+    "showcases": "Voorbeelden",
+    "howTo": "Handleidingen",
     "resources": "Bronnen",
     "governance": "Governance",
     "download": "Vroege toegang aanvragen",
-    "signin": "Inloggen"
+    "signin": "Inloggen",
+    "invitations": "Uitnodigingen"
   },
   "downloadPage": {
     "metaTitle": "Download Toone voor macOS",
@@ -42,12 +43,12 @@
       },
       "features": {
         "spotlight": {
-          "title": "Spotlight for your agents",
-          "description": "Summon any agent from anywhere with a Spotlight-like interface. Jump straight into a thread without breaking focus."
+          "title": "Spotlight voor je agents",
+          "description": "Roep elke agent overal op met een Spotlight-achtige interface. Spring direct in een thread zonder je focus te verliezen."
         },
         "windows": {
-          "title": "Windows that move with the work",
-          "description": "Resize Toone from a compact companion into a full-height workspace while you work, without rearranging your desktop."
+          "title": "Vensters die met het werk meebewegen",
+          "description": "Schaal Toone tijdens het werk van een compacte metgezel naar een werkruimte op volle hoogte, zonder je bureaublad opnieuw in te delen."
         },
         "browser": {
           "title": "Je vertrouwde tools",
@@ -66,8 +67,8 @@
           "description": "Geef gerichte taken aan agents met duidelijke verantwoordelijkheden."
         },
         "voice": {
-          "title": "Voice in. Meetings captured.",
-          "description": "Talk directly to your agents, record microphone and system audio, label speakers, and turn meetings into shared context and next actions."
+          "title": "Spraak erin. Meetings vastgelegd.",
+          "description": "Praat rechtstreeks met je agents, neem microfoon- en systeemaudio op, label sprekers en zet meetings om in gedeelde context en volgende acties."
         },
         "providers": {
           "title": "Een startpunt",
@@ -106,7 +107,7 @@
     "p6d": "Beoordeel belangrijke beslissingen en bepaal hoeveel verantwoordelijkheid je agents krijgen.",
     "p7t": "Een startpunt",
     "p7d": "Begin met een praktische workflow voor onderzoek, ontwikkeling, groei of dagelijkse taken.",
-    "techLabel": "Built on",
+    "techLabel": "Gebouwd op",
     "authGoogle": "Doorgaan met Google",
     "authOr": "of",
     "authEmailPh": "Vul je e-mailadres in",
@@ -120,7 +121,16 @@
     "waitlistSignIn": "Inloggen",
     "productLanguageDisclosure": "De desktop-app is momenteel alleen beschikbaar in het Engels.",
     "heroTag2": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
-    "haveInvitation": "Heb je een uitnodigingscode?"
+    "haveInvitation": "Heb je een uitnodigingscode?",
+    "eaIntro": "Toone is de AI-werkruimte voor je agentische workflows: een macOS-app waarin gespecialiseerde agents jouw workflows en routines uitvoeren onder jouw controle. Toegang is op uitnodiging: laat je e-mailadres achter en we sturen je een persoonlijke code zodra er een plek vrijkomt. Plekken komen in kleine groepen vrij, zodat elk nieuw team aandacht krijgt.",
+    "eaBeforeTitle": "Voordat je aanvraagt",
+    "eaBefore1": "macOS 14 of nieuwer",
+    "eaBefore2": "Een Anthropic- of OpenAI-account: je brengt je eigen providertoegang mee",
+    "eaBefore3": "Je Mac blijft online terwijl routines draaien",
+    "eaHowTitle": "Zo werkt het",
+    "eaStep1": "Vraag toegang aan met je e-mailadres.",
+    "eaStep2": "We sturen je een persoonlijke code zodra er een plek vrijkomt.",
+    "eaStep3": "Verzilver de code, maak je account aan en download Toone."
   },
   "footer": {
     "privacy": "Privacy",
@@ -142,7 +152,7 @@
   "showcases": {
     "metaTitle": "Showcases: hoe bedrijven AI-native werden op Toone",
     "metaDescription": "Showcases: hoe bedrijven AI-native werden op Toone. Eén werkplek voor je agents, je workflows en je resultaten.",
-    "eyebrow": "Showcases",
+    "eyebrow": "Voorbeelden",
     "title": "Hoe echte bedrijven AI-native werden",
     "sub": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "processesLabel": "Wat draait op Toone",
@@ -347,6 +357,15 @@
     "send": "Bericht versturen",
     "done": "Bedankt — je bericht is onderweg. We reageren snel.",
     "error": "Er is iets misgegaan. Probeer het opnieuw.",
+    "close": "Sluiten"
+  },
+  "announcement": {
+    "yourCode": "Je code",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "validUntil": "Geldig tot {date}",
+    "daysLeft": "{count, plural, one {Nog # dag} other {Nog # dagen}}",
+    "lastDay": "laatste dag",
     "close": "Sluiten"
   }
 }

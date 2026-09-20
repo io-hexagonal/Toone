@@ -3,7 +3,8 @@
 import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
-import HeroCosmos from "@/components/HeroCosmos";
+import HeroGlitter from "@/components/HeroGlitter";
+import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
@@ -37,10 +38,9 @@ function isWaitlistOutcome(value: unknown): value is WaitlistOutcome {
 }
 
 /**
- * Full-screen hero. Left column centered (claude.ai-style): headline, one
- * short line, auth card, one download button. Right: a quiet ASCII galaxy
- * (see HeroCosmos.tsx) that blends into the page background: no border,
- * no shadow, no fill.
+ * Full-screen hero. Centred column (claude.ai-style): headline, one short
+ * line, auth card, one download button, over the treated light loop in
+ * HeroGlitter.tsx.
  */
 
 type Props = {
@@ -106,15 +106,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
               position: relative; z-index: 5;
               min-height: 100svh; background: #141413;
               display: grid; align-items: center;
-              /* film's right edge aligns with the header's last element (10vw
-                 inset, same as the flat header); auth column centres in the rest */
-              grid-template-columns: 1fr auto;
-              gap: 32px; padding: 0 10vw 0 22px;
-            }
-            @media (max-width: 980px) {
-              .hero-auth { grid-template-columns: 1fr; padding: 0 20px; }
+              grid-template-columns: 1fr;
+              padding: 0 20px;
             }
 
+            .hero-auth > .ha-left { position: relative; z-index: 1; }
             .ha-left {
               text-align: center; display: flex; flex-direction: column; align-items: center;
               justify-self: center; max-width: 460px; padding: 96px 12px 40px;
@@ -124,59 +120,136 @@ export default function HeroAuth({ audience = "business" }: Props) {
               font-weight: 600; letter-spacing: -0.02em; line-height: 1.06;
               color: rgba(255,255,255,0.95);
               font-size: clamp(34px, 3.6vw, 48px);
-              margin-bottom: 14px; text-wrap: balance;
+              margin-bottom: 20px; text-wrap: balance;
             }
             .ha-tag {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
-              max-width: 30ch; margin-bottom: 30px; text-wrap: balance;
+              max-width: 30ch; margin-bottom: 40px; text-wrap: balance;
             }
             .ha-language {
               max-width: 42ch; margin: -16px 0 20px; color: rgba(255,255,255,0.72);
               font-size: 12.5px; line-height: 1.5;
             }
 
+            /* Glass card.
+               .ha-card::after    the frosted interior, fading IN from the edge over
+                                  --ha-fade so the rim never sits on a dark step
+               .ha-card::before   the refracting rim, fading OUT toward the centre
+               .ha-card-fringe    a 2px chromatic fringe on the outermost edge
+               A top bevel of light and a bottom bevel of shadow give the pane thickness. */
+            .ha-glass {
+              /* Eased ramps: a straight-line fade that stops dead reads as a crease
+                 (Mach band), so both ramps taper off gradually, and they end at
+                 different distances so no two transitions share a line. */
+              --ha-fade: 48px;   /* rim: bright at the edge, gone by here */
+              --ha-fill: 64px;   /* interior: absent at the edge, full by here */
+              --ha-rim-stops: #000,
+                rgba(0,0,0,0.78) calc(var(--ha-fade) * 0.18),
+                rgba(0,0,0,0.5) calc(var(--ha-fade) * 0.38),
+                rgba(0,0,0,0.26) calc(var(--ha-fade) * 0.58),
+                rgba(0,0,0,0.1) calc(var(--ha-fade) * 0.78),
+                rgba(0,0,0,0.02) calc(var(--ha-fade) * 0.92),
+                transparent var(--ha-fade);
+              --ha-fill-stops: transparent,
+                rgba(0,0,0,0.03) calc(var(--ha-fill) * 0.1),
+                rgba(0,0,0,0.12) calc(var(--ha-fill) * 0.26),
+                rgba(0,0,0,0.3) calc(var(--ha-fill) * 0.44),
+                rgba(0,0,0,0.55) calc(var(--ha-fill) * 0.64),
+                rgba(0,0,0,0.82) calc(var(--ha-fill) * 0.84),
+                #000 var(--ha-fill);
+              --ha-glass-filter: blur(6px) saturate(2.2) brightness(1.55) contrast(1.08);
+              position: relative; width: 100%; max-width: 400px;
+            }
             .ha-card {
-              width: 100%; max-width: 400px;
-              border: 1px solid rgba(255,255,255,0.11); border-radius: 16px;
-              background: rgba(255,255,255,0.03);
+              position: relative; z-index: 1; isolation: isolate; overflow: hidden;
+              width: 100%;
+              border: 1px solid transparent; border-radius: 16px;
+              background: transparent;
+              box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.16),
+                inset 0 -1px 0 rgba(0,0,0,0.35);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
-            .ha-google {
-              display: flex; align-items: center; justify-content: center; gap: 10px;
-              width: 100%; padding: 12px; border-radius: 10px;
-              border: 1px solid rgba(255,255,255,0.15); background: transparent;
-              color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 500;
-              cursor: default; position: relative;
+            .ha-card::after {
+              content: ""; position: absolute; inset: 0; z-index: -2; border-radius: inherit;
+              pointer-events: none;
+              background:
+                linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 62%, rgba(255,255,255,0.04) 100%),
+                rgba(20,20,19,0.6);
+              backdrop-filter: blur(22px) saturate(1.25);
+              -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              /* fade in from the edge so the glass edge is not a dark step */
+              -webkit-mask:
+                linear-gradient(to bottom, var(--ha-fill-stops)),
+                linear-gradient(to top, var(--ha-fill-stops)),
+                linear-gradient(to right, var(--ha-fill-stops)),
+                linear-gradient(to left, var(--ha-fill-stops));
+              -webkit-mask-composite: source-in;
+              mask:
+                linear-gradient(to bottom, var(--ha-fill-stops)),
+                linear-gradient(to top, var(--ha-fill-stops)),
+                linear-gradient(to right, var(--ha-fill-stops)),
+                linear-gradient(to left, var(--ha-fill-stops));
+              mask-composite: intersect;
             }
-            .ha-google svg { width: 17px; height: 17px; }
-            .ha-google.live {
-              cursor: pointer; text-decoration: none;
-              transition: border-color 0.2s ease, background 0.2s ease;
+            .ha-card::before {
+              content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+              pointer-events: none;
+              /* union of four eased edge fades = a rim that dissolves toward the centre */
+              -webkit-mask:
+                linear-gradient(to bottom, var(--ha-rim-stops)),
+                linear-gradient(to top, var(--ha-rim-stops)),
+                linear-gradient(to right, var(--ha-rim-stops)),
+                linear-gradient(to left, var(--ha-rim-stops));
+              mask:
+                linear-gradient(to bottom, var(--ha-rim-stops)),
+                linear-gradient(to top, var(--ha-rim-stops)),
+                linear-gradient(to right, var(--ha-rim-stops)),
+                linear-gradient(to left, var(--ha-rim-stops));
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
             }
-            .ha-google.live:hover {
-              border-color: rgba(255,255,255,0.35);
-              background: rgba(255,255,255,0.05);
+            .ha-card-fringe {
+              position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+              padding: 2px;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+              backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
+              -webkit-backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
+              opacity: 0.7;
             }
-            .ha-or {
-              text-align: center; color: rgba(255,255,255,0.66);
-              font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+            /* The email field keeps its quiet fill; its 1px border is the card's
+               refracted edge colour rather than a flat grey line. */
+            .ha-field { position: relative; display: block; width: 100%; border-radius: 10px; isolation: isolate; }
+            .ha-field::before {
+              content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none;
+              padding: 1px;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
             }
+            .ha-field:focus-within::before { padding: 1.5px; }
             .ha-email {
               width: 100%; padding: 12px 14px; border-radius: 10px;
-              border: 1px solid rgba(255,255,255,0.13);
+              border: 1px solid transparent;
               background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
             .ha-email::placeholder { color: rgba(255,255,255,0.62); }
-            .ha-email:focus { border-color: rgba(255,255,255,0.35); }
+            .ha-email:focus { background: rgba(255,255,255,0.07); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
+              display: inline-flex; align-items: center; justify-content: center; gap: 9px;
               background: #f0ede6; color: #1d1c19; cursor: pointer;
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
               transition: transform 0.15s ease;
             }
             .ha-continue:hover { transform: scale(1.015); }
+            .ha-continue svg { width: 16px; height: 16px; fill: currentColor; margin-top: -2px; flex: none; }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
             .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
             .ha-request { margin-top: 18px; font-size: 13px; }
@@ -222,23 +295,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-product-hunt-copy small { font-size: 8px; letter-spacing: 0.12em; color: rgba(255,255,255,0.66); }
             .ha-product-hunt-copy strong { font-size: 12.5px; line-height: 1.25; }
 
-            .ha-film {
-              position: relative; justify-self: end; align-self: end;
-              /* top edge meets the header (~90px), bottom keeps a 22px margin */
-              width: min(48vw, calc((100svh - 112px) * 0.8), 640px);
-              height: auto;
-              margin-bottom: 22px;
-              aspect-ratio: 4 / 5;
-              min-width: 0; overflow: hidden; contain: layout paint style;
-              /* no border, no shadow, no fill — the cosmos fades into the
-                 page background (#141413) at its own edges */
-            }
-            @media (max-width: 980px) {
-              .ha-film {
-                width: min(86vw, calc(52svh * 0.8), 440px);
-                height: auto; margin: 0 auto 24px; align-self: center;
-              }
-            }
             @media (max-width: 720px) {
               .ha-dl { display: none; }
               .ha-product-hunt {
@@ -252,6 +308,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
       />
 
       <section className="hero-auth">
+        <HeroGlitter />
         <div className="ha-left">
           <h1 className="ha-title">
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
@@ -263,7 +320,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
             <p className="ha-language">{t("productLanguageDisclosure")}</p>
           )}
 
+          <div className="ha-glass">
           <div className="ha-card">
+            <span className="ha-card-fringe" aria-hidden="true" />
             {status === "success" ? (
               <p className="ha-joined">{t("authJoined")}</p>
             ) : (
@@ -272,22 +331,24 @@ export default function HeroAuth({ audience = "business" }: Props) {
                   onSubmit={handleSubmit}
                   style={{ display: "flex", flexDirection: "column", gap: 12 }}
                 >
-                  <input
-                    className="ha-email"
-                    data-early-access-input=""
-                    type="email"
-                    aria-label={t("authEmailPh")}
-                    placeholder={t("authEmailPh")}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <span className="ha-field">
+                    <input
+                      className="ha-email"
+                      data-early-access-input=""
+                      type="email"
+                      aria-label={t("authEmailPh")}
+                      placeholder={t("authEmailPh")}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </span>
                   <button
                     className="ha-continue"
                     type="submit"
                     disabled={status === "loading"}
                   >
-                    {status === "loading" ? "…" : t("authContinue")}
+                    {status === "loading" ? "…" : <><AppleLogo />{t("authContinue")}</>}
                   </button>
                 </form>
                 <p className="ha-note">
@@ -295,6 +356,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 </p>
               </>
             )}
+          </div>
           </div>
 
           <p className="ha-note ha-request">
@@ -324,10 +386,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               <strong>Product Hunt</strong>
             </span>
           </a>
-        </div>
-
-        <div className="ha-film" aria-hidden="true">
-          <HeroCosmos />
         </div>
       </section>
     </>
