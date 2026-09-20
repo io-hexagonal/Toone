@@ -21,6 +21,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    // R7: og:url must equal the canonical. Without a route-level `openGraph`
+    // this page inherited the root layout's card, whose og:url is the locale
+    // home, so the shared URL and the canonical disagreed.
+    openGraph: {
+      type: "website",
+      url: "https://trytoone.com/en/privacy",
+      title: "Privacy Policy",
+      description: "How Toone handles website, account, product, and analytics data, and what stays on your Mac.",
+      siteName: "Toone",
+      images: ["https://trytoone.com/assets/og/toone-og.png"],
+    },
   };
 }
 
