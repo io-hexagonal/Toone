@@ -145,13 +145,13 @@
   },
   "meta": {
     "siteTitle": "Toone | The AI workspace for your agentic workflows on macOS",
-    "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines, built on Claude Code and Codex, with you in control.",
+    "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your routines under your control, built on Claude Code and Codex.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
   "showcases": {
     "metaTitle": "Showcases: how companies became AI-native on Toone",
-    "metaDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
+    "metaDescription": "See how companies run recurring operations on Toone: specialist agents, governed routines, and results their own team reviews.",
     "eyebrow": "Showcases",
     "title": "How real companies became AI-native",
     "sub": "Turn recurring work into useful results, with specialist agents and you in control.",

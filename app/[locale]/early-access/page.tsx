@@ -14,6 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   description: t("inviteCodeSub"),
   alternates: { canonical: `https://trytoone.com/${locale}/early-access` },
   robots: { index: false, follow: true },
+  // og:url follows the canonical (R7) instead of inheriting the locale home.
+  openGraph: { type: "website", url: `https://trytoone.com/${locale}/early-access`, siteName: "Toone" },
  };
 }
 export default async function EarlyAccess({ params }: Props) {

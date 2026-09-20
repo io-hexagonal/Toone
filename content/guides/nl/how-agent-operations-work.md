@@ -27,4 +27,4 @@ Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Vroege toegang aanvragen](/early-access)
+[Vroege toegang aanvragen](/request-access)

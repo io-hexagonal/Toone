@@ -252,7 +252,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-continue svg { width: 16px; height: 16px; fill: currentColor; margin-top: -2px; flex: none; }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
             .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
-            .ha-existing { margin-top: 22px; font-size: 13px; }
+            .ha-request { margin-top: 18px; font-size: 13px; }
+            .ha-request a { color: rgba(255,255,255,0.9); text-decoration: underline; }
+            .ha-existing { margin-top: 10px; font-size: 13px; }
             .ha-existing a { color: rgba(255,255,255,0.9); text-decoration: none; }
             .ha-existing a:hover { text-decoration: underline; }
             .ha-joined { color: rgba(255,255,255,0.85); font-size: 14.5px; text-align: center; padding: 16px 0; }
@@ -356,6 +358,16 @@ export default function HeroAuth({ audience = "business" }: Props) {
             )}
           </div>
           </div>
+
+          <p className="ha-note ha-request">
+            <Link
+              href="/request-access"
+              data-umami-event="request-early-access"
+              data-umami-event-placement="hero"
+            >
+              {t("downloadFor")}
+            </Link>
+          </p>
 
           <p className="ha-note ha-existing">
             {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>

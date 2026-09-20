@@ -27,4 +27,4 @@ Descreva o trabalho que repete e transforme-o numa rotina que pode voltar a util
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
 
-[Pedir acesso antecipado](/early-access)
+[Pedir acesso antecipado](/request-access)

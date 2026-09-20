@@ -27,4 +27,4 @@ Affida compiti mirati ad agenti con responsabilità chiare.
 
 Segui i progressi, verifica i risultati e decidi i prossimi passi.
 
-[Richiedi accesso anticipato](/early-access)
+[Richiedi accesso anticipato](/request-access)

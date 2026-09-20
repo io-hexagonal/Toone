@@ -9,7 +9,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: "Contact Toone",
-    description: "Contact Toone about corrections, product questions, partnerships, or support.",
+    description:
+      "Contact Toone about corrections, product questions, partnerships, or support. Reach the team on LinkedIn, or email hello@trytoone.com with the page URL.",
     alternates: {
       canonical: "https://trytoone.com/en/contact",
       languages: {
@@ -18,6 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    // R7: og:url must equal the canonical. Without a route-level `openGraph`
+    // this page inherited the root layout's card, whose og:url is the locale
+    // home, so the shared URL and the canonical disagreed.
+    openGraph: {
+      type: "website",
+      url: "https://trytoone.com/en/contact",
+      title: "Contact Toone",
+      description: "Product questions, partnership enquiries, support requests, and factual corrections.",
+      siteName: "Toone",
+      images: ["https://trytoone.com/assets/og/toone-og.png"],
+    },
   };
 }
 

@@ -4,7 +4,7 @@ slug: "organizational-knowledge"
 canonicalPath: "/organizational-knowledge"
 title: "Houd nuttige context dichtbij"
 heading: "Houd nuttige context dichtbij"
-description: "Houd nuttige context dichtbij. Houd de informatie die je team nodig heeft dicht bij het werk. Geef gerichte taken aan agents met duidelijke verantwoordelijkheden."
+description: "Houd de informatie die je team nodig heeft dicht bij het werk. Geef gerichte taken aan agents met duidelijke verantwoordelijkheden."
 eyebrow: "Ontdek Toone"
 author: "Toone"
 published: "2026-09-11"
@@ -27,4 +27,4 @@ Geef gerichte taken aan agents met duidelijke verantwoordelijkheden.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Vroege toegang aanvragen](/early-access)
+[Vroege toegang aanvragen](/request-access)

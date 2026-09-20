@@ -38,7 +38,10 @@ export async function generateBusinessShowcasesMetadata({ params }: Props): Prom
   languages["x-default"] = "https://trytoone.com/en/business/showcases";
 
   return {
-    title: t("metaTitle"),
+    // Every locale's showcases title already ends in "Toone"; `absolute` keeps
+    // the root `%s | Toone` template from adding a second brand token, which
+    // is what pushed the French title past the length budget (audit P2-5).
+    title: { absolute: t("metaTitle") },
     description: t("metaDescription"),
     alternates: { canonical: url, languages },
     // Without this the page inherits the root card, whose og:url points at the

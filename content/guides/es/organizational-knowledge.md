@@ -27,4 +27,4 @@ Asigna tareas concretas a agentes con responsabilidades claras.
 
 Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
-[Solicitar acceso anticipado](/early-access)
+[Solicitar acceso anticipado](/request-access)

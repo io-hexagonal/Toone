@@ -27,4 +27,4 @@ Describe el trabajo que repites y conviértelo en una rutina que puedas volver a
 
 Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
-[Solicitar acceso anticipado](/early-access)
+[Solicitar acceso anticipado](/request-access)

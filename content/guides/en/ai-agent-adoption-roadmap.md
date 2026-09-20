@@ -27,4 +27,4 @@ Keep the information your team needs close to the work.
 
 Follow progress, review outputs, and decide what happens next.
 
-[Request Early Access](/early-access)
+[Request Early Access](/request-access)

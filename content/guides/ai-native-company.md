@@ -26,4 +26,4 @@ Give agents the context they need and keep people responsible for important deci
 
 Compare the time spent, the quality of the result, and the effort needed to review it. Let those results guide what you try next.
 
-[See examples](/showcases) · [Request Early Access](/early-access)
+[See examples](/showcases) · [Request Early Access](/request-access)

@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "Editorial, Sources, and Corrections Policy",
     description:
-      "How Toone reviews product claims, cites sources, discloses automated assistance, and handles corrections.",
+      "How Toone reviews product claims, cites sources, discloses automated assistance, and handles corrections, and who is accountable for what Toone publishes.",
     alternates: {
       canonical: "https://trytoone.com/en/editorial-policy",
       languages: {
@@ -19,6 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    // R7: og:url must equal the canonical. Without a route-level `openGraph`
+    // this page inherited the root layout's card, whose og:url is the locale
+    // home, so the shared URL and the canonical disagreed.
+    openGraph: {
+      type: "website",
+      url: "https://trytoone.com/en/editorial-policy",
+      title: "Editorial, Sources, and Corrections Policy",
+      description: "How Toone reviews product claims, cites sources, and handles corrections.",
+      siteName: "Toone",
+      images: ["https://trytoone.com/assets/og/toone-og.png"],
+    },
   };
 }
 

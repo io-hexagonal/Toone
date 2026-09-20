@@ -86,7 +86,7 @@ export default async function Navigation({
         >
           {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
         </Link>
-        <Link href="/early-access" className="minimal-link">{t("download")}</Link>
+        <Link href="/request-access" className="minimal-link">{t("download")}</Link>
 
       </nav>
     </>

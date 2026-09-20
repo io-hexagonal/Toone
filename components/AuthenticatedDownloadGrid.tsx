@@ -124,7 +124,7 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
         <h2>{auth("signinTitle")}</h2>
         <p>{auth("signinSub")}</p>
         <Link className="download-button" href="/signin">{auth("signinBtn")}</Link>
-        <Link className="download-waitlist-link" href="/early-access">{auth("requestAccess")}</Link>
+        <Link className="download-waitlist-link" href="/request-access">{auth("requestAccess")}</Link>
       </div>
     );
   }

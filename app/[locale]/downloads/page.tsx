@@ -26,6 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("metaTitle"),
     description: t("metaDescription"),
     alternates: { canonical: url, languages },
+    // og:url follows the canonical (R7) instead of inheriting the locale home.
+    openGraph: { type: "website", url, siteName: "Toone" },
   };
 }
 

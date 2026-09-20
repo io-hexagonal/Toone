@@ -684,7 +684,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               </>
             ) : (
               <>
-                {t("newHere")} <Link href="/early-access">{t("requestAccess")}</Link>
+                {t("newHere")} <Link href="/request-access">{t("requestAccess")}</Link>
               </>
             )}
           </p>

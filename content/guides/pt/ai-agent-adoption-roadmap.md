@@ -27,4 +27,4 @@ Mantenha a informação de que a equipa precisa perto do trabalho.
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
 
-[Pedir acesso antecipado](/early-access)
+[Pedir acesso antecipado](/request-access)

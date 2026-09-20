@@ -27,4 +27,4 @@ Confiez des tâches précises à des agents aux responsabilités claires.
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Demander un accès anticipé](/early-access)
+[Demander un accès anticipé](/request-access)
