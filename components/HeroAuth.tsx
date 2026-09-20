@@ -272,6 +272,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 >
                   <input
                     className="ha-email"
+                    data-early-access-input=""
                     type="email"
                     aria-label={t("authEmailPh")}
                     placeholder={t("authEmailPh")}

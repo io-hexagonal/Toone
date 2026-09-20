@@ -28,6 +28,18 @@ export type Announcement = {
     href: string;
   };
   dismissLabel: string;
+  /**
+   * Shown instead of the code and install button when the visitor is not on a
+   * Mac. Its button closes the card and focuses the early-access email field so
+   * they can ask to be told when the Windows and Linux builds ship.
+   */
+  otherPlatforms: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    ctaLabel: string;
+    dismissLabel: string;
+  };
 };
 
 export const announcements: Announcement[] = [
@@ -44,5 +56,12 @@ export const announcements: Announcement[] = [
     code: "FIRSTBELIEVERS",
     cta: { label: "Install Toone", href: "/invite#code=FIRSTBELIEVERS" },
     dismissLabel: "Maybe later",
+    otherPlatforms: {
+      eyebrow: "Windows and Linux",
+      title: "Toone is on macOS today.",
+      body: "Windows and Linux builds are next. Want to hear the moment yours is ready? Leave your email and we'll let you know.",
+      ctaLabel: "Notify me",
+      dismissLabel: "No thanks",
+    },
   },
 ];

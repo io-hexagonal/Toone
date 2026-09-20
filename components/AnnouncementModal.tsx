@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Link } from "@/lib/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 import { announcements, type Announcement } from "@/content/announcements";
 
 const STORAGE_PREFIX = "toone.announcement.dismissed.";
@@ -14,6 +14,26 @@ export function activeAnnouncement(now: number, list: Announcement[] = announcem
     const end = Date.parse(item.endsAt);
     return !Number.isNaN(start) && !Number.isNaN(end) && start <= now && now <= end;
   }) ?? null;
+}
+
+/**
+ * True on a real Mac. Chromium reports the platform directly; Safari and
+ * Firefox need the user agent. iPads call themselves Macs in Safari, so a
+ * touch screen rules them out.
+ */
+export function isMacDesktop(): boolean {
+  const data = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData;
+  if (data?.platform) return data.platform === "macOS";
+  return /Macintosh|Mac OS X/.test(navigator.userAgent) && navigator.maxTouchPoints <= 1;
+}
+
+/** Scrolls to and focuses the early-access email field when the page has one. */
+export function focusEarlyAccessInput(): boolean {
+  const input = document.querySelector<HTMLInputElement>("[data-early-access-input]");
+  if (!input) return false;
+  input.scrollIntoView({ behavior: "smooth", block: "center" });
+  window.setTimeout(() => input.focus({ preventScroll: true }), 350);
+  return true;
 }
 
 function isDismissed(id: string) {
@@ -44,26 +64,42 @@ function track(event: string) {
  */
 export default function AnnouncementModal() {
   const pathname = usePathname();
+  const router = useRouter();
   const [announcement, setAnnouncement] = useState<Announcement | null>(null);
+  const [mac, setMac] = useState(true);
   const [copied, setCopied] = useState(false);
   const isPublicPage = !/\/(admin|signin|signup)(\/|$)/.test(pathname ?? "");
 
   useEffect(() => {
     if (!isPublicPage) return;
+    // ?preview-announcement=mac|other shows the card again, in that variant, for design review.
+    const preview = new URLSearchParams(window.location.search).get("preview-announcement");
     const now = Date.now();
     const active = activeAnnouncement(now);
-    if (!active || isDismissed(active.id)) return;
+    if (!active || (isDismissed(active.id) && !preview)) return;
+    const onMac = preview ? preview === "mac" : isMacDesktop();
     // A beat after paint so the page settles before the card rises.
-    const timer = window.setTimeout(() => { setAnnouncement(active); track(`announcement-open-${active.id}`); }, 700);
+    const timer = window.setTimeout(() => {
+      setMac(onMac); setAnnouncement(active);
+      track(`announcement-open-${active.id}-${onMac ? "mac" : "other"}`);
+    }, 700);
     return () => window.clearTimeout(timer);
   }, [isPublicPage]);
 
-  const close = useCallback((reason: "dismiss" | "cta" | "close") => {
+  const close = useCallback((reason: "dismiss" | "cta" | "notify" | "close") => {
     if (!announcement) return;
     remember(announcement.id);
     track(`announcement-${reason}-${announcement.id}`);
     setAnnouncement(null);
   }, [announcement]);
+
+  /** Non-Mac path: close the card and hand the visitor the early-access email field. */
+  function notifyMe() {
+    close("notify");
+    if (focusEarlyAccessInput()) return;
+    // Pages without the hero form: the request page focuses its field on #notify.
+    router.push("/request-access#notify");
+  }
 
   useEffect(() => {
     if (!announcement) return;
@@ -78,6 +114,7 @@ export default function AnnouncementModal() {
   }, [announcement, close]);
 
   if (!announcement) return null;
+  const other = announcement.otherPlatforms;
   const left = daysLeft(announcement.endsAt, Date.now());
   const deadline = new Date(announcement.endsAt).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
 
@@ -171,6 +208,7 @@ export default function AnnouncementModal() {
             .an-actions { display: flex; align-items: center; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
             .an-primary {
               display: inline-block; text-align: center; padding: 13px 26px; border-radius: 10px;
+              border: none; cursor: pointer;
               background: #f0ede6; color: #1d1c19; text-decoration: none;
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
@@ -204,6 +242,7 @@ export default function AnnouncementModal() {
           <div className="an-shade" aria-hidden="true" />
           <button type="button" className="an-close" onClick={() => close("close")} aria-label="Close">×</button>
           <div className="an-body">
+            {mac ? <>
             <p className="an-eyebrow">{announcement.eyebrow}</p>
             <h2 id="an-title" className="an-title">{announcement.title}</h2>
             <p className="an-text">{announcement.body}</p>
@@ -221,6 +260,15 @@ export default function AnnouncementModal() {
               <Link href={announcement.cta.href} className="an-primary" onClick={() => close("cta")}>{announcement.cta.label}</Link>
               <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{announcement.dismissLabel}</button>
             </div>
+            </> : <>
+            <p className="an-eyebrow">{other.eyebrow}</p>
+            <h2 id="an-title" className="an-title">{other.title}</h2>
+            <p className="an-text">{other.body}</p>
+            <div className="an-actions">
+              <button type="button" className="an-primary" onClick={notifyMe}>{other.ctaLabel}</button>
+              <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{other.dismissLabel}</button>
+            </div>
+            </>}
           </div>
         </div>
       </div>
