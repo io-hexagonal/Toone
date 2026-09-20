@@ -219,14 +219,27 @@ export default function HeroAuth({ audience = "business" }: Props) {
               -webkit-backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
               opacity: 0.7;
             }
+            /* The email field keeps its quiet fill; its 1px border is the card's
+               refracted edge colour rather than a flat grey line. */
+            .ha-field { position: relative; display: block; width: 100%; border-radius: 10px; isolation: isolate; }
+            .ha-field::before {
+              content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none;
+              padding: 1px;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
+            }
+            .ha-field:focus-within::before { padding: 1.5px; }
             .ha-email {
               width: 100%; padding: 12px 14px; border-radius: 10px;
-              border: 1px solid rgba(255,255,255,0.13);
+              border: 1px solid transparent;
               background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
             .ha-email::placeholder { color: rgba(255,255,255,0.62); }
-            .ha-email:focus { border-color: rgba(255,255,255,0.35); }
+            .ha-email:focus { background: rgba(255,255,255,0.07); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
               display: inline-flex; align-items: center; justify-content: center; gap: 9px;
@@ -316,16 +329,18 @@ export default function HeroAuth({ audience = "business" }: Props) {
                   onSubmit={handleSubmit}
                   style={{ display: "flex", flexDirection: "column", gap: 12 }}
                 >
-                  <input
-                    className="ha-email"
-                    data-early-access-input=""
-                    type="email"
-                    aria-label={t("authEmailPh")}
-                    placeholder={t("authEmailPh")}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <span className="ha-field">
+                    <input
+                      className="ha-email"
+                      data-early-access-input=""
+                      type="email"
+                      aria-label={t("authEmailPh")}
+                      placeholder={t("authEmailPh")}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </span>
                   <button
                     className="ha-continue"
                     type="submit"
