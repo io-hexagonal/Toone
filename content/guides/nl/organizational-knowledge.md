@@ -27,4 +27,4 @@ Geef gerichte taken aan agents met duidelijke verantwoordelijkheden.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Vroege toegang aanvragen](/early-access)
+[Vroege toegang aanvragen](/request-access)

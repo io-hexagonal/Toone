@@ -27,4 +27,4 @@ Descrivi il lavoro che ripeti e trasformalo in una routine riutilizzabile.
 
 Segui i progressi, verifica i risultati e decidi i prossimi passi.
 
-[Richiedi accesso anticipato](/early-access)
+[Richiedi accesso anticipato](/request-access)

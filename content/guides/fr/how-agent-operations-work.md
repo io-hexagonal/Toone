@@ -27,4 +27,4 @@ Décrivez une tâche récurrente et transformez-la en routine réutilisable.
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Demander un accès anticipé](/early-access)
+[Demander un accès anticipé](/request-access)

@@ -27,4 +27,4 @@ Give focused work to agents with clear responsibilities.
 
 Follow progress, review outputs, and decide what happens next.
 
-[Request Early Access](/early-access)
+[Request Early Access](/request-access)
