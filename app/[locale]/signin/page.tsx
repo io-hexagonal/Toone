@@ -12,6 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t("signinSub"),
     alternates: { canonical: `https://trytoone.com/${locale}/signin` },
     robots: { index: false, follow: true },
+    // og:url follows the canonical (R7) instead of inheriting the locale home.
+    openGraph: { type: "website", url: `https://trytoone.com/${locale}/signin`, siteName: "Toone" },
   };
 }
 

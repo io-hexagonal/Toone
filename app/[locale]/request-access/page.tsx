@@ -38,6 +38,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         languages: {},
       },
       robots: { index: false, follow: true },
+      // og:url follows the canonical (R7) instead of inheriting the locale home.
+      openGraph: {
+        type: "website",
+        url: `https://trytoone.com/${locale}/request-access`,
+        siteName: "Toone",
+        images: ["https://trytoone.com/assets/og/toone-og.png"],
+      },
     };
   }
 
