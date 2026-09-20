@@ -72,6 +72,9 @@ const siteSchema: Graph = {
       "@type": "Organization",
       "@id": "https://trytoone.com/#organization",
       name: "Toone",
+      // Owner-ratified 2026-09-20 (BRAND-001/002): "Toone AI" is a target term
+      // for the same entity, so it belongs here rather than on a second node.
+      alternateName: "Toone AI",
       url: "https://trytoone.com",
       logo: {
         "@type": "ImageObject",
@@ -79,11 +82,13 @@ const siteSchema: Graph = {
         width: "512",
         height: "512",
       },
-      description: "Toone is a local-first, governed AI operating layer for companies and small teams.",
+      description:
+        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
+      // BRAND-002: only profiles Toone controls. https://x.com/trytoone is an
+      // unrelated account and must never be claimed here.
       sameAs: [
         "https://github.com/io-hexagonal/Toone",
         "https://www.producthunt.com/products/toone",
-        "https://x.com/trytoone",
       ],
       parentOrganization: {
         "@type": "Organization",
@@ -97,9 +102,29 @@ const siteSchema: Graph = {
       "@id": "https://trytoone.com/#website",
       name: "Toone",
       url: "https://trytoone.com",
-      description: "Toone turns businesses into AI-native companies. Built on Claude Code and Codex.",
+      description:
+        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
       inLanguage: [...locales],
       publisher: { "@id": "https://trytoone.com/#organization" },
+    },
+    {
+      // Toone ships as a macOS application. No aggregateRating/review (none is
+      // collected) and no `offers`: access is invite-only, so a price node
+      // would assert a purchase path that does not exist.
+      "@type": "SoftwareApplication",
+      "@id": "https://trytoone.com/#software",
+      name: "Toone",
+      alternateName: "Toone AI",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "macOS",
+      url: "https://trytoone.com",
+      description:
+        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
+      publisher: { "@id": "https://trytoone.com/#organization" },
+      sameAs: [
+        "https://github.com/io-hexagonal/Toone",
+        "https://www.producthunt.com/products/toone",
+      ],
     },
   ],
 };
@@ -121,10 +146,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: `%s | Toone`,
     },
     description: t("siteDescription"),
-    // Note: every major engine has ignored the keywords meta since 2009; kept
-    // only because it costs nothing. "Media Marketing AI" was dropped — it
-    // named the toone-media template, deleted 2026-07-09.
-    keywords: ["Toone", "repeatable workflows", "specialised agents", "AI teams", "macOS", "early access"],
+    // The `keywords` meta was retired 2026-09-20 (audit P3-1): ignored by every
+    // engine since 2009 and a standing repo/live sync liability.
     applicationName: "Toone",
     metadataBase: new URL("https://trytoone.com"),
     alternates: {
@@ -156,8 +179,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      site: "@trytoone",
-      creator: "@trytoone",
+      // No twitter:site/twitter:creator until Toone owns a handle. @trytoone is
+      // the unrelated account BRAND-002 bars from sameAs (audit P3-4).
       title: t("ogTitle"),
       description: t("ogDescription"),
       images: [
