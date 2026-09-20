@@ -54,7 +54,8 @@ export const announcements: Announcement[] = [
   {
     id: "first-believers-2026-09",
     startsAt: "2026-09-20T00:00:00+01:00",
-    endsAt: "2026-09-27T23:59:59+01:00",
+    // Matches the FIRSTBELIEVERS shared code, which expires Sunday 27 Sep at 11:50 UTC.
+    endsAt: "2026-09-27T11:50:00Z",
     image: "/assets/announcements/first-believers.webp",
     imageAlt: "Toone's cat holding a glowing orb among the stars",
     imageFraming: { scale: 1.35, anchor: "left" },
