@@ -89,6 +89,7 @@ const siteSchema: Graph = {
       sameAs: [
         "https://github.com/io-hexagonal/Toone",
         "https://www.producthunt.com/products/toone",
+        "https://www.wikidata.org/wiki/Q141510503",
       ],
       parentOrganization: {
         "@type": "Organization",
@@ -124,6 +125,7 @@ const siteSchema: Graph = {
       sameAs: [
         "https://github.com/io-hexagonal/Toone",
         "https://www.producthunt.com/products/toone",
+        "https://www.wikidata.org/wiki/Q141510503",
       ],
     },
   ],
