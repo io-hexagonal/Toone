@@ -9,7 +9,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: "Contact Toone",
-    description: "Contact Toone about corrections, product questions, partnerships, or support.",
+    description:
+      "Contact Toone about corrections, product questions, partnerships, or support. Reach the team on LinkedIn, or email hello@trytoone.com with the page URL.",
     alternates: {
       canonical: "https://trytoone.com/en/contact",
       languages: {

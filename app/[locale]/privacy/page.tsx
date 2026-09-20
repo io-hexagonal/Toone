@@ -12,7 +12,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: "Privacy Policy",
-    description: "How Toone handles website, account, product, and analytics data.",
+    description:
+      "How Toone handles website, account, product, and analytics data, which data stays local on your Mac, and how to reach the team about a privacy request.",
     alternates: {
       canonical: "https://trytoone.com/en/privacy",
       languages: {

@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "Editorial, Sources, and Corrections Policy",
     description:
-      "How Toone reviews product claims, cites sources, discloses automated assistance, and handles corrections.",
+      "How Toone reviews product claims, cites sources, discloses automated assistance, and handles corrections, and who is accountable for what Toone publishes.",
     alternates: {
       canonical: "https://trytoone.com/en/editorial-policy",
       languages: {
