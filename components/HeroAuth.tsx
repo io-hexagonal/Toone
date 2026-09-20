@@ -3,7 +3,7 @@
 import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
-import HeroCosmos from "@/components/HeroCosmos";
+import HeroGlitter from "@/components/HeroGlitter";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
@@ -37,10 +37,9 @@ function isWaitlistOutcome(value: unknown): value is WaitlistOutcome {
 }
 
 /**
- * Full-screen hero. Left column centered (claude.ai-style): headline, one
- * short line, auth card, one download button. Right: a quiet ASCII galaxy
- * (see HeroCosmos.tsx) that blends into the page background: no border,
- * no shadow, no fill.
+ * Full-screen hero. Centred column (claude.ai-style): headline, one short
+ * line, auth card, one download button, over the treated light loop in
+ * HeroGlitter.tsx.
  */
 
 type Props = {
@@ -106,15 +105,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
               position: relative; z-index: 5;
               min-height: 100svh; background: #141413;
               display: grid; align-items: center;
-              /* film's right edge aligns with the header's last element (10vw
-                 inset, same as the flat header); auth column centres in the rest */
-              grid-template-columns: 1fr auto;
-              gap: 32px; padding: 0 10vw 0 22px;
-            }
-            @media (max-width: 980px) {
-              .hero-auth { grid-template-columns: 1fr; padding: 0 20px; }
+              grid-template-columns: 1fr;
+              padding: 0 20px;
             }
 
+            .hero-auth > .ha-left { position: relative; z-index: 1; }
             .ha-left {
               text-align: center; display: flex; flex-direction: column; align-items: center;
               justify-self: center; max-width: 460px; padding: 96px 12px 40px;
@@ -135,11 +130,40 @@ export default function HeroAuth({ audience = "business" }: Props) {
               font-size: 12.5px; line-height: 1.5;
             }
 
+            /* Glass card. The interior is a dark frosted fill; a thin ring along
+               the edge samples the raw light loop behind it, brighter and more
+               saturated, so the colour appears to refract through the rim. */
             .ha-card {
+              --ha-rim: 7px;
+              position: relative; isolation: isolate;
               width: 100%; max-width: 400px;
-              border: 1px solid rgba(255,255,255,0.11); border-radius: 16px;
-              background: rgba(255,255,255,0.03);
+              border: 1px solid rgba(255,255,255,0.16); border-radius: 16px;
+              background: transparent;
+              box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.22),
+                inset 0 -1px 0 rgba(255,255,255,0.05),
+                0 24px 70px rgba(0,0,0,0.45);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
+            }
+            .ha-card::before {
+              /* the refracting rim */
+              content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+              padding: var(--ha-rim); pointer-events: none;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+              backdrop-filter: blur(3px) saturate(2.4) brightness(1.7) contrast(1.15);
+              -webkit-backdrop-filter: blur(3px) saturate(2.4) brightness(1.7) contrast(1.15);
+              background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.06));
+            }
+            .ha-card::after {
+              /* the frosted interior */
+              content: ""; position: absolute; inset: var(--ha-rim); z-index: -1;
+              border-radius: calc(16px - var(--ha-rim) + 2px); pointer-events: none;
+              background: rgba(20,20,19,0.58);
+              backdrop-filter: blur(22px) saturate(1.25);
+              -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
             }
             .ha-google {
               display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -220,23 +244,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-product-hunt-copy small { font-size: 8px; letter-spacing: 0.12em; color: rgba(255,255,255,0.66); }
             .ha-product-hunt-copy strong { font-size: 12.5px; line-height: 1.25; }
 
-            .ha-film {
-              position: relative; justify-self: end; align-self: end;
-              /* top edge meets the header (~90px), bottom keeps a 22px margin */
-              width: min(48vw, calc((100svh - 112px) * 0.8), 640px);
-              height: auto;
-              margin-bottom: 22px;
-              aspect-ratio: 4 / 5;
-              min-width: 0; overflow: hidden; contain: layout paint style;
-              /* no border, no shadow, no fill — the cosmos fades into the
-                 page background (#141413) at its own edges */
-            }
-            @media (max-width: 980px) {
-              .ha-film {
-                width: min(86vw, calc(52svh * 0.8), 440px);
-                height: auto; margin: 0 auto 24px; align-self: center;
-              }
-            }
             @media (max-width: 720px) {
               .ha-dl { display: none; }
               .ha-product-hunt {
@@ -250,6 +257,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
       />
 
       <section className="hero-auth">
+        <HeroGlitter />
         <div className="ha-left">
           <h1 className="ha-title">
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
@@ -312,10 +320,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               <strong>Product Hunt</strong>
             </span>
           </a>
-        </div>
-
-        <div className="ha-film" aria-hidden="true">
-          <HeroCosmos />
         </div>
       </section>
     </>
