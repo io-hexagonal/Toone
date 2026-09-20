@@ -219,72 +219,14 @@ export default function HeroAuth({ audience = "business" }: Props) {
               -webkit-backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
               opacity: 0.7;
             }
-            /* The email field wears the same glass as the card at a smaller scale:
-               a refracting rim fading inward and a frosted interior fading in. */
-            .ha-field {
-              --hf-fade: 16px;
-              --hf-fill: 22px;
-              --hf-rim-stops: #000,
-                rgba(0,0,0,0.78) calc(var(--hf-fade) * 0.18),
-                rgba(0,0,0,0.5) calc(var(--hf-fade) * 0.38),
-                rgba(0,0,0,0.26) calc(var(--hf-fade) * 0.58),
-                rgba(0,0,0,0.1) calc(var(--hf-fade) * 0.78),
-                rgba(0,0,0,0.02) calc(var(--hf-fade) * 0.92),
-                transparent var(--hf-fade);
-              --hf-fill-stops: transparent,
-                rgba(0,0,0,0.03) calc(var(--hf-fill) * 0.1),
-                rgba(0,0,0,0.12) calc(var(--hf-fill) * 0.26),
-                rgba(0,0,0,0.3) calc(var(--hf-fill) * 0.44),
-                rgba(0,0,0,0.55) calc(var(--hf-fill) * 0.64),
-                rgba(0,0,0,0.82) calc(var(--hf-fill) * 0.84),
-                #000 var(--hf-fill);
-              position: relative; isolation: isolate; overflow: hidden;
-              display: block; width: 100%; border-radius: 10px;
-              box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.3);
-            }
-            .ha-field::after {
-              content: ""; position: absolute; inset: 0; z-index: -2; border-radius: inherit; pointer-events: none;
-              background: rgba(20,20,19,0.55);
-              backdrop-filter: blur(14px) saturate(1.2);
-              -webkit-backdrop-filter: blur(14px) saturate(1.2);
-              -webkit-mask:
-                linear-gradient(to bottom, var(--hf-fill-stops)),
-                linear-gradient(to top, var(--hf-fill-stops)),
-                linear-gradient(to right, var(--hf-fill-stops)),
-                linear-gradient(to left, var(--hf-fill-stops));
-              -webkit-mask-composite: source-in;
-              mask:
-                linear-gradient(to bottom, var(--hf-fill-stops)),
-                linear-gradient(to top, var(--hf-fill-stops)),
-                linear-gradient(to right, var(--hf-fill-stops)),
-                linear-gradient(to left, var(--hf-fill-stops));
-              mask-composite: intersect;
-            }
-            .ha-field::before {
-              content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
-              -webkit-mask:
-                linear-gradient(to bottom, var(--hf-rim-stops)),
-                linear-gradient(to top, var(--hf-rim-stops)),
-                linear-gradient(to right, var(--hf-rim-stops)),
-                linear-gradient(to left, var(--hf-rim-stops));
-              mask:
-                linear-gradient(to bottom, var(--hf-rim-stops)),
-                linear-gradient(to top, var(--hf-rim-stops)),
-                linear-gradient(to right, var(--hf-rim-stops)),
-                linear-gradient(to left, var(--hf-rim-stops));
-              backdrop-filter: var(--ha-glass-filter);
-              -webkit-backdrop-filter: var(--ha-glass-filter);
-            }
-            .ha-field:focus-within { box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.18); }
             .ha-email {
-              position: relative; z-index: 1;
               width: 100%; padding: 12px 14px; border-radius: 10px;
-              border: 1px solid transparent;
-              background: transparent; color: rgba(255,255,255,0.92);
+              border: 1px solid rgba(255,255,255,0.13);
+              background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
             .ha-email::placeholder { color: rgba(255,255,255,0.62); }
-            .ha-email:focus { border-color: transparent; }
+            .ha-email:focus { border-color: rgba(255,255,255,0.35); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
               display: inline-flex; align-items: center; justify-content: center; gap: 9px;
@@ -374,18 +316,16 @@ export default function HeroAuth({ audience = "business" }: Props) {
                   onSubmit={handleSubmit}
                   style={{ display: "flex", flexDirection: "column", gap: 12 }}
                 >
-                  <span className="ha-field">
-                    <input
-                      className="ha-email"
-                      data-early-access-input=""
-                      type="email"
-                      aria-label={t("authEmailPh")}
-                      placeholder={t("authEmailPh")}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </span>
+                  <input
+                    className="ha-email"
+                    data-early-access-input=""
+                    type="email"
+                    aria-label={t("authEmailPh")}
+                    placeholder={t("authEmailPh")}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                   <button
                     className="ha-continue"
                     type="submit"
