@@ -137,17 +137,17 @@ export default function HeroAuth({ audience = "business" }: Props) {
               --ha-rim: 7px;
               position: relative; isolation: isolate;
               width: 100%; max-width: 400px;
-              border: 1px solid rgba(255,255,255,0.16); border-radius: 16px;
+              /* no solid border: the rim's refracted colour is the edge */
+              border: 1px solid transparent; border-radius: 16px;
               background: transparent;
               box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.22),
-                inset 0 -1px 0 rgba(255,255,255,0.05),
+                inset 0 1px 0 rgba(255,255,255,0.12),
                 0 24px 70px rgba(0,0,0,0.45);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
             .ha-card::before {
               /* the refracting rim */
-              content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+              content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
               padding: var(--ha-rim); pointer-events: none;
               -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
               mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -163,7 +163,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               background: rgba(20,20,19,0.58);
               backdrop-filter: blur(22px) saturate(1.25);
               -webkit-backdrop-filter: blur(22px) saturate(1.25);
-              box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
             }
             .ha-google {
               display: flex; align-items: center; justify-content: center; gap: 10px;
