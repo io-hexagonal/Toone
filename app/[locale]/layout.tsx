@@ -84,8 +84,8 @@ const siteSchema: Graph = {
       },
       description:
         "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
-      // BRAND-002: only profiles Toone controls. https://x.com/trytoone is an
-      // unrelated account and must never be claimed here.
+      // BRAND-002: only profiles Toone controls. The similarly named X account
+      // is unrelated to Toone and must never be claimed here.
       sameAs: [
         "https://github.com/io-hexagonal/Toone",
         "https://www.producthunt.com/products/toone",
