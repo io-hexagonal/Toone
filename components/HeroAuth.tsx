@@ -119,11 +119,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
               font-weight: 600; letter-spacing: -0.02em; line-height: 1.06;
               color: rgba(255,255,255,0.95);
               font-size: clamp(34px, 3.6vw, 48px);
-              margin-bottom: 14px; text-wrap: balance;
+              margin-bottom: 20px; text-wrap: balance;
             }
             .ha-tag {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
-              max-width: 30ch; margin-bottom: 30px; text-wrap: balance;
+              max-width: 30ch; margin-bottom: 40px; text-wrap: balance;
             }
             .ha-language {
               max-width: 42ch; margin: -16px 0 20px; color: rgba(255,255,255,0.72);
