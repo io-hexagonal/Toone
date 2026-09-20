@@ -17,7 +17,15 @@ export type Announcement = {
   /** Landscape image under /public that fills the whole card (16:9 or wider works best). */
   image: string;
   imageAlt?: string;
-  eyebrow: string;
+  /**
+   * Framing on wide screens, where the copy occupies the left half. `scale`
+   * enlarges the image (1 = fit) and `anchor` says which edge stays put: with
+   * anchor "left" the image grows to the right, so a centred subject moves
+   * into the free right-hand side.
+   */
+  imageFraming?: { scale: number; anchor: "left" | "center" | "right" };
+  /** Small uppercase line above the title. Leave it out for a cleaner card. */
+  eyebrow?: string;
   title: string;
   body: string;
   /** Invitation code to display with a copy button. */
@@ -34,7 +42,7 @@ export type Announcement = {
    * they can ask to be told when the Windows and Linux builds ship.
    */
   otherPlatforms: {
-    eyebrow: string;
+    eyebrow?: string;
     title: string;
     body: string;
     ctaLabel: string;
@@ -47,17 +55,15 @@ export const announcements: Announcement[] = [
     id: "first-believers-2026-09",
     startsAt: "2026-09-20T00:00:00+01:00",
     endsAt: "2026-09-27T23:59:59+01:00",
-    // Placeholder until the campaign artwork is added under /public/assets/announcements.
-    image: "/assets/screenshots/desktop-chat.png",
-    imageAlt: "Toone desktop app",
-    eyebrow: "Early access · Product Hunt week",
+    image: "/assets/announcements/first-believers.webp",
+    imageAlt: "Toone's cat holding a glowing orb among the stars",
+    imageFraming: { scale: 1.35, anchor: "left" },
     title: "Lost your chance to download Toone?",
     body: "Install it now with the code below. It works for everyone who wanted in during launch week and stays valid until Sunday, 27 September.",
     code: "FIRSTBELIEVERS",
     cta: { label: "Install Toone", href: "/invite#code=FIRSTBELIEVERS" },
     dismissLabel: "Maybe later",
     otherPlatforms: {
-      eyebrow: "Windows and Linux",
       title: "Toone is on macOS today.",
       body: "Windows and Linux builds are next. Want to hear the moment yours is ready? Leave your email and we'll let you know.",
       ctaLabel: "Notify me",

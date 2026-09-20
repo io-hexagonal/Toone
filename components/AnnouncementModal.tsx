@@ -144,23 +144,27 @@ export default function AnnouncementModal() {
               background: #1b1b19; overflow: hidden; isolation: isolate;
               box-shadow: 0 40px 100px rgba(0,0,0,0.6);
               animation: an-rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-              display: flex; align-items: flex-end;
+              display: flex; align-items: center;
             }
             @keyframes an-rise {
               from { opacity: 0; transform: translateY(16px) scale(0.98); }
               to { opacity: 1; transform: none; }
             }
             .an-image {
-              position: absolute; inset: 0; width: 100%; height: 100%;
+              position: absolute; top: 0; bottom: 0; height: 100%; width: calc(100% * var(--an-scale, 1));
+              max-width: none; /* Tailwind preflight caps img at 100%; the framing needs to overflow. */
               object-fit: cover; object-position: center; z-index: -2;
-              transform: scale(1.02); animation: an-drift 14s ease-in-out infinite alternate;
+              animation: an-drift 16s ease-in-out infinite alternate;
             }
-            @keyframes an-drift { from { transform: scale(1.02) translateX(0); } to { transform: scale(1.06) translateX(-1.5%); } }
+            .an-image[data-anchor="left"] { left: 0; }
+            .an-image[data-anchor="center"] { left: 50%; transform: translateX(-50%); }
+            .an-image[data-anchor="right"] { right: 0; }
+            @keyframes an-drift { from { scale: 1; } to { scale: 1.04; } }
             .an-shade {
               position: absolute; inset: 0; z-index: -1;
               background:
-                linear-gradient(90deg, rgba(20,20,19,0.94) 0%, rgba(20,20,19,0.82) 38%, rgba(20,20,19,0.35) 68%, rgba(20,20,19,0.08) 100%),
-                linear-gradient(0deg, rgba(20,20,19,0.85) 0%, rgba(20,20,19,0.2) 45%, rgba(20,20,19,0) 100%);
+                linear-gradient(90deg, rgba(20,20,19,0.82) 0%, rgba(20,20,19,0.6) 34%, rgba(20,20,19,0.18) 58%, rgba(20,20,19,0) 80%),
+                linear-gradient(0deg, rgba(20,20,19,0.7) 0%, rgba(20,20,19,0.15) 40%, rgba(20,20,19,0) 70%);
             }
             .an-close {
               position: absolute; top: 16px; right: 16px; z-index: 2;
@@ -173,7 +177,14 @@ export default function AnnouncementModal() {
             .an-close:hover { transform: scale(1.06); background: rgba(20,20,19,0.8); }
             .an-body {
               position: relative; z-index: 1; max-width: 480px;
-              padding: 44px 48px 40px; display: flex; flex-direction: column; gap: 14px;
+              padding: 40px 48px; display: flex; flex-direction: column; gap: 14px;
+            }
+            .an-brand { display: flex; align-items: center; gap: 9px; margin: 0 0 6px; }
+            .an-brand img { width: 28px; height: 28px; display: block; }
+            .an-brand span {
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-weight: 600; letter-spacing: -0.03em; text-transform: lowercase;
+              color: rgba(255,255,255,0.92); font-size: 19px; line-height: 1;
             }
             .an-eyebrow {
               color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600;
@@ -222,7 +233,8 @@ export default function AnnouncementModal() {
             .an-secondary:hover { color: rgba(255,255,255,0.9); }
             @media (max-width: 720px) {
               .an-overlay { padding: 14px; }
-              .an-card { aspect-ratio: auto; min-height: min(78svh, 640px); border-radius: 18px; }
+              .an-card { aspect-ratio: auto; min-height: min(78svh, 640px); border-radius: 18px; align-items: flex-end; }
+              .an-image { width: 100% !important; left: 0 !important; right: auto !important; transform: none !important; object-position: center 30%; }
               .an-shade { background: linear-gradient(0deg, rgba(20,20,19,0.96) 0%, rgba(20,20,19,0.9) 45%, rgba(20,20,19,0.25) 100%); }
               .an-body { padding: 28px 24px 26px; max-width: none; }
               .an-title { font-size: 27px; }
@@ -238,12 +250,22 @@ export default function AnnouncementModal() {
       />
       <div className="an-overlay" onMouseDown={event => { if (event.target === event.currentTarget) close("close"); }}>
         <div className="an-card" role="dialog" aria-modal="true" aria-labelledby="an-title">
-          <img className="an-image" src={announcement.image} alt={announcement.imageAlt ?? ""} />
+          <img
+            className="an-image"
+            src={announcement.image}
+            alt={announcement.imageAlt ?? ""}
+            data-anchor={announcement.imageFraming?.anchor ?? "center"}
+            style={{ "--an-scale": announcement.imageFraming?.scale ?? 1 } as React.CSSProperties}
+          />
           <div className="an-shade" aria-hidden="true" />
           <button type="button" className="an-close" onClick={() => close("close")} aria-label="Close">×</button>
           <div className="an-body">
+            <div className="an-brand" aria-hidden="true">
+              <img src="/assets/brand/toone-mark.svg" alt="" />
+              <span>toone</span>
+            </div>
             {mac ? <>
-            <p className="an-eyebrow">{announcement.eyebrow}</p>
+            {announcement.eyebrow && <p className="an-eyebrow">{announcement.eyebrow}</p>}
             <h2 id="an-title" className="an-title">{announcement.title}</h2>
             <p className="an-text">{announcement.body}</p>
             {announcement.code && (
@@ -261,7 +283,7 @@ export default function AnnouncementModal() {
               <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{announcement.dismissLabel}</button>
             </div>
             </> : <>
-            <p className="an-eyebrow">{other.eyebrow}</p>
+            {other.eyebrow && <p className="an-eyebrow">{other.eyebrow}</p>}
             <h2 id="an-title" className="an-title">{other.title}</h2>
             <p className="an-text">{other.body}</p>
             <div className="an-actions">
