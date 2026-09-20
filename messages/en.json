@@ -81,7 +81,7 @@
     "downloadFor": "Request Early Access",
     "macOS": "macOS",
     "soon": "Soon",
-    "heroTitle": "The AI workspace for your agentic workflows",
+    "heroTitle": "Run company operations as governed AI routines",
     "pillarsTitle": "The AI workspace for your agentic workflows",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
     "collaborationTitle": "Your team works together live",
@@ -119,7 +119,7 @@
     "waitlistExisting": "Already using Toone?",
     "waitlistSignIn": "Sign in",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
-    "heroTag2": "Turn recurring work into useful results, with specialist agents and you in control.",
+    "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
     "haveInvitation": "Have an invitation code?"
   },
   "footer": {
@@ -134,8 +134,8 @@
     "rights": "All rights reserved."
   },
   "meta": {
-    "siteTitle": "Toone | The AI workspace for your agentic workflows",
-    "siteDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
+    "siteTitle": "Toone | The AI workspace for your agentic workflows on macOS",
+    "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines, built on Claude Code and Codex, with you in control.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
@@ -311,13 +311,13 @@
     "launchAccountSub": "Sign up with Google or your email to download Toone."
   },
   "resources": {
-    "metaTitle": "Practical ways to work with Toone",
-    "metaDescription": "Choose a useful workflow, keep the right context nearby, and review the results.",
-    "ogTitle": "Practical ways to work with Toone",
-    "ogDescription": "Choose a useful workflow, keep the right context nearby, and review the results.",
+    "metaTitle": "Guides and resources for working with Toone",
+    "metaDescription": "Practical guides for designing routines, agent organizations and approval steps in Toone, with worked examples you can copy.",
+    "ogTitle": "Guides and resources for working with Toone",
+    "ogDescription": "Practical guides for designing routines, agent organizations and approval steps in Toone, with worked examples you can copy.",
     "eyebrow": "Toone field guides",
-    "heading": "Practical ways to work with Toone",
-    "intro": "Choose a useful workflow, keep the right context nearby, and review the results.",
+    "heading": "Guides and resources",
+    "intro": "Practical guides for designing routines, agent organizations and approval steps in Toone, with worked examples you can copy.",
     "empty": "Localized guides are being prepared."
   },
   "article": {

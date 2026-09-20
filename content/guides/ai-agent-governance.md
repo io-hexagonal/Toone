@@ -1,9 +1,9 @@
 ---
 slug: "ai-agent-governance"
 canonicalPath: "/governance"
-title: "Stay in control of your work"
-heading: "Stay in control of your work"
-description: "Set expectations, review important decisions, and keep people accountable."
+title: "Approvals, permissions and audit trail for AI agents"
+heading: "Approval gates, permissions and receipts for every agent action"
+description: "How Toone keeps people in control: approval gates inside each routine, scoped permissions per agent, a receipt for every action, and local-first data handling."
 eyebrow: "Working with Toone"
 author: "Toone"
 published: "2026-09-11"

@@ -1,7 +1,7 @@
 ---
-title: "Meet Toone"
+title: "How Toone works"
 navTitle: "Overview"
-description: "Understand how Toone turns a project into a workspace where agents can carry out repeatable, observable work."
+description: "Step-by-step guide to Toone on your Mac: organizations, agents, routines, schedules, approval gates and integrations, from first setup to reviewed runs."
 eyebrow: "Personal overview"
 pageType: "overview"
 ---

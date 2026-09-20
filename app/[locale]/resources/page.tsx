@@ -17,7 +17,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     locales.map((alternateLocale) => [alternateLocale, `https://trytoone.com/${alternateLocale}/resources`]),
   );
   return {
-    title: t("metaTitle"),
+    // The English title carries the brand; `absolute` stops the root template
+    // from double-branding it (audit P2-5).
+    title: locale === "en" ? { absolute: t("metaTitle") } : t("metaTitle"),
     description: t("metaDescription"),
     alternates: {
       canonical: url,

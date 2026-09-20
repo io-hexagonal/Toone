@@ -43,6 +43,8 @@ export default async function GovernancePage({ params }: Props) {
     "@type": "Article",
     headline: publication.title,
     description: publication.description,
+    // Guide articles already carry an image; this one did not (audit P2-7).
+    image: "https://trytoone.com/assets/og/toone-og.png",
     datePublished: publication.published,
     dateModified: publication.updated,
     mainEntityOfPage: "https://trytoone.com/en/governance",
