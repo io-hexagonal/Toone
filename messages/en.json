@@ -348,5 +348,14 @@
     "done": "Thanks — your message is on its way. We'll get back to you shortly.",
     "error": "Something went wrong. Please try again.",
     "close": "Close"
+  },
+  "announcement": {
+    "yourCode": "Your code",
+    "copy": "Copy",
+    "copied": "Copied",
+    "validUntil": "Valid until {date}",
+    "daysLeft": "{count, plural, one {# day left} other {# days left}}",
+    "lastDay": "last day",
+    "close": "Close"
   }
 }

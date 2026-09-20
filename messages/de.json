@@ -348,5 +348,14 @@
     "done": "Danke — Ihre Nachricht ist unterwegs. Wir melden uns in Kürze.",
     "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "close": "Schließen"
+  },
+  "announcement": {
+    "yourCode": "Dein Code",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "validUntil": "Gültig bis {date}",
+    "daysLeft": "{count, plural, one {Noch # Tag} other {Noch # Tage}}",
+    "lastDay": "letzter Tag",
+    "close": "Schließen"
   }
 }

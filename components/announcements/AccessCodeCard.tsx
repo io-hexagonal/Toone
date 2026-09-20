@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
 import type { AccessCodeAnnouncement } from "@/content/announcements";
 import { daysLeft, focusEarlyAccessInput, track } from "@/lib/announcements";
@@ -13,6 +14,8 @@ import type { CardProps } from "./AnnouncementModal";
  */
 export default function AccessCodeCard({ announcement, platform, close }: CardProps<AccessCodeAnnouncement>) {
   const router = useRouter();
+  const t = useTranslations("announcement");
+  const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const { mac, otherPlatforms: other } = announcement;
 
@@ -48,7 +51,7 @@ export default function AccessCodeCard({ announcement, platform, close }: CardPr
   }
 
   const left = daysLeft(announcement.endsAt, Date.now());
-  const deadline = new Date(announcement.endsAt).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+  const deadline = new Date(announcement.endsAt).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
   return (
     <>
       {mac.eyebrow && <p className="an-eyebrow">{mac.eyebrow}</p>}
@@ -56,12 +59,12 @@ export default function AccessCodeCard({ announcement, platform, close }: CardPr
       <p className="an-text">{mac.body}</p>
       <div className="an-code">
         <div>
-          <p className="an-code-label">Your code</p>
+          <p className="an-code-label">{t("yourCode")}</p>
           <p className="an-code-value">{mac.code}</p>
         </div>
-        <button type="button" className="an-copy" onClick={() => void copyCode()} aria-live="polite">{copied ? "Copied" : "Copy"}</button>
+        <button type="button" className="an-copy" onClick={() => void copyCode()} aria-live="polite">{copied ? t("copied") : t("copy")}</button>
       </div>
-      <p className="an-deadline">Valid until <strong>{deadline}</strong>{left > 0 ? ` · ${left} ${left === 1 ? "day" : "days"} left` : " · last day"}</p>
+      <p className="an-deadline">{t.rich("validUntil", { date: () => <strong>{deadline}</strong> })} · {left > 0 ? t("daysLeft", { count: left }) : t("lastDay")}</p>
       <div className="an-actions">
         <Link href={mac.cta.href} className="an-primary" onClick={() => close("cta")}>{mac.cta.label}</Link>
         <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{mac.dismissLabel}</button>

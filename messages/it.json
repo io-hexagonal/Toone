@@ -348,5 +348,14 @@
     "done": "Grazie — il tuo messaggio è in arrivo. Ti risponderemo presto.",
     "error": "Qualcosa è andato storto. Riprova.",
     "close": "Chiudi"
+  },
+  "announcement": {
+    "yourCode": "Il tuo codice",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "validUntil": "Valido fino al {date}",
+    "daysLeft": "{count, plural, one {# giorno rimanente} other {# giorni rimanenti}}",
+    "lastDay": "ultimo giorno",
+    "close": "Chiudi"
   }
 }

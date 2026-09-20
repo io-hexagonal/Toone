@@ -348,5 +348,14 @@
     "done": "Bedankt — je bericht is onderweg. We reageren snel.",
     "error": "Er is iets misgegaan. Probeer het opnieuw.",
     "close": "Sluiten"
+  },
+  "announcement": {
+    "yourCode": "Je code",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "validUntil": "Geldig tot {date}",
+    "daysLeft": "{count, plural, one {Nog # dag} other {Nog # dagen}}",
+    "lastDay": "laatste dag",
+    "close": "Sluiten"
   }
 }

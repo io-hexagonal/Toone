@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type ComponentType } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { announcements, type Announcement } from "@/content/announcements";
 import { activeAnnouncement, isMacDesktop, rememberDismissal, track, wasDismissed } from "@/lib/announcements";
 import AccessCodeCard from "./AccessCodeCard";
@@ -34,6 +35,7 @@ const cards: { [K in Announcement["kind"]]: ComponentType<CardProps<Extract<Anno
  */
 export default function AnnouncementModal() {
   const pathname = usePathname() ?? "/";
+  const t = useTranslations("announcement");
   const [current, setCurrent] = useState<{ announcement: Announcement; platform: Platform } | null>(null);
   const isPublicPage = !/\/(admin|signin|signup)(\/|$)/.test(pathname);
 
@@ -91,7 +93,7 @@ export default function AnnouncementModal() {
             style={{ "--an-scale": framing?.scale ?? 1 } as React.CSSProperties}
           />
           <div className="an-shade" aria-hidden="true" />
-          <button type="button" className="an-close" onClick={() => close("close")} aria-label="Close">×</button>
+          <button type="button" className="an-close" onClick={() => close("close")} aria-label={t("close")}>×</button>
           <div className="an-body">
             <div className="an-brand" aria-hidden="true">
               <img src="/assets/brand/toone-mark.svg" alt="" />

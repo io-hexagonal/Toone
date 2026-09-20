@@ -228,6 +228,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
   const messages = await getMessages();
   const clientMessages = {
+    announcement: messages.announcement,
     auth: messages.auth,
     contact: messages.contact,
     footer: messages.footer,
