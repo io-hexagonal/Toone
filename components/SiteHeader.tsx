@@ -128,7 +128,6 @@ export default function SiteHeader({
         </Link>
         <nav className="links" aria-label="Primary">
           <Link href={`${landingPath}#how`} data-optional>{footer("how")}</Link>
-          <Link href="/resources" data-optional>{t("resources")}</Link>
           <Link href={showcasesPath} data-optional>
             {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
           </Link>

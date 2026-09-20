@@ -67,3 +67,14 @@
   .emptyShare { margin: 18px auto; }
   .page .search { max-width: none; }
 }
+
+.requests { margin: 28px 0 40px; }
+.requestSearch { display: flex; gap: 10px; max-width: 680px; margin-bottom: 20px; flex-wrap: wrap; }
+.requestSearch input { flex: 1 1 220px; }
+.requestSearch select { flex: 0 1 200px; width: auto; }
+.inviteNotice { color: #b7d4ad; font-size: 13px; line-height: 1.5; margin: 0 0 16px; }
+.requestPagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+.requestPagination > div { display: flex; gap: 8px; }
+.requestPagination .notice { margin: 0 !important; }
+.requests td:nth-child(3) { min-width: auto; }
+.requests td:last-child { white-space: nowrap; }

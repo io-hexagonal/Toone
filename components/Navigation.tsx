@@ -80,9 +80,6 @@ export default async function Navigation({
           pointerEvents: "auto",
         }}
       >
-        <a href="/en/resources" className="minimal-link">
-          {t("resources")}
-        </a>
         <Link
           href={showcasesPath}
           className="minimal-link"

@@ -8,6 +8,7 @@ import Script from "next/script";
 import { Playfair_Display, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
+import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
 export const viewport: Viewport = {
@@ -266,6 +267,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       >
         <NextIntlClientProvider messages={clientMessages}>
           {children}
+          <AnnouncementModal />
         </NextIntlClientProvider>
       </body>
     </html>

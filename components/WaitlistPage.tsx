@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -12,6 +13,13 @@ export default function WaitlistPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const submitting = useRef(false);
+
+  // The announcement card sends non-Mac visitors here with #notify: land them in the field.
+  useEffect(() => {
+    if (window.location.hash !== "#notify") return;
+    window.history.replaceState(null, "", window.location.pathname);
+    document.querySelector<HTMLInputElement>("[data-early-access-input]")?.focus();
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,6 +105,8 @@ export default function WaitlistPage() {
         <span>toone</span>
       </Link>
 
+      <AccessAvatar />
+
       <h1 className="waitlist-title">{t("waitlistTitle")}</h1>
       <p className="waitlist-sub">{t("waitlistSub")}</p>
 
@@ -107,6 +117,7 @@ export default function WaitlistPage() {
           <form className="waitlist-form" onSubmit={handleSubmit}>
             <input
               className="waitlist-input"
+              data-early-access-input=""
               type="email"
               autoComplete="email"
               placeholder={t("authEmailPh")}

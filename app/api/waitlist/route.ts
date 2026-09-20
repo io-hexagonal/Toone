@@ -1,16 +1,19 @@
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { apiBase } from "@/lib/api";
 
-/** Forward early-access requests to the configured Toone waitlist endpoint. */
-const UPSTREAM = process.env.WAITLIST_UPSTREAM || "https://api.trytoone.com/v1/waitlist";
+// Share the auth API configuration. The legacy WAITLIST_UPSTREAM override can
+// silently send this form to a retired host while the rest of the site works.
+const UPSTREAM = `${apiBase().replace(/\/$/, "")}/waitlist`;
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
     const email = body?.email;
     const source = body?.source;
 
-    if (!email || typeof email !== "string" || !email.includes("@")) {
+    if (typeof email !== "string" || email.trim().length > 254 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
@@ -52,10 +55,20 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (res.status === 400) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+    if (res.status === 429) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again in a minute." },
+        { status: 429, headers: { "Retry-After": "60" } },
+      );
+    }
     console.error(`[waitlist] Upstream responded ${res.status}`);
     return NextResponse.json({ error: "Server error" }, { status: 502 });
   } catch (err) {
-    console.error("[waitlist] Error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    const timeout = err instanceof Error && err.name === "TimeoutError";
+    console.error("[waitlist] Upstream unavailable", { timeout });
+    return NextResponse.json({ error: "Server error" }, { status: timeout ? 504 : 502 });
   }
 }

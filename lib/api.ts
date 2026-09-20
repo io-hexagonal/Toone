@@ -253,6 +253,10 @@ export type CreatedInvitation = {
   /** 0 means unlimited; 1 is a personal single-use code. */
   max_uses: number;
   signup_url: string;
+  /** Delivery address given at creation, when any. */
+  email?: string;
+  /** True when the server handed an email to the mailer (delivery is best-effort). */
+  email_queued?: boolean;
 };
 
 export async function canManageInvitations(token: string): Promise<boolean> {
@@ -270,7 +274,7 @@ export async function listInvitations(token: string): Promise<InvitationRecord[]
 
 export async function createInvitation(
   token: string,
-  input: { recipient_name: string; code: string; days: number; max_uses?: number; expires_at?: string },
+  input: { recipient_name: string; code: string; days: number; max_uses?: number; expires_at?: string; email?: string },
 ): Promise<CreatedInvitation> {
   return request<CreatedInvitation>("/admin/invitations", {
     ...jsonPost(input),
@@ -299,4 +303,38 @@ export async function logout(token: string): Promise<void> {
   } finally {
     clearSession();
   }
+}
+
+export type EarlyAccessRequest = {
+  id: string;
+  email: string;
+  source: string;
+  created_at: string;
+  /** Set once an administrator has sent an invitation for this request. */
+  invitation_id?: string;
+  invited_at?: string;
+};
+
+export type EarlyAccessRequestStatus = "" | "pending" | "invited";
+
+export type EarlyAccessRequestPage = {
+  entries: EarlyAccessRequest[];
+  has_more: boolean;
+  limit: number;
+};
+
+export async function listEarlyAccessRequests(
+  token: string, search: string, status: EarlyAccessRequestStatus, offset: number, signal?: AbortSignal,
+): Promise<EarlyAccessRequestPage> {
+  const query = new URLSearchParams({ search, status, offset: String(offset) });
+  return request<EarlyAccessRequestPage>(`/admin/waitlist?${query}`, {
+    headers: { Authorization: `Bearer ${token}` }, cache: "no-store", signal,
+  });
+}
+
+/** Issues a personal invitation for one request and emails it to the requester. */
+export async function inviteEarlyAccessRequest(token: string, id: string): Promise<CreatedInvitation> {
+  return request<CreatedInvitation>(`/admin/waitlist/${encodeURIComponent(id)}/invite`, {
+    method: "POST", headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
+  });
 }

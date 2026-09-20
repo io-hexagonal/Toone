@@ -1,0 +1,21 @@
+{
+  "source": "toone-playful-480-v4.webp",
+  "sourceSHA256": "aaa69e628afddf8f7b6a92703924c741c9d62edf9df24b69c5d6bafd4263be14",
+  "file": "toone-playful-v4.gif",
+  "encodedDimensions": [
+    480,
+    480
+  ],
+  "displayDimensions": [
+    240,
+    240
+  ],
+  "background": "#f0ede6",
+  "durationMs": 10800,
+  "frames": 258,
+  "loop": "infinite",
+  "opaqueFrames": true,
+  "clearBorders": true,
+  "loopSeamVerified": true,
+  "bytes": 1858840
+}
