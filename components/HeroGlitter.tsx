@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /** The look, as CSS custom properties on .hg-root. Change these to retune. */
 const DEFAULTS = {
@@ -11,12 +11,6 @@ const DEFAULTS = {
   saturate: 1.85,
   scale: 1.13,
 };
-type Knob = keyof typeof DEFAULTS;
-const RANGES: Record<Knob, [number, number, number]> = {
-  opacity: [0, 1, 0.01], blur: [0, 60, 1], contrast: [0.5, 3, 0.05],
-  brightness: [0.1, 1.5, 0.05], saturate: [0, 2, 0.05], scale: [1, 1.6, 0.01],
-};
-const UNITS: Partial<Record<Knob, string>> = { blur: "px" };
 
 /**
  * HeroGlitter — a treated video loop behind the hero. The source is a liquid
@@ -25,17 +19,10 @@ const UNITS: Partial<Record<Knob, string>> = { blur: "px" };
  * survive, and screened onto the page ground. The result reads as slow light
  * moving behind the content, not as a video.
  *
- * Tuning lives in the CSS variables on .hg-root so it can be adjusted live.
+ * The look lives in DEFAULTS, applied as CSS variables on .hg-root.
  */
 export default function HeroGlitter() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [tune, setTune] = useState<typeof DEFAULTS | null>(null);
-
-  // Development aid: ?hg-tune on the URL shows live sliders for the look.
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") return;
-    if (new URLSearchParams(window.location.search).has("hg-tune")) setTune({ ...DEFAULTS });
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -97,23 +84,10 @@ export default function HeroGlitter() {
             @media (prefers-reduced-motion: reduce) {
               .hg-video { animation: none; }
             }
-            .hg-tune {
-              position: fixed; right: 16px; bottom: 16px; z-index: 200; width: 240px;
-              padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);
-              background: rgba(20,20,19,0.9); color: rgba(255,255,255,0.85); font: 12px/1.4 ui-monospace, Menlo, monospace;
-              display: grid; gap: 8px;
-            }
-            .hg-tune label { display: grid; grid-template-columns: 1fr auto; gap: 4px; }
-            .hg-tune input { grid-column: 1 / -1; width: 100%; accent-color: #f0ede6; }
-            .hg-tune textarea { grid-column: 1 / -1; width: 100%; height: 88px; font: inherit; background: #0f0f0e; color: inherit; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 6px; resize: none; }
           `,
         }}
       />
-      <div
-        className="hg-root"
-        aria-hidden="true"
-        style={tune ? Object.fromEntries(Object.entries(tune).map(([k, v]) => [`--hg-${k}`, `${v}${UNITS[k as Knob] ?? ""}`])) as React.CSSProperties : undefined}
-      >
+      <div className="hg-root" aria-hidden="true">
         <video
           ref={videoRef}
           className="hg-video"
@@ -130,18 +104,6 @@ export default function HeroGlitter() {
         <div className="hg-vignette" />
         <div className="hg-grain" />
       </div>
-      {tune && (
-        <div className="hg-tune">
-          {(Object.keys(DEFAULTS) as Knob[]).map(key => (
-            <label key={key}>
-              <span>{key}</span><span>{tune[key]}{UNITS[key] ?? ""}</span>
-              <input type="range" min={RANGES[key][0]} max={RANGES[key][1]} step={RANGES[key][2]} value={tune[key]}
-                onChange={event => setTune({ ...tune, [key]: Number(event.target.value) })} />
-            </label>
-          ))}
-          <textarea readOnly value={JSON.stringify(tune, null, 1)} aria-label="Current values" />
-        </div>
-      )}
     </>
   );
 }
