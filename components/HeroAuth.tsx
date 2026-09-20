@@ -131,9 +131,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
             }
 
             /* Glass card.
-               .ha-glass::before  a halo outside the card: the same treatment as the
-                                  rim, fading out over --ha-halo so the glass throws
-                                  light past its own edge instead of stopping dead
                .ha-card::after    the frosted interior, fading IN from the edge over
                                   --ha-fade so the rim never sits on a dark step
                .ha-card::before   the refracting rim, fading OUT toward the centre
@@ -141,30 +138,8 @@ export default function HeroAuth({ audience = "business" }: Props) {
                A top bevel of light and a bottom bevel of shadow give the pane thickness. */
             .ha-glass {
               --ha-fade: 34px;
-              --ha-halo: 18px;
               --ha-glass-filter: blur(6px) saturate(2.2) brightness(1.55) contrast(1.08);
-              /* the halo is only a whisper: enough to unpin the outline, never a glow */
-              --ha-halo-filter: blur(10px) saturate(1.25) brightness(1.12);
               position: relative; width: 100%; max-width: 400px;
-            }
-            .ha-glass::before {
-              content: ""; position: absolute; inset: calc(-1 * var(--ha-halo)); z-index: 0;
-              border-radius: calc(16px + var(--ha-halo)); pointer-events: none;
-              backdrop-filter: var(--ha-halo-filter);
-              -webkit-backdrop-filter: var(--ha-halo-filter);
-              /* alpha rises from 0 at the outer edge to 1 at the card edge */
-              -webkit-mask:
-                linear-gradient(to bottom, transparent, #000 var(--ha-halo)),
-                linear-gradient(to top, transparent, #000 var(--ha-halo)),
-                linear-gradient(to right, transparent, #000 var(--ha-halo)),
-                linear-gradient(to left, transparent, #000 var(--ha-halo));
-              -webkit-mask-composite: source-in;
-              mask:
-                linear-gradient(to bottom, transparent, #000 var(--ha-halo)),
-                linear-gradient(to top, transparent, #000 var(--ha-halo)),
-                linear-gradient(to right, transparent, #000 var(--ha-halo)),
-                linear-gradient(to left, transparent, #000 var(--ha-halo));
-              mask-composite: intersect;
             }
             .ha-card {
               position: relative; z-index: 1; isolation: isolate; overflow: hidden;
