@@ -137,7 +137,25 @@ export default function HeroAuth({ audience = "business" }: Props) {
                .ha-card-fringe    a 2px chromatic fringe on the outermost edge
                A top bevel of light and a bottom bevel of shadow give the pane thickness. */
             .ha-glass {
-              --ha-fade: 34px;
+              /* Eased ramps: a straight-line fade that stops dead reads as a crease
+                 (Mach band), so both ramps taper off gradually, and they end at
+                 different distances so no two transitions share a line. */
+              --ha-fade: 48px;   /* rim: bright at the edge, gone by here */
+              --ha-fill: 64px;   /* interior: absent at the edge, full by here */
+              --ha-rim-stops: #000,
+                rgba(0,0,0,0.78) calc(var(--ha-fade) * 0.18),
+                rgba(0,0,0,0.5) calc(var(--ha-fade) * 0.38),
+                rgba(0,0,0,0.26) calc(var(--ha-fade) * 0.58),
+                rgba(0,0,0,0.1) calc(var(--ha-fade) * 0.78),
+                rgba(0,0,0,0.02) calc(var(--ha-fade) * 0.92),
+                transparent var(--ha-fade);
+              --ha-fill-stops: transparent,
+                rgba(0,0,0,0.03) calc(var(--ha-fill) * 0.1),
+                rgba(0,0,0,0.12) calc(var(--ha-fill) * 0.26),
+                rgba(0,0,0,0.3) calc(var(--ha-fill) * 0.44),
+                rgba(0,0,0,0.55) calc(var(--ha-fill) * 0.64),
+                rgba(0,0,0,0.82) calc(var(--ha-fill) * 0.84),
+                #000 var(--ha-fill);
               --ha-glass-filter: blur(6px) saturate(2.2) brightness(1.55) contrast(1.08);
               position: relative; width: 100%; max-width: 400px;
             }
@@ -161,32 +179,32 @@ export default function HeroAuth({ audience = "business" }: Props) {
               -webkit-backdrop-filter: blur(22px) saturate(1.25);
               /* fade in from the edge so the glass edge is not a dark step */
               -webkit-mask:
-                linear-gradient(to bottom, transparent, #000 var(--ha-fade)),
-                linear-gradient(to top, transparent, #000 var(--ha-fade)),
-                linear-gradient(to right, transparent, #000 var(--ha-fade)),
-                linear-gradient(to left, transparent, #000 var(--ha-fade));
+                linear-gradient(to bottom, var(--ha-fill-stops)),
+                linear-gradient(to top, var(--ha-fill-stops)),
+                linear-gradient(to right, var(--ha-fill-stops)),
+                linear-gradient(to left, var(--ha-fill-stops));
               -webkit-mask-composite: source-in;
               mask:
-                linear-gradient(to bottom, transparent, #000 var(--ha-fade)),
-                linear-gradient(to top, transparent, #000 var(--ha-fade)),
-                linear-gradient(to right, transparent, #000 var(--ha-fade)),
-                linear-gradient(to left, transparent, #000 var(--ha-fade));
+                linear-gradient(to bottom, var(--ha-fill-stops)),
+                linear-gradient(to top, var(--ha-fill-stops)),
+                linear-gradient(to right, var(--ha-fill-stops)),
+                linear-gradient(to left, var(--ha-fill-stops));
               mask-composite: intersect;
             }
             .ha-card::before {
               content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
               pointer-events: none;
-              /* union of four edge fades = a rim that dissolves toward the centre */
+              /* union of four eased edge fades = a rim that dissolves toward the centre */
               -webkit-mask:
-                linear-gradient(to bottom, #000, transparent var(--ha-fade)),
-                linear-gradient(to top, #000, transparent var(--ha-fade)),
-                linear-gradient(to right, #000, transparent var(--ha-fade)),
-                linear-gradient(to left, #000, transparent var(--ha-fade));
+                linear-gradient(to bottom, var(--ha-rim-stops)),
+                linear-gradient(to top, var(--ha-rim-stops)),
+                linear-gradient(to right, var(--ha-rim-stops)),
+                linear-gradient(to left, var(--ha-rim-stops));
               mask:
-                linear-gradient(to bottom, #000, transparent var(--ha-fade)),
-                linear-gradient(to top, #000, transparent var(--ha-fade)),
-                linear-gradient(to right, #000, transparent var(--ha-fade)),
-                linear-gradient(to left, #000, transparent var(--ha-fade));
+                linear-gradient(to bottom, var(--ha-rim-stops)),
+                linear-gradient(to top, var(--ha-rim-stops)),
+                linear-gradient(to right, var(--ha-rim-stops)),
+                linear-gradient(to left, var(--ha-rim-stops));
               backdrop-filter: var(--ha-glass-filter);
               -webkit-backdrop-filter: var(--ha-glass-filter);
             }
