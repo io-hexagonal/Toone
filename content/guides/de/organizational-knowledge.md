@@ -27,4 +27,4 @@ Halten Sie die Informationen Ihres Teams bei der jeweiligen Arbeit bereit.
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
 
-[Frühzugang anfragen](/early-access)
+[Frühzugang anfragen](/request-access)

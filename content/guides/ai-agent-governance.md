@@ -26,4 +26,4 @@ Use the available approval and sharing controls for the workflow you choose. Rev
 
 Look at what was produced, give feedback, and improve the next run. Toone supports your judgement; it does not guarantee that every result is correct.
 
-[See examples](/showcases) · [Request Early Access](/early-access)
+[See examples](/showcases) · [Request Early Access](/request-access)

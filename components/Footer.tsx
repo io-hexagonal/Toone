@@ -79,7 +79,7 @@ export default async function Footer({
               <Link href={`${landingPath}#faq`}>FAQ</Link>
               <Link
                 className="ftr-download"
-                href="/early-access"
+                href="/request-access"
                 data-umami-event="request-early-access"
                 data-umami-event-placement="footer"
               >

@@ -27,4 +27,4 @@ Gardez les informations utiles à votre équipe à proximité du travail.
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Demander un accès anticipé](/early-access)
+[Demander un accès anticipé](/request-access)

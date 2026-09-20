@@ -27,4 +27,4 @@ Confie tarefas específicas a agentes com responsabilidades claras.
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
 
-[Pedir acesso antecipado](/early-access)
+[Pedir acesso antecipado](/request-access)

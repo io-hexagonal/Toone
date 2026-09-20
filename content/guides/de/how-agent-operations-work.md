@@ -27,4 +27,4 @@ Beschreiben Sie wiederkehrende Arbeit und machen Sie daraus eine wiederverwendba
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
 
-[Frühzugang anfragen](/early-access)
+[Frühzugang anfragen](/request-access)

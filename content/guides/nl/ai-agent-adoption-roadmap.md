@@ -27,4 +27,4 @@ Houd de informatie die je team nodig heeft dicht bij het werk.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Vroege toegang aanvragen](/early-access)
+[Vroege toegang aanvragen](/request-access)

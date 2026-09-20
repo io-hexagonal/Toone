@@ -27,4 +27,4 @@ Describe work you repeat and turn it into a routine you can return to.
 
 Follow progress, review outputs, and decide what happens next.
 
-[Request Early Access](/early-access)
+[Request Early Access](/request-access)
