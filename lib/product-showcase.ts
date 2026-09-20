@@ -251,6 +251,15 @@ export function getProductGuidePage(slug: string): ProductGuidePage | null {
   return item ? readGuidePage(item) : null;
 }
 
+/**
+ * Repo-relative path of the markdown backing a product-guide slug. The sitemap
+ * uses it to derive a real `lastmod` from git history (TECH-013).
+ */
+export function getProductGuideSourcePath(slug: string): string | null {
+  const item = flattenedItems.find((candidate) => candidate.slug === slug);
+  return item ? `content/product-showcase/en/${item.contentFile}` : null;
+}
+
 export function getProductGuideSlugs(): string[] {
   return flattenedItems.map((item) => item.slug).filter(Boolean);
 }
