@@ -66,6 +66,20 @@
       "locales": [
         "en"
       ]
+    },
+    {
+      "slug": "ai-agent-routines",
+      "canonicalPath": "/ai-agent-routines",
+      "locales": [
+        "en"
+      ]
+    },
+    {
+      "slug": "choosing-ai-agent-organization-templates",
+      "canonicalPath": "/guides/choosing-ai-agent-organization-templates",
+      "locales": [
+        "en"
+      ]
     }
   ]
 }

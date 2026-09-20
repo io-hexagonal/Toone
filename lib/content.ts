@@ -8,6 +8,9 @@ export type PublicationAuthorType = "Organization" | "Person";
 export type Publication = {
   locale: Locale;
   slug: string;
+  /** Repo-relative path of the markdown file backing this publication. Used to
+   *  read a real `dateModified` / `lastmod` from git history (TECH-013). */
+  sourcePath: string;
   canonicalPath: string;
   title: string;
   heading: string;
@@ -92,6 +95,7 @@ function readPublication(filePath: string, expectedLocale: Locale): Publication 
   return {
     locale: declaredLocale,
     slug,
+    sourcePath: path.relative(process.cwd(), filePath),
     canonicalPath: String(data.canonicalPath),
     title: String(data.title),
     heading: String(data.heading || data.title),

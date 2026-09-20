@@ -8,9 +8,11 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: "About Toone",
+    // Already carries the brand twice ("Toone", "Toone AI"): `absolute` keeps
+    // the root `%s | Toone` template from adding a third (audit P2-5).
+    title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
-      "Meet Toone, the local-first macOS application for organizing governed AI agents into departments, roles, and routines.",
+      "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app published by Hexagonal.io and built on Claude Code and Codex.",
     alternates: {
       canonical: "https://trytoone.com/en/about",
       languages: {
@@ -22,8 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: "website",
       url: "https://trytoone.com/en/about",
-      title: "About Toone",
-      description: "Toone is a local-first, governed AI operating layer published by Hexagonal.io.",
+      title: "About Toone (Toone AI)",
+      description:
+        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
       siteName: "Toone",
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },
