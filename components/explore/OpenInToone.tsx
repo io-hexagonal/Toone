@@ -2,16 +2,28 @@
 import { useEffect, useRef } from "react";
 import { createOpenAttempt } from "@/lib/explore/presentation";
 
+/**
+ * "Open in Toone" CTA (contract §2 deep links, plan §4.3).
+ *
+ * Server-rendered as a plain download link so crawlers and no-JS visitors
+ * get a usable anchor. With JavaScript it assigns the validated `toone://`
+ * URL and starts a 1.5 s timer; if the page is still visible when it fires,
+ * the app is not installed and the visitor goes to the download page.
+ * Losing visibility, page hide, blur, unmount or a repeated click cancels
+ * the pending fallback so returning from the app never redirects.
+ */
 export default function OpenInToone({
   url,
   label,
+  locale,
 }: {
   url: string | null;
   label: string;
+  locale: string;
 }) {
   const cancel = useRef<(() => void) | null>(null);
   useEffect(() => () => cancel.current?.(), []);
-  const fallback = "/en/download?from=explore";
+  const fallback = `/${locale}/download?from=explore`;
   return (
     <a
       className="explore-button"

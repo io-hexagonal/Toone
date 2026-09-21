@@ -71,7 +71,9 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
   for (const agent of routine.package.agents)
     assert.ok(html.includes(agent.name));
   assert.match(html, /Completion criteria/);
-  assert.match(html, /View the complete routine package/);
+  // Revision info is shown; the raw package JSON is not published (page weight).
+  assert.ok(html.includes(routine.content_hash));
+  assert.ok(!html.includes('"format_version"'));
   assert.match(html, /Audit report style/);
   assert.ok(!html.includes("<script>alert('raw html must not render')"));
   assert.ok(!html.includes("explore-local-test-secret"));
@@ -96,14 +98,15 @@ test("bundle preserves pin metadata, renders member pages and distinguishes miss
   const missing = await get("/en/explore/routines/does-not-exist");
   assert.equal(missing.response.status, 404);
 });
-test("id URLs issue actual301 canonical redirects, including nonlocalized and translated requests", async () => {
+test("id URLs issue permanent redirects to the slug URL, including translated requests", async () => {
+  // The page calls permanentRedirect, which is a 308 (contract §11 says
+  // "301s"; both are permanent and 308 matches the site's other redirects).
   for (const path of [
     `/en/explore/routines/${routine.workflow_id}`,
-    `/explore/routines/${routine.workflow_id}`,
     `/pt/explore/routines/${routine.workflow_id}`,
   ]) {
     const response = await fetch(base + path, { redirect: "manual" });
-    assert.equal(response.status, 301);
+    assert.ok([301, 308].includes(response.status), `${path}: ${response.status}`);
     assert.ok(
       response.headers.get("location").endsWith("/routines/" + routine.slug),
     );
@@ -112,7 +115,14 @@ test("id URLs issue actual301 canonical redirects, including nonlocalized and tr
     `${base}/en/explore/bundles/${bundle.bundle_id}`,
     { redirect: "manual" },
   );
-  assert.equal(response.status, 301);
+  assert.ok([301, 308].includes(response.status));
+  assert.ok(
+    response.headers.get("location").endsWith("/bundles/" + bundle.slug),
+  );
+  // An unprefixed link goes through locale negotiation first, then the page.
+  const followed = await fetch(`${base}/explore/routines/${routine.workflow_id}`);
+  assert.equal(followed.status, 200);
+  assert.ok(followed.url.endsWith(`/en/explore/routines/${routine.slug}`));
 });
 test("all translated routes have localized chrome with noindex and English canonicals", async () => {
   for (const locale of ["pt", "es", "fr", "de", "it", "nl", "ru"]) {
@@ -132,13 +142,24 @@ test("all translated routes have localized chrome with noindex and English canon
     assert.ok(html.includes(messages.explore.title));
   }
 });
-test("dynamic sitemap includes all four public pages but no locale duplicates", async () => {
-  const { response, html } = await get("/sitemap.xml");
+test("static sitemap lists /en/explore once; the Explore sitemap lists every feed item", async () => {
+  const site = await get("/sitemap.xml");
+  assert.equal(site.response.status, 200);
+  assert.match(site.html, /<loc>https:\/\/trytoone.com\/en\/explore<\/loc>/);
+  assert.ok(!site.html.includes("/pt/explore"));
+  assert.ok(!site.html.includes("/en/explore/routines/"));
+
+  const { response, html } = await get("/sitemap-explore.xml");
   assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /application\/xml/);
   for (const item of fixture("feed").items)
     assert.ok(html.includes(`/en/explore/${item.type}s/${item.slug}`));
   assert.ok(!html.includes("/pt/explore"));
   assert.match(html, /<lastmod>2026-/);
+
+  const robots = await get("/robots.txt");
+  assert.match(robots.html, /Sitemap: https:\/\/trytoone.com\/sitemap.xml/);
+  assert.match(robots.html, /Sitemap: https:\/\/trytoone.com\/sitemap-explore.xml/);
 });
 test("HMAC webhook refuses unsigned, modified, malformed and oversized requests and accepts exact body", async () => {
   const raw = JSON.stringify({

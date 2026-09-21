@@ -56,7 +56,8 @@ test("API joins versioned prefix, encodes filters, caches tags, and distinguishe
   );
   assert.equal(await getRoutine("valid-slug"), null);
   await assert.rejects(listRoutines(), /404/);
-  await assert.rejects(listBundles(), /404/);
+  // A server without the bundles route is "no bundles yet", not an outage.
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
   t.mock.method(
     globalThis,
     "fetch",

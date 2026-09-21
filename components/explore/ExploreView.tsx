@@ -66,7 +66,6 @@ export const COPY_KEYS = [
   "revision",
   "newer",
   "license",
-  "source",
   "back",
   "home",
   "breadcrumb",
@@ -263,9 +262,11 @@ export function CatalogCard({
           </p>
           <h2>{entry.title}</h2>
           <p className="explore-summary">{entry.summary}</p>
-          <p className="explore-byline">
-            {ui.by} {entry.author_name}
-          </p>
+          {entry.author_name && (
+            <p className="explore-byline">
+              {ui.by} {entry.author_name}
+            </p>
+          )}
           {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
         </div>
       </a>
@@ -312,7 +313,12 @@ export function DetailHero({
             <h1>{detail.title}</h1>
             <p className="explore-deck">{detail.summary}</p>
             <p className="explore-byline">
-              {ui.by} {detail.author_name} <span>·</span> {ui.approved}{" "}
+              {detail.author_name && (
+                <>
+                  {ui.by} {detail.author_name} <span>·</span>{" "}
+                </>
+              )}
+              {ui.approved}{" "}
               <time dateTime={detail.approved_at}>{date}</time>
             </p>
             {"license" in detail && (
@@ -328,10 +334,11 @@ export function DetailHero({
               <OpenInToone
                 url={deepLink(type, id, detail.revision_id)}
                 label={ui.open}
+                locale={locale}
               />
               <a
                 className="explore-button explore-button-secondary"
-                href="/en/download?from=explore"
+                href={`/${locale}/download?from=explore`}
               >
                 {ui.getToone}
               </a>
@@ -578,13 +585,17 @@ export function RoutineContent({
                   <code>{resource.binding}</code> · {resource.mode}
                 </p>
                 <Markdown text={resource.reason} />
-                {resource.content != null && <pre>{resource.content}</pre>}
-                {resource.directory_entries?.map((entry) => (
-                  <details key={entry.relative_path}>
-                    <summary>{entry.relative_path}</summary>
-                    <pre>{entry.content}</pre>
-                  </details>
-                ))}
+                {/* File contents are installed by the app, not published:
+                    a disclosed directory can be hundreds of KB. */}
+                {!!resource.directory_entries?.length && (
+                  <ul>
+                    {resource.directory_entries.map((entry) => (
+                      <li key={entry.relative_path}>
+                        <code>{entry.relative_path}</code>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </section>
             ))}
           </section>
@@ -613,10 +624,6 @@ export function RoutineContent({
           <p>
             <code>{detail.content_hash}</code>
           </p>
-          <details>
-            <summary>{ui.source}</summary>
-            <pre>{JSON.stringify(pkg, null, 2)}</pre>
-          </details>
         </section>
       </article>
       <aside className="explore-toc">

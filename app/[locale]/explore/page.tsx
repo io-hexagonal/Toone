@@ -93,7 +93,9 @@ export default async function ExplorePage({ params, searchParams }: Props) {
               {ui.show}
             </span>
             <div className="explore-type-options">
-              {(["all", "routines", "bundles"] as const).map((type) => (
+              {(["all", "routines", "bundles"] as const)
+                .filter((type) => type !== "bundles" || catalog.bundlesAvailable)
+                .map((type) => (
                 <a
                   className="explore-type-option"
                   aria-current={query.type === type ? "true" : undefined}

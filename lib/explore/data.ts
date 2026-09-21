@@ -201,12 +201,14 @@ export async function listRoutines(
 }
 
 /**
- * `GET /v1/bundles` (§5.4). Missing collection endpoints are an outage,
- * not an empty catalog.
+ * `GET /v1/bundles` (§5.4). `available` is false when the deployed server
+ * does not serve the route at all (404): the live server predates bundles,
+ * and the index must still render routines and hide the Bundles filter.
+ * Any other failure is an outage and throws.
  */
 export async function listBundles(
   options: ListQuery = {},
-): Promise<ListResult<BundleCatalogEntry>> {
+): Promise<ListResult<BundleCatalogEntry> & { available: boolean }> {
   const result = await getJson<BundleCatalogEntry[]>(
     "bundles",
     {
@@ -217,12 +219,57 @@ export async function listBundles(
     },
     [EXPLORE_TAG],
   );
-  if (!result) throw new ExploreApiError("bundles", 404, "catalog unavailable");
+  if (!result) return { items: [], total: 0, available: false };
   if (!Array.isArray(result.data))
     throw new ExploreApiError("bundles", 502, "expected array");
+  return { items: result.data, total: result.total, available: true };
+}
+
+/**
+ * The deployed server still answers the detail route with the pre-contract
+ * `WorkflowRevision` shape (`id` for the revision, `reviewed_at` instead of
+ * `approved_at`, no counts, no author, and reviewer-only fields). Project it
+ * onto `RoutinePublicDetail` by allow-listing contract fields, so nothing the
+ * contract excludes (`submitted_by`, `reviewed_by`, `review_reason`,
+ * `status`) can reach the page, and derive the counts from the package.
+ */
+function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDetail {
+  const pkg = raw.package as RoutinePublicDetail["package"];
+  const members = Array.isArray(pkg?.members) ? pkg.members : [];
+  const str = (value: unknown, fallback = "") =>
+    typeof value === "string" ? value : fallback;
+  const num = (value: unknown, fallback: number) =>
+    typeof value === "number" && Number.isFinite(value) ? value : fallback;
+  const steps = members.reduce(
+    (sum, member) => sum + (member.payload?.steps?.length ?? 0),
+    0,
+  );
   return {
-    items: Array.isArray(result.data) ? result.data : [],
-    total: result.total,
+    workflow_id: str(raw.workflow_id),
+    slug: typeof raw.slug === "string" ? raw.slug : null,
+    revision_id: str(raw.revision_id, str(raw.id)),
+    sequence: num(raw.sequence, 1),
+    title: str(raw.title),
+    summary: str(raw.summary),
+    tags: Array.isArray(raw.tags) ? raw.tags.filter((t) => typeof t === "string") : [],
+    license: str(raw.license),
+    listing: raw.listing === "bundle_only" ? "bundle_only" : "standalone",
+    cover_url: typeof raw.cover_url === "string" ? raw.cover_url : null,
+    cover_image_data_url:
+      typeof raw.cover_image_data_url === "string" ? raw.cover_image_data_url : null,
+    author_name: str(raw.author_name),
+    approved_at: str(raw.approved_at, str(raw.reviewed_at)),
+    content_hash: str(raw.content_hash),
+    package_schema_version: num(raw.package_schema_version, num(pkg?.format_version, 0)),
+    routine_schema_version: num(raw.routine_schema_version, num(pkg?.routine_schema_version, 0)),
+    member_count: num(raw.member_count, members.length),
+    sub_routine_count: num(raw.sub_routine_count, Math.max(members.length - 1, 0)),
+    step_count: num(raw.step_count, steps),
+    agent_count: num(raw.agent_count, pkg?.agents?.length ?? 0),
+    included_in_bundles: Array.isArray(raw.included_in_bundles)
+      ? (raw.included_in_bundles as RoutinePublicDetail["included_in_bundles"])
+      : [],
+    package: pkg,
   };
 }
 
@@ -231,26 +278,24 @@ export async function getRoutine(
   idOrSlug: string,
 ): Promise<RoutinePublicDetail | null> {
   if (!isRouteParam(idOrSlug)) return null;
-  const result = await getJson<RoutinePublicDetail>(
+  const result = await getJson<Record<string, unknown>>(
     `workflows/${encodeURIComponent(idOrSlug)}`,
     {},
     [EXPLORE_TAG, itemTag(idOrSlug)],
   );
   if (!result) return null;
-  if (
-    !result.data ||
-    !isWorkflowId(result.data.workflow_id) ||
-    !Array.isArray(result.data.package?.members) ||
-    !Array.isArray(result.data.tags) ||
-    !Number.isFinite(Date.parse(result.data.approved_at))
-  ) {
-    throw new ExploreApiError(
-      "workflows/detail",
-      502,
-      "invalid routine detail",
-    );
+  if (!result.data || typeof result.data !== "object") {
+    throw new ExploreApiError("workflows/detail", 502, "invalid routine detail");
   }
-  return result.data;
+  const detail = normalizeRoutineDetail(result.data);
+  if (
+    !isWorkflowId(detail.workflow_id) ||
+    !Array.isArray(detail.package?.members) ||
+    !Number.isFinite(Date.parse(detail.approved_at))
+  ) {
+    throw new ExploreApiError("workflows/detail", 502, "invalid routine detail");
+  }
+  return detail;
 }
 
 /** `GET /v1/bundles/{id-or-slug}` (§5.5); null when unknown or not public. */
@@ -276,23 +321,25 @@ export async function getBundle(
   return result.data;
 }
 
-/** `GET /v1/explore/feed` (§5.8); an unavailable feed must not erase sitemap entries. */
-export async function getExploreFeed(since?: string): Promise<ExploreFeed> {
+/**
+ * `GET /v1/explore/feed` (§5.8). `null` when the deployed server does not
+ * serve the route yet (404); an outage throws so the caller can decide
+ * whether to keep the last good render.
+ */
+export async function getExploreFeed(since?: string): Promise<ExploreFeed | null> {
   const result = await getJson<ExploreFeed>("explore/feed", { since }, [
     EXPLORE_TAG,
   ]);
-  if (!result)
-    throw new ExploreApiError("explore/feed", 404, "feed unavailable");
+  if (!result) return null;
   if (!Array.isArray(result.data?.items))
     throw new ExploreApiError("explore/feed", 502, "expected feed");
   return result.data;
 }
 
-/** `GET /v1/explore/tags` (§5.9); absent routes are unavailable, not empty. */
+/** `GET /v1/explore/tags` (§5.9); empty when the route is not served yet (404). */
 export async function getExploreTags(): Promise<ExploreTag[]> {
   const result = await getJson<ExploreTag[]>("explore/tags", {}, [EXPLORE_TAG]);
-  if (!result)
-    throw new ExploreApiError("explore/tags", 404, "tags unavailable");
+  if (!result) return [];
   if (!Array.isArray(result.data))
     throw new ExploreApiError("explore/tags", 502, "expected array");
   return result.data;
@@ -301,16 +348,24 @@ export async function getExploreTags(): Promise<ExploreTag[]> {
 export const PAGE_SIZE = 20;
 
 /** Merge source prefixes, not independently offset pages (which drop interleaved results). */
-export async function loadCatalog(
-  query: CatalogQuery,
-): Promise<{ items: CatalogItem[]; total: number; page: number }> {
+export async function loadCatalog(query: CatalogQuery): Promise<{
+  items: CatalogItem[];
+  total: number;
+  page: number;
+  /** False when the server has no bundles route yet; the index hides the filter. */
+  bundlesAvailable: boolean;
+}> {
   const filters = { query: query.query, tag: query.tag, limit: 100 };
   const [routines, bundles] = await Promise.all([
     query.type === "bundles"
       ? Promise.resolve({ items: [] as RoutineCatalogEntry[], total: 0 })
       : listRoutines({ ...filters, listing: "standalone" }),
     query.type === "routines"
-      ? Promise.resolve({ items: [] as BundleCatalogEntry[], total: 0 })
+      ? listBundles({ ...filters, limit: 1 }).then((r) => ({
+          items: [] as BundleCatalogEntry[],
+          total: 0,
+          available: r.available,
+        }))
       : listBundles(filters),
   ]);
   const total = routines.total + bundles.total;
@@ -351,5 +406,6 @@ export async function loadCatalog(
     items: items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
     total,
     page,
+    bundlesAvailable: bundles.available,
   };
 }

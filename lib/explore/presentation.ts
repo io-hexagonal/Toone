@@ -112,6 +112,9 @@ export function exploreMetadata(
   cover: string | null,
 ) {
   const canonical = `${SITE}/en${path}`;
+  // Scrapers need a fetchable URL for og:image; the inline data-URL cover the
+  // pre-contract server sends would only bloat the head (~250 KB twice).
+  const image = cover && /^https?:\/\//.test(cover) ? cover : null;
   return {
     title,
     description,
@@ -126,13 +129,13 @@ export function exploreMetadata(
       title,
       description,
       siteName: "Toone",
-      images: cover ? [cover] : [`${SITE}/assets/og/toone-og.png`],
+      images: image ? [image] : [`${SITE}/assets/og/toone-og.png`],
     },
     twitter: {
       card: "summary_large_image" as const,
       title,
       description,
-      images: cover ? [cover] : [`${SITE}/assets/og/toone-og.png`],
+      images: image ? [image] : [`${SITE}/assets/og/toone-og.png`],
     },
   };
 }
