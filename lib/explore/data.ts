@@ -1,3 +1,4 @@
+import { normalizeClassification, validateCatalogTaxonomy, hasTaxonomyFilters, type ExploreTaxonomy, type ExploreFacet } from "./taxonomy";
 /**
  * Server-only fetchers for the public Explore catalog (contract §3, §5, §11).
  *
@@ -190,13 +191,13 @@ export function isMemoizedNotServed(path: string): boolean {
  */
 async function getJson<T>(
   path: string,
-  query: Record<string, string | number | undefined>,
+  query: Record<string, string | string[] | number | undefined>,
   tags: string[],
 ): Promise<Fetched<T> | null> {
   const url = new URL(`${exploreApiBase()}/${path}`);
   for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined && value !== "")
-      url.searchParams.set(key, String(value));
+    if (Array.isArray(value)) { for (const item of value) url.searchParams.append(key, item); }
+    else if (value !== undefined && value !== "") url.searchParams.set(key, String(value));
   }
   const routeKey = `${url.origin}${url.pathname}`;
   const negativeUntil = notServed.get(routeKey);
@@ -261,6 +262,9 @@ async function getJson<T>(
 }
 
 export type ListQuery = {
+  category?: string;
+  topic?: string[];
+  useful_for?: string[];
   query?: string;
   tag?: string;
   limit?: number;
@@ -277,6 +281,7 @@ export async function listRoutines(
       listing: options.listing,
       query: options.query,
       tag: options.tag,
+      category: options.category, topic: options.topic, useful_for: options.useful_for,
       limit: options.limit ?? 100,
       offset: options.offset,
     },
@@ -303,6 +308,7 @@ export async function listBundles(
     {
       query: options.query,
       tag: options.tag,
+      category: options.category, topic: options.topic, useful_for: options.useful_for,
       limit: options.limit ?? 100,
       offset: options.offset,
     },
@@ -334,6 +340,7 @@ function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDeta
     0,
   );
   return {
+    classification: normalizeClassification(raw.classification),
     workflow_id: str(raw.workflow_id),
     slug: typeof raw.slug === "string" ? raw.slug : null,
     revision_id: str(raw.revision_id, str(raw.id)),
@@ -389,6 +396,7 @@ function normalizeCatalogEntry(raw: unknown): RoutineCatalogEntry | null {
   const num = (value: unknown) =>
     typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : 0;
   const entry: RoutineCatalogEntry = {
+    classification: normalizeClassification(r.classification),
     workflow_id: str(r.workflow_id),
     slug: typeof r.slug === "string" ? r.slug : null,
     revision_id: str(r.revision_id),
@@ -437,6 +445,7 @@ function normalizeBundleDetail(raw: unknown): BundlePublicDetail | null {
     });
   }
   const detail: BundlePublicDetail = {
+    classification: normalizeClassification(r.classification),
     bundle_id: str(r.bundle_id),
     slug: typeof r.slug === "string" ? r.slug : null,
     revision_id: str(r.revision_id),
@@ -545,7 +554,7 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   /** False when the server has no bundles route yet; the index hides the filter. */
   bundlesAvailable: boolean;
 }> {
-  const filters = { query: query.query, tag: query.tag, limit: 100 };
+  const filters = { query: query.query, tag: query.tag, category: query.category, topic: query.topics, useful_for: query.usefulFor, limit: 100 };
   // Both sources are always fetched with the same URL the "All" view uses,
   // so a type filter shares the cached responses instead of adding a probe;
   // the excluded source's items are simply dropped.
@@ -605,4 +614,30 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
     page,
     bundlesAvailable: bundles.available,
   };
+}
+
+
+export async function getExploreTaxonomy(): Promise<ExploreTaxonomy | null> {
+  const result = await getJson<ExploreTaxonomy>("explore/taxonomy", {}, [EXPLORE_TAG]);
+  if (!result) return null;
+  if (typeof result.data?.version !== "string" || !Array.isArray(result.data.terms) || result.data.terms.some((term) => typeof term.id !== "string" || typeof term.label !== "string" || typeof term.description !== "string" || !["category", "topic", "useful_for"].includes(term.kind) || typeof term.active !== "boolean"))
+    throw new ExploreApiError("explore/taxonomy", 502, "invalid taxonomy");
+  return result.data;
+}
+
+export async function getExploreFacets(query: CatalogQuery): Promise<ExploreFacet[]> {
+  const result = await getJson<ExploreFacet[]>("explore/facets", {query: query.query, tag: query.tag, category: query.category, topic: query.topics, useful_for: query.usefulFor, type: query.type, listing: "standalone"}, [EXPLORE_TAG]);
+  if (!result) return [];
+  if (!Array.isArray(result.data) || result.data.some((f) => typeof f.term_id !== "string" || !Number.isSafeInteger(f.routines) || !Number.isSafeInteger(f.bundles) || f.routines < 0 || f.bundles < 0))
+    throw new ExploreApiError("explore/facets", 502, "invalid facets");
+  return result.data;
+}
+
+export async function loadCatalogWithTaxonomy(query: CatalogQuery) {
+  const taxonomy = await getExploreTaxonomy();
+  let invalidFilters = taxonomy ? validateCatalogTaxonomy(query, taxonomy) : hasTaxonomyFilters(query) ? [query.category, ...(query.topics ?? []), ...(query.usefulFor ?? [])].filter((id): id is string => !!id) : [];
+  if ((query.topics?.length ?? 0) > 20 || (query.usefulFor?.length ?? 0) > 20) invalidFilters = [...(query.topics ?? []), ...(query.usefulFor ?? [])];
+  if (invalidFilters.length) return { items: [] as CatalogItem[], total: 0, page: 1, bundlesAvailable: true, taxonomy, facets: [] as ExploreFacet[], invalidFilters };
+  const [catalog, facets] = await Promise.all([loadCatalog(query), taxonomy ? getExploreFacets(query) : Promise.resolve([])]);
+  return {...catalog, taxonomy, facets, invalidFilters};
 }

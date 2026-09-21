@@ -7,3 +7,6 @@ node_modules/
 .next/
 tsconfig.tsbuildinfo
 .env*
+
+.next-taxonomy/
+.next-taxonomy-build/

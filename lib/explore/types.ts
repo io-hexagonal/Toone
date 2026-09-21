@@ -1,3 +1,4 @@
+import type { ExploreClassification } from "./taxonomy";
 /**
  * Explore wire types — derived from the frozen contract in
  * docs/architecture/explore/contract.md (§5) and its fixtures.
@@ -12,6 +13,8 @@ export type RoutineListing = "standalone" | "bundle_only";
 
 /** `GET /v1/workflows` items (contract §5.1). */
 export type RoutineCatalogEntry = {
+  classification?: ExploreClassification | null;
+  classification_hash?: string;
   workflow_id: string;
   slug?: string | null;
   revision_id: string;
@@ -60,6 +63,7 @@ export type RoutinePayload = {
   schemaVersion?: number;
   steps?: RoutineStep[];
   inputs?: RoutineInput[];
+  artefacts?: { id: string; name?: string; format?: string; description?: string }[];
 };
 
 export type RoutineStep = {
@@ -68,6 +72,7 @@ export type RoutineStep = {
   description?: string;
   completionCriteria?: string[];
   subRoutineId?: string;
+  childInputBindings?: { childInputId: string; sourceKind: string; sourceId: string }[];
   executorAgentId?: string;
   skillIds?: string[];
   outcomes?: { id: string; description?: string; isTerminal?: boolean }[];
@@ -142,6 +147,8 @@ export type BundleRef = {
 
 /** `GET /v1/workflows/{id-or-slug}` (contract §5.2). */
 export type RoutinePublicDetail = {
+  classification?: ExploreClassification | null;
+  classification_hash?: string;
   workflow_id: string;
   slug?: string | null;
   revision_id: string;
@@ -177,6 +184,8 @@ export type BundleMemberRef = {
 
 /** `GET /v1/bundles` items (contract §5.4). */
 export type BundleCatalogEntry = {
+  classification?: ExploreClassification | null;
+  classification_hash?: string;
   bundle_id: string;
   slug?: string | null;
   revision_id: string;
@@ -200,6 +209,8 @@ export type BundleMemberDetail = RoutineCatalogEntry & {
 
 /** `GET /v1/bundles/{id-or-slug}` (contract §5.5). */
 export type BundlePublicDetail = {
+  classification?: ExploreClassification | null;
+  classification_hash?: string;
   bundle_id: string;
   slug?: string | null;
   revision_id: string;

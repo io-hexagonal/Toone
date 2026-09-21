@@ -391,7 +391,7 @@
     "show": "Mostra",
     "topics": "Argomenti",
     "clearTopic": "Rimuovi argomento",
-    "empty": "Nessun risultato per questi filtri. Prova un’altra ricerca o etichetta.",
+    "empty": "Nessun elemento corrisponde a questi filtri. Prova un’altra ricerca o rimuovi un filtro.",
     "unavailable": "Il catalogo è temporaneamente non disponibile",
     "unavailableBody": "Impossibile caricare il catalogo. Riprova tra un momento.",
     "retry": "Riprova",
@@ -446,6 +446,18 @@
     "runsAs": "Eseguito da",
     "overview": "Panoramica",
     "noTags": "Ancora nessun argomento",
-    "eyebrow": "Routine e Workflow"
+    "eyebrow": "Routine e Workflow",
+    "category": "Categoria",
+    "usefulFor": "Utile per",
+    "filters": "Filtri",
+    "applyFilters": "Applica filtri",
+    "clearFilters": "Cancella filtri",
+    "closeFilters": "Chiudi",
+    "allCategories": "Tutte le categorie",
+    "invalidFilters": "Alcuni filtri selezionati non sono più disponibili. Rimuovili o scegli un’altra opzione.",
+    "classification": "Classificazione",
+    "included": "Incluso",
+    "youProvide": "Da fornire",
+    "produces": "Produce"
   }
 }

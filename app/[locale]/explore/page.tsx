@@ -1,3 +1,5 @@
+import ExploreFilters from "@/components/explore/ExploreFilters";
+import {hasTaxonomyFilters} from "@/lib/explore/taxonomy";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { getCatalog, PAGE_SIZE, resolveSlug } from "@/lib/explore/api";
@@ -27,7 +29,7 @@ export async function generateMetadata({
   const ui = await getExploreCopy(locale);
   const query = parseCatalogQuery(await searchParams);
   const meta = exploreMetadata(locale, "/explore", ui.title, ui.intro, null);
-  if (query.query || query.tag || query.type !== "all" || query.page > 1)
+  if (query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all" || query.page > 1)
     meta.robots.index = false;
   try {
     await getCatalog(JSON.stringify(query));
@@ -115,6 +117,9 @@ export default async function ExplorePage({ params, searchParams }: Props) {
           >
             <input type="hidden" name="type" value={query.type} />
             {query.tag && <input type="hidden" name="tag" value={query.tag} />}
+            {query.category && <input type="hidden" name="category" value={query.category} />}
+            {(query.topics ?? []).map((id) => <input key={id} type="hidden" name="topic" value={id} />)}
+            {(query.usefulFor ?? []).map((id) => <input key={id} type="hidden" name="useful_for" value={id} />)}
             <label>
               <span className="explore-sr-only">{ui.search}</span>
               <input
@@ -128,7 +133,9 @@ export default async function ExplorePage({ params, searchParams }: Props) {
             <button type="submit">{ui.search}</button>
           </form>
         </div>
-        {(tags.length > 0 || query.tag) && (
+        {catalog.taxonomy && <ExploreFilters query={active} taxonomy={catalog.taxonomy} facets={catalog.facets} locale={locale} copy={{ category: ui.category, topics: ui.topics, usefulFor: ui.usefulFor, filters: ui.filters, applyFilters: ui.applyFilters, clearFilters: ui.clearFilters, closeFilters: ui.closeFilters, allCategories: ui.allCategories }} />}
+        {catalog.invalidFilters.length > 0 && <p className="explore-filter-error" role="alert">{ui.invalidFilters} <a href={catalogHref(locale, {...query, category: undefined, topics: [], usefulFor: [], page: 1})}>{ui.clearFilters}</a></p>}
+        {((!catalog.taxonomy && tags.length > 0) || query.tag) && (
           <nav
             className="explore-topic-filter"
             aria-labelledby="explore-topic-label"
@@ -173,6 +180,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
                     : item.entry.bundle_id)
                 }
                 item={item}
+                taxonomy={catalog.taxonomy}
                 locale={locale}
                 ui={ui}
               />
@@ -180,7 +188,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
           </div>
         ) : (
           <p className="explore-empty">
-            {query.query || query.tag || query.type !== "all"
+            {query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all"
               ? ui.empty
               : ui.emptyCatalog}
           </p>

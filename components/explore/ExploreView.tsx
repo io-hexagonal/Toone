@@ -1,3 +1,5 @@
+import { requirementFacts } from "@/lib/explore/requirements";
+import { termLabel, type ExploreTaxonomy } from "@/lib/explore/taxonomy";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -7,6 +9,7 @@ import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
 import CoverImage from "./CoverImage";
 import {
+  getExploreTaxonomy,
   resolveCardCoverUrl,
   resolveCoverUrl,
   resolveSlug,
@@ -25,6 +28,19 @@ import type {
 import "./explore.css";
 
 export const COPY_KEYS = [
+  "category",
+  "usefulFor",
+  "filters",
+  "applyFilters",
+  "clearFilters",
+  "closeFilters",
+  "allCategories",
+  "invalidFilters",
+  "classification",
+  "included",
+  "youProvide",
+  "produces",
+
   "title",
   "intro",
   "all",
@@ -256,10 +272,12 @@ export function CatalogCard({
   item,
   locale,
   ui,
+  taxonomy = null,
 }: {
   item: CatalogItem;
   locale: string;
   ui: ExploreCopy;
+  taxonomy?: ExploreTaxonomy | null;
 }) {
   const { entry } = item;
   const href = `/${locale}/explore/${item.type}s/${resolveSlug(entry)}`;
@@ -283,6 +301,7 @@ export function CatalogCard({
               : ui.routine}
           </p>
           <h2>{entry.title}</h2>
+          {entry.classification && <p className="explore-category-label">{termLabel(taxonomy, entry.classification.category_id)}</p>}
           <p className="explore-summary">{entry.summary}</p>
           <div className="explore-card-meta">
             {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
@@ -312,7 +331,7 @@ export function formatDate(
     timeZone: "UTC",
   }).format(new Date(iso));
 }
-export function DetailHero({
+export async function DetailHero({
   detail,
   type,
   locale,
@@ -324,6 +343,7 @@ export function DetailHero({
   ui: ExploreCopy;
 }) {
   const id = "workflow_id" in detail ? detail.workflow_id : detail.bundle_id;
+  const taxonomy = detail.classification ? await getExploreTaxonomy().catch(() => null) : null;
   return (
     <header className="explore-hero explore-hero-detail">
       <div className="explore-width">
@@ -344,6 +364,11 @@ export function DetailHero({
             </p>
             <h1>{detail.title}</h1>
             <p className="explore-deck">{detail.summary}</p>
+            {detail.classification && <dl className="explore-classification" aria-label={ui.classification}>
+              <div><dt>{ui.category}</dt><dd>{termLabel(taxonomy, detail.classification.category_id)}</dd></div>
+              <div><dt>{ui.topics}</dt><dd>{detail.classification.topic_ids.map((id) => termLabel(taxonomy, id)).join(", ")}</dd></div>
+              <div><dt>{ui.usefulFor}</dt><dd>{detail.classification.useful_for_ids.map((id) => termLabel(taxonomy, id)).join(", ")}</dd></div>
+            </dl>}
             <dl className="explore-meta">
               {detail.author_name && (
                 <div>
@@ -658,11 +683,10 @@ export function RoutineContent({
   const root = pkg.members.find((member) => member.key === pkg.root_key);
   const children = pkg.members.filter((member) => member.key !== pkg.root_key);
   const requirements = pkg.requirements;
+  const facts = requirementFacts(pkg);
   const agentNames = new Map(
     (pkg.agents ?? []).map((agent) => [agent.source_id, agent.name] as const),
   );
-  const named = (ids: string[]) =>
-    ids.map((id) => agentNames.get(id) ?? id);
   const hasRequirements = Object.values(requirements ?? {}).some(
     (values) => Array.isArray(values) && values.length > 0,
   );
@@ -738,20 +762,11 @@ export function RoutineContent({
         )}
         <section id="requirements" className="explore-section">
           <h2>{ui.requirements}</h2>
+          <dl className="explore-classification">
+            {(["included", "youProvide", "produces"] as const).filter((kind) => facts[kind].length > 0).map((kind) => <div key={kind}><dt>{ui[kind]}</dt><dd><Chips items={facts[kind]} mono={false} /></dd></div>)}
+          </dl>
           {hasRequirements ? (
             <div className="explore-req-groups">
-              {!!requirements?.agent_ids?.length && (
-                <div className="explore-req-group">
-                  <h4>{ui.agentIds}</h4>
-                  <Chips items={named(requirements.agent_ids)} mono={false} />
-                </div>
-              )}
-              {!!requirements?.skill_ids?.length && (
-                <div className="explore-req-group">
-                  <h4>{ui.skillIds}</h4>
-                  <Chips items={requirements.skill_ids} />
-                </div>
-              )}
               {!!requirements?.model_ids?.length && (
                 <div className="explore-req-group">
                   <h4>{ui.models}</h4>

@@ -4,6 +4,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  ...(process.env.NEXT_BUILD_DIR ? { distDir: process.env.NEXT_BUILD_DIR } : {}),
   // `next dev` only serves its client bundles to the origin it was started on;
   // opening http://127.0.0.1:<port> instead of localhost renders server HTML
   // without hydration, so nothing client-side (header morph, CTAs) runs.

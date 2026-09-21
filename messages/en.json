@@ -391,7 +391,7 @@
     "show": "Show",
     "topics": "Topics",
     "clearTopic": "Clear topic",
-    "empty": "No items match these filters. Try another search or tag.",
+    "empty": "No items match these filters. Try another search or clear a filter.",
     "unavailable": "Explore is temporarily unavailable",
     "unavailableBody": "We could not load the catalog. Please try again in a moment.",
     "retry": "Try again",
@@ -446,6 +446,18 @@
     "runsAs": "Runs as",
     "overview": "Overview",
     "noTags": "No topics yet",
-    "eyebrow": "Routines & Workflows"
+    "eyebrow": "Routines & Workflows",
+    "category": "Category",
+    "usefulFor": "Useful for",
+    "filters": "Filters",
+    "applyFilters": "Apply filters",
+    "clearFilters": "Clear filters",
+    "closeFilters": "Close",
+    "allCategories": "All categories",
+    "invalidFilters": "Some selected filters are no longer available. Remove them or choose another option.",
+    "classification": "Classification",
+    "included": "Included",
+    "youProvide": "You provide",
+    "produces": "Produces"
   }
 }

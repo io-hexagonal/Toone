@@ -9,6 +9,9 @@ export type CatalogQuery = {
   query: string;
   tag: string;
   page: number;
+  category?: string;
+  topics?: string[];
+  usefulFor?: string[];
 };
 export type CatalogItem =
   | { type: "routine"; entry: RoutineCatalogEntry }
@@ -22,11 +25,18 @@ export function parseCatalogQuery(
   const page = Number(one("page"));
   const type = one("type");
   const tag = one("tag");
+  const many = (key: string) => [...new Set((Array.isArray(raw[key]) ? raw[key] : raw[key] ? [raw[key]] : []) as string[])];
+  const category = Array.isArray(raw.category) ? [...new Set(raw.category)].join(",") : one("category");
+  const topics = many("topic");
+  const usefulFor = many("useful_for");
   return {
     type: type === "routines" || type === "bundles" ? type : "all",
     query: one("q").trim().slice(0, 128),
     tag: /^[a-z0-9-]{1,32}$/.test(tag) ? tag : "",
     page: Number.isSafeInteger(page) && page > 0 ? page : 1,
+    ...(category ? { category } : {}),
+    ...(topics.length ? { topics } : {}),
+    ...(usefulFor.length ? { usefulFor } : {}),
   };
 }
 export function catalogHref(locale: string, query: CatalogQuery): string {
@@ -34,6 +44,9 @@ export function catalogHref(locale: string, query: CatalogQuery): string {
   if (query.type !== "all") params.set("type", query.type);
   if (query.query) params.set("q", query.query);
   if (query.tag) params.set("tag", query.tag);
+  if (query.category) params.set("category", query.category);
+  for (const topic of query.topics ?? []) params.append("topic", topic);
+  for (const role of query.usefulFor ?? []) params.append("useful_for", role);
   if (query.page > 1) params.set("page", String(query.page));
   return `/${locale}/explore${params.size ? `?${params}` : ""}`;
 }

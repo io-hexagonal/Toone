@@ -391,7 +391,7 @@
     "show": "Toon",
     "topics": "Onderwerpen",
     "clearTopic": "Onderwerp wissen",
-    "empty": "Geen resultaten voor deze filters. Probeer een andere zoekopdracht of tag.",
+    "empty": "Geen items passen bij deze filters. Probeer een andere zoekopdracht of verwijder een filter.",
     "unavailable": "De catalogus is tijdelijk niet beschikbaar",
     "unavailableBody": "De catalogus kon niet worden geladen. Probeer het zo opnieuw.",
     "retry": "Opnieuw proberen",
@@ -446,6 +446,18 @@
     "runsAs": "Uitgevoerd door",
     "overview": "Overzicht",
     "noTags": "Nog geen onderwerpen",
-    "eyebrow": "Routines & Workflows"
+    "eyebrow": "Routines & Workflows",
+    "category": "Categorie",
+    "usefulFor": "Nuttig voor",
+    "filters": "Filters",
+    "applyFilters": "Filters toepassen",
+    "clearFilters": "Filters wissen",
+    "closeFilters": "Sluiten",
+    "allCategories": "Alle categorieën",
+    "invalidFilters": "Sommige geselecteerde filters zijn niet meer beschikbaar. Verwijder ze of kies een andere optie.",
+    "classification": "Classificatie",
+    "included": "Inbegrepen",
+    "youProvide": "Zelf aanleveren",
+    "produces": "Levert op"
   }
 }

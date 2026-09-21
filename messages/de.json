@@ -391,7 +391,7 @@
     "show": "Anzeigen",
     "topics": "Themen",
     "clearTopic": "Thema entfernen",
-    "empty": "Keine Treffer für diese Filter. Versuche eine andere Suche oder ein anderes Tag.",
+    "empty": "Keine Einträge entsprechen diesen Filtern. Suche erneut oder entferne einen Filter.",
     "unavailable": "Der Katalog ist vorübergehend nicht verfügbar",
     "unavailableBody": "Der Katalog konnte nicht geladen werden. Versuche es gleich noch einmal.",
     "retry": "Erneut versuchen",
@@ -446,6 +446,18 @@
     "runsAs": "Ausgeführt von",
     "overview": "Überblick",
     "noTags": "Noch keine Themen",
-    "eyebrow": "Routinen & Workflows"
+    "eyebrow": "Routinen & Workflows",
+    "category": "Kategorie",
+    "usefulFor": "Nützlich für",
+    "filters": "Filter",
+    "applyFilters": "Filter anwenden",
+    "clearFilters": "Filter löschen",
+    "closeFilters": "Schließen",
+    "allCategories": "Alle Kategorien",
+    "invalidFilters": "Einige ausgewählte Filter sind nicht mehr verfügbar. Entferne sie oder wähle eine andere Option.",
+    "classification": "Einordnung",
+    "included": "Enthalten",
+    "youProvide": "Du stellst bereit",
+    "produces": "Ergebnisse"
   }
 }

@@ -391,7 +391,7 @@
     "show": "Afficher",
     "topics": "Thèmes",
     "clearTopic": "Effacer le thème",
-    "empty": "Aucun résultat pour ces filtres. Essayez une autre recherche ou étiquette.",
+    "empty": "Aucun résultat ne correspond à ces filtres. Essayez une autre recherche ou retirez un filtre.",
     "unavailable": "Le catalogue est temporairement indisponible",
     "unavailableBody": "Impossible de charger le catalogue. Réessayez dans un instant.",
     "retry": "Réessayer",
@@ -446,6 +446,18 @@
     "runsAs": "Exécuté par",
     "overview": "Aperçu",
     "noTags": "Pas encore de thèmes",
-    "eyebrow": "Routines et Workflows"
+    "eyebrow": "Routines et Workflows",
+    "category": "Catégorie",
+    "usefulFor": "Utile pour",
+    "filters": "Filtres",
+    "applyFilters": "Appliquer les filtres",
+    "clearFilters": "Effacer les filtres",
+    "closeFilters": "Fermer",
+    "allCategories": "Toutes les catégories",
+    "invalidFilters": "Certains filtres sélectionnés ne sont plus disponibles. Supprimez-les ou choisissez une autre option.",
+    "classification": "Classification",
+    "included": "Inclus",
+    "youProvide": "À fournir",
+    "produces": "Résultats produits"
   }
 }
