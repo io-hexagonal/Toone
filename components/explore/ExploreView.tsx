@@ -295,9 +295,13 @@ export function CatalogCard({
     </article>
   );
 }
-export function formatDate(locale: string, iso: string) {
+export function formatDate(
+  locale: string,
+  iso: string,
+  style: "long" | "medium" = "long",
+) {
   return new Intl.DateTimeFormat(locale, {
-    dateStyle: "long",
+    dateStyle: style,
     timeZone: "UTC",
   }).format(new Date(iso));
 }

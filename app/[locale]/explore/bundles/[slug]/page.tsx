@@ -111,12 +111,12 @@ export default async function BundlePage({ params }: Props) {
                     <Counts entry={member} ui={ui} />
                     <Tags tags={member.tags} locale={locale} ui={ui} />
                     <div className="explore-bundle-member-foot">
-                      <span className="explore-muted">
-                        {ui.approved}{" "}
-                        <time dateTime={member.approved_at}>
-                          {formatDate(locale, member.approved_at)}
-                        </time>
-                      </span>
+                      <time
+                        className="explore-muted"
+                        dateTime={member.approved_at}
+                      >
+                        {formatDate(locale, member.approved_at, "medium")}
+                      </time>
                       {member.newer_revision_available && (
                         <span className="explore-newer">{ui.newer}</span>
                       )}
