@@ -10,7 +10,6 @@
   min-height: 420px;
   padding: 186px max(24px, 10vw) 72px;
   background:
-    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.07), transparent 28%),
     #141413;
   color: #fff;
 }

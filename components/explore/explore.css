@@ -43,7 +43,7 @@
   font-weight: 750;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #aebaf4;
+  color: #9b9a95;
   margin: 0 0 18px;
 }
 .explore-hero h1 {
@@ -465,7 +465,7 @@
   padding: 28px 28px 0;
 }
 .explore-card .explore-eyebrow {
-  color: #5e6c57;
+  color: #77756c;
   margin-bottom: 14px;
 }
 .explore-card h2 {
@@ -648,7 +648,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #4f5fc9;
+  color: #77756c;
   flex-shrink: 0;
 }
 .explore-step-agent {
@@ -657,8 +657,8 @@
   gap: 8px;
   padding: 5px 11px;
   border-radius: 20px;
-  background: #e8ebf9;
-  color: #3b47a3;
+  background: #e5e2d9;
+  color: #2d2c27;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
@@ -669,7 +669,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #7a83c4;
+  color: #8b8a84;
 }
 .explore-step-body {
   min-width: 0;
@@ -707,7 +707,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: #5e6c57;
+  color: #77756c;
   font-weight: 700;
 }
 .explore-outcomes li {
@@ -938,7 +938,7 @@
 }
 .explore-bundle-links .explore-eyebrow {
   margin: 0;
-  color: #5e6c57;
+  color: #77756c;
 }
 .explore-bundle-links strong {
   flex: 1;
