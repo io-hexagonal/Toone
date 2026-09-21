@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# процедура} few {# процедуры} many {# процедур} other {# процедуры}}",
     "includedRoutines": "Включённые процедуры",
     "includedBundles": "Входит в наборы",
-    "emptyCatalog": "Процедуры и наборы пока не опубликованы. Загляните позже."
+    "emptyCatalog": "Процедуры и наборы пока не опубликованы. Загляните позже.",
+    "details": "Сведения",
+    "revisionId": "ID ревизии",
+    "contentHash": "Хеш содержимого",
+    "runsAs": "Выполняет",
+    "overview": "Обзор",
+    "noTags": "Тем пока нет"
   }
 }

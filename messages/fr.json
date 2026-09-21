@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# routine} other {# routines}}",
     "includedRoutines": "Routines incluses",
     "includedBundles": "Incluse dans les ensembles",
-    "emptyCatalog": "Aucune routine ni aucun ensemble n’a encore été publié. Revenez bientôt."
+    "emptyCatalog": "Aucune routine ni aucun ensemble n’a encore été publié. Revenez bientôt.",
+    "details": "Détails",
+    "revisionId": "ID de révision",
+    "contentHash": "Empreinte du contenu",
+    "runsAs": "Exécuté par",
+    "overview": "Aperçu",
+    "noTags": "Pas encore de thèmes"
   }
 }

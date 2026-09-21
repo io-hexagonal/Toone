@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# routine} other {# routine}}",
     "includedRoutines": "Routine incluse",
     "includedBundles": "Inclusa nelle raccolte",
-    "emptyCatalog": "Non sono ancora state pubblicate routine o raccolte. Torna presto."
+    "emptyCatalog": "Non sono ancora state pubblicate routine o raccolte. Torna presto.",
+    "details": "Dettagli",
+    "revisionId": "ID revisione",
+    "contentHash": "Hash del contenuto",
+    "runsAs": "Eseguito da",
+    "overview": "Panoramica",
+    "noTags": "Ancora nessun argomento"
   }
 }

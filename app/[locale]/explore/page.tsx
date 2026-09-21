@@ -136,26 +136,29 @@ export default async function ExplorePage({ params, searchParams }: Props) {
             <span className="explore-filter-label" id="explore-topic-label">
               {ui.topics}
             </span>
-            <div className="explore-topic-options">
+            <ul className="explore-topic-options">
               {tags.map(({ tag }) => (
-                <a
-                  key={tag}
-                  className="explore-topic-option"
-                  aria-current={query.tag === tag ? "true" : undefined}
-                  href={catalogHref(locale, { ...active, tag, page: 1 })}
-                >
-                  {tag}
-                </a>
+                <li key={tag}>
+                  <a
+                    className="explore-topic-option"
+                    aria-current={query.tag === tag ? "true" : undefined}
+                    href={catalogHref(locale, { ...active, tag, page: 1 })}
+                  >
+                    {tag}
+                  </a>
+                </li>
               ))}
-            </div>
-            {query.tag && (
-              <a
-                className="explore-topic-clear"
-                href={catalogHref(locale, { ...active, tag: "", page: 1 })}
-              >
-                {ui.clearTopic} <span aria-hidden="true">×</span>
-              </a>
-            )}
+              {query.tag && (
+                <li>
+                  <a
+                    className="explore-topic-clear"
+                    href={catalogHref(locale, { ...active, tag: "", page: 1 })}
+                  >
+                    {ui.clearTopic} <span aria-hidden="true">×</span>
+                  </a>
+                </li>
+              )}
+            </ul>
           </nav>
         )}
         <p className="explore-results">{ui.count("results", catalog.total)}</p>

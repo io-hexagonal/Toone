@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# routine} other {# routines}}",
     "includedRoutines": "Inbegrepen routines",
     "includedBundles": "Opgenomen in bundels",
-    "emptyCatalog": "Er zijn nog geen routines of bundels gepubliceerd. Kom binnenkort terug."
+    "emptyCatalog": "Er zijn nog geen routines of bundels gepubliceerd. Kom binnenkort terug.",
+    "details": "Details",
+    "revisionId": "Revisie-ID",
+    "contentHash": "Inhoudshash",
+    "runsAs": "Uitgevoerd door",
+    "overview": "Overzicht",
+    "noTags": "Nog geen onderwerpen"
   }
 }

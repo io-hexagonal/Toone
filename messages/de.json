@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# Routine} other {# Routinen}}",
     "includedRoutines": "Enthaltene Routinen",
     "includedBundles": "In Paketen enthalten",
-    "emptyCatalog": "Es wurden noch keine Routinen oder Pakete veröffentlicht. Schau bald wieder vorbei."
+    "emptyCatalog": "Es wurden noch keine Routinen oder Pakete veröffentlicht. Schau bald wieder vorbei.",
+    "details": "Details",
+    "revisionId": "Revisions-ID",
+    "contentHash": "Inhalts-Hash",
+    "runsAs": "Ausgeführt von",
+    "overview": "Überblick",
+    "noTags": "Noch keine Themen"
   }
 }

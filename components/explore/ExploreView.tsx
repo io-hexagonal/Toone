@@ -68,6 +68,12 @@ export const COPY_KEYS = [
   "resources",
   "bindings",
   "revision",
+  "details",
+  "revisionId",
+  "contentHash",
+  "runsAs",
+  "overview",
+  "noTags",
   "newer",
   "license",
   "back",
@@ -209,6 +215,7 @@ export function Tags({
   locale: string;
   ui: ExploreCopy;
 }) {
+  if (!tags.length) return null;
   return (
     <ul className="explore-tags" aria-label={ui.tags}>
       {tags.map((tag) => (
@@ -216,7 +223,7 @@ export function Tags({
           <a
             href={catalogHref(locale, { type: "all", page: 1, query: "", tag })}
           >
-            #{tag}
+            {tag}
           </a>
         </li>
       ))}
@@ -272,19 +279,29 @@ export function CatalogCard({
           </p>
           <h2>{entry.title}</h2>
           <p className="explore-summary">{entry.summary}</p>
-          {entry.author_name && (
-            <p className="explore-byline">
-              {ui.by} {entry.author_name}
-            </p>
-          )}
-          {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
+          <div className="explore-card-meta">
+            {entry.author_name && (
+              <span className="explore-byline">
+                {ui.by} {entry.author_name}
+              </span>
+            )}
+            {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
+          </div>
         </div>
       </a>
-      <div className="explore-card-tags">
-        <Tags tags={entry.tags} locale={locale} ui={ui} />
-      </div>
+      {entry.tags.length > 0 && (
+        <div className="explore-card-tags">
+          <Tags tags={entry.tags} locale={locale} ui={ui} />
+        </div>
+      )}
     </article>
   );
+}
+function formatDate(locale: string, iso: string) {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "long",
+    timeZone: "UTC",
+  }).format(new Date(iso));
 }
 export function DetailHero({
   detail,
@@ -298,12 +315,8 @@ export function DetailHero({
   ui: ExploreCopy;
 }) {
   const id = "workflow_id" in detail ? detail.workflow_id : detail.bundle_id;
-  const date = new Intl.DateTimeFormat(locale, {
-    dateStyle: "long",
-    timeZone: "UTC",
-  }).format(new Date(detail.approved_at));
   return (
-    <header className="explore-hero">
+    <header className="explore-hero explore-hero-detail">
       <div className="explore-width">
         <nav className="explore-breadcrumb" aria-label={ui.breadcrumb}>
           <a href={`/${locale}`}>{ui.home}</a>
@@ -313,7 +326,7 @@ export function DetailHero({
           <span>{ui[type]}</span>
         </nav>
         <div className="explore-detail-head">
-          <div>
+          <div className="explore-detail-copy">
             <p className="explore-eyebrow">
               {ui[type]}
               {type === "bundle"
@@ -322,23 +335,46 @@ export function DetailHero({
             </p>
             <h1>{detail.title}</h1>
             <p className="explore-deck">{detail.summary}</p>
-            <p className="explore-byline">
+            <dl className="explore-meta">
               {detail.author_name && (
-                <>
-                  {ui.by} {detail.author_name} <span>·</span>{" "}
-                </>
+                <div>
+                  <dt>{ui.by}</dt>
+                  <dd>{detail.author_name}</dd>
+                </div>
               )}
-              {ui.approved}{" "}
-              <time dateTime={detail.approved_at}>{date}</time>
-            </p>
-            {"license" in detail && (
-              <>
-                <Counts entry={detail} ui={ui} />
-                <p className="explore-byline">
-                  {ui.license}: {detail.license}
-                </p>
-              </>
-            )}
+              <div>
+                <dt>{ui.approved}</dt>
+                <dd>
+                  <time dateTime={detail.approved_at}>
+                    {formatDate(locale, detail.approved_at)}
+                  </time>
+                </dd>
+              </div>
+              {"license" in detail && (
+                <div>
+                  <dt>{ui.license}</dt>
+                  <dd>{detail.license}</dd>
+                </div>
+              )}
+              {"license" in detail && (
+                <div>
+                  <dt>{ui.steps}</dt>
+                  <dd>{detail.step_count}</dd>
+                </div>
+              )}
+              {"license" in detail && (
+                <div>
+                  <dt>{ui.agents}</dt>
+                  <dd>{detail.agent_count}</dd>
+                </div>
+              )}
+              {"license" in detail && detail.sub_routine_count > 0 && (
+                <div>
+                  <dt>{ui.subRoutines}</dt>
+                  <dd>{detail.sub_routine_count}</dd>
+                </div>
+              )}
+            </dl>
             <Tags tags={detail.tags} locale={locale} ui={ui} />
             <div className="explore-actions">
               <OpenInToone
@@ -360,54 +396,124 @@ export function DetailHero({
     </header>
   );
 }
+/** Sticky right-rail card with the immutable revision facts (contract §5.2 / §5.5). */
+export function DetailsCard({
+  detail,
+  ui,
+}: {
+  detail: RoutinePublicDetail | BundlePublicDetail;
+  ui: ExploreCopy;
+}) {
+  const minimum =
+    "package" in detail ? detail.package.minimum_app_version : undefined;
+  return (
+    <section className="explore-details" aria-label={ui.details}>
+      <h2>{ui.details}</h2>
+      <dl>
+        <div>
+          <dt>{ui.revision}</dt>
+          <dd>{detail.sequence}</dd>
+        </div>
+        {"license" in detail && (
+          <div>
+            <dt>{ui.license}</dt>
+            <dd>{detail.license}</dd>
+          </div>
+        )}
+        {minimum && (
+          <div>
+            <dt>{ui.minimumVersion}</dt>
+            <dd>{minimum}</dd>
+          </div>
+        )}
+        <div>
+          <dt>{ui.revisionId}</dt>
+          <dd>
+            <code>{detail.revision_id}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>{ui.contentHash}</dt>
+          <dd>
+            <code>{detail.content_hash}</code>
+          </dd>
+        </div>
+      </dl>
+    </section>
+  );
+}
+function Chips({ items }: { items: string[] }) {
+  return (
+    <ul className="explore-chips">
+      {items.map((item, i) => (
+        <li key={i}>
+          <code>{item}</code>
+        </li>
+      ))}
+    </ul>
+  );
+}
 function MemberContent({
   member,
   root,
   ui,
+  agentNames,
 }: {
   member: PackageMember;
   root: boolean;
   ui: ExploreCopy;
+  agentNames: Map<string, string>;
 }) {
   const payload = member.payload;
   return (
-    <section
+    <div
       id={root ? "routine" : "member-" + encodeURIComponent(member.key)}
       className="explore-member"
     >
-      {!root && <h2>{payload.name || member.key}</h2>}
+      {!root && (
+        <header className="explore-member-head">
+          <p className="explore-eyebrow">{ui.subRoutines}</p>
+          <h2>{payload.name || member.key}</h2>
+        </header>
+      )}
       {payload.purpose && (
-        <section>
+        <section className="explore-section">
           <h2>{ui.purpose}</h2>
-          <Markdown text={payload.purpose} />
+          <div className="explore-lede">
+            <Markdown text={payload.purpose} />
+          </div>
+          <Markdown text={payload.preamble} />
         </section>
       )}
-      <Markdown text={payload.preamble} />
+      {!payload.purpose && payload.preamble && (
+        <section className="explore-section">
+          <h2>{ui.overview}</h2>
+          <Markdown text={payload.preamble} />
+        </section>
+      )}
       {payload.prerequisites && (
-        <section>
+        <section className="explore-section">
           <h2>{ui.prerequisites}</h2>
           <Markdown text={payload.prerequisites} />
         </section>
       )}
-      {payload.escalation && (
-        <section>
-          <h2>{ui.escalation}</h2>
-          <Markdown text={payload.escalation} />
-        </section>
-      )}
       {!!payload.inputs?.length && (
-        <section>
+        <section className="explore-section">
           <h2>{ui.inputs}</h2>
-          <dl>
+          <dl className="explore-inputs">
             {payload.inputs.map((input) => (
               <div key={input.id}>
                 <dt>
-                  {input.id}{" "}
-                  {input.requirement && <small>({input.requirement})</small>}
+                  <code>{input.id}</code>
+                  {input.requirement && <small>{input.requirement}</small>}
                 </dt>
                 <dd>
                   <Markdown text={input.description} />
-                  {[input.kind, input.valueType].filter(Boolean).join(" · ")}
+                  {(input.kind || input.valueType) && (
+                    <span className="explore-muted">
+                      {[input.kind, input.valueType].filter(Boolean).join(" · ")}
+                    </span>
+                  )}
                 </dd>
               </div>
             ))}
@@ -415,62 +521,80 @@ function MemberContent({
         </section>
       )}
       {!!payload.steps?.length && (
-        <section>
+        <section className="explore-section">
           <h2>{ui.steps}</h2>
           <ol className="explore-steps">
-            {payload.steps.map((step, index) => (
-              <li key={step.id} id={root ? `step-${index + 1}` : undefined}>
-                <h3>
-                  <span className="explore-step-number">{index + 1}</span>
-                  {step.title}
-                </h3>
-                <Markdown text={step.description} />
-                {!!step.completionCriteria?.length && (
-                  <>
-                    <h4>{ui.completion}</h4>
-                    <ul>
-                      {step.completionCriteria.map((criterion, i) => (
-                        <li key={i}>
-                          <Markdown text={criterion} />
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-                {!!step.outcomes?.length && (
-                  <details>
-                    <summary>{ui.outcomes}</summary>
-                    <ul>
-                      {step.outcomes.map((outcome) => (
-                        <li key={outcome.id}>
-                          <strong>{outcome.id}</strong>
-                          <Markdown text={outcome.description} />
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-                {step.subRoutineId && (
-                  <p>
-                    {ui.routine}: <code>{step.subRoutineId}</code>
-                  </p>
-                )}
-                {step.executorAgentId && (
-                  <p>
-                    {ui.agents}: <code>{step.executorAgentId}</code>
-                  </p>
-                )}
-                {!!step.skillIds?.length && (
-                  <p>
-                    {ui.skills}: {step.skillIds.join(", ")}
-                  </p>
-                )}
-              </li>
-            ))}
+            {payload.steps.map((step, index) => {
+              const executor = step.executorAgentId
+                ? (agentNames.get(step.executorAgentId) ?? step.executorAgentId)
+                : null;
+              return (
+                <li key={step.id} id={root ? `step-${index + 1}` : undefined}>
+                  <span className="explore-step-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <div className="explore-step-body">
+                    <h3>{step.title}</h3>
+                    <Markdown text={step.description} />
+                    {!!step.completionCriteria?.length && (
+                      <div className="explore-criteria">
+                        <h4>{ui.completion}</h4>
+                        <ul>
+                          {step.completionCriteria.map((criterion, i) => (
+                            <li key={i}>
+                              <Markdown text={criterion} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {!!step.outcomes?.length && (
+                      <details>
+                        <summary>{ui.outcomes}</summary>
+                        <ul>
+                          {step.outcomes.map((outcome) => (
+                            <li key={outcome.id}>
+                              <strong>{outcome.id}</strong>
+                              <Markdown text={outcome.description} />
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    )}
+                    {(executor || step.subRoutineId || !!step.skillIds?.length) && (
+                      <ul className="explore-step-meta">
+                        {executor && (
+                          <li>
+                            <span>{ui.runsAs}</span> {executor}
+                          </li>
+                        )}
+                        {step.subRoutineId && (
+                          <li>
+                            <span>{ui.routine}</span>{" "}
+                            <code>{step.subRoutineId}</code>
+                          </li>
+                        )}
+                        {!!step.skillIds?.length && (
+                          <li>
+                            <span>{ui.skills}</span> {step.skillIds.join(", ")}
+                          </li>
+                        )}
+                      </ul>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </section>
       )}
-    </section>
+      {payload.escalation && (
+        <section className="explore-section">
+          <h2>{ui.escalation}</h2>
+          <Markdown text={payload.escalation} />
+        </section>
+      )}
+    </div>
   );
 }
 export function RoutineContent({
@@ -486,12 +610,22 @@ export function RoutineContent({
   const root = pkg.members.find((member) => member.key === pkg.root_key);
   const children = pkg.members.filter((member) => member.key !== pkg.root_key);
   const requirements = pkg.requirements;
+  const agentNames = new Map(
+    (pkg.agents ?? []).map((agent) => [agent.source_id, agent.name] as const),
+  );
+  const named = (ids: string[]) =>
+    ids.map((id) => agentNames.get(id) ?? id);
+  const hasRequirements = Object.values(requirements ?? {}).some(
+    (values) => Array.isArray(values) && values.length > 0,
+  );
   return (
     <div className="explore-detail-body explore-width">
       <article className="explore-body">
-        {root && <MemberContent member={root} root ui={ui} />}
+        {root && (
+          <MemberContent member={root} root ui={ui} agentNames={agentNames} />
+        )}
         {!!children.length && (
-          <section id="sub-routines">
+          <section id="sub-routines" className="explore-section">
             <h2>{ui.subRoutines}</h2>
             {children.map((member) => (
               <MemberContent
@@ -499,151 +633,175 @@ export function RoutineContent({
                 member={member}
                 root={false}
                 ui={ui}
+                agentNames={agentNames}
               />
             ))}
           </section>
         )}
         {!!pkg.agents?.length && (
-          <section id="agents">
+          <section id="agents" className="explore-section">
             <h2>{ui.agents}</h2>
-            {pkg.agents.map((agent) => (
-              <section className="explore-panel" key={agent.source_id}>
-                <h3>{agent.name}</h3>
-                <Markdown text={agent.description} />
-                <Markdown text={agent.greeting} />
-                <ul>
-                  {agent.capabilities?.map((capability, i) => (
-                    <li key={i}>
-                      <Markdown text={capability} />
-                    </li>
-                  ))}
-                </ul>
-                {!!agent.skill_ids?.length && (
-                  <p>
-                    {ui.skills}: {agent.skill_ids.join(", ")}
-                  </p>
-                )}
-                {!!agent.mcp_ids?.length && (
-                  <p>
-                    {ui.mcps}: {agent.mcp_ids.join(", ")}
-                  </p>
-                )}
-              </section>
-            ))}
+            <div className="explore-roster">
+              {pkg.agents.map((agent) => (
+                <article className="explore-agent" key={agent.source_id}>
+                  <h3>{agent.name}</h3>
+                  <Markdown text={agent.description} />
+                  {!!agent.capabilities?.length && (
+                    <ul className="explore-capabilities">
+                      {agent.capabilities.map((capability, i) => (
+                        <li key={i}>
+                          <Markdown text={capability} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {(!!agent.skill_ids?.length || !!agent.mcp_ids?.length) && (
+                    <ul className="explore-step-meta">
+                      {!!agent.skill_ids?.length && (
+                        <li>
+                          <span>{ui.skills}</span> {agent.skill_ids.join(", ")}
+                        </li>
+                      )}
+                      {!!agent.mcp_ids?.length && (
+                        <li>
+                          <span>{ui.mcps}</span> {agent.mcp_ids.join(", ")}
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </article>
+              ))}
+            </div>
           </section>
         )}
         {!!pkg.skills?.length && (
-          <section id="skills">
+          <section id="skills" className="explore-section">
             <h2>{ui.skills}</h2>
             {pkg.skills.map((skill) => (
-              <section className="explore-panel" key={skill.id}>
-                <h3>{skill.id}</h3>
+              <details className="explore-skill" key={skill.id}>
+                <summary>
+                  <code>{skill.id}</code>
+                </summary>
                 <Markdown text={skill.markdown} />
-              </section>
+              </details>
             ))}
           </section>
         )}
-        <section id="requirements">
+        <section id="requirements" className="explore-section">
           <h2>{ui.requirements}</h2>
-          {pkg.minimum_app_version && (
-            <p>
-              {ui.minimumVersion}: {pkg.minimum_app_version}
-            </p>
+          {hasRequirements ? (
+            <dl className="explore-requirements">
+              {!!requirements?.agent_ids?.length && (
+                <div>
+                  <dt>{ui.agentIds}</dt>
+                  <dd>
+                    <Chips items={named(requirements.agent_ids)} />
+                  </dd>
+                </div>
+              )}
+              {!!requirements?.skill_ids?.length && (
+                <div>
+                  <dt>{ui.skillIds}</dt>
+                  <dd>
+                    <Chips items={requirements.skill_ids} />
+                  </dd>
+                </div>
+              )}
+              {!!requirements?.model_ids?.length && (
+                <div>
+                  <dt>{ui.models}</dt>
+                  <dd>
+                    <Chips items={requirements.model_ids} />
+                  </dd>
+                </div>
+              )}
+              {!!requirements?.mcp_ids?.length && (
+                <div>
+                  <dt>{ui.mcps}</dt>
+                  <dd>
+                    <Chips items={requirements.mcp_ids} />
+                  </dd>
+                </div>
+              )}
+              {!!requirements?.resource_bindings?.length && (
+                <div>
+                  <dt>{ui.bindings}</dt>
+                  <dd>
+                    <Chips
+                      items={requirements.resource_bindings.map((value) =>
+                        typeof value === "string" ? value : JSON.stringify(value),
+                      )}
+                    />
+                  </dd>
+                </div>
+              )}
+            </dl>
+          ) : (
+            <p>{ui.noRequirements}</p>
           )}
-          <dl>
-            {(
-              [
-                ["agent_ids", "agentIds"],
-                ["skill_ids", "skillIds"],
-                ["model_ids", "models"],
-                ["mcp_ids", "mcps"],
-                ["resource_bindings", "bindings"],
-              ] as const
-            ).map(
-              ([key, label]) =>
-                !!requirements?.[key]?.length && (
-                  <div key={key}>
-                    <dt>{ui[label]}</dt>
-                    <dd>
-                      <ul>
-                        {requirements[key]!.map((value, i) => (
-                          <li key={i}>
-                            <code>
-                              {typeof value === "string"
-                                ? value
-                                : JSON.stringify(value)}
-                            </code>
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                ),
-            )}
-          </dl>
-          {!Object.values(requirements ?? {}).some(
-            (values) => Array.isArray(values) && values.length > 0,
-          ) && <p>{ui.noRequirements}</p>}
         </section>
         {!!pkg.resources?.length && (
-          <section id="resources">
+          <section id="resources" className="explore-section">
             <h2>{ui.resources}</h2>
-            {pkg.resources.map((resource, i) => (
-              <section className="explore-panel" key={i}>
-                <h3>{resource.input_id}</h3>
-                <p>
-                  <code>{resource.binding}</code> · {resource.mode}
-                </p>
-                <Markdown text={resource.reason} />
-                {/* File contents are installed by the app, not published:
-                    a disclosed directory can be hundreds of KB. */}
-                {!!resource.directory_entries?.length && (
-                  <ul>
-                    {resource.directory_entries.map((entry) => (
-                      <li key={entry.relative_path}>
-                        <code>{entry.relative_path}</code>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </section>
-            ))}
+            <dl className="explore-requirements">
+              {pkg.resources.map((resource, i) => (
+                <div key={i}>
+                  <dt>
+                    <code>{resource.input_id}</code>
+                  </dt>
+                  <dd>
+                    <span className="explore-muted">
+                      <code>{resource.binding}</code> · {resource.mode}
+                    </span>
+                    <Markdown text={resource.reason} />
+                    {/* File contents are installed by the app, not published:
+                        a disclosed directory can be hundreds of KB. */}
+                    {!!resource.directory_entries?.length && (
+                      <Chips
+                        items={resource.directory_entries.map(
+                          (entry) => entry.relative_path,
+                        )}
+                      />
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </section>
         )}
         {!!detail.included_in_bundles?.length && (
-          <section>
+          <section className="explore-section" id="bundles">
             <h2>{ui.includedBundles}</h2>
-            <ul>
+            <ul className="explore-bundle-links">
               {detail.included_in_bundles.map((bundle) => (
                 <li key={bundle.bundle_id}>
                   <a href={`/${locale}/explore/bundles/${resolveSlug(bundle)}`}>
-                    {bundle.title}
+                    <span className="explore-eyebrow">{ui.bundle}</span>
+                    <strong>{bundle.title}</strong>
+                    <span aria-hidden="true">→</span>
                   </a>
                 </li>
               ))}
             </ul>
           </section>
         )}
-        <section className="explore-revision">
-          <h2>
-            {ui.revision} {detail.sequence}
-          </h2>
-          <p>
-            <code>{detail.revision_id}</code>
-          </p>
-          <p>
-            <code>{detail.content_hash}</code>
-          </p>
-        </section>
       </article>
-      <aside className="explore-toc">
-        <strong>{ui.contents}</strong>
-        <a href="#routine">{ui.routine}</a>
-        {!!children.length && <a href="#sub-routines">{ui.subRoutines}</a>}
-        {!!pkg.agents?.length && <a href="#agents">{ui.agents}</a>}
-        {!!pkg.skills?.length && <a href="#skills">{ui.skills}</a>}
-        <a href="#requirements">{ui.requirements}</a>
-        <a href={`/${locale}/explore`}>← {ui.back}</a>
+      <aside className="explore-rail">
+        <nav className="explore-toc" aria-label={ui.contents}>
+          <strong>{ui.contents}</strong>
+          <a href="#routine">{ui.routine}</a>
+          {!!children.length && <a href="#sub-routines">{ui.subRoutines}</a>}
+          {!!pkg.agents?.length && <a href="#agents">{ui.agents}</a>}
+          {!!pkg.skills?.length && <a href="#skills">{ui.skills}</a>}
+          <a href="#requirements">{ui.requirements}</a>
+          {!!detail.included_in_bundles?.length && (
+            <a href="#bundles">{ui.includedBundles}</a>
+          )}
+        </nav>
+        <DetailsCard detail={detail} ui={ui} />
+        <a className="explore-back" href={`/${locale}/explore`}>
+          ← {ui.back}
+        </a>
       </aside>
     </div>
   );

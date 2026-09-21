@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# rotina} other {# rotinas}}",
     "includedRoutines": "Rotinas incluídas",
     "includedBundles": "Incluída nos conjuntos",
-    "emptyCatalog": "Ainda não foram publicadas rotinas ou conjuntos. Volte em breve."
+    "emptyCatalog": "Ainda não foram publicadas rotinas ou conjuntos. Volte em breve.",
+    "details": "Detalhes",
+    "revisionId": "ID da revisão",
+    "contentHash": "Hash do conteúdo",
+    "runsAs": "Executado por",
+    "overview": "Visão geral",
+    "noTags": "Ainda sem tópicos"
   }
 }

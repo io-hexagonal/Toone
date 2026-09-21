@@ -25,7 +25,6 @@ export default function SiteHeader({
   scrollThreshold,
 }: Props) {
   const t = useTranslations("nav");
-  const footer = useTranslations("footer");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -127,7 +126,6 @@ export default function SiteHeader({
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
-          <Link href={`${landingPath}#how`} data-optional>{footer("how")}</Link>
           <Link href={showcasesPath} data-optional>
             {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
           </Link>

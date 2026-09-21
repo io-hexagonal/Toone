@@ -11,6 +11,7 @@ import {
   ExploreShell,
   ExploreUnavailable,
   DetailHero,
+  DetailsCard,
   Cover,
   Counts,
   Tags,
@@ -81,56 +82,54 @@ export default async function BundlePage({ params }: Props) {
         value={breadcrumbSchema(detail.title, `/explore/bundles/${canonical}`)}
       />
       <DetailHero detail={detail} type="bundle" locale={locale} ui={ui} />
-      <main className="explore-width">
-        <h2 className="explore-bundle-heading">{ui.includedRoutines}</h2>
-        <p className="explore-results">{ui.bundleDescription}</p>
-        <div className="explore-bundle-members">
-          {members.map((member) => (
-            <article className="explore-bundle-member" key={member.workflow_id}>
-              <Cover entry={member} />
-              <div>
-                <h3>
-                  <a
-                    href={`/${locale}/explore/routines/${resolveSlug(member)}`}
-                  >
-                    {member.title}
-                  </a>
-                </h3>
-                <p>{member.summary}</p>
-                <Counts entry={member} ui={ui} />
-                <Tags tags={member.tags} locale={locale} ui={ui} />
-                <p>
-                  <small>
-                    {ui.pinned}: <code>{member.pinned_revision_id}</code>
-                  </small>
-                </p>
-                {member.newer_revision_available && (
-                  <span className="explore-newer">{ui.newer}</span>
-                )}
-                <p>
-                  <a
-                    href={`/${locale}/explore/routines/${resolveSlug(member)}`}
-                  >
-                    {ui.viewRoutine} →
-                  </a>
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+      <main className="explore-detail-body explore-width">
         <div className="explore-body">
-          <section className="explore-revision">
-            <h2>
-              {ui.revision} {detail.sequence}
-            </h2>
-            <p>
-              <code>{detail.revision_id}</code>
-            </p>
-            <p>
-              <code>{detail.content_hash}</code>
-            </p>
+          <section className="explore-section" id="routines">
+            <h2>{ui.includedRoutines}</h2>
+            <p className="explore-lede explore-muted">{ui.bundleDescription}</p>
+            <ol className="explore-bundle-members">
+              {members.map((member, index) => (
+                <li className="explore-bundle-member" key={member.workflow_id}>
+                  <span className="explore-step-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <Cover entry={member} />
+                  <div className="explore-bundle-member-copy">
+                    <h3>
+                      <a
+                        href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                      >
+                        {member.title}
+                      </a>
+                    </h3>
+                    <p>{member.summary}</p>
+                    <Counts entry={member} ui={ui} />
+                    <Tags tags={member.tags} locale={locale} ui={ui} />
+                    <div className="explore-bundle-member-foot">
+                      <span className="explore-muted">
+                        {ui.pinned} <code>{member.pinned_revision_id}</code>
+                      </span>
+                      {member.newer_revision_available && (
+                        <span className="explore-newer">{ui.newer}</span>
+                      )}
+                      <a
+                        href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                      >
+                        {ui.viewRoutine} →
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </section>
         </div>
+        <aside className="explore-rail">
+          <DetailsCard detail={detail} ui={ui} />
+          <a className="explore-back" href={`/${locale}/explore`}>
+            ← {ui.back}
+          </a>
+        </aside>
       </main>
     </ExploreShell>
   );

@@ -431,6 +431,12 @@
     "routinesCount": "{count, plural, one {# routine} other {# routines}}",
     "includedRoutines": "Included routines",
     "includedBundles": "Included in bundles",
-    "emptyCatalog": "No routines or bundles have been published yet. Check back soon."
+    "emptyCatalog": "No routines or bundles have been published yet. Check back soon.",
+    "details": "Details",
+    "revisionId": "Revision ID",
+    "contentHash": "Content hash",
+    "runsAs": "Runs as",
+    "overview": "Overview",
+    "noTags": "No topics yet"
   }
 }
