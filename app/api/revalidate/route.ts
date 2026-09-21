@@ -1,5 +1,14 @@
 import { revalidateTag } from "next/cache";
-import { verifyRevalidation } from "@/lib/explore/revalidation";
+import {
+  parseRevalidateEvent,
+  verifySignature,
+} from "@/lib/explore/revalidation";
+
+/**
+ * Server -> web revalidation webhook (contract §9).
+ * 401 on a missing or wrong signature, 400 on a signed but malformed body,
+ * 413 on an oversized body, 503 when the secret is not configured.
+ */
 
 export const runtime = "nodejs";
 export async function POST(request: Request) {
@@ -21,12 +30,10 @@ export async function POST(request: Request) {
     chunks.push(value);
   }
   const raw = Buffer.concat(chunks).toString("utf8");
-  const event = verifyRevalidation(
-    raw,
-    request.headers.get("x-explore-signature"),
-    secret,
-  );
-  if (!event) return Response.json({ revalidated: false }, { status: 401 });
+  if (!verifySignature(raw, request.headers.get("x-explore-signature"), secret))
+    return Response.json({ revalidated: false }, { status: 401 });
+  const event = parseRevalidateEvent(raw);
+  if (!event) return Response.json({ revalidated: false }, { status: 400 });
   revalidateTag("explore", { expire: 0 });
   revalidateTag(`explore:${event.slug}`, { expire: 0 });
   revalidateTag(`explore:${event.id}`, { expire: 0 });
