@@ -104,7 +104,10 @@ export default function HeroAuth({ audience = "business" }: Props) {
           __html: `
             .hero-auth {
               position: relative; z-index: 5;
-              min-height: 100svh; background: #141413;
+              /* Keep the next section below Safari's expanded viewport when its
+                 toolbars retract, without resizing the animated background. */
+              min-height: 100vh;
+              min-height: 100lvh; background: #141413;
               display: grid; align-items: center;
               grid-template-columns: 1fr;
               padding: 0 20px;
