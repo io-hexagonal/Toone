@@ -2,6 +2,9 @@
   "name": "toone-oss",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +17,7 @@
     "test": "npm run content:check && npm run test:explore && npm run typecheck",
     "explore:mock": "node scripts/explore-mock-api.mjs",
     "test:explore": "node --import tsx --test tests/explore/*.test.ts",
-    "test:explore:http": "node --test --test-concurrency=1 tests/explore/http.test.mjs tests/explore/outage.test.mjs"
+    "test:explore:http": "node --test tests/explore/http.test.mjs && node --test tests/explore/outage.test.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

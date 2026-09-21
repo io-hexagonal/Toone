@@ -20,6 +20,16 @@ export const dynamic = "force-dynamic";
 const BASE_URL = "https://trytoone.com";
 const SLUG_OR_ID = /^[a-z0-9]+(?:[-_][a-z0-9]+)*$/;
 
+/** The "feed not served yet" warning is logged at most once per window. */
+const WARN_WINDOW_MS = 10 * 60_000;
+let lastNotServedWarning = 0;
+function warnNotServedOnce() {
+  const now = Date.now();
+  if (now - lastNotServedWarning < WARN_WINDOW_MS) return;
+  lastNotServedWarning = now;
+  console.warn("[sitemap-explore] feed route not available; listing no items");
+}
+
 function englishAlternates(path: string): string {
   const href = `${BASE_URL}/en${path}`;
   return [
@@ -43,7 +53,7 @@ export async function GET() {
     const feed = await getExploreFeed();
     if (!feed) {
       // The deployed server predates the feed route (404): nothing to list yet.
-      console.warn("[sitemap-explore] feed route not available; listing no items");
+      warnNotServedOnce();
     } else {
       for (const item of feed.items) {
         if (item.type !== "routine" && item.type !== "bundle") continue;
