@@ -5,15 +5,10 @@ import {
   getPublicationLocales,
   getRootEditorialSlugs,
 } from "@/lib/content";
-import {
-  getProductGuideSlugs,
-  getProductGuideSourcePath,
-} from "@/lib/product-showcase";
+import { getProductGuideSlugs, getProductGuideSourcePath } from "@/lib/product-showcase";
 import { BUILD_DATE, gitLastCommitDate } from "@/lib/source-date";
 
-import { getExploreFeed } from "@/lib/explore/api";
-
-export const revalidate = 600;
+export const dynamic = "force-static";
 
 const BASE_URL = "https://trytoone.com";
 
@@ -25,10 +20,7 @@ const BASE_URL = "https://trytoone.com";
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
-  {
-    path: "/business/showcases",
-    source: "app/[locale]/business/showcases/page.tsx",
-  },
+  { path: "/business/showcases", source: "app/[locale]/business/showcases/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
 ] as const;
 
@@ -47,10 +39,7 @@ const ENGLISH_ONLY_ROUTES = [
   { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
   { path: "/about", source: "app/[locale]/about/page.tsx" },
   { path: "/contact", source: "app/[locale]/contact/page.tsx" },
-  {
-    path: "/editorial-policy",
-    source: "app/[locale]/editorial-policy/page.tsx",
-  },
+  { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
   // `/request-access` is the public request page of the invitation-only funnel
   // (request -> personal code -> account). `/early-access` is the code gate
   // itself and stays `noindex`, so it is still absent from this list. Only
@@ -58,6 +47,13 @@ const ENGLISH_ONLY_ROUTES = [
   // copy and stay `noindex`, so they get neither a sitemap entry nor a
   // hreflang alternate (TECH-010, TECH-013).
   { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
+  // `/explore` is the public routine and bundle directory. Its seven non-English
+  // locales render translated chrome around English catalog content and are
+  // `noindex` with an English canonical, so only `/en/explore` is listed. The
+  // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
+  // revalidates at runtime; this file stays `force-static` so the git-derived
+  // `lastmod` values above are computed on the build host, where git exists.
+  { path: "/explore", source: "app/[locale]/explore/page.tsx" },
 ] as const;
 
 /**
@@ -74,11 +70,7 @@ function makeLastModified() {
   const fallbacks: string[] = [];
   return {
     fallbacks,
-    lastModified(
-      loc: string,
-      sourcePath: string | null,
-      declaredDate?: string,
-    ): string {
+    lastModified(loc: string, sourcePath: string | null, declaredDate?: string): string {
       const committed = gitLastCommitDate(sourcePath);
       if (committed) return committed;
       if (declaredDate) return declaredDate;
@@ -117,18 +109,13 @@ function englishAlternates(path: string): string {
   ].join("");
 }
 
-function publicationAlternateLinks(
-  path: string,
-  availableLocales: readonly string[],
-): string {
+function publicationAlternateLinks(path: string, availableLocales: readonly string[]): string {
   const links = availableLocales.map(
     (locale) =>
       `<xhtml:link rel="alternate" hreflang="${locale}" href="${BASE_URL}/${locale}${path}"/>`,
   );
   if (availableLocales.includes("en")) {
-    links.push(
-      `<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`,
-    );
+    links.push(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`);
   }
   return links.join("");
 }
@@ -138,16 +125,6 @@ function url(loc: string, lastmod: string, alternateLinks: string) {
 }
 
 export async function GET() {
-  let feed;
-  try {
-    feed = await getExploreFeed();
-  } catch {
-    // Do not publish or cache a partial sitemap during a catalog outage.
-    return new Response("Sitemap temporarily unavailable", {
-      status: 503,
-      headers: { "Retry-After": "60", "Cache-Control": "no-store" },
-    });
-  }
   const { fallbacks, lastModified } = makeLastModified();
   const lines: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -157,28 +134,20 @@ export async function GET() {
   for (const locale of locales) {
     for (const route of LOCALIZED_ROUTES) {
       const loc = `${BASE_URL}/${locale}${route.path}`;
-      lines.push(
-        url(loc, lastModified(loc, route.source), alternates(route.path)),
-      );
+      lines.push(url(loc, lastModified(loc, route.source), alternates(route.path)));
     }
   }
 
   for (const route of CANONICAL_ENGLISH_LOCALIZED_ROUTES) {
     const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(
-      url(loc, lastModified(loc, route.source), englishAlternates(route.path)),
-    );
+    lines.push(url(loc, lastModified(loc, route.source), englishAlternates(route.path)));
   }
 
   for (const slug of ["", ...getProductGuideSlugs()]) {
     const path = `/how-to${slug ? `/${slug}` : ""}`;
     const loc = `${BASE_URL}/en${path}`;
     lines.push(
-      url(
-        loc,
-        lastModified(loc, getProductGuideSourcePath(slug)),
-        englishAlternates(path),
-      ),
+      url(loc, lastModified(loc, getProductGuideSourcePath(slug)), englishAlternates(path)),
     );
   }
 
@@ -186,9 +155,7 @@ export async function GET() {
   // non-English routes redirect until qualified translations are approved.
   for (const route of ENGLISH_ONLY_ROUTES) {
     const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(
-      url(loc, lastModified(loc, route.source), englishAlternates(route.path)),
-    );
+    lines.push(url(loc, lastModified(loc, route.source), englishAlternates(route.path)));
   }
 
   for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {
@@ -202,10 +169,7 @@ export async function GET() {
         url(
           `${BASE_URL}/${locale}${publication.canonicalPath}`,
           publication.updated,
-          publicationAlternateLinks(
-            publication.canonicalPath,
-            availableLocales,
-          ),
+          publicationAlternateLinks(publication.canonicalPath, availableLocales),
         ),
       );
     }
@@ -226,37 +190,6 @@ export async function GET() {
       ),
     );
   }
-  const explorePath = "/explore";
-  const latestApproval = feed?.items
-    .map((item) => item.approved_at)
-    .sort()
-    .at(-1)
-    ?.slice(0, 10);
-  lines.push(
-    url(
-      `${BASE_URL}/en${explorePath}`,
-      latestApproval || BUILD_DATE,
-      englishAlternates(explorePath),
-    ),
-  );
-  for (const item of feed?.items ?? []) {
-    const slug = item.slug || item.id;
-    if (
-      !/^[a-z0-9_-]+$/.test(slug) ||
-      !["routine", "bundle"].includes(item.type)
-    )
-      continue;
-    const lastmod = new Date(item.updated_at || item.approved_at);
-    if (!Number.isFinite(lastmod.valueOf())) continue;
-    const path = `/explore/${item.type}s/${slug}`;
-    lines.push(
-      url(
-        `${BASE_URL}/en${path}`,
-        lastmod.toISOString(),
-        englishAlternates(path),
-      ),
-    );
-  }
   lines.push("</urlset>");
 
   reportFallbacks(fallbacks);
@@ -264,7 +197,7 @@ export async function GET() {
   return new Response(lines.join("\n"), {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=60, s-maxage=60",
+      "Cache-Control": "public, max-age=3600, s-maxage=3600",
     },
   });
 }

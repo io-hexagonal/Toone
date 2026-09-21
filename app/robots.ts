@@ -8,6 +8,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://trytoone.com/sitemap.xml",
+    sitemap: [
+      "https://trytoone.com/sitemap.xml",
+      // Explore items are API-driven and revalidate at runtime; see
+      // app/sitemap-explore.xml/route.ts for why they are not in sitemap.xml.
+      "https://trytoone.com/sitemap-explore.xml",
+    ],
   };
 }

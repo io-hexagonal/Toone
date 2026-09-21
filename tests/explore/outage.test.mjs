@@ -75,9 +75,13 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
           "detail retry preserves the item URL",
         );
     }
-    const sitemap = await fetch(base + "/sitemap.xml");
-    assert.equal(sitemap.status, 503);
+    // An outage yields a valid, uncached, empty Explore sitemap rather than a
+    // 5xx; the static /sitemap.xml is unaffected.
+    const sitemap = await fetch(base + "/sitemap-explore.xml");
+    assert.equal(sitemap.status, 200);
     assert.match(sitemap.headers.get("cache-control"), /no-store/);
+    assert.ok(!(await sitemap.text()).includes("/en/explore/routines/"));
+    assert.equal((await fetch(base + "/sitemap.xml")).status, 200);
     await mode({ edge: true });
     await invalidate();
     const edge = await (await fetch(base + detailPath)).text();
@@ -98,7 +102,7 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
     await invalidate();
     const removed = await fetch(base + detailPath);
     assert.equal(removed.status, 404);
-    const afterRemoval = await (await fetch(base + "/sitemap.xml")).text();
+    const afterRemoval = await (await fetch(base + "/sitemap-explore.xml")).text();
     assert.ok(!afterRemoval.includes("/en/explore/routines/" + routine.slug));
   } finally {
     await mode({});
