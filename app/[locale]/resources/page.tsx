@@ -60,11 +60,6 @@ export default async function ResourcesPage({ params }: Props) {
           position: relative; overflow: hidden; padding: 148px 24px 92px;
           background: #141413; color: white;
         }
-        .resources-hero::after {
-          content: ''; position: absolute; width: 720px; height: 520px;
-          right: -180px; top: -160px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(113,130,224,0.2), transparent 68%);
-        }
         .resources-hero-inner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; }
         .resources-eyebrow {
           color: #aebaf4; font-size: 11px; font-weight: 750;
@@ -88,12 +83,6 @@ export default async function ResourcesPage({ params }: Props) {
           border: 1px solid rgba(29,28,25,0.11); border-radius: 22px;
           background: rgba(255,255,255,0.48); transition: transform .25s, border-color .25s;
         }
-        .resource-card::after {
-          content: ''; position: absolute; width: 260px; height: 260px;
-          right: -100px; bottom: -120px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(92,124,114,0.16), transparent 68%);
-        }
-        .resource-card:nth-child(2)::after { background: radial-gradient(circle, rgba(118,104,127,0.16), transparent 68%); }
         .resource-card:hover { transform: translateY(-5px); border-color: rgba(29,28,25,0.3); }
         .resource-card-meta {
           color: rgba(29,28,25,0.48); font-size: 10px; font-weight: 750;

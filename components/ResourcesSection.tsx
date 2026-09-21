@@ -29,12 +29,6 @@ export default function ResourcesSection() {
           border: 1px solid rgba(29,28,25,.11); border-radius: 18px;
           background: rgba(255,255,255,.46); transition: transform .25s,border-color .25s;
         }
-        .resource-preview-card::after {
-          content: ''; position: absolute; width: 220px; height: 220px;
-          right: -95px; bottom: -110px; border-radius: 50%;
-          background: radial-gradient(circle,rgba(92,124,114,.18),transparent 68%);
-        }
-        .resource-preview-card:nth-child(2)::after { background: radial-gradient(circle,rgba(118,104,127,.17),transparent 68%); }
         .resource-preview-card:hover { transform: translateY(-4px); border-color: rgba(29,28,25,.3); }
         .resource-preview-type {
           color: rgba(29,28,25,.48); font-size: 10px; font-weight: 750;
