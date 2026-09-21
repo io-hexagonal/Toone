@@ -103,8 +103,14 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
   for (const agent of routine.package.agents)
     assert.ok(html.includes(agent.name));
   assert.match(html, /Completion criteria/);
-  // Revision info is shown; the raw package JSON is not published (page weight).
-  assert.ok(html.includes(routine.content_hash));
+  // Revision number is shown; ids, hashes and the raw package JSON are not
+  // published (they are for the app and the API, and add page weight).
+  // Ids may only appear inside attributes (deep link, cover URLs), never as text.
+  const visibleText = html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, " ")
+    .replace(/<[^>]+>/g, " ");
+  assert.ok(!visibleText.includes(routine.content_hash));
+  assert.ok(!visibleText.includes(routine.revision_id));
   assert.ok(!html.includes('"format_version"'));
   assert.match(html, /Audit report style/);
   assert.ok(!html.includes("<script>alert('raw html must not render')"));
@@ -121,7 +127,10 @@ test("bundle preserves pin metadata, renders member pages and distinguishes miss
   const { response, html } = await get("/en/explore/bundles/" + bundle.slug);
   assert.equal(response.status, 200);
   for (const member of bundle.members) {
-    assert.ok(html.includes(member.pinned_revision_id));
+    const memberText = html
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, " ")
+      .replace(/<[^>]+>/g, " ");
+    assert.ok(!memberText.includes(member.pinned_revision_id));
     const page = await get("/en/explore/routines/" + member.slug);
     assert.equal(page.response.status, 200);
     assert.ok(page.html.includes(bundle.title));

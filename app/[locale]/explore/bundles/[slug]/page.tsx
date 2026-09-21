@@ -12,6 +12,7 @@ import {
   ExploreUnavailable,
   DetailHero,
   DetailsCard,
+  formatDate,
   Cover,
   Counts,
   Tags,
@@ -87,13 +88,17 @@ export default async function BundlePage({ params }: Props) {
           <section className="explore-section" id="routines">
             <h2>{ui.includedRoutines}</h2>
             <p className="explore-lede explore-muted">{ui.bundleDescription}</p>
-            <ol className="explore-bundle-members">
-              {members.map((member, index) => (
+            <ul className="explore-bundle-members">
+              {members.map((member) => (
                 <li className="explore-bundle-member" key={member.workflow_id}>
-                  <span className="explore-step-number" aria-hidden="true">
-                    {index + 1}
-                  </span>
-                  <Cover entry={member} />
+                  <a
+                    className="explore-bundle-member-art"
+                    href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
+                    <Cover entry={member} />
+                  </a>
                   <div className="explore-bundle-member-copy">
                     <h3>
                       <a
@@ -107,7 +112,10 @@ export default async function BundlePage({ params }: Props) {
                     <Tags tags={member.tags} locale={locale} ui={ui} />
                     <div className="explore-bundle-member-foot">
                       <span className="explore-muted">
-                        {ui.pinned} <code>{member.pinned_revision_id}</code>
+                        {ui.approved}{" "}
+                        <time dateTime={member.approved_at}>
+                          {formatDate(locale, member.approved_at)}
+                        </time>
                       </span>
                       {member.newer_revision_available && (
                         <span className="explore-newer">{ui.newer}</span>
@@ -121,11 +129,11 @@ export default async function BundlePage({ params }: Props) {
                   </div>
                 </li>
               ))}
-            </ol>
+            </ul>
           </section>
         </div>
         <aside className="explore-rail">
-          <DetailsCard detail={detail} ui={ui} />
+          <DetailsCard detail={detail} ui={ui} locale={locale} />
           <a className="explore-back" href={`/${locale}/explore`}>
             ← {ui.back}
           </a>

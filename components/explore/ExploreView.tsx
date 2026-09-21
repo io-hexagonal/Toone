@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
+import CoverImage from "./CoverImage";
 import {
   resolveCardCoverUrl,
   resolveCoverUrl,
@@ -190,20 +191,17 @@ export function Cover({
   inline?: boolean;
 }) {
   const url = inline ? resolveCoverUrl(entry) : resolveCardCoverUrl(entry);
-  return url ? (
-    <img
-      className={`explore-cover ${className}`}
-      src={url}
-      alt=""
-      loading="lazy"
-    />
-  ) : (
-    <div
-      className={`explore-cover explore-cover-empty ${className}`}
+  return (
+    <span
+      className={`explore-cover-frame${url ? "" : " explore-cover-empty"}`}
       aria-hidden="true"
     >
-      <img src="/assets/brand/toone-mark.svg" alt="" />
-    </div>
+      <span className="explore-cover-mark">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/brand/toone-mark.svg" alt="" />
+      </span>
+      {url && <CoverImage className={`explore-cover ${className}`} src={url} />}
+    </span>
   );
 }
 export function Tags({
@@ -297,7 +295,7 @@ export function CatalogCard({
     </article>
   );
 }
-function formatDate(locale: string, iso: string) {
+export function formatDate(locale: string, iso: string) {
   return new Intl.DateTimeFormat(locale, {
     dateStyle: "long",
     timeZone: "UTC",
@@ -396,13 +394,16 @@ export function DetailHero({
     </header>
   );
 }
-/** Sticky right-rail card with the immutable revision facts (contract §5.2 / §5.5). */
+/** Sticky right-rail card with the facts a reader can act on. Internal
+    ids and content hashes stay in the API and the app, not on the page. */
 export function DetailsCard({
   detail,
   ui,
+  locale,
 }: {
   detail: RoutinePublicDetail | BundlePublicDetail;
   ui: ExploreCopy;
+  locale: string;
 }) {
   const minimum =
     "package" in detail ? detail.package.minimum_app_version : undefined;
@@ -414,10 +415,45 @@ export function DetailsCard({
           <dt>{ui.revision}</dt>
           <dd>{detail.sequence}</dd>
         </div>
-        {"license" in detail && (
+        <div>
+          <dt>{ui.approved}</dt>
+          <dd>
+            <time dateTime={detail.approved_at}>
+              {formatDate(locale, detail.approved_at)}
+            </time>
+          </dd>
+        </div>
+        {detail.author_name && (
           <div>
-            <dt>{ui.license}</dt>
-            <dd>{detail.license}</dd>
+            <dt>{ui.by}</dt>
+            <dd>{detail.author_name}</dd>
+          </div>
+        )}
+        {"license" in detail ? (
+          <>
+            <div>
+              <dt>{ui.license}</dt>
+              <dd>{detail.license}</dd>
+            </div>
+            <div>
+              <dt>{ui.steps}</dt>
+              <dd>{detail.step_count}</dd>
+            </div>
+            <div>
+              <dt>{ui.agents}</dt>
+              <dd>{detail.agent_count}</dd>
+            </div>
+            {detail.sub_routine_count > 0 && (
+              <div>
+                <dt>{ui.subRoutines}</dt>
+                <dd>{detail.sub_routine_count}</dd>
+              </div>
+            )}
+          </>
+        ) : (
+          <div>
+            <dt>{ui.routines}</dt>
+            <dd>{detail.member_count}</dd>
           </div>
         )}
         {minimum && (
@@ -426,32 +462,26 @@ export function DetailsCard({
             <dd>{minimum}</dd>
           </div>
         )}
-        <div>
-          <dt>{ui.revisionId}</dt>
-          <dd>
-            <code>{detail.revision_id}</code>
-          </dd>
-        </div>
-        <div>
-          <dt>{ui.contentHash}</dt>
-          <dd>
-            <code>{detail.content_hash}</code>
-          </dd>
-        </div>
       </dl>
     </section>
   );
 }
-function Chips({ items }: { items: string[] }) {
+function Chips({ items, mono = true }: { items: string[]; mono?: boolean }) {
   return (
-    <ul className="explore-chips">
+    <ul className={`explore-chips${mono ? "" : " explore-chips-plain"}`}>
       {items.map((item, i) => (
-        <li key={i}>
-          <code>{item}</code>
-        </li>
+        <li key={i}>{mono ? <code>{item}</code> : <span>{item}</span>}</li>
       ))}
     </ul>
   );
+}
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }
 function MemberContent({
   member,
@@ -529,12 +559,24 @@ function MemberContent({
                 ? (agentNames.get(step.executorAgentId) ?? step.executorAgentId)
                 : null;
               return (
-                <li key={step.id} id={root ? `step-${index + 1}` : undefined}>
-                  <span className="explore-step-number" aria-hidden="true">
-                    {index + 1}
-                  </span>
-                  <div className="explore-step-body">
+                <li
+                  key={step.id}
+                  id={root ? `step-${index + 1}` : undefined}
+                  className="explore-step"
+                >
+                  <div className="explore-step-head">
+                    <span className="explore-step-number" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                     <h3>{step.title}</h3>
+                    {executor && (
+                      <span className="explore-step-agent">
+                        <span>{ui.runsAs}</span>
+                        {executor}
+                      </span>
+                    )}
+                  </div>
+                  <div className="explore-step-body">
                     <Markdown text={step.description} />
                     {!!step.completionCriteria?.length && (
                       <div className="explore-criteria">
@@ -549,25 +591,20 @@ function MemberContent({
                       </div>
                     )}
                     {!!step.outcomes?.length && (
-                      <details>
-                        <summary>{ui.outcomes}</summary>
+                      <div className="explore-outcomes">
+                        <h4>{ui.outcomes}</h4>
                         <ul>
                           {step.outcomes.map((outcome) => (
                             <li key={outcome.id}>
-                              <strong>{outcome.id}</strong>
+                              <code>{outcome.id}</code>
                               <Markdown text={outcome.description} />
                             </li>
                           ))}
                         </ul>
-                      </details>
+                      </div>
                     )}
-                    {(executor || step.subRoutineId || !!step.skillIds?.length) && (
+                    {(step.subRoutineId || !!step.skillIds?.length) && (
                       <ul className="explore-step-meta">
-                        {executor && (
-                          <li>
-                            <span>{ui.runsAs}</span> {executor}
-                          </li>
-                        )}
                         {step.subRoutineId && (
                           <li>
                             <span>{ui.routine}</span>{" "}
@@ -644,16 +681,17 @@ export function RoutineContent({
             <div className="explore-roster">
               {pkg.agents.map((agent) => (
                 <article className="explore-agent" key={agent.source_id}>
-                  <h3>{agent.name}</h3>
-                  <Markdown text={agent.description} />
+                  <div className="explore-agent-head">
+                    <span className="explore-avatar" aria-hidden="true">
+                      {initials(agent.name)}
+                    </span>
+                    <div className="explore-agent-title">
+                      <h3>{agent.name}</h3>
+                      <Markdown text={agent.description} />
+                    </div>
+                  </div>
                   {!!agent.capabilities?.length && (
-                    <ul className="explore-capabilities">
-                      {agent.capabilities.map((capability, i) => (
-                        <li key={i}>
-                          <Markdown text={capability} />
-                        </li>
-                      ))}
-                    </ul>
+                    <Chips items={agent.capabilities} mono={false} />
                   )}
                   {(!!agent.skill_ids?.length || !!agent.mcp_ids?.length) && (
                     <ul className="explore-step-meta">
@@ -690,52 +728,42 @@ export function RoutineContent({
         <section id="requirements" className="explore-section">
           <h2>{ui.requirements}</h2>
           {hasRequirements ? (
-            <dl className="explore-requirements">
+            <div className="explore-req-groups">
               {!!requirements?.agent_ids?.length && (
-                <div>
-                  <dt>{ui.agentIds}</dt>
-                  <dd>
-                    <Chips items={named(requirements.agent_ids)} />
-                  </dd>
+                <div className="explore-req-group">
+                  <h4>{ui.agentIds}</h4>
+                  <Chips items={named(requirements.agent_ids)} mono={false} />
                 </div>
               )}
               {!!requirements?.skill_ids?.length && (
-                <div>
-                  <dt>{ui.skillIds}</dt>
-                  <dd>
-                    <Chips items={requirements.skill_ids} />
-                  </dd>
+                <div className="explore-req-group">
+                  <h4>{ui.skillIds}</h4>
+                  <Chips items={requirements.skill_ids} />
                 </div>
               )}
               {!!requirements?.model_ids?.length && (
-                <div>
-                  <dt>{ui.models}</dt>
-                  <dd>
-                    <Chips items={requirements.model_ids} />
-                  </dd>
+                <div className="explore-req-group">
+                  <h4>{ui.models}</h4>
+                  <Chips items={requirements.model_ids} />
                 </div>
               )}
               {!!requirements?.mcp_ids?.length && (
-                <div>
-                  <dt>{ui.mcps}</dt>
-                  <dd>
-                    <Chips items={requirements.mcp_ids} />
-                  </dd>
+                <div className="explore-req-group">
+                  <h4>{ui.mcps}</h4>
+                  <Chips items={requirements.mcp_ids} />
                 </div>
               )}
               {!!requirements?.resource_bindings?.length && (
-                <div>
-                  <dt>{ui.bindings}</dt>
-                  <dd>
-                    <Chips
-                      items={requirements.resource_bindings.map((value) =>
-                        typeof value === "string" ? value : JSON.stringify(value),
-                      )}
-                    />
-                  </dd>
+                <div className="explore-req-group">
+                  <h4>{ui.bindings}</h4>
+                  <Chips
+                    items={requirements.resource_bindings.map((value) =>
+                      typeof value === "string" ? value : JSON.stringify(value),
+                    )}
+                  />
                 </div>
               )}
-            </dl>
+            </div>
           ) : (
             <p>{ui.noRequirements}</p>
           )}
@@ -798,7 +826,7 @@ export function RoutineContent({
             <a href="#bundles">{ui.includedBundles}</a>
           )}
         </nav>
-        <DetailsCard detail={detail} ui={ui} />
+        <DetailsCard detail={detail} ui={ui} locale={locale} />
         <a className="explore-back" href={`/${locale}/explore`}>
           ← {ui.back}
         </a>
