@@ -2,24 +2,20 @@
 
 import { useEffect, useRef } from "react";
 
-/** The look, as CSS custom properties on .hg-root. Change these to retune. */
-const DEFAULTS = {
-  opacity: 0.7,
-  blur: 43,
-  contrast: 2.45,
-  brightness: 1.25,
-  saturate: 1.85,
-  scale: 1.13,
-};
+/**
+ * The look is baked into the video at encode time (see scripts/hero/encode-loop.sh):
+ * blur, saturation, contrast, brightness, the 0.7 opacity and the screen blend
+ * against the #141413 ground. The browser plays a plain video layer, which keeps
+ * the GPU idle. Retune by re-encoding; only the scale is still applied here.
+ */
+const SCALE = 1.13;
 
 /**
  * HeroGlitter — a treated video loop behind the hero. The source is a liquid
- * glitter clip, pre-blurred and desaturated at encode time; here it is blurred
- * again, pushed through a high-contrast curve so only its brightest glints
- * survive, and screened onto the page ground. The result reads as slow light
- * moving behind the content, not as a video.
- *
- * The look lives in DEFAULTS, applied as CSS variables on .hg-root.
+ * glitter clip; the blur, high-contrast curve and screen onto the page ground
+ * are all baked into the file, so what plays here is a plain, cheap video
+ * layer. The result reads as slow light moving behind the content, not as a
+ * video.
  */
 export default function HeroGlitter() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -43,12 +39,7 @@ export default function HeroGlitter() {
         dangerouslySetInnerHTML={{
           __html: `
             .hg-root {
-              --hg-opacity: ${DEFAULTS.opacity};
-              --hg-blur: ${DEFAULTS.blur}px;
-              --hg-contrast: ${DEFAULTS.contrast};
-              --hg-brightness: ${DEFAULTS.brightness};
-              --hg-saturate: ${DEFAULTS.saturate};
-              --hg-scale: ${DEFAULTS.scale};
+              --hg-scale: ${SCALE};
               position: absolute; inset: 0; z-index: 0; overflow: hidden;
               pointer-events: none; background: #141413;
               contain: strict;
@@ -57,9 +48,6 @@ export default function HeroGlitter() {
               position: absolute; inset: 0; width: 100%; height: 100%;
               object-fit: cover; object-position: center;
               transform: scale(var(--hg-scale));
-              filter: blur(var(--hg-blur)) saturate(var(--hg-saturate)) contrast(var(--hg-contrast)) brightness(var(--hg-brightness));
-              opacity: var(--hg-opacity);
-              mix-blend-mode: screen;
               will-change: transform;
               animation: hg-drift 40s ease-in-out infinite alternate;
             }
@@ -75,9 +63,11 @@ export default function HeroGlitter() {
                 radial-gradient(ellipse 80% 70% at 50% 45%, rgba(20,20,19,0) 0%, rgba(20,20,19,0.55) 60%, #141413 100%),
                 linear-gradient(180deg, rgba(20,20,19,0.75) 0%, rgba(20,20,19,0) 22%, rgba(20,20,19,0) 70%, #141413 100%);
             }
-            /* A whisper of film grain stops the blur from looking like a smear. */
+            /* A whisper of film grain stops the blur from looking like a smear.
+               Plain alpha, not a blend mode: a blend would re-composite the whole
+               viewport against the moving video every frame. */
             .hg-grain {
-              position: absolute; inset: 0; opacity: 0.06; mix-blend-mode: overlay;
+              position: absolute; inset: 0; opacity: 0.035;
               background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
               background-size: 160px 160px;
             }

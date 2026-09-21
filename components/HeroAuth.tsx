@@ -176,8 +176,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
               background:
                 linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 62%, rgba(255,255,255,0.04) 100%),
                 rgba(20,20,19,0.6);
-              backdrop-filter: blur(22px) saturate(1.25);
-              -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              /* the loop is already soft, so a light blur is enough here */
+              backdrop-filter: blur(12px) saturate(1.25);
+              -webkit-backdrop-filter: blur(12px) saturate(1.25);
               /* fade in from the edge so the glass edge is not a dark step */
               -webkit-mask:
                 linear-gradient(to bottom, var(--ha-fill-stops)),
