@@ -235,14 +235,20 @@ export function Counts({
   entry: { step_count: number; agent_count: number; sub_routine_count: number };
   ui: ExploreCopy;
 }) {
+  const stats: Array<["steps" | "agents" | "subRoutines", number]> = [
+    ["steps", entry.step_count],
+    ["agents", entry.agent_count],
+  ];
+  if (entry.sub_routine_count > 0) stats.push(["subRoutines", entry.sub_routine_count]);
   return (
-    <div className="explore-counts">
-      <span>{ui.count("steps", entry.step_count)}</span>
-      <span>{ui.count("agents", entry.agent_count)}</span>
-      {entry.sub_routine_count > 0 && (
-        <span>{ui.count("subRoutines", entry.sub_routine_count)}</span>
-      )}
-    </div>
+    <ul className="explore-counts explore-stats">
+      {stats.map(([unit, count]) => (
+        <li key={unit}>
+          <strong>{count}</strong>
+          <span>{ui.count(unit, count).replace(/^[\d\s.,]+/, "")}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 export function CatalogCard({
@@ -278,12 +284,12 @@ export function CatalogCard({
           <h2>{entry.title}</h2>
           <p className="explore-summary">{entry.summary}</p>
           <div className="explore-card-meta">
+            {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
             {entry.author_name && (
               <span className="explore-byline">
                 {ui.by} {entry.author_name}
               </span>
             )}
-            {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
           </div>
         </div>
       </a>
