@@ -32,7 +32,7 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "The AI workspace for your agentic workflows",
+      "heroTitle": "AI workspace for your agentic workflows",
       "heroTag": "Turn recurring work into useful results, with specialist agents and you in control.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
@@ -114,7 +114,7 @@
     "authContinue": "Request Early Access",
     "authJoined": "Your request is on the list. We will be in touch when access is available.",
     "authError": "Something went wrong — please try again.",
-    "authNote": "Leave your email to request early access. We will contact you when a place is available.",
+    "authNote": "You'll be contacted if a spot is available.",
     "waitlistTitle": "Request Early Access",
     "waitlistSub": "Leave your email to request early access. We will contact you when a place is available.",
     "waitlistExisting": "Already using Toone?",

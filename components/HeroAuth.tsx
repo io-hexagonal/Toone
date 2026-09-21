@@ -115,26 +115,16 @@ export default function HeroAuth({ audience = "business" }: Props) {
               text-align: center; display: flex; flex-direction: column; align-items: center;
               justify-self: center; max-width: 460px; padding: 96px 12px 40px;
             }
-            /* Brand lockup above the headline, same recipe as the invite page. */
-            .ha-brand {
-              display: inline-flex; align-items: center; gap: 10px; margin-bottom: 26px;
-              text-decoration: none; color: rgba(255,255,255,0.92);
-            }
-            .ha-brand img { width: 34px; height: 34px; display: block; }
-            .ha-brand span {
-              font-family: var(--font-wordmark), system-ui, sans-serif;
-              font-size: 23px; font-weight: 600; letter-spacing: -0.03em; text-transform: lowercase; line-height: 1;
-            }
             .ha-title {
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-weight: 600; letter-spacing: -0.02em; line-height: 1.06;
               color: rgba(255,255,255,0.95);
               font-size: clamp(34px, 3.6vw, 48px);
-              margin-bottom: 20px; text-wrap: balance;
+              margin-bottom: 24px; text-wrap: balance;
             }
             .ha-tag {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
-              max-width: 30ch; margin-bottom: 40px; text-wrap: balance;
+              max-width: 30ch; margin-bottom: 48px; text-wrap: balance;
             }
             .ha-language {
               max-width: 42ch; margin: -16px 0 20px; color: rgba(255,255,255,0.72);
@@ -246,17 +236,17 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-email {
               width: 100%; padding: 12px 14px; border-radius: 10px;
               border: 1px solid transparent;
-              background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.92);
+              background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.92);
               font-size: 14px; outline: none;
             }
             .ha-email::placeholder { color: rgba(255,255,255,0.62); }
-            .ha-email:focus { background: rgba(255,255,255,0.07); }
+            .ha-email:focus { background: rgba(255,255,255,0.10); }
             .ha-continue {
               width: 100%; padding: 12px; border-radius: 10px; border: none;
               display: inline-flex; align-items: center; justify-content: center; gap: 9px;
               background: #f0ede6; color: #1d1c19; cursor: pointer;
               font-family: var(--font-wordmark), system-ui, sans-serif;
-              font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
+              font-weight: 500; font-size: 14.5px; letter-spacing: -0.01em;
               transition: transform 0.15s ease;
             }
             .ha-continue:hover { transform: scale(1.015); }
@@ -280,35 +270,35 @@ export default function HeroAuth({ audience = "business" }: Props) {
 
             .ha-product-hunt {
               position: fixed; z-index: 35; left: 24px; bottom: 24px;
-              display: inline-flex; align-items: center; gap: 9px;
-              min-height: 48px; padding: 8px 12px; border-radius: 12px; overflow: hidden;
-              border: 1px solid rgba(255,255,255,0.12); background: #201e1d;
-              color: rgba(255,255,255,0.9); text-decoration: none;
-              opacity: 0.8; box-shadow: 0 10px 30px rgba(0,0,0,0.22);
-              transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+              display: inline-flex; align-items: center; gap: 12px;
+              min-height: 62px; padding: 12px 16px; border-radius: 12px; overflow: hidden;
+              border: 1px solid #ff6154; background: #fff8f6;
+              color: #201e1d; text-decoration: none;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+              transition: transform 0.2s, box-shadow 0.2s;
             }
             .ha-product-hunt:hover {
-              opacity: 1; transform: translateY(-2px);
+              transform: translateY(-2px);
               box-shadow: 0 14px 36px rgba(0,0,0,0.32);
             }
             .ha-product-hunt:focus-visible {
-              outline: 2px solid rgba(255,255,255,0.9);
-              outline-offset: 4px; opacity: 1;
+              outline: 2px solid #ff6154;
+              outline-offset: 4px;
             }
             .ha-product-hunt-mark {
-              display: grid; place-items: center; width: 28px; height: 28px;
+              display: grid; place-items: center; width: 36px; height: 36px; flex: none;
               border-radius: 50%; background: #ff6154; color: #fff;
-              font-size: 15px; font-weight: 750;
+              font-size: 22px; font-weight: 750;
             }
             .ha-product-hunt-copy { display: flex; flex-direction: column; text-align: left; }
-            .ha-product-hunt-copy small { font-size: 8px; letter-spacing: 0.12em; color: rgba(255,255,255,0.66); }
-            .ha-product-hunt-copy strong { font-size: 12.5px; line-height: 1.25; }
+            .ha-product-hunt-copy small { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: #794038; }
+            .ha-product-hunt-copy strong { font-size: 16px; line-height: 1.3; }
 
             @media (max-width: 720px) {
               .ha-dl { display: none; }
               .ha-product-hunt {
                 position: static; margin-top: 20px;
-                transform: none; opacity: 0.82;
+                transform: none;
               }
               .ha-product-hunt:hover { transform: translateY(-2px); }
             }
@@ -319,11 +309,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
       <section className="hero-auth">
         <HeroGlitter />
         <div className="ha-left">
-          <div className="ha-brand" aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/brand/toone-mark.svg" alt="" />
-            <span>toone</span>
-          </div>
           <h1 className="ha-title">
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
           </h1>
