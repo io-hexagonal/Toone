@@ -11,7 +11,8 @@
     "content:check": "npm run content:validate",
     "prebuild": "npm run content:validate",
     "typecheck": "tsc --noEmit",
-    "test": "npm run content:check && npm run typecheck"
+    "test": "npm run content:check && npm run typecheck",
+    "explore:mock": "node scripts/explore-mock-api.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
