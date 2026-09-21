@@ -2,15 +2,17 @@
 title: "How Toone works"
 navTitle: "Overview"
 description: "Step-by-step guide to Toone on your Mac: organizations, agents, routines, schedules, approval gates and integrations, from first setup to reviewed runs."
-eyebrow: "Personal overview"
+eyebrow: "Overview"
 pageType: "overview"
 ---
 
-## One place to shape and run agentic work
+## What it is and who it's for
 
-Toone is a native workspace for projects that use AI agents. A project keeps the agents you work with, the routines they can run, the tools they use, and the knowledge they build in one understandable place.
+Toone is a native workspace for projects that use AI agents, made for anyone who already has an OpenAI or Anthropic subscription. It lets you craft reliable agentic workflows in natural language: create an agent, talk with it, and turn that conversation into a routine built around the outcome you want. It is made for professionals and businesses that want to automate processes with a real degree of reliability, consistency and determinism, while keeping the observability and flexibility to expand them.
 
 You can begin with one agent and one useful task. As the project grows, agents can specialize, routines can call other routines, and work can move between roles without turning into one untraceable conversation.
+
+Not sure where to start? Browse the routines and bundles other people have shared in [Explore](/explore), then open one in Toone.
 
 ## The operating loop
 
