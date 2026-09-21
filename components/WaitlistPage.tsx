@@ -94,33 +94,33 @@ export default function WaitlistPage() {
         .waitlist-message { margin: 0; font-size: 13px; line-height: 1.5; text-align: center; }
         .waitlist-message.success { color: rgba(179,232,194,.92); }
         .waitlist-message.error { color: rgba(255,138,122,.95); }
+        /* Explainer under the form: same width as the card, quiet type, a
+           hairline above so it reads as supporting copy, not the page itself. */
         .waitlist-intro {
-          width: 100%; max-width: 640px; margin: 0 0 26px;
+          width: 100%; max-width: 400px; margin: 40px 0 0; padding-top: 28px;
+          border-top: 1px solid rgba(255,255,255,.09);
         }
         .waitlist-intro p {
-          color: rgba(255,255,255,.72); font-size: 15px; line-height: 1.6; margin: 0 0 22px;
+          color: rgba(255,255,255,.6); font-size: 14px; line-height: 1.65; margin: 0 0 24px;
         }
-        .waitlist-intro-cols {
-          display: grid; gap: 22px; grid-template-columns: 1fr;
-        }
-        @media (min-width: 620px) {
-          .waitlist-intro-cols { grid-template-columns: 1fr 1fr; gap: 28px; }
-        }
+        .waitlist-intro-cols { display: grid; gap: 24px; grid-template-columns: 1fr; }
         .waitlist-intro h2 {
-          color: rgba(255,255,255,.92); font-family: var(--font-wordmark), system-ui, sans-serif;
-          font-size: 15px; font-weight: 600; letter-spacing: -.01em; margin: 0 0 10px;
+          color: rgba(255,255,255,.88); font-family: var(--font-wordmark), system-ui, sans-serif;
+          font-size: 14px; font-weight: 600; letter-spacing: -.01em; margin: 0 0 8px;
         }
         .waitlist-intro ul, .waitlist-intro ol {
-          color: rgba(255,255,255,.66); font-size: 14px; line-height: 1.55;
-          margin: 0; padding-left: 20px;
+          color: rgba(255,255,255,.6); font-size: 14px; line-height: 1.55;
+          margin: 0; padding-left: 18px;
         }
-        .waitlist-intro li { margin: 0 0 7px; }
+        .waitlist-intro li { margin: 0 0 6px; padding-left: 2px; }
+        .waitlist-intro li::marker { color: rgba(255,255,255,.35); }
         .waitlist-intro li:last-child { margin-bottom: 0; }
         .waitlist-language {
           color: rgba(255,255,255,.5); font-size: 13px; line-height: 1.5;
           margin: 0 0 14px; text-align: center; max-width: 42ch;
         }
-        .waitlist-existing { color: rgba(255,255,255,.65); font-size: 13.5px; margin-top: 20px; }
+        .waitlist-existing { color: rgba(255,255,255,.65); font-size: 13.5px; margin: 20px 0 0; text-align: center; }
+        .waitlist-existing + .waitlist-existing { margin-top: 8px; }
         .waitlist-existing a { color: rgba(255,255,255,.9); text-decoration: none; }
         .waitlist-existing a:hover { text-decoration: underline; }
       `}</style>
@@ -135,33 +135,6 @@ export default function WaitlistPage() {
 
       <h1 className="waitlist-title">{t("waitlistTitle")}</h1>
       <p className="waitlist-sub">{t("waitlistSub")}</p>
-
-      {/* English-only content block. The seven other locales render the form
-          alone, so their message files need no new keys and their route stays
-          `noindex` until this copy is translated and reviewed. */}
-      {locale === "en" && (
-        <section className="waitlist-intro">
-          <p>{t("eaIntro")}</p>
-          <div className="waitlist-intro-cols">
-            <div>
-              <h2>{t("eaBeforeTitle")}</h2>
-              <ul>
-                <li>{t("eaBefore1")}</li>
-                <li>{t("eaBefore2")}</li>
-                <li>{t("eaBefore3")}</li>
-              </ul>
-            </div>
-            <div>
-              <h2>{t("eaHowTitle")}</h2>
-              <ol>
-                <li>{t("eaStep1")}</li>
-                <li>{t("eaStep2")}</li>
-                <li>{t("eaStep3")}</li>
-              </ol>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Product-language disclosure, stated before the conversion action on
           every locale (technical baseline: product-language row). */}
@@ -197,6 +170,30 @@ export default function WaitlistPage() {
         {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>
       </p>
       <p className="waitlist-existing"><Link href="/invite">{t("haveInvitation")}</Link></p>
+
+      {/* Supporting copy for search and for people who want the details; every
+          locale carries it now that the strings are translated. */}
+      <section className="waitlist-intro">
+        <p>{t("eaIntro")}</p>
+        <div className="waitlist-intro-cols">
+          <div>
+            <h2>{t("eaBeforeTitle")}</h2>
+            <ul>
+              <li>{t("eaBefore1")}</li>
+              <li>{t("eaBefore2")}</li>
+              <li>{t("eaBefore3")}</li>
+            </ul>
+          </div>
+          <div>
+            <h2>{t("eaHowTitle")}</h2>
+            <ol>
+              <li>{t("eaStep1")}</li>
+              <li>{t("eaStep2")}</li>
+              <li>{t("eaStep3")}</li>
+            </ol>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -176,8 +176,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
               background:
                 linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 62%, rgba(255,255,255,0.04) 100%),
                 rgba(20,20,19,0.6);
-              backdrop-filter: blur(22px) saturate(1.25);
-              -webkit-backdrop-filter: blur(22px) saturate(1.25);
+              /* the loop is already soft, so a light blur is enough here */
+              backdrop-filter: blur(12px) saturate(1.25);
+              -webkit-backdrop-filter: blur(12px) saturate(1.25);
               /* fade in from the edge so the glass edge is not a dark step */
               -webkit-mask:
                 linear-gradient(to bottom, var(--ha-fill-stops)),
@@ -252,8 +253,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-continue svg { width: 16px; height: 16px; fill: currentColor; margin-top: -2px; flex: none; }
             .ha-continue:disabled { opacity: 0.6; transform: none; cursor: default; }
             .ha-note { color: rgba(255,255,255,0.66); font-size: 12px; text-align: center; }
-            .ha-request { margin-top: 18px; font-size: 13px; }
-            .ha-request a { color: rgba(255,255,255,0.9); text-decoration: underline; }
             .ha-existing { margin-top: 10px; font-size: 13px; }
             .ha-existing a { color: rgba(255,255,255,0.9); text-decoration: none; }
             .ha-existing a:hover { text-decoration: underline; }
@@ -359,15 +358,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
           </div>
           </div>
 
-          <p className="ha-note ha-request">
-            <Link
-              href="/request-access"
-              data-umami-event="request-early-access"
-              data-umami-event-placement="hero"
-            >
-              {t("downloadFor")}
-            </Link>
-          </p>
 
           <p className="ha-note ha-existing">
             {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>
