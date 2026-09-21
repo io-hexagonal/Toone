@@ -437,6 +437,7 @@
     "contentHash": "Hash del contenido",
     "runsAs": "Ejecutado por",
     "overview": "Resumen",
-    "noTags": "Aún sin temas"
+    "noTags": "Aún sin temas",
+    "eyebrow": "Rutinas y Workflows"
   }
 }

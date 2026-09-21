@@ -75,6 +75,7 @@ export const COPY_KEYS = [
   "runsAs",
   "overview",
   "noTags",
+  "eyebrow",
   "newer",
   "license",
   "back",

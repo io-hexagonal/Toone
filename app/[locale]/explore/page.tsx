@@ -78,7 +78,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
       />
       <header className="explore-hero">
         <div className="explore-width">
-          <p className="explore-eyebrow">Toone: {ui.title}</p>
+          <p className="explore-eyebrow">{ui.eyebrow}</p>
           <h1>{ui.title}</h1>
           <p className="explore-intro">{ui.intro}</p>
         </div>
