@@ -85,17 +85,25 @@ export default async function ExplorePage({ params, searchParams }: Props) {
       </header>
       <main className="explore-catalog explore-width">
         <div className="explore-filters">
-          <nav className="explore-filter-list" aria-label={ui.title}>
-            {(["all", "routines", "bundles"] as const).map((type) => (
-              <a
-                className="explore-filter"
-                aria-current={query.type === type ? "true" : undefined}
-                key={type}
-                href={catalogHref(locale, { ...active, type, page: 1 })}
-              >
-                {ui[type]}
-              </a>
-            ))}
+          <nav
+            className="explore-type-filter"
+            aria-labelledby="explore-type-label"
+          >
+            <span className="explore-filter-label" id="explore-type-label">
+              {ui.show}
+            </span>
+            <div className="explore-type-options">
+              {(["all", "routines", "bundles"] as const).map((type) => (
+                <a
+                  className="explore-type-option"
+                  aria-current={query.type === type ? "true" : undefined}
+                  key={type}
+                  href={catalogHref(locale, { ...active, type, page: 1 })}
+                >
+                  {ui[type]}
+                </a>
+              ))}
+            </div>
           </nav>
           <form
             className="explore-search"
@@ -118,25 +126,36 @@ export default async function ExplorePage({ params, searchParams }: Props) {
             <button type="submit">{ui.search}</button>
           </form>
         </div>
-        <nav className="explore-filter-list" aria-label={ui.tags}>
-          <a
-            className="explore-filter"
-            aria-current={!query.tag ? "true" : undefined}
-            href={catalogHref(locale, { ...active, tag: "", page: 1 })}
+        {(tags.length > 0 || query.tag) && (
+          <nav
+            className="explore-topic-filter"
+            aria-labelledby="explore-topic-label"
           >
-            {ui.allTags}
-          </a>
-          {tags.map(({ tag }) => (
-            <a
-              key={tag}
-              className="explore-filter"
-              aria-current={query.tag === tag ? "true" : undefined}
-              href={catalogHref(locale, { ...active, tag, page: 1 })}
-            >
-              #{tag}
-            </a>
-          ))}
-        </nav>
+            <span className="explore-filter-label" id="explore-topic-label">
+              {ui.topics}
+            </span>
+            <div className="explore-topic-options">
+              {tags.map(({ tag }) => (
+                <a
+                  key={tag}
+                  className="explore-topic-option"
+                  aria-current={query.tag === tag ? "true" : undefined}
+                  href={catalogHref(locale, { ...active, tag, page: 1 })}
+                >
+                  {tag}
+                </a>
+              ))}
+            </div>
+            {query.tag && (
+              <a
+                className="explore-topic-clear"
+                href={catalogHref(locale, { ...active, tag: "", page: 1 })}
+              >
+                {ui.clearTopic} <span aria-hidden="true">×</span>
+              </a>
+            )}
+          </nav>
+        )}
         <p className="explore-results">{ui.count("results", catalog.total)}</p>
         {catalog.items.length ? (
           <div className="explore-grid">

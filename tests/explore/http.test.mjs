@@ -49,6 +49,18 @@ test("type, search, and tags filter the actual server-rendered catalog", async (
   const tag = fixture("tags")[0].tag;
   const tagged = await get(`/en/explore?tag=${tag}`);
   assert.match(tagged.html, /aria-current="true"/);
+  const combined = await get(
+    `/en/explore?type=bundles&tag=${tag}&q=audit&page=2`,
+  );
+  const clearTopic = combined.html.match(
+    /<a\b[^>]*class="explore-topic-clear"[^>]*href="([^"]+)"/,
+  );
+  assert.ok(clearTopic, "an active topic offers a clear action");
+  const cleared = new URL(clearTopic[1].replaceAll("&amp;", "&"), base);
+  assert.equal(cleared.searchParams.get("type"), "bundles");
+  assert.equal(cleared.searchParams.get("q"), "audit");
+  assert.equal(cleared.searchParams.has("tag"), false);
+  assert.equal(cleared.searchParams.has("page"), false);
 });
 test("routine HTML contains root and child steps, agents, safe Markdown, source, canonical and escaped schema", async () => {
   const { response, html } = await get("/en/explore/routines/" + routine.slug);
