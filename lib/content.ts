@@ -38,6 +38,7 @@ export const RESERVED_ROOT_EDITORIAL_SLUGS = [
   "download",
   "downloads",
   "early-access",
+  "explore",
   "invite",
   "editorial-policy",
   "governance",

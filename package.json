@@ -11,8 +11,10 @@
     "content:check": "npm run content:validate",
     "prebuild": "npm run content:validate",
     "typecheck": "tsc --noEmit",
-    "test": "npm run content:check && npm run typecheck",
-    "explore:mock": "node scripts/explore-mock-api.mjs"
+    "test": "npm run content:check && npm run test:explore && npm run typecheck",
+    "explore:mock": "node scripts/explore-mock-api.mjs",
+    "test:explore": "node --import tsx --test tests/explore/*.test.ts",
+    "test:explore:http": "node --test --test-concurrency=1 tests/explore/http.test.mjs tests/explore/outage.test.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -21,7 +23,8 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
@@ -30,6 +33,7 @@
     "@types/react-dom": "^19.0.0",
     "schema-dts": "2.0.0",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.0"
   }
 }

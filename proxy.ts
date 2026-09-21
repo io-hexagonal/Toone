@@ -1,5 +1,12 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  getRoutine,
+  getBundle,
+  resolveSlug,
+  isWorkflowId,
+  isBundleId,
+} from "./lib/explore/data";
 import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
@@ -13,7 +20,34 @@ const intlMiddleware = createMiddleware(routing);
 const PREVIEW_BOTS =
   /LinkedInBot|facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterestbot|redditbot|SkypeUriPreview|vkShare/i;
 
-export default function proxy(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
+  // Resolve immutable ids before rendering so the contract gets a real 301,
+  // including unprefixed links shared by older desktop versions.
+  const item = req.nextUrl.pathname.match(
+    /^\/(?:(en|pt|es|fr|de|it|nl|ru)\/)?explore\/(routines|bundles)\/([^/]+)$/,
+  );
+  if (
+    item &&
+    (item[2] === "routines" ? isWorkflowId(item[3]) : isBundleId(item[3]))
+  ) {
+    try {
+      const detail =
+        item[2] === "routines"
+          ? await getRoutine(item[3])
+          : await getBundle(item[3]);
+      if (detail && resolveSlug(detail) !== item[3]) {
+        const target = new URL(
+          `/${item[1] || "en"}/explore/${item[2]}/${resolveSlug(detail)}`,
+          req.url,
+        );
+        target.search = req.nextUrl.search;
+        return NextResponse.redirect(target, 301);
+      }
+    } catch {
+      /* A transient API failure must not turn a valid item into a 404. */
+    }
+  }
+
   if (
     req.nextUrl.pathname === "/" &&
     PREVIEW_BOTS.test(req.headers.get("user-agent") ?? "")

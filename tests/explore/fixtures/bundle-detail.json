@@ -1,0 +1,69 @@
+{
+  "bundle_id": "wfb_k3m9q2xw7a1b5c8d",
+  "slug": "scientific-review-toolkit-7a1b5c8d",
+  "revision_id": "wbr_p8s2d4f6h1j3k5l7",
+  "sequence": 1,
+  "title": "Scientific Review Toolkit",
+  "summary": "Two routines that together take a quantitative claim from literature search to a replayable audit package.",
+  "tags": [
+    "research",
+    "audit"
+  ],
+  "content_hash": "a169b2bbe5f70c10aff069a6ec51b7f8dea5de38deb7e4e88b8f90ec6fd9781d",
+  "member_count": 2,
+  "cover_url": "bundles/wfb_k3m9q2xw7a1b5c8d/revisions/wbr_p8s2d4f6h1j3k5l7/cover.jpg",
+  "author_name": "Matheus Paranhos",
+  "approved_at": "2026-09-25T09:00:00Z",
+  "members": [
+    {
+      "workflow_id": "wfl_a1b2c3d4e5f6g7h8",
+      "slug": "literature-sweep-e5f6g7h8",
+      "revision_id": "wfr_11aa22bb33cc44dd",
+      "title": "Literature Sweep",
+      "summary": "Literature Sweep: summary of what this routine does and when to run it.",
+      "tags": [
+        "research"
+      ],
+      "license": "toone-community-v1",
+      "listing": "bundle_only",
+      "content_hash": "0000000000000000000000000000000000000000000000000000000000abc124",
+      "routine_schema_version": 2,
+      "member_count": 2,
+      "sub_routine_count": 1,
+      "step_count": 9,
+      "agent_count": 4,
+      "cover_url": "workflows/wfl_a1b2c3d4e5f6g7h8/revisions/wfr_11aa22bb33cc44dd/cover.jpg",
+      "cover_image_data_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6DoooqhH/2Q==",
+      "author_name": "Matheus Paranhos",
+      "approved_at": "2026-09-24T10:12:00Z",
+      "position": 0,
+      "pinned_revision_id": "wfr_11aa22bb33cc44dd",
+      "newer_revision_available": false
+    },
+    {
+      "workflow_id": "wfl_h8g7f6e5d4c3b2a1",
+      "slug": "claim-audit-d4c3b2a1",
+      "revision_id": "wfr_55ee66ff77aa88bb",
+      "title": "Claim Audit",
+      "summary": "Claim Audit: summary of what this routine does and when to run it.",
+      "tags": [
+        "research"
+      ],
+      "license": "toone-community-v1",
+      "listing": "bundle_only",
+      "content_hash": "0000000000000000000000000000000000000000000000000000000000abc125",
+      "routine_schema_version": 2,
+      "member_count": 3,
+      "sub_routine_count": 2,
+      "step_count": 14,
+      "agent_count": 6,
+      "cover_url": "workflows/wfl_h8g7f6e5d4c3b2a1/revisions/wfr_55ee66ff77aa88bb/cover.jpg",
+      "cover_image_data_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6DoooqhH/2Q==",
+      "author_name": "Matheus Paranhos",
+      "approved_at": "2026-09-24T10:12:00Z",
+      "position": 1,
+      "pinned_revision_id": "wfr_55ee66ff77aa88bb",
+      "newer_revision_available": true
+    }
+  ]
+}

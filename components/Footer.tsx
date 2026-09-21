@@ -88,6 +88,7 @@ export default async function Footer({
             </div>
             <div>
               <p className="ftr-heading">{t("proof")}</p>
+              <Link href="/explore">{nav("explore")}</Link>
               <Link href="/resources">{nav("resources")}</Link>
               <a href="/en/governance">{nav("governance")}</a>
               <Link href={showcasesPath}>

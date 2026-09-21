@@ -1,0 +1,23 @@
+{
+  "workflow_id": "wfl_fyziwhse2biovg4e",
+  "slug": "run-peer2paper-scientific-audit-2biovg4e",
+  "revision_id": "wfr_sikihszbcdo5c3vq",
+  "title": "micro1/peer2paper",
+  "summary": "Audit one caller-supplied quantitative claim by freezing a compact case with an embedded analysis contract, reproducing that contract under bounded local execution, running authorized sensitivity and targeted evidence work, independently verifying decisive findings, and returning a lean replayable audit package.",
+  "tags": [
+    "research",
+    "audit"
+  ],
+  "license": "toone-community-v1",
+  "listing": "standalone",
+  "content_hash": "da6f7d5fd9e5bb3233ac8ec070a00cc26a850236897b12c9a865c60be5240a6f",
+  "routine_schema_version": 2,
+  "member_count": 7,
+  "sub_routine_count": 6,
+  "step_count": 47,
+  "agent_count": 19,
+  "cover_url": "workflows/wfl_fyziwhse2biovg4e/revisions/wfr_sikihszbcdo5c3vq/cover.jpg",
+  "cover_image_data_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6DoooqhH/2Q==",
+  "author_name": "Matheus Paranhos",
+  "approved_at": "2026-08-31T23:33:38.652323Z"
+}

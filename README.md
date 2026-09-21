@@ -12,6 +12,8 @@ This repository contains the public website and product introductions. The deskt
 
 ## Website development
 
-Use Node.js 24. Run `npm ci`, `npm run dev`, and `npm run build`. `npm test` validates the product content and types; `npm run content:check-routes` checks the built routes.
+Use Node.js 24. Run `npm ci`, `npm run dev`, and `npm run build`. `npm test` validates product content, Explore behavior, and types; `npm run content:check-routes` checks the built routes.
+
+Explore pages use the server-only `EXPLORE_API_BASE_URL` and signed cache revalidation. See [Explore verification](tests/explore/README.md) for the fixture API, production HTTP tests, and manual UI edge cases.
 
 Questions and support: [hello@trytoone.com](mailto:hello@trytoone.com).

@@ -131,6 +131,7 @@ export default function SiteHeader({
           <Link href={showcasesPath} data-optional>
             {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
           </Link>
+          <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/signin">{t("signin")}</Link>
           <InvitationAdminLink />
           <Link

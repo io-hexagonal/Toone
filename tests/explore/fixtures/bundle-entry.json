@@ -1,0 +1,34 @@
+{
+  "bundle_id": "wfb_k3m9q2xw7a1b5c8d",
+  "slug": "scientific-review-toolkit-7a1b5c8d",
+  "revision_id": "wbr_p8s2d4f6h1j3k5l7",
+  "title": "Scientific Review Toolkit",
+  "summary": "Two routines that together take a quantitative claim from literature search to a replayable audit package.",
+  "tags": [
+    "research",
+    "audit"
+  ],
+  "content_hash": "a169b2bbe5f70c10aff069a6ec51b7f8dea5de38deb7e4e88b8f90ec6fd9781d",
+  "member_count": 2,
+  "cover_url": "bundles/wfb_k3m9q2xw7a1b5c8d/revisions/wbr_p8s2d4f6h1j3k5l7/cover.jpg",
+  "author_name": "Matheus Paranhos",
+  "approved_at": "2026-09-25T09:00:00Z",
+  "members": [
+    {
+      "position": 0,
+      "workflow_id": "wfl_a1b2c3d4e5f6g7h8",
+      "slug": "literature-sweep-e5f6g7h8",
+      "title": "Literature Sweep",
+      "revision_id": "wfr_11aa22bb33cc44dd",
+      "cover_url": "workflows/wfl_a1b2c3d4e5f6g7h8/revisions/wfr_11aa22bb33cc44dd/cover.jpg"
+    },
+    {
+      "position": 1,
+      "workflow_id": "wfl_h8g7f6e5d4c3b2a1",
+      "slug": "claim-audit-d4c3b2a1",
+      "title": "Claim Audit",
+      "revision_id": "wfr_55ee66ff77aa88bb",
+      "cover_url": "workflows/wfl_h8g7f6e5d4c3b2a1/revisions/wfr_55ee66ff77aa88bb/cover.jpg"
+    }
+  ]
+}

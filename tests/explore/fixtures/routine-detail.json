@@ -1,0 +1,1260 @@
+{
+  "workflow_id": "wfl_fyziwhse2biovg4e",
+  "slug": "run-peer2paper-scientific-audit-2biovg4e",
+  "revision_id": "wfr_sikihszbcdo5c3vq",
+  "sequence": 1,
+  "title": "micro1/peer2paper",
+  "summary": "Audit one caller-supplied quantitative claim by freezing a compact case with an embedded analysis contract, reproducing that contract under bounded local execution, running authorized sensitivity and targeted evidence work, independently verifying decisive findings, and returning a lean replayable audit package.",
+  "tags": [
+    "research",
+    "audit"
+  ],
+  "license": "toone-community-v1",
+  "listing": "standalone",
+  "cover_url": "workflows/wfl_fyziwhse2biovg4e/revisions/wfr_sikihszbcdo5c3vq/cover.jpg",
+  "author_name": "Matheus Paranhos",
+  "approved_at": "2026-08-31T23:33:38.652323Z",
+  "content_hash": "da6f7d5fd9e5bb3233ac8ec070a00cc26a850236897b12c9a865c60be5240a6f",
+  "package_schema_version": 2,
+  "routine_schema_version": 2,
+  "member_count": 7,
+  "sub_routine_count": 6,
+  "step_count": 47,
+  "agent_count": 19,
+  "included_in_bundles": [
+    {
+      "bundle_id": "wfb_k3m9q2xw7a1b5c8d",
+      "slug": "scientific-review-toolkit-7a1b5c8d",
+      "title": "Scientific Review Toolkit"
+    }
+  ],
+  "package": {
+    "format_version": 2,
+    "routine_schema_version": 2,
+    "minimum_app_version": "1.0.70",
+    "root_key": "root",
+    "members": [
+      {
+        "key": "root",
+        "source_routine_id": "peer2paper-operations/run-peer2paper-scientific-audit",
+        "owner_agent_key": "peer2paper-operations/peer2paper-orchestrator",
+        "payload": {
+          "name": "Run Peer2Paper Scientific Audit",
+          "steps": [
+            {
+              "id": "invoke-build-study-case",
+              "title": "Build compact study case",
+              "inputs": [],
+              "outputs": [],
+              "outcomes": [
+                {
+                  "id": "case_frozen",
+                  "isTerminal": false,
+                  "description": "The claim and every required execution link are fixed without a blocking gap."
+                },
+                {
+                  "id": "case_frozen_with_limits",
+                  "isTerminal": false,
+                  "description": "The case can execute with visible nonblocking limitations."
+                },
+                {
+                  "id": "case_not_assessable",
+                  "isTerminal": true,
+                  "description": "The target cannot be fixed without an unsupported substantive choice."
+                },
+                {
+                  "id": "operationally_blocked",
+                  "isTerminal": true,
+                  "description": "Authority, privacy, safety, or inaccessible required files block execution."
+                }
+              ],
+              "skillIds": [],
+              "joinPolicy": "all",
+              "description": "Validate the target, map only its document and data dependency closure, preserve exact source-backed transformations and document conflicts, and freeze one study case containing primary_target and analysis_contract.",
+              "subRoutineId": "peer2paper-operations/build-and-freeze-study-case",
+              "routineInputIds": [
+                "case-bundle",
+                "audit-request",
+                "scientific-policy",
+                "execution-policy"
+              ],
+              "inputArtefactIds": [],
+              "outputArtefactIds": [
+                "paper-documents",
+                "dataset-maps",
+                "code-project",
+                "document-consistency-findings",
+                "frozen-study-case"
+              ],
+              "childInputBindings": [
+                {
+                  "sourceId": "case-bundle",
+                  "sourceKind": "parent-input",
+                  "childInputId": "case-bundle"
+                },
+                {
+                  "sourceId": "audit-request",
+                  "sourceKind": "parent-input",
+                  "childInputId": "audit-request"
+                },
+                {
+                  "sourceId": "scientific-policy",
+                  "sourceKind": "parent-input",
+                  "childInputId": "scientific-policy"
+                },
+                {
+                  "sourceId": "execution-policy",
+                  "sourceKind": "parent-input",
+                  "childInputId": "execution-policy"
+                }
+              ],
+              "completionCriteria": [
+                "The child returns one frozen study case with mandatory primary_target, compact analysis_contract, separate document_conflicts, bounded secondary benchmarks, and target-scoped data and code maps, or an explicit blocker.",
+                "A unique caller-frozen estimand with a contradictory supplementary document emits case_frozen_with_limits and remains eligible for reproduction."
+              ],
+              "childOutputBindings": [
+                {
+                  "outcomes": [
+                    "case_frozen",
+                    "case_frozen_with_limits",
+                    "case_not_assessable",
+                    "operationally_blocked"
+                  ],
+                  "childArtefactId": "paper-documents",
+                  "parentArtefactId": "paper-documents"
+                },
+                {
+                  "outcomes": [
+                    "case_frozen",
+                    "case_frozen_with_limits",
+                    "case_not_assessable",
+                    "operationally_blocked"
+                  ],
+                  "childArtefactId": "dataset-maps",
+                  "parentArtefactId": "dataset-maps"
+                },
+                {
+                  "outcomes": [
+                    "case_frozen",
+                    "case_frozen_with_limits",
+                    "case_not_assessable",
+                    "operationally_blocked"
+                  ],
+                  "childArtefactId": "code-project",
+                  "parentArtefactId": "code-project"
+                },
+                {
+                  "outcomes": [
+                    "case_frozen",
+                    "case_frozen_with_limits",
+                    "case_not_assessable",
+                    "operationally_blocked"
+                  ],
+                  "childArtefactId": "document-consistency-findings",
+                  "parentArtefactId": "document-consistency-findings"
+                },
+                {
+                  "outcomes": [
+                    "case_frozen",
+                    "case_frozen_with_limits",
+                    "case_not_assessable",
+                    "operationally_blocked"
+                  ],
+                  "childArtefactId": "frozen-study-case",
+                  "parentArtefactId": "frozen-study-case"
+                }
+              ]
+            },
+            {
+              "id": "invoke-reproduce-result",
+              "title": "Preflight and reproduce primary result",
+              "inputs": [],
+              "outputs": [],
+              "outcomes": [
+                {
+                  "id": "exact_reproduction",
+                  "isTerminal": false,
+                  "description": "The untouched primary target and required benchmarks reproduce exactly under frozen comparison rules."
+                },
+                {
+                  "id": "within_tolerance",
+                  "isTerminal": false,
+                  "description": "The untouched primary target and required benchmarks satisfy the frozen tolerance rules."
+                },
+                {
+                  "id": "partial_reproduction",
+                  "isTerminal": false,
+                  "description": "The primary target or required benchmarks reproduce only in part and need an explicit continuation decision."
+                },
+                {
+                  "id": "numerical_mismatch",
+                  "isTerminal": false,
+                  "description": "The executable analysis remains numerically inconsistent after the one remediation pass."
+                },
+                {
+                  "id": "not_executable",
+                  "isTerminal": true,
+                  "description": "A concrete runtime, dependency, path, permission, isolation, or resource-control blocker prevents execution."
+                },
+                {
+                  "id": "not_assessable",
+                  "isTerminal": true,
+                  "description": "The target cannot be assessed without an unsupported substantive choice."
+                }
+              ],
+              "skillIds": [],
+              "joinPolicy": "all",
+              "description": "Preflight the real case bundle and shared execution capability, run the contract-defined model unchanged, test bounded working-directory or input-binding repairs when needed, and preserve complete scientific outputs in one reproduction package.",
+              "subRoutineId": "peer2paper-operations/reproduce-original-result",
+              "routineInputIds": [
+                "execution-policy",
+                "scientific-policy",
+                "execution-runner",
+                "case-bundle"
+              ],
+              "inputArtefactIds": [
+                "frozen-study-case"
+              ],
+              "outputArtefactIds": [
+                "reproduction-inputs",
+                "execution-readiness",
+                "execution-profile",
+                "primary-run",
+                "primary-comparison",
+                "repair-candidates",
+                "repair-attempt-1",
+                "repair-attempt-2",
+                "repair-attempt-3",
+                "secondary-target-1",
+                "secondary-target-2",
+                "secondary-target-3",
+                "reproduction-evidence",
+                "reproduction-package"
+              ],
+              "childInputBindings": [
+                {
+                  "sourceId": "execution-policy",
+                  "sourceKind": "parent-input",
+                  "childInputId": "execution-policy"
+                },
+                {
+                  "sourceId": "scientific-policy",
+                  "sourceKind": "parent-input",
+                  "childInputId": "scientific-policy"
+                },
+                {
+                  "sourceId": "execution-runner",
+                  "sourceKind": "parent-input",
+                  "childInputId": "execution-runner"
+                },
+                {
+                  "sourceId": "frozen-study-case",
+                  "sourceKind": "parent-artefact",
+                  "childInputId": "frozen-study-case-resource"
+                },
+                {
+                  "sourceId": "case-bundle",
+                  "sourceKind": "parent-input",
+                  "childInputId": "case-bundle"
+                }
+              ],
+              "completionCriteria": [
+                "The child receives the real case bundle and frozen analysis_contract, captures sample, missingness, coefficient, standard error, interval, statistic, degrees of freedom and p-value, and returns a self-contained reproduction package.",
+                "Execution provenance and scientific comparison remain separate: execution_mode is untouched or technically_repaired_original, while the emitted routine outcome follows comparison_status.",
+                "Verified network or DNS denial is not a prerequisite. Memory and storage are operational defaults, and unavailable exact enforcement does not emit not_executable when the analysis can run in an attempt-local working directory."
+              ],
+              "childOutputBindings": [
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "reproduction-inputs",
+                  "parentArtefactId": "reproduction-inputs"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "execution-readiness",
+                  "parentArtefactId": "execution-readiness"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "execution-profile",
+                  "parentArtefactId": "execution-profile"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "primary-run",
+                  "parentArtefactId": "primary-run"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "primary-comparison",
+                  "parentArtefactId": "primary-comparison"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "repair-candidates",
+                  "parentArtefactId": "repair-candidates"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "repair-attempt-1",
+                  "parentArtefactId": "repair-attempt-1"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "repair-attempt-2",
+                  "parentArtefactId": "repair-attempt-2"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "repair-attempt-3",
+                  "parentArtefactId": "repair-attempt-3"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "secondary-target-1",
+                  "parentArtefactId": "secondary-target-1"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "secondary-target-2",
+                  "parentArtefactId": "secondary-target-2"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "secondary-target-3",
+                  "parentArtefactId": "secondary-target-3"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "reproduction-evidence",
+                  "parentArtefactId": "reproduction-evidence"
+                },
+                {
+                  "outcomes": [
+                    "exact_reproduction",
+                    "within_tolerance",
+                    "partial_reproduction",
+                    "numerical_mismatch",
+                    "not_executable",
+                    "not_assessable"
+                  ],
+                  "childArtefactId": "reproduction-package",
+                  "parentArtefactId": "reproduction-package"
+                }
+              ]
+            }
+          ],
+          "inputs": [
+            {
+              "id": "case-bundle",
+              "kind": "parameter",
+              "source": "Caller",
+              "binding": "",
+              "valueType": "directory",
+              "description": "Local directory containing the paper or draft, data, code, environment files, supplements, data dictionaries, and authorized supporting sources.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-request",
+              "kind": "parameter",
+              "source": "Caller",
+              "binding": "",
+              "valueType": "json",
+              "description": "Required audit scope containing one exact target claim and location, permissions, privacy classification, retention rules, public-redistribution intent, and external-search authorization.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "scientific-policy",
+              "kind": "parameter",
+              "source": "Caller",
+              "binding": "",
+              "valueType": "json",
+              "description": "Required scientific rules for estimands, tolerances, admissibility, comparability, severity, disagreement, and allowed defaults. Supply an empty JSON object only when the routine's recorded defaults are intended.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "execution-policy",
+              "kind": "parameter",
+              "source": "Caller",
+              "binding": "",
+              "valueType": "json",
+              "description": "Execution rules for runtime, attempt-local working directories, host network policy, operational memory and storage defaults, a 600-second command timeout, source immutability, source access, and internal-only release.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "canonical-schema-bundle",
+              "kind": "resource",
+              "source": "Definition",
+              "binding": "project://peer2paper/config/canonical-schemas.json",
+              "valueType": "file",
+              "description": "Routine-owned versioned schemas for canonical findings, claims, actions, limitations, and frozen audit objects.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-template",
+              "kind": "resource",
+              "source": "Definition",
+              "binding": "project://peer2paper/config/audit-template.html",
+              "valueType": "file",
+              "description": "Project-owned pinned template used for the researcher-facing HTML report.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-schema",
+              "kind": "resource",
+              "source": "Definition",
+              "binding": "project://peer2paper/config/audit-schema.json",
+              "valueType": "file",
+              "description": "Routine-owned pinned JSON Schema for the machine-readable audit.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "execution-runner",
+              "kind": "resource",
+              "source": "Definition",
+              "binding": "project://peer2paper/execution/runner.py",
+              "valueType": "file",
+              "description": "Project-owned versioned scientific execution runner used by reproduction, robustness, and independent statistical verification. A missing runner file blocks execution.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "reproduction-continuation-decision",
+              "kind": "parameter",
+              "source": "Caller",
+              "binding": "",
+              "valueType": "json",
+              "description": "Required only after partial_reproduction or numerical_mismatch. Supply a JSON decision of continue or stop, with a reason and the authorizing person or role.",
+              "requirement": "stage"
+            }
+          ],
+          "cadence": "onDemand",
+          "purpose": "Audit one caller-supplied quantitative claim by freezing a compact case with an embedded analysis contract, reproducing that contract under bounded local execution, running authorized sensitivity and targeted evidence work, independently verifying decisive findings, and returning a lean replayable audit package.",
+          "handoffs": [],
+          "preamble": "> **Status**: Production | **Updated**: 2026-08-31",
+          "agentName": "Peer2Paper Orchestrator",
+          "artefacts": [
+            {
+              "id": "paper-documents",
+              "name": "Target claim and relevant document map",
+              "path": "project://peer2paper/audits/{runId}/study-case/paper-documents.json",
+              "format": "json"
+            },
+            {
+              "id": "dataset-maps",
+              "name": "Target data and variable map",
+              "path": "project://peer2paper/audits/{runId}/study-case/dataset-maps.json",
+              "format": "json"
+            },
+            {
+              "id": "code-project",
+              "name": "Target code and dependency map",
+              "path": "project://peer2paper/audits/{runId}/study-case/code-project.json",
+              "format": "json"
+            },
+            {
+              "id": "document-consistency-findings",
+              "name": "Verified supplied-document consistency findings",
+              "path": "project://peer2paper/audits/{runId}/study-case/document-consistency-findings.json",
+              "format": "json"
+            },
+            {
+              "id": "frozen-study-case",
+              "name": "Compact frozen study case contract",
+              "path": "project://peer2paper/audits/{runId}/study-case/frozen-study-case.json",
+              "format": "json"
+            },
+            {
+              "id": "reproduction-inputs",
+              "name": "Frozen reproduction contract and inputs",
+              "path": "project://peer2paper/audits/{runId}/reproduction/reproduction-inputs.json",
+              "format": "json"
+            },
+            {
+              "id": "execution-readiness",
+              "name": "Execution readiness",
+              "path": "project://peer2paper/audits/{runId}/reproduction/execution-readiness.json",
+              "format": "json"
+            },
+            {
+              "id": "execution-profile",
+              "name": "Execution profile attempt",
+              "path": "project://peer2paper/audits/{runId}/reproduction/execution-profile.json",
+              "format": "json"
+            },
+            {
+              "id": "primary-run",
+              "name": "Untouched primary run checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/primary-run.json",
+              "format": "json"
+            },
+            {
+              "id": "primary-comparison",
+              "name": "Primary numerical comparison",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/primary-comparison.json",
+              "format": "json"
+            },
+            {
+              "id": "repair-candidates",
+              "name": "Frozen repair candidates",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/repair-candidates.json",
+              "format": "json"
+            },
+            {
+              "id": "repair-attempt-1",
+              "name": "Repair attempt 1 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/repair-attempt-01.json",
+              "format": "json"
+            },
+            {
+              "id": "repair-attempt-2",
+              "name": "Repair attempt 2 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/repair-attempt-02.json",
+              "format": "json"
+            },
+            {
+              "id": "repair-attempt-3",
+              "name": "Repair attempt 3 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/repair-attempt-03.json",
+              "format": "json"
+            },
+            {
+              "id": "secondary-target-1",
+              "name": "Secondary target 1 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/secondary-target-01.json",
+              "format": "json"
+            },
+            {
+              "id": "secondary-target-2",
+              "name": "Secondary target 2 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/secondary-target-02.json",
+              "format": "json"
+            },
+            {
+              "id": "secondary-target-3",
+              "name": "Secondary target 3 checkpoint",
+              "path": "project://peer2paper/audits/{runId}/reproduction/checkpoints/secondary-target-03.json",
+              "format": "json"
+            },
+            {
+              "id": "reproduction-evidence",
+              "name": "Per-target reproduction evidence",
+              "path": "project://peer2paper/audits/{runId}/reproduction/evidence",
+              "format": "directory"
+            },
+            {
+              "id": "reproduction-package",
+              "name": "Reproduction package",
+              "path": "project://peer2paper/audits/{runId}/reproduction/reproduction-package.json",
+              "format": "json"
+            },
+            {
+              "id": "estimand-rules",
+              "name": "Frozen estimand and conclusion rules",
+              "path": "project://peer2paper/audits/{runId}/robustness/estimand-rules.json",
+              "format": "json"
+            },
+            {
+              "id": "data-measurement-candidates",
+              "name": "Data and measurement candidates",
+              "path": "project://peer2paper/audits/{runId}/robustness/lanes/data-measurement.json",
+              "format": "json"
+            },
+            {
+              "id": "model-specification-candidates",
+              "name": "Model specification candidates",
+              "path": "project://peer2paper/audits/{runId}/robustness/lanes/model-specification.json",
+              "format": "json"
+            },
+            {
+              "id": "inference-candidates",
+              "name": "Inference candidates",
+              "path": "project://peer2paper/audits/{runId}/robustness/lanes/inference.json",
+              "format": "json"
+            },
+            {
+              "id": "ranked-candidates",
+              "name": "Ranked sensitivity candidate pool",
+              "path": "project://peer2paper/audits/{runId}/robustness/ranked-candidates.json",
+              "format": "json"
+            },
+            {
+              "id": "blind-review-alpha",
+              "name": "Primary blind admissibility review",
+              "path": "project://peer2paper/audits/{runId}/robustness/blind-review-alpha.json",
+              "format": "json"
+            },
+            {
+              "id": "blind-review-beta",
+              "name": "Conditional second blind review",
+              "path": "project://peer2paper/audits/{runId}/robustness/blind-review-beta.json",
+              "format": "json"
+            },
+            {
+              "id": "approved-candidates",
+              "name": "Approved sensitivity candidates",
+              "path": "project://peer2paper/audits/{runId}/robustness/approved-candidates.json",
+              "format": "json"
+            },
+            {
+              "id": "candidate-runs",
+              "name": "Isolated sensitivity runs",
+              "path": "project://peer2paper/audits/{runId}/robustness/candidate-runs.json",
+              "format": "json"
+            },
+            {
+              "id": "robustness-map",
+              "name": "Sensitivity result and coverage map",
+              "path": "project://peer2paper/audits/{runId}/robustness/robustness-map.json",
+              "format": "json"
+            },
+            {
+              "id": "robustness-version-history",
+              "name": "Sensitivity version history",
+              "path": "project://peer2paper/audits/{runId}/robustness/versions",
+              "format": "directory"
+            },
+            {
+              "id": "research-brief",
+              "name": "Targeted research questions",
+              "path": "project://peer2paper/audits/{runId}/research/research-brief.json",
+              "format": "json"
+            },
+            {
+              "id": "screened-source-registry",
+              "name": "Screened source shortlist and slot plan",
+              "path": "project://peer2paper/audits/{runId}/research/screened-sources.json",
+              "format": "json"
+            },
+            {
+              "id": "full-text-source-1",
+              "name": "Source evidence checkpoint 1",
+              "path": "project://peer2paper/audits/{runId}/research/source-checkpoints/source-01.json",
+              "format": "json"
+            },
+            {
+              "id": "full-text-source-2",
+              "name": "Source evidence checkpoint 2",
+              "path": "project://peer2paper/audits/{runId}/research/source-checkpoints/source-02.json",
+              "format": "json"
+            },
+            {
+              "id": "full-text-source-3",
+              "name": "Source evidence checkpoint 3",
+              "path": "project://peer2paper/audits/{runId}/research/source-checkpoints/source-03.json",
+              "format": "json"
+            },
+            {
+              "id": "full-text-map",
+              "name": "Assembled targeted full-text evidence",
+              "path": "project://peer2paper/audits/{runId}/research/full-text-map.json",
+              "format": "json"
+            },
+            {
+              "id": "literature-evidence-package",
+              "name": "Targeted literature evidence package",
+              "path": "project://peer2paper/audits/{runId}/research/literature-evidence-package.json",
+              "format": "json"
+            },
+            {
+              "id": "literature-version-history",
+              "name": "Targeted evidence version history",
+              "path": "project://peer2paper/audits/{runId}/research/versions",
+              "format": "directory"
+            },
+            {
+              "id": "verification-inputs",
+              "name": "Frozen important verification targets",
+              "path": "project://peer2paper/audits/{runId}/verification/verification-inputs.json",
+              "format": "json"
+            },
+            {
+              "id": "statistical-verification",
+              "name": "Independent statistical rerun",
+              "path": "project://peer2paper/audits/{runId}/verification/statistical-verification.json",
+              "format": "json"
+            },
+            {
+              "id": "source-verification",
+              "name": "Independent source and document verification",
+              "path": "project://peer2paper/audits/{runId}/verification/source-verification.json",
+              "format": "json"
+            },
+            {
+              "id": "adjudication-package",
+              "name": "Verified finding package",
+              "path": "project://peer2paper/audits/{runId}/verification/adjudication-package.json",
+              "format": "json"
+            },
+            {
+              "id": "manuscript-recommendations",
+              "name": "Concrete manuscript recommendations",
+              "path": "project://peer2paper/audits/{runId}/verification/manuscript-recommendations.json",
+              "format": "json"
+            },
+            {
+              "id": "audit-json",
+              "name": "Canonical audit JSON",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit.json",
+              "format": "json"
+            },
+            {
+              "id": "replay-package",
+              "name": "Replay package",
+              "path": "project://peer2paper/audits/{runId}/delivery/replay",
+              "format": "directory"
+            },
+            {
+              "id": "audit-html",
+              "name": "Researcher audit report HTML",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit.html",
+              "format": "html"
+            },
+            {
+              "id": "release-gates",
+              "name": "Scoped release checks",
+              "path": "project://peer2paper/audits/{runId}/delivery/release-gates.json",
+              "format": "json"
+            },
+            {
+              "id": "audit-package",
+              "name": "Audit package manifest",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit-package.json",
+              "format": "json"
+            }
+          ],
+          "transitions": [
+            {
+              "id": "case-frozen-to-reproduction",
+              "toStepId": "invoke-reproduce-result",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-build-study-case",
+              "conditionValue": "case_frozen"
+            },
+            {
+              "id": "case-limited-to-reproduction",
+              "toStepId": "invoke-reproduce-result",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-build-study-case",
+              "conditionValue": "case_frozen_with_limits"
+            },
+            {
+              "id": "reproduction-exact-to-sensitivity",
+              "toStepId": "invoke-stress-test",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "exact_reproduction"
+            },
+            {
+              "id": "reproduction-exact-to-research",
+              "toStepId": "invoke-research-evidence",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "exact_reproduction"
+            },
+            {
+              "id": "reproduction-tolerance-to-sensitivity",
+              "toStepId": "invoke-stress-test",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "within_tolerance"
+            },
+            {
+              "id": "reproduction-tolerance-to-research",
+              "toStepId": "invoke-research-evidence",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "within_tolerance"
+            },
+            {
+              "id": "reproduction-partial-to-decision",
+              "toStepId": "decide-reproduction-continuation",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "partial_reproduction"
+            },
+            {
+              "id": "reproduction-mismatch-to-decision",
+              "toStepId": "decide-reproduction-continuation",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-reproduce-result",
+              "conditionValue": "numerical_mismatch"
+            },
+            {
+              "id": "decision-continue-to-sensitivity",
+              "toStepId": "invoke-stress-test",
+              "condition": "outcome-is",
+              "fromStepId": "decide-reproduction-continuation",
+              "conditionValue": "continue_to_analysis"
+            },
+            {
+              "id": "decision-continue-to-research",
+              "toStepId": "invoke-research-evidence",
+              "condition": "outcome-is",
+              "fromStepId": "decide-reproduction-continuation",
+              "conditionValue": "continue_to_analysis"
+            },
+            {
+              "id": "sensitivity-ready-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-stress-test",
+              "conditionValue": "robustness_ready"
+            },
+            {
+              "id": "sensitivity-limited-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-stress-test",
+              "conditionValue": "robustness_ready_with_limits"
+            },
+            {
+              "id": "sensitivity-unassessable-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-stress-test",
+              "conditionValue": "analysis_not_assessable"
+            },
+            {
+              "id": "research-ready-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-research-evidence",
+              "conditionValue": "evidence_ready"
+            },
+            {
+              "id": "research-limited-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-research-evidence",
+              "conditionValue": "evidence_ready_with_limits"
+            },
+            {
+              "id": "research-unassessable-to-verification",
+              "toStepId": "invoke-verify-findings",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-research-evidence",
+              "conditionValue": "evidence_not_assessable"
+            },
+            {
+              "id": "verification-ready-to-delivery",
+              "toStepId": "invoke-deliver-audit",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-verify-findings",
+              "conditionValue": "audit_ready"
+            },
+            {
+              "id": "verification-incomplete-to-delivery",
+              "toStepId": "invoke-deliver-audit",
+              "condition": "outcome-is",
+              "fromStepId": "invoke-verify-findings",
+              "conditionValue": "verification_incomplete"
+            }
+          ],
+          "departmentId": "peer2paper-operations",
+          "isSubRoutine": false,
+          "schemaVersion": 2,
+          "maxConcurrency": 3,
+          "skillRequirements": [],
+          "diagnosticsOptedOut": false
+        }
+      },
+      {
+        "key": "child-1",
+        "source_routine_id": "peer2paper-operations/assemble-final-audit",
+        "parent_key": "root",
+        "owner_agent_key": "peer2paper-operations/peer2paper-orchestrator",
+        "payload": {
+          "name": "Assemble Final Audit",
+          "steps": [
+            {
+              "id": "build-canonical-audit",
+              "title": "Build canonical audit and replay package",
+              "inputs": [],
+              "outputs": [],
+              "outcomes": [],
+              "skillIds": [],
+              "joinPolicy": "all",
+              "description": "Build one canonical JSON audit and replay directory from the frozen case, reproduction, sensitivity, targeted evidence, adjudicated findings, and complete manuscript recommendations. Keep raw logs, hashes, prompts, and provenance in the machine package.",
+              "executorAgentId": "peer2paper-delivery/audit-report-builder",
+              "routineInputIds": [
+                "frozen-study-case-resource",
+                "reproduction-package-resource",
+                "robustness-map-resource",
+                "literature-evidence-resource",
+                "adjudication-package-resource",
+                "manuscript-recommendations-resource",
+                "audit-request",
+                "execution-policy",
+                "canonical-schema-bundle-resource",
+                "audit-schema-resource"
+              ],
+              "inputArtefactIds": [],
+              "outputArtefactIds": [
+                "audit-json",
+                "replay-package"
+              ],
+              "childInputBindings": [],
+              "completionCriteria": [
+                "The canonical JSON contains the verdict, reported and reproduced values, numerical differences, sensitivity result, verified conflicts, concrete manuscript recommendations, limitations, and content-addressed references to technical evidence.",
+                "The JSON validates against the pinned schema and uses one value for every displayed number and statement.",
+                "The replay package contains the shared execution profile, exact commands, 600-second timeout, environments, inputs, outputs, checks, and hashes needed to rerun every scientific result included in the verdict.",
+                "Raw logs, IDs, prompts, and detailed provenance remain in the machine package rather than the researcher report.",
+                "Every concrete manuscript recommendation from the verified recommendations resource appears in the canonical audit with its affected section or statement, exact change, evidence, urgency, and required or optional status.",
+                "The package is internal-only unless audit-request contains separate explicit external-release approval."
+              ],
+              "childOutputBindings": []
+            },
+            {
+              "id": "render-researcher-html",
+              "title": "Render concise researcher report",
+              "inputs": [],
+              "outputs": [],
+              "outcomes": [],
+              "skillIds": [],
+              "joinPolicy": "all",
+              "description": "Render a two-to-three-page HTML report from the canonical JSON using the pinned template.",
+              "executorAgentId": "peer2paper-delivery/audit-report-builder",
+              "routineInputIds": [
+                "audit-template-resource"
+              ],
+              "inputArtefactIds": [
+                "audit-json"
+              ],
+              "outputArtefactIds": [
+                "audit-html"
+              ],
+              "childInputBindings": [],
+              "completionCriteria": [
+                "The HTML presents the verdict, reported versus reproduced result, sensitivity summary, verified contradictions or ambiguities, exact manuscript changes, and remaining limitations.",
+                "Every number and allowed statement is read from the canonical JSON, and detailed provenance is linked rather than expanded into large report tables.",
+                "The HTML is accessible, readable, and contains no unsupported scientific finding."
+              ],
+              "childOutputBindings": []
+            }
+          ],
+          "inputs": [
+            {
+              "id": "frozen-study-case-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/frozen-study-case.json",
+              "valueType": "file",
+              "description": "Parent-produced frozen study case. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "reproduction-package-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/reproduction-package.json",
+              "valueType": "file",
+              "description": "Parent-produced reproduction package. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "robustness-map-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/robustness-map.json",
+              "valueType": "file",
+              "description": "Parent-produced robustness map. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "literature-evidence-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/literature-evidence-package.json",
+              "valueType": "file",
+              "description": "Parent-produced literature evidence package. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "adjudication-package-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/adjudication-package.json",
+              "valueType": "file",
+              "description": "Parent-produced adjudication package. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-request",
+              "kind": "parameter",
+              "source": "Parent",
+              "binding": "",
+              "valueType": "json",
+              "description": "Audit scope, intended internal audience, privacy, retention, redaction, and release boundaries.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "execution-policy",
+              "kind": "parameter",
+              "source": "Parent",
+              "binding": "",
+              "valueType": "json",
+              "description": "Rendering, replay, storage, access, and internal release policy.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "canonical-schema-bundle-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/config/canonical-schemas.json",
+              "valueType": "file",
+              "description": "Parent-supplied versioned canonical schema bundle.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-template-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/config/audit-template.html",
+              "valueType": "file",
+              "description": "Parent-supplied pinned template used for the researcher-facing HTML report.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "audit-schema-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/config/audit-schema.json",
+              "valueType": "file",
+              "description": "Parent-supplied pinned JSON audit schema.",
+              "requirement": "dispatch"
+            },
+            {
+              "id": "manuscript-recommendations-resource",
+              "kind": "resource",
+              "source": "Parent",
+              "binding": "project://peer2paper/subroutine-inputs/manuscript-recommendations.json",
+              "valueType": "file",
+              "description": "Parent-produced concrete manuscript changes, each linked to a verified finding and exact affected text or section. Parent invocation supplies the resolved run-scoped parent artefact path at runtime; this fixed binding is a definition fallback and is not a shared staging copy.",
+              "requirement": "dispatch"
+            }
+          ],
+          "cadence": "onDemand",
+          "purpose": "Publish one canonical JSON audit, a concise researcher-facing HTML report, and a replay package with scoped release checks. PDF is outside the required hackathon output.",
+          "handoffs": [
+            {
+              "id": "html-to-package-handoff",
+              "mode": "await-result",
+              "toStepId": "check-and-package-audit",
+              "fromStepId": "render-researcher-html",
+              "artefactIds": [
+                "audit-html"
+              ],
+              "artefactPaths": [],
+              "acceptanceCriteria": [
+                "The HTML is rendered only from the canonical JSON and identifies the same workflow run and content hash.",
+                "The HTML contains the verdict, reproduced result, sensitivity summary, verified conflicts, manuscript recommendations, and limitations required for release review."
+              ]
+            }
+          ],
+          "parentId": "peer2paper-operations/run-peer2paper-scientific-audit",
+          "agentName": "Peer2Paper Orchestrator",
+          "artefacts": [
+            {
+              "id": "audit-json",
+              "name": "Canonical audit JSON",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit.json",
+              "format": "json"
+            },
+            {
+              "id": "replay-package",
+              "name": "Replay package",
+              "path": "project://peer2paper/audits/{runId}/delivery/replay",
+              "format": "directory"
+            },
+            {
+              "id": "audit-html",
+              "name": "Researcher audit report HTML",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit.html",
+              "format": "html"
+            },
+            {
+              "id": "release-gates",
+              "name": "Scoped release checks",
+              "path": "project://peer2paper/audits/{runId}/delivery/release-gates.json",
+              "format": "json"
+            },
+            {
+              "id": "audit-package",
+              "name": "Audit package manifest",
+              "path": "project://peer2paper/audits/{runId}/delivery/audit-package.json",
+              "format": "json"
+            }
+          ],
+          "transitions": [
+            {
+              "id": "canonical-to-html",
+              "toStepId": "render-researcher-html",
+              "condition": "on-success",
+              "fromStepId": "build-canonical-audit"
+            },
+            {
+              "id": "html-to-package",
+              "toStepId": "check-and-package-audit",
+              "condition": "on-success",
+              "fromStepId": "render-researcher-html"
+            }
+          ],
+          "departmentId": "peer2paper-operations",
+          "isSubRoutine": true,
+          "schemaVersion": 2,
+          "maxConcurrency": 1,
+          "skillRequirements": [],
+          "diagnosticsOptedOut": false
+        }
+      }
+    ],
+    "requirements": {
+      "agent_ids": [
+        "peer2paper-delivery/audit-report-builder",
+        "peer2paper-delivery/release-quality-reviewer",
+        "peer2paper-intake/claim-mapper"
+      ],
+      "skill_ids": [],
+      "model_ids": [],
+      "mcp_ids": [],
+      "resource_bindings": []
+    },
+    "agents": [
+      {
+        "source_id": "peer2paper-delivery/audit-report-builder",
+        "name": "Audit Report Builder",
+        "description": "Renders verified canonical objects into consistent HTML, PDF, JSON, and replay-package outputs.",
+        "greeting": "I turn frozen verified evidence into a readable audit and machine-replayable package.",
+        "capabilities": [
+          "Read only routine-projected inputs and artefacts under project://peer2paper/audits/{runId}/. Write only the declared output artefacts for the active step. NEVER overwrite raw submissions, invent missing evidence, or treat prose as the canonical result.",
+          "Read only frozen verified canonical objects and approved wording. Write project://peer2paper/audits/{runId}/delivery/audit.html, audit.pdf, audit.json, replay/, and manifest.json.",
+          "Render reproduction, robustness, and evidence-alignment statuses separately from one pinned template version and preserve exact numbers, order, links, limitations, and hashes across formats.",
+          "NEVER add a scientific finding, promote rejected material, or rewrite a verified conclusion beyond its allowed wording."
+        ],
+        "skill_ids": [],
+        "mcp_ids": []
+      },
+      {
+        "source_id": "peer2paper-delivery/release-quality-reviewer",
+        "name": "Release Quality Reviewer",
+        "description": "Checks completeness, consistency, provenance, replay, privacy, accessibility, licensing, and release boundaries.",
+        "greeting": "I test the assembled audit package and return an evidence-backed release decision without changing scientific content.",
+        "capabilities": [
+          "Read only routine-projected inputs and artefacts under project://peer2paper/audits/{runId}/. Write only the declared output artefacts for the active step. NEVER overwrite raw submissions, invent missing evidence, or treat prose as the canonical result.",
+          "Read the rendered audit package and all declared manifests. Write project://peer2paper/audits/{runId}/delivery/release-gates.json.",
+          "Check numerical consistency, evidence links, replay commands, expected hashes, language rules, accessibility, privacy, redaction, licences, and access restrictions.",
+          "NEVER repair scientific content during quality review or authorize external release beyond the dispatched release policy."
+        ],
+        "skill_ids": [],
+        "mcp_ids": []
+      },
+      {
+        "source_id": "peer2paper-intake/claim-mapper",
+        "name": "Claim Mapper",
+        "description": "Extracts candidate claims and connects the selected claim to exact reported results and source locations.",
+        "greeting": "I convert paper language into precise claim records tied to exact tables, figures, passages, and reported results.",
+        "capabilities": [
+          "Read only routine-projected inputs and artefacts under project://peer2paper/audits/{runId}/. Write only the declared output artefacts for the active step. NEVER overwrite raw submissions, invent missing evidence, or treat prose as the canonical result.",
+          "Read paper documents and the artifact registry. Write project://peer2paper/audits/{runId}/study-case/claim-records.json and selected-claim.json.",
+          "Separate measured results from interpretation and record population, exposure or treatment, comparator, outcome, timepoint, effect measure, direction, scope, and reported-result links.",
+          "NEVER finalize an ambiguous target claim or fabricate a missing source location; emit a typed unresolved decision instead."
+        ],
+        "skill_ids": [],
+        "mcp_ids": []
+      }
+    ],
+    "skills": [],
+    "resources": []
+  }
+}

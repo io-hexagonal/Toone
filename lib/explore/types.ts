@@ -115,9 +115,30 @@ export type WorkflowPackage = {
   requirements?: PackageRequirements;
   agents?: PackageAgent[];
   skills?: PackageSkill[];
+  resources?: {
+    member_key: string;
+    input_id: string;
+    binding: string;
+    value_type: string;
+    mode: string;
+    reason?: string;
+    content?: string | null;
+    byte_count: number;
+    sha256?: string;
+    directory_entries?: {
+      relative_path: string;
+      content: string;
+      byte_count: number;
+      sha256: string;
+    }[];
+  }[];
 };
 
-export type BundleRef = { bundle_id: string; slug?: string | null; title: string };
+export type BundleRef = {
+  bundle_id: string;
+  slug?: string | null;
+  title: string;
+};
 
 /** `GET /v1/workflows/{id-or-slug}` (contract §5.2). */
 export type RoutinePublicDetail = {
@@ -215,7 +236,7 @@ export type RevalidateEvent = {
   type: "routine" | "bundle";
   id: string;
   slug: string;
-  occurred_at?: string;
+  occurred_at: string;
 };
 
 export type ListResult<T> = { items: T[]; total: number };
