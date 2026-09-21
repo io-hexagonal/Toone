@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
-      "heroTag": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
+      "heroTag": "Des workflows agentiques fiables : façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "statement": {
@@ -271,7 +271,7 @@
   },
   "statement": {
     "title": "L’espace de travail IA pour vos workflows agentiques",
-    "lead": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
+    "lead": "Des workflows agentiques fiables : façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
     "cta": "Découvrir Toone"
   },
   "auth": {

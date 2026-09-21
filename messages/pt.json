@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
-      "heroTag": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+      "heroTag": "Workflows agênticos em que pode confiar: molde-os em conversa, veja-os correr passo a passo, pause ou edite a meio da execução e expanda-os sabendo que nada se parte.",
       "featuresTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
       "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
       "statement": {
@@ -271,7 +271,7 @@
   },
   "statement": {
     "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
-    "lead": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
+    "lead": "Workflows agênticos em que pode confiar: molde-os em conversa, veja-os correr passo a passo, pause ou edite a meio da execução e expanda-os sabendo que nada se parte.",
     "cta": "Explorar o Toone"
   },
   "auth": {
