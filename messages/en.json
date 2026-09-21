@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "AI workspace for your agentic workflows",
-      "heroTag": "Agentic workflows you can rely on: shape them in conversation, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
+      "heroTag": "Shape them in conversation, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "statement": {
@@ -115,7 +115,7 @@
     "authContinue": "Request Early Access",
     "authJoined": "Your request is on the list. We will be in touch when access is available.",
     "authError": "Something went wrong — please try again.",
-    "authNote": "You'll be contacted if a spot is available.",
+    "authNote": "You'll be contacted when a spot is available.",
     "waitlistTitle": "Request Early Access",
     "waitlistSub": "Leave your email to request early access. We will contact you when a place is available.",
     "waitlistExisting": "Already using Toone?",
@@ -271,7 +271,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "Agentic workflows you can rely on: shape them in conversation, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
+    "lead": "Shape them in conversation, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
     "cta": "Explore Toone"
   },
   "auth": {
