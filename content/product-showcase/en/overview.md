@@ -12,6 +12,8 @@ Toone is a native workspace for projects that use AI agents. A project keeps the
 
 You can begin with one agent and one useful task. As the project grows, agents can specialize, routines can call other routines, and work can move between roles without turning into one untraceable conversation.
 
+Toone runs on Claude Code and OpenAI Codex with your own provider access, and connects to your tools through MCP.
+
 ## The operating loop
 
 Most work in Toone follows the same loop:

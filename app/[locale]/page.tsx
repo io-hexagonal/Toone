@@ -205,6 +205,29 @@ export async function TooneLandingPage({
               78% { transform: translate3d(-166px, 38px, 0) rotate(-1deg); }
             }
 
+            /* --- built-on (the substrate, stated in plain words) ---
+               Reuses the .section rhythm above; the marker is the wordmark
+               hexagon at list scale, so it belongs to the same family as the
+               .phex counters in the pillars rail. */
+            .built-on .built-on-lead {
+              color: rgba(29,28,25,0.78); font-size: 16.5px; line-height: 1.65;
+              max-width: 62ch;
+            }
+            .built-on .built-on-facts {
+              list-style: none; margin-top: 18px;
+              display: flex; flex-direction: column; gap: 9px;
+            }
+            .built-on .built-on-facts li {
+              position: relative; padding-left: 19px;
+              color: rgba(29,28,25,0.6); font-size: 14.5px; line-height: 1.6;
+            }
+            .built-on .built-on-facts li::before {
+              content: ''; position: absolute; left: 0; top: 0.58em;
+              width: 7px; height: 8px;
+              clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+              background: rgba(29,28,25,0.34);
+            }
+
             /* The pillars, as a numbered rail. A wrapping card grid left a hole
                and gave equal-weight boxes no reading order; the rail is ordered,
                ragged-free, and scales as the list grows. */
@@ -354,6 +377,24 @@ export async function TooneLandingPage({
               })}
             </div>
           </section>
+
+          {/* The substrate, stated on-page. English literals for now, on the
+              same reasoning as /business: these strings are not translated,
+              and putting them under a `landing.*` key would force the English
+              copy onto all eight locales. */}
+          {locale === "en" && (
+            <section className="section built-on" id="built-on">
+              <h2>Built on</h2>
+              <p className="built-on-lead">
+                Toone runs on Claude Code and OpenAI Codex with your own provider
+                access, and connects to your tools through MCP.
+              </p>
+              <ul className="built-on-facts">
+                <li>You bring your own Anthropic or OpenAI account.</li>
+                <li>Your organization&rsquo;s files stay on your Mac.</li>
+              </ul>
+            </section>
+          )}
 
           <ResourcesSection />
           <FaqSection />
