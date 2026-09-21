@@ -1,8 +1,40 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
 import { readFileSync } from "node:fs";
 import { createHmac } from "node:crypto";
 const base = process.env.EXPLORE_WEB_URL || "http://127.0.0.1:13013";
+const api = process.env.EXPLORE_MOCK_URL || "http://127.0.0.1:18787";
+const secret = process.env.EXPLORE_REVALIDATE_SECRET || "explore-local-test-secret";
+/** Replace the mock mode (needs EXPLORE_MOCK_ALLOW_CONTROL=1 on the mock). */
+async function mode(data) {
+  const response = await fetch(api + "/__test/mode", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  assert.equal(response.status, 200, "mock control must be explicitly enabled");
+}
+/** Signed webhook call: expires the data cache and the in-memory memos. */
+async function invalidate(slug, id, type = "routine") {
+  const raw = JSON.stringify({
+    event: "approved",
+    type,
+    id,
+    slug,
+    occurred_at: new Date().toISOString(),
+  });
+  const signature = "sha256=" + createHmac("sha256", secret).update(raw).digest("hex");
+  const response = await fetch(base + "/api/revalidate", {
+    method: "POST",
+    body: raw,
+    headers: { "X-Explore-Signature": signature },
+  });
+  assert.equal(response.status, 200);
+}
+// A leaked mode from another file or an aborted run must not shape this one.
+beforeEach(async () => {
+  await mode({});
+  await invalidate("reset-marker", "wfl_00000000");
+});
 const fixture = (name) =>
   JSON.parse(
     readFileSync(new URL(`./fixtures/${name}.json`, import.meta.url), "utf8"),
@@ -192,4 +224,38 @@ test("HMAC webhook refuses unsigned, modified, malformed and oversized requests 
   const valid = await send(raw, signature);
   assert.equal(valid.status, 200);
   assert.deepEqual(await valid.json(), { revalidated: true });
+});
+
+test("a server without the bundles route hides the Bundles filter and still lists routines", async () => {
+  await mode({ bundles404: true });
+  await invalidate(routine.slug, routine.workflow_id);
+  const { response, html } = await get("/en/explore");
+  assert.equal(response.status, 200);
+  assert.equal(count(html, "routine"), 1);
+  assert.equal(count(html, "bundle"), 0);
+  const chips = [...html.matchAll(/class="explore-type-option"[^>]*>([^<]*)</g)].map((m) => m[1]);
+  assert.deepEqual(chips, ["All", "Routines"]);
+  assert.ok(!html.includes("Explore is temporarily unavailable"));
+  const filtered = await get("/en/explore?type=routines");
+  assert.equal(count(filtered.html, "routine"), 1);
+  assert.ok(!filtered.html.includes(">Bundles<"));
+  const bundlePage = await get("/en/explore/bundles/" + bundle.slug);
+  assert.equal(bundlePage.response.status, 404);
+  // The webhook clears the negative memo: bundles come back without waiting for the TTL.
+  await mode({});
+  await invalidate(routine.slug, routine.workflow_id);
+  const restored = await get("/en/explore");
+  assert.equal(count(restored.html, "bundle"), 1);
+});
+test("data-URL-only covers render the placeholder on cards but inline in the detail hero", async () => {
+  await mode({ dataUrlCovers: true });
+  await invalidate(routine.slug, routine.workflow_id);
+  const index = await get("/en/explore");
+  assert.equal(count(index.html, "routine"), 1);
+  assert.ok(!index.html.includes("src=\"data:image"), "cards must not inline data URLs");
+  assert.match(index.html, /explore-cover-empty/);
+  const detail = await get("/en/explore/routines/" + routine.slug);
+  assert.equal(detail.response.status, 200);
+  assert.match(detail.html, /class="explore-cover " src="data:image\/jpeg;base64,/);
+  assert.ok(!detail.html.includes("og:image\" content=\"data:"), "og:image never uses a data URL");
 });

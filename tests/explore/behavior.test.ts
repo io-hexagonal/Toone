@@ -1,14 +1,20 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
 import { createHmac } from "node:crypto";
 import { readFileSync } from "node:fs";
 import {
+  getBundle,
+  getExploreTags,
   getRoutine,
+  isMemoizedNotServed,
   listRoutines,
   listBundles,
   loadCatalog,
+  resetExploreMemo,
+  resolveCardCoverUrl,
   resolveCoverUrl,
 } from "../../lib/explore/data";
+
 import {
   parseCatalogQuery,
   catalogHref,
@@ -19,6 +25,9 @@ import {
   safeMarkdownUrl,
 } from "../../lib/explore/presentation";
 import { verifyRevalidation } from "../../lib/explore/revalidation";
+
+// The negative/last-good memos persist across tests in one process.
+beforeEach(() => resetExploreMemo());
 
 const fixture = (name: string) =>
   JSON.parse(
@@ -63,6 +72,8 @@ test("API joins versioned prefix, encodes filters, caches tags, and distinguishe
     "fetch",
     async () => new Response("{}", { status: 503 }),
   );
+  // The 404 above is memoized for the window; clear it as the webhook would.
+  resetExploreMemo();
   await assert.rejects(getRoutine("valid-slug"), /503/);
   t.mock.method(globalThis, "fetch", async () =>
     response({ unexpected: true }),
@@ -392,4 +403,132 @@ test("even a queued fallback callback cannot navigate after cancellation", () =>
   cancel();
   queued();
   assert.deepEqual(navigations, ["toone://explore/routines/wfl_abcdefgh"]);
+});
+
+test("legacy detail shape is projected through an allow-list: reviewer fields never survive", async (t) => {
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  const legacy = {
+    id: "wfr_sikihszbcdo5c3vq",
+    workflow_id: "wfl_fyziwhse2biovg4e",
+    sequence: 1,
+    submitted_by: "usr_leak",
+    reviewed_by: "usr_leak",
+    review_reason: "leak",
+    status: "approved",
+    title: "micro1/peer2paper",
+    summary: "s",
+    tags: [],
+    license: "toone-community-v1",
+    cover_image_data_url: "data:image/jpeg;base64,/9j/2Q==",
+    package_schema_version: 2,
+    routine_schema_version: 2,
+    package: fixture("routine-detail").package,
+    content_hash: "0".repeat(64),
+    submitted_at: "2026-08-31T23:28:06.353298Z",
+    reviewed_at: "2026-08-31T23:33:38.652323Z",
+    included_in_bundles: [
+      { bundle_id: "wfb_k3m9q2xw7a1b5c8d", slug: "ok-7a1b5c8d", title: "OK" },
+      { bundle_id: "not-a-bundle", title: "bad" },
+      "garbage",
+    ],
+  };
+  t.mock.method(globalThis, "fetch", async () => response(legacy));
+  const detail = await getRoutine("wfl_fyziwhse2biovg4e");
+  assert.ok(detail);
+  for (const key of ["submitted_by", "reviewed_by", "review_reason", "status", "submitted_at", "id"])
+    assert.ok(!(key in detail), `${key} must not be exposed`);
+  assert.ok(!JSON.stringify(detail).includes("usr_leak"));
+  assert.equal(detail.revision_id, "wfr_sikihszbcdo5c3vq");
+  assert.equal(detail.approved_at, "2026-08-31T23:33:38.652323Z");
+  assert.equal(detail.slug, null);
+  assert.equal(detail.member_count, 2);
+  assert.equal(detail.step_count, 4);
+  assert.equal(detail.agent_count, 3);
+  assert.deepEqual(detail.included_in_bundles, [
+    { bundle_id: "wfb_k3m9q2xw7a1b5c8d", slug: "ok-7a1b5c8d", title: "OK" },
+  ]);
+});
+
+test("a missing X-Total-Count falls back to the page length", async (t) => {
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  t.mock.method(globalThis, "fetch", async () =>
+    response([fixture("routine-entry"), fixture("routine-entry")]),
+  );
+  const result = await listRoutines();
+  assert.equal(result.total, 2);
+  t.mock.method(globalThis, "fetch", async () =>
+    new Response(JSON.stringify({ data: [fixture("routine-entry")] }), {
+      headers: { "X-Total-Count": "not-a-number" },
+    }),
+  );
+  assert.equal((await listRoutines()).total, 1);
+});
+
+test("cards never inline the data-URL cover; the hero still may", () => {
+  const dataOnly = { cover_image_data_url: "data:image/jpeg;base64,/9j/2Q==" };
+  assert.match(resolveCoverUrl(dataOnly)!, /^data:image\/jpeg/);
+  assert.equal(resolveCardCoverUrl(dataOnly), null);
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  const withPath = { cover_url: "workflows/wfl_a/revisions/wfr_b/cover.jpg", ...dataOnly };
+  assert.equal(
+    resolveCardCoverUrl(withPath),
+    "https://example.test/v1/workflows/wfl_a/revisions/wfr_b/cover.jpg",
+  );
+});
+
+test("malformed bundle members fail soft as an API error, never a render crash", async (t) => {
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  const bundle = fixture("bundle-detail");
+  const broken = structuredClone(bundle);
+  broken.members[1] = { title: "no id", tags: "nope" };
+  t.mock.method(globalThis, "fetch", async () => response(broken));
+  await assert.rejects(getBundle(bundle.slug), /invalid bundle detail/);
+  const noMembers = structuredClone(bundle);
+  noMembers.members = "wrong";
+  t.mock.method(globalThis, "fetch", async () => response(noMembers));
+  await assert.rejects(getBundle(bundle.slug), /invalid bundle detail/);
+  t.mock.method(globalThis, "fetch", async () => response(bundle));
+  const ok = await getBundle(bundle.slug);
+  assert.equal(ok?.members.length, 2);
+  assert.equal(ok?.members[0].pinned_revision_id, bundle.members[0].pinned_revision_id);
+  assert.ok(!("submitted_by" in ok!));
+});
+
+test("a 404 route is remembered for the window and 429 serves the last good payload", async (t) => {
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => {
+    calls += 1;
+    return new Response("{}", { status: 404 });
+  });
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
+  assert.deepEqual(await listBundles({ tag: "x" }), { items: [], total: 0, available: false });
+  assert.deepEqual(await getExploreTags(), []);
+  assert.equal(calls, 2, "one upstream call per 404 route, not per request");
+  assert.ok(isMemoizedNotServed("bundles"));
+  resetExploreMemo();
+  await listBundles();
+  assert.equal(calls, 3, "the webhook reset re-probes the route");
+
+  calls = 0;
+  const entry = fixture("routine-entry");
+  t.mock.method(globalThis, "fetch", async () => (calls++ === 0
+    ? response([entry], 1)
+    : new Response("{}", { status: 429 })));
+  const first = await listRoutines();
+  const second = await listRoutines();
+  assert.deepEqual(second, first, "429 renders the last good catalog");
+  t.mock.method(globalThis, "fetch", async () => new Response("{}", { status: 429 }));
+  await assert.rejects(listRoutines({ tag: "never-seen" }), /429/);
+  // A type filter shares the "All" requests instead of probing with limit=1.
+  const seen: string[] = [];
+  t.mock.method(globalThis, "fetch", async (url: URL) => {
+    seen.push(url.search);
+    return url.pathname.endsWith("/bundles") ? new Response("{}", { status: 404 }) : response([entry], 1);
+  });
+  resetExploreMemo();
+  const catalog = await loadCatalog({ type: "routines", query: "", tag: "", page: 1 });
+  assert.equal(catalog.bundlesAvailable, false);
+  assert.equal(catalog.items.length, 1);
+  assert.ok(seen.every((s) => !s.includes("limit=1&") && !s.endsWith("limit=1")), seen.join(" "));
 });

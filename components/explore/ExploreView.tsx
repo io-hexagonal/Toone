@@ -5,7 +5,11 @@ import { getTranslations } from "next-intl/server";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
-import { resolveCoverUrl, resolveSlug } from "@/lib/explore/api";
+import {
+  resolveCardCoverUrl,
+  resolveCoverUrl,
+  resolveSlug,
+} from "@/lib/explore/api";
 import {
   catalogHref,
   deepLink,
@@ -166,14 +170,20 @@ export function Markdown({ text }: { text?: string | null }) {
     </div>
   );
 }
+/**
+ * `inline` permits the legacy data-URL cover (detail hero only). Cards use
+ * the placeholder tile instead so a page of them stays light.
+ */
 export function Cover({
   entry,
   className = "",
+  inline = false,
 }: {
   entry: { cover_url?: string | null; cover_image_data_url?: string | null };
   className?: string;
+  inline?: boolean;
 }) {
-  const url = resolveCoverUrl(entry);
+  const url = inline ? resolveCoverUrl(entry) : resolveCardCoverUrl(entry);
   return url ? (
     <img
       className={`explore-cover ${className}`}
@@ -344,7 +354,7 @@ export function DetailHero({
               </a>
             </div>
           </div>
-          <Cover entry={detail} />
+          <Cover entry={detail} inline />
         </div>
       </div>
     </header>

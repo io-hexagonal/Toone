@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { beforeEach } from "node:test";
 import { readFileSync } from "node:fs";
 import { createHmac } from "node:crypto";
 const base = process.env.EXPLORE_WEB_URL || "http://127.0.0.1:13013";
@@ -40,6 +40,11 @@ async function invalidate() {
   });
   assert.equal(response.status, 200);
 }
+// A leaked mode from another file or an aborted run must not shape this one.
+beforeEach(async () => {
+  await mode({});
+  await invalidate();
+});
 test("webhook expires rendered detail, catalog and sitemap; outages stay distinct from not-found", async () => {
   const detailPath = "/en/explore/routines/" + routine.slug;
   const probe = "Explore revalidation proof " + Date.now();
@@ -92,6 +97,10 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
     assert.ok(!edge.includes("<script>alert('edge-script')"));
     assert.ok(!edge.includes('<img src="x"'));
     assert.match(edge, /explore-cover-empty/);
+    // Reviewer-only fields injected upstream never reach the HTML (§5.2 allow-list).
+    assert.ok(!edge.includes("usr_reviewer_leak_test"));
+    assert.ok(!edge.includes("review-reason-leak-test"));
+    assert.ok(!edge.includes("submitted_by"));
     assert.ok(!edge.includes('aria-label="Tags"><li>'));
     await mode({ empty: true });
     await invalidate();

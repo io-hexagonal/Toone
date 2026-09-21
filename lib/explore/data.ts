@@ -109,13 +109,84 @@ export class ExploreApiError extends Error {
   }
 }
 
+/**
+ * Card covers never inline the legacy data URL: the live entry carries a
+ * ~100 KB data URL, so a page of covered cards would weigh megabytes (twice,
+ * counting the RSC payload). Cards render the placeholder tile until
+ * `cover_url` ships; only the detail hero inlines the fallback.
+ */
+export function resolveCardCoverUrl(entry: {
+  cover_url?: string | null;
+  cover_image_data_url?: string | null;
+}): string | null {
+  const url = resolveCoverUrl(entry);
+  return url && /^https?:\/\//.test(url) ? url : null;
+}
+
 type Fetched<T> = { data: T; total: number };
+
+/**
+ * Next's data cache only stores 200s, and the index is a dynamic route, so
+ * without this every request against today's server would re-fetch the 404
+ * routes (`/v1/bundles`, `/v1/explore/tags`) and burn the contract's shared
+ * 60 req/min/IP bucket. Two small in-module memos, both cleared by the
+ * revalidation webhook and bounded in size:
+ *
+ * - `notServed`: upstream path -> expiry. A 404 costs one upstream call per
+ *   window instead of one per request.
+ * - `lastGood`: full URL -> last 200 payload. When upstream answers 429 the
+ *   last good catalog renders instead of the outage page.
+ *
+ * Per warm instance only (Vercel functions do not share memory); the TTL
+ * bounds staleness where the webhook cannot reach.
+ */
+const NEGATIVE_TTL_MS = 5 * 60_000;
+const NEGATIVE_LIMIT = 500;
+const LAST_GOOD_LIMIT = 200;
+
+/**
+ * Next compiles each route into its own chunk with its own copy of this
+ * module, so a plain module-level Map in the webhook handler would not be the
+ * Map the pages read. A Symbol-keyed slot on `globalThis` is shared by every
+ * chunk in the process (the same trick used for database-client singletons).
+ */
+type ExploreMemo = {
+  notServed: Map<string, number>;
+  lastGood: Map<string, Fetched<unknown>>;
+};
+const MEMO_KEY = Symbol.for("toone.explore.memo");
+const memo: ExploreMemo = ((globalThis as Record<symbol, unknown>)[MEMO_KEY] ??= {
+  notServed: new Map<string, number>(),
+  lastGood: new Map<string, Fetched<unknown>>(),
+}) as ExploreMemo;
+const { notServed, lastGood } = memo;
+
+function remember<K, V>(map: Map<K, V>, key: K, value: V, limit: number) {
+  map.delete(key);
+  map.set(key, value);
+  while (map.size > limit) {
+    const oldest = map.keys().next().value as K;
+    map.delete(oldest);
+  }
+}
+
+/** Clears the negative and last-good memos (called by the webhook handler). */
+export function resetExploreMemo(): void {
+  notServed.clear();
+  lastGood.clear();
+}
+
+/** True when `path` answered 404 within the negative window (test hook). */
+export function isMemoizedNotServed(path: string): boolean {
+  const until = notServed.get(`${exploreApiBase()}/${path}`);
+  return until !== undefined && until > Date.now();
+}
 
 /**
  * GET `${base}/${path}`, unwrap the `{data}` envelope, read `X-Total-Count`.
  * Returns `null` on 404; detail fetchers preserve it as not-found, while catalog
- * and feed fetchers treat a missing collection route as unavailability. Other
- * failures are never converted to successful empty responses.
+ * and feed fetchers treat a missing collection route as "not served yet".
+ * Other failures are never converted to successful empty responses.
  */
 async function getJson<T>(
   path: string,
@@ -127,6 +198,12 @@ async function getJson<T>(
     if (value !== undefined && value !== "")
       url.searchParams.set(key, String(value));
   }
+  const routeKey = `${url.origin}${url.pathname}`;
+  const negativeUntil = notServed.get(routeKey);
+  if (negativeUntil !== undefined) {
+    if (negativeUntil > Date.now()) return null;
+    notServed.delete(routeKey);
+  }
 
   const response = await fetch(url, {
     headers: { Accept: "application/json" },
@@ -134,7 +211,17 @@ async function getJson<T>(
     next: { revalidate: EXPLORE_REVALIDATE_SECONDS, tags },
   });
 
-  if (response.status === 404) return null;
+  if (response.status === 404) {
+    remember(notServed, routeKey, Date.now() + NEGATIVE_TTL_MS, NEGATIVE_LIMIT);
+    return null;
+  }
+  if (response.status === 429) {
+    const previous = lastGood.get(url.href);
+    if (previous) {
+      console.warn(`[explore] upstream 429 on ${url.pathname}; serving last good response`);
+      return previous as Fetched<T>;
+    }
+  }
   if (!response.ok) {
     let message = response.statusText;
     try {
@@ -168,7 +255,9 @@ async function getJson<T>(
       : Array.isArray(data)
         ? data.length
         : 0;
-  return { data, total };
+  const result = { data, total };
+  remember(lastGood, url.href, result, LAST_GOOD_LIMIT);
+  return result;
 }
 
 export type ListQuery = {
@@ -266,11 +355,111 @@ function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDeta
     sub_routine_count: num(raw.sub_routine_count, Math.max(members.length - 1, 0)),
     step_count: num(raw.step_count, steps),
     agent_count: num(raw.agent_count, pkg?.agents?.length ?? 0),
-    included_in_bundles: Array.isArray(raw.included_in_bundles)
-      ? (raw.included_in_bundles as RoutinePublicDetail["included_in_bundles"])
-      : [],
+    included_in_bundles: (Array.isArray(raw.included_in_bundles)
+      ? (raw.included_in_bundles as Record<string, unknown>[])
+      : []
+    )
+      .filter(
+        (ref) =>
+          ref &&
+          typeof ref === "object" &&
+          typeof ref.bundle_id === "string" &&
+          isBundleId(ref.bundle_id) &&
+          typeof ref.title === "string",
+      )
+      .map((ref) => ({
+        bundle_id: ref.bundle_id as string,
+        slug: typeof ref.slug === "string" ? ref.slug : null,
+        title: ref.title as string,
+      })),
     package: pkg,
   };
+}
+
+/**
+ * Allow-list projection of a catalog entry (§5.1) as it appears in bundle
+ * members. Returns null when the shape is unusable, so a malformed member
+ * fails soft to the retry page instead of a 500 mid-render.
+ */
+function normalizeCatalogEntry(raw: unknown): RoutineCatalogEntry | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const str = (value: unknown, fallback = "") =>
+    typeof value === "string" ? value : fallback;
+  const num = (value: unknown) =>
+    typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : 0;
+  const entry: RoutineCatalogEntry = {
+    workflow_id: str(r.workflow_id),
+    slug: typeof r.slug === "string" ? r.slug : null,
+    revision_id: str(r.revision_id),
+    title: str(r.title),
+    summary: str(r.summary),
+    tags: Array.isArray(r.tags) ? r.tags.filter((t) => typeof t === "string") : [],
+    license: str(r.license),
+    listing: r.listing === "bundle_only" ? "bundle_only" : "standalone",
+    content_hash: str(r.content_hash),
+    routine_schema_version: num(r.routine_schema_version),
+    member_count: num(r.member_count),
+    sub_routine_count: num(r.sub_routine_count),
+    step_count: num(r.step_count),
+    agent_count: num(r.agent_count),
+    cover_url: typeof r.cover_url === "string" ? r.cover_url : null,
+    cover_image_data_url:
+      typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
+    author_name: str(r.author_name),
+    approved_at: str(r.approved_at),
+  };
+  if (!isWorkflowId(entry.workflow_id) || !entry.title) return null;
+  if (!Number.isFinite(Date.parse(entry.approved_at))) return null;
+  return entry;
+}
+
+/** Allow-list projection of `BundlePublicDetail` (§5.5); null when unusable. */
+function normalizeBundleDetail(raw: unknown): BundlePublicDetail | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const str = (value: unknown, fallback = "") =>
+    typeof value === "string" ? value : fallback;
+  if (!Array.isArray(r.members)) return null;
+  const members: BundlePublicDetail["members"] = [];
+  for (const [index, member] of r.members.entries()) {
+    const entry = normalizeCatalogEntry(member);
+    if (!entry) return null;
+    const m = member as Record<string, unknown>;
+    members.push({
+      ...entry,
+      position:
+        typeof m.position === "number" && Number.isFinite(m.position)
+          ? m.position
+          : index,
+      pinned_revision_id: str(m.pinned_revision_id, entry.revision_id),
+      newer_revision_available: m.newer_revision_available === true,
+    });
+  }
+  const detail: BundlePublicDetail = {
+    bundle_id: str(r.bundle_id),
+    slug: typeof r.slug === "string" ? r.slug : null,
+    revision_id: str(r.revision_id),
+    sequence:
+      typeof r.sequence === "number" && Number.isFinite(r.sequence) ? r.sequence : 1,
+    title: str(r.title),
+    summary: str(r.summary),
+    tags: Array.isArray(r.tags) ? r.tags.filter((t) => typeof t === "string") : [],
+    content_hash: str(r.content_hash),
+    member_count:
+      typeof r.member_count === "number" && Number.isFinite(r.member_count)
+        ? r.member_count
+        : members.length,
+    cover_url: typeof r.cover_url === "string" ? r.cover_url : null,
+    cover_image_data_url:
+      typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
+    author_name: str(r.author_name),
+    approved_at: str(r.approved_at),
+    members,
+  };
+  if (!isBundleId(detail.bundle_id) || !detail.title) return null;
+  if (!Number.isFinite(Date.parse(detail.approved_at))) return null;
+  return detail;
 }
 
 /** `GET /v1/workflows/{id-or-slug}` (§5.2); null when unknown. */
@@ -303,22 +492,17 @@ export async function getBundle(
   idOrSlug: string,
 ): Promise<BundlePublicDetail | null> {
   if (!isRouteParam(idOrSlug)) return null;
-  const result = await getJson<BundlePublicDetail>(
+  const result = await getJson<unknown>(
     `bundles/${encodeURIComponent(idOrSlug)}`,
     {},
     [EXPLORE_TAG, itemTag(idOrSlug)],
   );
   if (!result) return null;
-  if (
-    !result.data ||
-    !isBundleId(result.data.bundle_id) ||
-    !Array.isArray(result.data.members) ||
-    !Array.isArray(result.data.tags) ||
-    !Number.isFinite(Date.parse(result.data.approved_at))
-  ) {
+  const detail = normalizeBundleDetail(result.data);
+  if (!detail) {
     throw new ExploreApiError("bundles/detail", 502, "invalid bundle detail");
   }
-  return result.data;
+  return detail;
 }
 
 /**
@@ -346,6 +530,12 @@ export async function getExploreTags(): Promise<ExploreTag[]> {
 }
 
 export const PAGE_SIZE = 20;
+/**
+ * Deepest page the index serves. Beyond it a `?page=` chain would extend the
+ * merged prefixes one 100-item upstream batch at a time; at 25 pages that is
+ * at most five serial calls per source, all of them data-cached.
+ */
+export const MAX_PAGE = 25;
 
 /** Merge source prefixes, not independently offset pages (which drop interleaved results). */
 export async function loadCatalog(query: CatalogQuery): Promise<{
@@ -356,20 +546,27 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   bundlesAvailable: boolean;
 }> {
   const filters = { query: query.query, tag: query.tag, limit: 100 };
-  const [routines, bundles] = await Promise.all([
-    query.type === "bundles"
-      ? Promise.resolve({ items: [] as RoutineCatalogEntry[], total: 0 })
-      : listRoutines({ ...filters, listing: "standalone" }),
-    query.type === "routines"
-      ? listBundles({ ...filters, limit: 1 }).then((r) => ({
-          items: [] as BundleCatalogEntry[],
-          total: 0,
-          available: r.available,
-        }))
-      : listBundles(filters),
+  // Both sources are always fetched with the same URL the "All" view uses,
+  // so a type filter shares the cached responses instead of adding a probe;
+  // the excluded source's items are simply dropped.
+  const [allRoutines, allBundles] = await Promise.all([
+    listRoutines({ ...filters, listing: "standalone" }),
+    listBundles(filters),
   ]);
+  const routines =
+    query.type === "bundles"
+      ? { items: [] as RoutineCatalogEntry[], total: 0 }
+      : allRoutines;
+  const bundles =
+    query.type === "routines"
+      ? { items: [] as BundleCatalogEntry[], total: 0, available: allBundles.available }
+      : allBundles;
   const total = routines.total + bundles.total;
-  const page = Math.min(query.page, Math.max(1, Math.ceil(total / PAGE_SIZE)));
+  const page = Math.min(
+    query.page,
+    MAX_PAGE,
+    Math.max(1, Math.ceil(total / PAGE_SIZE)),
+  );
   const needed = page * PAGE_SIZE;
   async function extend<T>(
     result: ListResult<T>,

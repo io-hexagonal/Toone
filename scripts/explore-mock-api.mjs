@@ -220,6 +220,19 @@ function project(data) {
     delete item.cover_url;
     delete item.cover_image_data_url;
   }
+  // Pre-contract server: only the inline data-URL cover exists.
+  if (mode.dataUrlCovers) {
+    delete item.cover_url;
+    item.cover_image_data_url = `data:image/jpeg;base64,${COVER.toString("base64")}`;
+  }
+  // Reviewer-only fields the contract forbids on public shapes (§5.2); the
+  // web must allow-list them away.
+  if (item.package && mode.edge) {
+    item.submitted_by = "usr_reviewer_leak_test";
+    item.reviewed_by = "usr_reviewer_leak_test";
+    item.review_reason = "review-reason-leak-test";
+    item.status = "approved";
+  }
   if (item.package && mode.edge) {
     item.package.members[0].payload.purpose =
       "Averylongunbrokenpublictoken".repeat(25);
@@ -316,6 +329,11 @@ const server = http.createServer(async (req, res) => {
       log(200);
       return detail(req, res, project(memberDetail(member)));
     }
+    log(404);
+    return notFound(res);
+  }
+  // Pre-contract server: the bundles routes do not exist yet.
+  if (mode.bundles404 && p.startsWith("/v1/bundles")) {
     log(404);
     return notFound(res);
   }

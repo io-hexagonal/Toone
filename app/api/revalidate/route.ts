@@ -1,4 +1,5 @@
 import { revalidateTag } from "next/cache";
+import { resetExploreMemo } from "@/lib/explore/api";
 import {
   parseRevalidateEvent,
   verifySignature,
@@ -34,6 +35,9 @@ export async function POST(request: Request) {
     return Response.json({ revalidated: false }, { status: 401 });
   const event = parseRevalidateEvent(raw);
   if (!event) return Response.json({ revalidated: false }, { status: 400 });
+  // The in-memory memos (negative "route not served" + last-good fallback)
+  // live outside Next's cache, so the webhook clears them explicitly too.
+  resetExploreMemo();
   revalidateTag("explore", { expire: 0 });
   revalidateTag(`explore:${event.slug}`, { expire: 0 });
   revalidateTag(`explore:${event.id}`, { expire: 0 });
