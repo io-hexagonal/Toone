@@ -115,6 +115,16 @@ export default function HeroAuth({ audience = "business" }: Props) {
               text-align: center; display: flex; flex-direction: column; align-items: center;
               justify-self: center; max-width: 460px; padding: 96px 12px 40px;
             }
+            /* Brand lockup above the headline, same recipe as the invite page. */
+            .ha-brand {
+              display: inline-flex; align-items: center; gap: 10px; margin-bottom: 26px;
+              text-decoration: none; color: rgba(255,255,255,0.92);
+            }
+            .ha-brand img { width: 34px; height: 34px; display: block; }
+            .ha-brand span {
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-size: 23px; font-weight: 600; letter-spacing: -0.03em; text-transform: lowercase; line-height: 1;
+            }
             .ha-title {
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-weight: 600; letter-spacing: -0.02em; line-height: 1.06;
@@ -309,6 +319,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
       <section className="hero-auth">
         <HeroGlitter />
         <div className="ha-left">
+          <div className="ha-brand" aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/brand/toone-mark.svg" alt="" />
+            <span>toone</span>
+          </div>
           <h1 className="ha-title">
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
           </h1>
