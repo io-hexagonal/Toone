@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "AI workspace for your agentic workflows",
-      "heroTag": "Craft them conversationally, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
+      "heroTag": "AI routines can be unreliable, slow to build, and hard to maintain. With Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "statement": {
@@ -271,7 +271,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "Craft them conversationally, watch them run step by step, pause or edit mid-run, and expand them knowing nothing breaks.",
+    "lead": "AI routines can be unreliable, slow to build, and hard to maintain. With Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
     "cta": "Explore Toone"
   },
   "auth": {

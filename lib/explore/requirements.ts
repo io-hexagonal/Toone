@@ -9,7 +9,13 @@ export function requirementFacts(pkg: WorkflowPackage) {
   ];
   const produces: string[] = [];
   for (const resource of pkg.resources ?? []) {
-    if (resource.mode === "seed_text" || resource.mode === "seed_directory") included.push(resource.binding);
+    if (resource.mode === "seed_text" || resource.mode === "seed_directory") {
+      const input = pkg.members.find((member) => member.key === resource.member_key)?.payload.inputs?.find((input) => input.id === resource.input_id);
+      // Installation paths and bundled contents belong to the desktop package.
+      // Public requirements describe what is included, not where it is written.
+      const name = resource.input_id.replace(/^input[-_]/, "").replace(/[-_]+/g, " ");
+      included.push(input?.description?.trim() || name.charAt(0).toUpperCase() + name.slice(1));
+    }
   }
   for (const member of pkg.members) {
     const invocations = member.parent_key ? pkg.members.flatMap((parent) => parent.payload.steps ?? []).filter((step) => step.subRoutineId === member.source_routine_id) : [];

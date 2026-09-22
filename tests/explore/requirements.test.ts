@@ -8,7 +8,7 @@ test("requirements separate bundled content, external inputs and declared output
     {key: "root", source_routine_id: "r", payload: { inputs: [
       {id: "question", description: "Research question", requirement: "dispatch"},
       {id: "optional", requirement: "optional"},
-      {id: "seed", requirement: "dispatch"},
+      {id: "seed", description: "Launch website catalog", requirement: "dispatch"},
       {id: "child", requirement: "dispatch"}], artefacts: [{id:"report", name:"Research report", format:"markdown"}]}},
   ], agents: [{source_id:"a",name:"Researcher",description:"",capabilities:[],skill_ids:[],mcp_ids:[]}],
     resources:[
@@ -16,9 +16,19 @@ test("requirements separate bundled content, external inputs and declared output
       {member_key:"root",input_id:"child",binding:"project://child",mode:"runtime_binding",value_type:"file",byte_count:0},
     ]};
   const facts = requirementFacts(pkg);
-  assert.deepEqual(facts.included, ["Researcher", "project://seed.txt"]);
+  assert.deepEqual(facts.included, ["Researcher", "Launch website catalog"]);
   assert.deepEqual(facts.youProvide, ["Research question"]);
   assert.deepEqual(facts.produces, ["Research report (markdown)"]);
+});
+
+test("public requirements never expose installation bindings or bundled file contents", () => {
+  const pkg: WorkflowPackage = {
+    format_version: 2, routine_schema_version: 2, root_key: "root",
+    members: [{key: "root", source_routine_id: "r", payload: {inputs: [{id: "input-brand-assets", requirement: "dispatch"}]}}],
+    resources: [{member_key: "root", input_id: "input-brand-assets", binding: "organization://private/assets", mode: "seed_directory", value_type: "directory", byte_count: 7, directory_entries: [{relative_path: "internal-logo.svg", content: "private", byte_count: 7, sha256: "hash"}]}],
+    requirements: {resource_bindings: ["project://launch/{runId}/status.json"]},
+  };
+  assert.deepEqual(requirementFacts(pkg), {included: ["Brand assets"], youProvide: [], produces: []});
 });
 test("an empty package makes no inferred requirements or output claims", () => {
   assert.deepEqual(requirementFacts({format_version:1,routine_schema_version:2,root_key:"root",members:[]}), {included:[],youProvide:[],produces:[]});

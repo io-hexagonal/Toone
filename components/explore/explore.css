@@ -762,23 +762,61 @@
   font-size: 15px;
 }
 
-/* inputs / requirements as label + value rows */
-.explore-inputs,
-.explore-requirements {
+/* Public setup and deliverables: readable lists, not paragraph-sized chips. */
+.explore-requirement-summary {
   margin: 0;
+  padding: 4px 24px;
+  border: 1px solid #d8d5cb;
+  border-radius: 18px;
+  background: #fff4;
 }
-.explore-inputs > div,
-.explore-requirements > div {
+.explore-requirement-summary > div {
   display: grid;
-  grid-template-columns: minmax(140px, 200px) minmax(0, 1fr);
-  gap: 8px 24px;
-  padding: 14px 0;
-  border-top: 1px solid #e2dfd4;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px 24px;
+  padding: 22px 0;
 }
-.explore-inputs > div:first-child,
-.explore-requirements > div:first-child {
-  border-top: 0;
-  padding-top: 0;
+.explore-requirement-summary > div + div {
+  border-top: 1px solid #d8d5cb;
+}
+.explore-body .explore-requirement-summary dt {
+  padding-top: 3px;
+  color: #6c6a62;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.explore-requirement-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.explore-requirement-list li {
+  position: relative;
+  padding-left: 16px;
+  color: #4d4c45;
+  font-size: 14px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.explore-requirement-list li::before {
+  content: "";
+  position: absolute;
+  top: .65em;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #89877d;
+}
+.explore-requirement-list[data-kind="produces"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 10px 24px;
+}
+.explore-requirement-summary + .explore-req-groups {
+  margin-top: 24px;
 }
 .explore-body dt {
   font-weight: 650;
@@ -1196,8 +1234,10 @@
     grid-template-columns: 30px minmax(0, 1fr);
     gap: 12px;
   }
-  .explore-inputs > div,
-  .explore-requirements > div {
+  .explore-requirement-summary {
+    padding: 0 18px;
+  }
+  .explore-requirement-summary > div {
     grid-template-columns: 1fr;
     gap: 6px;
   }

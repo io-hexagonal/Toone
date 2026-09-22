@@ -563,29 +563,6 @@ function MemberContent({
           <Markdown text={payload.prerequisites} />
         </section>
       )}
-      {!!payload.inputs?.length && (
-        <section className="explore-section">
-          <h2>{ui.inputs}</h2>
-          <dl className="explore-inputs">
-            {payload.inputs.map((input) => (
-              <div key={input.id}>
-                <dt>
-                  <code>{input.id}</code>
-                  {input.requirement && <small>{input.requirement}</small>}
-                </dt>
-                <dd>
-                  <Markdown text={input.description} />
-                  {(input.kind || input.valueType) && (
-                    <span className="explore-muted">
-                      {[input.kind, input.valueType].filter(Boolean).join(" · ")}
-                    </span>
-                  )}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )}
       {!!payload.steps?.length && (
         <section className="explore-section">
           <h2>{ui.steps}</h2>
@@ -687,9 +664,8 @@ export function RoutineContent({
   const agentNames = new Map(
     (pkg.agents ?? []).map((agent) => [agent.source_id, agent.name] as const),
   );
-  const hasRequirements = Object.values(requirements ?? {}).some(
-    (values) => Array.isArray(values) && values.length > 0,
-  );
+  const hasRequirements = !!(requirements?.model_ids?.length || requirements?.mcp_ids?.length);
+  const factKinds = (["included", "youProvide", "produces"] as const).filter((kind) => facts[kind].length > 0);
   return (
     <div className="explore-detail-body explore-width">
       <article className="explore-body">
@@ -762,10 +738,15 @@ export function RoutineContent({
         )}
         <section id="requirements" className="explore-section">
           <h2>{ui.requirements}</h2>
-          <dl className="explore-classification">
-            {(["included", "youProvide", "produces"] as const).filter((kind) => facts[kind].length > 0).map((kind) => <div key={kind}><dt>{ui[kind]}</dt><dd><Chips items={facts[kind]} mono={false} /></dd></div>)}
-          </dl>
-          {hasRequirements ? (
+          {factKinds.length > 0 && <dl className="explore-requirement-summary">
+            {factKinds.map((kind) => <div key={kind}>
+              <dt>{ui[kind]}</dt>
+              <dd><ul className="explore-requirement-list" data-kind={kind}>
+                {facts[kind].map((fact) => <li key={fact}>{fact}</li>)}
+              </ul></dd>
+            </div>)}
+          </dl>}
+          {hasRequirements && (
             <div className="explore-req-groups">
               {!!requirements?.model_ids?.length && (
                 <div className="explore-req-group">
@@ -779,50 +760,10 @@ export function RoutineContent({
                   <Chips items={requirements.mcp_ids} />
                 </div>
               )}
-              {!!requirements?.resource_bindings?.length && (
-                <div className="explore-req-group">
-                  <h4>{ui.bindings}</h4>
-                  <Chips
-                    items={requirements.resource_bindings.map((value) =>
-                      typeof value === "string" ? value : JSON.stringify(value),
-                    )}
-                  />
-                </div>
-              )}
             </div>
-          ) : (
-            <p>{ui.noRequirements}</p>
           )}
+          {!hasRequirements && factKinds.length === 0 && <p>{ui.noRequirements}</p>}
         </section>
-        {!!pkg.resources?.length && (
-          <section id="resources" className="explore-section">
-            <h2>{ui.resources}</h2>
-            <dl className="explore-requirements">
-              {pkg.resources.map((resource, i) => (
-                <div key={i}>
-                  <dt>
-                    <code>{resource.input_id}</code>
-                  </dt>
-                  <dd>
-                    <span className="explore-muted">
-                      <code>{resource.binding}</code> · {resource.mode}
-                    </span>
-                    <Markdown text={resource.reason} />
-                    {/* File contents are installed by the app, not published:
-                        a disclosed directory can be hundreds of KB. */}
-                    {!!resource.directory_entries?.length && (
-                      <Chips
-                        items={resource.directory_entries.map(
-                          (entry) => entry.relative_path,
-                        )}
-                      />
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-        )}
         {!!detail.included_in_bundles?.length && (
           <section className="explore-section" id="bundles">
             <h2>{ui.includedBundles}</h2>
