@@ -116,7 +116,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .hero-auth > .ha-left { position: relative; z-index: 1; }
             .ha-left {
               text-align: center; display: flex; flex-direction: column; align-items: center;
-              justify-self: center; max-width: 460px; padding: 96px 12px 40px;
+              justify-self: center; max-width: 560px; padding: 96px 12px 40px;
             }
             .ha-title {
               font-family: var(--font-wordmark), system-ui, sans-serif;
@@ -127,8 +127,17 @@ export default function HeroAuth({ audience = "business" }: Props) {
             }
             .ha-tag {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
-              max-width: 30ch; margin-bottom: 48px; text-wrap: balance;
+              /* Sits just inside the headline's column so the two read as a pair. */
+              max-width: 88%; margin-bottom: 18px; text-wrap: balance;
             }
+            .ha-explore {
+              display: inline-flex; align-items: center; gap: 8px;
+              color: rgba(255,255,255,0.82); font-size: 15px; font-weight: 500;
+              text-decoration: none; padding-bottom: 3px; margin-bottom: 46px;
+              border-bottom: 1px solid rgba(255,255,255,0.26);
+              transition: color 0.2s ease, border-color 0.2s ease;
+            }
+            .ha-explore:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
             .ha-language {
               max-width: 42ch; margin: -16px 0 20px; color: rgba(255,255,255,0.72);
               font-size: 12.5px; line-height: 1.5;
@@ -318,6 +327,10 @@ export default function HeroAuth({ audience = "business" }: Props) {
           <p className="ha-tag">
             {t(audience === "personal" ? "personal.heroTag" : "heroTag2")}
           </p>
+          <Link className="ha-explore" href="/explore">
+            {t("exploreLink")}
+            <span aria-hidden="true">→</span>
+          </Link>
           {locale !== "en" && (
             <p className="ha-language">{t("productLanguageDisclosure")}</p>
           )}

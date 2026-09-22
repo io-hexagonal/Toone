@@ -131,7 +131,8 @@
     "eaHowTitle": "How it works",
     "eaStep1": "Request access with your email.",
     "eaStep2": "We send a personal code when a place opens.",
-    "eaStep3": "Redeem the code, create your account and download Toone."
+    "eaStep3": "Redeem the code, create your account and download Toone.",
+    "exploreLink": "Explore Routines"
   },
   "footer": {
     "privacy": "Privacy",

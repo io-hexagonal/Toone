@@ -131,7 +131,8 @@
     "eaHowTitle": "Comment ça marche",
     "eaStep1": "Demandez l'accès avec votre e-mail.",
     "eaStep2": "Nous vous envoyons un code personnel dès qu'une place se libère.",
-    "eaStep3": "Utilisez le code, créez votre compte et téléchargez Toone."
+    "eaStep3": "Utilisez le code, créez votre compte et téléchargez Toone.",
+    "exploreLink": "Explorer les routines"
   },
   "footer": {
     "privacy": "Confidentialite",
