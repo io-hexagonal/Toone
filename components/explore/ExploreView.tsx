@@ -17,6 +17,7 @@ import {
 import {
   catalogHref,
   deepLink,
+  requestAccessHref,
   safeMarkdownUrl,
   type CatalogItem,
 } from "@/lib/explore/presentation";
@@ -420,8 +421,8 @@ export async function DetailHero({
               />
               <a
                 className="explore-button explore-button-secondary"
-                href={`/${locale}/download?from=explore`}
-                data-umami-event="explore-get-toone"
+                href={requestAccessHref(locale, `${type}:${id}`)}
+                data-umami-event="explore-request-access"
                 data-umami-event-item={`${type}:${id}`}
               >
                 {ui.getToone}

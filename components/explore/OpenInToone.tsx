@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { createOpenAttempt } from "@/lib/explore/presentation";
+import { createOpenAttempt, requestAccessHref } from "@/lib/explore/presentation";
 
 /**
  * "Open in Toone" CTA (contract §2 deep links, plan §4.3).
@@ -26,7 +26,7 @@ export default function OpenInToone({
 }) {
   const cancel = useRef<(() => void) | null>(null);
   useEffect(() => () => cancel.current?.(), []);
-  const fallback = `/${locale}/download?from=explore`;
+  const fallback = requestAccessHref(locale, item);
   return (
     <a
       className="explore-button"

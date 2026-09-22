@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
+import { accessAttribution } from "@/lib/explore/presentation";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -35,9 +36,11 @@ export default function WaitlistPage() {
       });
       if (!response.ok) throw new Error("waitlist request failed");
       const outcome = await response.json();
+      const params = new URLSearchParams(window.location.search);
+      const attribution = accessAttribution(params.get("from"), params.get("item"));
       if (outcome.outcome_state === "created" && outcome.outcome_id) {
         (window as unknown as { umami?: { track: (name: string, data: Record<string, string>) => void } }).umami?.track(
-          "waitlist-signup", { source: "web", locale, outcome_id: outcome.outcome_id },
+          "waitlist-signup", { source: "web", locale, outcome_id: outcome.outcome_id, ...attribution },
         );
       }
       setStatus("success");
