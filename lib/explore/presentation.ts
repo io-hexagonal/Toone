@@ -112,6 +112,19 @@ export function createOpenAttempt(
   }
   return cancel;
 }
+/**
+ * Attribution carried from Explore to the access request: `from=explore` and
+ * the record (`routine:wfl_…` / `bundle:wfb_…`). Anything else is dropped.
+ */
+const ATTRIBUTION_ITEM = /^(routine:wfl|bundle:wfb)_[a-z0-9]{8,32}$/;
+export function accessAttribution(from: unknown, item: unknown): { from?: string; item?: string } {
+  if (from !== "explore") return {};
+  return typeof item === "string" && ATTRIBUTION_ITEM.test(item) ? { from, item } : { from };
+}
+export function requestAccessHref(locale: string, item?: string): string {
+  const params = new URLSearchParams(accessAttribution("explore", item));
+  return `/${locale}/request-access?${params}`;
+}
 export function safeMarkdownUrl(value: string): string {
   if (/^(https?:\/\/|mailto:)/i.test(value)) return value;
   if (/^(#[^\s]*|\/(?!\/)[^\\]*)$/.test(value)) return value;
