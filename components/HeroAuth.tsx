@@ -128,7 +128,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-tag {
               color: rgba(255,255,255,0.62); font-size: 19px; line-height: 1.45;
               /* Sits just inside the headline's column so the two read as a pair. */
-              max-width: 88%; margin-bottom: 18px; text-wrap: balance;
+              max-width: 78%; margin-bottom: 18px; text-wrap: balance;
             }
             .ha-explore {
               display: inline-flex; align-items: center; gap: 8px;
