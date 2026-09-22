@@ -117,6 +117,37 @@ export function safeMarkdownUrl(value: string): string {
   if (/^(#[^\s]*|\/(?!\/)[^\\]*)$/.test(value)) return value;
   return "";
 }
+/**
+ * Search snippets cut near 160 characters. Keep whole sentences that fit,
+ * otherwise cut at a word boundary; the full summary stays on the page.
+ */
+export function metaDescription(text: string, limit = 160): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= limit) return clean;
+  const sentences = clean.match(/[^.!?]+[.!?]+(\s|$)/g) ?? [];
+  let out = "";
+  for (const sentence of sentences) {
+    if ((out + sentence).trim().length > limit) break;
+    out += sentence;
+  }
+  if (out.trim()) return out.trim();
+  const cut = clean.slice(0, limit - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:\s]+$/, "")}…`;
+}
+/** Shared schema.org fields for approved Explore records. */
+export function recordSchemaFields(detail: {
+  author_name: string;
+  approved_at: string;
+}) {
+  return {
+    dateModified: detail.approved_at,
+    ...(detail.author_name
+      ? { author: { "@type": "Person", name: detail.author_name } }
+      : {}),
+    publisher: { "@id": `${SITE}/#organization` },
+    isPartOf: { "@id": `${SITE}/#website` },
+  };
+}
 export function exploreMetadata(
   locale: string,
   path: string,
@@ -128,6 +159,7 @@ export function exploreMetadata(
   // Scrapers need a fetchable URL for og:image; the inline data-URL cover the
   // pre-contract server sends would only bloat the head (~250 KB twice).
   const image = cover && /^https?:\/\//.test(cover) ? cover : null;
+  description = metaDescription(description);
   return {
     title,
     description,
@@ -163,6 +195,7 @@ export function routineSchema(detail: RoutinePublicDetail) {
     description: detail.summary,
     inLanguage: "en",
     url: `${SITE}/en/explore/routines/${detail.slug || detail.workflow_id}`,
+    ...recordSchemaFields(detail),
     step: (root?.payload.steps ?? []).map((step, index) => ({
       "@type": "HowToStep",
       position: index + 1,

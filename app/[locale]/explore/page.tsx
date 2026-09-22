@@ -28,7 +28,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const ui = await getExploreCopy(locale);
   const query = parseCatalogQuery(await searchParams);
-  const meta = exploreMetadata(locale, "/explore", ui.title, ui.intro, null);
+  const meta = exploreMetadata(locale, "/explore", ui.heading, ui.intro, null);
   if (query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all" || query.page > 1)
     meta.robots.index = false;
   try {
@@ -72,8 +72,9 @@ export default async function ExplorePage({ params, searchParams }: Props) {
         value={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: ui.title,
+          name: ui.heading,
           description: ui.intro,
+          isPartOf: { "@id": `${SITE}/#website` },
           url: `${SITE}/en/explore`,
           mainEntity: itemList,
         }}
@@ -81,7 +82,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
       <header className="explore-hero">
         <div className="explore-width">
           <p className="explore-eyebrow">{ui.eyebrow}</p>
-          <h1>{ui.title}</h1>
+          <h1>{ui.heading}</h1>
           <p className="explore-intro">{ui.intro}</p>
         </div>
       </header>

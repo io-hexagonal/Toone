@@ -42,6 +42,7 @@ export const COPY_KEYS = [
   "produces",
 
   "title",
+  "heading",
   "intro",
   "all",
   "routines",
@@ -415,10 +416,13 @@ export async function DetailHero({
                 url={deepLink(type, id, detail.revision_id)}
                 label={ui.open}
                 locale={locale}
+                item={`${type}:${id}`}
               />
               <a
                 className="explore-button explore-button-secondary"
                 href={`/${locale}/download?from=explore`}
+                data-umami-event="explore-get-toone"
+                data-umami-event-item={`${type}:${id}`}
               >
                 {ui.getToone}
               </a>

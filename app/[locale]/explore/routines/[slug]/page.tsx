@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getRoutine, resolveSlug, resolveCoverUrl } from "@/lib/explore/api";
+import { getRoutine, findRoutineByIdTail, resolveSlug, resolveCoverUrl } from "@/lib/explore/api";
 import {
   exploreMetadata,
   routineSchema,
@@ -53,7 +53,12 @@ export default async function RoutinePage({ params }: Props) {
       />
     );
   }
-  if (!detail) notFound();
+  if (!detail) {
+    const moved = await findRoutineByIdTail(slug).catch(() => null);
+    if (moved)
+      permanentRedirect(`/${locale}/explore/routines/${resolveSlug(moved)}`);
+    notFound();
+  }
   const canonical = resolveSlug(detail);
   if (canonical !== slug)
     permanentRedirect(`/${locale}/explore/routines/${canonical}`);

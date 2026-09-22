@@ -24,7 +24,11 @@ export default function ExploreFilters({ query, taxonomy, facets, locale, copy }
   const selected = [query.category, ...(query.topics ?? []), ...(query.usefulFor ?? [])].filter((id): id is string => !!id);
   const counts = new Map(facets.map((facet) => [facet.term_id, facet.routines + facet.bundles]));
   const clear = catalogHref(locale, { ...query, category: undefined, topics: [], usefulFor: [], tag: "", page: 1 });
-  const terms = (kind: "category" | "topic" | "useful_for") => taxonomy.terms.filter((term) => term.kind === kind && term.active)
+  // Facets are counted against the current query, so only the unfiltered view
+  // hides terms with no approved items; any filtered view keeps every option.
+  const unfiltered = !selected.length && !query.query && !query.tag && query.type === "all";
+  const hasMatches = (id: string) => !unfiltered || !facets.length || (counts.get(id) ?? 0) > 0;
+  const terms = (kind: "category" | "topic" | "useful_for") => taxonomy.terms.filter((term) => term.kind === kind && term.active && hasMatches(term.id))
     .sort((a, b) => a.sort_order - b.sort_order || a.id.localeCompare(b.id));
   const fields = (scope: string) => <>
     <input type="hidden" name="q" value={query.query} />
@@ -58,7 +62,7 @@ export default function ExploreFilters({ query, taxonomy, facets, locale, copy }
         </fieldset>
       </details>;
     })}
-    <button className="explore-apply-filters" type="submit">{copy.applyFilters}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" /></svg></button>
+    <button className="explore-apply-filters" type="submit" data-umami-event="explore-filter-apply">{copy.applyFilters}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" /></svg></button>
   </>;
   return <section className="explore-taxonomy-filters" aria-label={copy.filters}>
     <form className="explore-taxonomy-desktop" method="get" action={`/${locale}/explore`}>{fields("desktop")}</form>

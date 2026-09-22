@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run content:check && npm run test:explore && npm run typecheck",
     "explore:mock": "node scripts/explore-mock-api.mjs",
-    "test:explore": "node --import tsx --test tests/explore/*.test.ts",
+    "test:explore": "node --import tsx --test tests/explore/*.test.ts tests/explore/*.test.tsx",
     "test:explore:http": "node --test tests/explore/http.test.mjs && node --test tests/explore/outage.test.mjs"
   },
   "dependencies": {
