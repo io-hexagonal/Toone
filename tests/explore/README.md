@@ -49,5 +49,11 @@ The mock binds only to `127.0.0.1`. Controls do not exist unless `EXPLORE_MOCK_A
 | `{"delayMs":10000}` | Eight-second API timeout followed by retry state |
 | `{"removed":true}` | The main routine returns 404 and leaves the Explore sitemap after invalidation |
 | `{"title":"revision marker"}` | Cache persistence before webhook and fresh content after webhook |
+| `{"profiles":true}` | Hub cards for listing-profile records: display title, card summary, "For:" line, results count |
+| `{"malformedProfile":true}` | The profile routine falls back to the legacy layout (and logs why) |
+
+## Listing profiles (contract §13)
+
+`fixtures/listing-profile.json` and the §13 fields in the other fixtures are byte-identical copies of `docs/architecture/explore/fixtures` in the product repository. The mock always serves the fixture routine without its profile, so its page exercises the fallback layout. From the profile it synthesizes `/en/explore/routines/product-launch-prep-directories-qk4m2x7a` (profile layout), `/en/explore/routines/product-launch-prep-draft-w9t3v6pe` (`indexable: false`: `noindex, follow`, not in the sitemap) and `/en/explore/bundles/launch-kit-r5h8c2nd` (bundle with a profile). Check the builders' section with the keyboard: it is a native `<details>` that stays collapsed until opened.
 
 Inspect the Open in Toone link with and without JavaScript. The server emits a usable `/{locale}/download?from=explore` anchor. With JavaScript it attempts the validated scheme URL. Returning from the app, switching tabs, navigating away, or clicking repeatedly must not cause a delayed download redirect.

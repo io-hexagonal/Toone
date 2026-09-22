@@ -12,9 +12,12 @@ function usable(img: HTMLImageElement) {
 export default function CoverImage({
   className,
   src,
+  alt = "",
 }: {
   className: string;
   src: string;
+  /** Empty (decorative) unless the record describes its cover. */
+  alt?: string;
 }) {
   const ref = useRef<HTMLImageElement>(null);
   useEffect(() => {
@@ -29,7 +32,7 @@ export default function CoverImage({
       ref={ref}
       className={className}
       src={src}
-      alt=""
+      alt={alt}
       loading="lazy"
       onError={(event) => event.currentTarget.classList.add("is-broken")}
       onLoad={(event) => {

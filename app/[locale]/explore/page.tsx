@@ -6,6 +6,7 @@ import { getCatalog, PAGE_SIZE, resolveSlug } from "@/lib/explore/api";
 import {
   parseCatalogQuery,
   catalogHref,
+  cardText,
   exploreMetadata,
   SITE,
 } from "@/lib/explore/presentation";
@@ -63,7 +64,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
       "@type": "ListItem",
       position: (catalog.page - 1) * PAGE_SIZE + index + 1,
       url: `${SITE}/en/explore/${item.type}s/${resolveSlug(item.entry)}`,
-      name: item.entry.title,
+      name: cardText(item.entry).title,
     })),
   };
   return (

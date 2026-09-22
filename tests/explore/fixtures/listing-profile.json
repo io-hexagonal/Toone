@@ -1,0 +1,59 @@
+{
+  "profile_schema_version": 1,
+  "search": {
+    "job_statement": "Prepare your product launch across Product Hunt and startup directories",
+    "search_phrases": ["product launch checklist", "prepare a Product Hunt launch", "startup directory submissions"],
+    "display_title": "Product launch prep for Product Hunt and directories",
+    "seo_title": "Product Launch Prep Routine for Product Hunt & Directories",
+    "meta_description": "Research launch sites, prepare the profiles you approve and get a launch plan and draft for each one. Nothing is published without you.",
+    "slug_words": ["product", "launch", "prep", "directories"]
+  },
+  "answer": "Planning a launch across Product Hunt and startup directories? This routine checks each site's rules, costs and requirements, prepares the accounts and profiles you allow, and writes a site-by-site launch plan with draft copy. You review everything: it never posts, votes or submits a launch for you.",
+  "for_whom": [
+    { "useful_for_id": "role_founders", "why": "One plan for every launch site instead of ten browser tabs." },
+    { "useful_for_id": "role_marketers", "why": "Requirements, assets and timing per site before launch week." }
+  ],
+  "use_cases": [
+    "You're launching next month and need every site's rules and costs in one place.",
+    "You want draft listings ready before launch day without anything going live."
+  ],
+  "time_and_effort": { "you_prepare": "A list of sites and your approved product facts.", "run_estimate": "About 30–60 minutes for 10 sites" },
+  "results": [
+    { "artefact_id": "artefact-readiness-report", "name": "Launch readiness report", "description": "A written summary of every site, what's ready and what still needs you.", "format_label": "Written report" },
+    { "artefact_id": "artefact-strategies", "name": "Site-by-site launch plans", "description": "Positioning, required fields, timing and draft copy for each site.", "format_label": "Written plans" },
+    { "artefact_id": "artefact-status-register", "name": "Site status list", "description": "Each site marked prepared, research only, blocked or not eligible.", "format_label": "Spreadsheet-ready list" }
+  ],
+  "how_it_works": [
+    "Checks your list of sites.",
+    "Reads each site's official rules, costs and requirements.",
+    "Prepares accounts and profiles only where you allowed it.",
+    "Writes a launch plan and draft for each site.",
+    "Gives you one report with what's ready and what needs you."
+  ],
+  "you_provide": [
+    { "input_id": "input-sites", "label": "Your launch sites", "description": "Up to 10 sites you want to launch on.", "example": "Product Hunt, BetaList, Indie Hackers" },
+    { "input_id": "input-product-facts", "label": "Approved product facts", "description": "Your product name, description, links and the claims you allow.", "example": "" },
+    { "input_id": "input-account-mode", "label": "Account permissions", "description": "Which sites may get accounts. Default: none, research only.", "example": "research-only" }
+  ],
+  "stays_in_your_control": [
+    "Never posts, votes, messages or submits a launch.",
+    "Stops at CAPTCHAs, email verification and billing.",
+    "Passwords go only to your secure store."
+  ],
+  "customization": [
+    { "id": "sites", "label": "Launch sites", "kind": "site_list", "target": "input-sites", "default": "The published list below", "allowed": "1–10 sites", "note": "" },
+    { "id": "account-mode", "label": "Account creation", "kind": "input", "target": "input-account-mode", "default": "research-only", "allowed": "research-only or prepare-accounts", "note": "" }
+  ],
+  "third_parties": [
+    { "id": "producthunt", "name": "Product Hunt", "url": "https://www.producthunt.com", "domain": "producthunt.com", "actions": ["read", "profile"], "cost": "free", "note": "" }
+  ],
+  "faq": [
+    { "question": "Does it create accounts for me?", "answer": "Only on sites you allow, and never past a CAPTCHA or a payment step." },
+    { "question": "Can I use my own list of sites?", "answer": "Yes. Supply up to 10 sites." },
+    { "question": "Does it publish anything?", "answer": "No. You submit each launch yourself." }
+  ],
+  "related_hints": [],
+  "guide_path": "/en/ai-agent-routines",
+  "cover_alt": "Abstract warm gradient cover for a product launch routine",
+  "author_ran_it": true
+}

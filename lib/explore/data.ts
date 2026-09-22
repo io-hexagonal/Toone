@@ -12,6 +12,7 @@ import { normalizeClassification, validateCatalogTaxonomy, hasTaxonomyFilters, t
  * at `app/api/revalidate` can expire them on demand.
  */
 import type { CatalogQuery, CatalogItem } from "./presentation";
+import { normalizeListingProfile, normalizeThirdPartyReviews } from "./profile";
 import type {
   BundleCatalogEntry,
   BundlePublicDetail,
@@ -21,6 +22,8 @@ import type {
   RoutineCatalogEntry,
   RoutineListing,
   RoutinePublicDetail,
+  ProfileFields,
+  CardPresentation,
 } from "./types";
 
 export const EXPLORE_REVALIDATE_SECONDS = 600;
@@ -291,7 +294,7 @@ export async function listRoutines(
     throw new ExploreApiError("workflows", 404, "catalog unavailable");
   if (!Array.isArray(result.data))
     throw new ExploreApiError("workflows", 502, "expected array");
-  return { items: result.data, total: result.total };
+  return { items: result.data.map(withCardPresentation), total: result.total };
 }
 
 /**
@@ -317,7 +320,7 @@ export async function listBundles(
   if (!result) return { items: [], total: 0, available: false };
   if (!Array.isArray(result.data))
     throw new ExploreApiError("bundles", 502, "expected array");
-  return { items: result.data, total: result.total, available: true };
+  return { items: result.data.map(withCardPresentation), total: result.total, available: true };
 }
 
 /**
@@ -380,6 +383,53 @@ function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDeta
         title: ref.title as string,
       })),
     package: pkg,
+    ...normalizeProfileFields(raw, `routine ${str(raw.workflow_id)}`, str(raw.workflow_id)),
+  };
+}
+
+/**
+ * Contract §13 fields shared by both details. Every one is optional: a
+ * legacy record has no profile, is indexable, and has no related items.
+ */
+function normalizeProfileFields(
+  raw: Record<string, unknown>,
+  record: string,
+  selfId: string,
+): Required<ProfileFields> {
+  const related: RoutineCatalogEntry[] = [];
+  for (const entry of Array.isArray(raw.related) ? raw.related : []) {
+    const normalized = normalizeCatalogEntry(entry);
+    if (!normalized || normalized.workflow_id === selfId) continue;
+    if (related.some((item) => item.workflow_id === normalized.workflow_id)) continue;
+    related.push(normalized);
+    if (related.length === 4) break;
+  }
+  return {
+    listing_profile: normalizeListingProfile(raw.listing_profile, record),
+    indexable: raw.indexable !== false,
+    third_party_reviews: normalizeThirdPartyReviews(raw.third_party_reviews),
+    related,
+  };
+}
+
+/** List items keep their shape; only the §13 card fields are type-checked. */
+function withCardPresentation<T>(item: T): T {
+  return item && typeof item === "object"
+    ? { ...item, ...normalizeCardPresentation(item as Record<string, unknown>) }
+    : item;
+}
+
+/** Card fields on catalog entries (§13); anything unusable reads as legacy. */
+export function normalizeCardPresentation(r: Record<string, unknown>): CardPresentation {
+  const text = (value: unknown) =>
+    typeof value === "string" && value.trim() ? value.trim() : null;
+  return {
+    display_title: text(r.display_title),
+    card_summary: text(r.card_summary),
+    results_count:
+      typeof r.results_count === "number" && Number.isSafeInteger(r.results_count) && r.results_count > 0
+        ? r.results_count
+        : null,
   };
 }
 
@@ -416,6 +466,7 @@ function normalizeCatalogEntry(raw: unknown): RoutineCatalogEntry | null {
       typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
     author_name: str(r.author_name),
     approved_at: str(r.approved_at),
+    ...normalizeCardPresentation(r),
   };
   if (!isWorkflowId(entry.workflow_id) || !entry.title) return null;
   if (!Number.isFinite(Date.parse(entry.approved_at))) return null;
@@ -465,6 +516,7 @@ function normalizeBundleDetail(raw: unknown): BundlePublicDetail | null {
     author_name: str(r.author_name),
     approved_at: str(r.approved_at),
     members,
+    ...normalizeProfileFields(r, `bundle ${str(r.bundle_id)}`, ""),
   };
   if (!isBundleId(detail.bundle_id) || !detail.title) return null;
   if (!Number.isFinite(Date.parse(detail.approved_at))) return null;
