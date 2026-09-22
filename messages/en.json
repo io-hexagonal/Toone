@@ -388,7 +388,7 @@
   },
   "explore": {
     "title": "Explore",
-    "heading": "Routine and workflow templates",
+    "heading": "Explore Routines & Workflows Templates",
     "intro": "Reviewed routines and bundles you can add to Toone. See every step, input and approval before you run one.",
     "all": "All",
     "routines": "Routines",
@@ -456,7 +456,7 @@
     "runsAs": "Runs as",
     "overview": "Overview",
     "noTags": "No topics yet",
-    "eyebrow": "Explore",
+    "eyebrow": "Toone",
     "category": "Category",
     "usefulFor": "Useful for",
     "filters": "Filters",
