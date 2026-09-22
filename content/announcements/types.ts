@@ -35,6 +35,17 @@ export type AnnouncementImage = {
   framing?: { scale: number; anchor: "left" | "center" | "right" };
 };
 
+/** Additional editorial panels after a campaign's primary invitation panel. */
+export type AnnouncementShowcasePanel = {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  body: string;
+  image: AnnouncementImage;
+  items?: { title: string; description: string }[];
+  cta: { label: string; /** Locale-relative destination. */ href: string };
+};
+
 type AnnouncementBase = {
   /** Stable key. Together with `version` it forms the dismissal key. */
   id: string;
@@ -46,10 +57,14 @@ type AnnouncementBase = {
   routes: AnnouncementRoutes;
   repeat: AnnouncementRepeat;
   image: AnnouncementImage;
+  /** Omit for the original single-panel modal. */
+  panels?: AnnouncementShowcasePanel[];
+  /** Defaults to 12 seconds; pauses while reading or interacting. */
+  autoAdvanceMs?: number;
 };
 
 /** Small uppercase line above a title; leave it out for a cleaner card. */
-type Copy = { eyebrow?: string; title: string; body: string };
+type Copy = { eyebrow?: string; title: string; body: string; note?: string };
 
 /**
  * An invitation code campaign. Mac visitors see the code and an install
@@ -61,10 +76,13 @@ export type AccessCodeAnnouncement = AnnouncementBase & {
   mac: Copy & {
     code: string;
     cta: { label: string; /** Locale-relative path; `#code=` prefills the invite form. */ href: string };
-    dismissLabel: string;
+    dismissLabel?: string;
   };
-  otherPlatforms: Copy & { ctaLabel: string; dismissLabel: string };
+  otherPlatforms: Copy & { ctaLabel: string; dismissLabel?: string };
 };
 
 /** Add new card kinds here as a union member, with a component in components/announcements. */
 export type Announcement = AccessCodeAnnouncement;
+
+/** Allows a development preview before an invitation's dates are confirmed. */
+export type AnnouncementContent = Omit<AccessCodeAnnouncement, "startsAt" | "endsAt">;

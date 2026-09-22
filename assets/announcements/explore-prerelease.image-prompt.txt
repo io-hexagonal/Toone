@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: Background artwork for the Toone Explore prerelease announcement modal, landscape 16:9.
+Listing context: Toone Explore is an upcoming library of AI routines and bundles reviewed by Toone. People can discover how routines work and make useful routines part of their own workspace. A three-day invitation offers a first look before the dedicated launch; the code and all campaign wording will be separate HTML, never in this image.
+
+Creative brief, objective → concept → composition:
+Objective: help people discover reusable work and bring useful routines together in their workspace.
+Concept: shared possibility, expressed through confluence.
+Composition: a few broad, softly blurred organic color fields approach and overlap, creating one restrained luminous meeting area in the right half. The shared glow feels like new possibilities becoming available through combination. Use one primary abstract metaphor, not a literal collection, library, workflow or network.
+
+Create exactly one original image.
+Style explore-cover-v2: landscape 16:9, abstract colorful blurred organic color fields, soft luminous transitions, fine visible film grain, subtle depth, restrained editorial composition. Broad soft forms with breathing room and a deliberate focal relationship; the metaphor should be felt rather than illustrated. Full bleed and crop-safe.
+Palette chosen for this concept: deep midnight indigo, muted ocean teal, luminous cyan and a small pale warm-ivory glow. A coherent atmospheric palette, restrained and sophisticated.
+Composition for the actual modal: reserve the left 45% as a dark, low-contrast midnight-indigo field with gentle fine grain, so separate cream text and an invitation-code block will remain legible. Let the meaningful convergence unfold between the center and right third. Keep all edges soft and organic, no hard boundaries. Keep the focal relationship readable in a center crop for mobile. Avoid a sharply bounded glowing orb, a tunnel, a recognizable horizon or concentric rings.
+Materials and finish: tactile fine film grain across the entire image, luminous diffuse transitions, rich but restrained color. No glossy plastic or glass surfaces.
+Constraints: No text, lettering, logos, watermarks, UI, icons, screenshots, identifiable people, animals or mascots. No rockets, arrows, charts, network nodes, recognizable plants, hard-edged vector shapes, glossy 3D objects, frames or borders. No literal business symbols or diagram of a workflow. Generate the artwork only in approximately 16:9 landscape.

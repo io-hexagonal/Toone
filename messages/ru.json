@@ -376,7 +376,15 @@
     "validUntil": "Действует до {date}",
     "daysLeft": "{count, plural, one {Остался # день} few {Осталось # дня} many {Осталось # дней} other {Осталось # дня}}",
     "lastDay": "последний день",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "carouselLabel": "Избранные объявления",
+    "panelRole": "слайд",
+    "panelPosition": "{current} из {total}",
+    "previousPanel": "Предыдущий слайд",
+    "nextPanel": "Следующий слайд",
+    "pauseCarousel": "Приостановить показ",
+    "playCarousel": "Продолжить показ",
+    "goToPanel": "Показать {title}"
   },
   "explore": {
     "title": "Обзор",

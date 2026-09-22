@@ -376,7 +376,15 @@
     "validUntil": "Valable jusqu'au {date}",
     "daysLeft": "{count, plural, one {# jour restant} other {# jours restants}}",
     "lastDay": "dernier jour",
-    "close": "Fermer"
+    "close": "Fermer",
+    "carouselLabel": "Annonces à la une",
+    "panelRole": "diapositive",
+    "panelPosition": "{current} sur {total}",
+    "previousPanel": "Panneau précédent",
+    "nextPanel": "Panneau suivant",
+    "pauseCarousel": "Mettre en pause",
+    "playCarousel": "Reprendre le diaporama",
+    "goToPanel": "Afficher {title}"
   },
   "explore": {
     "title": "Explorer",

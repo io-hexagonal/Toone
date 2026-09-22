@@ -376,7 +376,15 @@
     "validUntil": "Gültig bis {date}",
     "daysLeft": "{count, plural, one {Noch # Tag} other {Noch # Tage}}",
     "lastDay": "letzter Tag",
-    "close": "Schließen"
+    "close": "Schließen",
+    "carouselLabel": "Aktuelle Ankündigungen",
+    "panelRole": "Folie",
+    "panelPosition": "{current} von {total}",
+    "previousPanel": "Vorherige Folie",
+    "nextPanel": "Nächste Folie",
+    "pauseCarousel": "Diashow pausieren",
+    "playCarousel": "Diashow fortsetzen",
+    "goToPanel": "{title} anzeigen"
   },
   "explore": {
     "title": "Entdecken",

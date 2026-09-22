@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
-import type { AccessCodeAnnouncement } from "@/content/announcements";
 import { daysLeft, focusEarlyAccessInput, track } from "@/lib/announcements";
 import type { CardProps } from "./AnnouncementModal";
 
@@ -12,7 +11,7 @@ import type { CardProps } from "./AnnouncementModal";
  * button that carries it into the invite flow; everyone else is offered a
  * notification for the Windows and Linux builds through the early-access form.
  */
-export default function AccessCodeCard({ announcement, platform, close }: CardProps<AccessCodeAnnouncement>) {
+export default function AccessCodeCard({ announcement, platform, close, endsAt }: CardProps) {
   const router = useRouter();
   const t = useTranslations("announcement");
   const locale = useLocale();
@@ -42,21 +41,23 @@ export default function AccessCodeCard({ announcement, platform, close }: CardPr
         {other.eyebrow && <p className="an-eyebrow">{other.eyebrow}</p>}
         <h2 id="an-title" className="an-title">{other.title}</h2>
         <p className="an-text">{other.body}</p>
+        {other.note && <p className="an-note">{other.note}</p>}
         <div className="an-actions">
           <button type="button" className="an-primary" onClick={notifyMe}>{other.ctaLabel}</button>
-          <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{other.dismissLabel}</button>
+          {other.dismissLabel && <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{other.dismissLabel}</button>}
         </div>
       </>
     );
   }
 
-  const left = daysLeft(announcement.endsAt, Date.now());
-  const deadline = new Date(announcement.endsAt).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
+  const left = endsAt ? daysLeft(endsAt, Date.now()) : 0;
+  const deadline = endsAt ? new Date(endsAt).toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" }) : null;
   return (
     <>
       {mac.eyebrow && <p className="an-eyebrow">{mac.eyebrow}</p>}
       <h2 id="an-title" className="an-title">{mac.title}</h2>
       <p className="an-text">{mac.body}</p>
+      {mac.note && <p className="an-note">{mac.note}</p>}
       <div className="an-code">
         <div>
           <p className="an-code-label">{t("yourCode")}</p>
@@ -64,10 +65,10 @@ export default function AccessCodeCard({ announcement, platform, close }: CardPr
         </div>
         <button type="button" className="an-copy" onClick={() => void copyCode()} aria-live="polite">{copied ? t("copied") : t("copy")}</button>
       </div>
-      <p className="an-deadline">{t.rich("validUntil", { date: () => <strong>{deadline}</strong> })} · {left > 0 ? t("daysLeft", { count: left }) : t("lastDay")}</p>
+      {deadline && <p className="an-deadline">{t("validUntil", { date: deadline })} · {left > 0 ? t("daysLeft", { count: left }) : t("lastDay")}</p>}
       <div className="an-actions">
         <Link href={mac.cta.href} className="an-primary" onClick={() => close("cta")}>{mac.cta.label}</Link>
-        <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{mac.dismissLabel}</button>
+        {mac.dismissLabel && <button type="button" className="an-secondary" onClick={() => close("dismiss")}>{mac.dismissLabel}</button>}
       </div>
     </>
   );

@@ -376,7 +376,15 @@
     "validUntil": "Valid until {date}",
     "daysLeft": "{count, plural, one {# day left} other {# days left}}",
     "lastDay": "last day",
-    "close": "Close"
+    "close": "Close",
+    "carouselLabel": "Featured announcements",
+    "panelRole": "slide",
+    "panelPosition": "{current} of {total}",
+    "previousPanel": "Previous panel",
+    "nextPanel": "Next panel",
+    "pauseCarousel": "Pause slideshow",
+    "playCarousel": "Resume slideshow",
+    "goToPanel": "Show {title}"
   },
   "explore": {
     "title": "Explore",

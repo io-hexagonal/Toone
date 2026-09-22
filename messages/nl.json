@@ -376,7 +376,15 @@
     "validUntil": "Geldig tot {date}",
     "daysLeft": "{count, plural, one {Nog # dag} other {Nog # dagen}}",
     "lastDay": "laatste dag",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "carouselLabel": "Uitgelichte aankondigingen",
+    "panelRole": "dia",
+    "panelPosition": "{current} van {total}",
+    "previousPanel": "Vorig paneel",
+    "nextPanel": "Volgend paneel",
+    "pauseCarousel": "Diavoorstelling pauzeren",
+    "playCarousel": "Diavoorstelling hervatten",
+    "goToPanel": "Toon {title}"
   },
   "explore": {
     "title": "Ontdekken",
