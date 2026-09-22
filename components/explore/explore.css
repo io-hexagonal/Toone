@@ -1249,30 +1249,284 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
-/* Distinct discovery dimensions; native dialog manages mobile focus. */
-.explore-taxonomy-filters { margin: 1rem 0 1.5rem; }
-.explore-taxonomy-desktop { display:flex; align-items:end; flex-wrap:wrap; gap:.75rem; }
-.explore-category-select { display:flex; flex-direction:column; gap:.4rem; font-size:.85rem; }
-.explore-category-select select, .explore-multiselect summary, .explore-apply-filters, .explore-mobile-filters { font:inherit; color:inherit; background:transparent; border:1px solid #26282133; border-radius:.6rem; padding:.65rem .85rem; min-height:44px; }
-.explore-category-select select { max-width:100%; }
-.explore-multiselect { position:relative; min-width:160px; }
-.explore-multiselect summary { cursor:pointer; }
-.explore-multiselect fieldset { position:absolute; top:100%; left:0; z-index:10; width:290px; max-height:320px; overflow:auto; margin:.35rem 0 0; padding:.6rem; border:1px solid #26282133; border-radius:.6rem; background:var(--background, #f0ede6); box-shadow:0 8px 24px #0002; }
-.explore-multiselect fieldset label { display:flex; align-items:center; gap:.65rem; padding:.5rem; min-height:44px; font-size:.9rem; cursor:pointer; }
-.explore-multiselect fieldset input { accent-color:#252820; width:18px; height:18px; flex-shrink:0; }
-.explore-multiselect fieldset small { margin-left:auto; opacity:.6; }
-.explore-apply-filters { background:#252820; color:#fff; cursor:pointer; }
-.explore-active-filters { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; font-size:.85rem; }
-.explore-active-filters a { display:inline-flex; align-items:center; gap:.65rem; padding:.4rem .65rem; background:#2628210d; border-radius:.4rem; text-decoration:none; overflow-wrap:anywhere; }
-.explore-active-filters .explore-clear-filters { background:none; text-decoration:underline; }
-.explore-mobile-filters { display:none; }
-.explore-filter-dialog { margin:auto; overflow:auto; color:#252820; background:#f0ede6; width:min(94vw, 460px); max-height:90dvh; padding:1.25rem; border:1px solid #26282133; border-radius:1rem; }
-.explore-filter-dialog::backdrop { background:#0008; }
-.explore-filter-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-.explore-filter-dialog-header h2 { font-size:1.25rem; }
-.explore-filter-dialog-header button { font:inherit; background:none; border:0; text-decoration:underline; padding:.6rem; cursor:pointer; }
-.explore-filter-dialog form { display:flex; flex-direction:column; gap:1rem; margin-bottom:1rem; }
-.explore-filter-dialog .explore-multiselect fieldset { position:static; width:100%; max-height:32dvh; box-shadow:none; }
+/* Discovery controls share the catalog's warm surfaces and pill-shaped actions.
+   Native form controls and the dialog retain keyboard and focus behavior. */
+.explore-taxonomy-filters {
+  --filter-ink: #252721;
+  --filter-muted: #6c6a62;
+  --filter-border: #d4d1c8;
+  --filter-surface: #f0ede6;
+  --filter-hover: #e4e1d9;
+  margin: 20px 0 24px;
+  color-scheme: light;
+}
+.explore-taxonomy-desktop {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.3fr) repeat(2, minmax(144px, 1fr)) auto;
+  align-items: center;
+  gap: 10px;
+  max-width: 820px;
+}
+.explore-category-select,
+.explore-multiselect {
+  position: relative;
+  min-width: 0;
+}
+.explore-category-select select,
+.explore-multiselect summary,
+.explore-apply-filters,
+.explore-mobile-filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 0;
+  padding: 11px 18px;
+  border: 1px solid var(--filter-border);
+  border-radius: 30px;
+  background: #fff5;
+  color: var(--filter-ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+}
+.explore-category-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  padding-right: 42px;
+  text-overflow: ellipsis;
+}
+.explore-filter-chevron {
+  flex-shrink: 0;
+  color: var(--filter-muted);
+}
+.explore-category-select > .explore-filter-chevron {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.explore-multiselect summary {
+  list-style: none;
+  justify-content: flex-start;
+}
+.explore-multiselect summary::-webkit-details-marker {
+  display: none;
+}
+.explore-multiselect summary > .explore-filter-chevron {
+  margin-left: auto;
+}
+.explore-multiselect[open] summary > .explore-filter-chevron {
+  transform: rotate(180deg);
+}
+.explore-category-select select:hover,
+.explore-multiselect summary:hover,
+.explore-mobile-filters:hover {
+  background: var(--filter-hover);
+}
+.explore-category-select[data-selected="true"] select,
+.explore-multiselect[data-selected="true"] summary,
+.explore-multiselect[open] summary {
+  border-color: #aaa89e;
+  background: var(--filter-hover);
+}
+.explore-filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: var(--filter-ink);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.explore-multiselect fieldset {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 10;
+  width: max(100%, 300px);
+  min-width: 0;
+  max-width: calc(100vw - 48px);
+  max-height: 320px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--filter-border);
+  border-radius: 16px;
+  background: var(--filter-surface);
+  box-shadow: 0 12px 36px #1d1c1914, 0 2px 8px #1d1c1908;
+}
+.explore-multiselect fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--filter-ink);
+  font-size: 13px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.explore-multiselect fieldset label:hover,
+.explore-multiselect fieldset label:has(input:checked) {
+  background: var(--filter-hover);
+}
+.explore-multiselect fieldset input {
+  accent-color: var(--filter-ink);
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.explore-multiselect fieldset small {
+  margin-left: auto;
+  padding-left: 6px;
+  color: var(--filter-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.explore-apply-filters {
+  border-color: var(--filter-ink);
+  background: var(--filter-ink);
+  color: #fff;
+}
+.explore-apply-filters:hover {
+  border-color: #3d3e35;
+  background: #3d3e35;
+}
+.explore-apply-filters svg,
+.explore-active-filters svg {
+  flex-shrink: 0;
+}
+.explore-active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.explore-active-filters a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--filter-border);
+  border-radius: 30px;
+  background: var(--filter-hover);
+  color: var(--filter-ink);
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.explore-active-filters a:hover {
+  border-color: #aaa89e;
+}
+.explore-clear-filters,
+.explore-active-filters .explore-clear-filters {
+  border-color: transparent;
+  background: none;
+  color: var(--filter-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.explore-mobile-filters {
+  display: none;
+}
+.explore-filter-dialog {
+  width: min(calc(100vw - 32px), 460px);
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 24px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--filter-border);
+  border-radius: 24px;
+  background: var(--filter-surface);
+  color: var(--filter-ink);
+  box-shadow: 0 24px 80px #14141340;
+}
+.explore-filter-dialog::backdrop {
+  background: #14141399;
+}
+.explore-filter-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.explore-filter-dialog-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 620;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+.explore-filter-dialog-header button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--filter-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--filter-ink);
+  cursor: pointer;
+}
+.explore-filter-dialog-header button:hover {
+  background: var(--filter-hover);
+}
+.explore-filter-dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.explore-filter-dialog .explore-multiselect fieldset {
+  position: static;
+  width: 100%;
+  max-height: 32dvh;
+  margin-top: 8px;
+  box-shadow: none;
+}
+.explore-filter-dialog .explore-apply-filters {
+  margin-top: 8px;
+}
+.explore-taxonomy-filters :is(select, summary, button, input, a):focus-visible {
+  outline: 2px solid var(--filter-ink);
+  outline-offset: 3px;
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .explore-taxonomy-desktop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .explore-taxonomy-desktop .explore-multiselect:first-of-type fieldset {
+    left: auto;
+    right: 0;
+  }
+}
 .explore-filter-error { padding:1rem; border:1px solid currentColor; border-radius:.6rem; }
 .explore-classification { display:grid; gap:.65rem; margin:1rem 0; }
 .explore-classification div { display:grid; grid-template-columns:110px 1fr; gap:1rem; }
