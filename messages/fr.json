@@ -388,6 +388,7 @@
   },
   "explore": {
     "title": "Explorer",
+    "heading": "Explorer",
     "intro": "Des routines et des ensembles examinés par Toone. Découvrez leur fonctionnement, consultez chaque étape et ajoutez-les à votre espace de travail.",
     "all": "Tout",
     "routines": "Routines",

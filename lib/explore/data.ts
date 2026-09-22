@@ -529,6 +529,31 @@ export async function getExploreFeed(since?: string): Promise<ExploreFeed | null
   return result.data;
 }
 
+/**
+ * Public slugs end in the last 8 characters of the record id
+ * (`launch-surface-preparation-xzmzpbkf` → `wfl_…xzmzpbkf`). When a title
+ * change moves the slug, an old URL still carries that tail, so look the
+ * record up by it and let the page 308 to the current slug. Scans the first
+ * 100 catalog entries (all of them today; data-cached like every list call).
+ */
+const ID_TAIL = /-([a-z0-9]{8})$/;
+export async function findRoutineByIdTail(
+  slug: string,
+): Promise<RoutineCatalogEntry | null> {
+  const tail = ID_TAIL.exec(slug)?.[1];
+  if (!tail) return null;
+  const { items } = await listRoutines({ listing: "all", limit: 100 });
+  return items.find((item) => item.workflow_id.endsWith(tail)) ?? null;
+}
+export async function findBundleByIdTail(
+  slug: string,
+): Promise<BundleCatalogEntry | null> {
+  const tail = ID_TAIL.exec(slug)?.[1];
+  if (!tail) return null;
+  const { items } = await listBundles({ limit: 100 });
+  return items.find((item) => item.bundle_id.endsWith(tail)) ?? null;
+}
+
 /** `GET /v1/explore/tags` (§5.9); empty when the route is not served yet (404). */
 export async function getExploreTags(): Promise<ExploreTag[]> {
   const result = await getJson<ExploreTag[]>("explore/tags", {}, [EXPLORE_TAG]);

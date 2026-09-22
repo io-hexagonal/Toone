@@ -388,6 +388,7 @@
   },
   "explore": {
     "title": "Explorar",
+    "heading": "Explorar",
     "intro": "Rotinas e conjuntos revistos pela Toone. Veja como funcionam, consulte cada passo e adicione-os ao seu espaço de trabalho.",
     "all": "Tudo",
     "routines": "Rotinas",

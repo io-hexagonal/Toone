@@ -16,10 +16,13 @@ export default function OpenInToone({
   url,
   label,
   locale,
+  item,
 }: {
   url: string | null;
   label: string;
   locale: string;
+  /** `routine:<id>` or `bundle:<id>`, for the click event. */
+  item?: string;
 }) {
   const cancel = useRef<(() => void) | null>(null);
   useEffect(() => () => cancel.current?.(), []);
@@ -28,6 +31,8 @@ export default function OpenInToone({
     <a
       className="explore-button"
       href={fallback}
+      data-umami-event="explore-open-in-toone"
+      data-umami-event-item={item}
       onClick={(event) => {
         if (
           !url ||

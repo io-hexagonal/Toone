@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getBundle, resolveSlug, resolveCoverUrl } from "@/lib/explore/api";
+import { getBundle, findBundleByIdTail, resolveSlug, resolveCoverUrl } from "@/lib/explore/api";
 import {
   exploreMetadata,
   breadcrumbSchema,
@@ -57,7 +57,12 @@ export default async function BundlePage({ params }: Props) {
       />
     );
   }
-  if (!detail) notFound();
+  if (!detail) {
+    const moved = await findBundleByIdTail(slug).catch(() => null);
+    if (moved)
+      permanentRedirect(`/${locale}/explore/bundles/${resolveSlug(moved)}`);
+    notFound();
+  }
   const canonical = resolveSlug(detail);
   if (canonical !== slug)
     permanentRedirect(`/${locale}/explore/bundles/${canonical}`);
@@ -70,6 +75,7 @@ export default async function BundlePage({ params }: Props) {
           "@type": "ItemList",
           name: detail.title,
           description: detail.summary,
+          url: `${SITE}/en/explore/bundles/${canonical}`,
           numberOfItems: members.length,
           itemListElement: members.map((member, index) => ({
             "@type": "ListItem",
