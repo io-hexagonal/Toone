@@ -111,7 +111,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
       {featured.length > 0 && (
         <FeaturedCarousel
           slides={featured}
-          copy={{ featuredLabel: ui.featuredLabel, previousSlide: ui.previousSlide, nextSlide: ui.nextSlide, goToSlide: ui.goToSlide }}
+          copy={{ featuredLabel: ui.featuredLabel, previousSlide: ui.previousSlide, nextSlide: ui.nextSlide, goToSlide: ui.goToSlide, pause: ui.pauseSlides, play: ui.playSlides }}
         />
       )}
       <main className="explore-catalog explore-width">

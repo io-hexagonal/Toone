@@ -55,6 +55,8 @@ export const COPY_KEYS = [
   "previousSlide",
   "nextSlide",
   "goToSlide",
+  "pauseSlides",
+  "playSlides",
   "viewRoutine",
   "viewBundle",
   "preparedDuringSetupNote",

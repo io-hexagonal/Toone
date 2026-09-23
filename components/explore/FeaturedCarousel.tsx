@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 
 export type FeaturedSlide = {
   id: string;
@@ -13,123 +13,197 @@ export type FeaturedSlide = {
   coverAlt?: string;
 };
 
-type Copy = { featuredLabel: string; previousSlide: string; nextSlide: string; goToSlide: string };
+type Copy = {
+  featuredLabel: string;
+  previousSlide: string;
+  nextSlide: string;
+  goToSlide: string;
+  pause: string;
+  play: string;
+};
 
-const AUTOPLAY_MS = 6500;
+const AUTOPLAY_MS = 7_000;
 
 /**
- * Featured routines and bundles: full-width, swipeable (native scroll snap),
- * with arrows, dots and arrow keys. It advances on its own, but stops while
- * hovered or focused, when the page is hidden, and for reduced motion.
+ * Featured routines and bundles, presented like the announcement carousel:
+ * one full-bleed card, a slide at a time. Changing slides never moves focus
+ * or scrolls the page. It advances on its own unless paused, hovered,
+ * focused, hidden, or reduced motion is on; swipe, arrows, pills and the
+ * arrow keys change slides.
  */
 export default function FeaturedCarousel({ slides, copy }: { slides: FeaturedSlide[]; copy: Copy }) {
-  const track = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const count = slides.length;
+  const multiple = count > 1;
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(true);
+  const [dragOffset, setDragOffset] = useState(0);
+  const drag = useRef<{ pointerId: number; x: number; y: number; axis: "horizontal" | "vertical" | null } | null>(null);
+  const suppressClick = useRef(false);
+  const rotating = multiple && playing && !hovered && !focused && visible && !reducedMotion;
+  const slide = slides[index];
 
-  const go = useCallback(
-    (index: number) => {
-      const el = track.current;
-      if (!el || !count) return;
-      const target = el.children[((index % count) + count) % count] as HTMLElement | undefined;
-      target?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-    },
-    [count],
-  );
-
-  // The slide nearest the track's center is the active one.
   useEffect(() => {
-    const el = track.current;
-    if (!el) return;
-    const update = () => {
-      const center = el.scrollLeft + el.clientWidth / 2;
-      let best = 0;
-      let distance = Infinity;
-      Array.from(el.children).forEach((child, index) => {
-        const slide = child as HTMLElement;
-        const d = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - center);
-        if (d < distance) { distance = d; best = index; }
-      });
-      setActive(best);
-    };
-    update();
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => setReducedMotion(media.matches);
+    const updateVisibility = () => setVisible(document.visibilityState === "visible");
+    updateMotion();
+    updateVisibility();
+    media.addEventListener("change", updateMotion);
+    document.addEventListener("visibilitychange", updateVisibility);
     return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      media.removeEventListener("change", updateMotion);
+      document.removeEventListener("visibilitychange", updateVisibility);
     };
   }, []);
 
   useEffect(() => {
-    if (count < 2 || paused) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => {
-      if (document.visibilityState === "visible") go(active + 1);
-    }, AUTOPLAY_MS);
-    return () => window.clearInterval(timer);
-  }, [active, count, paused, go]);
+    if (!rotating) return;
+    const timer = window.setTimeout(() => setIndex((value) => (value + 1) % count), AUTOPLAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [rotating, index, count]);
 
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "ArrowRight") { event.preventDefault(); go(active + 1); }
-    if (event.key === "ArrowLeft") { event.preventDefault(); go(active - 1); }
-  };
+  // Warm the next covers so a change never shows an empty card.
+  useEffect(() => {
+    for (const item of slides) {
+      const image = new Image();
+      image.src = item.coverUrl;
+    }
+  }, [slides]);
 
-  if (!count) return null;
+  function select(next: number) {
+    setPlaying(false);
+    setIndex((next + count) % count);
+  }
+
+  function onKey(event: KeyboardEvent<HTMLElement>) {
+    if (!multiple || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      select(index + (event.key === "ArrowLeft" ? -1 : 1));
+    }
+  }
+
+  function startDrag(event: PointerEvent<HTMLDivElement>) {
+    suppressClick.current = false;
+    if (!multiple || !event.isPrimary || event.button !== 0) return;
+    if ((event.target as HTMLElement).closest("a, button")) return;
+    drag.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, axis: null };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    if (event.pointerType === "mouse") event.preventDefault();
+  }
+
+  function moveDrag(event: PointerEvent<HTMLDivElement>) {
+    const start = drag.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (!start.axis && Math.max(Math.abs(dx), Math.abs(dy)) > 8) {
+      start.axis = Math.abs(dx) > Math.abs(dy) * 1.3 ? "horizontal" : "vertical";
+    }
+    if (start.axis !== "horizontal") return;
+    event.preventDefault();
+    setDragOffset(Math.max(-80, Math.min(80, dx * 0.4)));
+  }
+
+  function endDrag(event: PointerEvent<HTMLDivElement>, cancelled = false) {
+    const start = drag.current;
+    if (!start || start.pointerId !== event.pointerId) return;
+    drag.current = null;
+    setDragOffset(0);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    const dx = event.clientX - start.x;
+    suppressClick.current = !cancelled && start.axis === "horizontal";
+    if (!cancelled && start.axis === "horizontal" && Math.abs(dx) > 60) select(index + (dx < 0 ? 1 : -1));
+  }
+
+  if (!slide) return null;
   return (
-    <section
-      className="explore-featured"
-      aria-roledescription="carousel"
-      aria-label={copy.featuredLabel}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-      onKeyDown={onKeyDown}
-    >
-      <div className="explore-featured-track" ref={track}>
-        {slides.map((slide, index) => (
-          <article
-            key={slide.id}
-            className="explore-featured-slide"
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${index + 1} / ${count}`}
-            aria-hidden={index === active ? undefined : "true"}
+    <section className="explore-featured explore-width" aria-label={copy.featuredLabel}>
+      <div
+        className="explore-featured-card"
+        role={multiple ? "region" : undefined}
+        aria-roledescription={multiple ? "carousel" : undefined}
+        aria-label={multiple ? copy.featuredLabel : undefined}
+        data-carousel={multiple}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocusCapture={() => setFocused(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+        }}
+        onKeyDown={onKey}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img key={slide.coverUrl} className="explore-featured-image" src={slide.coverUrl} alt={slide.coverAlt ?? ""} draggable={false} />
+        <div className="explore-featured-shade" aria-hidden="true" />
+        {multiple && !reducedMotion && (
+          <button
+            type="button"
+            className="explore-featured-icon"
+            onClick={() => setPlaying((value) => !value)}
+            aria-label={playing ? copy.pause : copy.play}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="explore-featured-cover" src={slide.coverUrl} alt={slide.coverAlt ?? ""} loading={index === 0 ? "eager" : "lazy"} />
-            <div className="explore-featured-copy">
-              <p className="explore-eyebrow">{slide.eyebrow}</p>
-              <h2>{slide.title}</h2>
-              <p className="explore-featured-summary">{slide.summary}</p>
-              <a className="explore-featured-cta" href={slide.href} tabIndex={index === active ? 0 : -1}>
-                {slide.cta} <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-      {count > 1 && (
-        <div className="explore-featured-controls explore-width">
-          <div className="explore-featured-dots">
-            {slides.map((slide, index) => (
-              <button
-                key={slide.id}
-                type="button"
-                aria-label={`${copy.goToSlide} ${index + 1}`}
-                aria-current={index === active ? "true" : undefined}
-                onClick={() => go(index)}
-              />
-            ))}
-          </div>
-          <div className="explore-featured-arrows">
-            <button type="button" aria-label={copy.previousSlide} onClick={() => go(active - 1)}>←</button>
-            <button type="button" aria-label={copy.nextSlide} onClick={() => go(active + 1)}>→</button>
+            <span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span>
+          </button>
+        )}
+        <div
+          className="explore-featured-stage"
+          id="explore-featured-current"
+          aria-live={rotating ? "off" : "polite"}
+          aria-atomic="true"
+          style={{ transform: `translateX(${dragOffset}px)` }}
+          onPointerDown={startDrag}
+          onPointerMove={moveDrag}
+          onPointerUp={(event) => endDrag(event)}
+          onPointerCancel={(event) => endDrag(event, true)}
+          onLostPointerCapture={(event) => endDrag(event, true)}
+          onClickCapture={(event) => {
+            if (suppressClick.current) {
+              event.preventDefault();
+              event.stopPropagation();
+              suppressClick.current = false;
+            }
+          }}
+        >
+          <div
+            key={slide.id}
+            className="explore-featured-body"
+            role={multiple ? "group" : undefined}
+            aria-roledescription={multiple ? "slide" : undefined}
+            aria-label={multiple ? `${index + 1} / ${count}` : undefined}
+          >
+            <p className="explore-featured-eyebrow">{slide.eyebrow}</p>
+            <h2>{slide.title}</h2>
+            <p className="explore-featured-summary">{slide.summary}</p>
+            <a className="explore-featured-cta" href={slide.href}>
+              {slide.cta}
+            </a>
           </div>
         </div>
-      )}
+        {multiple && (
+          <>
+            <button type="button" className="explore-featured-arrow explore-featured-previous" onClick={() => select(index - 1)}
+              aria-label={copy.previousSlide} aria-controls="explore-featured-current">‹</button>
+            <div className="explore-featured-indicators" style={{ "--active-index": index } as React.CSSProperties}>
+              {slides.map((item, position) => (
+                <button key={item.id} type="button" className="explore-featured-indicator"
+                  aria-label={`${copy.goToSlide} ${position + 1}: ${item.title}`}
+                  aria-current={position === index ? "true" : undefined}
+                  aria-controls="explore-featured-current"
+                  onClick={() => select(position)}>
+                  <span />
+                </button>
+              ))}
+            </div>
+            <button type="button" className="explore-featured-arrow explore-featured-next" onClick={() => select(index + 1)}
+              aria-label={copy.nextSlide} aria-controls="explore-featured-current">›</button>
+          </>
+        )}
+      </div>
     </section>
   );
 }

@@ -482,6 +482,8 @@
     "previousSlide": "Previous",
     "nextSlide": "Next",
     "goToSlide": "Show slide",
+    "pauseSlides": "Pause slides",
+    "playSlides": "Play slides",
     "viewRoutine": "View routine",
     "viewBundle": "View bundle",
     "preparedDuringSetupNote": "When you add this routine, Toone's setup assistant prepares these with you. You only answer what it can't find.",
