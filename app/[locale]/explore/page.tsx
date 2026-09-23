@@ -1,13 +1,15 @@
 import ExploreFilters from "@/components/explore/ExploreFilters";
-import {hasTaxonomyFilters} from "@/lib/explore/taxonomy";
+import FeaturedCarousel, { type FeaturedSlide } from "@/components/explore/FeaturedCarousel";
+import {hasTaxonomyFilters, termLabel} from "@/lib/explore/taxonomy";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { getCatalog, PAGE_SIZE, resolveSlug } from "@/lib/explore/api";
+import { getCatalog, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
 import {
   parseCatalogQuery,
   catalogHref,
   cardText,
   exploreMetadata,
+  featuredItems,
   SITE,
 } from "@/lib/explore/presentation";
 import {
@@ -57,6 +59,25 @@ export default async function ExplorePage({ params, searchParams }: Props) {
     return <ExploreUnavailable ui={ui} locale={locale} />;
   }
   const active = { ...query, page: catalog.page };
+  // Featured only on the plain first view, never on a search or filter.
+  const unfiltered = !query.query && !query.tag && !hasTaxonomyFilters(query) && query.type === "all" && catalog.page === 1;
+  const featured: FeaturedSlide[] = unfiltered
+    ? featuredItems(catalog.items, (item) => !!resolveCardCoverUrl(item.entry)).map((item) => {
+        const text = cardText(item.entry);
+        const category = item.entry.classification?.category_id;
+        return {
+          id: item.type + ("workflow_id" in item.entry ? item.entry.workflow_id : item.entry.bundle_id),
+          href: `/${locale}/explore/${item.type}s/${resolveSlug(item.entry)}`,
+          eyebrow: [ui.featured, item.type === "bundle" ? ui.bundle : ui.routine, category && termLabel(catalog.taxonomy, category)]
+            .filter(Boolean)
+            .join(" · "),
+          title: text.title,
+          summary: text.summary,
+          cta: item.type === "bundle" ? ui.viewBundle : ui.viewRoutine,
+          coverUrl: resolveCardCoverUrl(item.entry) as string,
+        };
+      })
+    : [];
   const itemList = {
     "@type": "ItemList",
     numberOfItems: catalog.total,
@@ -87,6 +108,12 @@ export default async function ExplorePage({ params, searchParams }: Props) {
           <p className="explore-intro">{ui.intro}</p>
         </div>
       </header>
+      {featured.length > 0 && (
+        <FeaturedCarousel
+          slides={featured}
+          copy={{ featuredLabel: ui.featuredLabel, previousSlide: ui.previousSlide, nextSlide: ui.nextSlide, goToSlide: ui.goToSlide }}
+        />
+      )}
       <main className="explore-catalog explore-width">
         <div className="explore-filters">
           <nav
