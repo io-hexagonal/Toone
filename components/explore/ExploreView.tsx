@@ -50,6 +50,7 @@ export const COPY_KEYS = [
   "useItWhen",
   "howItWorks",
   "whatYouProvide",
+  "preparedDuringSetupNote",
   "youPrepare",
   "runEstimate",
   "example",

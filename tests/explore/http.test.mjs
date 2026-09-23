@@ -309,7 +309,7 @@ test("profile routine renders every section in page-spec order with the builders
     "What you get",
     "Who it's for",
     "How it works",
-    "What you provide",
+    "Prepared during setup",
     "Customize",
     "Works with",
     "Stays in your control",
@@ -318,6 +318,9 @@ test("profile routine renders every section in page-spec order with the builders
     "Included in bundles",
     "Full routine definition (for builders)",
   ];
+  // What setup prepares starts closed; setup handles it.
+  const setupSection = html.match(/<details[^>]*id="what-you-provide"[^>]*>/);
+  assert.ok(setupSection && !/\bopen\b/.test(setupSection[0]), "Prepared during setup starts collapsed");
   const headings = h2s(html);
   let last = -1;
   for (const title of order) {

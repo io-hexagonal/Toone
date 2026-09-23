@@ -1903,3 +1903,93 @@
     transition: none;
   }
 }
+
+/* What you get: one line per result; open an item to read it all. */
+.explore-body .explore-profile-results {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #dcd8cd;
+}
+.explore-profile-results > li {
+  border-bottom: 1px solid #dcd8cd;
+}
+.explore-profile-result > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+  padding: 14px 2px;
+  list-style: none;
+  cursor: pointer;
+}
+.explore-profile-result > summary::-webkit-details-marker {
+  display: none;
+}
+.explore-profile-result > summary::after {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid #8b8a84;
+  border-bottom: 2px solid #8b8a84;
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+.explore-profile-result[open] > summary::after {
+  transform: rotate(-135deg);
+}
+.explore-body .explore-profile-result h3 {
+  grid-column: 1;
+  margin: 0;
+  font-size: 17px;
+}
+.explore-body .explore-profile-result p {
+  grid-column: 1 / -1;
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #5d5b55;
+}
+.explore-profile-result:not([open]) p {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+/* Sections that start closed (e.g. what setup prepares). */
+.explore-body details.explore-collapsible > summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  list-style: none;
+  cursor: pointer;
+}
+.explore-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
+.explore-collapsible > summary::before {
+  content: "";
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid #43593a;
+  border-bottom: 2px solid #43593a;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+.explore-collapsible[open] > summary::before {
+  transform: rotate(45deg);
+}
+.explore-body .explore-collapsible > summary h2 {
+  margin: 0;
+}
+.explore-collapsible-body {
+  padding-top: 18px;
+}
+.explore-body p.explore-profile-setup-note {
+  margin: 0 0 18px;
+  color: #5d5b55;
+}
