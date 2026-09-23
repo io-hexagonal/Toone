@@ -1,11 +1,12 @@
 /* Featured routines and bundles, styled like the announcement carousel:
    one full-bleed card at content width, one slide at a time. */
 .section {
-  padding-top: 48px;
+  padding-top: 32px;
 }
 .card {
   position: relative;
-  height: clamp(380px, 56vh, 600px);
+  /* Fills what is left of the first screen under the compact header. */
+  height: clamp(340px, calc(100svh - 460px), 600px);
   border: 1px solid #d8d5cb;
   border-radius: 22px;
   background: #1b1b19;

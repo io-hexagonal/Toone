@@ -101,9 +101,8 @@ export default async function ExplorePage({ params, searchParams }: Props) {
           mainEntity: itemList,
         }}
       />
-      <header className="explore-hero">
+      <header className="explore-hero explore-hero-index">
         <div className="explore-width">
-          <p className="explore-eyebrow">{ui.eyebrow}</p>
           <h1>{ui.heading}</h1>
           <p className="explore-intro">{ui.intro}</p>
         </div>
