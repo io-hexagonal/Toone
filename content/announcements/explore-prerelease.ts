@@ -1,10 +1,6 @@
 import type { AccessCodeAnnouncement } from "./types";
 
-/**
- * Prepared campaign content. Add the invitation's exact startsAt and endsAt
- * when registering this announcement, after the EXPLORE code is created.
- * The three-day limit is the invitation redemption window, not a trial length.
- */
+/** Explore invitation content. Its active window is registered in index.ts. */
 export const explorePrereleaseContent = {
   kind: "access-code",
   id: "explore-prerelease-2026-09",
@@ -48,7 +44,7 @@ export const explorePrereleaseContent = {
     eyebrow: "Explore is on pre-release",
     title: "Be there from the start.",
     body: "Put workflows made by experts to work for you. Discover routines for SEO, marketing, engineering, and design, ready to adapt to your own projects.",
-    note: "Join the preview before the official launch. Invitations are open for three days.",
+    note: "Redeem the code before it expires to join the preview.",
     code: "EXPLORE",
     cta: { label: "Get a first look", href: "/invite#code=EXPLORE" },
   },
