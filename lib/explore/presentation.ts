@@ -2,6 +2,8 @@ import type {
   RoutineCatalogEntry,
   BundleCatalogEntry,
   RoutinePublicDetail,
+  BundlePublicDetail,
+  ListingProfilePublic,
 } from "./types";
 
 export type CatalogQuery = {
@@ -167,11 +169,13 @@ export function exploreMetadata(
   title: string,
   description: string,
   cover: string | null,
+  options: { imageAlt?: string; indexable?: boolean } = {},
 ) {
   const canonical = `${SITE}/en${path}`;
   // Scrapers need a fetchable URL for og:image; the inline data-URL cover the
   // pre-contract server sends would only bloat the head (~250 KB twice).
-  const image = cover && /^https?:\/\//.test(cover) ? cover : null;
+  const url = cover && /^https?:\/\//.test(cover) ? cover : null;
+  const image = url && options.imageAlt ? { url, alt: options.imageAlt } : url;
   description = metaDescription(description);
   return {
     title,
@@ -180,7 +184,7 @@ export function exploreMetadata(
       canonical,
       languages: { en: canonical, "x-default": canonical },
     },
-    robots: { index: locale === "en", follow: true },
+    robots: { index: locale === "en" && options.indexable !== false, follow: true },
     openGraph: {
       type: "website" as const,
       url: canonical,
@@ -220,24 +224,80 @@ export function routineSchema(detail: RoutinePublicDetail) {
     })),
   };
 }
-export function breadcrumbSchema(title: string, path: string) {
+export function breadcrumbSchema(
+  title: string,
+  path: string,
+  category?: { id: string; label: string } | null,
+) {
+  const levels = [
+    { name: "Toone", item: `${SITE}/en` },
+    { name: "Explore", item: `${SITE}/en/explore` },
+    ...(category
+      ? [{ name: category.label, item: `${SITE}${categoryHref("en", category.id)}` }]
+      : []),
+    { name: title, item: `${SITE}/en${path}` },
+  ];
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Toone", item: `${SITE}/en` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Explore",
-        item: `${SITE}/en/explore`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: title,
-        item: `${SITE}/en${path}`,
-      },
-    ],
+    itemListElement: levels.map((level, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      ...level,
+    })),
+  };
+}
+/** The hub filtered to one category (the breadcrumb's middle level). */
+export function categoryHref(locale: string, categoryId: string): string {
+  return catalogHref(locale, { type: "all", query: "", tag: "", page: 1, category: categoryId });
+}
+
+/* ---------- listing profile (contract §13) ---------- */
+
+/**
+ * `HowTo` for a record with a listing profile: the plain-language job, the
+ * answer and the human summary of the steps, with the sites it works with as
+ * tools and what you provide as supplies. The builder-level steps stay in the
+ * page's collapsed definition, not in the markup.
+ */
+export function profileSchema(
+  detail: RoutinePublicDetail | BundlePublicDetail,
+  profile: ListingProfilePublic,
+  path: string,
+) {
+  const url = `${SITE}/en${path}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: profile.search.display_title,
+    description: profile.answer,
+    inLanguage: "en",
+    url,
+    ...recordSchemaFields(detail),
+    step: profile.how_it_works.map((text, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      text,
+      url: `${url}#how-it-works-${index + 1}`,
+    })),
+    ...(profile.third_parties.length
+      ? { tool: profile.third_parties.map((site) => ({ "@type": "HowToTool", name: site.name })) }
+      : {}),
+    ...(profile.you_provide.length
+      ? { supply: profile.you_provide.map((input) => ({ "@type": "HowToSupply", name: input.label })) }
+      : {}),
+  };
+}
+
+/** Title and summary a card shows: the profile's plain wording when present. */
+export function cardText(entry: {
+  title: string;
+  summary: string;
+  display_title?: string | null;
+  card_summary?: string | null;
+}): { title: string; summary: string } {
+  return {
+    title: entry.display_title || entry.title,
+    summary: entry.card_summary || entry.summary,
   };
 }

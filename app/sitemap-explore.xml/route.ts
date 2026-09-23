@@ -11,6 +11,8 @@ import { getExploreFeed } from "@/lib/explore/api";
  *
  * Only `/en/...` is listed: the other locales are `noindex` with an English
  * canonical (contract §11), so they get neither an entry nor an alternate.
+ * Items the feed marks `indexable: false` (contract §13) are left out; their
+ * pages render with `noindex, follow`.
  * A feed outage yields an empty urlset (200) rather than an error: Google
  * keeps previously discovered URLs, while a 5xx would make it retry the
  * fetch and, repeated, distrust the file.
@@ -57,6 +59,8 @@ export async function GET() {
     } else {
       for (const item of feed.items) {
         if (item.type !== "routine" && item.type !== "bundle") continue;
+        // Contract §13: records the server marks noindex stay out of the sitemap.
+        if (item.indexable === false) continue;
         const slug = item.slug || item.id;
         if (!SLUG_OR_ID.test(slug) || slug.length > 128) continue;
         const lastmod = Date.parse(item.updated_at || item.approved_at);

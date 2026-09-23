@@ -34,6 +34,17 @@ export type RoutineCatalogEntry = {
   cover_image_data_url?: string | null;
   author_name: string;
   approved_at: string;
+} & CardPresentation;
+
+/**
+ * Card fields a schema-3 record carries (contract §13): `display_title`,
+ * `card_summary` (= the profile's meta description) and the number of
+ * results. `null` or absent for legacy records.
+ */
+export type CardPresentation = {
+  display_title?: string | null;
+  card_summary?: string | null;
+  results_count?: number | null;
 };
 
 /** One shared routine family inside a package: the root routine or a direct child. */
@@ -171,6 +182,15 @@ export type RoutinePublicDetail = {
   agent_count: number;
   included_in_bundles?: BundleRef[];
   package: WorkflowPackage;
+} & ProfileFields;
+
+/** Contract §13 additions to both public details; absent on legacy records. */
+export type ProfileFields = {
+  listing_profile?: ListingProfilePublic | null;
+  /** False only when the server says so; legacy records are indexable. */
+  indexable?: boolean;
+  third_party_reviews?: ThirdPartyReview[];
+  related?: RoutineCatalogEntry[];
 };
 
 export type BundleMemberRef = {
@@ -199,7 +219,7 @@ export type BundleCatalogEntry = {
   author_name: string;
   approved_at: string;
   members: BundleMemberRef[];
-};
+} & CardPresentation;
 
 export type BundleMemberDetail = RoutineCatalogEntry & {
   position: number;
@@ -225,7 +245,7 @@ export type BundlePublicDetail = {
   author_name: string;
   approved_at: string;
   members: BundleMemberDetail[];
-};
+} & ProfileFields;
 
 export type ExploreFeedItem = {
   type: "routine" | "bundle";
@@ -233,6 +253,8 @@ export type ExploreFeedItem = {
   slug?: string | null;
   approved_at: string;
   updated_at: string;
+  /** Contract §13: `false` keeps the item out of the sitemap. */
+  indexable?: boolean;
 };
 
 /** `GET /v1/explore/feed` (contract §5.8). */
@@ -251,3 +273,78 @@ export type RevalidateEvent = {
 };
 
 export type ListResult<T> = { items: T[]; total: number };
+
+/* ---------- Listing profile (contract §13, profile_schema_version 1) ---------- */
+
+export type ListingProfileSearch = {
+  job_statement: string;
+  search_phrases: string[];
+  display_title: string;
+  seo_title: string;
+  meta_description: string;
+  slug_words: string[];
+};
+export type ListingProfileAudience = { useful_for_id: string; why: string };
+export type ListingProfileResult = {
+  artefact_id: string | null;
+  name: string;
+  description: string;
+  format_label: string;
+};
+export type ListingProfileInput = {
+  input_id: string | null;
+  label: string;
+  description: string;
+  example: string;
+};
+export const CUSTOMIZATION_KINDS = ["input", "site_list", "tone", "schedule", "limit", "format", "model", "step"] as const;
+export type ListingProfileCustomization = {
+  id: string;
+  label: string;
+  kind: (typeof CUSTOMIZATION_KINDS)[number];
+  target: string;
+  default: string;
+  allowed: string;
+  note: string;
+};
+export const THIRD_PARTY_ACTIONS = ["read", "signup", "profile", "post", "submit", "pay"] as const;
+export type ThirdPartyAction = (typeof THIRD_PARTY_ACTIONS)[number];
+export const THIRD_PARTY_COSTS = ["free", "freemium", "paid", "unknown"] as const;
+export type ListingProfileThirdParty = {
+  id: string;
+  name: string;
+  url: string;
+  domain: string;
+  actions: ThirdPartyAction[];
+  cost: (typeof THIRD_PARTY_COSTS)[number];
+  note: string;
+};
+export type ListingProfileFaq = { question: string; answer: string };
+
+/**
+ * The public projection of a listing profile: the §1.1 shape without
+ * `author_ran_it` and `related_hints`, which the server never publishes.
+ */
+export type ListingProfilePublic = {
+  profile_schema_version: 1;
+  search: ListingProfileSearch;
+  answer: string;
+  for_whom: ListingProfileAudience[];
+  use_cases: string[];
+  time_and_effort: { you_prepare: string; run_estimate: string };
+  results: ListingProfileResult[];
+  how_it_works: string[];
+  you_provide: ListingProfileInput[];
+  stays_in_your_control: string[];
+  customization: ListingProfileCustomization[];
+  third_parties: ListingProfileThirdParty[];
+  faq: ListingProfileFaq[];
+  guide_path: string;
+  cover_alt: string;
+};
+
+export type ThirdPartyReview = {
+  domain: string;
+  status: "well_known" | "ok" | "ok_with_note";
+  note: string;
+};

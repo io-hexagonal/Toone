@@ -15,6 +15,7 @@ import {
   resolveSlug,
 } from "@/lib/explore/api";
 import {
+  cardText,
   catalogHref,
   deepLink,
   requestAccessHref,
@@ -41,6 +42,45 @@ export const COPY_KEYS = [
   "included",
   "youProvide",
   "produces",
+  "useRoutine",
+  "runsInToone",
+  "forLabel",
+  "whatYouGet",
+  "whoItsFor",
+  "useItWhen",
+  "howItWorks",
+  "whatYouProvide",
+  "youPrepare",
+  "runEstimate",
+  "example",
+  "customize",
+  "runsAsPublished",
+  "defaultValue",
+  "allowedValues",
+  "worksWith",
+  "whatItDoesThere",
+  "cost",
+  "reviewNote",
+  "actionRead",
+  "actionSignup",
+  "actionProfile",
+  "actionPost",
+  "actionSubmit",
+  "actionPay",
+  "costFree",
+  "costFreemium",
+  "costPaid",
+  "costUnknown",
+  "staysInControl",
+  "faq",
+  "relatedRoutines",
+  "learnRoutines",
+  "routinesInside",
+  "builders",
+  "doneWhen",
+  "connectedTools",
+  "routineName",
+  "bundleName",
 
   "title",
   "heading",
@@ -204,22 +244,26 @@ export function Cover({
   entry,
   className = "",
   inline = false,
+  alt,
 }: {
   entry: { cover_url?: string | null; cover_image_data_url?: string | null };
   className?: string;
   inline?: boolean;
+  /** Described covers (listing profile `cover_alt`) are exposed to assistive tech. */
+  alt?: string;
 }) {
   const url = inline ? resolveCoverUrl(entry) : resolveCardCoverUrl(entry);
+  const described = !!(url && alt);
   return (
     <span
       className={`explore-cover-frame${url ? "" : " explore-cover-empty"}`}
-      aria-hidden="true"
+      aria-hidden={described ? undefined : "true"}
     >
-      <span className="explore-cover-mark">
+      <span className="explore-cover-mark" aria-hidden={described ? "true" : undefined}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/brand/toone-mark.svg" alt="" />
       </span>
-      {url && <CoverImage className={`explore-cover ${className}`} src={url} />}
+      {url && <CoverImage className={`explore-cover ${className}`} src={url} alt={described ? alt : undefined} />}
     </span>
   );
 }
@@ -283,6 +327,8 @@ export function CatalogCard({
 }) {
   const { entry } = item;
   const href = `/${locale}/explore/${item.type}s/${resolveSlug(entry)}`;
+  const text = cardText(entry);
+  const audiences = entry.classification?.useful_for_ids ?? [];
   return (
     <article className="explore-card" data-explore-type={item.type}>
       <a href={href} className="explore-card-main">
@@ -302,11 +348,19 @@ export function CatalogCard({
               ? `${ui.bundle} · ${ui.count("routines", entry.member_count)}`
               : ui.routine}
           </p>
-          <h2>{entry.title}</h2>
+          <h2>{text.title}</h2>
           {entry.classification && <p className="explore-category-label">{termLabel(taxonomy, entry.classification.category_id)}</p>}
-          <p className="explore-summary">{entry.summary}</p>
+          <p className="explore-summary">{text.summary}</p>
+          {audiences.length > 0 && (
+            <p className="explore-card-for">
+              <span>{ui.forLabel}:</span> {audiences.map((id) => capitalize(termLabel(taxonomy, id))).join(", ")}
+            </p>
+          )}
           <div className="explore-card-meta">
             {item.type === "routine" && <Counts entry={item.entry} ui={ui} />}
+            {!!entry.results_count && (
+              <span className="explore-card-results">{ui.count("results", entry.results_count)}</span>
+            )}
             {entry.author_name && (
               <span className="explore-byline">
                 {ui.by} {entry.author_name}
@@ -322,6 +376,9 @@ export function CatalogCard({
       )}
     </article>
   );
+}
+export function capitalize(label: string): string {
+  return label ? label.charAt(0).toUpperCase() + label.slice(1) : label;
 }
 export function formatDate(
   locale: string,
@@ -524,16 +581,39 @@ function initials(name: string) {
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
 }
+/**
+ * Heading at `level + shift`. The fallback page renders the definition at
+ * shift 0; inside the builders' `<details>` (under its own h2) it shifts by
+ * one so the outline stays in order.
+ */
+function H({
+  level,
+  shift,
+  children,
+}: {
+  level: 2 | 3 | 4;
+  shift: 0 | 1;
+  children: ReactNode;
+}) {
+  const Tag = `h${level + shift}` as "h2" | "h3" | "h4" | "h5";
+  return <Tag>{children}</Tag>;
+}
+/** Labels that differ between the legacy page and the builders' section. */
+type DefinitionLabels = { completion: string; mcps: string };
 function MemberContent({
   member,
   root,
   ui,
   agentNames,
+  shift = 0,
+  labels,
 }: {
   member: PackageMember;
   root: boolean;
   ui: ExploreCopy;
   agentNames: Map<string, string>;
+  shift?: 0 | 1;
+  labels: DefinitionLabels;
 }) {
   const payload = member.payload;
   return (
@@ -544,12 +624,12 @@ function MemberContent({
       {!root && (
         <header className="explore-member-head">
           <p className="explore-eyebrow">{ui.subRoutines}</p>
-          <h2>{payload.name || member.key}</h2>
+          <H level={2} shift={shift}>{payload.name || member.key}</H>
         </header>
       )}
       {payload.purpose && (
         <section className="explore-section">
-          <h2>{ui.purpose}</h2>
+          <H level={2} shift={shift}>{ui.purpose}</H>
           <div className="explore-lede">
             <Markdown text={payload.purpose} />
           </div>
@@ -558,19 +638,19 @@ function MemberContent({
       )}
       {!payload.purpose && payload.preamble && (
         <section className="explore-section">
-          <h2>{ui.overview}</h2>
+          <H level={2} shift={shift}>{ui.overview}</H>
           <Markdown text={payload.preamble} />
         </section>
       )}
       {payload.prerequisites && (
         <section className="explore-section">
-          <h2>{ui.prerequisites}</h2>
+          <H level={2} shift={shift}>{ui.prerequisites}</H>
           <Markdown text={payload.prerequisites} />
         </section>
       )}
       {!!payload.steps?.length && (
         <section className="explore-section">
-          <h2>{ui.steps}</h2>
+          <H level={2} shift={shift}>{ui.steps}</H>
           <ol className="explore-steps">
             {payload.steps.map((step, index) => {
               const executor = step.executorAgentId
@@ -586,7 +666,7 @@ function MemberContent({
                     <span className="explore-step-number" aria-hidden="true">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <h3>{step.title}</h3>
+                    <H level={3} shift={shift}>{step.title}</H>
                     {executor && (
                       <span className="explore-step-agent">
                         <span>{ui.runsAs}</span>
@@ -598,7 +678,7 @@ function MemberContent({
                     <Markdown text={step.description} />
                     {!!step.completionCriteria?.length && (
                       <div className="explore-criteria">
-                        <h4>{ui.completion}</h4>
+                        <H level={4} shift={shift}>{labels.completion}</H>
                         <ul>
                           {step.completionCriteria.map((criterion, i) => (
                             <li key={i}>
@@ -610,7 +690,7 @@ function MemberContent({
                     )}
                     {!!step.outcomes?.length && (
                       <div className="explore-outcomes">
-                        <h4>{ui.outcomes}</h4>
+                        <H level={4} shift={shift}>{ui.outcomes}</H>
                         <ul>
                           {step.outcomes.map((outcome) => (
                             <li key={outcome.id}>
@@ -645,22 +725,31 @@ function MemberContent({
       )}
       {payload.escalation && (
         <section className="explore-section">
-          <h2>{ui.escalation}</h2>
+          <H level={2} shift={shift}>{ui.escalation}</H>
           <Markdown text={payload.escalation} />
         </section>
       )}
     </div>
   );
 }
-export function RoutineContent({
+/**
+ * The routine definition as published: members, steps, agents, skills and
+ * requirements. The legacy page shows it as the page body; a page with a
+ * listing profile keeps it, collapsed, in the builders' section.
+ */
+export function RoutineDefinition({
   detail,
   ui,
-  locale,
+  builder = false,
 }: {
   detail: RoutinePublicDetail;
   ui: ExploreCopy;
-  locale: string;
+  builder?: boolean;
 }) {
+  const shift = builder ? 1 : 0;
+  const labels: DefinitionLabels = builder
+    ? { completion: ui.doneWhen, mcps: ui.connectedTools }
+    : { completion: ui.completion, mcps: ui.mcps };
   const pkg = detail.package;
   const root = pkg.members.find((member) => member.key === pkg.root_key);
   const children = pkg.members.filter((member) => member.key !== pkg.root_key);
@@ -672,119 +761,151 @@ export function RoutineContent({
   const hasRequirements = !!(requirements?.model_ids?.length || requirements?.mcp_ids?.length);
   const factKinds = (["included", "youProvide", "produces"] as const).filter((kind) => facts[kind].length > 0);
   return (
+    <>
+      {root && (
+        <MemberContent member={root} root ui={ui} agentNames={agentNames} shift={shift} labels={labels} />
+      )}
+      {!!children.length && (
+        <section id="sub-routines" className="explore-section">
+          <H level={2} shift={shift}>{ui.subRoutines}</H>
+          {children.map((member) => (
+            <MemberContent
+              key={member.key}
+              member={member}
+              root={false}
+              ui={ui}
+              agentNames={agentNames}
+              shift={shift}
+              labels={labels}
+            />
+          ))}
+        </section>
+      )}
+      {!!pkg.agents?.length && (
+        <section id="agents" className="explore-section">
+          <H level={2} shift={shift}>{ui.agents}</H>
+          <div className="explore-roster">
+            {pkg.agents.map((agent) => (
+              <article className="explore-agent" key={agent.source_id}>
+                <div className="explore-agent-head">
+                  <span className="explore-avatar" aria-hidden="true">
+                    {initials(agent.name)}
+                  </span>
+                  <div className="explore-agent-title">
+                    <H level={3} shift={shift}>{agent.name}</H>
+                    <Markdown text={agent.description} />
+                  </div>
+                </div>
+                {!!agent.capabilities?.length && (
+                  <Chips items={agent.capabilities} mono={false} />
+                )}
+                {(!!agent.skill_ids?.length || !!agent.mcp_ids?.length) && (
+                  <ul className="explore-step-meta">
+                    {!!agent.skill_ids?.length && (
+                      <li>
+                        <span>{ui.skills}</span> {agent.skill_ids.join(", ")}
+                      </li>
+                    )}
+                    {!!agent.mcp_ids?.length && (
+                      <li>
+                        <span>{labels.mcps}</span> {agent.mcp_ids.join(", ")}
+                      </li>
+                    )}
+                  </ul>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+      {!!pkg.skills?.length && (
+        <section id="skills" className="explore-section">
+          <H level={2} shift={shift}>{ui.skills}</H>
+          {pkg.skills.map((skill) => (
+            <details className="explore-skill" key={skill.id}>
+              <summary>
+                <code>{skill.id}</code>
+              </summary>
+              <Markdown text={skill.markdown} />
+            </details>
+          ))}
+        </section>
+      )}
+      <section id="requirements" className="explore-section">
+        <H level={2} shift={shift}>{ui.requirements}</H>
+        {factKinds.length > 0 && <dl className="explore-requirement-summary">
+          {factKinds.map((kind) => <div key={kind}>
+            <dt>{ui[kind]}</dt>
+            <dd><ul className="explore-requirement-list" data-kind={kind}>
+              {facts[kind].map((fact) => <li key={fact}>{fact}</li>)}
+            </ul></dd>
+          </div>)}
+        </dl>}
+        {hasRequirements && (
+          <div className="explore-req-groups">
+            {!!requirements?.model_ids?.length && (
+              <div className="explore-req-group">
+                <H level={4} shift={shift}>{ui.models}</H>
+                <Chips items={requirements.model_ids} />
+              </div>
+            )}
+            {!!requirements?.mcp_ids?.length && (
+              <div className="explore-req-group">
+                <H level={4} shift={shift}>{labels.mcps}</H>
+                <Chips items={requirements.mcp_ids} />
+              </div>
+            )}
+          </div>
+        )}
+        {!hasRequirements && factKinds.length === 0 && <p>{ui.noRequirements}</p>}
+      </section>
+    </>
+  );
+}
+export function IncludedInBundles({
+  detail,
+  ui,
+  locale,
+}: {
+  detail: RoutinePublicDetail;
+  ui: ExploreCopy;
+  locale: string;
+}) {
+  if (!detail.included_in_bundles?.length) return null;
+  return (
+    <section className="explore-section" id="bundles">
+      <h2>{ui.includedBundles}</h2>
+      <ul className="explore-bundle-links">
+        {detail.included_in_bundles.map((bundle) => (
+          <li key={bundle.bundle_id}>
+            <a href={`/${locale}/explore/bundles/${resolveSlug(bundle)}`}>
+              <span className="explore-eyebrow">{ui.bundle}</span>
+              <strong>{bundle.title}</strong>
+              <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+/** The legacy layout: used whenever the record has no listing profile. */
+export function RoutineContent({
+  detail,
+  ui,
+  locale,
+}: {
+  detail: RoutinePublicDetail;
+  ui: ExploreCopy;
+  locale: string;
+}) {
+  const pkg = detail.package;
+  const children = pkg.members.filter((member) => member.key !== pkg.root_key);
+  return (
     <div className="explore-detail-body explore-width">
       <article className="explore-body">
-        {root && (
-          <MemberContent member={root} root ui={ui} agentNames={agentNames} />
-        )}
-        {!!children.length && (
-          <section id="sub-routines" className="explore-section">
-            <h2>{ui.subRoutines}</h2>
-            {children.map((member) => (
-              <MemberContent
-                key={member.key}
-                member={member}
-                root={false}
-                ui={ui}
-                agentNames={agentNames}
-              />
-            ))}
-          </section>
-        )}
-        {!!pkg.agents?.length && (
-          <section id="agents" className="explore-section">
-            <h2>{ui.agents}</h2>
-            <div className="explore-roster">
-              {pkg.agents.map((agent) => (
-                <article className="explore-agent" key={agent.source_id}>
-                  <div className="explore-agent-head">
-                    <span className="explore-avatar" aria-hidden="true">
-                      {initials(agent.name)}
-                    </span>
-                    <div className="explore-agent-title">
-                      <h3>{agent.name}</h3>
-                      <Markdown text={agent.description} />
-                    </div>
-                  </div>
-                  {!!agent.capabilities?.length && (
-                    <Chips items={agent.capabilities} mono={false} />
-                  )}
-                  {(!!agent.skill_ids?.length || !!agent.mcp_ids?.length) && (
-                    <ul className="explore-step-meta">
-                      {!!agent.skill_ids?.length && (
-                        <li>
-                          <span>{ui.skills}</span> {agent.skill_ids.join(", ")}
-                        </li>
-                      )}
-                      {!!agent.mcp_ids?.length && (
-                        <li>
-                          <span>{ui.mcps}</span> {agent.mcp_ids.join(", ")}
-                        </li>
-                      )}
-                    </ul>
-                  )}
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-        {!!pkg.skills?.length && (
-          <section id="skills" className="explore-section">
-            <h2>{ui.skills}</h2>
-            {pkg.skills.map((skill) => (
-              <details className="explore-skill" key={skill.id}>
-                <summary>
-                  <code>{skill.id}</code>
-                </summary>
-                <Markdown text={skill.markdown} />
-              </details>
-            ))}
-          </section>
-        )}
-        <section id="requirements" className="explore-section">
-          <h2>{ui.requirements}</h2>
-          {factKinds.length > 0 && <dl className="explore-requirement-summary">
-            {factKinds.map((kind) => <div key={kind}>
-              <dt>{ui[kind]}</dt>
-              <dd><ul className="explore-requirement-list" data-kind={kind}>
-                {facts[kind].map((fact) => <li key={fact}>{fact}</li>)}
-              </ul></dd>
-            </div>)}
-          </dl>}
-          {hasRequirements && (
-            <div className="explore-req-groups">
-              {!!requirements?.model_ids?.length && (
-                <div className="explore-req-group">
-                  <h4>{ui.models}</h4>
-                  <Chips items={requirements.model_ids} />
-                </div>
-              )}
-              {!!requirements?.mcp_ids?.length && (
-                <div className="explore-req-group">
-                  <h4>{ui.mcps}</h4>
-                  <Chips items={requirements.mcp_ids} />
-                </div>
-              )}
-            </div>
-          )}
-          {!hasRequirements && factKinds.length === 0 && <p>{ui.noRequirements}</p>}
-        </section>
-        {!!detail.included_in_bundles?.length && (
-          <section className="explore-section" id="bundles">
-            <h2>{ui.includedBundles}</h2>
-            <ul className="explore-bundle-links">
-              {detail.included_in_bundles.map((bundle) => (
-                <li key={bundle.bundle_id}>
-                  <a href={`/${locale}/explore/bundles/${resolveSlug(bundle)}`}>
-                    <span className="explore-eyebrow">{ui.bundle}</span>
-                    <strong>{bundle.title}</strong>
-                    <span aria-hidden="true">→</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <RoutineDefinition detail={detail} ui={ui} />
+        <IncludedInBundles detail={detail} ui={ui} locale={locale} />
       </article>
       <aside className="explore-rail">
         <nav className="explore-toc" aria-label={ui.contents}>

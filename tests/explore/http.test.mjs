@@ -193,8 +193,13 @@ test("static sitemap lists /en/explore once; the Explore sitemap lists every fee
   const { response, html } = await get("/sitemap-explore.xml");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /application\/xml/);
+  // Contract §13: items the feed marks indexable:false are left out.
   for (const item of fixture("feed").items)
-    assert.ok(html.includes(`/en/explore/${item.type}s/${item.slug}`));
+    assert.equal(
+      html.includes(`/en/explore/${item.type}s/${item.slug}<`),
+      item.indexable !== false,
+      item.slug,
+    );
   assert.ok(!html.includes("/pt/explore"));
   assert.match(html, /<lastmod>2026-/);
 
@@ -267,4 +272,172 @@ test("data-URL-only covers render the placeholder on cards but inline in the det
   assert.equal(detail.response.status, 200);
   assert.match(detail.html, /class="explore-cover " src="data:image\/jpeg;base64,/);
   assert.ok(!detail.html.includes("og:image\" content=\"data:"), "og:image never uses a data URL");
+});
+
+/* ---------- listing profile (contract §13) ---------- */
+// Synthesized by scripts/explore-mock-api.mjs from fixtures/listing-profile.json.
+const PROFILE_SLUG = "product-launch-prep-directories-qk4m2x7a";
+const NOINDEX_SLUG = "product-launch-prep-draft-w9t3v6pe";
+const PROFILE_BUNDLE_SLUG = "launch-kit-r5h8c2nd";
+const profileFixture = fixture("listing-profile");
+const decode = (text) =>
+  text
+    .replaceAll("&amp;", "&")
+    .replaceAll("&#x27;", "'")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">");
+const visible = (html) =>
+  decode(
+    html
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, " ")
+      .replace(/<[^>]+>/g, " "),
+  );
+const h2s = (html) =>
+  [...html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/g)].map((m) =>
+    decode(m[1].replace(/<[^>]+>/g, "")).trim(),
+  );
+
+test("profile routine renders every section in page-spec order with the builders' section collapsed in the HTML", async () => {
+  const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
+  assert.equal(response.status, 200);
+  const text = visible(html);
+  const h1 = decode(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1]);
+  assert.equal(h1, profileFixture.search.display_title);
+  assert.ok(text.includes(profileFixture.answer));
+  const order = [
+    "What you get",
+    "Who it's for",
+    "How it works",
+    "What you provide",
+    "Customize",
+    "Works with",
+    "Stays in your control",
+    "FAQ",
+    "Related routines",
+    "Included in bundles",
+    "Full routine definition (for builders)",
+  ];
+  const headings = h2s(html);
+  let last = -1;
+  for (const title of order) {
+    const at = headings.indexOf(title);
+    assert.ok(at > last, `${title} after previous section (headings: ${headings.join(" | ")})`);
+    last = at;
+  }
+  for (const result of profileFixture.results) assert.ok(text.includes(result.name), result.name);
+  for (const step of profileFixture.how_it_works) assert.ok(text.includes(step), step);
+  for (const input of profileFixture.you_provide) assert.ok(text.includes(input.label), input.label);
+  for (const rule of profileFixture.stays_in_your_control) assert.ok(text.includes(rule), rule);
+  for (const entry of profileFixture.faq) assert.ok(text.includes(entry.question), entry.question);
+  for (const useCase of profileFixture.use_cases) assert.ok(text.includes(useCase), useCase);
+  assert.ok(text.includes("Reads public information"));
+  assert.match(html, /href="https:\/\/www.producthunt.com"[^>]*rel="nofollow noopener noreferrer"/);
+  assert.match(html, /href="\/en\/ai-agent-routines"[^>]*>Learn how routines work/);
+  assert.match(html, new RegExp(`href="/en/explore/routines/${routine.slug}"`), "related routine links");
+  assert.match(html, new RegExp(`href="/en/explore/bundles/${PROFILE_BUNDLE_SLUG}"`), "bundle backlink");
+  // Builders' section: collapsed <details>, definition still server-rendered.
+  const builders = html.match(/<details class="explore-builders"[^>]*>([\s\S]*?)<\/details>\s*<\/article>/);
+  assert.ok(builders, "builders' details present");
+  assert.ok(!/<details class="explore-builders"[^>]*\bopen\b/.test(html), "collapsed by default");
+  assert.match(builders[1], /Validate the site list/);
+  assert.match(builders[1], /Done when/);
+  assert.match(builders[1], /Connected tools/);
+  assert.ok(!builders[1].includes("Completion criteria"));
+  assert.ok(!builders[1].includes("MCP servers"));
+  // Cover alt, breadcrumb with category, CTAs with attribution.
+  assert.ok(html.includes(`alt="${profileFixture.cover_alt}"`));
+  assert.match(html, /href="\/en\/explore\?category=cat_marketing-sales"/);
+  assert.match(html, />Use this routine</);
+  assert.match(html, /data-umami-event="explore-open-in-toone"/);
+  assert.match(html, /href="\/en\/request-access\?from=explore&amp;item=routine%3Awfl_lnchprepqk4m2x7a"/);
+  assert.ok(text.includes("Routine name"));
+  assert.ok(!text.includes("author_ran_it") && !html.includes("related_hints"));
+});
+
+test("profile routine metadata, robots and JSON-LD come from the profile", async () => {
+  const { html } = await get("/en/explore/routines/" + PROFILE_SLUG);
+  assert.match(html, new RegExp(`<title>${profileFixture.search.seo_title.replace("&", "&amp;")} \\| Toone</title>`));
+  assert.ok(html.includes(`<meta name="description" content="${profileFixture.search.meta_description}"/>`));
+  assert.ok(html.includes(`<meta property="og:image:alt" content="${profileFixture.cover_alt}"/>`));
+  assert.match(html, /<meta name="robots" content="index, follow"/);
+  const all = schemas(html);
+  const howTo = all.find((s) => s["@type"] === "HowTo");
+  assert.equal(howTo.name, profileFixture.search.display_title);
+  assert.equal(howTo.description, profileFixture.answer);
+  assert.deepEqual(howTo.step.map((s) => s.text), profileFixture.how_it_works);
+  assert.deepEqual(howTo.tool.map((t) => t.name), profileFixture.third_parties.map((t) => t.name));
+  assert.deepEqual(howTo.supply.map((t) => t.name), profileFixture.you_provide.map((t) => t.label));
+  assert.ok(!all.some((s) => s["@type"] === "FAQPage"));
+  const crumbs = all.find((s) => s["@type"] === "BreadcrumbList").itemListElement;
+  assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3, 4]);
+  assert.equal(crumbs[2].item, "https://trytoone.com/en/explore?category=cat_marketing-sales");
+  assert.equal(crumbs[3].name, profileFixture.search.display_title);
+});
+
+test("indexable:false renders noindex, follow and leaves the Explore sitemap; indexable profiles stay", async () => {
+  const { response, html } = await get("/en/explore/routines/" + NOINDEX_SLUG);
+  assert.equal(response.status, 200);
+  assert.match(html, /<meta name="robots" content="noindex, follow"/);
+  assert.match(html, /<title>Draft Launch Prep Routine \| Toone<\/title>/);
+  const sitemap = await get("/sitemap-explore.xml");
+  assert.ok(!sitemap.html.includes(NOINDEX_SLUG));
+  assert.ok(sitemap.html.includes(`/en/explore/routines/${PROFILE_SLUG}`));
+  assert.ok(sitemap.html.includes(`/en/explore/bundles/${PROFILE_BUNDLE_SLUG}`));
+});
+
+test("the legacy routine keeps the fallback layout", async () => {
+  const { html } = await get("/en/explore/routines/" + routine.slug);
+  assert.ok(!html.includes("explore-builders"));
+  assert.ok(!/<h2[^>]*>What you get<\/h2>/.test(html));
+  assert.match(html, /Completion criteria/);
+  assert.match(html, />Open in Toone</);
+  assert.match(html, new RegExp(`<title>${routine.title} \\| Toone</title>`));
+  assert.equal(
+    schemas(html).find((s) => s["@type"] === "BreadcrumbList").itemListElement.length,
+    3,
+  );
+});
+
+test("a malformed profile falls back to the legacy layout instead of failing", async () => {
+  await mode({ malformedProfile: true });
+  await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
+  const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
+  assert.equal(response.status, 200);
+  assert.ok(!html.includes("explore-builders"));
+  assert.match(html, /Completion criteria/);
+  assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
+  await mode({});
+  await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
+  const restored = await get("/en/explore/routines/" + PROFILE_SLUG);
+  assert.match(restored.html, /explore-builders/);
+});
+
+test("bundle with a profile lists the routines inside in their plain wording", async () => {
+  const { response, html } = await get("/en/explore/bundles/" + PROFILE_BUNDLE_SLUG);
+  assert.equal(response.status, 200);
+  const headings = h2s(html);
+  assert.ok(headings.indexOf("What you get") < headings.indexOf("The routines inside"));
+  assert.ok(headings.indexOf("The routines inside") < headings.indexOf("Who it's for"));
+  const text = visible(html);
+  assert.ok(text.includes(profileFixture.search.display_title), "member display_title");
+  assert.ok(text.includes(routine.title), "legacy member falls back to its title");
+  assert.ok(text.includes("Bundle name"));
+  assert.match(html, /<title>Product Launch Kit: Plan and Prepare Your Launch \| Toone<\/title>/);
+  assert.ok(schemas(html).some((s) => s["@type"] === "HowTo"));
+});
+
+test("hub cards use display_title, card summary, For line and results count", async () => {
+  await mode({ profiles: true });
+  await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
+  const { html } = await get("/en/explore");
+  const text = visible(html);
+  assert.ok(text.includes(profileFixture.search.display_title));
+  assert.ok(text.includes(profileFixture.search.meta_description));
+  assert.match(text, /For\s*:\s+Founders, Marketers/);
+  assert.match(text, /3 results/);
+  const list = schemas(html).find((s) => s["@type"] === "CollectionPage").mainEntity;
+  assert.ok(list.itemListElement.some((item) => item.name === profileFixture.search.display_title));
+  await mode({});
+  await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
 });
