@@ -125,7 +125,8 @@ const COST_COPY: Record<ListingProfileThirdParty["cost"], Exclude<keyof ExploreC
   unknown: "costUnknown",
 };
 
-type Section = { id: string; title: string; body: ReactNode };
+/** `collapsed` sections start closed (native <details>). */
+type Section = { id: string; title: string; body: ReactNode; collapsed?: boolean };
 
 /** Sections in page-spec order; empty optional ones are left out. */
 function profileSections(
@@ -140,14 +141,16 @@ function profileSections(
     id: "what-you-get",
     title: ui.whatYouGet,
     body: (
-      <ul className="explore-profile-cards">
+      <ul className="explore-profile-results">
         {profile.results.map((result, index) => (
-          <li key={index} className="explore-profile-card">
-            <h3>{result.name}</h3>
-            <p>{result.description}</p>
-            {result.format_label && (
-              <p className="explore-profile-format">{result.format_label}</p>
-            )}
+          <li key={index}>
+            {/* One line each; open an item to read all of it. */}
+            <details className="explore-profile-result">
+              <summary>
+                <h3>{result.name}</h3>
+                <p>{result.description}</p>
+              </summary>
+            </details>
           </li>
         ))}
       </ul>
@@ -199,8 +202,10 @@ function profileSections(
     sections.push({
       id: "what-you-provide",
       title: ui.whatYouProvide,
+      collapsed: true,
       body: (
         <>
+          <p className="explore-profile-setup-note">{ui.preparedDuringSetupNote}</p>
           {profile.you_provide.length > 0 && (
             <ul className="explore-profile-inputs">
               {profile.you_provide.map((input, index) => (
@@ -410,12 +415,21 @@ export function ProfileBody(
   return (
     <div className="explore-detail-body explore-width">
       <article className="explore-body explore-profile">
-        {sections.map((section) => (
-          <section key={section.id} id={section.id} className="explore-section">
-            <h2>{section.title}</h2>
-            {section.body}
-          </section>
-        ))}
+        {sections.map((section) =>
+          section.collapsed ? (
+            <details key={section.id} id={section.id} className="explore-section explore-collapsible">
+              <summary>
+                <h2>{section.title}</h2>
+              </summary>
+              <div className="explore-collapsible-body">{section.body}</div>
+            </details>
+          ) : (
+            <section key={section.id} id={section.id} className="explore-section">
+              <h2>{section.title}</h2>
+              {section.body}
+            </section>
+          ),
+        )}
         {guide && (
           <p className="explore-profile-guide">
             <a href={guide}>{ui.learnRoutines} →</a>

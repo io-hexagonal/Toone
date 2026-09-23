@@ -301,3 +301,19 @@ export function cardText(entry: {
     summary: entry.card_summary || entry.summary,
   };
 }
+
+/**
+ * The Featured carousel: up to `limit` catalog items that have a cover,
+ * newest approval first. Chosen from the unfiltered first page only; a
+ * server-side "featured" flag can replace this rule without touching the UI.
+ */
+export function featuredItems(
+  items: CatalogItem[],
+  hasCover: (item: CatalogItem) => boolean,
+  limit = 5,
+): CatalogItem[] {
+  return items
+    .filter(hasCover)
+    .sort((a, b) => Date.parse(b.entry.approved_at) - Date.parse(a.entry.approved_at))
+    .slice(0, limit);
+}
