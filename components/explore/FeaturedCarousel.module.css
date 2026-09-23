@@ -1,0 +1,272 @@
+/* Featured routines and bundles, styled like the announcement carousel:
+   one full-bleed card at content width, one slide at a time. */
+.section {
+  padding-top: 48px;
+}
+.card {
+  position: relative;
+  height: clamp(380px, 56vh, 600px);
+  border: 1px solid #d8d5cb;
+  border-radius: 22px;
+  background: #1b1b19;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.45);
+}
+.image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  animation: imageIn 0.45s ease, drift 16s ease-in-out infinite alternate;
+}
+@keyframes imageIn {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+@keyframes drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.04); }
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(20, 20, 19, 0.82) 0%, rgba(20, 20, 19, 0.6) 34%, rgba(20, 20, 19, 0.18) 58%, rgba(20, 20, 19, 0) 80%),
+    linear-gradient(0deg, rgba(20, 20, 19, 0.7) 0%, rgba(20, 20, 19, 0.15) 40%, rgba(20, 20, 19, 0) 70%);
+}
+.stage {
+  position: absolute;
+  inset: 0 0 48px 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.18s ease;
+}
+.dragging .stage {
+  transition: none;
+}
+.multiple .stage {
+  cursor: grab;
+}
+.body {
+  max-width: 580px;
+  padding: 0 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: panelIn 0.25s ease;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.title {
+  margin: 0;
+  color: #f0ede6;
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+}
+.summary {
+  margin: 0;
+  max-width: 44ch;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.cta {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 13px 26px;
+  border-radius: 10px;
+  background: #f0ede6;
+  color: #1d1c19;
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.cta:hover {
+  background: #fff;
+}
+.iconButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(20, 20, 19, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.15s ease;
+}
+.iconButton:hover {
+  background: rgba(20, 20, 19, 0.8);
+}
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 56px;
+  margin-top: -28px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.previous {
+  left: 12px;
+}
+.next {
+  right: 12px;
+}
+.arrow:hover,
+.arrow:focus-visible {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(20, 20, 19, 0.25);
+}
+.indicators {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  transform: translateX(-50%);
+}
+/* The active pill slides; the active target grows so the group stays centered. */
+.indicators::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 8.5px;
+  width: 23px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 20px;
+  background: #f0ede6;
+  pointer-events: none;
+  transform: translateX(calc(var(--active-index, 0) * 24px));
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.indicator {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.indicator[aria-current="true"] {
+  width: 40px;
+}
+.indicator span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.38);
+  transition: opacity 0.2s ease;
+}
+.indicator[aria-current="true"] span {
+  opacity: 0;
+}
+.card button:focus-visible,
+.card a:focus-visible {
+  outline: 2px solid #f0ede6;
+  outline-offset: 4px;
+}
+@media (max-width: 720px) {
+  .card {
+    height: min(540px, calc(100svh - 140px));
+    border-radius: 18px;
+  }
+  .shade {
+    background: linear-gradient(0deg, rgba(20, 20, 19, 0.96) 0%, rgba(20, 20, 19, 0.88) 45%, rgba(20, 20, 19, 0.2) 100%);
+  }
+  .stage {
+    align-items: flex-end;
+  }
+  .body {
+    max-width: none;
+    padding: 0 24px 8px;
+  }
+  .cta {
+    align-self: stretch;
+    text-align: center;
+  }
+  .arrow {
+    display: none;
+  }
+}
+@media (pointer: coarse) {
+  .iconButton {
+    width: 44px;
+    height: 44px;
+  }
+  .indicator {
+    height: 44px;
+  }
+  .arrow {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .image,
+  .body {
+    animation: none;
+  }
+  .indicators::before,
+  .indicator,
+  .indicator span,
+  .stage {
+    transition: none;
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import styles from "./FeaturedCarousel.module.css";
 
 export type FeaturedSlide = {
   id: string;
@@ -121,14 +122,14 @@ export default function FeaturedCarousel({ slides, copy }: { slides: FeaturedSli
   }
 
   if (!slide) return null;
+  const cardClass = [styles.card, multiple && styles.multiple, dragOffset !== 0 && styles.dragging].filter(Boolean).join(" ");
   return (
-    <section className="explore-featured explore-width" aria-label={copy.featuredLabel}>
+    <section className={`${styles.section} explore-width`} aria-label={copy.featuredLabel}>
       <div
-        className="explore-featured-card"
+        className={cardClass}
         role={multiple ? "region" : undefined}
         aria-roledescription={multiple ? "carousel" : undefined}
         aria-label={multiple ? copy.featuredLabel : undefined}
-        data-carousel={multiple}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onFocusCapture={() => setFocused(true)}
@@ -138,20 +139,10 @@ export default function FeaturedCarousel({ slides, copy }: { slides: FeaturedSli
         onKeyDown={onKey}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img key={slide.coverUrl} className="explore-featured-image" src={slide.coverUrl} alt={slide.coverAlt ?? ""} draggable={false} />
-        <div className="explore-featured-shade" aria-hidden="true" />
-        {multiple && !reducedMotion && (
-          <button
-            type="button"
-            className="explore-featured-icon"
-            onClick={() => setPlaying((value) => !value)}
-            aria-label={playing ? copy.pause : copy.play}
-          >
-            <span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span>
-          </button>
-        )}
+        <img key={slide.coverUrl} className={styles.image} src={slide.coverUrl} alt={slide.coverAlt ?? ""} draggable={false} />
+        <div className={styles.shade} aria-hidden="true" />
         <div
-          className="explore-featured-stage"
+          className={styles.stage}
           id="explore-featured-current"
           aria-live={rotating ? "off" : "polite"}
           aria-atomic="true"
@@ -171,26 +162,32 @@ export default function FeaturedCarousel({ slides, copy }: { slides: FeaturedSli
         >
           <div
             key={slide.id}
-            className="explore-featured-body"
+            className={styles.body}
             role={multiple ? "group" : undefined}
             aria-roledescription={multiple ? "slide" : undefined}
             aria-label={multiple ? `${index + 1} / ${count}` : undefined}
           >
-            <p className="explore-featured-eyebrow">{slide.eyebrow}</p>
-            <h2>{slide.title}</h2>
-            <p className="explore-featured-summary">{slide.summary}</p>
-            <a className="explore-featured-cta" href={slide.href}>
+            <p className={styles.eyebrow}>{slide.eyebrow}</p>
+            <h2 className={styles.title}>{slide.title}</h2>
+            <p className={styles.summary}>{slide.summary}</p>
+            <a className={styles.cta} href={slide.href}>
               {slide.cta}
             </a>
           </div>
         </div>
+        {multiple && !reducedMotion && (
+          <button type="button" className={styles.iconButton} onClick={() => setPlaying((value) => !value)}
+            aria-label={playing ? copy.pause : copy.play}>
+            <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+          </button>
+        )}
         {multiple && (
           <>
-            <button type="button" className="explore-featured-arrow explore-featured-previous" onClick={() => select(index - 1)}
+            <button type="button" className={`${styles.arrow} ${styles.previous}`} onClick={() => select(index - 1)}
               aria-label={copy.previousSlide} aria-controls="explore-featured-current">‹</button>
-            <div className="explore-featured-indicators" style={{ "--active-index": index } as React.CSSProperties}>
+            <div className={styles.indicators} style={{ "--active-index": index } as CSSProperties}>
               {slides.map((item, position) => (
-                <button key={item.id} type="button" className="explore-featured-indicator"
+                <button key={item.id} type="button" className={styles.indicator}
                   aria-label={`${copy.goToSlide} ${position + 1}: ${item.title}`}
                   aria-current={position === index ? "true" : undefined}
                   aria-controls="explore-featured-current"
@@ -199,7 +196,7 @@ export default function FeaturedCarousel({ slides, copy }: { slides: FeaturedSli
                 </button>
               ))}
             </div>
-            <button type="button" className="explore-featured-arrow explore-featured-next" onClick={() => select(index + 1)}
+            <button type="button" className={`${styles.arrow} ${styles.next}`} onClick={() => select(index + 1)}
               aria-label={copy.nextSlide} aria-controls="explore-featured-current">›</button>
           </>
         )}
