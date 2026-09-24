@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { preload } from "react-dom";
 
 /**
  * The look is baked into the video at encode time (see scripts/hero/encode-loop.sh):
@@ -9,6 +10,10 @@ import { useEffect, useRef } from "react";
  * the GPU idle. Retune by re-encoding; only the scale is still applied here.
  */
 const SCALE = 1.13;
+
+const VIDEO_SRC = "/assets/hero/glitter-loop.mp4";
+/** First frame of the loop, so the poster → video hand-off is seamless. */
+const POSTER_SRC = "/assets/hero/glitter-poster.jpg";
 
 /**
  * HeroGlitter — a treated video loop behind the hero. The source is a liquid
@@ -19,6 +24,28 @@ const SCALE = 1.13;
  */
 export default function HeroGlitter() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const posterRef = useRef<HTMLImageElement>(null);
+  // Fetch the poster with the document instead of after hydration.
+  preload(POSTER_SRC, { as: "image", fetchPriority: "high" });
+
+  // First load: the ground shows, the poster fades in as soon as it decodes,
+  // and the video fades in over it once frames are actually playing. Nothing
+  // ever pops in at full strength.
+  useEffect(() => {
+    const poster = posterRef.current;
+    const video = videoRef.current;
+    if (!poster || !video) return;
+    const showPoster = () => { poster.dataset.ready = ""; };
+    const showVideo = () => { video.dataset.ready = ""; };
+    if (poster.complete && poster.naturalWidth > 0) showPoster();
+    else poster.addEventListener("load", showPoster, { once: true });
+    if (!video.paused && video.readyState >= 3) showVideo();
+    else video.addEventListener("playing", showVideo, { once: true });
+    return () => {
+      poster.removeEventListener("load", showPoster);
+      video.removeEventListener("playing", showVideo);
+    };
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -44,13 +71,17 @@ export default function HeroGlitter() {
               pointer-events: none; background: #141413;
               contain: strict;
             }
-            .hg-video {
+            .hg-poster, .hg-video {
               position: absolute; inset: 0; width: 100%; height: 100%;
               object-fit: cover; object-position: center;
               transform: scale(var(--hg-scale));
-              will-change: transform;
+              will-change: transform, opacity;
               animation: hg-drift 40s ease-in-out infinite alternate;
+              opacity: 0;
             }
+            .hg-poster { transition: opacity 450ms ease-out; }
+            .hg-video { transition: opacity 900ms ease-in-out; }
+            .hg-poster[data-ready], .hg-video[data-ready] { opacity: 1; }
             @keyframes hg-drift {
               from { transform: scale(var(--hg-scale)) translate3d(-1.5%, -1%, 0); }
               to { transform: scale(var(--hg-scale)) translate3d(1.5%, 1%, 0); }
@@ -72,17 +103,18 @@ export default function HeroGlitter() {
               background-size: 160px 160px;
             }
             @media (prefers-reduced-motion: reduce) {
-              .hg-video { animation: none; }
+              .hg-poster, .hg-video { animation: none; transition: none; }
             }
           `,
         }}
       />
       <div className="hg-root" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img ref={posterRef} className="hg-poster" src={POSTER_SRC} alt="" decoding="async" fetchPriority="high" />
         <video
           ref={videoRef}
           className="hg-video"
-          src="/assets/hero/glitter-loop.mp4"
-          poster="/assets/hero/glitter-poster.jpg"
+          src={VIDEO_SRC}
           autoPlay
           muted
           loop
@@ -91,6 +123,9 @@ export default function HeroGlitter() {
           disablePictureInPicture
           tabIndex={-1}
         />
+        <noscript>
+          <style>{`.hg-poster { opacity: 1; }`}</style>
+        </noscript>
         <div className="hg-vignette" />
         <div className="hg-grain" />
       </div>
