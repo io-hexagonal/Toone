@@ -224,6 +224,13 @@
   height: 1.15em;
   flex: none;
 }
+.explore-author-official .on-dark,
+.explore-hero .explore-author-official .on-light {
+  display: none;
+}
+.explore-hero .explore-author-official .on-dark {
+  display: block;
+}
 .explore-stats {
   list-style: none;
   display: flex;

@@ -337,8 +337,11 @@ export function Author({ entry }: { entry: { author_name: string; author_officia
   if (!entry.author_official) return <>{entry.author_name}</>;
   return (
     <span className="explore-author-official">
+      {/* Both marks ship; CSS shows the one that reads on the surrounding surface. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/assets/brand/toone-mark-light.svg" alt="" width={14} height={14} />
+      <img className="on-light" src="/assets/brand/toone-mark-light.svg" alt="" width={14} height={14} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="on-dark" src="/assets/brand/toone-mark.svg" alt="" width={14} height={14} />
       {entry.author_name}
     </span>
   );
