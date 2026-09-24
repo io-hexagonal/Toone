@@ -305,26 +305,31 @@ export function Tags({
     </ul>
   );
 }
-/** "Free", or the localized currency amount (contract §5 `price`). */
-export function priceLabel(price: ExplorePrice | null | undefined, locale: string, ui: ExploreCopy): string {
+/** "Free", the localized currency amount, or null (no tag): contract §5 `price`. */
+export function priceLabel(price: ExplorePrice | null | undefined, locale: string, ui: ExploreCopy): string | null {
   return formatPrice(price, locale, ui.free);
 }
+/** The price tag; renders nothing when the price cannot be shown honestly. */
 export function PriceTag({
   price,
   locale,
   ui,
+  as: Tag = "span",
   className = "explore-price",
 }: {
   price: ExplorePrice | null | undefined;
   locale: string;
   ui: ExploreCopy;
+  as?: "span" | "li";
   className?: string;
 }) {
+  const text = priceLabel(price, locale, ui);
+  if (!text) return null;
   return (
-    <span className={className} data-free={isFree(price) || undefined}>
+    <Tag className={className} data-free={isFree(price) || undefined}>
       <span className="explore-sr-only">{ui.price}: </span>
-      {priceLabel(price, locale, ui)}
-    </span>
+      {text}
+    </Tag>
   );
 }
 /** "By …" byline value; Toone-published listings carry the Toone mark. */
@@ -389,7 +394,6 @@ export function CatalogCard({
               ))}
             </div>
           )}
-          <PriceTag price={entry.price} locale={locale} ui={ui} className="explore-price explore-price-card" />
         </div>
         <div className="explore-card-copy">
           <p className="explore-eyebrow">
@@ -418,6 +422,8 @@ export function CatalogCard({
           </div>
         </div>
       </a>
+      {/* Outside the link, so the price is not part of the card link name. */}
+      <PriceTag price={entry.price} locale={locale} ui={ui} className="explore-price explore-price-card" />
       {entry.tags.length > 0 && (
         <div className="explore-card-tags">
           <Tags tags={entry.tags} locale={locale} ui={ui} />
@@ -472,12 +478,11 @@ export async function DetailHero({
             </p>
             <h1>{detail.title}</h1>
             <p className="explore-deck">{detail.summary}</p>
-            <ul className="explore-hero-chips">
-              <li className="explore-price-chip" data-free={isFree(detail.price) || undefined}>
-                <span className="explore-sr-only">{ui.price}: </span>
-                {priceLabel(detail.price, locale, ui)}
-              </li>
-            </ul>
+            {priceLabel(detail.price, locale, ui) && (
+              <ul className="explore-hero-chips">
+                <PriceTag as="li" price={detail.price} locale={locale} ui={ui} className="explore-price-chip" />
+              </ul>
+            )}
             {detail.classification && <dl className="explore-classification" aria-label={ui.classification}>
               <div><dt>{ui.category}</dt><dd>{termLabel(taxonomy, detail.classification.category_id)}</dd></div>
               <div><dt>{ui.topics}</dt><dd>{detail.classification.topic_ids.map((id) => termLabel(taxonomy, id)).join(", ")}</dd></div>

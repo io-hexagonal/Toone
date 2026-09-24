@@ -164,6 +164,7 @@ export function loadSession(): ToneSession | null {
 
 export function clearSession(): void {
   if (typeof window === "undefined") return;
+  clearCapabilityCache();
   try {
     localStorage.removeItem(SESSION_KEY);
   } catch {
@@ -286,9 +287,26 @@ export type CreatedInvitation = {
 };
 
 /** Server-granted capabilities of the signed-in account (`GET /me/capabilities`). */
-export async function getCapabilities(token: string): Promise<string[]> {
-  const result = await authedRequest<{ capabilities?: unknown }>(token, "/me/capabilities");
-  return Array.isArray(result?.capabilities) ? result.capabilities.filter((c): c is string => typeof c === "string") : [];
+export function getCapabilities(token: string): Promise<string[]> {
+  const now = Date.now();
+  const cached = capabilityCache.get(token);
+  if (cached && cached.until > now) return cached.promise;
+  const promise = authedRequest<{ capabilities?: unknown }>(token, "/me/capabilities").then(result =>
+    Array.isArray(result?.capabilities) ? result.capabilities.filter((c): c is string => typeof c === "string") : []);
+  // One request per token for every component on the page (header links,
+  // "Edit listing"…); failures are never cached.
+  capabilityCache.clear();
+  capabilityCache.set(token, { promise, until: now + CAPABILITY_TTL_MS });
+  promise.catch(() => { if (capabilityCache.get(token)?.promise === promise) capabilityCache.delete(token); });
+  return promise;
+}
+
+const CAPABILITY_TTL_MS = 60_000;
+const capabilityCache = new Map<string, { promise: Promise<string[]>; until: number }>();
+
+/** Forgets memoized capabilities (sign-out, tests). */
+export function clearCapabilityCache(): void {
+  capabilityCache.clear();
 }
 
 export async function hasCapability(token: string, capability: string): Promise<boolean> {

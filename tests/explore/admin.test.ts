@@ -3,11 +3,11 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { ApiError, getCapabilities, hasCapability } from "../../lib/api";
+import { ApiError, clearCapabilityCache, getCapabilities, hasCapability } from "../../lib/api";
 import {
   EXPLORE_EDIT_CAPABILITY, buildSaveRequest, canEditExplore, editCoverUrl, fieldForPath, formFromEdit,
-  getListingEdit, groupErrorDetails, isEditDirty, isListingRef, normalizeTags, parseListingKind,
-  publicListingPath, saveListingEdit, tagProblem,
+  editLimits, getListingEdit, groupErrorDetails, isEditDirty, isListingRef, localProblems, normalizeTags,
+  parseListingKind, publicListingPath, remapListErrors, saveListingEdit, tagFromInput, tagProblem,
   type ExploreListingEdit, type ListingProfileFull,
 } from "../../lib/explore/admin";
 import { resolveCoverPath } from "../../lib/explore/cover";
@@ -146,20 +146,106 @@ test("legacy listings (no profile, no classification) edit the catalog title/sum
   assert.equal(isEditDirty(edit, form), false, "whitespace-only edits are not changes");
 });
 
-test("tags are trimmed, deduplicated and normalized per kind", () => {
-  assert.deepEqual(normalizeTags(["  launch ", "launch", "", "product   hunt", "Launch"], "routine"), ["launch", "product hunt", "Launch"]);
-  assert.deepEqual(normalizeTags([" Product Hunt ", "product-hunt", "SEO"], "bundle"), ["product-hunt", "seo"]);
-  assert.equal(tagProblem("a".repeat(40), "routine"), null);
-  assert.ok(tagProblem("a".repeat(41), "routine"));
-  assert.ok(tagProblem("é".repeat(21), "routine"), "40 bytes, like the server's len()");
-  assert.equal(tagProblem("growth-2026", "bundle"), null);
-  assert.ok(tagProblem("growth_2026", "bundle"));
-  assert.ok(tagProblem("a".repeat(33), "bundle"));
+test("tags are normalized like the server: trim, bundles lowercase, dedupe; inner spaces kept", () => {
+  assert.deepEqual(normalizeTags(["  launch ", "launch", "", "product   hunt", "Launch"], "routine"), ["launch", "product   hunt", "Launch"]);
+  assert.deepEqual(normalizeTags([" Product-Hunt ", "product-hunt", "SEO"], "bundle"), ["product-hunt", "seo"]);
+  assert.equal(tagFromInput(" Product  Hunt ", "bundle"), "product-hunt", "typed bundle tags become valid slugs");
+  assert.equal(tagFromInput(" Product  Hunt ", "routine"), "Product  Hunt");
+  const routine = editLimits({ kind: "routine" });
+  const bundle = editLimits({ kind: "bundle" });
+  assert.equal(tagProblem("a".repeat(40), routine), null);
+  assert.ok(tagProblem("a".repeat(41), routine));
+  assert.ok(tagProblem("é".repeat(21), routine), "40 bytes, like the server's len()");
+  assert.equal(tagProblem("growth-2026", bundle), null);
+  assert.ok(tagProblem("growth_2026", bundle));
+  assert.ok(tagProblem("a".repeat(33), bundle));
   const edit = loaded();
   const form = formFromEdit(edit);
   form.tags = [" launch", "launch ", "product hunt"];
   assert.deepEqual(buildSaveRequest(edit, form).tags, ["launch", "product hunt"]);
   assert.equal(isEditDirty(edit, form), false, "normalization alone is not a change");
+});
+
+test("dirty state compares against the normalized loaded tags", () => {
+  const edit = loaded({ kind: "bundle", tags: ["Launch", " seo", "launch"] });
+  assert.equal(isEditDirty(edit, formFromEdit(edit)), false, "loaded tags the server would normalize are not a change");
+  const form = formFromEdit(edit);
+  form.tags = ["launch", "seo"];
+  assert.equal(isEditDirty(edit, form), false);
+  form.tags = ["seo", "launch"];
+  assert.equal(isEditDirty(edit, form), true, "order is meaningful");
+});
+
+test("server limits drive tag rules, with per-field fallbacks", () => {
+  const limits = editLimits({ kind: "routine", limits: { tags_max: 5, tag_max_length: 10, tag_pattern: "^[a-z]+$", summary_max: 0, title_max: "x" as unknown as number } });
+  assert.equal(limits.tags_max, 5);
+  assert.equal(limits.tag_max_length, 10);
+  assert.equal(limits.summary_max, 2000, "invalid value falls back");
+  assert.equal(limits.title_max, 128);
+  assert.equal(limits.reason_max, 500, "absent value falls back");
+  assert.ok(tagProblem("Growth", limits));
+  assert.equal(tagProblem("growth", limits), null);
+  assert.equal(editLimits({ kind: "bundle", limits: { tag_pattern: "(" } }).tag_pattern, "^[a-z0-9-]{1,32}$", "a broken pattern falls back");
+  assert.equal(editLimits({ kind: "bundle", limits: { tag_pattern: "" } }).tag_pattern, "", "an explicit empty pattern is respected");
+  const edit = loaded({ limits: { tags_max: 2 } });
+  const form = formFromEdit(edit);
+  form.tags = ["a", "b", "c"];
+  assert.ok(localProblems(edit, form).some((d) => d.path === "tags"));
+});
+
+test("every profile string is trimmed in the payload; whitespace-only required fields fail locally", () => {
+  const edit = loaded();
+  const form = formFromEdit(edit);
+  form.profile!.search.display_title = "  Launch prep  ";
+  form.profile!.faq[0].answer = `${form.profile!.faq[0].answer}   `;
+  form.profile!.how_it_works[1] = "  Reads each site's rules.  ";
+  const body = buildSaveRequest(edit, form);
+  assert.equal(body.listing_profile!.search.display_title, "Launch prep");
+  assert.equal(body.listing_profile!.faq[0].answer, edit.listing_profile!.faq[0].answer);
+  assert.equal(body.listing_profile!.how_it_works[1], "Reads each site's rules.");
+  assert.deepEqual(localProblems(edit, form), []);
+  form.profile!.search.display_title = "   ";
+  form.profile!.results[1].description = "\n\t ";
+  form.profile!.use_cases[0] = " ";
+  const paths = localProblems(edit, form).map((d) => d.path);
+  assert.deepEqual(paths, [
+    "listing_profile.search.display_title",
+    "listing_profile.use_cases[0]",
+    "listing_profile.results[1].description",
+  ]);
+});
+
+test("legacy listings: title required, summary may be empty, reason bounded", () => {
+  const edit = loaded({ listing_profile: null, profile_hash: "", classification: null, classification_hash: "", limits: { reason_max: 10 } });
+  const form = formFromEdit(edit);
+  form.summary = "   ";
+  assert.equal(buildSaveRequest(edit, form).summary, "");
+  assert.deepEqual(localProblems(edit, form), []);
+  form.title = "  ";
+  form.reason = "a".repeat(11);
+  assert.deepEqual(localProblems(edit, form).map((d) => d.path), ["title", "reason"]);
+});
+
+test("row errors follow their rows through moves, removals and additions", () => {
+  const errors = new Map([
+    ["listing_profile.results[0].name", ["first"]],
+    ["listing_profile.results[2]", ["third"]],
+    ["listing_profile.results", ["list"]],
+    ["listing_profile.faq[0].answer", ["faq"]],
+  ]);
+  // Move row 2 to the top: order[new] = old.
+  const moved = remapListErrors(errors, "listing_profile.results", [2, 0, 1]);
+  assert.deepEqual([...moved.entries()].sort(), [
+    ["listing_profile.faq[0].answer", ["faq"]],
+    ["listing_profile.results", ["list"]],
+    ["listing_profile.results[0]", ["third"]],
+    ["listing_profile.results[1].name", ["first"]],
+  ]);
+  const removed = remapListErrors(errors, "listing_profile.results", [1, 2]);
+  assert.ok(!removed.has("listing_profile.results[0].name"), "a removed row's errors go away");
+  assert.deepEqual(removed.get("listing_profile.results[1]"), ["third"]);
+  const added = remapListErrors(errors, "listing_profile.results", [0, 1, 2, -1]);
+  assert.deepEqual(added, errors);
 });
 
 test("dirty tracking ignores the reason and key order, and clears when an edit is reverted", () => {
@@ -239,16 +325,34 @@ test("the edit capability is explore.edit and nothing else", () => {
 });
 
 test("capabilities come from /me/capabilities with the session token; odd shapes read as none", async (t) => {
+  clearCapabilityCache();
   let payload: unknown = { data: { capabilities: ["invitation.manage", "explore.edit"] } };
   const calls = mockFetch(t, () => new Response(JSON.stringify(payload)));
-  assert.equal(await hasCapability("tok", "explore.edit"), true);
+  assert.equal(await hasCapability("tok-1", "explore.edit"), true);
   assert.ok(calls[0].url.endsWith("/me/capabilities"));
-  assert.equal(new Headers(calls[0].init.headers).get("Authorization"), "Bearer tok");
+  assert.equal(new Headers(calls[0].init.headers).get("Authorization"), "Bearer tok-1");
   assert.equal(calls[0].init.cache, "no-store");
   payload = { data: { capabilities: ["invitation.manage"] } };
-  assert.equal(await hasCapability("tok", "explore.edit"), false);
+  assert.equal(await hasCapability("tok-2", "explore.edit"), false);
   payload = { data: { capabilities: "explore.edit" } };
-  assert.deepEqual(await getCapabilities("tok"), []);
+  assert.deepEqual(await getCapabilities("tok-3"), []);
+});
+
+test("one capabilities request per token is shared by every caller; failures are retried", async (t) => {
+  clearCapabilityCache();
+  let fail = true;
+  const calls = mockFetch(t, () => fail
+    ? new Response(JSON.stringify({ code: "internal_error", message: "boom" }), { status: 500 })
+    : new Response(JSON.stringify({ data: { capabilities: ["explore.edit", "invitation.manage"] } })));
+  await assert.rejects(hasCapability("tok", "explore.edit"));
+  fail = false;
+  const [edit, invite] = await Promise.all([hasCapability("tok", "explore.edit"), hasCapability("tok", "invitation.manage")]);
+  assert.deepEqual([edit, invite], [true, true]);
+  assert.equal(await hasCapability("tok", "explore.edit"), true);
+  assert.equal(calls.length, 2, "the failure, then one shared request");
+  await hasCapability("other", "explore.edit");
+  assert.equal(calls.length, 3, "another token is a new request");
+  clearCapabilityCache();
 });
 
 test("the Edit listing island renders nothing on the server (ISR output is unchanged)", () => {

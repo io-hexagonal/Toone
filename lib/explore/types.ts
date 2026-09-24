@@ -48,8 +48,8 @@ export type CardPresentation = {
   display_title?: string | null;
   card_summary?: string | null;
   results_count?: number | null;
-  /** Contract §5 marketplace price; absent reads as free. */
-  price?: ExplorePrice;
+  /** Contract §5 marketplace price; absent reads as free, null = unusable (no tag). */
+  price?: ExplorePrice | null;
 };
 
 /** One shared routine family inside a package: the root routine or a direct child. */
@@ -176,8 +176,8 @@ export type RoutinePublicDetail = {
   listing?: RoutineListing;
   cover_url?: string | null;
   cover_image_data_url?: string | null;
-  /** Contract §5 marketplace price; absent reads as free. */
-  price?: ExplorePrice;
+  /** Contract §5 marketplace price; absent reads as free, null = unusable (no tag). */
+  price?: ExplorePrice | null;
   author_name: string;
   /** True when Toone (a platform admin) published it: show the Toone mark. */
   author_official?: boolean;
@@ -253,8 +253,8 @@ export type BundlePublicDetail = {
   member_count: number;
   cover_url?: string | null;
   cover_image_data_url?: string | null;
-  /** Contract §5 marketplace price; absent reads as free. */
-  price?: ExplorePrice;
+  /** Contract §5 marketplace price; absent reads as free, null = unusable (no tag). */
+  price?: ExplorePrice | null;
   author_name: string;
   /** True when Toone (a platform admin) published it: show the Toone mark. */
   author_official?: boolean;

@@ -29,10 +29,9 @@ import {
   RoutineDefinition,
   capitalize,
   formatDate,
-  priceLabel,
+  PriceTag,
   type ExploreCopy,
 } from "./ExploreView";
-import { isFree } from "@/lib/explore/price";
 
 type Detail = RoutinePublicDetail | BundlePublicDetail;
 type Props = {
@@ -81,10 +80,7 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
             <h1>{profile.search.display_title}</h1>
             <p className="explore-answer">{profile.answer}</p>
             <ul className="explore-hero-chips" aria-label={ui.details}>
-              <li className="explore-price-chip" data-free={isFree(detail.price) || undefined}>
-                <span className="explore-sr-only">{ui.price}: </span>
-                {priceLabel(detail.price, locale, ui)}
-              </li>
+              <PriceTag as="li" price={detail.price} locale={locale} ui={ui} className="explore-price-chip" />
               {category && <li>{label(taxonomy, category)}</li>}
               {audiences.length > 0 && (
                 <li>

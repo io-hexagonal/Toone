@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import ListingEditPage from "@/components/explore/admin/ListingEditPage";
 
 export const metadata: Metadata = {
-  title: "Account",
+  title: "Edit listing",
   robots: { index: false, follow: false },
   referrer: "no-referrer",
 };

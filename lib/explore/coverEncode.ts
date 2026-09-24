@@ -24,7 +24,7 @@ function toDataUrl(blob: Blob): Promise<string> {
   });
 }
 
-export async function encodeCoverImage(file: File): Promise<string> {
+export async function encodeCoverImage(file: File, maxBytes = MAX_COVER_BYTES): Promise<string> {
   if (!file.type.startsWith("image/")) throw new CoverEncodeError("Choose an image file (JPEG, PNG, WebP…).");
   if (file.size > MAX_SOURCE_BYTES) throw new CoverEncodeError("That image is larger than 20 MB. Choose a smaller one.");
   let bitmap: ImageBitmap;
@@ -49,11 +49,11 @@ export async function encodeCoverImage(file: File): Promise<string> {
       context.drawImage(bitmap, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
       for (const quality of QUALITIES) {
         const blob = await toBlob(canvas, quality);
-        if (blob && blob.size <= MAX_COVER_BYTES) return toDataUrl(blob);
+        if (blob && blob.size <= maxBytes) return toDataUrl(blob);
       }
     }
   } finally {
     bitmap.close();
   }
-  throw new CoverEncodeError("Could not get this image under 256 KB. Choose a simpler image.");
+  throw new CoverEncodeError(`Could not get this image under ${Math.round(maxBytes / 1024)} KB. Choose a simpler image.`);
 }

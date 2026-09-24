@@ -10,10 +10,10 @@ import { Link } from "@/lib/navigation";
 import { ApiError, logout, type ApiErrorDetail, type ToneSession } from "@/lib/api";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import {
-  LIMITS, MAX_TAGS, buildSaveRequest, editCoverUrl, formFromEdit, getListingEdit, getPublicTaxonomy,
-  groupErrorDetails, isEditDirty, isListingRef, normalizeTag, parseListingKind, publicListingPath,
-  saveListingEdit, tagProblem,
-  type ExploreListingEdit, type ListingEditForm, type ListingEditRef, type ListingKind, type ListingProfileFull,
+  DEFAULT_EDIT_LIMITS, LIMITS, buildSaveRequest, editCoverUrl, editLimits, formFromEdit, getListingEdit, getPublicTaxonomy,
+  groupErrorDetails, isEditDirty, isListingRef, localProblems, parseListingKind, publicListingPath,
+  remapListErrors, saveListingEdit, tagFromInput, tagProblem,
+  type EditLimits, type ExploreListingEdit, type ListingEditForm, type ListingEditRef, type ListingKind, type ListingProfileFull,
 } from "@/lib/explore/admin";
 import { CoverEncodeError, encodeCoverImage } from "@/lib/explore/coverEncode";
 import type { ExploreClassification, ExploreTaxonomy, TaxonomyTerm } from "@/lib/explore/taxonomy";
@@ -48,7 +48,15 @@ type Notice =
   | { kind: "invalid"; message: string; unmatched: ApiErrorDetail[]; count: number }
   | { kind: "error"; message: string };
 
-const ErrorsContext = createContext<ReadonlyMap<string, string[]>>(new Map());
+type ErrorsState = {
+  errors: ReadonlyMap<string, string[]>;
+  /** A list's rows moved: keep each row's errors on that row. */
+  remap: (listPath: string, order: readonly number[]) => void;
+  limits: EditLimits;
+};
+const ErrorsContext = createContext<ErrorsState>({ errors: new Map(), remap: () => {}, limits: DEFAULT_EDIT_LIMITS.routine });
+
+const LEAVE_MESSAGE = "Leave this page? Your unsaved changes will be lost.";
 
 function EditorWorkspace({ session, kind, id, onSessionEnded }: {
   session: ToneSession; kind: ListingKind; id: string; onSessionEnded: () => void;
@@ -58,6 +66,8 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
   const [form, setForm] = useState<ListingEditForm | null>(null);
   const [taxonomy, setTaxonomy] = useState<ExploreTaxonomy | null>(null);
   const [saving, setSaving] = useState(false);
+  /** Set by a 409: the draft was built on an old version and must not be resent. */
+  const [stale, setStale] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [fieldErrors, setFieldErrors] = useState<ReadonlyMap<string, string[]>>(new Map());
   const [signingOut, setSigningOut] = useState(false);
@@ -69,7 +79,7 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
     try {
       const result = await getListingEdit(session.token, kind, id);
       if (!active.current) return;
-      setEdit(result); setForm(formFromEdit(result)); setState("ready");
+      setEdit(result); setForm(formFromEdit(result)); setStale(false); setState("ready");
     } catch (caught) {
       if (!active.current) return;
       if (caught instanceof ApiError && caught.status === 401) onSessionEnded();
@@ -88,16 +98,33 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
   }, [load]);
 
   const dirty = !!edit && !!form && isEditDirty(edit, form);
+  const limits = useMemo(() => edit ? editLimits(edit) : DEFAULT_EDIT_LIMITS[kind], [edit, kind]);
+  const remap = useCallback((listPath: string, order: readonly number[]) => {
+    setFieldErrors(current => current.size ? remapListErrors(current, listPath, order) : current);
+  }, []);
+  const errorsState = useMemo(() => ({ errors: fieldErrors, remap, limits }), [fieldErrors, remap, limits]);
 
   useEffect(() => {
-    document.title = state === "denied" ? "Page not found | Toone" : state === "ready" ? "Edit listing | Toone" : "Account | Toone";
+    document.title = state === "denied" ? "Page not found | Toone" : "Edit listing | Toone";
   }, [state]);
 
+  // Unsaved changes: warn on reload/close, and on any in-app link (Next's
+  // client navigation never fires beforeunload). The capture listener runs
+  // before React's, so cancelling it stops the router too.
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    const click = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = (event.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin === window.location.origin && url.pathname === window.location.pathname && url.search === window.location.search) return;
+      if (!window.confirm(LEAVE_MESSAGE)) { event.preventDefault(); event.stopPropagation(); }
+    };
     window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
+    document.addEventListener("click", click, true);
+    return () => { window.removeEventListener("beforeunload", warn); document.removeEventListener("click", click, true); };
   }, [dirty]);
 
   const update = useCallback((change: (current: ListingEditForm) => ListingEditForm) => {
@@ -108,9 +135,23 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
     update(current => current.profile ? { ...current, profile: change(current.profile) } : current);
   }, [update]);
 
+  function showProblems(details: readonly ApiErrorDetail[], message: string) {
+    const known = new Set(Array.from(formRef.current?.querySelectorAll<HTMLElement>("[data-field-path]") ?? [], el => el.dataset.fieldPath ?? ""));
+    const { fields, unmatched } = groupErrorDetails(details, known);
+    setFieldErrors(fields);
+    setNotice({ kind: "invalid", message, unmatched, count: fields.size });
+    requestAnimationFrame(() => {
+      const first = formRef.current?.querySelector<HTMLElement>("[data-invalid='true']");
+      first?.scrollIntoView({ behavior: "smooth", block: "center" });
+      first?.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true });
+    });
+  }
+
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (!edit || !form || saving || !dirty) return;
+    if (!edit || !form || saving || !dirty || stale) return;
+    const problems = localProblems(edit, form);
+    if (problems.length) { showProblems(problems, "Some fields need attention before saving."); return; }
     setSaving(true); setNotice(null); setFieldErrors(new Map());
     try {
       const result = await saveListingEdit(session.token, kind, id, buildSaveRequest(edit, form));
@@ -122,17 +163,10 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
       if (caught instanceof ApiError && caught.status === 401) { onSessionEnded(); return; }
       if (caught instanceof ApiError && caught.status === 403) { setState("denied"); return; }
       if (caught instanceof ApiError && caught.status === 409) {
+        setStale(true);
         setNotice({ kind: "conflict", message: caught.message || "This listing changed since you opened it. Reload to edit the latest version." });
       } else if (caught instanceof ApiError && (caught.status === 400 || caught.status === 422)) {
-        const known = new Set(Array.from(formRef.current?.querySelectorAll<HTMLElement>("[data-field-path]") ?? [], el => el.dataset.fieldPath ?? ""));
-        const { fields, unmatched } = groupErrorDetails(caught.details, known);
-        setFieldErrors(fields);
-        setNotice({ kind: "invalid", message: caught.message || "Some fields need attention.", unmatched, count: fields.size });
-        requestAnimationFrame(() => {
-          const first = formRef.current?.querySelector<HTMLElement>("[data-invalid='true']");
-          first?.scrollIntoView({ behavior: "smooth", block: "center" });
-          first?.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true });
-        });
+        showProblems(caught.details, caught.message || "Some fields need attention.");
       } else if (caught instanceof ApiError && caught.status === 404) {
         setNotice({ kind: "error", message: "This listing is no longer live, so it can’t be edited." });
       } else {
@@ -145,7 +179,7 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
   }
 
   function reload() {
-    if (dirty && !window.confirm("Reload the latest version? Your unsaved changes will be lost.")) return;
+    if (dirty && !stale && !window.confirm("Reload the latest version? Your unsaved changes will be lost.")) return;
     void load();
   }
 
@@ -155,6 +189,7 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
   }
 
   async function signOut() {
+    if (dirty && !window.confirm(LEAVE_MESSAGE)) return;
     setSigningOut(true);
     await logout(session.token);
     onSessionEnded();
@@ -225,7 +260,7 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
             <ol>{sections.map(([anchor, label]) => <li key={anchor}><a href={`#${anchor}`}>{label}</a></li>)}</ol>
           </nav>
 
-          <ErrorsContext.Provider value={fieldErrors}>
+          <ErrorsContext.Provider value={errorsState}>
             <form ref={formRef} className={s.form} onSubmit={save} noValidate>
               <Section id="basics" title="Basics" hint="What people see first: the heading, the card and search result, and the description.">
                 {profile ? <>
@@ -250,9 +285,9 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
                   <small className={s.referenceNote}>The catalog title and summary are kept as they are: with a listing profile, pages and cards use the fields above.</small>
                 </> : <>
                   <p className={s.note}>This listing was published before listing profiles, so its page shows this title and description. Page sections (results, how it works, FAQ…) arrive with a new revision that has a listing profile.</p>
-                  <Field path="title" label="Title" hint="The page heading and card title." max={LIMITS.title}
+                  <Field path="title" label="Title" hint="The page heading and card title." max={limits.title_max}
                     value={form.title} onChange={title => update(current => ({ ...current, title }))} />
-                  <Field path="summary" label="Short description" hint="The card summary and the text under the page heading." multiline rows={5} max={LIMITS.summary}
+                  <Field path="summary" label="Short description" hint="The card summary and the text under the page heading." optional multiline rows={5} max={limits.summary_max}
                     value={form.summary} onChange={summary => update(current => ({ ...current, summary }))} />
                 </>}
               </Section>
@@ -274,17 +309,17 @@ function EditorWorkspace({ session, kind, id, onSessionEnded }: {
               {profile && <ProfileSections profile={profile} edit={edit} classification={form.classification} taxonomy={taxonomy} updateProfile={updateProfile} />}
 
               <Section id="save" title="Save" hint="Saving updates the public page and the desktop app within a minute.">
-                <Field path="reason" label="Reason" optional hint="Kept in the audit log." multiline rows={2} max={LIMITS.reason}
+                <Field path="reason" label="Reason" optional hint="Kept in the audit log." multiline rows={2} max={limits.reason_max}
                   value={form.reason} onChange={reason => update(current => ({ ...current, reason }))} />
               </Section>
 
               <div className={s.saveBar}>
                 <p role="status" className={s.saveStatus}>
-                  {saving ? "Saving…" : dirty ? "Unsaved changes" : notice?.kind === "saved" ? "All changes saved" : "No changes"}
+                  {saving ? "Saving…" : stale ? "This listing changed elsewhere. Reload to continue." : dirty ? "Unsaved changes" : notice?.kind === "saved" ? "All changes saved" : "No changes"}
                 </p>
                 <div className={s.saveActions}>
-                  {dirty && !saving && <button type="button" onClick={discard}>Discard</button>}
-                  <button type="submit" className={s.saveButton} disabled={!dirty || saving}>{saving ? "Saving…" : "Save changes"}</button>
+                  {stale ? <button type="button" onClick={reload}>Reload</button> : dirty && !saving && <button type="button" onClick={discard}>Discard</button>}
+                  <button type="submit" className={s.saveButton} disabled={!dirty || saving || stale}>{saving ? "Saving…" : "Save changes"}</button>
                 </div>
               </div>
             </form>
@@ -523,20 +558,21 @@ function ChipGroup({ path, label, range, terms, selected, onChange }: {
 function TagInput({ kind, tags, onChange }: { kind: ListingKind; tags: string[]; onChange: (tags: string[]) => void }) {
   const [draft, setDraft] = useState("");
   const [problem, setProblem] = useState("");
+  const { limits } = useContext(ErrorsContext);
   const errors = useFieldErrors("tags");
-  const full = tags.length >= MAX_TAGS;
+  const full = tags.length >= limits.tags_max;
 
   function commit(raw: string) {
-    const parts = raw.split(",").map(part => normalizeTag(part, kind)).filter(Boolean);
+    const parts = raw.split(",").map(part => tagFromInput(part, kind)).filter(Boolean);
     const next = [...tags];
     for (const tag of parts) {
-      const issue = tagProblem(tag, kind);
+      const issue = tagProblem(tag, limits);
       if (issue) { setProblem(`“${tag}”: ${issue}`); return; }
       if (next.includes(tag)) continue;
-      if (next.length >= MAX_TAGS) { setProblem(`Use at most ${MAX_TAGS} tags.`); break; }
+      if (next.length >= limits.tags_max) { setProblem(`Use at most ${limits.tags_max} tags.`); onChange(next); setDraft(""); return; }
       next.push(tag);
     }
-    onChange(next); setDraft(""); if (next.length < MAX_TAGS || parts.length === 0) setProblem("");
+    onChange(next); setDraft(""); setProblem("");
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -544,24 +580,28 @@ function TagInput({ kind, tags, onChange }: { kind: ListingKind; tags: string[];
     else if (event.key === "Backspace" && !draft && tags.length) onChange(tags.slice(0, -1));
   }
 
+  const hasErrors = !!problem || errors.length > 0;
   return (
     <div className={s.field} data-field-path="tags" data-invalid={errors.length > 0 || undefined}>
-      <div className={s.labelRow}><label htmlFor="tag-input">Tags</label><span className={s.counter}>{tags.length} of {MAX_TAGS}</span></div>
+      <div className={s.labelRow}><label htmlFor="tag-input">Tags</label><span className={s.counter}>{tags.length} of {limits.tags_max}</span></div>
       <div className={s.tagBox}>
         {tags.map((tag, index) => (
-          <span key={tag} className={s.tag} data-invalid={!!tagProblem(tag, kind) || undefined}>
+          <span key={tag} className={s.tag} data-invalid={!!tagProblem(tag, limits) || undefined}>
             {tag}
             <button type="button" aria-label={`Remove tag ${tag}`} onClick={() => onChange(tags.filter((_, i) => i !== index))}>×</button>
           </span>
         ))}
         <input id="tag-input" value={draft} disabled={full} autoComplete="off" spellCheck={false}
+          aria-describedby={`tag-help${hasErrors ? " tag-errors" : ""}`} aria-invalid={hasErrors || undefined}
           placeholder={full ? "Tag limit reached" : tags.length ? "Add a tag" : "Type a tag and press Enter"}
           onChange={event => { setDraft(event.target.value); setProblem(""); }}
           onKeyDown={onKeyDown} onBlur={() => { if (draft.trim()) commit(draft); }} />
       </div>
-      <small>{kind === "bundle" ? "Lowercase letters, digits and hyphens, up to 32 characters." : "Up to 40 characters each."} Press Enter or comma to add.</small>
-      {problem && <p className={s.error}>{problem}</p>}
-      <FieldErrors errors={errors} />
+      <small id="tag-help">{limits.tag_pattern ? `Lowercase letters, digits and hyphens, up to ${limits.tag_max_length} characters.` : `Up to ${limits.tag_max_length} characters each.`} Press Enter or comma to add.</small>
+      <div id="tag-errors" aria-live="polite">
+        {problem && <p className={s.error}>{problem}</p>}
+        <FieldErrors errors={errors} />
+      </div>
     </div>
   );
 }
@@ -569,6 +609,7 @@ function TagInput({ kind, tags, onChange }: { kind: ListingKind; tags: string[];
 function CoverEditor({ edit, dataUrl, alt, onChange }: {
   edit: ExploreListingEdit; dataUrl: string | null; alt: string; onChange: (dataUrl: string | null) => void;
 }) {
+  const { limits } = useContext(ErrorsContext);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState("");
   const input = useRef<HTMLInputElement>(null);
@@ -579,7 +620,7 @@ function CoverEditor({ edit, dataUrl, alt, onChange }: {
   async function choose(file: File | undefined) {
     if (!file) return;
     setBusy(true); setProblem("");
-    try { onChange(await encodeCoverImage(file)); }
+    try { onChange(await encodeCoverImage(file, limits.cover_max_bytes)); }
     catch (caught) { setProblem(caught instanceof CoverEncodeError ? caught.message : "Could not use that image."); }
     finally { setBusy(false); if (input.current) input.current.value = ""; }
   }
@@ -596,7 +637,7 @@ function CoverEditor({ edit, dataUrl, alt, onChange }: {
           <input ref={input} type="file" accept="image/*" hidden onChange={event => void choose(event.target.files?.[0])} />
           <button type="button" onClick={() => input.current?.click()} disabled={busy}>{busy ? "Preparing…" : shown ? "Replace image…" : "Choose image…"}</button>
           {dataUrl && <button type="button" onClick={() => onChange(null)} disabled={busy}>Keep current cover</button>}
-          <small>Cropped to 16:9 and saved as a JPEG under 256 KB.</small>
+          <small>Cropped to 16:9 and saved as a JPEG under {Math.round(limits.cover_max_bytes / 1024)} KB.</small>
         </div>
       </div>
       {problem && <p className={s.error} role="alert">{problem}</p>}
@@ -608,7 +649,7 @@ function CoverEditor({ edit, dataUrl, alt, onChange }: {
 /* ---------------------------------------------------------------- building blocks */
 
 function useFieldErrors(path: string) {
-  return useContext(ErrorsContext).get(path) ?? [];
+  return useContext(ErrorsContext).errors.get(path) ?? [];
 }
 
 function FieldErrors({ errors }: { errors: string[] }) {
@@ -698,31 +739,54 @@ function RefSelect({ path, label, refs, value, onChange }: {
   );
 }
 
+let rowKeySeed = 0;
+const newRowKey = () => `row-${++rowKeySeed}`;
+
+/**
+ * Stable React keys for list rows, created on load and carried through every
+ * add/move/remove, so a row keeps its DOM state and its errors when it moves.
+ * A length change from outside (reload, discard) starts fresh keys.
+ */
+function useRowKeys(length: number) {
+  const keys = useRef<string[]>([]);
+  if (keys.current.length !== length) keys.current = Array.from({ length }, newRowKey);
+  return keys;
+}
+
 function ListEditor<T>({ path, items, onChange, min, max, noun, make, render }: {
   path: string; items: T[]; onChange: (items: T[]) => void; min: number; max: number; noun: string;
   make?: () => T; render: (item: T, index: number, change: (next: T) => void) => ReactNode;
 }) {
   const errors = useFieldErrors(path);
+  const { remap } = useContext(ErrorsContext);
+  const keys = useRowKeys(items.length);
+  /** Applies a new row order (`order[newIndex] = oldIndex`, -1 = new row). */
+  const reorder = (order: number[], make?: () => T) => {
+    keys.current = order.map(old => old >= 0 ? keys.current[old] : newRowKey());
+    remap(path, order);
+    onChange(order.map(old => old >= 0 ? items[old] : (make as () => T)()));
+  };
+  const indexes = () => items.map((_, i) => i);
   const move = (from: number, to: number) => {
-    const next = [...items];
-    const [item] = next.splice(from, 1);
-    next.splice(to, 0, item);
-    onChange(next);
+    const order = indexes();
+    const [old] = order.splice(from, 1);
+    order.splice(to, 0, old);
+    reorder(order);
   };
   return (
     <div className={s.list} data-field-path={path} data-invalid={errors.length > 0 || undefined}>
       {items.length === 0 ? <p className={s.empty}>No {noun}s yet.</p> : (
         <ol className={s.rows}>
-          {items.map((item, index) => <ListRow key={index} path={`${path}[${index}]`} index={index} count={items.length} noun={noun}
+          {items.map((item, index) => <ListRow key={keys.current[index]} path={`${path}[${index}]`} index={index} count={items.length} noun={noun}
             canRemove={items.length > min}
-            onMove={to => move(index, to)} onRemove={() => onChange(items.filter((_, i) => i !== index))}>
+            onMove={to => move(index, to)} onRemove={() => reorder(indexes().filter(i => i !== index))}>
             {render(item, index, next => onChange(items.map((current, i) => i === index ? next : current)))}
           </ListRow>)}
         </ol>
       )}
       <FieldErrors errors={errors} />
       {make && <div className={s.listFoot}>
-        <button type="button" onClick={() => onChange([...items, make()])} disabled={items.length >= max}>+ Add {noun}</button>
+        <button type="button" onClick={() => reorder([...indexes(), -1], make)} disabled={items.length >= max}>+ Add {noun}</button>
         <span className={s.counter}>{items.length} of {min ? `${min}–` : "up to "}{max}</span>
       </div>}
     </div>
