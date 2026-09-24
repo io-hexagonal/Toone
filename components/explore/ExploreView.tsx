@@ -327,6 +327,18 @@ export function PriceTag({
     </span>
   );
 }
+/** "By …" byline value; Toone-published listings carry the Toone mark. */
+export function Author({ entry }: { entry: { author_name: string; author_official?: boolean } }) {
+  if (!entry.author_official) return <>{entry.author_name}</>;
+  return (
+    <span className="explore-author-official">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/assets/brand/toone-mark-light.svg" alt="" width={14} height={14} />
+      {entry.author_name}
+    </span>
+  );
+}
+
 export function Counts({
   entry,
   ui,
@@ -400,7 +412,7 @@ export function CatalogCard({
             )}
             {entry.author_name && (
               <span className="explore-byline">
-                {ui.by} {entry.author_name}
+                {ui.by} <Author entry={entry} />
               </span>
             )}
           </div>
@@ -475,7 +487,7 @@ export async function DetailHero({
               {detail.author_name && (
                 <div>
                   <dt>{ui.by}</dt>
-                  <dd>{detail.author_name}</dd>
+                  <dd><Author entry={detail} /></dd>
                 </div>
               )}
               <div>
@@ -568,7 +580,7 @@ export function DetailsCard({
         {detail.author_name && (
           <div>
             <dt>{ui.by}</dt>
-            <dd>{detail.author_name}</dd>
+            <dd><Author entry={detail} /></dd>
           </div>
         )}
         {"license" in detail ? (

@@ -23,6 +23,7 @@ import type {
 import OpenInToone from "./OpenInToone";
 import EditListingLink from "./EditListingLink";
 import {
+  Author,
   Cover,
   IncludedInBundles,
   RoutineDefinition,
@@ -379,7 +380,7 @@ function ProfileDetailsCard({ detail, ui, locale }: { detail: Detail; ui: Explor
         {detail.author_name && (
           <div>
             <dt>{ui.by}</dt>
-            <dd>{detail.author_name}</dd>
+            <dd><Author entry={detail} /></dd>
           </div>
         )}
         <div>

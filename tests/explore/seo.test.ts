@@ -27,6 +27,11 @@ test("record schema names author, date and publisher", () => {
   assert.equal("author" in recordSchemaFields({ author_name: "", approved_at: "x" }), false);
 });
 
+test("Toone-published records credit the organization, not a person", () => {
+  const fields = recordSchemaFields({ author_name: "Toone", author_official: true, approved_at: "x" });
+  assert.deepEqual(fields.author, { "@id": `${SITE}/#organization` });
+});
+
 import { accessAttribution, requestAccessHref } from "../../lib/explore/presentation";
 
 test("access attribution keeps only Explore and a valid record id", () => {

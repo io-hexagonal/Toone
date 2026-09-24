@@ -213,6 +213,17 @@
   color: #77756c;
   line-height: 1.7;
 }
+.explore-author-official {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  vertical-align: bottom;
+}
+.explore-author-official img {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
 .explore-stats {
   list-style: none;
   display: flex;

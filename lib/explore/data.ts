@@ -352,6 +352,7 @@ function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDeta
       typeof raw.cover_image_data_url === "string" ? raw.cover_image_data_url : null,
     price: normalizePrice(raw.price),
     author_name: str(raw.author_name),
+    author_official: raw.author_official === true,
     approved_at: str(raw.approved_at, str(raw.reviewed_at)),
     content_hash: str(raw.content_hash),
     package_schema_version: num(raw.package_schema_version, num(pkg?.format_version, 0)),
@@ -461,6 +462,7 @@ function normalizeCatalogEntry(raw: unknown): RoutineCatalogEntry | null {
     cover_image_data_url:
       typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
     author_name: str(r.author_name),
+    author_official: r.author_official === true,
     approved_at: str(r.approved_at),
     ...normalizeCardPresentation(r),
   };
@@ -511,6 +513,7 @@ function normalizeBundleDetail(raw: unknown): BundlePublicDetail | null {
       typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
     price: normalizePrice(r.price),
     author_name: str(r.author_name),
+    author_official: r.author_official === true,
     approved_at: str(r.approved_at),
     members,
     ...normalizeProfileFields(r, `bundle ${str(r.bundle_id)}`, ""),

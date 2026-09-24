@@ -34,6 +34,8 @@ export type RoutineCatalogEntry = {
   /** Legacy inline cover for the shipping desktop build; superseded by `cover_url`. */
   cover_image_data_url?: string | null;
   author_name: string;
+  /** True when Toone (a platform admin) published it: show the Toone mark. */
+  author_official?: boolean;
   approved_at: string;
 } & CardPresentation;
 
@@ -177,6 +179,8 @@ export type RoutinePublicDetail = {
   /** Contract §5 marketplace price; absent reads as free. */
   price?: ExplorePrice;
   author_name: string;
+  /** True when Toone (a platform admin) published it: show the Toone mark. */
+  author_official?: boolean;
   approved_at: string;
   content_hash: string;
   package_schema_version: number;
@@ -222,6 +226,8 @@ export type BundleCatalogEntry = {
   cover_url?: string | null;
   cover_image_data_url?: string | null;
   author_name: string;
+  /** True when Toone (a platform admin) published it: show the Toone mark. */
+  author_official?: boolean;
   approved_at: string;
   members: BundleMemberRef[];
 } & CardPresentation;
@@ -250,6 +256,8 @@ export type BundlePublicDetail = {
   /** Contract §5 marketplace price; absent reads as free. */
   price?: ExplorePrice;
   author_name: string;
+  /** True when Toone (a platform admin) published it: show the Toone mark. */
+  author_official?: boolean;
   approved_at: string;
   members: BundleMemberDetail[];
 } & ProfileFields;

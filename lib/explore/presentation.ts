@@ -152,13 +152,18 @@ export function metaDescription(text: string, limit = 160): string {
 /** Shared schema.org fields for approved Explore records. */
 export function recordSchemaFields(detail: {
   author_name: string;
+  author_official?: boolean;
   approved_at: string;
 }) {
+  // Toone-published records are authored by the organization node itself.
+  const author: Record<string, string> | undefined = detail.author_official
+    ? { "@id": `${SITE}/#organization` }
+    : detail.author_name
+      ? { "@type": "Person", name: detail.author_name }
+      : undefined;
   return {
     dateModified: detail.approved_at,
-    ...(detail.author_name
-      ? { author: { "@type": "Person", name: detail.author_name } }
-      : {}),
+    ...(author ? { author } : {}),
     publisher: { "@id": `${SITE}/#organization` },
     isPartOf: { "@id": `${SITE}/#website` },
   };
