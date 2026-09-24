@@ -183,7 +183,7 @@ test("all translated routes have localized chrome with noindex and English canon
     assert.ok(html.includes(messages.explore.title));
   }
 });
-test("static sitemap lists /en/explore once; the Explore sitemap lists every feed item", async () => {
+test("static sitemap lists the hub; the Explore sitemap lists only profiled records", async () => {
   const site = await get("/sitemap.xml");
   assert.equal(site.response.status, 200);
   assert.match(site.html, /<loc>https:\/\/trytoone.com\/en\/explore<\/loc>/);
@@ -193,13 +193,12 @@ test("static sitemap lists /en/explore once; the Explore sitemap lists every fee
   const { response, html } = await get("/sitemap-explore.xml");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /application\/xml/);
-  // Contract §13: items the feed marks indexable:false are left out.
+  // Legacy records lack the reader-facing profile required by CONTENT-022.
   for (const item of fixture("feed").items)
-    assert.equal(
-      html.includes(`/en/explore/${item.type}s/${item.slug}<`),
-      item.indexable !== false,
-      item.slug,
-    );
+    assert.ok(!html.includes(`/en/explore/${item.type}s/${item.slug}<`), item.slug);
+  assert.ok(html.includes(`/en/explore/routines/${PROFILE_SLUG}<`));
+  assert.ok(html.includes(`/en/explore/bundles/${PROFILE_BUNDLE_SLUG}<`));
+  assert.ok(!html.includes(`/en/explore/routines/${NOINDEX_SLUG}<`));
   assert.ok(!html.includes("/pt/explore"));
   assert.match(html, /<lastmod>2026-/);
 
@@ -391,6 +390,7 @@ test("indexable:false renders noindex, follow and leaves the Explore sitemap; in
 
 test("the legacy routine keeps the fallback layout", async () => {
   const { html } = await get("/en/explore/routines/" + routine.slug);
+  assert.match(html, /<meta name="robots" content="noindex, follow"/);
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!/<h2[^>]*>What you get<\/h2>/.test(html));
   assert.match(html, /Completion criteria/);
@@ -410,6 +410,7 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   assert.ok(!html.includes("explore-builders"));
   assert.match(html, /Completion criteria/);
   assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
+  assert.match(html, /<meta name="robots" content="noindex, follow"/);
   await mode({});
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
   const restored = await get("/en/explore/routines/" + PROFILE_SLUG);

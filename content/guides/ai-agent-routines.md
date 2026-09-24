@@ -19,6 +19,8 @@ An AI agent routine is a bounded recurring or event-driven job with a named owne
 
 Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control. This guide covers the design decisions a routine needs before any tool runs it.
 
+To see reviewed examples of routines and bundles, browse [Explore Routines & Workflows Templates](/en/explore). The library shows what each routine does and what it needs before you add one to your workspace.
+
 A schedule alone does not make a routine ready to operate. The contract also needs to say what happens when an input is stale, a request is delivered twice, a write may have succeeded, a reviewer rejects the output, or nobody can prove the final effect. The lifecycle and worksheet below turn those decisions into records that an operator can inspect.
 
 ## What belongs in an agent routine

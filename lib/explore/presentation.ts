@@ -206,6 +206,13 @@ export function exploreMetadata(
     },
   };
 }
+/** A reviewed public record still needs its reader-facing profile to enter Search. */
+export function isExploreIndexable(detail: {
+  listing_profile?: ListingProfilePublic | null;
+  indexable?: boolean;
+}): boolean {
+  return !!detail.listing_profile && detail.indexable !== false;
+}
 export function routineSchema(detail: RoutinePublicDetail) {
   const root = detail.package.members.find(
     (member) => member.key === detail.package.root_key,

@@ -7,6 +7,7 @@ import {
   breadcrumbSchema,
   cardText,
   exploreMetadata,
+  isExploreIndexable,
   profileSchema,
   routineSchema,
   SITE,
@@ -164,6 +165,9 @@ test("profile metadata: seo title, meta description, cover alt and robots from i
   assert.deepEqual(hidden.robots, { index: false, follow: true });
   // Legacy callers are unchanged.
   assert.equal(exploreMetadata("en", "/explore", "t", "d", null).robots.index, true);
+  assert.equal(isExploreIndexable({ listing_profile: null, indexable: true }), false);
+  assert.equal(isExploreIndexable({ listing_profile: profile, indexable: false }), false);
+  assert.equal(isExploreIndexable({ listing_profile: profile, indexable: true }), true);
 });
 
 test("profile JSON-LD is a HowTo from the plain steps with tools, supplies and a category breadcrumb", () => {

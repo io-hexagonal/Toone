@@ -13,6 +13,7 @@ import {
   routineSchema,
   breadcrumbSchema,
   profileSchema,
+  isExploreIndexable,
 } from "@/lib/explore/presentation";
 import { termLabel } from "@/lib/explore/taxonomy";
 import {
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         profile.search.seo_title,
         profile.search.meta_description,
         resolveCoverUrl(detail),
-        { imageAlt: profile.cover_alt, indexable: detail.indexable },
+        { imageAlt: profile.cover_alt, indexable: isExploreIndexable(detail) },
       );
     return exploreMetadata(
       locale,
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       detail.title,
       detail.summary,
       resolveCoverUrl(detail),
-      { indexable: detail.indexable },
+      { indexable: false },
     );
   } catch {
     return { title: "Explore", robots: { index: false, follow: true } };
