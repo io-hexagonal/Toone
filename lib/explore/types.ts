@@ -1,4 +1,5 @@
 import type { ExploreClassification } from "./taxonomy";
+import type { ExplorePrice } from "./price";
 /**
  * Explore wire types — derived from the frozen contract in
  * docs/architecture/explore/contract.md (§5) and its fixtures.
@@ -45,6 +46,8 @@ export type CardPresentation = {
   display_title?: string | null;
   card_summary?: string | null;
   results_count?: number | null;
+  /** Contract §5 marketplace price; absent reads as free. */
+  price?: ExplorePrice;
 };
 
 /** One shared routine family inside a package: the root routine or a direct child. */
@@ -171,6 +174,8 @@ export type RoutinePublicDetail = {
   listing?: RoutineListing;
   cover_url?: string | null;
   cover_image_data_url?: string | null;
+  /** Contract §5 marketplace price; absent reads as free. */
+  price?: ExplorePrice;
   author_name: string;
   approved_at: string;
   content_hash: string;
@@ -242,6 +247,8 @@ export type BundlePublicDetail = {
   member_count: number;
   cover_url?: string | null;
   cover_image_data_url?: string | null;
+  /** Contract §5 marketplace price; absent reads as free. */
+  price?: ExplorePrice;
   author_name: string;
   approved_at: string;
   members: BundleMemberDetail[];

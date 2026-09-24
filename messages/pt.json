@@ -387,6 +387,8 @@
     "goToPanel": "Mostrar {title}"
   },
   "explore": {
+    "free": "Grátis",
+    "price": "Preço",
     "title": "Explorar",
     "heading": "Explorar",
     "intro": "Rotinas e conjuntos revistos, criados por especialistas. Use a sua própria IA: escolha o resultado de que precisa e a Toone configura tudo e faz o trabalho.",

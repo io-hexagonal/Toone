@@ -18,6 +18,7 @@ import {
   CatalogCard,
   JsonLd,
   getExploreCopy,
+  priceLabel,
 } from "@/components/explore/ExploreView";
 
 type Props = {
@@ -68,7 +69,7 @@ export default async function ExplorePage({ params, searchParams }: Props) {
         return {
           id: item.type + ("workflow_id" in item.entry ? item.entry.workflow_id : item.entry.bundle_id),
           href: `/${locale}/explore/${item.type}s/${resolveSlug(item.entry)}`,
-          eyebrow: [ui.featured, item.type === "bundle" ? ui.bundle : ui.routine, category && termLabel(catalog.taxonomy, category)]
+          eyebrow: [ui.featured, item.type === "bundle" ? ui.bundle : ui.routine, category && termLabel(catalog.taxonomy, category), priceLabel(item.entry.price, locale, ui)]
             .filter(Boolean)
             .join(" · "),
           title: text.title,

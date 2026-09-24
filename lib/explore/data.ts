@@ -13,6 +13,7 @@ import { normalizeClassification, validateCatalogTaxonomy, hasTaxonomyFilters, t
  */
 import type { CatalogQuery, CatalogItem } from "./presentation";
 import { resolveCoverPath } from "./cover";
+import { normalizePrice } from "./price";
 import { normalizeListingProfile, normalizeThirdPartyReviews } from "./profile";
 import type {
   BundleCatalogEntry,
@@ -349,6 +350,7 @@ function normalizeRoutineDetail(raw: Record<string, unknown>): RoutinePublicDeta
     cover_url: typeof raw.cover_url === "string" ? raw.cover_url : null,
     cover_image_data_url:
       typeof raw.cover_image_data_url === "string" ? raw.cover_image_data_url : null,
+    price: normalizePrice(raw.price),
     author_name: str(raw.author_name),
     approved_at: str(raw.approved_at, str(raw.reviewed_at)),
     content_hash: str(raw.content_hash),
@@ -423,6 +425,7 @@ export function normalizeCardPresentation(r: Record<string, unknown>): CardPrese
       typeof r.results_count === "number" && Number.isSafeInteger(r.results_count) && r.results_count > 0
         ? r.results_count
         : null,
+    price: normalizePrice(r.price),
   };
 }
 
@@ -506,6 +509,7 @@ function normalizeBundleDetail(raw: unknown): BundlePublicDetail | null {
     cover_url: typeof r.cover_url === "string" ? r.cover_url : null,
     cover_image_data_url:
       typeof r.cover_image_data_url === "string" ? r.cover_image_data_url : null,
+    price: normalizePrice(r.price),
     author_name: str(r.author_name),
     approved_at: str(r.approved_at),
     members,

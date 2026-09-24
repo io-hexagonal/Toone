@@ -387,6 +387,8 @@
     "goToPanel": "Afficher {title}"
   },
   "explore": {
+    "free": "Gratuit",
+    "price": "Prix",
     "title": "Explorer",
     "heading": "Explorer",
     "intro": "Des routines et des ensembles vérifiés, conçus par des experts. Utilisez votre propre IA : choisissez le résultat souhaité, Toone s'occupe de la configuration et du travail.",

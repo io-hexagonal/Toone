@@ -28,6 +28,7 @@ import type {
   RoutinePublicDetail,
   BundlePublicDetail,
 } from "@/lib/explore/types";
+import { formatPrice, isFree, type ExplorePrice } from "@/lib/explore/price";
 import "./explore.css";
 
 export const COPY_KEYS = [
@@ -157,6 +158,8 @@ export const COPY_KEYS = [
   "agentIds",
   "noRequirements",
   "pinned",
+  "free",
+  "price",
   "viewRoutine",
 ] as const;
 export type ExploreCopy = Record<(typeof COPY_KEYS)[number], string> & {
@@ -302,6 +305,28 @@ export function Tags({
     </ul>
   );
 }
+/** "Free", or the localized currency amount (contract §5 `price`). */
+export function priceLabel(price: ExplorePrice | null | undefined, locale: string, ui: ExploreCopy): string {
+  return formatPrice(price, locale, ui.free);
+}
+export function PriceTag({
+  price,
+  locale,
+  ui,
+  className = "explore-price",
+}: {
+  price: ExplorePrice | null | undefined;
+  locale: string;
+  ui: ExploreCopy;
+  className?: string;
+}) {
+  return (
+    <span className={className} data-free={isFree(price) || undefined}>
+      <span className="explore-sr-only">{ui.price}: </span>
+      {priceLabel(price, locale, ui)}
+    </span>
+  );
+}
 export function Counts({
   entry,
   ui,
@@ -352,6 +377,7 @@ export function CatalogCard({
               ))}
             </div>
           )}
+          <PriceTag price={entry.price} locale={locale} ui={ui} className="explore-price explore-price-card" />
         </div>
         <div className="explore-card-copy">
           <p className="explore-eyebrow">
@@ -434,6 +460,12 @@ export async function DetailHero({
             </p>
             <h1>{detail.title}</h1>
             <p className="explore-deck">{detail.summary}</p>
+            <ul className="explore-hero-chips">
+              <li className="explore-price-chip" data-free={isFree(detail.price) || undefined}>
+                <span className="explore-sr-only">{ui.price}: </span>
+                {priceLabel(detail.price, locale, ui)}
+              </li>
+            </ul>
             {detail.classification && <dl className="explore-classification" aria-label={ui.classification}>
               <div><dt>{ui.category}</dt><dd>{termLabel(taxonomy, detail.classification.category_id)}</dd></div>
               <div><dt>{ui.topics}</dt><dd>{detail.classification.topic_ids.map((id) => termLabel(taxonomy, id)).join(", ")}</dd></div>

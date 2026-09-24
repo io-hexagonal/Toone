@@ -387,6 +387,8 @@
     "goToPanel": "Show {title}"
   },
   "explore": {
+    "free": "Free",
+    "price": "Price",
     "title": "Explore",
     "heading": "Explore AI Routines & Workflows Templates",
     "intro": "Reviewed routines and bundles made by experts. Bring your own AI: pick the outcome you need, and Toone sets it up and does the work.",

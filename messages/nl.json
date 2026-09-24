@@ -387,6 +387,8 @@
     "goToPanel": "Toon {title}"
   },
   "explore": {
+    "free": "Gratis",
+    "price": "Prijs",
     "title": "Ontdekken",
     "heading": "Ontdekken",
     "intro": "Beoordeelde routines en bundels, gemaakt door experts. Gebruik je eigen AI: kies het resultaat dat je nodig hebt en Toone richt het in en doet het werk.",
