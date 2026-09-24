@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
+import EditListingLink from "./EditListingLink";
 import CoverImage from "./CoverImage";
 import {
   getExploreTaxonomy,
@@ -494,6 +495,7 @@ export async function DetailHero({
               >
                 {ui.getToone}
               </a>
+              <EditListingLink kind={type} id={id} locale={locale} />
             </div>
           </div>
           <Cover entry={detail} inline />

@@ -5,9 +5,10 @@ import EarlyAccessRequests from "@/components/EarlyAccessRequests";
 import AuthPage from "@/components/AuthPage";
 import { Link } from "@/lib/navigation";
 import {
-  ApiError, clearSession, createInvitation, listInvitations, loadSession, logout, revokeInvitation,
+  ApiError, createInvitation, listInvitations, logout, revokeInvitation,
   type CreatedInvitation, type InvitationRecord, type ToneSession,
 } from "@/lib/api";
+import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import styles from "./InvitationAdminPage.module.css";
 
 const statusLabels = { pending: "Pending", redeemed: "Signed up", expired: "Expired", revoked: "Revoked" };
@@ -28,20 +29,7 @@ function usesLabel(record: { max_uses: number; use_count: number }) {
 const MAX_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
 
 export default function InvitationAdminPage() {
-  const [session, setSession] = useState<ToneSession | null>(null);
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const syncSession = () => setSession(loadSession());
-    syncSession();
-    setReady(true);
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === "toone.session" || event.key === null) syncSession();
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
-
-  const endSession = useCallback(() => { clearSession(); setSession(null); }, []);
+  const { session, ready, setSession, endSession } = useStoredSession();
   if (!ready) return <main className={styles.page}><p role="status">Checking your account…</p></main>;
   if (!session) return <AuthPage mode="signin" onAuthenticated={setSession} />;
   return <InvitationWorkspace key={session.token} session={session} onSessionEnded={endSession} />;

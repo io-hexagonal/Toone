@@ -191,6 +191,21 @@
   color: #f0ede6;
   border-color: #605e58;
 }
+/* Admin-only, client-rendered after a capability check (EditListingLink). */
+.explore-edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  padding: 8px 4px;
+  color: #9b9a95;
+  font-size: 13px;
+  font-weight: 550;
+  text-decoration: none;
+}
+.explore-edit-link:hover {
+  color: #fff;
+}
 
 /* ---------- shared small type ---------- */
 .explore-byline {

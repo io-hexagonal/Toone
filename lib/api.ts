@@ -8,16 +8,21 @@ export function apiBase(): string {
   return process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE;
 }
 
+/** One field-level correction from a 400 validation error (`details[]`). */
+export type ApiErrorDetail = { path: string; rule?: string; action?: string; instruction?: string };
+
 /** Error codes: invalid_input (400), unauthorized (401), already_exists (409), rate_limit_exceeded (429). */
 export class ApiError extends Error {
   code: string;
   status: number;
+  details: ApiErrorDetail[];
 
-  constructor(code: string, message: string, status: number) {
+  constructor(code: string, message: string, status: number, details: ApiErrorDetail[] = []) {
     super(message);
     this.name = "ApiError";
     this.code = code;
     this.status = status;
+    this.details = details;
   }
 }
 
@@ -74,16 +79,37 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     // non-JSON body (proxy error page etc.) — handled below
   }
 
-  if (!res.ok) {
-    const err = (body ?? {}) as { code?: string; message?: string };
-    throw new ApiError(
-      err.code ?? "unknown",
-      err.message ?? `Request failed (${res.status})`,
-      res.status,
-    );
-  }
+  if (!res.ok) throw apiErrorFrom(body, res.status);
 
   return (body as { data: T }).data;
+}
+
+/**
+ * The server replies `{code, message, details?}`; a few proxies nest it as
+ * `{error: {...}}`. Details without a string `path` are dropped.
+ */
+export function apiErrorFrom(body: unknown, status: number): ApiError {
+  const outer = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+  const err = (outer.error && typeof outer.error === "object" ? outer.error : outer) as {
+    code?: unknown; message?: unknown; details?: unknown;
+  };
+  const details = Array.isArray(err.details)
+    ? err.details.filter((d): d is ApiErrorDetail => !!d && typeof d === "object" && typeof (d as ApiErrorDetail).path === "string")
+    : [];
+  return new ApiError(
+    typeof err.code === "string" ? err.code : "unknown",
+    typeof err.message === "string" && err.message ? err.message : `Request failed (${status})`,
+    status,
+    details,
+  );
+}
+
+/** Authenticated, uncached JSON request for the signed-in account. */
+export function authedRequest<T>(token: string, path: string, init: RequestInit = {}): Promise<T> {
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  if (init.body !== undefined && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  return request<T>(path, { ...init, headers, cache: "no-store" });
 }
 
 function jsonPost(body: unknown): RequestInit {
@@ -259,11 +285,14 @@ export type CreatedInvitation = {
   email_queued?: boolean;
 };
 
-export async function canManageInvitations(token: string): Promise<boolean> {
-  const result = await request<{ capabilities: string[] }>("/me/capabilities", {
-    headers: { Authorization: `Bearer ${token}` }, cache: "no-store",
-  });
-  return result.capabilities.includes("invitation.manage");
+/** Server-granted capabilities of the signed-in account (`GET /me/capabilities`). */
+export async function getCapabilities(token: string): Promise<string[]> {
+  const result = await authedRequest<{ capabilities?: unknown }>(token, "/me/capabilities");
+  return Array.isArray(result?.capabilities) ? result.capabilities.filter((c): c is string => typeof c === "string") : [];
+}
+
+export async function hasCapability(token: string, capability: string): Promise<boolean> {
+  return (await getCapabilities(token)).includes(capability);
 }
 
 export async function listInvitations(token: string): Promise<InvitationRecord[]> {

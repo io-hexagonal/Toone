@@ -12,6 +12,7 @@ import { normalizeClassification, validateCatalogTaxonomy, hasTaxonomyFilters, t
  * at `app/api/revalidate` can expire them on demand.
  */
 import type { CatalogQuery, CatalogItem } from "./presentation";
+import { resolveCoverPath } from "./cover";
 import { normalizeListingProfile, normalizeThirdPartyReviews } from "./profile";
 import type {
   BundleCatalogEntry,
@@ -86,15 +87,7 @@ export function resolveCoverUrl(entry: {
   cover_url?: string | null;
   cover_image_data_url?: string | null;
 }): string | null {
-  if (entry.cover_url) {
-    if (
-      !/^(workflows|bundles)\/[a-z0-9_]+\/revisions\/[a-z0-9_]+\/cover\.jpg$/.test(
-        entry.cover_url,
-      )
-    )
-      return null;
-    return `${exploreApiBase()}/${entry.cover_url}`;
-  }
+  if (entry.cover_url) return resolveCoverPath(exploreApiBase(), entry.cover_url);
   const dataUrl = entry.cover_image_data_url;
   return dataUrl && /^data:image\/jpeg;base64,[a-zA-Z0-9+/=]+$/.test(dataUrl)
     ? dataUrl

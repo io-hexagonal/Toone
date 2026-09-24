@@ -21,6 +21,7 @@ import type {
   ThirdPartyAction,
 } from "@/lib/explore/types";
 import OpenInToone from "./OpenInToone";
+import EditListingLink from "./EditListingLink";
 import {
   Cover,
   IncludedInBundles,
@@ -101,6 +102,7 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
               >
                 {ui.getToone}
               </a>
+              <EditListingLink kind={type} id={id} locale={locale} />
             </div>
           </div>
           <Cover entry={detail} inline alt={profile.cover_alt} />

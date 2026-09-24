@@ -1,0 +1,117 @@
+/* Explore listing editor. The shell (page, header, buttons, inputs) comes from
+   InvitationAdminPage.module.css; this file adds the form layout. */
+
+.title { margin: 28px 0 24px; }
+.subtitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 0; color: #aaa8a1; font-size: 15px; line-height: 1.5; }
+.subtitle > span { color: #dfdcd4; }
+.inlineLink { color: #f0ede6; font-size: 13px; text-underline-offset: 4px; white-space: nowrap; }
+.inlineLink:hover { color: #fff; }
+
+/* ---- banners */
+.banner { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border: 1px solid #ffffff1c; border-radius: 12px; padding: 14px 16px; margin: 0 0 24px; font-size: 14px; line-height: 1.55; }
+.banner p { margin: 0; }
+.banner > div:last-child { flex-shrink: 0; }
+.banner button { padding: 7px 12px !important; }
+.bannerSuccess { border-color: #b7d4ad40; background: #b7d4ad0d; color: #d3e6cc; }
+.bannerError { border-color: #f3a39340; background: #f3a3930d; color: #f7c3b8; }
+.detailList { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: #e9d3cc; }
+.detailList code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #f3a393; margin-right: 4px; }
+
+/* ---- layout */
+.layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 48px; align-items: start; }
+.toc { position: sticky; top: 24px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 10px; border-radius: 7px; color: #aaa8a1; font-size: 13px; text-decoration: none; }
+.toc a:hover { color: #f0ede6; background: #ffffff0b; }
+.form { min-width: 0; max-width: 760px; }
+
+/* ---- sections: headings and rules, no cards */
+.section { padding: 32px 0; border-top: 1px solid #ffffff14; scroll-margin-top: 20px; }
+.section:first-child { border-top: 0; padding-top: 4px; }
+.sectionHead { margin-bottom: 18px; }
+.sectionHead h2 { margin-bottom: 4px !important; }
+.sectionHead p { margin: 0; color: #aaa8a1; font-size: 13px; line-height: 1.55; }
+.sectionBody { display: grid; gap: 18px; }
+
+.reference { display: grid; gap: 10px; margin: 0; padding: 14px 16px; border-left: 2px solid #ffffff24; background: #ffffff05; border-radius: 0 9px 9px 0; }
+.reference div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; }
+.reference dt { color: #94928b; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; padding-top: 2px; }
+.reference dd { margin: 0; color: #d2cec4; font-size: 14px; line-height: 1.55; }
+.referenceNote { margin-top: -8px !important; }
+.note { margin: 0; padding: 12px 14px; border-left: 2px solid #c4b69080; background: #c4b6900d; border-radius: 0 9px 9px 0; color: #d8d0bb; font-size: 13px; line-height: 1.6; }
+
+/* ---- fields */
+.field { min-width: 0; margin: 0; padding: 0; border: 0; }
+.labelRow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 7px; padding: 0; width: 100%; }
+.labelRow label, .labelRow > span:first-child { color: #dfdcd4; font-size: 13px; }
+.field textarea { border: 1px solid #ffffff24; border-radius: 9px; background: #242421; color: #f0ede6; font: inherit; font-size: 14px; line-height: 1.55; padding: 11px 12px; width: 100%; min-width: 0; resize: vertical; color-scheme: dark; }
+.field textarea:focus-visible { outline: 2px solid #d9d3c5; outline-offset: 3px; }
+.field input, .field select { padding: 10px 12px !important; }
+.field[data-invalid] > input, .field[data-invalid] > textarea, .field[data-invalid] > select, .field[data-invalid] .tagBox { border-color: #f3a39399; }
+.counter { color: #94928b; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.counter[data-warn] { color: #e0b37e; }
+.error { color: #f3a393; font-size: 12px; line-height: 1.5; margin: 6px 0 0; }
+.warning { color: #e0b37e; font-size: 12px; line-height: 1.5; margin: 6px 0 0; }
+.meta { margin: 0; color: #94928b; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+.empty { margin: 0; padding: 18px; border: 1px dashed #ffffff24; border-radius: 10px; color: #aaa8a1; font-size: 13px; line-height: 1.55; text-align: center; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+/* ---- chips (classification) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; align-items: center; padding: 7px 12px; border: 1px solid #ffffff24; border-radius: 99px; color: #cfccc4; font-size: 13px; cursor: pointer; user-select: none; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip:hover { background: #ffffff0b; }
+.chip[data-on] { background: #f0ede6; border-color: #f0ede6; color: #1b1b19; font-weight: 500; }
+.chip:has(input:disabled) { opacity: .45; cursor: default; }
+.chip:has(input:focus-visible) { outline: 2px solid #d9d3c5; outline-offset: 2px; }
+
+/* ---- tags */
+.tagBox { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px; border: 1px solid #ffffff24; border-radius: 9px; background: #242421; }
+.tagBox:focus-within { outline: 2px solid #d9d3c5; outline-offset: 3px; }
+.tagBox input { flex: 1 1 140px; width: auto !important; border: 0 !important; background: transparent !important; padding: 6px !important; outline: none !important; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 4px 4px 10px; border-radius: 99px; background: #ffffff12; color: #e6e2d9; font-size: 13px; }
+.tag[data-invalid] { background: #f3a39322; color: #f7c3b8; }
+.tag button { border: 0 !important; padding: 0 6px !important; border-radius: 99px !important; color: #aaa8a1 !important; font-size: 15px !important; line-height: 1; }
+.tag button:hover { color: #f0ede6 !important; }
+.badge { color: #e0b37e; font-size: 12px; }
+
+/* ---- cover */
+.cover { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 20px; align-items: center; }
+.coverFrame { aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse at 30% 10%, #2a2a28, #141413); border: 1px solid #ffffff14; display: grid; place-items: center; color: #77756c; font-size: 13px; }
+.coverFrame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.coverActions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.coverActions small { flex-basis: 100%; margin-top: 2px !important; }
+
+/* ---- lists */
+.list { display: grid; gap: 12px; }
+.rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid #ffffff14; }
+.row { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid #ffffff14; }
+.row[data-invalid] { box-shadow: inset 2px 0 0 #f3a39399; }
+.rowIndex { color: #77756c; font-size: 12px; font-variant-numeric: tabular-nums; padding-top: 3px; text-align: right; }
+.rowFields { display: grid; gap: 12px; min-width: 0; }
+.rowTools { display: flex; flex-direction: column; gap: 4px; }
+.rowTools button { width: 30px; height: 30px; padding: 0 !important; border-color: transparent !important; color: #aaa8a1 !important; font-size: 14px !important; border-radius: 7px !important; }
+.rowTools button:hover:not(:disabled) { color: #f0ede6 !important; background: #ffffff0b; }
+.listFoot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.listFoot button { padding: 8px 12px !important; }
+
+/* ---- save bar */
+.saveBar { position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; padding: 14px 0 16px; border-top: 1px solid #ffffff1c; background: linear-gradient(to bottom, #141413f2, #141413); backdrop-filter: blur(6px); }
+.saveStatus { margin: 0; color: #aaa8a1; font-size: 13px; }
+.saveActions { display: flex; gap: 10px; }
+.saveButton { background: #f0ede6 !important; color: #1b1b19 !important; border-color: #f0ede6 !important; font-weight: 600 !important; padding: 11px 20px !important; }
+.saveButton:hover:not(:disabled) { background: #ded9cd !important; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 0; }
+  .toc { display: none; }
+  .form { max-width: none; }
+}
+@media (max-width: 600px) {
+  .pair, .cover { grid-template-columns: 1fr; }
+  .reference div { grid-template-columns: 1fr; gap: 2px; }
+  .row { grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+  .rowIndex { display: none; }
+  .banner { flex-direction: column; }
+  .saveStatus { font-size: 12px; }
+}

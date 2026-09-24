@@ -136,7 +136,15 @@ test("cover URLs cannot escape the API prefix or accept executable data", () => 
     }),
     "https://example.test/api/v1/toone/workflows/wfl_abcdefgh/revisions/wfr_abcdefgh/cover.jpg",
   );
+  // An admin cover override is served with a cache-busting presentation id.
+  assert.equal(
+    resolveCoverUrl({
+      cover_url: "workflows/wfl_abcdefgh/revisions/wfr_abcdefgh/cover.jpg?v=pres_1",
+    }),
+    "https://example.test/api/v1/toone/workflows/wfl_abcdefgh/revisions/wfr_abcdefgh/cover.jpg?v=pres_1",
+  );
   for (const value of [
+    "workflows/wfl_abcdefgh/revisions/wfr_abcdefgh/cover.jpg?next=https://evil.test",
     "https://evil.test/a.jpg",
     "//evil.test/a.jpg",
     "../secret",
