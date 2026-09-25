@@ -179,9 +179,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               width: 100%;
               border: 1px solid transparent; border-radius: 16px;
               background: transparent;
-              box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.16),
-                inset 0 -1px 0 rgba(0,0,0,0.35);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
             .ha-card::after {
@@ -233,6 +230,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
               backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
               -webkit-backdrop-filter: hue-rotate(28deg) saturate(2.6) brightness(1.6);
               opacity: 0.7;
+              display: none; /* card has no border line */
             }
             /* The email field keeps its quiet fill; its 1px border is the card's
                refracted edge colour rather than a flat grey line. */
