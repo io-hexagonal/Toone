@@ -149,7 +149,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                .ha-card::after    the frosted interior, fading IN from the edge over
                                   --ha-fade so the rim never sits on a dark step
                .ha-card::before   the refracting rim, fading OUT toward the centre
-               The outer edge is a single 1px line; the inner bevel gives the pane thickness. */
+               The outer edge is a single 1px line. */
             .ha-glass {
               /* Eased ramps: a straight-line fade that stops dead reads as a crease
                  (Mach band), so both ramps taper off gradually, and they end at
@@ -178,9 +178,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               width: 100%;
               border: 1px solid rgba(255,255,255,0.16); border-radius: 16px;
               background: transparent;
-              box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.16),
-                inset 0 -1px 0 rgba(0,0,0,0.35);
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
             .ha-card::after {
