@@ -342,7 +342,7 @@ export function Author({ entry }: { entry: { author_name: string; author_officia
       <img className="on-light" src="/assets/brand/toone-mark-light.svg" alt="" width={14} height={14} />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="on-dark" src="/assets/brand/toone-mark.svg" alt="" width={14} height={14} />
-      {entry.author_name}
+      Toone Team
     </span>
   );
 }
@@ -417,7 +417,7 @@ export function CatalogCard({
             {!!entry.results_count && (
               <span className="explore-card-results">{ui.count("results", entry.results_count)}</span>
             )}
-            {entry.author_name && (
+            {(entry.author_official || entry.author_name) && (
               <span className="explore-byline">
                 {ui.by} <Author entry={entry} />
               </span>
@@ -492,7 +492,7 @@ export async function DetailHero({
               <div><dt>{ui.usefulFor}</dt><dd>{detail.classification.useful_for_ids.map((id) => termLabel(taxonomy, id)).join(", ")}</dd></div>
             </dl>}
             <dl className="explore-meta">
-              {detail.author_name && (
+              {(detail.author_official || detail.author_name) && (
                 <div>
                   <dt>{ui.by}</dt>
                   <dd><Author entry={detail} /></dd>
@@ -585,7 +585,7 @@ export function DetailsCard({
             </time>
           </dd>
         </div>
-        {detail.author_name && (
+        {(detail.author_official || detail.author_name) && (
           <div>
             <dt>{ui.by}</dt>
             <dd><Author entry={detail} /></dd>

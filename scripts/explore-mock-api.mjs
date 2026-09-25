@@ -209,7 +209,7 @@ const launchPackage = {
   skills: [],
   resources: [],
 };
-function profileRoutine({ id, slug, revision, seoTitle, indexable }) {
+function profileRoutine({ id, slug, revision, seoTitle, indexable, official = false }) {
   const profile = structuredClone(profileBase);
   if (seoTitle) profile.search.seo_title = seoTitle;
   const entry = {
@@ -230,6 +230,7 @@ function profileRoutine({ id, slug, revision, seoTitle, indexable }) {
     agent_count: 1,
     cover_url: `workflows/${id}/revisions/${revision}/cover.jpg`,
     author_name: "Matheus Paranhos",
+    author_official: official,
     approved_at: "2026-09-22T12:00:00Z",
     display_title: profile.search.display_title,
     card_summary: profile.search.meta_description,
@@ -258,6 +259,7 @@ const profileRoutines = [
     slug: "product-launch-prep-directories-qk4m2x7a",
     revision: "wfr_lnchprep0000rev2",
     indexable: true,
+    official: true,
   }),
   profileRoutine({
     id: "wfl_lnchdraftw9t3v6pe",
@@ -281,6 +283,7 @@ const profileBundle = {
   member_count: 2,
   cover_url: `bundles/${profileBundleId}/revisions/wbr_lnchkit00000rev1/cover.jpg`,
   author_name: "Matheus Paranhos",
+  author_official: true,
   approved_at: "2026-09-22T12:00:00Z",
   display_title: "Launch kit: plan and prepare your product launch",
   card_summary: profileBase.search.meta_description,

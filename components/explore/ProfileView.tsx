@@ -149,12 +149,9 @@ function profileSections(
       <ul className="explore-profile-results">
         {profile.results.map((result, index) => (
           <li key={index}>
-            {/* One line each; open an item to read all of it. */}
             <details className="explore-profile-result">
-              <summary>
-                <h3>{result.name}</h3>
-                <p>{result.description}</p>
-              </summary>
+              <summary><h3>{result.name}</h3></summary>
+              <p>{result.description}</p>
             </details>
           </li>
         ))}
@@ -373,7 +370,7 @@ function ProfileDetailsCard({ detail, ui, locale }: { detail: Detail; ui: Explor
     <section className="explore-details" aria-label={ui.details}>
       <h2>{ui.details}</h2>
       <dl>
-        {detail.author_name && (
+        {(detail.author_official || detail.author_name) && (
           <div>
             <dt>{ui.by}</dt>
             <dd><Author entry={detail} /></dd>

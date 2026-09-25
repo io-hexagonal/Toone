@@ -126,6 +126,9 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
 test("bundle preserves pin metadata, renders member pages and distinguishes missing items", async () => {
   const { response, html } = await get("/en/explore/bundles/" + bundle.slug);
   assert.equal(response.status, 200);
+  const details = html.match(/<section class="explore-details"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(details?.includes("Matheus Paranhos"), "regular publishers keep their names");
+  assert.ok(!details.includes("Toone Team"));
   for (const member of bundle.members) {
     const memberText = html
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, " ")
@@ -328,6 +331,13 @@ test("profile routine renders every section in page-spec order with the builders
     last = at;
   }
   for (const result of profileFixture.results) assert.ok(text.includes(result.name), result.name);
+  const disclosures = [...html.matchAll(/<details class="explore-profile-result"([^>]*)><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)];
+  assert.equal(disclosures.length, profileFixture.results.length, "every result reveals a description when opened");
+  for (const [index, [, attributes, heading, description]] of disclosures.entries()) {
+    assert.ok(!/\bopen\b/.test(attributes), "results start collapsed");
+    assert.equal(visible(heading).trim(), profileFixture.results[index].name);
+    assert.equal(visible(description).trim(), profileFixture.results[index].description);
+  }
   for (const step of profileFixture.how_it_works) assert.ok(text.includes(step), step);
   for (const input of profileFixture.you_provide) assert.ok(text.includes(input.label), input.label);
   for (const rule of profileFixture.stays_in_your_control) assert.ok(text.includes(rule), rule);
@@ -420,6 +430,9 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
 test("bundle with a profile lists the routines inside in their plain wording", async () => {
   const { response, html } = await get("/en/explore/bundles/" + PROFILE_BUNDLE_SLUG);
   assert.equal(response.status, 200);
+  const details = html.match(/<section class="explore-details"[\s\S]*?<\/section>/)?.[0];
+  assert.ok(details?.includes("Toone Team"), "official bundle credits the team");
+  assert.ok(!details.includes("Matheus Paranhos"), "admin's personal name is hidden");
   const headings = h2s(html);
   assert.ok(headings.indexOf("What you get") < headings.indexOf("The routines inside"));
   assert.ok(headings.indexOf("The routines inside") < headings.indexOf("Who it's for"));
@@ -440,6 +453,8 @@ test("hub cards use display_title, card summary, For line and results count", as
   assert.ok(text.includes(profileFixture.search.meta_description));
   assert.match(text, /For\s*:\s+Founders, Marketers/);
   assert.match(text, /3 results/);
+  assert.ok(text.includes("Toone Team"), "official cards credit the team");
+  assert.ok(text.includes("Matheus Paranhos"), "regular cards retain their publishers");
   const list = schemas(html).find((s) => s["@type"] === "CollectionPage").mainEntity;
   assert.ok(list.itemListElement.some((item) => item.name === profileFixture.search.display_title));
   await mode({});
