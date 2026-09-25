@@ -171,12 +171,22 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 rgba(0,0,0,0.82) calc(var(--ha-fill) * 0.84),
                 #000 var(--ha-fill);
               --ha-glass-filter: blur(6px) saturate(2.2) brightness(1.55) contrast(1.08);
-              position: relative; width: 100%; max-width: 400px;
+              position: relative; isolation: isolate; width: 100%; max-width: 400px;
+              border-radius: 16px;
+            }
+            .ha-glass::before {
+              content: ""; position: absolute; inset: 0; z-index: 2;
+              border-radius: inherit; pointer-events: none; padding: 1px;
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+              backdrop-filter: var(--ha-glass-filter);
+              -webkit-backdrop-filter: var(--ha-glass-filter);
             }
             .ha-card {
               position: relative; z-index: 1; isolation: isolate; overflow: hidden;
               width: 100%;
-              border: 1px solid rgba(255,255,255,0.16); border-radius: 16px;
+              border: 1px solid transparent; border-radius: 16px;
               background: transparent;
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
@@ -220,8 +230,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
               backdrop-filter: var(--ha-glass-filter);
               -webkit-backdrop-filter: var(--ha-glass-filter);
             }
-            /* The email field keeps its quiet fill; its 1px border is the card's
-               refracted edge colour rather than a flat grey line. */
+            /* Both the card and email field refract the background through a 1px edge. */
             .ha-field { position: relative; display: block; width: 100%; border-radius: 10px; isolation: isolate; }
             .ha-field::before {
               content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none;
