@@ -120,10 +120,12 @@
     "waitlistSub": "Laissez votre email pour demander un accès anticipé. Nous vous contacterons lorsqu’une place sera disponible.",
     "waitlistExisting": "Vous utilisez déjà Toone ?",
     "waitlistSignIn": "Se connecter",
+    "emailPrivacyNotice": "Nous utilisons votre adresse e-mail pour gérer votre demande d’accès anticipé.",
+    "emailPrivacyLink": "Politique de confidentialité",
     "productLanguageDisclosure": "L’application de bureau est actuellement disponible uniquement en anglais.",
     "heroTag2": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
     "haveInvitation": "Vous avez un code d’invitation ?",
-    "eaIntro": "Toone est l'espace de travail IA pour vos flux agentiques : une app macOS où des agents spécialisés exécutent vos flux et vos routines sous votre contrôle. L'accès se fait sur invitation : laissez votre e-mail et nous vous envoyons un code personnel dès qu'une place se libère. Les places sont ouvertes par petits lots, pour que chaque nouvelle équipe soit bien accompagnée.",
+    "eaIntro": "Toone est l'espace de travail IA pour vos flux agentiques : une app macOS où vous pouvez concevoir, déboguer et modifier facilement des workflows d’IA complexes et déterministes.",
     "eaBeforeTitle": "Avant de faire votre demande",
     "eaBefore1": "macOS 14 ou version ultérieure",
     "eaBefore2": "Un compte Anthropic ou OpenAI : vous apportez votre propre accès fournisseur",
@@ -133,6 +135,14 @@
     "eaStep2": "Nous vous envoyons un code personnel dès qu'une place se libère.",
     "eaStep3": "Utilisez le code, créez votre compte et téléchargez Toone.",
     "exploreLink": "Explorer les routines"
+  },
+  "privacyChoices": {
+    "title": "Cookies et statistiques",
+    "description": "Nous mémorisons vos choix de langue, de connexion et de confidentialité. Avec votre accord, les statistiques sans cookies comptent les visites et les clics.",
+    "details": "Politique de confidentialité",
+    "deny": "Essentiel uniquement",
+    "allow": "Autoriser les statistiques",
+    "reopen": "Choix de confidentialité"
   },
   "footer": {
     "privacy": "Confidentialite",

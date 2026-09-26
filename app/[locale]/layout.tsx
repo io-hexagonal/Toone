@@ -4,11 +4,11 @@ import { locales } from "@/i18n/routing";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 import { Playfair_Display, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
+import PrivacyChoices from "@/components/PrivacyChoices";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
 export const viewport: Viewport = {
@@ -238,6 +238,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     footer: messages.footer,
     landing: messages.landing,
     nav: messages.nav,
+    privacyChoices: messages.privacyChoices,
   };
 
   return (
@@ -252,14 +253,6 @@ export default async function LocaleLayout({ children, params }: Props) {
             __html: JSON.stringify(siteSchema).replace(/</g, "\\u003c"),
           }}
         />
-        {/* Self-hosted, cookieless Umami analytics (see /privacy). data-domains
-            keeps localhost/preview traffic out of the production website. */}
-        <Script
-          src="https://analytics.truleaf.org/script.js"
-          data-website-id="70c91dbc-6116-453f-9702-cbd942760e51"
-          data-domains="trytoone.com,www.trytoone.com"
-          strategy="afterInteractive"
-        />
       </head>
       <body
         style={{
@@ -273,6 +266,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={clientMessages}>
           {children}
           <AnnouncementModal />
+          <PrivacyChoices />
         </NextIntlClientProvider>
       </body>
     </html>

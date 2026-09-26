@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { announcements, type AnnouncementContent } from "@/content/announcements";
 import { explorePrereleaseContent } from "@/content/announcements/explore-prerelease";
 import { activeAnnouncement, isMacDesktop, rememberDismissal, track, wasDismissed } from "@/lib/announcements";
+import { PRIVACY_CHOICE_SAVED_EVENT, savedPrivacyChoice } from "@/lib/privacy-choices";
 import AccessCodeCard from "./AccessCodeCard";
 import ShowcaseCard from "./ShowcaseCard";
 
@@ -34,11 +35,19 @@ type ShownAnnouncement = Omit<CardProps, "close"> & { preview: boolean };
 export default function AnnouncementModal() {
   const pathname = usePathname() ?? "/";
   const [current, setCurrent] = useState<ShownAnnouncement | null>(null);
+  const [privacyResolved, setPrivacyResolved] = useState(false);
   const isPublicPage = !/\/(admin|signin|signup)(\/|$)/.test(pathname);
 
   useEffect(() => {
+    const refresh = () => setPrivacyResolved(savedPrivacyChoice() !== null);
+    refresh();
+    window.addEventListener(PRIVACY_CHOICE_SAVED_EVENT, refresh);
+    return () => window.removeEventListener(PRIVACY_CHOICE_SAVED_EVENT, refresh);
+  }, []);
+
+  useEffect(() => {
     setCurrent(null);
-    if (!isPublicPage) return;
+    if (!isPublicPage || !privacyResolved) return;
     const params = new URLSearchParams(window.location.search);
     const variant = params.get("preview-announcement");
     const preview = variant === "mac" || variant === "other";
@@ -52,7 +61,7 @@ export default function AnnouncementModal() {
       if (!preview) track(`announcement-open-${active.id}-${platform}`);
     }, 700);
     return () => window.clearTimeout(timer);
-  }, [isPublicPage, pathname]);
+  }, [isPublicPage, pathname, privacyResolved]);
 
   const close = useCallback((reason: CloseReason) => {
     if (!current) return;

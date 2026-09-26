@@ -120,10 +120,12 @@
     "waitlistSub": "Hinterlassen Sie Ihre E-Mail-Adresse für den Frühzugang. Wir melden uns, sobald ein Platz verfügbar ist.",
     "waitlistExisting": "Sie nutzen Toone bereits?",
     "waitlistSignIn": "Anmelden",
+    "emailPrivacyNotice": "Wir verwenden Ihre E-Mail-Adresse, um Ihre Anfrage für den frühen Zugang zu bearbeiten.",
+    "emailPrivacyLink": "Datenschutzerklärung",
     "productLanguageDisclosure": "Die Desktop-App ist derzeit nur auf Englisch verfügbar.",
     "heroTag2": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
     "haveInvitation": "Haben Sie einen Einladungscode?",
-    "eaIntro": "Toone ist der KI-Arbeitsbereich für deine agentischen Workflows: eine macOS-App, in der spezialisierte Agenten deine Workflows und Routinen unter deiner Kontrolle ausführen. Der Zugang erfolgt auf Einladung: Hinterlasse deine E-Mail-Adresse und wir schicken dir einen persönlichen Code, sobald ein Platz frei wird. Plätze werden in kleinen Gruppen vergeben, damit jedes neue Team Aufmerksamkeit bekommt.",
+    "eaIntro": "Toone ist der KI-Arbeitsbereich für deine agentischen Workflows: eine macOS-App, mit der du komplexe und deterministische KI-Workflows erstellen, debuggen und einfach bearbeiten kannst.",
     "eaBeforeTitle": "Bevor du anfragst",
     "eaBefore1": "macOS 14 oder neuer",
     "eaBefore2": "Ein Anthropic- oder OpenAI-Konto: du bringst deinen eigenen Anbieterzugang mit",
@@ -133,6 +135,14 @@
     "eaStep2": "Wir schicken dir einen persönlichen Code, sobald ein Platz frei wird.",
     "eaStep3": "Löse den Code ein, erstelle dein Konto und lade Toone herunter.",
     "exploreLink": "Routinen entdecken"
+  },
+  "privacyChoices": {
+    "title": "Cookies und Analyse",
+    "description": "Wir speichern Ihre Sprach-, Anmelde- und Datenschutzeinstellungen. Mit Ihrer Einwilligung zählt eine cookiefreie Analyse Besuche und Klicks.",
+    "details": "Datenschutzerklärung",
+    "deny": "Nur Erforderliches",
+    "allow": "Analyse erlauben",
+    "reopen": "Datenschutzeinstellungen"
   },
   "footer": {
     "privacy": "Datenschutz",

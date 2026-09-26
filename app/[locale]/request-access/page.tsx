@@ -4,8 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 
 const TITLE = "Request early access to Toone | AI routines on macOS";
 const DESCRIPTION =
-  "Toone is a macOS app where specialist agents run your routines. Access is invitation-only: " +
-  "leave your email and we send a personal code when a place opens.";
+  "Toone is a macOS app where you can craft, debug and easily edit complex and deterministic AI workflows.";
 const CANONICAL = "https://trytoone.com/en/request-access";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -63,8 +62,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: CANONICAL,
       title: "Request early access to Toone",
       description:
-        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist " +
-        "agents run your workflows and routines under your control. Access is by invitation.",
+        "Toone is the AI workspace for your agentic workflows: a macOS app where you can " +
+        "craft, debug and easily edit complex and deterministic AI workflows.",
       siteName: "Toone",
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },

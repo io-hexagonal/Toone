@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
 import { accessAttribution } from "@/lib/explore/presentation";
+import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -40,7 +41,7 @@ export default function WaitlistPage() {
       const attribution = accessAttribution(params.get("from"), params.get("item"));
       if (outcome.outcome_state === "created" && outcome.outcome_id) {
         (window as unknown as { umami?: { track: (name: string, data: Record<string, string>) => void } }).umami?.track(
-          "waitlist-signup", { source: "web", locale, outcome_id: outcome.outcome_id, ...attribution },
+          "waitlist-signup", { source: "web", locale, ...attribution },
         );
       }
       setStatus("success");
@@ -97,6 +98,11 @@ export default function WaitlistPage() {
         .waitlist-message { margin: 0; font-size: 13px; line-height: 1.5; text-align: center; }
         .waitlist-message.success { color: rgba(179,232,194,.92); }
         .waitlist-message.error { color: rgba(255,138,122,.95); }
+        .waitlist-privacy {
+          color: rgba(255,255,255,.56); font-size: 12px; line-height: 1.5;
+          text-align: center; margin: 12px 0 0; max-width: 400px;
+        }
+        .waitlist-privacy a { color: rgba(255,255,255,.82); }
         /* Explainer under the form: same width as the card, quiet type, a
            hairline above so it reads as supporting copy, not the page itself. */
         .waitlist-intro {
@@ -168,6 +174,11 @@ export default function WaitlistPage() {
           </form>
         )}
       </div>
+
+      <p className="waitlist-privacy">
+        {t("emailPrivacyNotice")}{" "}<Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
+        <PrivacyChoicesButton />
+      </p>
 
       <p className="waitlist-existing">
         {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>

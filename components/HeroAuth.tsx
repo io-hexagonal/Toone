@@ -6,6 +6,7 @@ import { Link } from "@/lib/navigation";
 import HeroGlitter from "@/components/HeroGlitter";
 import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
+import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 
@@ -80,7 +81,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
               };
             }
           ).umami?.track("waitlist-signup", {
-            outcome_id: outcome.outcome_id,
             outcome_state: outcome.outcome_state,
             source: outcome.source,
             locale,
@@ -265,6 +265,8 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-existing { margin-top: 10px; font-size: 13px; }
             .ha-existing a { color: rgba(255,255,255,0.9); text-decoration: none; }
             .ha-existing a:hover { text-decoration: underline; }
+            .ha-privacy { margin-top: 8px; color: rgba(255,255,255,.58); }
+            .ha-privacy a { color: rgba(255,255,255,.82); }
             .ha-joined { color: rgba(255,255,255,0.85); font-size: 14.5px; text-align: center; padding: 16px 0; }
 
             .ha-dl {
@@ -364,6 +366,10 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 </form>
                 <p className="ha-note">
                   {status === "error" ? t("authError") : t("authNote")}
+                </p>
+                <p className="ha-note ha-privacy">
+                  {t("emailPrivacyNotice")}{" "}<Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
+                  <PrivacyChoicesButton />
                 </p>
               </>
             )}

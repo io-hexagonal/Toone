@@ -120,10 +120,12 @@
     "waitlistSub": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
     "waitlistExisting": "Já utiliza o Toone?",
     "waitlistSignIn": "Entrar",
+    "emailPrivacyNotice": "Usamos seu e-mail para gerenciar seu pedido de acesso antecipado.",
+    "emailPrivacyLink": "Política de privacidade",
     "productLanguageDisclosure": "O aplicativo desktop está disponível atualmente apenas em inglês.",
     "heroTag2": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
     "haveInvitation": "Tem um código de convite?",
-    "eaIntro": "O Toone é o espaço de trabalho de IA para os seus fluxos agênticos: uma app para macOS onde agentes especializados executam os seus fluxos e rotinas sob o seu controlo. O acesso é por convite: deixe o seu email e enviamos-lhe um código pessoal quando surgir uma vaga. As vagas são libertadas em pequenos lotes, para que cada nova equipa receba atenção.",
+    "eaIntro": "O Toone é o espaço de trabalho de IA para os seus fluxos agênticos: uma app para macOS onde pode criar, depurar e editar facilmente fluxos de trabalho de IA complexos e determinísticos.",
     "eaBeforeTitle": "Antes de pedir",
     "eaBefore1": "macOS 14 ou posterior",
     "eaBefore2": "Uma conta Anthropic ou OpenAI: o acesso ao fornecedor é seu",
@@ -133,6 +135,14 @@
     "eaStep2": "Enviamos um código pessoal quando surgir uma vaga.",
     "eaStep3": "Resgate o código, crie a sua conta e descarregue o Toone.",
     "exploreLink": "Explorar rotinas"
+  },
+  "privacyChoices": {
+    "title": "Cookies e análise",
+    "description": "Lembramos suas escolhas de idioma, login e privacidade. Com sua permissão, a análise sem cookies conta visitas e cliques.",
+    "details": "Política de privacidade",
+    "deny": "Apenas o essencial",
+    "allow": "Permitir análise",
+    "reopen": "Preferências de privacidade"
   },
   "footer": {
     "privacy": "Privacidade",

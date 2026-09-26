@@ -120,10 +120,12 @@
     "waitlistSub": "Leave your email to request early access. We will contact you when a place is available.",
     "waitlistExisting": "Already using Toone?",
     "waitlistSignIn": "Sign in",
+    "emailPrivacyNotice": "We use your email to manage your early access request.",
+    "emailPrivacyLink": "Privacy policy",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
     "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
     "haveInvitation": "Have an invitation code?",
-    "eaIntro": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control. Access is by invitation — leave your email and we send you a personal code when a place opens. Places are released in small batches, so every new team gets attention.",
+    "eaIntro": "Toone is the AI workspace for your agentic workflows: a macOS app where you can craft, debug and easily edit complex and deterministic AI workflows.",
     "eaBeforeTitle": "Before you request",
     "eaBefore1": "macOS 14 or later",
     "eaBefore2": "An Anthropic or OpenAI account — you bring your own provider access",
@@ -133,6 +135,14 @@
     "eaStep2": "We send a personal code when a place opens.",
     "eaStep3": "Redeem the code, create your account and download Toone.",
     "exploreLink": "Explore Routines"
+  },
+  "privacyChoices": {
+    "title": "Cookies & analytics",
+    "description": "We remember your language, sign-in and privacy choices. With your permission, cookieless analytics counts visits and clicks.",
+    "details": "Privacy policy",
+    "deny": "Essential only",
+    "allow": "Allow analytics",
+    "reopen": "Privacy choices"
   },
   "footer": {
     "privacy": "Privacy",

@@ -1,0 +1,91 @@
+.panel {
+  position: fixed;
+  z-index: 1000;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: max(16px, env(safe-area-inset-left));
+  width: min(calc(100% - 32px), 760px);
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  color: #f0ede6;
+  background: #1c1c1a;
+  border: 1px solid rgba(255, 255, 255, .23);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+.copy h2 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.copy p {
+  margin: 0;
+  max-width: 56ch;
+  color: rgba(255, 255, 255, .72);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.copy a {
+  color: #f0ede6;
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.actions button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 8px;
+  color: #f0ede6;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions button:hover,
+.actions button:focus-visible {
+  background: rgba(255, 255, 255, .12);
+}
+
+.inlineButton {
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.inlineButton:hover,
+.inlineButton:focus-visible {
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .actions button { flex: 1; }
+}

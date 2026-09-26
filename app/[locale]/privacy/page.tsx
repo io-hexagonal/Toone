@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
+import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -101,7 +102,7 @@ export default async function PrivacyPage({ params }: Props) {
             letterSpacing: "0.02em",
           }}
         >
-          Updated: August 10, 2026
+          Updated: September 26, 2026
         </p>
 
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
@@ -191,9 +192,29 @@ export default async function PrivacyPage({ params }: Props) {
           your name or email. You can turn this off at any time in Settings.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          This website uses the same self-hosted, cookieless analytics to count
-          visits and clicks. It sets no cookies, does not track you across
-          sites, and does not share data with any third party.
+          With your permission, this website loads our self-hosted, cookieless
+          analytics to count visits and clicks. It sets no analytics cookies and
+          does not track you across sites. Declining analytics does not affect
+          your access to the site. You can change your choice at any time using{" "}
+          <PrivacyChoicesButton />.
+        </p>
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Cookies &amp; Browser Storage
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          The site uses a session cookie named NEXT_LOCALE to remember your
+          language. It stores your analytics choice in your browser for up to six
+          months. Sign-in stores an account session in your browser for authenticated
+          features, until you sign out or the session expires. If you decline
+          analytics, its script is not loaded; allowing it adds no analytics cookie.
         </p>
 
         <h2

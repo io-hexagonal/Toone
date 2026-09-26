@@ -120,10 +120,12 @@
     "waitlistSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
     "waitlistExisting": "Gebruik je Toone al?",
     "waitlistSignIn": "Inloggen",
+    "emailPrivacyNotice": "We gebruiken je e-mailadres om je verzoek om vroege toegang te beheren.",
+    "emailPrivacyLink": "Privacybeleid",
     "productLanguageDisclosure": "De desktop-app is momenteel alleen beschikbaar in het Engels.",
     "heroTag2": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "haveInvitation": "Heb je een uitnodigingscode?",
-    "eaIntro": "Toone is de AI-werkruimte voor je agentische workflows: een macOS-app waarin gespecialiseerde agents jouw workflows en routines uitvoeren onder jouw controle. Toegang is op uitnodiging: laat je e-mailadres achter en we sturen je een persoonlijke code zodra er een plek vrijkomt. Plekken komen in kleine groepen vrij, zodat elk nieuw team aandacht krijgt.",
+    "eaIntro": "Toone is de AI-werkruimte voor je agentische workflows: een macOS-app waarmee je complexe en deterministische AI-workflows kunt maken, debuggen en eenvoudig bewerken.",
     "eaBeforeTitle": "Voordat je aanvraagt",
     "eaBefore1": "macOS 14 of nieuwer",
     "eaBefore2": "Een Anthropic- of OpenAI-account: je brengt je eigen providertoegang mee",
@@ -133,6 +135,14 @@
     "eaStep2": "We sturen je een persoonlijke code zodra er een plek vrijkomt.",
     "eaStep3": "Verzilver de code, maak je account aan en download Toone.",
     "exploreLink": "Routines ontdekken"
+  },
+  "privacyChoices": {
+    "title": "Cookies en analyse",
+    "description": "We onthouden je taal-, inlog- en privacykeuzes. Met je toestemming telt cookievrije analyse bezoeken en klikken.",
+    "details": "Privacybeleid",
+    "deny": "Alleen noodzakelijk",
+    "allow": "Analyse toestaan",
+    "reopen": "Privacykeuzes"
   },
   "footer": {
     "privacy": "Privacy",

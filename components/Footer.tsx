@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
+import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -52,6 +53,14 @@ export default async function Footer({
               font-size: 13.5px; margin-bottom: 9px; transition: color 0.2s;
             }
             .ftr-cols a:hover { color: rgba(255,255,255,0.95); }
+            .ftr-privacy-choice {
+              display: block; padding: 0; border: 0; background: none;
+              color: rgba(255,255,255,0.62); font: inherit;
+              font-size: 13.5px; cursor: pointer;
+            }
+            .ftr-privacy-choice:hover, .ftr-privacy-choice:focus-visible {
+              color: rgba(255,255,255,0.95); text-decoration: underline;
+            }
             @media (max-width: 640px) {
               .ftr-wrap { flex-direction: column; }
               .ftr-cols { gap: 40px; }
@@ -102,6 +111,7 @@ export default async function Footer({
               <Link href="/signin">{nav("signin")}</Link>
               <Link href="/contact">{t("contact")}</Link>
               <Link href="/privacy">{t("privacy")}</Link>
+              <PrivacyChoicesButton className="ftr-privacy-choice" />
 
             </div>
           </div>

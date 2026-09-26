@@ -120,10 +120,12 @@
     "waitlistSub": "Lascia la tua email per richiedere accesso anticipato. Ti contatteremo quando sarà disponibile un posto.",
     "waitlistExisting": "Usi già Toone?",
     "waitlistSignIn": "Accedi",
+    "emailPrivacyNotice": "Usiamo la tua email per gestire la richiesta di accesso anticipato.",
+    "emailPrivacyLink": "Informativa sulla privacy",
     "productLanguageDisclosure": "L’app desktop è attualmente disponibile solo in inglese.",
     "heroTag2": "Trasforma le attività ricorrenti in risultati utili con agenti specializzati, mantenendo il controllo.",
     "haveInvitation": "Hai un codice di invito?",
-    "eaIntro": "Toone è lo spazio di lavoro AI per i tuoi flussi agentici: un'app per macOS in cui agenti specializzati eseguono i tuoi flussi e le tue routine sotto il tuo controllo. L'accesso è su invito: lascia la tua email e ti inviamo un codice personale quando si libera un posto. I posti vengono rilasciati in piccoli gruppi, così ogni nuovo team riceve attenzione.",
+    "eaIntro": "Toone è lo spazio di lavoro AI per i tuoi flussi agentici: un'app per macOS con cui puoi creare, eseguire il debug e modificare facilmente workflow AI complessi e deterministici.",
     "eaBeforeTitle": "Prima di richiedere",
     "eaBefore1": "macOS 14 o successivo",
     "eaBefore2": "Un account Anthropic o OpenAI: l'accesso al provider lo porti tu",
@@ -133,6 +135,14 @@
     "eaStep2": "Ti inviamo un codice personale quando si libera un posto.",
     "eaStep3": "Riscatta il codice, crea il tuo account e scarica Toone.",
     "exploreLink": "Esplora le routine"
+  },
+  "privacyChoices": {
+    "title": "Cookie e analisi",
+    "description": "Ricordiamo le tue scelte di lingua, accesso e privacy. Con il tuo consenso, le analisi senza cookie contano visite e clic.",
+    "details": "Informativa sulla privacy",
+    "deny": "Solo essenziali",
+    "allow": "Consenti analisi",
+    "reopen": "Scelte sulla privacy"
   },
   "footer": {
     "privacy": "Privacy",
