@@ -16,7 +16,7 @@ A routine can assign independent tasks to different agents, let those tasks prog
 
 ## Carry context through handoffs
 
-A handoff should include the information the receiving agent needs without transferring an entire undifferentiated conversation. Clear inputs and expected outputs make responsibility visible at every stage.
+A handoff should include the information the receiving agent needs without transferring an entire undifferentiated conversation. Clear inputs and expected outputs make responsibility visible at every stage. In the [Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g) bundle, one agent prepares launch sites and plans, and a second agent writes launch content from a brief that can build on those plans.
 
 ## Keep people in the operation
 

@@ -2121,3 +2121,14 @@
   margin: 0 0 18px;
   color: #5d5b55;
 }
+
+/* "Learn the features this uses": how-to links derived from the record */
+.explore-feature-guides .explore-feature-guide-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+.explore-feature-guides .explore-feature-guide-copy .explore-muted {
+  font-size: 14px;
+}

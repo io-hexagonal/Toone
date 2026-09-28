@@ -1,4 +1,5 @@
 import { requirementFacts } from "@/lib/explore/requirements";
+import { featureGuides, type FeatureGuide } from "@/lib/explore/featureGuides";
 import { termLabel, type ExploreTaxonomy } from "@/lib/explore/taxonomy";
 import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
@@ -175,6 +176,19 @@ export const COPY_KEYS = [
   "free",
   "price",
   "viewRoutine",
+  "featureGuidesHeading",
+  "featureGuideEyebrow",
+  "featureRoutines",
+  "featureRoutinesNote",
+  "featureExplore",
+  "featureExploreNote",
+  "featureBrowser",
+  "featureBrowserNote",
+  "featureRunDebug",
+  "featureRunDebugNote",
+  "featureOrchestration",
+  "featureOrchestrationAgentsNote",
+  "featureOrchestrationOwnerNote",
 ] as const;
 export type ExploreCopy = Record<(typeof COPY_KEYS)[number], string> & {
   count: (
@@ -970,6 +984,56 @@ export function IncludedInBundles({
     </section>
   );
 }
+/** "Learn the features this uses": how-to steps derived from what the record declares. */
+export function FeatureGuides({
+  detail,
+  ui,
+}: {
+  detail: RoutinePublicDetail | BundlePublicDetail;
+  ui: ExploreCopy;
+}) {
+  const guides = featureGuides(detail);
+  if (!guides.length) return null;
+  const text = (guide: FeatureGuide): [string, string] => {
+    switch (guide.id) {
+      case "routines":
+        return [ui.featureRoutines, ui.featureRoutinesNote];
+      case "explore":
+        return [ui.featureExplore, ui.featureExploreNote];
+      case "browser":
+        return [ui.featureBrowser, ui.featureBrowserNote];
+      case "runDebug":
+        return [ui.featureRunDebug, ui.featureRunDebugNote];
+      case "orchestration":
+        return [
+          ui.featureOrchestration,
+          guide.reason === "ownerControl" ? ui.featureOrchestrationOwnerNote : ui.featureOrchestrationAgentsNote,
+        ];
+    }
+  };
+  return (
+    <section className="explore-section" id="features">
+      <h2>{ui.featureGuidesHeading}</h2>
+      <ul className="explore-bundle-links explore-feature-guides">
+        {guides.map((guide) => {
+          const [title, note] = text(guide);
+          return (
+            <li key={guide.id}>
+              <a href={guide.href}>
+                <span className="explore-eyebrow">{ui.featureGuideEyebrow}</span>
+                <span className="explore-feature-guide-copy">
+                  <strong>{title}</strong>
+                  <span className="explore-muted">{note}</span>
+                </span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
 /** The legacy layout: used whenever the record has no listing profile. */
 export function RoutineContent({
   detail,
@@ -987,6 +1051,7 @@ export function RoutineContent({
       <article className="explore-body">
         <RoutineDefinition detail={detail} ui={ui} />
         <IncludedInBundles detail={detail} ui={ui} locale={locale} />
+        <FeatureGuides detail={detail} ui={ui} />
       </article>
       <aside className="explore-rail">
         <nav className="explore-toc" aria-label={ui.contents}>
@@ -999,6 +1064,7 @@ export function RoutineContent({
           {!!detail.included_in_bundles?.length && (
             <a href="#bundles">{ui.includedBundles}</a>
           )}
+          <a href="#features">{ui.featureGuidesHeading}</a>
         </nav>
         <DetailsCard detail={detail} ui={ui} locale={locale} />
         <a className="explore-back" href={`/${locale}/explore`}>

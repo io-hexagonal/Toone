@@ -26,6 +26,7 @@ import EditListingLink from "./EditListingLink";
 import {
   Author,
   Cover,
+  FeatureGuides,
   IncludedInBundles,
   RoutineDefinition,
   capitalize,
@@ -442,6 +443,7 @@ export function ProfileBody(
           </p>
         )}
         {routine && <IncludedInBundles detail={routine} ui={ui} locale={locale} />}
+        <FeatureGuides detail={detail} ui={ui} />
         {routine && (
           <details className="explore-builders" id="builders">
             <summary>
@@ -462,6 +464,7 @@ export function ProfileBody(
             </a>
           ))}
           {!!routine?.included_in_bundles?.length && <a href="#bundles">{ui.includedBundles}</a>}
+          <a href="#features">{ui.featureGuidesHeading}</a>
           {routine && <a href="#builders">{ui.builders}</a>}
         </nav>
         <ProfileDetailsCard detail={detail} ui={ui} locale={locale} />

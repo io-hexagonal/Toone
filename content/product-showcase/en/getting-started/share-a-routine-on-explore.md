@@ -38,6 +38,8 @@ A checklist card shows the listing coming together, from the shared copy and saf
 - write the category, audiences and public page, which you can ask it to change in the chat;
 - create a cover image, or ask you to choose one with **Choose cover image…** if it can't.
 
+To see what a finished listing page looks like, open [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf).
+
 Toone also checks the copy for secrets, private data and unsafe instructions. Anything it finds has to be resolved before the listing can be submitted.
 
 ## 4. Confirm and submit
