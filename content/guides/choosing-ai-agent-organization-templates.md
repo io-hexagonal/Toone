@@ -9,7 +9,7 @@ author: "Toone Content"
 authorType: "Organization"
 authorUrl: "/en/editorial-policy"
 published: "2026-08-14"
-updated: "2026-09-20"
+updated: "2026-09-28"
 readTime: "15 min read"
 featured: true
 image: "/assets/og/toone-og.png"
@@ -187,11 +187,13 @@ This page deliberately makes no claim about a current Toone template registry or
 
 Organization design owns responsibility and coordination. It should link to, but not absorb, adjacent decisions:
 
+- Use [the AI-native company guide](/en/guides/ai-native-company) to check whether the job should be delegated at all.
 - Use [AI agent governance](/en/governance) to set authority, approval, and exception policy.
 - Use [organizational knowledge](/en/organizational-knowledge) to define source ownership, provenance, access, and lifecycle.
 - Use [AI agent routines](/en/ai-agent-routines) to specify recurring triggers, inputs, stop conditions, retries, and maintenance.
 - Use [the adoption roadmap](/en/guides/ai-agent-adoption-roadmap) to bound the first rollout before the design is widened.
-- Use [showcases](/en/showcases) only for evidence that is documented on those pages.
+- Use [showcases](/en/business/showcases) only for evidence that is documented on those pages.
+- Browse [reviewed routine and workflow templates](/en/explore) to compare concrete examples.
 
 The most useful next step is to complete the worksheet, then draw the responsibility and handoff map for the roles it produced. If the worksheet exposes an unresolved approval, permission, or exception boundary, continue with [AI agent governance](/en/governance) before adding roles.
 

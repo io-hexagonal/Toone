@@ -8,7 +8,7 @@ description: "Start with one recurring workflow: pick the work worth repeating, 
 eyebrow: "Explore Toone"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 min read"
 featured: true
 ---
@@ -19,12 +19,18 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 Describe work you repeat and turn it into a routine you can return to.
 
+Once the workflow is clear, [hand it to specialised agents](/guides/how-agent-operations-work).
+
 ## Shared context
 
 Keep the information your team needs close to the work.
 
+[Keep that context in one place](/organizational-knowledge) so each new workflow starts from it.
+
 ## Results you can review
 
 Follow progress, review outputs, and decide what happens next.
+
+[See how companies run recurring workflows on Toone](/business/showcases).
 
 [Request Early Access](/request-access)

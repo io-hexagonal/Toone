@@ -8,7 +8,7 @@ description: "Keep the context your agents need close to the work: what to write
 eyebrow: "Explore Toone"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 min read"
 featured: false
 ---
@@ -19,12 +19,18 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 Keep the information your team needs close to the work.
 
+You don't need everything on day one, so [gather the context for one workflow first](/guides/ai-agent-adoption-roadmap).
+
 ## Specialised agents
 
 Give focused work to agents with clear responsibilities.
 
+[See how specialised agents use that context](/guides/how-agent-operations-work) in their daily work.
+
 ## Results you can review
 
 Follow progress, review outputs, and decide what happens next.
+
+[See what real companies run on Toone](/business/showcases).
 
 [Request Early Access](/request-access)

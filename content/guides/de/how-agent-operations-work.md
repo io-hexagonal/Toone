@@ -8,7 +8,7 @@ description: "Mit spezialisierten Agenten arbeiten. Übergeben Sie klar umrissen
 eyebrow: "Toone entdecken"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 Min. Lesezeit"
 featured: true
 ---
@@ -19,12 +19,18 @@ Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche E
 
 Übergeben Sie klar umrissene Aufgaben an Agenten mit eindeutigen Verantwortlichkeiten.
 
+Alle Agenten arbeiten mit demselben [gemeinsamen Unternehmenskontext](/organizational-knowledge), sodass niemand die Grundlagen neu erklären muss.
+
 ## Wiederholbare Abläufe
 
 Beschreiben Sie wiederkehrende Arbeit und machen Sie daraus eine wiederverwendbare Routine.
 
+Wenn Sie neu anfangen, [beginnen Sie mit einem einzigen Ablauf](/guides/ai-agent-adoption-roadmap), bevor Sie weitere hinzufügen.
+
 ## Ergebnisse zum Prüfen
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
+
+[Sehen Sie, wie Truleaf und micoo die Arbeit ihrer Agenten prüfen](/business/showcases).
 
 [Frühzugang anfragen](/request-access)

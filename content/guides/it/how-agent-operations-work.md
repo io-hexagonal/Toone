@@ -8,7 +8,7 @@ description: "Lavora con agenti specializzati. Affida compiti mirati ad agenti c
 eyebrow: "Scopri Toone"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 min di lettura"
 featured: true
 ---
@@ -19,12 +19,18 @@ Trasforma le attività ricorrenti in risultati utili con agenti specializzati, m
 
 Affida compiti mirati ad agenti con responsabilità chiare.
 
+Ogni agente lavora sullo stesso [contesto aziendale condiviso](/organizational-knowledge), così nessuno deve rispiegare le basi.
+
 ## Flussi ripetibili
 
 Descrivi il lavoro che ripeti e trasformalo in una routine riutilizzabile.
 
+Se stai iniziando, [parti da un solo flusso](/guides/ai-agent-adoption-roadmap) prima di aggiungerne altri.
+
 ## Risultati da verificare
 
 Segui i progressi, verifica i risultati e decidi i prossimi passi.
+
+[Scopri come Truleaf e micoo verificano il lavoro dei loro agenti](/business/showcases).
 
 [Richiedi accesso anticipato](/request-access)
