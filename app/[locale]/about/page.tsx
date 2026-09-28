@@ -53,8 +53,9 @@ export default async function AboutPage({ params }: Props) {
             and handoffs so recurring work has a durable operating structure.
           </p>
           <p>
-            Users bring their own supported Anthropic or OpenAI access. Toone supplies the operating
-            layer around those agents rather than presenting itself as an AI model provider.
+            Users can connect supported Anthropic or OpenAI access. Limited access may also be
+            provided through Toone for review or trials. Toone supplies the operating layer around
+            those agents rather than presenting itself as an AI model provider.
           </p>
         </section>
 
@@ -62,9 +63,9 @@ export default async function AboutPage({ params }: Props) {
           <h2>Local-first by design</h2>
           <p>
             Organization definitions, working context, conversations, and project files live on the
-            user&apos;s Mac. Website accounts, early-access requests, anonymous analytics, and optional
-            encrypted relay connections are separate services and are described in the{` `}
-            <a href="/en/privacy">privacy policy</a>.
+            user&apos;s Mac. AI requests, account services, optional relay and Live Share connections,
+            and usage analytics in the Direct edition can send information off the Mac.
+            Read our <a href="/en/privacy">privacy policy</a> for details.
           </p>
         </section>
 

@@ -7,10 +7,18 @@ type Props = {
   title: string;
   lede: string;
   updated: string;
+  updatedLabel?: string;
   children: ReactNode;
 };
 
-export default function TrustPage({ eyebrow, title, lede, updated, children }: Props) {
+export default function TrustPage({
+  eyebrow,
+  title,
+  lede,
+  updated,
+  updatedLabel = "Last reviewed",
+  children,
+}: Props) {
   return (
     <>
       <style
@@ -63,7 +71,9 @@ export default function TrustPage({ eyebrow, title, lede, updated, children }: P
         <p className="trust-eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="trust-lede">{lede}</p>
-        <p className="trust-updated">Last reviewed: {updated}</p>
+        <p className="trust-updated">
+          {updatedLabel}: {updated}
+        </p>
         {children}
       </main>
       <Footer />
