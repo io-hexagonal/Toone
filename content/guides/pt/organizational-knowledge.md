@@ -31,6 +31,6 @@ Confie tarefas específicas a agentes com responsabilidades claras.
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
 
-[Veja o que empresas reais executam no Toone](/business/showcases).
+[Veja as rotinas que outras pessoas partilham no Explore](/explore).
 
 [Pedir acesso antecipado](/request-access)

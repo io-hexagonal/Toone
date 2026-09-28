@@ -31,6 +31,6 @@ Confiez des tâches précises à des agents aux responsabilités claires.
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Découvrez ce que des entreprises réelles font tourner sur Toone](/business/showcases).
+[Parcourez les routines partagées sur Explore](/explore).
 
 [Demander un accès anticipé](/request-access)

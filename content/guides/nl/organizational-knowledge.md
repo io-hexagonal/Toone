@@ -31,6 +31,6 @@ Geef gerichte taken aan agents met duidelijke verantwoordelijkheden.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Bekijk wat echte bedrijven op Toone draaien](/business/showcases).
+[Bekijk de routines die anderen delen op Explore](/explore).
 
 [Vroege toegang aanvragen](/request-access)

@@ -78,9 +78,9 @@ const ENGLISH_UI: ArticleUi = {
   published: "Published",
   updated: "Updated",
   onThisPage: "On this page",
-  continueTitle: "Continue with evidence",
-  continueDescription: "See what currently runs on Toone before deciding whether the operating model fits your work.",
-  continueAction: "View Toone showcases",
+  continueTitle: "See how Toone works",
+  continueDescription: "Follow a routine from setup to a reviewed result before deciding whether Toone fits your work.",
+  continueAction: "Read the how-to guides",
 };
 
 export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_UI }: Props) {

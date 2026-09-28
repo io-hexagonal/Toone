@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import TruleafWordmark from "@/components/TruleafWordmark";
-import { Link } from "@/lib/navigation";
 
 /**
  * Partner band — the real partners, static.
@@ -43,12 +42,6 @@ export default async function PartnerBand() {
 
         {/* Partners in onboarding who can't be named publicly yet */}
         <span className="pb-more">{t("partnersBandMore")}</span>
-      </div>
-
-      <div className="pb-foot">
-        <Link href="/business/showcases" className="pb-cta">
-          {t("partnersBandCta")}
-        </Link>
       </div>
     </div>
   );

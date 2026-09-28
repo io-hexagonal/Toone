@@ -139,13 +139,6 @@ export async function TooneLandingPage({
             .pb-more {
               color: rgba(29,28,25,0.45); font-size: 13.5px; font-style: italic;
             }
-            .pb-foot { margin-top: 38px; }
-            .pb-cta {
-              display: inline-block; color: rgba(29,28,25,0.55); font-size: 13px;
-              text-decoration: none; border-bottom: 1px solid rgba(29,28,25,0.2);
-              padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
-            }
-            .pb-cta:hover { color: #1d1c19; border-color: rgba(29,28,25,0.5); }
             @media (max-width: 640px) {
               .pb-row { gap: 26px; }
               .pb-sep { display: none; }

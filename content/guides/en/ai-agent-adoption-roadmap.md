@@ -31,6 +31,6 @@ Keep the information your team needs close to the work.
 
 Follow progress, [review the output of each run](/en/how-to/getting-started/run-and-debug), and decide what happens next.
 
-[See how companies run recurring workflows on Toone](/business/showcases).
+[Browse the routines people share on Explore](/explore).
 
 [Request Early Access](/request-access)

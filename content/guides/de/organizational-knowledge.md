@@ -31,6 +31,6 @@ Sie brauchen nicht alles am ersten Tag, also [sammeln Sie zuerst den Kontext fü
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
 
-[Sehen Sie, was echte Unternehmen mit Toone betreiben](/business/showcases).
+[Stöbern Sie in den Routinen, die andere auf Explore teilen](/explore).
 
 [Frühzugang anfragen](/request-access)

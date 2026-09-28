@@ -31,6 +31,6 @@ Give focused work to agents with clear responsibilities, and [give each agent co
 
 Follow progress, review outputs, and decide what happens next.
 
-[See what real companies run on Toone](/business/showcases).
+[Browse the routines people share on Explore](/explore).
 
 [Request Early Access](/request-access)
