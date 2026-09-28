@@ -16,7 +16,7 @@ A useful routine identifies its input, the agents responsible for the work, the 
 
 ## Compose larger workflows
 
-Routines can delegate to specialized agents and call smaller routines. This lets a complex workflow remain understandable as a set of focused responsibilities instead of becoming one long prompt.
+Routines can delegate to specialized agents and call smaller routines. This lets a complex workflow remain understandable as a set of focused responsibilities instead of becoming one long prompt. For published examples of focused routines, see [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf), which checks launch sites and prepares unpublished drafts, and [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6), which turns an approved brief into reviewed launch content.
 
 ## Observe and improve each run
 
