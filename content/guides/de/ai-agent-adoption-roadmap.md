@@ -31,6 +31,6 @@ Halten Sie die Informationen Ihres Teams bei der jeweiligen Arbeit bereit.
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
 
-[Sehen Sie, wie Unternehmen wiederkehrende Abläufe mit Toone ausführen](/business/showcases).
+[Stöbern Sie in den Routinen, die andere auf Explore teilen](/explore).
 
 [Frühzugang anfragen](/request-access)

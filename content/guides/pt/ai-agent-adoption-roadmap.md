@@ -31,6 +31,6 @@ Mantenha a informação de que a equipa precisa perto do trabalho.
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
 
-[Veja como as empresas executam fluxos recorrentes no Toone](/business/showcases).
+[Veja as rotinas que outras pessoas partilham no Explore](/explore).
 
 [Pedir acesso antecipado](/request-access)

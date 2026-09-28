@@ -31,6 +31,6 @@ Ben je net begonnen, [start dan met één workflow](/guides/ai-agent-adoption-ro
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Bekijk hoe Truleaf en micoo het werk van hun agents beoordelen](/business/showcases).
+[Bekijk de routines die anderen delen op Explore](/explore).
 
 [Vroege toegang aanvragen](/request-access)

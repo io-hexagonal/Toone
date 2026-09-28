@@ -33,6 +33,6 @@ If you're new to this, [start with one workflow](/guides/ai-agent-adoption-roadm
 
 [Follow automated work as it progresses](/en/how-to/features/background-threads), review outputs, and decide what happens next.
 
-[See how Truleaf and micoo review their agents' work](/business/showcases).
+[Browse the routines people share on Explore](/explore).
 
 [Request Early Access](/request-access)

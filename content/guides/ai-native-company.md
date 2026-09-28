@@ -30,4 +30,4 @@ Give agents the context they need and keep people responsible for important deci
 
 Compare the time spent, the quality of the result, and the effort needed to review it. Let those results guide what you try next, and [compare runs after each change](/en/how-to/getting-started/run-and-debug).
 
-[See examples](/business/showcases) · [Request Early Access](/request-access)
+[Browse routines on Explore](/explore) · [Request Early Access](/request-access)
