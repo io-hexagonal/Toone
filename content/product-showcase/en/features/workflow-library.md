@@ -1,7 +1,7 @@
 ---
 title: "Workflow library"
 navTitle: "Workflow library"
-description: "Explore reusable workflow packages and adapt an approved routine family to the current project."
+description: "Browse a library of reusable workflows, review what each one needs, then add it to your project or branch your own version to adapt before it runs."
 eyebrow: "Feature · Workflows"
 pageType: "feature"
 ---

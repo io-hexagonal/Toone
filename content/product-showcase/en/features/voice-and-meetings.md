@@ -1,7 +1,7 @@
 ---
 title: "Voice and meetings"
 navTitle: "Voice and meetings"
-description: "Speak with agents and turn captured conversations into useful project context and follow-up work."
+description: "Talk to agents by voice, record meetings with speaker labels, and turn what was said into decisions, open questions, and next actions for your project."
 eyebrow: "Feature · Captured context"
 pageType: "feature"
 ---

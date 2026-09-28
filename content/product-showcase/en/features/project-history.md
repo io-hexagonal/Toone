@@ -1,7 +1,7 @@
 ---
 title: "Project History"
 navTitle: "Project History"
-description: "Use readable checkpoints and a visual timeline to understand how a project changed over time."
+description: "See how a project changed on a visual timeline of Git-backed checkpoints, tell agent edits from your own, and ask for an explanation of any change."
 eyebrow: "Feature · Control and safety"
 pageType: "feature"
 ---

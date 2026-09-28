@@ -1,7 +1,7 @@
 ---
 title: "Create your first project"
 navTitle: "Create a project"
-description: "Create a clear boundary for the agents, routines, tools, and context involved in one body of work."
+description: "Create your first project from an empty folder on your Mac and pick a scope that keeps its agents, routines, tools, and context together in one place."
 eyebrow: "Getting started · Step 2"
 pageType: "tutorial"
 estimatedTime: "2 minutes"

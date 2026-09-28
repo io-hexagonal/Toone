@@ -1,7 +1,7 @@
 ---
 title: "MCPs and integrations"
 navTitle: "MCPs and integrations"
-description: "Give agents access to structured tools and reusable browser knowledge at the right scope."
+description: "Give agents extra tools through MCP servers and reusable browser integrations, scoped to one project or your whole Mac, with no secrets in routines."
 eyebrow: "Feature · Connect"
 pageType: "feature"
 ---

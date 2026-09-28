@@ -1,7 +1,7 @@
 ---
 title: "Calendar"
 navTitle: "Calendar"
-description: "See routine schedules and project events across day, week, and month views."
+description: "See scheduled routines and project events in day, week, and month views, and create events with participants and tags that stay pending until confirmed."
 eyebrow: "Feature · Workflows"
 pageType: "feature"
 ---

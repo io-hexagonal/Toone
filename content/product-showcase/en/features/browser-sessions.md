@@ -1,7 +1,7 @@
 ---
 title: "Browser sessions"
 navTitle: "Browser sessions"
-description: "Bring authenticated browser context into Toone so agents can work with services you already use."
+description: "Let agents work through websites with a browser session you are already signed into, follow the pages they use, and step in when a task needs you."
 eyebrow: "Feature · Browser work"
 pageType: "feature"
 ---

@@ -1,7 +1,7 @@
 ---
 title: "Agent Spotlight"
 navTitle: "Agent Spotlight"
-description: "Reach the right agent, project, or thread from anywhere without interrupting your current flow."
+description: "Open Agent Spotlight over any app to reach the right agent, project, or thread, ask a quick question, or hand off the next task without losing focus."
 eyebrow: "Feature · Agent access"
 pageType: "feature"
 ---

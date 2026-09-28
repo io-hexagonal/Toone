@@ -1,7 +1,7 @@
 ---
 title: "Zen mode"
 navTitle: "Zen mode"
-description: "Create a focused working environment by placing a chosen ambient video behind the Toone panels."
+description: "Turn the desktop behind your panels into an ambient video for focused work. Pick a video in Settings, toggle it with a shortcut, and mute it anytime."
 eyebrow: "Feature · Experience"
 pageType: "feature"
 ---

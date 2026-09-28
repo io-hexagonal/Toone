@@ -1,7 +1,7 @@
 ---
 title: "Mobile companion"
 navTitle: "Mobile companion"
-description: "Pair an approved iPhone with Toone over the cloud or local network."
+description: "Pair your iPhone with the Toone app on your Mac to follow and control agent work over the cloud or your local network, and revoke devices anytime."
 eyebrow: "Feature · Connect"
 pageType: "feature"
 ---

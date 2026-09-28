@@ -1,7 +1,7 @@
 ---
 title: "Project Explorer"
 navTitle: "Project Explorer"
-description: "Browse the active project’s files and project structure from Toone’s right-side panel."
+description: "Keep your project files beside your agents and threads: browse the folder tree, open readable files, switch folders, and hide the panel when you need room."
 eyebrow: "Feature · Experience"
 pageType: "feature"
 ---

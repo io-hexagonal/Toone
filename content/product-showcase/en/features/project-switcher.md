@@ -1,7 +1,7 @@
 ---
 title: "Project switcher"
 navTitle: "Project switcher"
-description: "Keep multiple projects available and move between them from the numbered workspace strip."
+description: "Keep up to nine projects open in a numbered strip, jump between them with Option-number shortcuts, and spot unread agent activity in other projects."
 eyebrow: "Feature · Experience"
 pageType: "feature"
 ---

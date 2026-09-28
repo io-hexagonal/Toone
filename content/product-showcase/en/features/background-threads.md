@@ -1,7 +1,7 @@
 ---
 title: "Background threads"
 navTitle: "Background threads"
-description: "Follow automated and system work separately from direct conversations without losing its history or controls."
+description: "Follow automated work in System Threads, apart from your own chats: see which agent is running, open its full history, or stop it when something is off."
 eyebrow: "Feature · Workflows"
 pageType: "feature"
 ---

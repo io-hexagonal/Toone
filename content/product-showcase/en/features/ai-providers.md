@@ -1,7 +1,7 @@
 ---
 title: "AI providers"
 navTitle: "AI providers"
-description: "Choose OpenAI Codex or Anthropic Claude while Toone keeps the surrounding project structure consistent."
+description: "Connect OpenAI Codex or Anthropic Claude to power your agents, set a default model or pick another per thread, and keep your project setup unchanged."
 eyebrow: "Feature · Intelligence layer"
 pageType: "feature"
 ---
