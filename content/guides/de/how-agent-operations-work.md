@@ -25,7 +25,7 @@ Alle Agenten arbeiten mit demselben [gemeinsamen Unternehmenskontext](/organizat
 
 Beschreiben Sie wiederkehrende Arbeit und machen Sie daraus eine wiederverwendbare Routine.
 
-Wenn Sie neu anfangen, [beginnen Sie mit einem einzigen Ablauf](/guides/ai-agent-adoption-roadmap), bevor Sie weitere hinzufügen.
+Wenn Sie gerade erst anfangen, [beginnen Sie mit einem einzigen Ablauf](/guides/ai-agent-adoption-roadmap), bevor Sie weitere hinzufügen.
 
 ## Ergebnisse zum Prüfen
 

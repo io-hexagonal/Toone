@@ -25,7 +25,7 @@ Quando il flusso è chiaro, [affidalo ad agenti specializzati](/guides/how-agent
 
 Tieni le informazioni necessarie al team vicine al lavoro.
 
-[Raccogli quel contesto in un unico posto](/organizational-knowledge) così ogni nuovo flusso parte da lì.
+[Raccogli quel contesto in un unico posto](/organizational-knowledge), così ogni nuovo flusso parte da lì.
 
 ## Risultati da verificare
 

@@ -31,6 +31,6 @@ Affida compiti mirati ad agenti con responsabilità chiare.
 
 Segui i progressi, verifica i risultati e decidi i prossimi passi.
 
-[Scopri cosa gestiscono su Toone aziende reali](/business/showcases).
+[Scopri come aziende reali usano Toone](/business/showcases).
 
 [Richiedi accesso anticipato](/request-access)
