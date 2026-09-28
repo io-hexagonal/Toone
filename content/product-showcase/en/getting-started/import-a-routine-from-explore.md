@@ -48,7 +48,7 @@ To follow the first run, see [Run and debug a routine](/how-to/getting-started/r
 
 ## Adding a bundle
 
-A bundle page shows **The routines inside**. Choose **Use this bundle** to open **Add to your organization**, then:
+A bundle page, such as [Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g), shows **The routines inside**. Choose **Use this bundle** to open **Add to your organization**, then:
 
 1. Tick the routines you want.
 2. Pick the **Department** they should go into.

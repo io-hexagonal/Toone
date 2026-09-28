@@ -19,6 +19,7 @@ import {
   ExploreUnavailable,
   DetailHero,
   DetailsCard,
+  FeatureGuides,
   formatDate,
   Cover,
   Counts,
@@ -198,6 +199,7 @@ export default async function BundlePage({ params }: Props) {
               ))}
             </ul>
           </section>
+          <FeatureGuides detail={detail} ui={ui} />
         </div>
         <aside className="explore-rail">
           <DetailsCard detail={detail} ui={ui} locale={locale} />

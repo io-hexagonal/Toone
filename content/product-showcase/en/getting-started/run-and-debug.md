@@ -21,7 +21,7 @@ Notice which agent is working, what step is underway, and whether Toone is waiti
 
 ## Inspect the result
 
-When the run finishes, open the produced brief and compare it with the routine’s expected sections. Look for missing evidence, unclear assumptions, or a result saved in the wrong place. The run stays in the routine's execution history, so you can come back to it later and compare it with the next one.
+When the run finishes, open the produced brief and compare it with the routine’s expected sections. This is easier when each step states what it must deliver, as in [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) on Explore. Look for missing evidence, unclear assumptions, or a result saved in the wrong place. The run stays in the routine's execution history, so you can come back to it later and compare it with the next one.
 
 ## Improve and repeat
 
