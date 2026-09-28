@@ -9,7 +9,7 @@ estimatedTime: "5 minutes"
 
 ## Before you start
 
-You need the Toone app, signed in, with your own organization and project open. Routines from Explore are added to that organization, so open it first. If you don't have Toone yet, it is currently available by invitation: [request access](/en/request-access).
+You need the Toone app, signed in, with a project open. Routines from Explore are added to your organization in that project. If you don't have Toone yet, it is currently available by invitation: [request access](/en/request-access).
 
 If you haven't set up a project, follow [Create your first project](/how-to/getting-started/create-a-project) first.
 
@@ -55,7 +55,11 @@ A bundle page shows **The routines inside**. Choose **Use this bundle** to open 
 3. Confirm that you reviewed the included routines, agents, Skills and files.
 4. Choose **Add to organization**, or **Create editable branches** if you want draft copies to adapt first.
 
-Bundles are added in one step, without the setup conversation, and their scheduling starts switched off. Open each routine from the **Routines** panel to check its inputs before you run it.
+Bundles are added in one step, without the setup conversation. Each routine then needs its own setup before it runs:
+
+1. Open each routine from the **Routines** panel and choose **Setup**. Toone starts the same setup conversation described above for that routine.
+2. Scheduling stays off until you set the routine up.
+3. If a run pauses because setup is missing, choose **Open Setup**, finish it, then choose **Resume**.
 
 ## Checkpoint
 

@@ -24,7 +24,7 @@ In the right panel, open the **Organization** tab. Right-click the routine and c
 Toone asks **What would you like to share?**
 
 - **Share this routine** publishes it as one listing. Its sub-routines travel with it.
-- **Create a routine bundle** lets you pick other routines to publish together. Each routine is reviewed on its own, and the bundle goes live once all of them are approved.
+- **Create a routine bundle** lets you pick other routines to publish together. Each routine is reviewed on its own, and the bundle goes live once all of them are approved. For each routine you can also choose to list it on its own, so it appears by itself in Explore as well as inside the bundle.
 - **Share an update** sends a new version of a routine you have already shared.
 
 Choose **Continue**. A Share assistant opens in chat. It prepares everything and asks only for what it needs.
@@ -48,7 +48,7 @@ Listings are free. Paid listings aren't available yet.
 
 ## 5. Follow the review
 
-The card changes to **Submitted for review**. To check on it later, open **Explore** in the app and switch to **My submissions**. Each item shows its status, and a rejected item includes the reviewer's note. The routine's row in your organization also shows a status such as **In review** or **Shared**.
+The card changes to **Submitted for review**. Toone emails you when your submission has been reviewed. To check on it any time, open **Explore** in the app and switch to **My submissions**. Each item shows its status, and a rejected item includes the reviewer's note. The routine's row in your organization also shows a status such as **In review** or **Shared**.
 
 Once approved, the listing is public on [Explore](/explore) and anyone can add it by following [Import a routine from Explore](/how-to/getting-started/import-a-routine-from-explore). Choose **Copy link** in **My submissions** to send someone straight to it.
 

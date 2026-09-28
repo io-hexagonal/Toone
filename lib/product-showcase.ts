@@ -153,12 +153,6 @@ export const PRODUCT_GUIDE_NAV: ProductGuideNavSection[] = [
         nested: true,
       },
       {
-        slug: "features/workflow-library",
-        label: "Workflow library",
-        contentFile: "features/workflow-library.md",
-        nested: true,
-      },
-      {
         slug: "features/explore",
         label: "Explore",
         contentFile: "features/explore.md",
