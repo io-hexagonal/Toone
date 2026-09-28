@@ -23,6 +23,7 @@ import type {
 } from "@/lib/explore/types";
 import OpenInToone from "./OpenInToone";
 import EditListingLink from "./EditListingLink";
+import { FeatureGuides } from "./FeatureGuides";
 import {
   Author,
   Cover,
@@ -406,6 +407,7 @@ function ProfileDetailsCard({ detail, ui, locale }: { detail: Detail; ui: Explor
           <dt>{"package" in detail ? ui.routineName : ui.bundleName}</dt>
           <dd>{detail.title}</dd>
         </div>
+        <FeatureGuides detail={detail} ui={ui} />
       </dl>
     </section>
   );

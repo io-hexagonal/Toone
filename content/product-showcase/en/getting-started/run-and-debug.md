@@ -9,7 +9,7 @@ estimatedTime: "3–5 minutes"
 
 ## Make a test run
 
-Run the routine once with a small, real input. The point of the first run is not the result; it is to check that the pipeline works end to end and is not more complex than it needs to be. Run it from the **Routines** panel with **Run**, or ask the agent to run it for you.
+Run the routine once with a small, real input. The point of the first run is not the result; it is to check that the pipeline works end to end and is not more complex than it needs to be. To practise on a routine someone else built, try [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6); each of its steps states when it is done. Run it from the **Routines** panel with **Run**, or ask the agent to run it for you.
 
 ## Watch the work
 

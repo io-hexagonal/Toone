@@ -20,6 +20,6 @@ A handoff should include the information the receiving agent needs without trans
 
 ## Keep people in the operation
 
-Agents can escalate decisions, request approval, or return uncertain work for review. Orchestration is not only about increasing autonomy; it is also about making the right interruption happen at the right time.
+Agents can escalate decisions, request approval, or return uncertain work for review. Orchestration is not only about increasing autonomy; it is also about making the right interruption happen at the right time. [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf), a shared routine on Explore, asks for your permission on each site before it changes an account or profile.
 
 Next: [Explore](/how-to/features/explore).

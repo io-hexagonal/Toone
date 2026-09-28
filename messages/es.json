@@ -37,6 +37,7 @@
       "heroTag": "Dales forma conversando, míralos ejecutarse paso a paso, pausa o edita a mitad de ejecución y amplíalos sabiendo que nada se rompe.",
       "featuresTitle": "El espacio de trabajo de IA para tus flujos agénticos",
       "featuresSub": "Un espacio para tus agentes, tus flujos de trabajo y tus resultados.",
+      "featuresAll": "Ver todas las funciones",
       "statement": {
         "title": "El espacio de trabajo de IA para tus flujos agénticos",
         "lead": "Un espacio para tus agentes, tus flujos de trabajo y tus resultados.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Conoce las funciones que usa",
+    "guideRoutines": "Cómo se escriben y ejecutan las rutinas",
+    "guideBrowser": "Cómo trabajan los agentes en tu navegador",
+    "guideRunDebug": "Sigue cada paso y comprueba su resultado",
+    "guideApprovals": "Dónde apruebas acciones en sitios externos",
+    "guideBundles": "Qué es un conjunto y cómo añadirlo"
   }
 }

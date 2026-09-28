@@ -19,13 +19,13 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 Keep the information your team needs close to the work.
 
-You don't need everything on day one, so [gather the context for one workflow first](/guides/ai-agent-adoption-roadmap).
+You don't need everything on day one, so [gather the context for one workflow first](/guides/ai-agent-adoption-roadmap). A [Toone project keeps agents, routines and context together](/en/how-to/getting-started/create-a-project).
 
 ## Specialised agents
 
 Give focused work to agents with clear responsibilities.
 
-[See how specialised agents use that context](/guides/how-agent-operations-work) in their daily work.
+[See how specialised agents use that context](/guides/how-agent-operations-work) in their daily work, or [give an agent context it reads every time](/en/how-to/getting-started/create-an-agent).
 
 ## Results you can review
 

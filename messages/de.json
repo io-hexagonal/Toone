@@ -37,6 +37,7 @@
       "heroTag": "Im Gespräch formen, Schritt für Schritt beim Laufen zusehen, mitten im Lauf pausieren oder ändern und erweitern, ohne dass etwas bricht.",
       "featuresTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
       "featuresSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
+      "featuresAll": "Alle Funktionen ansehen",
       "statement": {
         "title": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
         "lead": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Die genutzten Funktionen kennenlernen",
+    "guideRoutines": "Wie Routinen geschrieben und ausgeführt werden",
+    "guideBrowser": "Wie Agenten in deinem Browser arbeiten",
+    "guideRunDebug": "Jeden Schritt verfolgen und sein Ergebnis prüfen",
+    "guideApprovals": "Wo du Aktionen auf fremden Websites freigibst",
+    "guideBundles": "Was ein Paket ist und wie du es hinzufügst"
   }
 }

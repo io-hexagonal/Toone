@@ -18,6 +18,8 @@ Bring a session from your default browser into Toone when a task depends on an a
 
 Browser work should remain understandable to the person responsible for the project. Follow which session and page are involved, then intervene when a step requires judgment, approval, or corrected input.
 
+Two shared routines on Explore work this way. [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) researches sources in the browser while it drafts, and [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) checks launch sites and prepares only the accounts you authorize.
+
 ## Use deliberate boundaries
 
 Connect only the browser context needed for the task. An authenticated session can expose sensitive capabilities, so its scope should match the agent’s role and the outcome you asked it to produce.

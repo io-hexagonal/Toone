@@ -4,9 +4,23 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
+import { getProductGuidePage } from "@/lib/product-showcase";
 import { locales, type Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
+
+/** Product guides with no article that describes them. The how-to section is
+    English-only, so the block renders on the English page. */
+const PRODUCT_GUIDES = [
+  "concepts",
+  "features",
+  "getting-started/install-and-connect",
+  "features/agent-spotlight",
+  "features/workspace-windows",
+  "features/project-explorer",
+  "features/project-switcher",
+  "features/zen-mode",
+];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
@@ -45,6 +59,13 @@ export default async function ResourcesPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "resources" });
   const publications = getPublications(locale);
+  const productGuides =
+    locale === "en"
+      ? PRODUCT_GUIDES.flatMap((slug) => {
+          const page = getProductGuidePage(slug);
+          return page ? [{ slug, title: page.title, description: page.description }] : [];
+        })
+      : [];
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
@@ -101,6 +122,20 @@ export default async function ResourcesPage({ params }: Props) {
           position: relative; z-index: 1; display: flex; gap: 16px; margin-top: auto;
           padding-top: 30px; color: rgba(29,28,25,0.5); font-size: 11px;
         }
+        .product-guides {
+          max-width: 1080px; margin: 0 auto; padding: 0 24px 120px;
+        }
+        .product-guides h2 {
+          font-size: clamp(24px, 3vw, 32px); letter-spacing: -.03em; font-weight: 640;
+        }
+        .product-guides ul { list-style: none; margin: 22px 0 0; padding: 0; }
+        .product-guides li {
+          padding: 16px 0; border-top: 1px solid rgba(29,28,25,0.11);
+          color: rgba(29,28,25,0.62); font-size: 14px; line-height: 1.65;
+        }
+        .product-guides a {
+          color: #1d1c19; font-weight: 620; text-underline-offset: 3px;
+        }
         @media (max-width: 740px) {
           .resources-hero { padding-top: 120px; padding-bottom: 70px; }
           .resources-grid { grid-template-columns: 1fr; padding-top: 58px; }
@@ -130,6 +165,18 @@ export default async function ResourcesPage({ params }: Props) {
             </Link>
           ))}
         </main>
+        {productGuides.length > 0 && (
+          <section className="product-guides" aria-labelledby="product-guides">
+            <h2 id="product-guides">Product guides</h2>
+            <ul>
+              {productGuides.map((guide) => (
+                <li key={guide.slug}>
+                  <Link href={`/how-to/${guide.slug}`}>{guide.title}</Link>. {guide.description}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <Footer />
       </div>
     </>

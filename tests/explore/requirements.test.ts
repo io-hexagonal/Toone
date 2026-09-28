@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { requirementFacts } from "../../lib/explore/requirements";
-import type { WorkflowPackage } from "../../lib/explore/types";
+import { featureGuides, requirementFacts } from "../../lib/explore/requirements";
+import type { BundlePublicDetail, RoutinePublicDetail, WorkflowPackage } from "../../lib/explore/types";
 
 test("requirements separate bundled content, external inputs and declared outputs without inventing accounts", () => {
   const pkg: WorkflowPackage = { format_version: 2, routine_schema_version: 2, root_key: "root", members: [
@@ -40,4 +40,20 @@ test("legacy dependencies remain visible while parent-bound child inputs are not
     {key: "child", parent_key: "root", source_routine_id: "child", payload: {inputs: [{id: "request", description: "Child brief", requirement: "dispatch"}]}},
   ]};
   assert.deepEqual(requirementFacts(pkg).youProvide, ["external/editor", "editing", "Your brief"]);
+});
+
+test("feature guides come only from declared package and listing facts", () => {
+  const pkg: WorkflowPackage = {format_version: 2, routine_schema_version: 2, root_key: "root", members: [
+    {key: "root", source_routine_id: "r", payload: {steps: [{id: "s", title: "Research", completionCriteria: ["Sources are dated"]}]}},
+  ], requirements: {mcp_ids: ["browser"]}};
+  const routine = {package: pkg, listing_profile: null} as unknown as RoutinePublicDetail;
+  assert.deepEqual(featureGuides(routine), ["guideRoutines", "guideBrowser", "guideRunDebug"]);
+  const withProfile = {package: pkg, listing_profile: {third_parties: [{actions: ["read", "profile"]}]}} as unknown as RoutinePublicDetail;
+  assert.deepEqual(featureGuides(withProfile), ["guideRoutines", "guideBrowser", "guideRunDebug", "guideApprovals"]);
+  const bare = {package: {format_version: 1, routine_schema_version: 2, root_key: "root", members: []}} as unknown as RoutinePublicDetail;
+  assert.deepEqual(featureGuides(bare), ["guideRoutines"]);
+  const readOnly = {package: pkg, listing_profile: {third_parties: [{actions: ["read"]}]}} as unknown as RoutinePublicDetail;
+  assert.ok(!featureGuides(readOnly).includes("guideApprovals"));
+  const bundle = {members: [{}, {}]} as unknown as BundlePublicDetail;
+  assert.deepEqual(featureGuides(bundle), ["guideBundles", "guideRoutines"]);
 });

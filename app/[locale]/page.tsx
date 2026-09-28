@@ -11,6 +11,20 @@ import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
 import CollaborationPresence from "@/components/CollaborationPresence";
+import { Link } from "@/lib/navigation";
+
+/** The how-to page for each personal feature card. How-to is English-only;
+    `Link` resolves these to `/en/…` in every locale. */
+const FEATURE_GUIDES: Record<string, string> = {
+  "personal.features.spotlight.title": "/how-to/features/agent-spotlight",
+  "personal.features.windows.title": "/how-to/features/workspace-windows",
+  "personal.features.browser.title": "/how-to/features/browser-sessions",
+  "personal.features.routines.title": "/how-to/features/routines",
+  "personal.features.liveShare.title": "/how-to/features/live-share",
+  "personal.features.orchestration.title": "/how-to/features/orchestration",
+  "personal.features.voice.title": "/how-to/features/voice-and-meetings",
+  "personal.features.providers.title": "/how-to/features/explore",
+};
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -251,6 +265,11 @@ export async function TooneLandingPage({
               letter-spacing: -0.005em;
             }
             .pillar p { color: rgba(29,28,25,0.6); font-size: 14px; line-height: 1.6; }
+            .pillar h3 a { color: inherit; text-decoration: none; }
+            .pillar h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+            .features-all { margin: -28px 0 32px; font-size: 14px; }
+            .features-all a { color: rgba(29,28,25,0.7); text-underline-offset: 3px; }
+            .features-all a:hover { color: #1d1c19; }
 
             @media (max-width: 760px) {
               .collab-presence { inset: -12px; }
@@ -298,6 +317,11 @@ export async function TooneLandingPage({
             <p className="sub">
               {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
             </p>
+            {audience === "personal" && (
+              <p className="features-all">
+                <Link href="/how-to/features">{t("personal.featuresAll")} →</Link>
+              </p>
+            )}
             <div className="pillars">
               {(
                 audience === "personal"
@@ -335,7 +359,13 @@ export async function TooneLandingPage({
                     )}
                     <div className="phex">{String(i + 1).padStart(2, "0")}</div>
                     <div className="pillar-heading">
-                      <h3>{t(titleKey)}</h3>
+                      <h3>
+                        {FEATURE_GUIDES[titleKey] ? (
+                          <Link href={FEATURE_GUIDES[titleKey]}>{t(titleKey)}</Link>
+                        ) : (
+                          t(titleKey)
+                        )}
+                      </h3>
                       {isCollaboration && <span className="pillar-beta">Beta</span>}
                     </div>
                     <p>

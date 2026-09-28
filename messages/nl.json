@@ -37,6 +37,7 @@
       "heroTag": "Vorm ze in een gesprek, zie ze stap voor stap draaien, pauzeer of bewerk ze tijdens een run en breid ze uit in de wetenschap dat er niets breekt.",
       "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
+      "featuresAll": "Alle functies bekijken",
       "statement": {
         "title": "De AI-werkruimte voor jouw agentische workflows",
         "lead": "Eén werkplek voor je agents, je workflows en je resultaten.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Leer de functies kennen die dit gebruikt",
+    "guideRoutines": "Hoe routines worden geschreven en uitgevoerd",
+    "guideBrowser": "Hoe agents in je browser werken",
+    "guideRunDebug": "Volg elke stap en controleer het resultaat",
+    "guideApprovals": "Waar je acties op externe sites goedkeurt",
+    "guideBundles": "Wat een bundel is en hoe je hem toevoegt"
   }
 }

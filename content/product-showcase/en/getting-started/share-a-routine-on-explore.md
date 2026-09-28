@@ -31,7 +31,7 @@ Choose **Continue**. A Share assistant opens in chat. It prepares everything and
 
 ## 3. Answer the Share assistant
 
-A checklist card shows the listing coming together, from the shared copy and safety checks through the title, category, public page and cover. The assistant will:
+A checklist card shows the listing coming together, from the shared copy and safety checks through the title, category, public page and cover. For a finished public page, see [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf). The assistant will:
 
 - suggest a title for you to confirm, and for a bundle, ask which routines to include and what to call it;
 - ask, for any well-known site the routine works with, whether to name it on the page or keep the routine generic;

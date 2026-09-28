@@ -27,7 +27,7 @@ More agents create more coordination paths. That can be useful when work needs s
 
 Anthropic recommends beginning with the simplest solution that meets the need and increasing agentic complexity only when the task warrants it in [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents). OpenAI similarly recommends maximizing a single agent's capabilities before introducing multiple agents in [A practical guide to building agents](https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/). Microsoft's [AI agent orchestration patterns](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns) advises using the lowest level of complexity that reliably meets the requirements.
 
-These sources do not establish a universal ideal number of agents. Use the following questions instead:
+These sources do not establish a universal ideal number of agents. In Toone, [agents, routines and runs fit together](/en/how-to/concepts) inside one project. Use the following questions instead:
 
 1. Can one accountable owner complete the job with clear instructions and well-defined tools?
 2. Does any part of the job need a distinct expertise, context, data, or permission boundary?
@@ -100,13 +100,13 @@ Do not use a dynamic handoff to implement a fixed rule. If every billing request
 
 For each role, list what it may read, what it may write, and what it must never receive. Reading a system does not justify changing it. Drafting a recommendation does not grant approval authority.
 
-The [Model Context Protocol architecture](https://modelcontextprotocol.io/specification/2025-06-18/architecture) is one concrete example of explicit capability boundaries: hosts control permissions and authorization, clients maintain isolated server connections, and supported capabilities are declared during negotiation. Not every integration uses MCP, but the design lesson transfers: record what a connection exposes and who may authorize its use.
+The [Model Context Protocol architecture](https://modelcontextprotocol.io/specification/2025-06-18/architecture) is one concrete example of explicit capability boundaries: hosts control permissions and authorization, clients maintain isolated server connections, and supported capabilities are declared during negotiation. Not every integration uses MCP, but the design lesson transfers: record what a connection exposes and who may authorize its use. In Toone, you can [give agents tools scoped to one project](/en/how-to/features/mcp-integrations) rather than to your whole Mac.
 
 If connection choice is the unresolved part of the design, treat it as a separate decision with its own record. A named integration should not enter this worksheet without its own evidence and permission boundary.
 
 ### 5. Specify handoffs and shared state
 
-A handoff should name the trigger, payload, recipient, acknowledgement, and owner after transfer. The receiving role should be able to reject malformed or unsupported input before acting on it.
+A handoff should name the trigger, payload, recipient, acknowledgement, and owner after transfer. The receiving role should be able to reject malformed or unsupported input before acting on it. Toone lets you [hand off work between specialist agents](/en/how-to/features/orchestration) with clear inputs and outputs.
 
 Persist only the state required to resume. Microsoft's orchestration guidance recommends durable progress and checkpointing for long-running work, validation before passing output downstream, and explicit timeout, retry, and degradation behavior. It also warns that concurrent agents sharing mutable state can create inconsistent results.
 
@@ -114,7 +114,7 @@ Record one source owner for every shared instruction, fact, and configuration. I
 
 ### 6. Define evidence, recovery, and maintenance
 
-Decide what proves the work is acceptable before running it. Evidence might include a required schema, a source manifest, an immutable artifact, a reviewer applying a rubric, or a state-change receipt. Match the evidence to the job and its risk.
+Decide what proves the work is acceptable before running it. Evidence might include a required schema, a source manifest, an immutable artifact, a reviewer applying a rubric, or a state-change receipt. Match the evidence to the job and its risk. In a Toone project, a [timeline separates agent changes from your own](/en/how-to/features/project-history), and you can ask for an explanation of any change.
 
 Write the failure path beside the happy path:
 
@@ -193,7 +193,7 @@ Organization design owns responsibility and coordination. It should link to, but
 - Use [AI agent routines](/en/ai-agent-routines) to specify recurring triggers, inputs, stop conditions, retries, and maintenance.
 - Use [the adoption roadmap](/en/guides/ai-agent-adoption-roadmap) to bound the first rollout before the design is widened.
 - Use [showcases](/en/business/showcases) only for evidence that is documented on those pages.
-- Browse [reviewed routine and workflow templates](/en/explore) to compare concrete examples.
+- Browse [reviewed routine and workflow templates](/en/explore) to compare concrete examples, [start from a reviewed template](/en/how-to/features/explore) that matches the job, and [add it to your organization](/en/how-to/getting-started/import-a-routine-from-explore).
 
 The most useful next step is to complete the worksheet, then draw the responsibility and handoff map for the roles it produced. If the worksheet exposes an unresolved approval, permission, or exception boundary, continue with [AI agent governance](/en/governance) before adding roles.
 

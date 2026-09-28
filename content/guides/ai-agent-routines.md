@@ -62,7 +62,7 @@ Bounded permissions reduce what a routine is authorized to touch. They do not pr
 
 ## Hypothetical example: a weekly product-proof source packet
 
-This example is hypothetical. It describes an operating design, not a Toone product trace, customer deployment, or runtime test.
+This example is hypothetical. It describes an operating design, not a Toone product trace, customer deployment, or runtime test. For a real shared routine that sets completion criteria for every step, see [Launch Content Production on Explore](/en/explore/routines/launch-content-production-gni2lxu6).
 
 A content operations team wants a packet of current primary sources ready for a product-proof review every Monday.
 
@@ -194,10 +194,10 @@ Leave an entry blank or mark it `UNKNOWN` when the answer is not available. An e
 
 ## Where Toone fits
 
-In Toone you write a routine in plain English, assign it to a specialist agent, schedule it, add the approval steps you want, and review each run. Two product facts belong in the contract above before you rely on a schedule:
+In Toone you [write a routine in plain English](/en/how-to/features/routines), [assign it to a specialist agent](/en/how-to/getting-started/create-an-agent), [schedule it](/en/how-to/features/calendar), [add the approval steps you want](/en/how-to/features/orchestration), and [review each run](/en/how-to/getting-started/run-and-debug). While a run is in progress, you can [watch it or stop it from its background thread](/en/how-to/features/background-threads). Two product facts belong in the contract above before you rely on a schedule:
 
-- Routines run only while your Mac is online. A routine is not a hosted scheduler, so the trigger, freshness window, and missing-run rule should assume the machine can be off.
-- Agents run on your own Anthropic or OpenAI account. Provider access, and its limits, stay under your control.
+- Routines run only while your Mac is online. A routine is not a hosted scheduler, so the trigger, freshness window, and missing-run rule should assume the machine can be off. You can [follow runs from an iPhone paired with that Mac](/en/how-to/features/mobile-companion).
+- Agents run on your own [Anthropic or OpenAI account](/en/how-to/features/ai-providers). Provider access, and its limits, stay under your control.
 
 Recurring routines are how [an AI-native company](/en/guides/ai-native-company) runs day to day.
 

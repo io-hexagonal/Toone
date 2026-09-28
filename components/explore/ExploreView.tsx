@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
 import EditListingLink from "./EditListingLink";
 import CoverImage from "./CoverImage";
+import { FeatureGuides } from "./FeatureGuides";
 import {
   getExploreTaxonomy,
   resolveCardCoverUrl,
@@ -164,6 +165,12 @@ export const COPY_KEYS = [
   "free",
   "price",
   "viewRoutine",
+  "featureGuides",
+  "guideRoutines",
+  "guideBrowser",
+  "guideRunDebug",
+  "guideApprovals",
+  "guideBundles",
 ] as const;
 export type ExploreCopy = Record<(typeof COPY_KEYS)[number], string> & {
   count: (
@@ -630,6 +637,7 @@ export function DetailsCard({
             <dd>{minimum}</dd>
           </div>
         )}
+        <FeatureGuides detail={detail} ui={ui} />
       </dl>
     </section>
   );

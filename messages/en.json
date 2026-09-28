@@ -37,6 +37,7 @@
       "heroTag": "AI routines can be unreliable, slow to build, and hard to maintain.\nWith Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
+      "featuresAll": "See all features",
       "statement": {
         "title": "The AI workspace for your agentic workflows",
         "lead": "One workspace for your agents, your workflows, and the results that matter.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Learn the features this uses",
+    "guideRoutines": "How routines are written and run",
+    "guideBrowser": "How agents work in your browser",
+    "guideRunDebug": "Follow each step and check its result",
+    "guideApprovals": "Where you approve actions on outside sites",
+    "guideBundles": "What a bundle is and how to add one"
   }
 }

@@ -19,7 +19,7 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 Describe work you repeat and turn it into a routine you can return to.
 
-Once the workflow is clear, [hand it to specialised agents](/guides/how-agent-operations-work).
+Once the workflow is clear, [hand it to specialised agents](/guides/how-agent-operations-work), or [start from a reviewed routine](/en/how-to/features/explore) that already does the job.
 
 ## Shared context
 
@@ -31,6 +31,6 @@ Keep the information your team needs close to the work.
 
 Follow progress, review outputs, and decide what happens next.
 
-[See how companies run recurring workflows on Toone](/business/showcases).
+[See how companies run recurring workflows on Toone](/business/showcases), then [review a run and change it](/en/how-to/getting-started/run-and-debug).
 
 [Request Early Access](/request-access)

@@ -1107,6 +1107,18 @@
   color: #4f4d45;
   line-height: 1.5;
 }
+.explore-feature-guides ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.explore-feature-guides li + li {
+  margin-top: 4px;
+}
+.explore-feature-guides a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
 .explore-back {
   font-size: 13px;
   color: #6a685f;

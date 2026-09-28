@@ -37,6 +37,7 @@
       "heroTag": "Dai loro forma conversando, guardali eseguire passo dopo passo, mettili in pausa o modificali durante l'esecuzione ed espandili sapendo che nulla si rompe.",
       "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
+      "featuresAll": "Vedi tutte le funzioni",
       "statement": {
         "title": "Lo spazio di lavoro IA per i tuoi flussi agentici",
         "lead": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Scopri le funzioni che usa",
+    "guideRoutines": "Come si scrivono ed eseguono le routine",
+    "guideBrowser": "Come lavorano gli agenti nel tuo browser",
+    "guideRunDebug": "Segui ogni passaggio e controllane il risultato",
+    "guideApprovals": "Dove approvi le azioni su siti esterni",
+    "guideBundles": "Cos’è una raccolta e come aggiungerla"
   }
 }

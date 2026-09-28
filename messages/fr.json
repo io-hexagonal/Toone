@@ -37,6 +37,7 @@
       "heroTag": "Façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
+      "featuresAll": "Voir toutes les fonctionnalités",
       "statement": {
         "title": "L’espace de travail IA pour vos workflows agentiques",
         "lead": "Un espace pour vos agents, vos processus et vos résultats.",
@@ -531,6 +532,12 @@
     "doneWhen": "Done when",
     "connectedTools": "Connected tools",
     "routineName": "Routine name",
-    "bundleName": "Bundle name"
+    "bundleName": "Bundle name",
+    "featureGuides": "Découvrir les fonctionnalités utilisées",
+    "guideRoutines": "Comment les routines sont écrites et exécutées",
+    "guideBrowser": "Comment les agents travaillent dans votre navigateur",
+    "guideRunDebug": "Suivre chaque étape et vérifier son résultat",
+    "guideApprovals": "Où vous approuvez les actions sur des sites externes",
+    "guideBundles": "Ce qu’est un ensemble et comment l’ajouter"
   }
 }
