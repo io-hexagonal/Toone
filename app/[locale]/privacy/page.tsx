@@ -181,21 +181,25 @@ export default async function PrivacyPage({ params }: Props) {
             marginBottom: 12,
           }}
         >
-          Anonymous Usage Analytics
+          Usage Analytics
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          The Toone desktop app sends anonymous usage telemetry (feature usage
-          events such as &quot;an organization was created&quot; — never
-          conversation content, file contents, prompts, or anything that
-          identifies you) to our own self-hosted, privacy-focused analytics
-          (Umami). Events are tied to a random per-install identifier, not to
-          your name or email. You can turn this off at any time in Settings.
+          The Toone desktop app sends usage events, such as &quot;an organization
+          was created,&quot; to our self-hosted analytics (Umami). Events never
+          include prompts, conversations, file contents, file paths, routine
+          steps, agent instructions, or organization names. When you are signed
+          in, events are linked to your Toone account ID, and your email, name,
+          and public handle (if you have claimed one) are stored with the
+          analytics session. When you are signed out, events use a random
+          per-install identifier instead. You can turn usage analytics off at any
+          time in Settings, which also discards events that have not been sent.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           With your permission, this website loads our self-hosted, cookieless
-          analytics to count visits and clicks. It sets no analytics cookies and
-          does not track you across sites. Declining analytics does not affect
-          your access to the site. You can change your choice at any time using{" "}
+          analytics to count visits and clicks. Website analytics is not linked
+          to your account. It sets no analytics cookies and does not track you
+          across sites. Declining analytics does not affect your access to the
+          site. You can change your choice at any time using{" "}
           <PrivacyChoicesButton />.
         </p>
         <h2
