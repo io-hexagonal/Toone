@@ -134,7 +134,9 @@ export default function ProductShowcasePage({ locale, page }: Props) {
                   return <h3 id={headingId(label)}>{children}</h3>;
                 },
                 a: ({ href = "", children }) => {
-                  if (href.startsWith("/how-to")) {
+                  // Locale-prefix internal links so they don't hop through a
+                  // redirect (`/explore` was a 307 to `/en/explore`, F02).
+                  if (href.startsWith("/how-to") || href.startsWith("/explore")) {
                     return <a href={`/${locale}${href}`}>{children}</a>;
                   }
                   const external = href.startsWith("http");

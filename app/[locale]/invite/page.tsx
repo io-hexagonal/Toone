@@ -5,7 +5,14 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const { locale } = await params;
  const t = await getTranslations({ locale, namespace: "auth" });
- return { title: t("inviteTitle"), robots: { index: false, follow: false }, referrer: "no-referrer" };
+ return {
+  title: t("inviteTitle"),
+  // noindex, so a self-canonical and no hreflang set (TECH-021) instead of the
+  // root layout's locale-home canonical and languages.
+  alternates: { canonical: `https://trytoone.com/${locale}/invite`, languages: {} },
+  robots: { index: false, follow: false },
+  referrer: "no-referrer",
+ };
 }
 export default async function Invite({ params }: Props) {
  const { locale } = await params;

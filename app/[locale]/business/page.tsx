@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isEnglish = locale === "en";
   const title = isEnglish
     ? "Toone for business | Governed AI routines for company operations"
-    : `${t("siteTitle")} | Toone`;
+    : t("siteTitle"); // already carries the brand (Ahrefs F06)
   const description = isEnglish
     ? "Encode how your company works as routines that specialist agents run under human approval. See how teams pilot Toone on one recurring workflow first."
     : t("siteDescription");
