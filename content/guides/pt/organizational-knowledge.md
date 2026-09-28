@@ -8,7 +8,7 @@ description: "Mantenha a informação de que a equipa precisa perto do trabalho.
 eyebrow: "Explorar o Toone"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 min de leitura"
 featured: false
 ---
@@ -19,12 +19,18 @@ Transforme trabalho recorrente em resultados úteis, com agentes especializados 
 
 Mantenha a informação de que a equipa precisa perto do trabalho.
 
+Não precisa de tudo no primeiro dia, por isso [reúna primeiro o contexto de um único fluxo](/guides/ai-agent-adoption-roadmap).
+
 ## Agentes especializados
 
 Confie tarefas específicas a agentes com responsabilidades claras.
 
+[Veja como os agentes especializados usam esse contexto](/guides/how-agent-operations-work) no trabalho diário.
+
 ## Resultados para rever
 
 Acompanhe o progresso, reveja os resultados e decida os próximos passos.
+
+[Veja o que empresas reais executam no Toone](/business/showcases).
 
 [Pedir acesso antecipado](/request-access)

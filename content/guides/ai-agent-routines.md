@@ -9,7 +9,7 @@ author: "Toone Content"
 authorType: "Organization"
 authorUrl: "/en/editorial-policy"
 published: "2026-08-14"
-updated: "2026-09-20"
+updated: "2026-09-28"
 readTime: "15 min read"
 featured: true
 image: "/assets/og/toone-og.png"
@@ -199,13 +199,15 @@ In Toone you write a routine in plain English, assign it to a specialist agent, 
 - Routines run only while your Mac is online. A routine is not a hosted scheduler, so the trigger, freshness window, and missing-run rule should assume the machine can be off.
 - Agents run on your own Anthropic or OpenAI account. Provider access, and its limits, stay under your control.
 
+Recurring routines are how [an AI-native company](/en/guides/ai-native-company) runs day to day.
+
 This page makes no claim about shipped retry, healing, delivery-guarantee, history-retention, reliability, performance, or time-saved behavior. Treat the lifecycle above as the design you are responsible for, not a guarantee any tool supplies.
 
 ## Review the contract before choosing a tool
 
 The worksheet gives a team a way to compare a proposed routine with the operating controls it needs. If the team cannot name the owner, immutable inputs, allowed effects, acceptance criteria, retry boundary, and recovery method, choosing a scheduler or agent platform will not resolve the missing decisions.
 
-Use the related guides to examine [agent governance](/en/governance), [how to bound a first rollout](/en/guides/ai-agent-adoption-roadmap), and [how organizational knowledge is owned](/en/organizational-knowledge). For related examples and their stated evidence boundaries, [see the Toone showcases](/en/showcases).
+Use the related guides to examine [agent governance](/en/governance), [how to bound a first rollout](/en/guides/ai-agent-adoption-roadmap), [how to choose an organization template](/en/guides/choosing-ai-agent-organization-templates), and [how organizational knowledge is owned](/en/organizational-knowledge). For related examples and their stated evidence boundaries, [see the Toone showcases](/en/business/showcases).
 
 ## Who made this guide and how
 

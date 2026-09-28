@@ -8,7 +8,7 @@ description: "Nützlichen Kontext bereithalten. Halten Sie die Informationen Ihr
 eyebrow: "Toone entdecken"
 author: "Toone"
 published: "2026-09-11"
-updated: "2026-09-11"
+updated: "2026-09-28"
 readTime: "2 Min. Lesezeit"
 featured: false
 ---
@@ -19,12 +19,18 @@ Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche E
 
 Halten Sie die Informationen Ihres Teams bei der jeweiligen Arbeit bereit.
 
+Sie brauchen nicht alles am ersten Tag, also [sammeln Sie zuerst den Kontext für einen einzigen Ablauf](/guides/ai-agent-adoption-roadmap).
+
 ## Spezialisierte Agenten
 
 Übergeben Sie klar umrissene Aufgaben an Agenten mit eindeutigen Verantwortlichkeiten.
 
+[Sehen Sie, wie spezialisierte Agenten diesen Kontext im Arbeitsalltag nutzen](/guides/how-agent-operations-work).
+
 ## Ergebnisse zum Prüfen
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
+
+[Sehen Sie, was echte Unternehmen mit Toone betreiben](/business/showcases).
 
 [Frühzugang anfragen](/request-access)
