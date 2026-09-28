@@ -53,11 +53,15 @@ const schemas = (html) =>
   ].map((match) => JSON.parse(match[1]));
 const count = (html, type) =>
   [...html.matchAll(new RegExp(`data-explore-type="${type}"`, "g"))].length;
+// The unfiltered hub also lists bundle-only routines under "Routines inside
+// bundles" (Ahrefs F29); `grid` keeps only the main catalog grid.
+const grid = (html) => html.split('id="explore-in-bundles"')[0];
 test("server-rendered catalog has exactly one standalone routine and one bundle", async () => {
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(html, "routine"), 1);
-  assert.equal(count(html, "bundle"), 1);
+  assert.equal(count(grid(html), "routine"), 1);
+  assert.equal(count(grid(html), "bundle"), 1);
+  assert.ok(count(html.slice(grid(html).length), "routine") >= 1, "bundle-only routines are one click from the hub");
   assert.match(
     html,
     /<link rel="canonical" href="https:\/\/trytoone.com\/en\/explore"/,
@@ -186,7 +190,7 @@ test("all translated routes have localized chrome with noindex and English canon
     assert.ok(html.includes(messages.explore.title));
   }
 });
-test("static sitemap lists the hub; the Explore sitemap lists only profiled records", async () => {
+test("static sitemap lists the hub; the Explore sitemap lists every approved record unless noindex", async () => {
   const site = await get("/sitemap.xml");
   assert.equal(site.response.status, 200);
   assert.match(site.html, /<loc>https:\/\/trytoone.com\/en\/explore<\/loc>/);
@@ -196,9 +200,9 @@ test("static sitemap lists the hub; the Explore sitemap lists only profiled reco
   const { response, html } = await get("/sitemap-explore.xml");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /application\/xml/);
-  // Legacy records lack the reader-facing profile required by CONTENT-022.
+  // CONTENT-022 v1.7.0: approval indexes; a missing profile no longer blocks.
   for (const item of fixture("feed").items)
-    assert.ok(!html.includes(`/en/explore/${item.type}s/${item.slug}<`), item.slug);
+    assert.equal(html.includes(`/en/explore/${item.type}s/${item.slug}<`), item.indexable !== false, item.slug);
   assert.ok(html.includes(`/en/explore/routines/${PROFILE_SLUG}<`));
   assert.ok(html.includes(`/en/explore/bundles/${PROFILE_BUNDLE_SLUG}<`));
   assert.ok(!html.includes(`/en/explore/routines/${NOINDEX_SLUG}<`));
@@ -247,8 +251,8 @@ test("a server without the bundles route hides the Bundles filter and still list
   await invalidate(routine.slug, routine.workflow_id);
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(html, "routine"), 1);
-  assert.equal(count(html, "bundle"), 0);
+  assert.equal(count(grid(html), "routine"), 1);
+  assert.equal(count(grid(html), "bundle"), 0);
   const chips = [...html.matchAll(/class="explore-type-option"[^>]*>([^<]*)</g)].map((m) => m[1]);
   assert.deepEqual(chips, ["All", "Routines"]);
   assert.ok(!html.includes("Explore is temporarily unavailable"));
@@ -267,7 +271,7 @@ test("data-URL-only covers render the placeholder on cards but inline in the det
   await mode({ dataUrlCovers: true });
   await invalidate(routine.slug, routine.workflow_id);
   const index = await get("/en/explore");
-  assert.equal(count(index.html, "routine"), 1);
+  assert.equal(count(grid(index.html), "routine"), 1);
   assert.ok(!index.html.includes("src=\"data:image"), "cards must not inline data URLs");
   assert.match(index.html, /explore-cover-empty/);
   const detail = await get("/en/explore/routines/" + routine.slug);
@@ -400,7 +404,8 @@ test("indexable:false renders noindex, follow and leaves the Explore sitemap; in
 
 test("the legacy routine keeps the fallback layout", async () => {
   const { html } = await get("/en/explore/routines/" + routine.slug);
-  assert.match(html, /<meta name="robots" content="noindex, follow"/);
+  // An approved record without a profile is indexable (CONTENT-022 v1.7.0).
+  assert.match(html, /<meta name="robots" content="index, follow"/);
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!/<h2[^>]*>What you get<\/h2>/.test(html));
   assert.match(html, /Completion criteria/);
@@ -420,7 +425,8 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   assert.ok(!html.includes("explore-builders"));
   assert.match(html, /Completion criteria/);
   assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
-  assert.match(html, /<meta name="robots" content="noindex, follow"/);
+  // The server's indexable flag decides, not the profile's shape.
+  assert.match(html, /<meta name="robots" content="index, follow"/);
   await mode({});
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
   const restored = await get("/en/explore/routines/" + PROFILE_SLUG);

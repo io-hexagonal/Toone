@@ -1,4 +1,4 @@
-import { getBundle, getExploreFeed, getRoutine } from "@/lib/explore/api";
+import { getExploreFeed } from "@/lib/explore/api";
 import { isExploreIndexable } from "@/lib/explore/presentation";
 
 /**
@@ -8,12 +8,13 @@ import { isExploreIndexable } from "@/lib/explore/presentation";
  * derives `lastmod` from git on the build host, which does not exist at
  * runtime on Vercel. This route is dynamic; the feed fetch itself is cached
  * by Next's data cache (600 s, tag `explore`) and expired by the webhook,
- * and the CDN holds the rendered XML for an hour via `s-maxage`.
+ * and the CDN holds the rendered XML for the same 600 s via `s-maxage`, so a
+ * newly approved record is listed within ten minutes.
  *
  * Only `/en/...` is listed: the other locales are `noindex` with an English
  * canonical (contract §11), so they get neither an entry nor an alternate.
- * A feed flag alone does not prove the record has the reader-facing profile
- * required by CONTENT-022. Check each detail before listing its URL.
+ * CONTENT-022 (v1.7.0): every approved record is listed unless a reviewer set
+ * `noindex`; the feed's `indexable` flag carries that server-side rule.
  * A feed outage yields an empty urlset (200) rather than an error: Google
  * keeps previously discovered URLs, while a 5xx would make it retry the
  * fetch and, repeated, distrust the file.
@@ -58,38 +59,21 @@ export async function GET() {
       // The deployed server predates the feed route (404): nothing to list yet.
       warnNotServedOnce();
     } else {
-      // Bound concurrent detail reads as the catalog grows. Failed reads fail
-      // closed for that URL and can be retried on the next sitemap fetch.
-      for (let offset = 0; offset < feed.items.length; offset += 8) {
-        const batch = feed.items.slice(offset, offset + 8);
-        const eligible = await Promise.all(batch.map(async (item) => {
-          if (item.indexable === false || (item.type !== "routine" && item.type !== "bundle"))
-            return false;
-          try {
-            const detail = item.type === "routine"
-              ? await getRoutine(item.id)
-              : await getBundle(item.id);
-            return !!detail && isExploreIndexable(detail);
-          } catch {
-            ok = false;
-            return false;
-          }
-        }));
-        for (const [index, item] of batch.entries()) {
-          if (!eligible[index]) continue;
-          const slug = item.slug || item.id;
-          if (!SLUG_OR_ID.test(slug) || slug.length > 128) continue;
-          const lastmod = Date.parse(item.updated_at || item.approved_at);
-          if (!Number.isFinite(lastmod)) continue;
-          const path = `/explore/${item.type}s/${slug}`;
-          lines.push(
-            url(
-              `${BASE_URL}/en${path}`,
-              new Date(lastmod).toISOString(),
-              englishAlternates(path),
-            ),
-          );
-        }
+      for (const item of feed.items) {
+        if (!isExploreIndexable(item) || (item.type !== "routine" && item.type !== "bundle"))
+          continue;
+        const slug = item.slug || item.id;
+        if (!SLUG_OR_ID.test(slug) || slug.length > 128) continue;
+        const lastmod = Date.parse(item.updated_at || item.approved_at);
+        if (!Number.isFinite(lastmod)) continue;
+        const path = `/explore/${item.type}s/${slug}`;
+        lines.push(
+          url(
+            `${BASE_URL}/en${path}`,
+            new Date(lastmod).toISOString(),
+            englishAlternates(path),
+          ),
+        );
       }
     }
   } catch (error) {
@@ -106,7 +90,7 @@ export async function GET() {
       "Content-Type": "application/xml",
       // A failed render must not be pinned at the CDN for an hour.
       "Cache-Control": ok
-        ? "public, max-age=600, s-maxage=3600, stale-while-revalidate=86400"
+        ? "public, max-age=600, s-maxage=600, stale-while-revalidate=86400"
         : "no-store",
     },
   });

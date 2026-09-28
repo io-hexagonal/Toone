@@ -2,7 +2,6 @@
   "nav": {
     "privacy": "Privacy",
     "github": "GitHub",
-    "showcases": "Voorbeelden",
     "howTo": "Handleidingen",
     "resources": "Bronnen",
     "governance": "Governance",
@@ -162,105 +161,6 @@
     "siteDescription": "De AI-werkruimte voor jouw agentische workflows. Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "ogDescription": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
     "ogTitle": "Toone | De AI-werkruimte voor jouw agentische workflows"
-  },
-  "showcases": {
-    "metaTitle": "Showcases: hoe bedrijven AI-native werden op Toone",
-    "metaDescription": "Showcases: hoe bedrijven AI-native werden op Toone. Eén werkplek voor je agents, je workflows en je resultaten.",
-    "eyebrow": "Voorbeelden",
-    "title": "Hoe echte bedrijven AI-native werden",
-    "sub": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
-    "processesLabel": "Wat draait op Toone",
-    "moreTitle": "Meer op komst",
-    "moreSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
-    "ctaTitle": "Breng ons je organisatie",
-    "ctaSub": "Laat je e-mailadres achter om vroege toegang aan te vragen. We nemen contact op zodra er plaats is.",
-    "ctaBtn": "Vroege toegang aanvragen",
-    "backHome": "← Terug naar home",
-    "note": "De aantallen afdelingen en routines weerspiegelen de organisaties die elke partner in juli 2026 op Toone draait.",
-    "cases": [
-      {
-        "id": "truleaf",
-        "name": "Truleaf.org",
-        "role": "Deployment nr. 1",
-        "sector": "R&D in biologische gewasbescherming",
-        "url": "https://truleaf.org",
-        "logo": "truleaf",
-        "lede": "Truleaf gebruikt Toone voor onderzoek, productstrategie, groei en engineering bij de ontwikkeling van gewasbescherming zonder pesticiden. De teams zetten wetenschappelijke publicaties om in inzichten die ze kunnen beoordelen en gebruiken.",
-        "stats": [
-          {
-            "n": "3",
-            "l": "organisaties"
-          },
-          {
-            "n": "21",
-            "l": "afdelingen"
-          },
-          {
-            "n": "107",
-            "l": "routines in productie"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Onderzoekspipeline",
-            "d": "Houd de informatie die je team nodig heeft dicht bij het werk."
-          },
-          {
-            "t": "Productstrategie",
-            "d": "Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen."
-          },
-          {
-            "t": "Organische groei",
-            "d": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van."
-          },
-          {
-            "t": "Engineering",
-            "d": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft."
-          }
-        ]
-      },
-      {
-        "id": "micoo",
-        "name": "micoo",
-        "role": "Designpartner nr. 1",
-        "sector": "Microcredential-platform",
-        "url": "",
-        "logo": "micoo",
-        "lede": "micoo gebruikt Toone ter ondersteuning van de ontwikkeling van zijn platform voor microcredentials. Herhaalbare werkprocessen maken voortgang, blokkades en onderhoud zichtbaar, zodat het team zich op beslissingen kan richten.",
-        "stats": [
-          {
-            "n": "1",
-            "l": "organisatie"
-          },
-          {
-            "n": "7",
-            "l": "afdelingen"
-          },
-          {
-            "n": "38",
-            "l": "routines in productie"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Oplevering rapporteert zichzelf",
-            "d": "Houd de informatie die je team nodig heeft dicht bij het werk."
-          },
-          {
-            "t": "Herhaalbare workflows",
-            "d": "Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen."
-          },
-          {
-            "t": "Hygiëne op cadans",
-            "d": "Beschrijf werk dat je herhaalt en maak er een herbruikbare routine van."
-          },
-          {
-            "t": "Radar en onderzoek",
-            "d": "Breng samenhangend werk bijeen en zie wat je aandacht nodig heeft."
-          }
-        ]
-      }
-    ]
   },
   "faq": {
     "title": "Vragen, beantwoord.",

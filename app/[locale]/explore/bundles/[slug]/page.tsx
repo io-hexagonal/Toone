@@ -31,6 +31,12 @@ import {
 } from "@/components/explore/ExploreView";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+// TE-01: rendered on the first request, then served from cache. The data
+// cache window matches, and the signed webhook expires both on approval.
+export const revalidate = 600;
+export function generateStaticParams(): { slug: string }[] {
+  return [];
+}
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   try {
@@ -53,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       detail.title,
       detail.summary,
       resolveCoverUrl(detail),
-      { indexable: false },
+      { indexable: isExploreIndexable(detail) },
     );
   } catch {
     return { title: "Explore", robots: { index: false, follow: true } };

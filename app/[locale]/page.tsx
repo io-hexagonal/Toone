@@ -306,7 +306,6 @@ export async function TooneLandingPage({
       <LandingAudienceBar activeAudience={audience} />
       <SiteHeader
         landingPath={landingPath}
-        showcasesPath={audience === "business" ? "/business/showcases" : "/how-to"}
       />
 
       <main>
@@ -395,7 +394,6 @@ export async function TooneLandingPage({
 
       <Footer
         landingPath={landingPath}
-        showcasesPath={audience === "business" ? "/business/showcases" : "/how-to"}
       />
     </>
   );
