@@ -236,6 +236,20 @@ export async function loginGoogle(idToken: string, code?: string): Promise<ToneS
   return session;
 }
 
+/**
+ * Sign in with Apple. Only the identity token (plus Apple's first-time name and
+ * any invitation code) is sent; Apple's authorization code never leaves the page.
+ */
+export async function loginApple(idToken: string, name?: string, code?: string): Promise<ToneSession> {
+  const body: { id_token: string; name?: string; code?: string } = { id_token: idToken };
+  if (name) body.name = name;
+  if (code) body.code = code;
+  const raw = await request<RawAuthPayload>("/auth/apple", { ...jsonPost(body), cache: "no-store" });
+  const session = normalizeSession(raw);
+  saveSession(session);
+  return session;
+}
+
 export async function getMe(token: string): Promise<ToneUser> {
   const raw = await request<RawUser>("/me", {
     headers: { Authorization: `Bearer ${token}` },

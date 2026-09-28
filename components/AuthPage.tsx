@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, FormEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
 import AccessAvatar from "@/components/AccessAvatar";
+import AppleSignInButton from "@/components/AppleSignInButton";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import {
   ApiError,
@@ -11,12 +12,14 @@ import {
   claimHandle,
   loadSession,
   loginEmail,
+  loginApple,
   loginGoogle,
   logout,
   signupInvitation,
   type InvitationPreview,
   type ToneSession,
 } from "@/lib/api";
+import { appleSignInConfig } from "@/lib/appleSignIn";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
@@ -59,17 +62,24 @@ function track(event: string) {
 
 type Mode = "signin" | "invite";
 
+/** Which identity provider a submission came from, for provider-specific errors. */
+type Via = "google" | "apple";
+
 /**
  * Shared sign-in / sign-up page: dark ground, brand lockup, one card in the
  * HeroAuth idiom (same border/input/button/soon patterns). Google on top via
  * GIS renderButton (or the disabled "Soon" button when no client id is
- * configured), divider, then the email form. Success swaps the card for a
+ * configured), Sign in with Apple beneath it once a Services ID is configured,
+ * divider, then the email form. Success swaps the card for a
  * "you're signed in" panel pointing at the macOS download — the desktop app
  * is where the account is used.
  */
 export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
   const t = useTranslations("auth");
+  const locale = useLocale();
   const router = useRouter();
+  // Hidden entirely until the deployment configures a Services ID + return URL.
+  const [appleConfig] = useState(appleSignInConfig);
   const [code, setCode] = useState("");
   // Invite mode asks for the code first and only reveals the account form once
   // the server confirms it is still redeemable.
@@ -90,13 +100,15 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   // re-initializing the button on every render.
   const busyRef = useRef(false);
 
-  function friendlyError(e: unknown, viaGoogle = false): string {
+  function friendlyError(e: unknown, via?: Via): string {
     if (e instanceof ApiError) {
       switch (e.code) {
         case "already_exists":
-          // Google flow: the backend rejects Google sign-in when the email
-          // already has an email/password account — point there instead.
-          return viaGoogle ? t("errExistsGoogle") : t("errExists");
+          // Provider flows: the backend never links a new provider identity to
+          // an existing account by email — point to the original method.
+          if (via === "google") return t("errExistsGoogle");
+          if (via === "apple") return t("errExistsApple");
+          return t("errExists");
         case "unauthorized":
           return t("errInvalid");
         case "invalid_input":
@@ -104,11 +116,10 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
         case "rate_limit_exceeded":
           return t("errRate");
         case "invalid_invitation":
-          return t("errInvitation");
+          // A personal invitation is bound to one address; Hide My Email never matches it.
+          return via === "apple" ? t("errInvitationApple") : t("errInvitation");
         case "registration_closed":
           return t("errRegistrationClosed");
-        case "already_exists":
-          return viaGoogle ? t("errExistsGoogle") : t("errExists");
       }
     }
     return t("errGeneric");
@@ -117,7 +128,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   async function finish(
     promise: Promise<ToneSession>,
     event: string,
-    viaGoogle = false,
+    via?: Via,
   ) {
     busyRef.current = true;
     setLoading(true);
@@ -129,7 +140,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       track(event);
       if (mode === "invite") setStep("handle");
     } catch (e) {
-      setError(friendlyError(e, viaGoogle));
+      setError(friendlyError(e, via));
       // The code can expire or run out between the check and the signup.
       if (mode === "invite" && e instanceof ApiError && e.code === "invalid_invitation") {
         setPreview(null);
@@ -186,6 +197,18 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       busyRef.current = false;
       setLoading(false);
     }
+  }
+
+  function signInWithApple(credential: { idToken: string; name: string }) {
+    if (busyRef.current) return;
+    // The invite flow carries the verified code so a new Apple identity can
+    // register while public signup is closed; existing accounts ignore it.
+    const invitationCode = mode === "invite" ? codeRef.current.trim() : undefined;
+    void finish(
+      loginApple(credential.idToken, credential.name, invitationCode),
+      mode === "invite" ? "auth-invitation-apple" : "auth-apple",
+      "apple",
+    );
   }
 
   const isLaunchCode = Boolean(preview?.shared && /product\s*hunt/i.test(preview.label));
@@ -278,7 +301,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
             void finish(
               loginGoogle(response.credential, invitationCode),
               mode === "invite" ? "auth-invitation-google" : "auth-google",
-              true,
+              "google",
             );
           },
         });
@@ -396,6 +419,14 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.16);
               border-radius: 999px; padding: 2px 8px;
             }
+            .auth-apple {
+              display: block; width: 100%; max-width: 356px; margin: 0 auto; padding: 0;
+              border: none; background: transparent; cursor: pointer; line-height: 0;
+            }
+            .auth-apple img { display: block; width: 100%; height: auto; }
+            .auth-apple:focus-visible { outline: 2px solid rgba(255,255,255,0.8); outline-offset: 2px; }
+            .auth-apple:disabled { opacity: 0.6; cursor: default; }
+            .auth-apple[aria-busy="true"] { cursor: progress; }
             .auth-or {
               text-align: center; color: rgba(255,255,255,0.65);
               font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
@@ -606,6 +637,17 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                   <span className="soon">{t("soon")}</span>
                 </button>
               )}
+
+              <AppleSignInButton
+                config={appleConfig}
+                locale={locale}
+                label={mode === "invite" ? t("appleContinue") : t("appleSignIn")}
+                buttonType={mode === "invite" ? "continue" : "sign-in"}
+                unavailableLabel={t("appleUnavailable")}
+                disabled={loading}
+                onCredential={signInWithApple}
+                onFailure={() => setError(t("appleFailed"))}
+              />
 
               <div className="auth-or">{t("or")}</div>
 
