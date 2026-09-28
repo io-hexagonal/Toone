@@ -20,7 +20,6 @@ const BASE_URL = "https://trytoone.com";
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
-  { path: "/business/showcases", source: "app/[locale]/business/showcases/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
 ] as const;
 

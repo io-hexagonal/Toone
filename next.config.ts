@@ -42,6 +42,18 @@ const nextConfig: NextConfig = {
         destination: "/en/how-to/features/explore",
         permanent: true,
       },
+      // BC-09 (owner decision 2026-09-28): Showcases is retired and Explore
+      // replaces it. Every locale copy lands on the English Explore hub.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/business/showcases",
+        destination: "/en/explore",
+        permanent: true,
+      },
+      {
+        source: "/business/showcases",
+        destination: "/en/explore",
+        permanent: true,
+      },
       {
         source: "/how-to/features/workflow-library",
         destination: "/en/how-to/features/explore",

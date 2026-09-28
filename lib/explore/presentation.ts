@@ -218,12 +218,13 @@ export function exploreMetadata(
     },
   };
 }
-/** A reviewed public record still needs its reader-facing profile to enter Search. */
-export function isExploreIndexable(detail: {
-  listing_profile?: ListingProfilePublic | null;
-  indexable?: boolean;
-}): boolean {
-  return !!detail.listing_profile && detail.indexable !== false;
+/**
+ * CONTENT-022 (v1.7.0): an approved public record is indexable unless a
+ * reviewer set `noindex`. The server applies that rule and sends the result as
+ * `indexable`; a missing listing profile no longer blocks indexing.
+ */
+export function isExploreIndexable(detail: { indexable?: boolean }): boolean {
+  return detail.indexable !== false;
 }
 export function routineSchema(detail: RoutinePublicDetail) {
   const root = detail.package.members.find(

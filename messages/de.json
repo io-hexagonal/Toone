@@ -2,7 +2,6 @@
   "nav": {
     "privacy": "Datenschutz",
     "github": "GitHub",
-    "showcases": "Beispiele",
     "howTo": "Anleitungen",
     "resources": "Ressourcen",
     "governance": "Governance",
@@ -162,105 +161,6 @@
     "siteDescription": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
     "ogDescription": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
     "ogTitle": "Toone | Der KI-Arbeitsbereich für Ihre agentischen Workflows"
-  },
-  "showcases": {
-    "metaTitle": "Showcases: wie Unternehmen auf Toone AI-native wurden",
-    "metaDescription": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
-    "eyebrow": "Beispiele",
-    "title": "Wie echte Unternehmen AI-native wurden",
-    "sub": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
-    "processesLabel": "Was auf Toone läuft",
-    "moreTitle": "Weitere folgen",
-    "moreSub": "Hinterlassen Sie Ihre E-Mail-Adresse für den Frühzugang. Wir melden uns, sobald ein Platz verfügbar ist.",
-    "ctaTitle": "Bring uns deine Organisation",
-    "ctaSub": "Hinterlassen Sie Ihre E-Mail-Adresse für den Frühzugang. Wir melden uns, sobald ein Platz verfügbar ist.",
-    "ctaBtn": "Frühzugang anfragen",
-    "backHome": "← Zurück zur Startseite",
-    "note": "Die Zahlen zu Abteilungen und Routinen entsprechen den Organisationen, die jeder Partner im Juli 2026 auf Toone betreibt.",
-    "cases": [
-      {
-        "id": "truleaf",
-        "name": "Truleaf.org",
-        "role": "Deployment Nr. 1",
-        "sector": "F&E für biologischen Pflanzenschutz",
-        "url": "https://truleaf.org",
-        "logo": "truleaf",
-        "lede": "Truleaf nutzt Toone für Forschung, Produktstrategie, Wachstum und Entwicklung bei der Arbeit an pestizidfreiem Pflanzenschutz. Die Teams machen aus wissenschaftlichen Veröffentlichungen Erkenntnisse, die sie prüfen und nutzen können.",
-        "stats": [
-          {
-            "n": "3",
-            "l": "Organisationen"
-          },
-          {
-            "n": "21",
-            "l": "Abteilungen"
-          },
-          {
-            "n": "107",
-            "l": "Routinen in Produktion"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Forschungspipeline",
-            "d": "Halten Sie die Informationen Ihres Teams bei der jeweiligen Arbeit bereit."
-          },
-          {
-            "t": "Produktstrategie",
-            "d": "Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte."
-          },
-          {
-            "t": "Organisches Wachstum",
-            "d": "Beschreiben Sie wiederkehrende Arbeit und machen Sie daraus eine wiederverwendbare Routine."
-          },
-          {
-            "t": "Engineering",
-            "d": "Führen Sie zusammengehörige Arbeit zusammen und erkennen Sie, was Ihre Aufmerksamkeit braucht."
-          }
-        ]
-      },
-      {
-        "id": "micoo",
-        "name": "micoo",
-        "role": "Design-Partner Nr. 1",
-        "sector": "Microcredential-Plattform",
-        "url": "",
-        "logo": "micoo",
-        "lede": "micoo nutzt Toone zur Unterstützung der Entwicklung seiner Plattform für Microcredentials. Wiederholbare Abläufe machen Fortschritte, Hindernisse und Wartungsaufgaben sichtbar, damit sich das Team auf Entscheidungen konzentrieren kann.",
-        "stats": [
-          {
-            "n": "1",
-            "l": "Organisation"
-          },
-          {
-            "n": "7",
-            "l": "Abteilungen"
-          },
-          {
-            "n": "38",
-            "l": "Routinen in Produktion"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Delivery berichtet sich selbst",
-            "d": "Halten Sie die Informationen Ihres Teams bei der jeweiligen Arbeit bereit."
-          },
-          {
-            "t": "Wiederholbare Abläufe",
-            "d": "Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte."
-          },
-          {
-            "t": "Hygiene im Takt",
-            "d": "Beschreiben Sie wiederkehrende Arbeit und machen Sie daraus eine wiederverwendbare Routine."
-          },
-          {
-            "t": "Radar und Forschung",
-            "d": "Führen Sie zusammengehörige Arbeit zusammen und erkennen Sie, was Ihre Aufmerksamkeit braucht."
-          }
-        ]
-      }
-    ]
   },
   "faq": {
     "title": "Fragen, beantwortet.",

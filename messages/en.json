@@ -2,7 +2,6 @@
   "nav": {
     "privacy": "Privacy",
     "github": "GitHub",
-    "showcases": "Showcases",
     "howTo": "How to",
     "resources": "Resources",
     "governance": "Governance",
@@ -162,105 +161,6 @@
     "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your routines under your control, built on Claude Code and Codex.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
-  },
-  "showcases": {
-    "metaTitle": "Showcases: how companies became AI-native on Toone",
-    "metaDescription": "See how companies run recurring operations on Toone: specialist agents, governed routines, and results their own team reviews.",
-    "eyebrow": "Showcases",
-    "title": "How real companies became AI-native",
-    "sub": "Turn recurring work into useful results, with specialist agents and you in control.",
-    "processesLabel": "What runs on Toone",
-    "moreTitle": "More incoming",
-    "moreSub": "Leave your email to request early access. We will contact you when a place is available.",
-    "ctaTitle": "Bring us your organization",
-    "ctaSub": "Leave your email to request early access. We will contact you when a place is available.",
-    "ctaBtn": "Request Early Access",
-    "backHome": "← Back home",
-    "note": "Department and routine counts reflect the organizations each partner runs on Toone as of July 2026.",
-    "cases": [
-      {
-        "id": "truleaf",
-        "name": "Truleaf.org",
-        "role": "Deployment #1",
-        "sector": "Biological crop protection R&D",
-        "url": "https://truleaf.org",
-        "logo": "truleaf",
-        "lede": "Truleaf uses Toone for research, product strategy, growth, and engineering as it develops pesticide-free crop protection. Its teams turn published science into evidence they can review and use.",
-        "stats": [
-          {
-            "n": "3",
-            "l": "organizations"
-          },
-          {
-            "n": "21",
-            "l": "departments"
-          },
-          {
-            "n": "107",
-            "l": "routines in production"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Research pipeline",
-            "d": "Research summaries help teams assess biological crop protection, with sources available for review."
-          },
-          {
-            "t": "Product strategy",
-            "d": "Competitor and market research helps the team evaluate product opportunities."
-          },
-          {
-            "t": "Organic growth",
-            "d": "Recurring content and search reviews keep growth work moving."
-          },
-          {
-            "t": "Engineering",
-            "d": "Routine reviews help the team track bugs, maintenance, and release readiness."
-          }
-        ]
-      },
-      {
-        "id": "micoo",
-        "name": "micoo",
-        "role": "Design partner #1",
-        "sector": "Microcredential platform",
-        "url": "",
-        "logo": "micoo",
-        "lede": "micoo uses Toone to support engineering delivery for its microcredential platform. Repeatable workflows keep progress, blockers, and maintenance visible so the team can focus on decisions.",
-        "stats": [
-          {
-            "n": "1",
-            "l": "organization"
-          },
-          {
-            "n": "7",
-            "l": "departments"
-          },
-          {
-            "n": "38",
-            "l": "routines in production"
-          }
-        ],
-        "blocks": [
-          {
-            "t": "Delivery reports itself",
-            "d": "Delivery summaries show what moved forward, what is blocked, and where the team needs to make a decision."
-          },
-          {
-            "t": "Repeatable workflows",
-            "d": "Recurring delivery work gives the team a consistent way to follow progress and review results."
-          },
-          {
-            "t": "Hygiene on cadence",
-            "d": "Scheduled maintenance reviews keep recurring engineering work visible."
-          },
-          {
-            "t": "Radar and research",
-            "d": "Technology research helps the team evaluate changes that may affect its product."
-          }
-        ]
-      }
-    ]
   },
   "faq": {
     "title": "Questions, answered.",

@@ -1,5 +1,10 @@
 import { revalidateTag } from "next/cache";
+import { after } from "next/server";
 import { resetExploreMemo } from "@/lib/explore/api";
+import {
+  indexNowOnApprovalEnabled,
+  submitApprovedRecord,
+} from "@/lib/explore/indexnow";
 import {
   parseRevalidateEvent,
   verifySignature,
@@ -41,5 +46,7 @@ export async function POST(request: Request) {
   revalidateTag("explore", { expire: 0 });
   revalidateTag(`explore:${event.slug}`, { expire: 0 });
   revalidateTag(`explore:${event.id}`, { expire: 0 });
+  // Runs after the response, against the freshly expired caches.
+  if (indexNowOnApprovalEnabled()) after(() => submitApprovedRecord(event));
   return Response.json({ revalidated: true });
 }

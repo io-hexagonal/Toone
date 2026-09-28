@@ -3,12 +3,10 @@ import { Link } from "@/lib/navigation";
 
 type Props = {
   homePath?: "/" | "/business";
-  showcasesPath?: "/how-to" | "/business/showcases";
 };
 
 export default async function Navigation({
   homePath = "/",
-  showcasesPath = "/how-to",
 }: Props) {
   const t = await getTranslations("nav");
 
@@ -81,10 +79,10 @@ export default async function Navigation({
         }}
       >
         <Link
-          href={showcasesPath}
+          href="/how-to"
           className="minimal-link"
         >
-          {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
+          {t("howTo")}
         </Link>
         <Link href="/request-access" className="minimal-link">{t("download")}</Link>
 

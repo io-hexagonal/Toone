@@ -13,6 +13,9 @@ const intlMiddleware = createMiddleware(routing);
 const PREVIEW_BOTS =
   /LinkedInBot|facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterestbot|redditbot|SkypeUriPreview|vkShare/i;
 
+const EXPLORE_HUB = /^\/([a-z]{2})\/explore\/?$/;
+const CATALOG_PARAMS = ["type", "q", "tag", "category", "topic", "useful_for", "page"];
+
 export default function proxy(req: NextRequest) {
   if (
     req.nextUrl.pathname === "/" &&
@@ -60,6 +63,21 @@ export default function proxy(req: NextRequest) {
     const target = new URL(`/${routing.defaultLocale}/explore`, req.url);
     target.search = req.nextUrl.search;
     return NextResponse.redirect(target, 308);
+  }
+
+  // TE-01: the parameter-free hub is prerendered. Catalog parameters (type,
+  // search, tag, taxonomy facets, page) need a per-request render, so those
+  // URLs are rewritten to the request-time view; the address bar keeps them.
+  // Anything else in the query (utm_*, ref) still gets the cached hub.
+  const hub = req.nextUrl.pathname.match(EXPLORE_HUB);
+  if (
+    hub &&
+    (routing.locales as readonly string[]).includes(hub[1]) &&
+    CATALOG_PARAMS.some((key) => req.nextUrl.searchParams.has(key))
+  ) {
+    const target = req.nextUrl.clone();
+    target.pathname = `/${hub[1]}/explore/search`;
+    return NextResponse.rewrite(target);
   }
 
   return intlMiddleware(req);

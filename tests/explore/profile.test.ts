@@ -165,9 +165,13 @@ test("profile metadata: seo title, meta description, cover alt and robots from i
   assert.deepEqual(hidden.robots, { index: false, follow: true });
   // Legacy callers are unchanged.
   assert.equal(exploreMetadata("en", "/explore", "t", "d", null).robots.index, true);
-  assert.equal(isExploreIndexable({ listing_profile: null, indexable: true }), false);
-  assert.equal(isExploreIndexable({ listing_profile: profile, indexable: false }), false);
-  assert.equal(isExploreIndexable({ listing_profile: profile, indexable: true }), true);
+  // CONTENT-022 v1.7.0: approval indexes; only a reviewer noindex (indexable: false) holds a record back.
+  const withoutProfile = { listing_profile: null, indexable: true };
+  const reviewerNoindex = { listing_profile: profile, indexable: false };
+  const approved = { listing_profile: profile, indexable: true };
+  assert.equal(isExploreIndexable(withoutProfile), true);
+  assert.equal(isExploreIndexable(reviewerNoindex), false);
+  assert.equal(isExploreIndexable(approved), true);
 });
 
 test("profile JSON-LD is a HowTo from the plain steps with tools, supplies and a category breadcrumb", () => {
