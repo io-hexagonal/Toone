@@ -9,6 +9,7 @@ import { termLabel, type ExploreTaxonomy } from "@/lib/explore/taxonomy";
 import { resolveSlug } from "@/lib/explore/api";
 import {
   cardText,
+  EXPLORE_GUIDES,
   categoryHref,
   deepLink,
   requestAccessHref,
@@ -107,6 +108,9 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
               </a>
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
+            <p className="explore-howto">
+              <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
+            </p>
           </div>
           <Cover entry={detail} inline alt={profile.cover_alt} />
         </div>

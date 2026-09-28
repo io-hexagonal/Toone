@@ -12,7 +12,7 @@ Toone is a native workspace for projects that use AI agents, made for anyone who
 
 You can begin with one agent and one useful task. As the project grows, agents can specialize, routines can call other routines, and work can move between roles without turning into one untraceable conversation.
 
-Not sure where to start? Browse the routines and bundles other people have shared in [Explore](/explore), then open one in Toone.
+Not sure where to start? Browse the routines and bundles other people have shared in [Explore](/explore), then open one in Toone. [Import a routine from Explore](/how-to/getting-started/import-a-routine-from-explore) shows each step.
 
 ## The operating loop
 

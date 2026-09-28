@@ -47,7 +47,7 @@ The draft fills in as you talk. Check its steps, inputs, outputs, and completion
 
 Focused routines are quicker to test and iterate. Build a routine that does one thing well, run it until it is reliable, and only then compose it with others as sub-routines under a bigger routine. You can also instruct the agent to call another routine as the last step of a routine, piping them together so the output of one becomes the input of the next.
 
-[Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g) splits a launch into two focused routines: [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) prepares launch sites and drafts, and [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) turns an approved brief into reviewed content.
+[Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g) splits a launch into two focused routines: [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) prepares launch sites and drafts, and [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) turns an approved brief into reviewed content. If a shared routine already does the job, you can [import it from Explore](/how-to/getting-started/import-a-routine-from-explore) instead of starting from scratch.
 
 ## Make success visible
 

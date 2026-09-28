@@ -64,6 +64,12 @@ Explore reusable workflow packages and bring an approved routine family into a p
 
 [Explore the workflow library](/how-to/features/workflow-library).
 
+### Explore
+
+Browse reviewed routines and bundles other people have shared, add one to your organization, or publish your own.
+
+[Explore shared routines and bundles](/how-to/features/explore).
+
 ### Calendar
 
 See routine schedules and project events across day, week, and month views.

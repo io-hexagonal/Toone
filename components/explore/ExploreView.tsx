@@ -17,6 +17,7 @@ import {
 } from "@/lib/explore/api";
 import {
   cardText,
+  EXPLORE_GUIDES,
   catalogHref,
   deepLink,
   requestAccessHref,
@@ -87,6 +88,8 @@ export const COPY_KEYS = [
   "faq",
   "relatedRoutines",
   "learnRoutines",
+  "exploreGuide",
+  "setupGuide",
   "routinesInside",
   "builders",
   "doneWhen",
@@ -549,6 +552,9 @@ export async function DetailHero({
               </a>
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
+            <p className="explore-howto">
+              <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
+            </p>
           </div>
           <Cover entry={detail} inline />
         </div>

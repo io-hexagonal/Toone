@@ -11,6 +11,7 @@ import {
   exploreMetadata,
   featuredItems,
   SITE,
+  EXPLORE_GUIDES,
 } from "@/lib/explore/presentation";
 import {
   ExploreShell,
@@ -106,6 +107,9 @@ export default async function ExplorePage({ params, searchParams }: Props) {
         <div className="explore-width">
           <h1>{ui.heading}</h1>
           <p className="explore-intro">{ui.intro}</p>
+          <p className="explore-howto">
+            <a href={EXPLORE_GUIDES.explore}>{ui.exploreGuide} →</a>
+          </p>
         </div>
       </header>
       {featured.length > 0 && (
