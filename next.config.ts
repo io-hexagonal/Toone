@@ -14,6 +14,21 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // F03: `www` URLs whose apex target is itself a redirect (proxy.ts sends
+      // `/` and `/explore` to `/en/…` with a 308) go straight to the final
+      // URL, so `https://www…/` is one hop instead of two.
+      {
+        source: "/",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en",
+        permanent: true,
+      },
+      {
+        source: "/explore",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/explore",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.trytoone.com" }],

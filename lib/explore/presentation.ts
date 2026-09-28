@@ -182,13 +182,16 @@ export function exploreMetadata(
   const url = cover && /^https?:\/\//.test(cover) ? cover : null;
   const image = url && options.imageAlt ? { url, alt: options.imageAlt } : url;
   description = metaDescription(description);
+  // TECH-021 (Ahrefs F10): a record kept out of Search must not be declared as
+  // an hreflang target, so its English canonical drops the en/x-default pair.
+  // Translations still point at the English canonical when it is indexable.
+  // The empty map stops the root layout's locale-home set from merging in.
+  const languages: Record<string, string> =
+    options.indexable === false ? {} : { en: canonical, "x-default": canonical };
   return {
     title,
     description,
-    alternates: {
-      canonical,
-      languages: { en: canonical, "x-default": canonical },
-    },
+    alternates: { canonical, languages },
     robots: { index: locale === "en" && options.indexable !== false, follow: true },
     openGraph: {
       type: "website" as const,

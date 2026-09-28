@@ -53,6 +53,15 @@ export default function proxy(req: NextRequest) {
     return NextResponse.redirect(target, 308);
   }
 
+  // F02: `/explore` is linked from outside the site, and only `/en/explore`
+  // is indexable (the other locales canonicalise to it), so negotiation buys
+  // nothing here either. Same permanent 308 as the root.
+  if (req.nextUrl.pathname === "/explore") {
+    const target = new URL(`/${routing.defaultLocale}/explore`, req.url);
+    target.search = req.nextUrl.search;
+    return NextResponse.redirect(target, 308);
+  }
+
   return intlMiddleware(req);
 }
 

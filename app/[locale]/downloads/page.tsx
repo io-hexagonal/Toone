@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import AuthenticatedDownloadGrid from "@/components/AuthenticatedDownloadGrid";
-import { locales } from "@/i18n/routing";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -13,19 +12,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "downloadPage" });
   const url = `https://trytoone.com/${locale}/downloads`;
-  const languages: Record<string, string> = Object.fromEntries(
-    locales.map((language) => [
-      language,
-      `https://trytoone.com/${language}/downloads`,
-    ]),
-  );
-  languages["x-default"] = "https://trytoone.com/en/downloads";
 
   return {
     robots: { index: false, follow: false },
     title: t("metaTitle"),
     description: t("metaDescription"),
-    alternates: { canonical: url, languages },
+    // noindex, so no hreflang set (TECH-021). The empty map keeps the root
+    // layout's locale-home languages from merging in.
+    alternates: { canonical: url, languages: {} },
     // og:url follows the canonical (R7) instead of inheriting the locale home.
     openGraph: { type: "website", url, siteName: "Toone" },
   };
