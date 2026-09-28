@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
-      "heroTag": "Façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
+      "heroTag": "Transformez un travail récurrent, comme un rapport client hebdomadaire ou une veille bibliographique, en une routine qui vous livre un résultat à vérifier.\nSuivez chaque étape, mettez en pause ou modifiez en cours de route, et relancez-la quand vous en avez besoin.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "seeAllFeatures": "Voir toutes les fonctionnalités",
@@ -268,7 +268,7 @@
     "q1": "Qu'est-ce que Toone ?",
     "a1": "Toone est un espace de travail natif pour macOS destiné aux projets qui utilisent des agents IA : des agents spécialisés, les routines répétables qu'ils exécutent, et les outils et connaissances qu'ils partagent, réunis au même endroit.",
     "q2": "À qui s'adresse Toone ?",
-    "a2": "À toute personne disposant d'un abonnement OpenAI ou Anthropic qui veut automatiser un vrai travail avec des agents IA, que vous utilisiez déjà des agents ou que vous vous soyez senti à l'écart des workflows agentiques. Les professionnels et les entreprises l'utilisent pour automatiser des processus avec fiabilité, cohérence et déterminisme, tout en gardant observabilité et marge d'évolution.",
+    "a2": "Toute personne sur Mac dont le travail complexe, en plusieurs étapes, revient chaque semaine ou chaque mois : opérations, recherche, marketing, fondateurs et créateurs. Vous apportez votre propre Claude Code ou Codex, transformez ce travail en routine, puis suivez, mettez en pause, modifiez et vérifiez chaque exécution.",
     "q3": "Faut-il un abonnement existant ?",
     "a3": "Oui. Toone fonctionne avec votre propre abonnement OpenAI ou Anthropic et s'y connecte lors de la configuration. Aucun forfait de modèles séparé n'est à acheter chez nous.",
     "q4": "Y a-t-il une courbe d'apprentissage ?",
@@ -284,7 +284,7 @@
   },
   "statement": {
     "title": "L’espace de travail IA pour vos workflows agentiques",
-    "lead": "Façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
+    "lead": "Transformez un travail récurrent, comme un rapport client hebdomadaire ou une veille bibliographique, en une routine qui vous livre un résultat à vérifier. Suivez chaque étape, mettez en pause ou modifiez en cours de route, et relancez-la quand vous en avez besoin.",
     "cta": "Découvrir Toone"
   },
   "auth": {

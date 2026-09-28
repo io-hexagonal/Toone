@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "El espacio de trabajo de IA para tus flujos agénticos",
-      "heroTag": "Dales forma conversando, míralos ejecutarse paso a paso, pausa o edita a mitad de ejecución y amplíalos sabiendo que nada se rompe.",
+      "heroTag": "Convierte el trabajo recurrente, como un informe semanal para un cliente o una revisión bibliográfica, en una rutina que te entrega un resultado que puedes revisar.\nSigue cada paso, pausa o edita sobre la marcha y vuelve a ejecutarla cuando la necesites.",
       "featuresTitle": "El espacio de trabajo de IA para tus flujos agénticos",
       "featuresSub": "Un espacio para tus agentes, tus flujos de trabajo y tus resultados.",
       "seeAllFeatures": "Ver todas las funciones",
@@ -268,7 +268,7 @@
     "q1": "¿Qué es Toone?",
     "a1": "Toone es un espacio de trabajo nativo para macOS para proyectos que usan agentes de IA: agentes especializados, las rutinas repetibles que ejecutan y las herramientas y el conocimiento que comparten, todo en un solo lugar.",
     "q2": "¿Para quién es Toone?",
-    "a2": "Para cualquiera con una suscripción a OpenAI o Anthropic que quiera automatizar trabajo real con agentes de IA, tanto si ya usa agentes como si hasta ahora se ha sentido fuera de los flujos agénticos. Profesionales y empresas lo usan para automatizar procesos con fiabilidad, consistencia y determinismo, manteniendo observabilidad y margen para crecer.",
+    "a2": "Cualquiera que trabaje en un Mac con tareas complejas de varios pasos que vuelven cada semana o cada mes: operaciones, investigación, marketing, fundadores y creadores. Usas tu propio Claude Code o Codex, conviertes ese trabajo en una rutina y puedes seguir, pausar, editar y revisar cada ejecución.",
     "q3": "¿Necesito una suscripción existente?",
     "a3": "Sí. Toone funciona con tu propia suscripción a OpenAI o Anthropic y se conecta a ella durante la configuración. No hay que comprarnos ningún plan de modelos aparte.",
     "q4": "¿Tiene curva de aprendizaje?",
@@ -284,7 +284,7 @@
   },
   "statement": {
     "title": "El espacio de trabajo de IA para tus flujos agénticos",
-    "lead": "Dales forma conversando, míralos ejecutarse paso a paso, pausa o edita a mitad de ejecución y amplíalos sabiendo que nada se rompe.",
+    "lead": "Convierte el trabajo recurrente, como un informe semanal para un cliente o una revisión bibliográfica, en una rutina que te entrega un resultado que puedes revisar. Sigue cada paso, pausa o edita sobre la marcha y vuelve a ejecutarla cuando la necesites.",
     "cta": "Explorar Toone"
   },
   "auth": {

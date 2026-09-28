@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "AI workspace for your agentic workflows & routines",
-      "heroTag": "AI routines can be unreliable, slow to build, and hard to maintain.\nWith Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
+      "heroTag": "Turn recurring work, like a weekly client report or a literature scan, into a routine that gives you a result you can review.\nWatch it run step by step, pause or edit as it goes, and run it again whenever you need it.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
@@ -268,7 +268,7 @@
     "q1": "What is Toone?",
     "a1": "Toone is a native macOS workspace for projects that use AI agents: specialised agents, the repeatable routines they run, and the tools and knowledge they share, kept together in one place.",
     "q2": "Who is Toone for?",
-    "a2": "Anyone with an OpenAI or Anthropic subscription who wants to automate real work with AI agents, whether you already run agents or have felt left out of agentic workflows so far. Professionals and businesses use it to automate processes with reliability, consistency and determinism, while keeping observability and room to expand.",
+    "a2": "Anyone on a Mac with complex, multi-step work that comes back every week or month: operators, researchers, marketers, founders and creators. You bring your own Claude Code or Codex, turn the work into a routine, and watch, pause, edit and review each run.",
     "q3": "Do I need an existing subscription?",
     "a3": "Yes. Toone works with your own OpenAI or Anthropic subscription and connects to it during setup. There is no separate model plan to buy from us.",
     "q4": "Is there a learning curve?",
@@ -284,7 +284,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "AI routines can be unreliable, slow to build, and hard to maintain. With Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
+    "lead": "Turn recurring work, like a weekly client report or a literature scan, into a routine that gives you a result you can review. Watch it run step by step, pause or edit as it goes, and run it again whenever you need it.",
     "cta": "Explore Toone"
   },
   "auth": {
