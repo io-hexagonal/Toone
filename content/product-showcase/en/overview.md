@@ -8,7 +8,7 @@ pageType: "overview"
 
 ## What it is and who it's for
 
-Toone is a native workspace for projects that use AI agents, made for anyone who already has an OpenAI or Anthropic subscription. It lets you craft reliable agentic workflows in natural language: create an agent, talk with it, and turn that conversation into a routine built around the outcome you want. It is made for professionals and businesses that want to automate processes with a real degree of reliability, consistency and determinism, while keeping the observability and flexibility to expand them.
+Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control. It is for anyone with recurring, multi-step work, such as a weekly client report, a literature scan or a launch checklist. You talk the work through with an agent and set it up once as a routine, then get an output you can check, run it again and share it. You need a Mac and your own Claude Code or Codex. While a routine runs, you can watch each step, pause it, edit it and review the result before you use it.
 
 You can begin with one agent and one useful task. As the project grows, agents can specialize, routines can call other routines, and work can move between roles without turning into one untraceable conversation.
 
