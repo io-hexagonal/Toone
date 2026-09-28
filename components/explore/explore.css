@@ -559,6 +559,49 @@
 .explore-pagination a {
   color: inherit;
 }
+.explore-library-section {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid #dcd8cd;
+  max-width: 100%;
+}
+.explore-library-section > p,
+.explore-about ul {
+  max-width: 720px;
+}
+.explore-library-section h2 {
+  font-size: 24px;
+  margin: 0 0 12px;
+}
+.explore-library-section h3 {
+  font-size: 16px;
+  margin: 28px 0 10px;
+}
+.explore-library-section > p {
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.explore-about-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.explore-about-terms li {
+  border: 1px solid #d8d5cb;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+.explore-about-links {
+  padding-left: 18px;
+  line-height: 1.8;
+}
+.explore-about-links a {
+  color: inherit;
+}
 .explore-empty {
   padding: 65px 24px;
   background: #fff6;

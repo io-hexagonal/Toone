@@ -24,6 +24,9 @@ export const SITE = "https://trytoone.com";
 export const EXPLORE_GUIDES = {
   explore: "/en/how-to/features/explore",
   setup: "/en/how-to/getting-started/import-a-routine-from-explore",
+  share: "/en/how-to/getting-started/share-a-routine-on-explore",
+  routines: "/en/how-to/features/routines",
+  routineGuide: "/en/ai-agent-routines",
 } as const;
 export function parseCatalogQuery(
   raw: Record<string, string | string[] | undefined>,
