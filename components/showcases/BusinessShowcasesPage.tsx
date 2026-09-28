@@ -258,7 +258,7 @@ export default async function BusinessShowcasesPage({ params }: Props) {
         }}
       />
 
-      <Navigation homePath="/business" showcasesPath="/business/showcases" />
+      <Navigation homePath="/business" />
 
       <div className="sc-page">
         <header className="sc-head">
@@ -364,7 +364,7 @@ export default async function BusinessShowcasesPage({ params }: Props) {
         <p className="sc-note">{t("note")}</p>
       </div>
 
-      <Footer landingPath="/business" showcasesPath="/business/showcases" />
+      <Footer landingPath="/business" />
     </>
   );
 }

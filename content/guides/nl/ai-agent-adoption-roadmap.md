@@ -31,6 +31,6 @@ Houd de informatie die je team nodig heeft dicht bij het werk.
 
 Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
-[Bekijk hoe bedrijven terugkerende workflows op Toone draaien](/business/showcases).
+[Bekijk de routines die anderen delen op Explore](/explore).
 
 [Vroege toegang aanvragen](/request-access)

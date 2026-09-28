@@ -31,6 +31,6 @@ Si vous débutez, [commencez par un seul processus](/guides/ai-agent-adoption-ro
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Découvrez comment Truleaf et micoo examinent le travail de leurs agents](/business/showcases).
+[Parcourez les routines partagées sur Explore](/explore).
 
 [Demander un accès anticipé](/request-access)

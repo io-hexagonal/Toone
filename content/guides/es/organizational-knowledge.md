@@ -31,6 +31,6 @@ Asigna tareas concretas a agentes con responsabilidades claras.
 
 Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
-[Mira qué ejecutan empresas reales en Toone](/business/showcases).
+[Explora las rutinas que otras personas comparten en Explore](/explore).
 
 [Solicitar acceso anticipado](/request-access)

@@ -31,6 +31,6 @@ Si estás empezando, [empieza por un solo flujo](/guides/ai-agent-adoption-roadm
 
 Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
-[Mira cómo Truleaf y micoo revisan el trabajo de sus agentes](/business/showcases).
+[Explora las rutinas que otras personas comparten en Explore](/explore).
 
 [Solicitar acceso anticipado](/request-access)

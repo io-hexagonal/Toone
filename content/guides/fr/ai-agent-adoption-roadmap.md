@@ -31,6 +31,6 @@ Gardez les informations utiles à votre équipe à proximité du travail.
 
 Suivez les progrès, examinez les résultats et décidez de la suite.
 
-[Découvrez comment des entreprises exécutent leurs processus récurrents sur Toone](/business/showcases).
+[Parcourez les routines partagées sur Explore](/explore).
 
 [Demander un accès anticipé](/request-access)

@@ -31,6 +31,6 @@ Mantén la información que necesita tu equipo cerca del trabajo.
 
 Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
-[Mira cómo las empresas ejecutan flujos recurrentes en Toone](/business/showcases).
+[Explora las rutinas que otras personas comparten en Explore](/explore).
 
 [Solicitar acceso anticipado](/request-access)

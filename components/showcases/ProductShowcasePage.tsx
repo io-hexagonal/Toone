@@ -89,7 +89,7 @@ export default function ProductShowcasePage({ locale, page }: Props) {
   return (
     <div className={styles.page}>
       <LandingAudienceBar activeAudience="personal" />
-      <SiteHeader landingPath="/" showcasesPath="/how-to" scrollThreshold={260} />
+      <SiteHeader landingPath="/" scrollThreshold={260} />
 
       <header className={styles.hero}>
         <div className={styles.heroInner}>
@@ -189,7 +189,7 @@ export default function ProductShowcasePage({ locale, page }: Props) {
         </aside>
       </main>
 
-      <Footer landingPath="/" showcasesPath="/how-to" />
+      <Footer landingPath="/" />
     </div>
   );
 }

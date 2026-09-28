@@ -9,12 +9,10 @@ import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
  */
 type Props = {
   landingPath?: "/" | "/business";
-  showcasesPath?: "/how-to" | "/business/showcases";
 };
 
 export default async function Footer({
   landingPath = "/",
-  showcasesPath = "/how-to",
 }: Props) {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
@@ -100,8 +98,8 @@ export default async function Footer({
               <Link href="/explore">{nav("explore")}</Link>
               <Link href="/resources">{nav("resources")}</Link>
               <a href="/en/governance">{nav("governance")}</a>
-              <Link href={showcasesPath}>
-                {nav(showcasesPath === "/how-to" ? "howTo" : "showcases")}
+              <Link href="/how-to">
+                {nav("howTo")}
               </Link>
             </div>
             <div>

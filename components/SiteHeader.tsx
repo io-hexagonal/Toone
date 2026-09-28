@@ -15,13 +15,11 @@ import InvitationAdminLink from "@/components/InvitationAdminLink";
  */
 type Props = {
   landingPath?: "/" | "/business";
-  showcasesPath?: "/how-to" | "/business/showcases";
   scrollThreshold?: number;
 };
 
 export default function SiteHeader({
   landingPath = "/",
-  showcasesPath = "/how-to",
   scrollThreshold,
 }: Props) {
   const t = useTranslations("nav");
@@ -126,8 +124,8 @@ export default function SiteHeader({
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
-          <Link href={showcasesPath} data-optional>
-            {t(showcasesPath === "/how-to" ? "howTo" : "showcases")}
+          <Link href="/how-to" data-optional>
+            {t("howTo")}
           </Link>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/signin">{t("signin")}</Link>

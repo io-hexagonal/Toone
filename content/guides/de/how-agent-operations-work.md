@@ -31,6 +31,6 @@ Wenn Sie gerade erst anfangen, [beginnen Sie mit einem einzigen Ablauf](/guides/
 
 Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über die nächsten Schritte.
 
-[Sehen Sie, wie Truleaf und micoo die Arbeit ihrer Agenten prüfen](/business/showcases).
+[Stöbern Sie in den Routinen, die andere auf Explore teilen](/explore).
 
 [Frühzugang anfragen](/request-access)

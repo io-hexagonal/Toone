@@ -209,7 +209,7 @@ This page makes no claim about shipped retry, healing, delivery-guarantee, histo
 
 The worksheet gives a team a way to compare a proposed routine with the operating controls it needs. If the team cannot name the owner, immutable inputs, allowed effects, acceptance criteria, retry boundary, and recovery method, choosing a scheduler or agent platform will not resolve the missing decisions.
 
-Use the related guides to examine [agent governance](/en/governance), [how to bound a first rollout](/en/guides/ai-agent-adoption-roadmap), [how to choose an organization template](/en/guides/choosing-ai-agent-organization-templates), and [how organizational knowledge is owned](/en/organizational-knowledge). For related examples and their stated evidence boundaries, [see the Toone showcases](/en/business/showcases).
+Use the related guides to examine [agent governance](/en/governance), [how to bound a first rollout](/en/guides/ai-agent-adoption-roadmap), [how to choose an organization template](/en/guides/choosing-ai-agent-organization-templates), and [how organizational knowledge is owned](/en/organizational-knowledge). For worked examples, [browse the reviewed routines on Explore](/en/explore).
 
 ## Who made this guide and how
 

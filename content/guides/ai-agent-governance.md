@@ -28,4 +28,4 @@ Use the available approval and sharing controls for the workflow you choose, inc
 
 Look at what was produced in [the project's timeline of agent and human changes](/en/how-to/features/project-history), give feedback, and improve the next run. Toone supports your judgement; it does not guarantee that every result is correct.
 
-[See examples](/business/showcases) · [Request Early Access](/request-access)
+[Browse routines on Explore](/explore) · [Request Early Access](/request-access)
