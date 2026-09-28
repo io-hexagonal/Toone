@@ -8,7 +8,8 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: "Contact Toone",
+    // The title carries the brand; `absolute` skips the root template (F26).
+    title: { absolute: "Contact Toone" },
     description:
       "Contact Toone about corrections, product questions, partnerships, or support. Reach the team on LinkedIn, or email hello@trytoone.com with the page URL.",
     alternates: {
