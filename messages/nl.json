@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
-      "heroTag": "Vorm ze in een gesprek, zie ze stap voor stap draaien, pauzeer of bewerk ze tijdens een run en breid ze uit in de wetenschap dat er niets breekt.",
+      "heroTag": "Maak van terugkerend werk, zoals een wekelijks klantrapport of een literatuurscan, een routine die je een resultaat geeft dat je kunt controleren.\nVolg elke stap, pauzeer of bewerk onderweg en voer de routine opnieuw uit wanneer je die nodig hebt.",
       "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "seeAllFeatures": "Bekijk alle functies",
@@ -168,7 +168,7 @@
     "q1": "Wat is Toone?",
     "a1": "Toone is een native macOS-werkruimte voor projecten met AI-agents: gespecialiseerde agents, de herhaalbare routines die ze uitvoeren en de tools en kennis die ze delen, op één plek.",
     "q2": "Voor wie is Toone?",
-    "a2": "Voor iedereen met een OpenAI- of Anthropic-abonnement die echt werk wil automatiseren met AI-agents, of je nu al agents draait of je tot nu toe buitengesloten voelde van agentische workflows. Professionals en bedrijven gebruiken het om processen betrouwbaar, consistent en deterministisch te automatiseren, met behoud van inzicht en ruimte om uit te breiden.",
+    "a2": "Iedereen op een Mac met complex werk in meerdere stappen dat elke week of maand terugkomt: operations, onderzoek, marketing, oprichters en makers. Je gebruikt je eigen Claude Code of Codex, maakt van dat werk een routine en kunt elke run volgen, pauzeren, bewerken en controleren.",
     "q3": "Heb ik een bestaand abonnement nodig?",
     "a3": "Ja. Toone werkt met je eigen OpenAI- of Anthropic-abonnement en verbindt daarmee tijdens de installatie. Je hoeft bij ons geen apart modelabonnement te kopen.",
     "q4": "Is er een leercurve?",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "De AI-werkruimte voor jouw agentische workflows",
-    "lead": "Vorm ze in een gesprek, zie ze stap voor stap draaien, pauzeer of bewerk ze tijdens een run en breid ze uit in de wetenschap dat er niets breekt.",
+    "lead": "Maak van terugkerend werk, zoals een wekelijks klantrapport of een literatuurscan, een routine die je een resultaat geeft dat je kunt controleren. Volg elke stap, pauzeer of bewerk onderweg en voer de routine opnieuw uit wanneer je die nodig hebt.",
     "cta": "Ontdek Toone"
   },
   "auth": {

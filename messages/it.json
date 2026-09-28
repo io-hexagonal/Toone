@@ -34,7 +34,7 @@
   "landing": {
     "personal": {
       "heroTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-      "heroTag": "Dai loro forma conversando, guardali eseguire passo dopo passo, mettili in pausa o modificali durante l'esecuzione ed espandili sapendo che nulla si rompe.",
+      "heroTag": "Trasforma un lavoro ricorrente, come un report settimanale per un cliente o una ricerca bibliografica, in una routine che ti consegna un risultato da verificare.\nSegui ogni passaggio, metti in pausa o modifica mentre procede e rieseguila quando ti serve.",
       "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
@@ -168,7 +168,7 @@
     "q1": "Cos'è Toone?",
     "a1": "Toone è uno spazio di lavoro nativo per macOS per progetti che usano agenti IA: agenti specializzati, le routine ripetibili che eseguono e gli strumenti e le conoscenze che condividono, tutto in un unico posto.",
     "q2": "Per chi è Toone?",
-    "a2": "Per chiunque abbia un abbonamento OpenAI o Anthropic e voglia automatizzare lavoro reale con agenti IA, sia che usi già agenti sia che finora si sia sentito escluso dai workflow agentici. Professionisti e aziende lo usano per automatizzare processi con affidabilità, coerenza e determinismo, mantenendo osservabilità e margine per crescere.",
+    "a2": "Chiunque lavori su Mac con attività complesse, in più passaggi, che tornano ogni settimana o ogni mese: operations, ricerca, marketing, founder e creator. Usi il tuo Claude Code o Codex, trasformi quel lavoro in una routine e puoi seguire, mettere in pausa, modificare e verificare ogni esecuzione.",
     "q3": "Serve un abbonamento esistente?",
     "a3": "Sì. Toone funziona con il tuo abbonamento OpenAI o Anthropic e vi si collega durante la configurazione. Non c'è alcun piano di modelli separato da acquistare da noi.",
     "q4": "C'è una curva di apprendimento?",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-    "lead": "Dai loro forma conversando, guardali eseguire passo dopo passo, mettili in pausa o modificali durante l'esecuzione ed espandili sapendo che nulla si rompe.",
+    "lead": "Trasforma un lavoro ricorrente, come un report settimanale per un cliente o una ricerca bibliografica, in una routine che ti consegna un risultato da verificare. Segui ogni passaggio, metti in pausa o modifica mentre procede e rieseguila quando ti serve.",
     "cta": "Scopri Toone"
   },
   "auth": {
