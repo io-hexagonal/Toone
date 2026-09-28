@@ -47,6 +47,24 @@ const nextConfig: NextConfig = {
         destination: "/en/how-to/features/explore",
         permanent: true,
       },
+      // BC-09: Showcases is retired and Explore replaces it. Business and
+      // legacy personal paths go to the same locale's Explore in one hop; the
+      // bare paths skip next-intl's 307 negotiation and land on /en.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/business/showcases",
+        destination: "/:locale/explore",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/showcases",
+        destination: "/:locale/explore",
+        permanent: true,
+      },
+      {
+        source: "/:path(business/showcases|showcases)",
+        destination: "/en/explore",
+        permanent: true,
+      },
     ];
   },
 };

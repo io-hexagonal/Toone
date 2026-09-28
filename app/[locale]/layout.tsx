@@ -5,7 +5,6 @@ import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
 import { Playfair_Display, Rubik } from "next/font/google";
-import localFont from "next/font/local";
 import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 import PrivacyChoices from "@/components/PrivacyChoices";
@@ -28,20 +27,8 @@ const rubik = Rubik({
 });
 
 /**
- * Toone's pixel display face, matching the pixel typography used inside the
- * desktop app next to the pixel mark. Reserved for brand moments (the
- * showcases CTA lockup), never for body copy.
- */
-const pixel = localFont({
-  src: "../../public/assets/fonts/10Pixel-Bold.ttf",
-  variable: "--font-pixel",
-  display: "swap",
-  preload: false,
-});
-
-/**
  * Truleaf's brand display face. Loaded only so their wordmark renders in their
- * own typeface wherever we show it (partner marquee, showcases page) — see
+ * own typeface wherever we show it (partner marquee) — see
  * components/TruleafWordmark.tsx. next/font self-hosts it, so this adds no
  * third-party request at runtime.
  */
@@ -242,7 +229,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   };
 
   return (
-    <html lang={locale} className={`${playfair.variable} ${pixel.variable} ${rubik.variable}`}>
+    <html lang={locale} className={`${playfair.variable} ${rubik.variable}`}>
       <head>
         {/* hreflang comes from the metadata API (alternates.languages),
             which subpages override with their own URLs — a hardcoded block
