@@ -3,10 +3,11 @@ import FeaturedCarousel, { type FeaturedSlide } from "@/components/explore/Featu
 import {hasTaxonomyFilters, termLabel} from "@/lib/explore/taxonomy";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { getCatalog, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
+import { getCatalog, listRoutines, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
 import {
   parseCatalogQuery,
   catalogHref,
+  type CatalogItem,
   cardText,
   exploreMetadata,
   featuredItems,
@@ -63,6 +64,20 @@ export default async function ExplorePage({ params, searchParams }: Props) {
   const active = { ...query, page: catalog.page };
   // Featured only on the plain first view, never on a search or filter.
   const unfiltered = !query.query && !query.tag && !hasTaxonomyFilters(query) && query.type === "all" && catalog.page === 1;
+  // Routines listed only inside a bundle never reach the grid; the plain view
+  // still links each one so every public record is one click from the hub.
+  let bundleOnly: CatalogItem[] = [];
+  if (unfiltered) {
+    try {
+      bundleOnly = (await listRoutines({ listing: "bundle_only" })).items.map((entry) => ({ type: "routine" as const, entry }));
+    } catch {
+      bundleOnly = [];
+    }
+  }
+  const libraryTerms = (kind: "category" | "useful_for") =>
+    (catalog.taxonomy?.terms ?? [])
+      .filter((term) => term.kind === kind && term.active)
+      .sort((a, b) => a.sort_order - b.sort_order);
   const featured: FeaturedSlide[] = unfiltered
     ? featuredItems(catalog.items, (item) => !!resolveCardCoverUrl(item.entry)).map((item) => {
         const text = cardText(item.entry);
@@ -254,6 +269,48 @@ export default async function ExplorePage({ params, searchParams }: Props) {
               </a>
             )}
           </nav>
+        )}
+        {bundleOnly.length > 0 && (
+          <section className="explore-library-section" aria-labelledby="explore-in-bundles">
+            <h2 id="explore-in-bundles">{ui.inBundlesHeading}</h2>
+            <p>{ui.inBundlesBody}</p>
+            <div className="explore-grid">
+              {bundleOnly.map((item) => (
+                <CatalogCard key={item.type + ("workflow_id" in item.entry ? item.entry.workflow_id : item.entry.bundle_id)} item={item} taxonomy={catalog.taxonomy} locale={locale} ui={ui} />
+              ))}
+            </div>
+          </section>
+        )}
+        {unfiltered && (
+          <section className="explore-library-section explore-about" aria-labelledby="explore-about">
+            <h2 id="explore-about">{ui.aboutHeading}</h2>
+            <p>{ui.aboutWhat}</p>
+            <p>{ui.aboutReview}</p>
+            {libraryTerms("category").length > 0 && (
+              <>
+                <h3>{ui.aboutCategories}</h3>
+                <ul className="explore-about-terms">
+                  {libraryTerms("category").map((term) => <li key={term.id}>{term.label}</li>)}
+                </ul>
+              </>
+            )}
+            {libraryTerms("useful_for").length > 0 && (
+              <>
+                <h3>{ui.aboutRoles}</h3>
+                <ul className="explore-about-terms">
+                  {libraryTerms("useful_for").map((term) => <li key={term.id}>{term.label}</li>)}
+                </ul>
+              </>
+            )}
+            <h3>{ui.aboutUseHeading}</h3>
+            <ul className="explore-about-links">
+              <li><a href={EXPLORE_GUIDES.explore}>{ui.exploreGuide}</a></li>
+              <li><a href={EXPLORE_GUIDES.setup}>{ui.aboutImport}</a></li>
+              <li><a href={EXPLORE_GUIDES.share}>{ui.aboutShare}</a></li>
+              <li><a href={EXPLORE_GUIDES.routines}>{ui.learnRoutines}</a></li>
+              <li><a href={EXPLORE_GUIDES.routineGuide}>{ui.aboutRoutineGuide}</a></li>
+            </ul>
+          </section>
         )}
       </main>
     </ExploreShell>
