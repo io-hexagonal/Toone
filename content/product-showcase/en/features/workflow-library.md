@@ -10,6 +10,8 @@ pageType: "feature"
 
 The workflow library provides an Explore Workflows destination inside Toone. Search the catalog when a useful process may already exist instead of designing every routine family from an empty page.
 
+You can also browse shared routines and bundles on [Explore](/explore) and open them in Toone. [Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g), for example, pairs [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) with [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6).
+
 ## Inspect before adding
 
 A workflow entry describes its purpose and requirements. Review the package before adding it so you understand the agents, skills, models, and project resources it expects.
