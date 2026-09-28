@@ -19,6 +19,12 @@ export type CatalogItem =
   | { type: "routine"; entry: RoutineCatalogEntry }
   | { type: "bundle"; entry: BundleCatalogEntry };
 export const SITE = "https://trytoone.com";
+/** How-to guides for Explore. The how-to section is English-only, so every
+    locale links to the /en pages directly instead of through a redirect. */
+export const EXPLORE_GUIDES = {
+  explore: "/en/how-to/features/explore",
+  setup: "/en/how-to/getting-started/import-a-routine-from-explore",
+} as const;
 export function parseCatalogQuery(
   raw: Record<string, string | string[] | undefined>,
 ): CatalogQuery {

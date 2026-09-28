@@ -72,6 +72,16 @@ export const PRODUCT_GUIDE_NAV: ProductGuideNavSection[] = [
         label: "Run and debug",
         contentFile: "getting-started/run-and-debug.md",
       },
+      {
+        slug: "getting-started/import-a-routine-from-explore",
+        label: "Import from Explore",
+        contentFile: "getting-started/import-a-routine-from-explore.md",
+      },
+      {
+        slug: "getting-started/share-a-routine-on-explore",
+        label: "Share on Explore",
+        contentFile: "getting-started/share-a-routine-on-explore.md",
+      },
     ],
   },
   {
@@ -143,9 +153,9 @@ export const PRODUCT_GUIDE_NAV: ProductGuideNavSection[] = [
         nested: true,
       },
       {
-        slug: "features/workflow-library",
-        label: "Workflow library",
-        contentFile: "features/workflow-library.md",
+        slug: "features/explore",
+        label: "Explore",
+        contentFile: "features/explore.md",
         nested: true,
       },
       {

@@ -30,4 +30,8 @@ Choose whether inspection threads remain in Recent Threads and whether a main ro
 
 For a first practical example, follow [Create your first routine](/how-to/getting-started/create-a-routine).
 
+## Start from a shared routine
+
+You don't have to build every routine yourself. [Explore](/how-to/features/explore) lists reviewed routines that other people have shared. [Import one from Explore](/how-to/getting-started/import-a-routine-from-explore) into your organization, and when one of yours works well, [share it on Explore](/how-to/getting-started/share-a-routine-on-explore).
+
 Next: [Agent orchestration](/how-to/features/orchestration).

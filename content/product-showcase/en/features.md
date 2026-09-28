@@ -58,11 +58,11 @@ Delegate work across specialized agents, run independent tasks in parallel, hand
 
 [Explore agent orchestration](/how-to/features/orchestration).
 
-### Workflow library
+### Explore
 
-Explore reusable workflow packages and bring an approved routine family into a project as a starting point.
+Browse reviewed routines and bundles other people have shared, add one to your organization as a starting point, or publish your own.
 
-[Explore the workflow library](/how-to/features/workflow-library).
+[Explore shared routines and bundles](/how-to/features/explore).
 
 ### Calendar
 

@@ -22,4 +22,4 @@ A handoff should include the information the receiving agent needs without trans
 
 Agents can escalate decisions, request approval, or return uncertain work for review. Orchestration is not only about increasing autonomy; it is also about making the right interruption happen at the right time.
 
-Next: [Workflow library](/how-to/features/workflow-library).
+Next: [Explore](/how-to/features/explore).

@@ -35,6 +35,18 @@ const nextConfig: NextConfig = {
         destination: "https://trytoone.com/:path*",
         permanent: true,
       },
+      // Workflow library was merged into the Explore guide. How-to is
+      // English-only, so every locale prefix and the bare path land on /en.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/how-to/features/workflow-library",
+        destination: "/en/how-to/features/explore",
+        permanent: true,
+      },
+      {
+        source: "/how-to/features/workflow-library",
+        destination: "/en/how-to/features/explore",
+        permanent: true,
+      },
     ];
   },
 };

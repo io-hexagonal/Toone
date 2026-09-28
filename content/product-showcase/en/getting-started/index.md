@@ -63,4 +63,4 @@ When the run finishes, inspect the brief it produced. Revise one instruction in 
 
 ## What comes next
 
-Once this loop feels familiar, the rest of Toone becomes easier to place. You can add specialized agents, connect tools, schedule routines, and delegate work between roles without changing the underlying model.
+Once this loop feels familiar, the rest of Toone becomes easier to place. You can add specialized agents, connect tools, schedule routines, and delegate work between roles without changing the underlying model. You can also [import reviewed routines from Explore](/how-to/getting-started/import-a-routine-from-explore) and [share your own](/how-to/getting-started/share-a-routine-on-explore).

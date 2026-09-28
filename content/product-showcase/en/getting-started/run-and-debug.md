@@ -29,4 +29,4 @@ Change one instruction based on what you observed, then run the same routine aga
 
 ## You completed the operating loop
 
-You now have a project, an agent, a repeatable routine, an observable run, and a durable output. Continue with [Core concepts](/how-to/concepts) or browse [Features](/how-to/features).
+You now have a project, an agent, a repeatable routine, an observable run, and a durable output. Continue with [Core concepts](/how-to/concepts) or browse [Features](/how-to/features). To add routines other people have built, [import one from Explore](/how-to/getting-started/import-a-routine-from-explore); to publish yours, [share it on Explore](/how-to/getting-started/share-a-routine-on-explore).

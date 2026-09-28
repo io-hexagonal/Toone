@@ -162,6 +162,13 @@
 .explore-hero .explore-tags {
   margin-top: 26px;
 }
+.explore-howto {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+.explore-howto a {
+  color: #c3c2bf;
+}
 .explore-actions {
   display: flex;
   flex-wrap: wrap;
