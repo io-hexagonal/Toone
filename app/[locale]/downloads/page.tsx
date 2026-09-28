@@ -117,6 +117,7 @@ export default async function DownloadPage({ params }: Props) {
               color: rgba(255,255,255,0.58); text-align: center;
               font-size: 12px; line-height: 1.6; margin-top: 28px;
             }
+            .download-note a { color: rgba(255,255,255,0.86); text-underline-offset: 3px; }
             .download-access {
               max-width: 430px; margin: 0 auto; padding: 30px;
               border: 1px solid rgba(255,255,255,.11); border-radius: 20px;
@@ -168,7 +169,11 @@ export default async function DownloadPage({ params }: Props) {
           }}
         />
 
-        <p className="download-note">{t("compatibilityNote")}</p>
+        <p className="download-note">
+          {t("compatibilityNote")}{" "}
+          {/* How-to is English-only, so every locale links the /en page. */}
+          <a href="/en/how-to/getting-started/install-and-connect">{t("setupLink")}</a>
+        </p>
 
       </main>
       <Footer />

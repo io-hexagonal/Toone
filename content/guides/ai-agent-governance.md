@@ -22,10 +22,10 @@ Choose a useful task, provide the relevant context, and agree on the result you 
 
 ## Review important decisions
 
-Use the available approval and sharing controls for the workflow you choose. Review consequential outputs before relying on them or sharing them outside your team. Capabilities vary by workflow and connected service.
+Use the available approval and sharing controls for the workflow you choose, including [host-controlled project sharing](/en/how-to/features/live-share). Review consequential outputs before relying on them or sharing them outside your team. For Claude agents, [safe mode screens tool output and records each result in an audit log](/en/how-to/features/safe-mode). Capabilities vary by workflow and connected service.
 
 ## Learn from the results
 
-Look at what was produced, give feedback, and improve the next run. Toone supports your judgement; it does not guarantee that every result is correct.
+Look at what was produced in [the project's timeline of agent and human changes](/en/how-to/features/project-history), give feedback, and improve the next run. Toone supports your judgement; it does not guarantee that every result is correct.
 
 [See examples](/business/showcases) · [Request Early Access](/request-access)

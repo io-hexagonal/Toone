@@ -17,7 +17,7 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 ## Specialised agents
 
-Give focused work to agents with clear responsibilities.
+Give focused work to agents with clear responsibilities, and [coordinate those specialist agents](/en/how-to/features/orchestration) in one place.
 
 Each agent works from the same [shared company context](/organizational-knowledge), so nobody re-explains the basics.
 
@@ -25,13 +25,13 @@ If you're unsure which roles you need, [start from an organization template](/gu
 
 ## Repeatable workflows
 
-Describe work you repeat and turn it into a routine you can return to.
+Describe work you repeat and [turn it into a routine](/en/how-to/features/routines) you can return to.
 
 If you're new to this, [start with one workflow](/guides/ai-agent-adoption-roadmap) before adding more.
 
 ## Results you can review
 
-Follow progress, review outputs, and decide what happens next.
+[Follow automated work as it progresses](/en/how-to/features/background-threads), review outputs, and decide what happens next.
 
 [See how Truleaf and micoo review their agents' work](/business/showcases).
 

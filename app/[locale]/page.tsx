@@ -26,6 +26,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Each personal feature row links its how-to page. How-to is English-only,
+// so every locale links the /en pages.
+const FEATURE_HOW_TO = {
+  "personal.features.spotlight.title": "/en/how-to/features/agent-spotlight",
+  "personal.features.windows.title": "/en/how-to/features/workspace-windows",
+  "personal.features.browser.title": "/en/how-to/features/browser-sessions",
+  "personal.features.routines.title": "/en/how-to/features/routines",
+  "personal.features.liveShare.title": "/en/how-to/features/live-share",
+  "personal.features.orchestration.title": "/en/how-to/features/orchestration",
+  "personal.features.voice.title": "/en/how-to/features/voice-and-meetings",
+  "personal.features.providers.title": "/en/how-to/features/ai-providers",
+} as const;
+
 type TooneLandingPageProps = Props & {
   audience: LandingAudience;
 };
@@ -250,6 +263,17 @@ export async function TooneLandingPage({
               color: rgba(29,28,25,0.92); font-size: 15.5px; font-weight: 600;
               letter-spacing: -0.005em;
             }
+            /* The title link covers the whole row, so the existing hover
+               state now leads somewhere. */
+            .pillar--linked { position: relative; }
+            .pillar h3 a { color: inherit; text-decoration: none; }
+            .pillar h3 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+            .pillar h3 a:hover, .pillar h3 a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+            .features-all-link {
+              color: rgba(29,28,25,0.72); font-weight: 600; white-space: nowrap;
+              text-underline-offset: 3px;
+            }
+            .features-all-link:hover { color: #1d1c19; }
             .pillar p { color: rgba(29,28,25,0.6); font-size: 14px; line-height: 1.6; }
 
             @media (max-width: 760px) {
@@ -297,6 +321,14 @@ export async function TooneLandingPage({
             <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
             <p className="sub">
               {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
+              {audience === "personal" && (
+                <>
+                  {" "}
+                  <a className="features-all-link" href="/en/how-to/features">
+                    {t("personal.seeAllFeatures")}
+                  </a>
+                </>
+              )}
             </p>
             <div className="pillars">
               {(
@@ -324,10 +356,11 @@ export async function TooneLandingPage({
                   ] as const
               ).map(([titleKey, descKey], i) => {
                 const isCollaboration = audience === "personal" ? i === 4 : i === 0;
+                const featureHref = FEATURE_HOW_TO[titleKey as keyof typeof FEATURE_HOW_TO];
 
                 return (
                   <div
-                    className={`pillar${isCollaboration ? " pillar--collaboration" : ""}`}
+                    className={`pillar${isCollaboration ? " pillar--collaboration" : ""}${featureHref ? " pillar--linked" : ""}`}
                     key={titleKey}
                   >
                     {isCollaboration && (
@@ -335,7 +368,7 @@ export async function TooneLandingPage({
                     )}
                     <div className="phex">{String(i + 1).padStart(2, "0")}</div>
                     <div className="pillar-heading">
-                      <h3>{t(titleKey)}</h3>
+                      <h3>{featureHref ? <a href={featureHref}>{t(titleKey)}</a> : t(titleKey)}</h3>
                       {isCollaboration && <span className="pillar-beta">Beta</span>}
                     </div>
                     <p>

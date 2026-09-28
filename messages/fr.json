@@ -29,6 +29,7 @@
     "liquidDescription": "Les mêmes processus Toone avec l’apparence Liquid Glass.",
     "liquidButton": "Télécharger Liquid Glass",
     "compatibilityNote": "Installez Toone, puis connectez-vous avec le compte que vous utilisez sur ce site.",
+    "setupLink": "Installer Toone et connecter votre fournisseur",
     "repoLink": "Se connecter"
   },
   "landing": {
@@ -37,6 +38,7 @@
       "heroTag": "Façonnez-les en conversation, suivez-les étape par étape, mettez-les en pause ou modifiez-les en cours d'exécution, et étendez-les en sachant que rien ne casse.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
+      "seeAllFeatures": "Voir toutes les fonctionnalités",
       "statement": {
         "title": "L’espace de travail IA pour vos workflows agentiques",
         "lead": "Un espace pour vos agents, vos processus et vos résultats.",
@@ -349,7 +351,36 @@
     "eyebrow": "Guides pratiques Toone",
     "heading": "Travailler concrètement avec Toone",
     "intro": "Choisissez un processus utile, rassemblez le bon contexte et examinez les résultats.",
-    "empty": "Les guides en français sont en préparation."
+    "empty": "Les guides en français sont en préparation.",
+    "productGuidesTitle": "Guides du produit",
+    "productGuidesIntro": "Le fonctionnement de Toone, une page par concept et par fonctionnalité.",
+    "productGuidesLanguage": "Ces guides du produit sont en anglais.",
+    "productGuides": {
+      "concepts": {
+        "title": "Concepts clés",
+        "description": "Les idées de base de Toone : fournisseurs, projets, agents, fils, routines, exécutions, outils et contexte."
+      },
+      "features": {
+        "title": "Toutes les fonctionnalités",
+        "description": "L'expérience de bureau, les outils de processus, les contrôles de sécurité et les connexions d'un projet Toone."
+      },
+      "agentSpotlight": {
+        "title": "Agent Spotlight",
+        "description": "Ouvrez Agent Spotlight par-dessus n'importe quelle app pour rejoindre le bon agent, projet ou fil sans perdre le fil de votre travail."
+      },
+      "workspaceWindows": {
+        "title": "Fenêtres de l'espace de travail",
+        "description": "Redimensionnez Toone d'un compagnon compact à un espace de travail complet et placez vos autres fenêtres autour."
+      },
+      "projectSwitcher": {
+        "title": "Sélecteur de projets",
+        "description": "Gardez jusqu'à neuf projets ouverts et passez de l'un à l'autre avec les raccourcis Option et chiffre."
+      },
+      "zenMode": {
+        "title": "Mode zen",
+        "description": "Transformez le bureau derrière vos panneaux en vidéo d'ambiance pour un travail concentré."
+      }
+    }
   },
   "article": {
     "breadcrumb": "Fil d’Ariane",

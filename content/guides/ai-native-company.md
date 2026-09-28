@@ -22,12 +22,12 @@ When the task needs more than one role, [choose an organization template](/guide
 
 ## Keep your team involved
 
-Give agents the context they need and keep people responsible for important decisions. Expand only when the workflow is useful in practice.
+Give agents the context they need and keep people responsible for important decisions. [Bring a teammate into the project](/en/how-to/features/live-share) to follow the work with you. Expand only when the workflow is useful in practice.
 
 [See how specialised agents divide the work](/guides/how-agent-operations-work) while your team stays in charge.
 
 ## Measure the outcome
 
-Compare the time spent, the quality of the result, and the effort needed to review it. Let those results guide what you try next.
+Compare the time spent, the quality of the result, and the effort needed to review it. Let those results guide what you try next, and [compare runs after each change](/en/how-to/getting-started/run-and-debug).
 
 [See examples](/business/showcases) · [Request Early Access](/request-access)

@@ -29,6 +29,7 @@
     "liquidDescription": "The same Toone workflows with the Liquid Glass appearance.",
     "liquidButton": "Download Liquid Glass",
     "compatibilityNote": "Install Toone, then sign in with the same account you use on this website.",
+    "setupLink": "Install and connect your provider",
     "repoLink": "Sign in"
   },
   "landing": {
@@ -37,6 +38,7 @@
       "heroTag": "AI routines can be unreliable, slow to build, and hard to maintain.\nWith Toone, craft them in a chat, watch them run step by step, and pause or edit as they go.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
+      "seeAllFeatures": "See all features",
       "statement": {
         "title": "The AI workspace for your agentic workflows",
         "lead": "One workspace for your agents, your workflows, and the results that matter.",
@@ -349,7 +351,36 @@
     "eyebrow": "Toone field guides",
     "heading": "Guides and resources",
     "intro": "Practical guides for designing routines, agent organizations and approval steps in Toone, with worked examples you can copy.",
-    "empty": "Localized guides are being prepared."
+    "empty": "Localized guides are being prepared.",
+    "productGuidesTitle": "Product guides",
+    "productGuidesIntro": "How Toone works, one page per concept and feature.",
+    "productGuidesLanguage": "These product guides are in English.",
+    "productGuides": {
+      "concepts": {
+        "title": "Core concepts",
+        "description": "The core ideas behind Toone: providers, projects, agents, threads, routines, runs, tools, and context."
+      },
+      "features": {
+        "title": "All features",
+        "description": "The desktop experience, workflow tools, safety controls, and connections inside a Toone project."
+      },
+      "agentSpotlight": {
+        "title": "Agent Spotlight",
+        "description": "Open Agent Spotlight over any app to reach the right agent, project, or thread without losing focus."
+      },
+      "workspaceWindows": {
+        "title": "Workspace windows",
+        "description": "Resize Toone from a compact companion to a full workspace and fit your other windows around it."
+      },
+      "projectSwitcher": {
+        "title": "Project switcher",
+        "description": "Keep up to nine projects open and jump between them with Option-number shortcuts."
+      },
+      "zenMode": {
+        "title": "Zen mode",
+        "description": "Turn the desktop behind your panels into an ambient video for focused work."
+      }
+    }
   },
   "article": {
     "breadcrumb": "Breadcrumb",
