@@ -1,7 +1,7 @@
 ---
 title: "Create your first routine"
 navTitle: "Create a routine"
-description: "Turn an intent into a repeatable process by drafting it with an agent, in plain language."
+description: "Create your first routine: describe its intent and objective to an agent, break it into steps or sub-routines, review the draft, and publish it."
 eyebrow: "Getting started · Step 4"
 pageType: "tutorial"
 estimatedTime: "4 minutes"

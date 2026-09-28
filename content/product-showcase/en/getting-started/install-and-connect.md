@@ -1,7 +1,7 @@
 ---
-title: "Install Toone and connect an AI provider"
+title: "Install Toone, connect an AI provider"
 navTitle: "Install and connect"
-description: "Prepare the desktop app and connect the model provider that will power your agents."
+description: "Install the Toone desktop app on your Mac and connect OpenAI Codex or Anthropic Claude as the provider that powers your agents, ready for a first project."
 eyebrow: "Getting started · Step 1"
 pageType: "tutorial"
 estimatedTime: "3–5 minutes"

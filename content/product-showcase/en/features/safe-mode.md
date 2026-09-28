@@ -1,7 +1,7 @@
 ---
 title: "Safe Mode"
 navTitle: "Safe Mode"
-description: "Screen Claude tool results for forbidden topics before the output reaches a conversation."
+description: "Redact forbidden topics from Claude tool output before it reaches the conversation, block output if screening fails, and check each result in an audit log."
 eyebrow: "Feature · Control and safety"
 pageType: "feature"
 ---

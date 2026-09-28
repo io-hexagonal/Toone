@@ -1,7 +1,7 @@
 ---
 title: "Workspace windows"
 navTitle: "Workspace windows"
-description: "Resize Toone from a compact companion into a full workspace as the work becomes more involved."
+description: "Resize Toone from a compact companion to a full workspace, pick one of five panel layouts, and fit your other app windows around it as the work grows."
 eyebrow: "Feature · Native workspace"
 pageType: "feature"
 ---

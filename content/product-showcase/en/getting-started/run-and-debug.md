@@ -1,7 +1,7 @@
 ---
 title: "Run, watch, and debug your routine"
 navTitle: "Run and debug"
-description: "Execute the routine, follow its progress, inspect the result, and improve one instruction."
+description: "Run your routine with a real input, follow each step and agent as it works, inspect the result, then change one instruction and run it again to compare."
 eyebrow: "Getting started · Step 5"
 pageType: "tutorial"
 estimatedTime: "3–5 minutes"

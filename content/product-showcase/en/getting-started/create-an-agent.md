@@ -1,7 +1,7 @@
 ---
 title: "Create your first agent"
 navTitle: "Create an agent"
-description: "Give one agent a clear name, a narrow purpose, and the context it should always work from."
+description: "Create your first agent with a name, a narrow purpose, and custom context it reads every time, then test it with a small request before automating."
 eyebrow: "Getting started · Step 3"
 pageType: "tutorial"
 estimatedTime: "3 minutes"

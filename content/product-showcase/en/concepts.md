@@ -1,7 +1,7 @@
 ---
 title: "Core concepts"
 navTitle: "Core concepts"
-description: "Learn how providers, projects, agents, threads, routines, runs, tools, and context fit together in Toone."
+description: "Learn the core ideas behind Toone: providers, projects, agents, threads, routines, runs, tools, and context, and how they fit together in your work."
 eyebrow: "Understand Toone"
 pageType: "concept"
 ---

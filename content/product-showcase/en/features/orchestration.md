@@ -1,7 +1,7 @@
 ---
 title: "Agent orchestration"
 navTitle: "Agent orchestration"
-description: "Coordinate specialized agents, parallel work, handoffs, and decisions as one observable operation."
+description: "Coordinate specialized agents that work in parallel, hand off tasks with clear inputs and outputs, and bring you in for approvals at the right moment."
 eyebrow: "Feature · Coordinated work"
 pageType: "feature"
 ---
