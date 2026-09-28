@@ -8,6 +8,16 @@ import { locales, type Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
 
+// How-to is English-only, so every locale links the /en pages.
+const PRODUCT_GUIDES = [
+  ["concepts", "/en/how-to/concepts"],
+  ["features", "/en/how-to/features"],
+  ["agentSpotlight", "/en/how-to/features/agent-spotlight"],
+  ["workspaceWindows", "/en/how-to/features/workspace-windows"],
+  ["projectSwitcher", "/en/how-to/features/project-switcher"],
+  ["zenMode", "/en/how-to/features/zen-mode"],
+] as const;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
   const locale = localeParam as Locale;
@@ -101,6 +111,31 @@ export default async function ResourcesPage({ params }: Props) {
           position: relative; z-index: 1; display: flex; gap: 16px; margin-top: auto;
           padding-top: 30px; color: rgba(29,28,25,0.5); font-size: 11px;
         }
+        .product-guides {
+          max-width: 1080px; margin: 0 auto; padding: 0 24px 120px;
+        }
+        .product-guides h2 {
+          font-size: clamp(24px, 3vw, 30px); line-height: 1.1;
+          letter-spacing: -.03em; font-weight: 640;
+        }
+        .product-guides > p {
+          max-width: 62ch; margin-top: 10px;
+          color: rgba(29,28,25,0.62); font-size: 14px; line-height: 1.65;
+        }
+        .product-guides ul { list-style: none; margin-top: 26px; border-top: 1px solid rgba(29,28,25,0.11); }
+        .product-guides li {
+          display: grid; grid-template-columns: minmax(180px, 1fr) 2fr; gap: 8px 24px;
+          padding: 16px 0; border-bottom: 1px solid rgba(29,28,25,0.11);
+          font-size: 14px; line-height: 1.6;
+        }
+        .product-guides li a {
+          color: #1d1c19; font-weight: 600; text-underline-offset: 3px;
+        }
+        .product-guides li span { color: rgba(29,28,25,0.62); }
+        @media (max-width: 740px) {
+          .product-guides { padding-bottom: 80px; }
+          .product-guides li { grid-template-columns: 1fr; }
+        }
         @media (max-width: 740px) {
           .resources-hero { padding-top: 120px; padding-bottom: 70px; }
           .resources-grid { grid-template-columns: 1fr; padding-top: 58px; }
@@ -130,6 +165,21 @@ export default async function ResourcesPage({ params }: Props) {
             </Link>
           ))}
         </main>
+        <section className="product-guides" aria-labelledby="product-guides-title">
+          <h2 id="product-guides-title">{t("productGuidesTitle")}</h2>
+          <p>
+            {t("productGuidesIntro")}
+            {locale !== "en" && <> {t("productGuidesLanguage")}</>}
+          </p>
+          <ul>
+            {PRODUCT_GUIDES.map(([key, href]) => (
+              <li key={key}>
+                <a href={href}>{t(`productGuides.${key}.title`)}</a>
+                <span>{t(`productGuides.${key}.description`)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
         <Footer />
       </div>
     </>

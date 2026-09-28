@@ -29,6 +29,7 @@
     "liquidDescription": "Dezelfde Toone-werkprocessen met de Liquid Glass-vormgeving.",
     "liquidButton": "Download Liquid Glass",
     "compatibilityNote": "Installeer Toone en meld je aan met hetzelfde account dat je op deze website gebruikt.",
+    "setupLink": "Installeer Toone en koppel je provider",
     "repoLink": "Inloggen"
   },
   "landing": {
@@ -37,6 +38,7 @@
       "heroTag": "Vorm ze in een gesprek, zie ze stap voor stap draaien, pauzeer of bewerk ze tijdens een run en breid ze uit in de wetenschap dat er niets breekt.",
       "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
+      "seeAllFeatures": "Bekijk alle functies",
       "statement": {
         "title": "De AI-werkruimte voor jouw agentische workflows",
         "lead": "Eén werkplek voor je agents, je workflows en je resultaten.",
@@ -349,7 +351,36 @@
     "eyebrow": "Praktische Toone-gidsen",
     "heading": "Praktisch werken met Toone",
     "intro": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
-    "empty": "De Nederlandse gidsen worden voorbereid."
+    "empty": "De Nederlandse gidsen worden voorbereid.",
+    "productGuidesTitle": "Productgidsen",
+    "productGuidesIntro": "Hoe Toone werkt, één pagina per concept en functie.",
+    "productGuidesLanguage": "Deze productgidsen zijn in het Engels.",
+    "productGuides": {
+      "concepts": {
+        "title": "Kernbegrippen",
+        "description": "De basisideeën achter Toone: providers, projecten, agents, threads, routines, runs, tools en context."
+      },
+      "features": {
+        "title": "Alle functies",
+        "description": "De desktopervaring, workflowtools, veiligheidsinstellingen en koppelingen in een Toone-project."
+      },
+      "agentSpotlight": {
+        "title": "Agent Spotlight",
+        "description": "Open Agent Spotlight boven elke app om de juiste agent, het juiste project of de juiste thread te bereiken zonder je focus te verliezen."
+      },
+      "workspaceWindows": {
+        "title": "Werkplekvensters",
+        "description": "Schaal Toone van een compacte metgezel naar een volledige werkplek en zet je andere vensters eromheen."
+      },
+      "projectSwitcher": {
+        "title": "Projectwisselaar",
+        "description": "Houd tot negen projecten open en wissel ertussen met Option-cijfer-sneltoetsen."
+      },
+      "zenMode": {
+        "title": "Zen-modus",
+        "description": "Maak van het bureaublad achter je panelen een rustige video voor geconcentreerd werk."
+      }
+    }
   },
   "article": {
     "breadcrumb": "Kruimelpad",

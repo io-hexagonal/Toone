@@ -17,7 +17,7 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 ## Repeatable workflows
 
-Describe work you repeat and turn it into a routine you can return to.
+Describe work you repeat and turn it into a routine you can return to, or [start from a reviewed routine](/en/how-to/features/explore).
 
 Once the workflow is clear, [hand it to specialised agents](/guides/how-agent-operations-work).
 
@@ -29,7 +29,7 @@ Keep the information your team needs close to the work.
 
 ## Results you can review
 
-Follow progress, review outputs, and decide what happens next.
+Follow progress, [review the output of each run](/en/how-to/getting-started/run-and-debug), and decide what happens next.
 
 [See how companies run recurring workflows on Toone](/business/showcases).
 

@@ -17,13 +17,13 @@ Turn recurring work into useful results, with specialist agents and you in contr
 
 ## Shared context
 
-Keep the information your team needs close to the work.
+Keep the information your team needs close to the work. In Toone, [one project keeps your agents, routines and context together](/en/how-to/getting-started/create-a-project), with [your project files beside your agents](/en/how-to/features/project-explorer).
 
 You don't need everything on day one, so [gather the context for one workflow first](/guides/ai-agent-adoption-roadmap).
 
 ## Specialised agents
 
-Give focused work to agents with clear responsibilities.
+Give focused work to agents with clear responsibilities, and [give each agent context it reads every time](/en/how-to/getting-started/create-an-agent).
 
 [See how specialised agents use that context](/guides/how-agent-operations-work) in their daily work.
 

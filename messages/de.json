@@ -29,6 +29,7 @@
     "liquidDescription": "Die gleichen Toone-Abläufe im Liquid-Glass-Design.",
     "liquidButton": "Liquid Glass laden",
     "compatibilityNote": "Installiere Toone und melde dich mit dem Konto an, das du auf dieser Website verwendest.",
+    "setupLink": "Installieren und Anbieter verbinden",
     "repoLink": "Anmelden"
   },
   "landing": {
@@ -37,6 +38,7 @@
       "heroTag": "Im Gespräch formen, Schritt für Schritt beim Laufen zusehen, mitten im Lauf pausieren oder ändern und erweitern, ohne dass etwas bricht.",
       "featuresTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
       "featuresSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
+      "seeAllFeatures": "Alle Funktionen ansehen",
       "statement": {
         "title": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
         "lead": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
@@ -349,7 +351,36 @@
     "eyebrow": "Toone Praxisleitfäden",
     "heading": "Praktisch mit Toone arbeiten",
     "intro": "Wählen Sie einen nützlichen Ablauf, sammeln Sie passenden Kontext und prüfen Sie die Ergebnisse.",
-    "empty": "Die deutschen Leitfäden werden vorbereitet."
+    "empty": "Die deutschen Leitfäden werden vorbereitet.",
+    "productGuidesTitle": "Produktanleitungen",
+    "productGuidesIntro": "So funktioniert Toone, eine Seite pro Konzept und Funktion.",
+    "productGuidesLanguage": "Diese Produktanleitungen sind auf Englisch.",
+    "productGuides": {
+      "concepts": {
+        "title": "Grundbegriffe",
+        "description": "Die Grundideen von Toone: Anbieter, Projekte, Agenten, Threads, Routinen, Läufe, Werkzeuge und Kontext."
+      },
+      "features": {
+        "title": "Alle Funktionen",
+        "description": "Desktop-Erlebnis, Workflow-Werkzeuge, Sicherheitskontrollen und Verbindungen in einem Toone-Projekt."
+      },
+      "agentSpotlight": {
+        "title": "Agent Spotlight",
+        "description": "Öffnen Sie Agent Spotlight über jeder App und erreichen Sie den passenden Agenten, das Projekt oder den Thread, ohne den Fokus zu verlieren."
+      },
+      "workspaceWindows": {
+        "title": "Arbeitsbereichsfenster",
+        "description": "Ändern Sie die Größe von Toone vom kompakten Begleiter bis zum vollen Arbeitsbereich und ordnen Sie andere Fenster darum an."
+      },
+      "projectSwitcher": {
+        "title": "Projektwechsler",
+        "description": "Halten Sie bis zu neun Projekte offen und wechseln Sie mit Wahltaste-Zahl-Kürzeln zwischen ihnen."
+      },
+      "zenMode": {
+        "title": "Zen-Modus",
+        "description": "Verwandeln Sie den Schreibtisch hinter Ihren Panels in ein ruhiges Video für konzentriertes Arbeiten."
+      }
+    }
   },
   "article": {
     "breadcrumb": "Brotkrümelnavigation",

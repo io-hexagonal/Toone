@@ -29,6 +29,7 @@
     "liquidDescription": "Os mesmos fluxos de trabalho do Toone com o visual Liquid Glass.",
     "liquidButton": "Baixar Liquid Glass",
     "compatibilityNote": "Instale o Toone e entre com a mesma conta que usa neste site.",
+    "setupLink": "Instale o Toone e ligue o seu fornecedor",
     "repoLink": "Entrar"
   },
   "landing": {
@@ -37,6 +38,7 @@
       "heroTag": "Molde-os em conversa, veja-os correr passo a passo, pause ou edite a meio da execução e expanda-os sabendo que nada se parte.",
       "featuresTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
       "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
+      "seeAllFeatures": "Ver todas as funcionalidades",
       "statement": {
         "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
         "lead": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
@@ -349,7 +351,36 @@
     "eyebrow": "Guias práticos da Toone",
     "heading": "Formas práticas de trabalhar com o Toone",
     "intro": "Escolha um fluxo útil, reúna o contexto necessário e reveja os resultados.",
-    "empty": "Os guias em português estão sendo preparados."
+    "empty": "Os guias em português estão sendo preparados.",
+    "productGuidesTitle": "Guias do produto",
+    "productGuidesIntro": "Como o Toone funciona, uma página por conceito e funcionalidade.",
+    "productGuidesLanguage": "Estes guias do produto estão em inglês.",
+    "productGuides": {
+      "concepts": {
+        "title": "Conceitos base",
+        "description": "As ideias centrais do Toone: fornecedores, projetos, agentes, threads, rotinas, execuções, ferramentas e contexto."
+      },
+      "features": {
+        "title": "Todas as funcionalidades",
+        "description": "A experiência no desktop, as ferramentas de fluxo de trabalho, os controlos de segurança e as ligações de um projeto Toone."
+      },
+      "agentSpotlight": {
+        "title": "Agent Spotlight",
+        "description": "Abra o Agent Spotlight sobre qualquer app para chegar ao agente, projeto ou thread certo sem perder o foco."
+      },
+      "workspaceWindows": {
+        "title": "Janelas da área de trabalho",
+        "description": "Redimensione o Toone de um companheiro compacto para uma área de trabalho completa e ajuste as outras janelas à sua volta."
+      },
+      "projectSwitcher": {
+        "title": "Seletor de projetos",
+        "description": "Mantenha até nove projetos abertos e alterne entre eles com atalhos Option e número."
+      },
+      "zenMode": {
+        "title": "Modo zen",
+        "description": "Transforme a área de trabalho por trás dos painéis num vídeo ambiente para trabalhar com foco."
+      }
+    }
   },
   "article": {
     "breadcrumb": "Navegação estrutural",
