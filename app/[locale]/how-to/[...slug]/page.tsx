@@ -21,10 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!page) return {};
 
   const canonical = `https://trytoone.com/en/how-to/${slug}`;
+  // Was "<Page> | Toone product guide | Toone" once the root template ran
+  // (audit P2-5). One brand token, appended here, and none when the page
+  // title already names Toone (F33).
+  const suffix = /toone/i.test(page.title) ? "Product guide" : "Toone product guide";
   return {
-    // Was "<Page> | Toone product guide | Toone" once the root template ran
-    // (audit P2-5). One brand token, appended here.
-    title: { absolute: `${page.title} | Toone product guide` },
+    title: { absolute: `${page.title} | ${suffix}` },
     description: page.description,
     alternates: {
       canonical,
