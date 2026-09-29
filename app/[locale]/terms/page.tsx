@@ -13,7 +13,8 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return {
-    title: "Toone Terms and Licenses",
+    // Root template appends "| Toone"; the brand stays out of this title (F33).
+    title: "Terms and Licenses",
     description: "Where to find the license terms for Toone from the Mac App Store and Toone downloaded directly.",
     alternates: {
       canonical: TERMS_CANONICAL,
