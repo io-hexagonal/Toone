@@ -19,6 +19,7 @@ const ENGLISH_ONLY_PATHS = [
   "/how-to",
   "/journal",
   "/privacy",
+  "/terms",
 ];
 
 function isEnglishOnly(href: ComponentProps<typeof navigation.Link>["href"]) {

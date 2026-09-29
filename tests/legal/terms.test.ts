@@ -33,3 +33,19 @@ test("footer Terms labels exist in every locale", () => {
     assert.equal(typeof messages.footer.terms, "string", locale);
   }
 });
+
+test("footer links to English-only pages resolve to /en/ (Ahrefs F32, TECH-020)", () => {
+  const navigation = read("lib/navigation.ts");
+  const list = navigation.match(/ENGLISH_ONLY_PATHS = \[([^\]]*)\]/);
+  assert.ok(list, "ENGLISH_ONLY_PATHS not found");
+  const englishOnly = [...list[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  assert.ok(englishOnly.includes("/terms"));
+
+  const footer = read("components/Footer.tsx");
+  for (const [, href] of footer.matchAll(/<Link href="(\/[a-z-]+)">/g)) {
+    const pagePath = `app/[locale]${href}/page.tsx`;
+    if (!fs.existsSync(pagePath)) continue;
+    if (!read(pagePath).includes(`permanentRedirect("/en${href}")`)) continue;
+    assert.ok(englishOnly.includes(href), `${href} redirects non-English locales but is missing from ENGLISH_ONLY_PATHS`);
+  }
+});
