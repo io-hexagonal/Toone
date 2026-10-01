@@ -23,6 +23,20 @@
  * legacy two-card assertions hold); `{"malformedProfile":true}` corrupts the
  * profile routine's profile to exercise the fallback.
  *
+ * Journal (docs/architecture/journal/contract.md §7): `tests/journal/fixtures/
+ * journal.json` holds one post of each type (a release with a cover and an
+ * inline image, a spotlight with Explore blocks including one record the mock
+ * does not serve, a launch without a cover), a retired post with a redirect,
+ * one without, and a draft preview token. Twelve older release posts are
+ * synthesized so the index and the releases hub have a second page. Routes:
+ * /v1/journal/posts (type, explore, limit, offset), /v1/journal/posts/{id-or-slug}
+ * (410 for retired posts), /v1/journal/feed, /v1/journal/previews/{token},
+ * /v1/journal/assets/{jna_id} (generated PNGs). Modes `{"journal404":true}`
+ * (a server that predates the Journal) and `{"journalUnavailable":true}`
+ * (503 on every Journal route) exercise the fallbacks; `{"journalTitle":"…"}`
+ * retitles the newest post to prove caching and webhook eviction;
+ * `{"journalHide":["launch"]}` unpublishes every post of the listed types.
+ *
  * Env: PORT (default 8787), EXPLORE_FIXTURES_DIR (default: checked-in test fixtures),
  * EXPLORE_MOCK_ENRICH=1 adds a sample skill, prerequisites and escalation to
  * the routine detail so those renderers can be exercised locally.
@@ -30,6 +44,7 @@
 import fs from "node:fs";
 import http from "node:http";
 import { createHash } from "node:crypto";
+import zlib from "node:zlib";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -342,6 +357,232 @@ const COVER = Buffer.from(
 
 const PUBLIC_CACHE = "public, s-maxage=300, stale-while-revalidate=3600";
 
+/* ---------- Journal ---------- */
+
+const journalFixture = JSON.parse(
+  fs.readFileSync(
+    process.env.JOURNAL_FIXTURE ||
+      path.resolve(here, "../tests/journal/fixtures/journal.json"),
+    "utf8",
+  ),
+);
+
+/** A two-colour diagonal gradient PNG, so covers look like covers. */
+function gradientPng(width, height, from, to) {
+  const crcTable = Array.from({ length: 256 }, (_, n) => {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    return c >>> 0;
+  });
+  const crc = (buf) => {
+    let c = 0xffffffff;
+    for (const byte of buf) c = crcTable[(c ^ byte) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  };
+  const chunk = (type, data) => {
+    const head = Buffer.alloc(8);
+    head.writeUInt32BE(data.length, 0);
+    head.write(type, 4, "ascii");
+    const tail = Buffer.alloc(4);
+    tail.writeUInt32BE(crc(Buffer.concat([Buffer.from(type, "ascii"), data])), 0);
+    return Buffer.concat([head, data, tail]);
+  };
+  const raw = Buffer.alloc((width * 3 + 1) * height);
+  for (let y = 0; y < height; y++) {
+    const row = y * (width * 3 + 1);
+    raw[row] = 0;
+    for (let x = 0; x < width; x++) {
+      const t = (x / width + y / height) / 2;
+      for (let c = 0; c < 3; c++)
+        raw[row + 1 + x * 3 + c] = Math.round(from[c] + (to[c] - from[c]) * t);
+    }
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8; // bit depth
+  ihdr[9] = 2; // RGB
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk("IHDR", ihdr),
+    chunk("IDAT", zlib.deflateSync(raw)),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+const journalAssets = new Map();
+for (const post of [...journalFixture.posts, ...journalFixture.previews]) {
+  for (const [id, asset] of Object.entries(post.assets ?? {})) {
+    if (journalAssets.has(id)) continue;
+    const palette = id.includes("cover")
+      ? [[34, 40, 92], [174, 186, 244]]
+      : [[20, 20, 19], [86, 108, 207]];
+    journalAssets.set(id, gradientPng(asset.width, asset.height, ...palette));
+  }
+}
+
+/** Twelve older releases: page 2 of the index and of the releases hub. */
+const fillerReleases = Array.from({ length: 12 }, (_, index) => {
+  const patch = 78 - index;
+  const day = String(20 - index).padStart(2, "0");
+  const slug = `toone-1-0-${patch}-release-notes`;
+  return {
+    post_id: `jnp_fill${String(patch).padStart(4, "0")}abcd123`,
+    slug,
+    type: "release",
+    title: `Toone 1.0.${patch} Release Notes`,
+    heading: `What changed in Toone 1.0.${patch}`,
+    description: `Toone 1.0.${patch} for macOS: fixes and refinements to routines, agents and the Explore install flow, on the direct download and the Mac App Store.`,
+    author: { name: "Toone Content", type: "Organization", url: "/en/editorial-policy" },
+    assistance: "assisted",
+    release: { version: `1.0.${patch}`, channels: ["direct"] },
+    cover: null,
+    explore_refs: [],
+    read_minutes: 2,
+    published_at: `2026-09-${day}T09:00:00Z`,
+    updated_at: `2026-09-${day}T09:00:00Z`,
+    state: "published",
+    revision_id: `jnr_fill${String(patch).padStart(4, "0")}rev001`,
+    content_hash: "e".repeat(64),
+    keywords: { primary: `toone 1.0.${patch} release notes`, secondary: [] },
+    body: `Toone 1.0.${patch} is a maintenance release.\n\n## Fixes\n\n- Routine runs recover cleanly after the Mac sleeps.\n- Agent names wrap instead of clipping.\n\nSee every version on the [releases page](/journal/releases).\n`,
+    assets: {},
+  };
+});
+const journalPosts = [...journalFixture.posts, ...fillerReleases].sort(
+  (a, b) => Date.parse(b.published_at) - Date.parse(a.published_at),
+);
+/**
+ * `{"journalHide": ["spotlight", …]}` unpublishes every post of those types
+ * (lists, detail, feed): an empty hub, or a post that appears on "publish"
+ * when the mode is cleared again (webhook freshness proof).
+ */
+const livePosts = () =>
+  Array.isArray(mode.journalHide)
+    ? journalPosts.filter((post) => !mode.journalHide.includes(post.type))
+    : journalPosts;
+const ENTRY_KEYS = [
+  "post_id", "slug", "type", "title", "heading", "description", "author",
+  "assistance", "release", "cover", "explore_refs", "read_minutes",
+  "published_at", "updated_at",
+];
+const DETAIL_KEYS = [...ENTRY_KEYS, "revision_id", "content_hash", "body", "keywords", "assets"];
+const pick = (post, keys) => {
+  // `{"journalTitle": "…"}` retitles the newest post (cache/webhook proof).
+  const source =
+    mode.journalTitle && post.post_id === journalFixture.posts[0].post_id
+      ? { ...post, title: mode.journalTitle }
+      : post;
+  return Object.fromEntries(keys.map((key) => [key, source[key] ?? null]));
+};
+function journalFind(value) {
+  return (
+    livePosts().find((post) => post.post_id === value || post.slug === value) ??
+    journalFixture.retired.find((post) => post.post_id === value || post.slug === value) ??
+    null
+  );
+}
+
+function handleJournal(req, res, p, url, log) {
+  if (mode.journal404) {
+    log(404);
+    return notFound(res);
+  }
+  if (mode.journalUnavailable) {
+    log(503);
+    return json(res, 503, { code: "unavailable", message: "Fixture Journal unavailable" });
+  }
+  let match;
+  if (p === "/v1/journal/posts") {
+    const type = url.searchParams.get("type");
+    const explore = url.searchParams.get("explore");
+    const limit = Math.min(Math.max(Number(url.searchParams.get("limit") || 20), 1), 100);
+    const offset = Math.max(Number(url.searchParams.get("offset") || 0), 0);
+    let items = livePosts();
+    if (type) items = items.filter((post) => post.type === type);
+    if (explore)
+      items = items.filter((post) =>
+        post.explore_refs.some((ref) => ref.slug === explore || ref.id === explore),
+      );
+    log(200);
+    return ok(
+      res,
+      items.slice(offset, offset + limit).map((post) => pick(post, ENTRY_KEYS)),
+      { "X-Total-Count": String(items.length) },
+    );
+  }
+  if ((match = p.match(/^\/v1\/journal\/posts\/([^/]+)$/))) {
+    const post = journalFind(decodeURIComponent(match[1]));
+    if (!post) {
+      log(404);
+      return notFound(res);
+    }
+    if (post.state === "retired") {
+      log(410);
+      return json(res, 410, {
+        code: "gone",
+        message: "This post was retired.",
+        redirect_slug: post.redirect_slug ?? null,
+      });
+    }
+    log(200);
+    return detail(req, res, pick(post, DETAIL_KEYS));
+  }
+  if (p === "/v1/journal/feed") {
+    const since = url.searchParams.get("since");
+    const items = [...livePosts(), ...journalFixture.retired]
+      .map((post) => ({
+        post_id: post.post_id,
+        slug: post.slug,
+        type: post.type,
+        state: post.state,
+        published_at: post.published_at,
+        updated_at: post.updated_at,
+        retired_at: post.retired_at ?? null,
+      }))
+      .filter((item) => !since || (item.retired_at ?? item.updated_at) >= since);
+    log(200);
+    return ok(res, items);
+  }
+  if ((match = p.match(/^\/v1\/journal\/previews\/([^/]+)$/))) {
+    const preview = journalFixture.previews.find(
+      (item) => item.token === decodeURIComponent(match[1]),
+    );
+    if (!preview) {
+      log(404);
+      res.writeHead(404, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+      return res.end(JSON.stringify({ code: "not_found", message: "not found" }));
+    }
+    log(200);
+    res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+    return res.end(
+      JSON.stringify({
+        data: {
+          ...pick(preview, DETAIL_KEYS),
+          published_at: preview.published_at || null,
+          updated_at: preview.updated_at || null,
+          preview: true,
+          state: preview.state,
+        },
+      }),
+    );
+  }
+  if ((match = p.match(/^\/v1\/journal\/assets\/(jna_[a-z0-9]{8,32})$/))) {
+    const bytes = journalAssets.get(match[1]);
+    if (!bytes) {
+      log(404);
+      return notFound(res);
+    }
+    log(200);
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    });
+    return res.end(bytes);
+  }
+  log(404);
+  return notFound(res);
+}
+
 function json(res, status, body, headers = {}) {
   res.writeHead(status, {
     "Content-Type": "application/json",
@@ -481,6 +722,8 @@ const server = http.createServer(async (req, res) => {
     log(405);
     return json(res, 405, { code: "invalid_input", message: "GET only" });
   }
+
+  if (p.startsWith("/v1/journal/")) return handleJournal(req, res, p, url, log);
 
   let match;
   if (p === "/v1/workflows") {

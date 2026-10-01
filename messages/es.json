@@ -8,7 +8,8 @@
     "download": "Solicitar acceso anticipado",
     "signin": "Iniciar sesión",
     "invitations": "Invitaciones",
-    "explore": "Explorar"
+    "explore": "Explorar",
+    "journal": "Diario"
   },
   "downloadPage": {
     "metaTitle": "Descargar Toone para macOS",
@@ -251,6 +252,10 @@
     "heading": "Formas prácticas de trabajar con Toone",
     "intro": "Elige un flujo útil, reúne el contexto adecuado y revisa los resultados.",
     "empty": "Las guías en español están en preparación.",
+    "journalTitle": "Del Diario",
+    "journalIntro": "Notas de versión, rutinas destacadas y anuncios de lanzamientos del equipo que crea Toone.",
+    "journalLanguage": "Las publicaciones del Diario están en inglés.",
+    "journalAll": "Todas las publicaciones del Diario",
     "productGuidesTitle": "Guías del producto",
     "productGuidesIntro": "Cómo funciona Toone, una página por concepto y función.",
     "productGuidesLanguage": "Estas guías del producto están en inglés.",

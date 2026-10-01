@@ -128,6 +128,7 @@ export default function SiteHeader({
             {t("howTo")}
           </Link>
           <Link href="/explore" data-optional>{t("explore")}</Link>
+          <Link href="/journal" data-optional>{t("journal")}</Link>
           <Link href="/signin">{t("signin")}</Link>
           <InvitationAdminLink />
           <Link

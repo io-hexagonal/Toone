@@ -22,3 +22,24 @@ const exploreRoutes = [
 const missingExplore = exploreRoutes.filter(route => !(route in appRoutes));
 if (missingExplore.length) { console.error("Missing Explore routes:", missingExplore); process.exit(1); }
 console.log(`Verified ${exploreRoutes.length} dynamic Explore routes.`);
+
+// The Journal is API-driven too (Journal contract §10): the list pages may be
+// prerendered, but every post, page n and preview renders on demand.
+const journalRoutes = [
+  "/[locale]/journal/page",
+  "/[locale]/journal/page/[n]/page",
+  "/[locale]/journal/releases/page",
+  "/[locale]/journal/releases/page/[n]/page",
+  "/[locale]/journal/routines/page",
+  "/[locale]/journal/routines/page/[n]/page",
+  "/[locale]/journal/launches/page",
+  "/[locale]/journal/launches/page/[n]/page",
+  "/[locale]/journal/[slug]/page",
+  "/[locale]/journal/preview/[token]/page",
+  "/journal/feed.xml/route",
+  "/journal/og/[file]/route",
+  "/sitemap-journal.xml/route",
+];
+const missingJournal = journalRoutes.filter(route => !(route in appRoutes));
+if (missingJournal.length) { console.error("Missing Journal routes:", missingJournal); process.exit(1); }
+console.log(`Verified ${journalRoutes.length} dynamic Journal routes.`);

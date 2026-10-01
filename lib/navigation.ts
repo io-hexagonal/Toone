@@ -17,6 +17,7 @@ const ENGLISH_ONLY_PATHS = [
   "/contact",
   "/editorial-policy",
   "/how-to",
+  "/journal",
   "/privacy",
 ];
 

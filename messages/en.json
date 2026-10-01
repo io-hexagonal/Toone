@@ -8,7 +8,8 @@
     "download": "Request Early Access",
     "signin": "Sign in",
     "invitations": "Invitations",
-    "explore": "Explore"
+    "explore": "Explore",
+    "journal": "Journal"
   },
   "downloadPage": {
     "metaTitle": "Download Toone for macOS",
@@ -251,6 +252,10 @@
     "heading": "Guides and resources",
     "intro": "Practical guides for designing routines, agent organizations and approval steps in Toone, with worked examples you can copy.",
     "empty": "Localized guides are being prepared.",
+    "journalTitle": "From the Journal",
+    "journalIntro": "Release notes, routine spotlights and launch announcements from the team building Toone.",
+    "journalLanguage": "Journal posts are published in English.",
+    "journalAll": "All Journal posts",
     "productGuidesTitle": "Product guides",
     "productGuidesIntro": "How Toone works, one page per concept and feature.",
     "productGuidesLanguage": "These product guides are in English.",

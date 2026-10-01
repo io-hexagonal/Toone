@@ -14,6 +14,7 @@ import {
 import { termLabel } from "@/lib/explore/taxonomy";
 import type { BundlePublicDetail } from "@/lib/explore/types";
 import { ProfileBody, ProfileHero } from "@/components/explore/ProfileView";
+import FeaturedInJournal from "@/components/journal/FeaturedInJournal";
 import {
   ExploreShell,
   ExploreUnavailable,
@@ -132,6 +133,7 @@ export default async function BundlePage({ params }: Props) {
             routinesInside={<RoutinesInside members={members} locale={locale} ui={ui} />}
           />
         </main>
+        <FeaturedInJournal exploreSlug={canonical} />
       </ExploreShell>
     );
   }
@@ -214,6 +216,7 @@ export default async function BundlePage({ params }: Props) {
           </a>
         </aside>
       </main>
+      <FeaturedInJournal exploreSlug={canonical} />
     </ExploreShell>
   );
 }
