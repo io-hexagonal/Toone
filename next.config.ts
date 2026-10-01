@@ -61,10 +61,18 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       // Unprefixed How-to paths are a 308 on the apex too (proxy.ts).
+      // Two rules: an empty `:rest*` leaves a trailing slash on Vercel, which
+      // is one more 308 (`/en/how-to/` to `/en/how-to`).
       {
-        source: "/how-to/:rest*",
+        source: "/how-to",
         has: [{ type: "host", value: "www.trytoone.com" }],
-        destination: "https://trytoone.com/en/how-to/:rest*",
+        destination: "https://trytoone.com/en/how-to",
+        permanent: true,
+      },
+      {
+        source: "/how-to/:rest+",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/how-to/:rest+",
         permanent: true,
       },
       {
