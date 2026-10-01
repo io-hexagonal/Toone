@@ -1,0 +1,190 @@
+{
+  "posts": [
+    {
+      "post_id": "jnp_rel0001abcd1234",
+      "slug": "toone-1-0-79-release-notes",
+      "type": "release",
+      "title": "Toone 1.0.79: Run Controls and Clearer Installs",
+      "heading": "Toone 1.0.79 lets you pause, edit and resume routines while they run",
+      "description": "Toone 1.0.79 adds pause, continue, cancel and edit controls for running routines, explains missing connectors in Explore installs, and fixes stale run states.",
+      "author": {
+        "name": "Toone Content",
+        "type": "Organization",
+        "url": "/en/editorial-policy"
+      },
+      "assistance": "assisted",
+      "release": {
+        "version": "1.0.79",
+        "channels": [
+          "direct",
+          "appstore"
+        ]
+      },
+      "cover": {
+        "url": "journal/assets/jna_cover0release01",
+        "alt": "Toone 1.0.79 run panel with pause and edit controls",
+        "width": 1600,
+        "height": 900
+      },
+      "explore_refs": [],
+      "read_minutes": 3,
+      "published_at": "2026-09-28T09:00:00Z",
+      "updated_at": "2026-09-30T15:30:00Z",
+      "keywords": {
+        "primary": "toone 1.0.79 release notes",
+        "secondary": [
+          "routine run controls",
+          "pause ai agent routine"
+        ]
+      },
+      "state": "published",
+      "revision_id": "jnr_rel0001rev00002",
+      "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "body": "Toone 1.0.79 makes long routines easier to steer while they run and tidies up the Explore install flow. Here is what changed, and where each change applies.\n\n## Run controls you can reach mid-run\n\nYou can now **pause**, **continue**, **cancel** or **edit** a routine while it is running, from the run panel or the Spotlight bar. Edits apply from the next step, and the run log records who intervened and when. The [routine run controls guide](/how-to/features/routines) walks through each action.\n\n![The run panel with the new pause and edit controls](asset:jna_shot0release001)\n\n## Explore installs that explain themselves\n\nWhen a routine from [Explore](/explore) needs a connector you have not set up, Toone now names the missing piece and offers to set it up instead of failing the install.\n\n| Change | Direct download | Mac App Store |\n| --- | --- | --- |\n| Run controls | Yes | Yes |\n| Explore install guidance | Yes | Yes |\n| Browser helper diagnostics | Yes | Not applicable |\n\n## Fixes\n\n- Runs that were active when the app quit no longer show as running after relaunch.\n- The Spotlight bar keeps its position across displays.\n- Long agent names no longer clip in the organization chart.\n\n## How the update reaches you\n\n```mermaid\nflowchart LR\n  A[1.0.79 tagged] --> B[Direct download]\n  A --> C[Mac App Store review]\n```\n\nDirect-download installs update in place from **Settings → Updates**. The Mac App Store build follows once review completes. Questions or regressions: write to [hello@trytoone.com](mailto:hello@trytoone.com).\n",
+      "assets": {
+        "jna_cover0release01": {
+          "url": "journal/assets/jna_cover0release01",
+          "width": 1600,
+          "height": 900,
+          "content_type": "image/png"
+        },
+        "jna_shot0release001": {
+          "url": "journal/assets/jna_shot0release001",
+          "width": 1200,
+          "height": 750,
+          "content_type": "image/png"
+        }
+      }
+    },
+    {
+      "post_id": "jnp_spot0001abcd123",
+      "slug": "automating-launch-content-with-ai-agents",
+      "type": "spotlight",
+      "title": "Automating Launch Content with AI Agents",
+      "heading": "How we turn a product brief into reviewed launch content",
+      "description": "A walkthrough of the Launch Kit bundle in Explore: how Toone agents prepare launch sites and drafts while a person approves everything that goes live.",
+      "author": {
+        "name": "Toone Content",
+        "type": "Organization",
+        "url": "/en/editorial-policy"
+      },
+      "assistance": "drafted",
+      "release": null,
+      "cover": null,
+      "explore_refs": [
+        {
+          "type": "bundle",
+          "slug": "launch-kit-r5h8c2nd",
+          "id": "wfb_lnchkitr5h8c2nd"
+        },
+        {
+          "type": "routine",
+          "slug": "product-launch-prep-directories-qk4m2x7a",
+          "id": "wfl_lnchprepqk4m2x7a"
+        },
+        {
+          "type": "routine",
+          "slug": "retired-launch-checklist-zz9zz9zz",
+          "id": "wfl_retiredzz9zz9zz"
+        }
+      ],
+      "read_minutes": 5,
+      "published_at": "2026-09-26T10:00:00Z",
+      "updated_at": "2026-09-26T10:00:00Z",
+      "keywords": {
+        "primary": "ai agents for launch content",
+        "secondary": [
+          "product launch content workflow"
+        ]
+      },
+      "state": "published",
+      "revision_id": "jnr_spot0001rev0001",
+      "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "body": "Launch weeks produce the same pile of work every time: a directory list, a profile per site, a draft per channel, and a review pass before anything goes live. This spotlight shows how two Explore listings split that work between agents in Toone.\n\n## Start with the bundle\n\nThe **Launch Kit** bundle groups the routines a launch needs, in the order you run them. Install it once and every routine arrives with its agents and requirements.\n\n```explore\nbundle: launch-kit-r5h8c2nd\n```\n\n## Prepare every launch site\n\nThe directory preparation routine researches each site's rules, prepares an authorized profile and writes an unpublished draft per site. It stops at CAPTCHAs, email verification and billing and hands back to you.\n\n```explore\nroutine: product-launch-prep-directories-qk4m2x7a\nvariant: compact\n```\n\n## Keep a reviewer in the loop\n\nNothing is published by the routine itself. Each draft lands in your review queue with its sources, so you approve, edit or drop it. Read [how approvals work](/how-to/concepts) before your first run.\n\n## A routine that is no longer listed\n\nListings can be withdrawn from Explore. When that happens the post keeps a plain link instead of a card:\n\n```explore\nroutine: retired-launch-checklist-zz9zz9zz\n```\n\nBrowse more routines like these in [Explore](/explore), or see [what is new in Toone](/journal/releases).\n",
+      "assets": {}
+    },
+    {
+      "post_id": "jnp_lnch0001abcd123",
+      "slug": "toone-pro-is-here",
+      "type": "launch",
+      "title": "Toone Pro Is Here: Unlimited Routine Creation",
+      "heading": "Toone Pro removes the routine creation limit",
+      "description": "Toone Pro is available today: unlimited routine creation and priority support, while running routines and installing from Explore stay free.",
+      "author": {
+        "name": "Matheus Paranhos",
+        "type": "Person",
+        "url": null
+      },
+      "assistance": "none",
+      "release": null,
+      "cover": null,
+      "explore_refs": [],
+      "read_minutes": 2,
+      "published_at": "2026-09-24T08:00:00Z",
+      "updated_at": "2026-09-24T08:00:00Z",
+      "keywords": {
+        "primary": "toone pro",
+        "secondary": []
+      },
+      "state": "published",
+      "revision_id": "jnr_lnch0001rev0001",
+      "content_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "body": "Toone Pro is available today for people who build more than a handful of routines. The free plan keeps everything it had; Pro removes the creation limit and adds priority support.\n\n## What stays free\n\nRunning routines, installing from [Explore](/explore), and creating your first five routines stay free. Nothing you built on the free plan changes.\n\n## What Pro adds\n\n- Unlimited routine creation.\n- Priority answers from the team at hello@trytoone.com.\n- Early access to new Explore bundles.\n\n## How to upgrade\n\nOpen **Settings → Account** in the app and choose a plan. Subscriptions are handled by Apple and can be managed from your Apple account at any time.\n\nRead the [editorial policy](/editorial-policy) for how we write about pricing, and the [download page](/download) if you do not have Toone yet.\n",
+      "assets": {}
+    }
+  ],
+  "retired": [
+    {
+      "post_id": "jnp_old00001abcd123",
+      "slug": "toone-pro-early-announcement",
+      "type": "launch",
+      "state": "retired",
+      "redirect_slug": "toone-pro-is-here",
+      "published_at": "2026-09-01T08:00:00Z",
+      "updated_at": "2026-09-01T08:00:00Z",
+      "retired_at": "2026-09-24T08:05:00Z"
+    },
+    {
+      "post_id": "jnp_gone0001abcd123",
+      "slug": "beta-waitlist-closed",
+      "type": "launch",
+      "state": "retired",
+      "redirect_slug": null,
+      "published_at": "2026-08-20T08:00:00Z",
+      "updated_at": "2026-08-20T08:00:00Z",
+      "retired_at": "2026-09-10T08:00:00Z"
+    }
+  ],
+  "previews": [
+    {
+      "post_id": "jnp_draft001abcd123",
+      "slug": "weekly-research-digest-routine",
+      "type": "spotlight",
+      "title": "A Weekly Research Digest Routine for Busy Teams",
+      "heading": "Turn a reading list into a weekly digest your team will open",
+      "description": "A draft spotlight of a research digest routine: how agents collect, summarize and cite sources every week, and where a reviewer signs off.",
+      "author": {
+        "name": "Toone Content",
+        "type": "Organization",
+        "url": "/en/editorial-policy"
+      },
+      "assistance": "drafted",
+      "release": null,
+      "cover": null,
+      "explore_refs": [],
+      "read_minutes": 4,
+      "published_at": "",
+      "updated_at": "",
+      "keywords": {
+        "primary": "a weekly research digest routine for busy teams",
+        "secondary": []
+      },
+      "state": "draft",
+      "token": "Q2xhdWRlUHJldmlld1Rva2VuMDAwMDAwMDAwMDAwMDA",
+      "revision_id": "jnr_draft001rev0003",
+      "content_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "body": "This is a **draft** spotlight. It is not published, and only people with this link can see it.\n\n## What the routine does\n\nIt collects the week's sources, summarizes each one and cites it. A reviewer approves the digest before it is sent.\n\n```explore\nroutine: product-launch-prep-directories-qk4m2x7a\n```\n\n## Who it is for\n\nTeams that share a reading list and never get through it. Learn the basics in [Explore](/explore).\n",
+      "assets": {}
+    }
+  ]
+}

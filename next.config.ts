@@ -29,6 +29,37 @@ const nextConfig: NextConfig = {
         destination: "https://trytoone.com/en/explore",
         permanent: true,
       },
+      // Same for the Journal (contract §2, §10): `/changelog` (any locale) and
+      // the unprefixed or non-English Journal URLs are themselves redirects
+      // on the apex (the `/changelog` rules below, proxy.ts for `/journal`),
+      // so `www` goes straight to the final `/en/journal…` URL. Paths with a
+      // dot (`/journal/feed.xml`, `/journal/og/*.png`) are files served
+      // unprefixed and fall through to the generic rule. These must stay
+      // above that rule: the first match wins.
+      {
+        source: "/changelog",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/journal/releases",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/changelog",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/journal/releases",
+        permanent: true,
+      },
+      {
+        source: "/:locale(pt|es|fr|de|it|nl|ru)?/journal",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/journal",
+        permanent: true,
+      },
+      {
+        source: "/:locale(pt|es|fr|de|it|nl|ru)?/journal/:rest([^.]+)",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/journal/:rest",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.trytoone.com" }],
@@ -52,6 +83,17 @@ const nextConfig: NextConfig = {
       {
         source: "/business/showcases",
         destination: "/en/explore",
+        permanent: true,
+      },
+      // Journal contract §2: the changelog lives in the Journal's releases hub.
+      {
+        source: "/changelog",
+        destination: "/en/journal/releases",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/changelog",
+        destination: "/en/journal/releases",
         permanent: true,
       },
       {

@@ -4,6 +4,8 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
+import { getLatestPosts } from "@/lib/journal/api";
+import { PostCard } from "@/components/journal/JournalParts";
 import { locales, type Locale } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -55,6 +57,8 @@ export default async function ResourcesPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "resources" });
   const publications = getPublications(locale);
+  // The Journal is English-only and API-driven; a failure hides the section.
+  const journalPosts = await getLatestPosts(3);
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
@@ -114,6 +118,19 @@ export default async function ResourcesPage({ params }: Props) {
         .product-guides {
           max-width: 1080px; margin: 0 auto; padding: 0 24px 120px;
         }
+        .resources-journal { max-width: 1080px; margin: 0 auto; padding: 0 24px 100px; }
+        .resources-journal h2 {
+          font-size: clamp(24px, 3vw, 30px); line-height: 1.1;
+          letter-spacing: -.03em; font-weight: 640;
+        }
+        .resources-journal > p {
+          max-width: 62ch; margin: 10px 0 26px;
+          color: rgba(29,28,25,0.62); font-size: 14px; line-height: 1.65;
+        }
+        .resources-journal-all {
+          display: inline-block; margin-top: 22px; color: #1d1c19;
+          font-size: 14px; font-weight: 600; text-underline-offset: 3px;
+        }
         .product-guides h2 {
           font-size: clamp(24px, 3vw, 30px); line-height: 1.1;
           letter-spacing: -.03em; font-weight: 640;
@@ -165,6 +182,21 @@ export default async function ResourcesPage({ params }: Props) {
             </Link>
           ))}
         </main>
+        {journalPosts.length > 0 && (
+          <section className="resources-journal" aria-labelledby="resources-journal-title">
+            <h2 id="resources-journal-title">{t("journalTitle")}</h2>
+            <p>
+              {t("journalIntro")}
+              {locale !== "en" && <> {t("journalLanguage")}</>}
+            </p>
+            <ul className="jr-grid">
+              {journalPosts.map((post) => (
+                <PostCard key={post.post_id} post={post} headingLevel={3} />
+              ))}
+            </ul>
+            <a className="resources-journal-all" href="/en/journal">{t("journalAll")} →</a>
+          </section>
+        )}
         <section className="product-guides" aria-labelledby="product-guides-title">
           <h2 id="product-guides-title">{t("productGuidesTitle")}</h2>
           <p>

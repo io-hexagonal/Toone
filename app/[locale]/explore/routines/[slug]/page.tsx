@@ -26,6 +26,7 @@ import {
   capitalize,
 } from "@/components/explore/ExploreView";
 import { ProfileBody, ProfileHero } from "@/components/explore/ProfileView";
+import FeaturedInJournal from "@/components/journal/FeaturedInJournal";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 // TE-01: rendered on the first request, then served from cache. The data
@@ -102,6 +103,7 @@ export default async function RoutinePage({ params }: Props) {
         <main>
           <RoutineContent detail={detail} ui={ui} locale={locale} />
         </main>
+        <FeaturedInJournal exploreSlug={canonical} />
       </ExploreShell>
     );
   const taxonomy = detail.classification
@@ -120,6 +122,7 @@ export default async function RoutinePage({ params }: Props) {
       <main>
         <ProfileBody {...view} />
       </main>
+      <FeaturedInJournal exploreSlug={canonical} />
     </ExploreShell>
   );
 }

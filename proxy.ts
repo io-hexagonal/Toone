@@ -14,6 +14,9 @@ const PREVIEW_BOTS =
   /LinkedInBot|facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterestbot|redditbot|SkypeUriPreview|vkShare/i;
 
 const EXPLORE_HUB = /^\/([a-z]{2})\/explore\/?$/;
+/** Journal paths with or without a locale prefix (Journal contract §2, §10). */
+const JOURNAL_PATH = /^\/(?:([a-z]{2})\/)?journal(\/.*)?$/;
+const JOURNAL_PREVIEW = /^\/en\/journal\/preview\//;
 const CATALOG_PARAMS = ["type", "q", "tag", "category", "topic", "useful_for", "page"];
 
 export default function proxy(req: NextRequest) {
@@ -63,6 +66,33 @@ export default function proxy(req: NextRequest) {
     const target = new URL(`/${routing.defaultLocale}/explore`, req.url);
     target.search = req.nextUrl.search;
     return NextResponse.redirect(target, 308);
+  }
+
+  // Journal contract §10: the Journal is English only. The bare `/journal`
+  // and every other locale's copy are a permanent 308 to the `/en` URL, here
+  // rather than in each page so no non-English variant is ever rendered,
+  // cached or crawled. (`/journal/feed.xml` and `/journal/og/*.png` contain a
+  // dot, so the matcher below never sends them through this function.)
+  const journal = req.nextUrl.pathname.match(JOURNAL_PATH);
+  if (
+    journal &&
+    journal[1] !== routing.defaultLocale &&
+    (journal[1] === undefined || (routing.locales as readonly string[]).includes(journal[1]))
+  ) {
+    const target = new URL(`/${routing.defaultLocale}/journal${journal[2] ?? ""}`, req.url);
+    target.search = req.nextUrl.search;
+    return NextResponse.redirect(target, 308);
+  }
+
+  // Draft previews are unlisted, `noindex` and never cached (§2, §3). The page
+  // is rendered per request; these headers also cover crawlers that only read
+  // response headers and any shared cache between the user and the origin.
+  if (JOURNAL_PREVIEW.test(req.nextUrl.pathname)) {
+    const response = intlMiddleware(req);
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    response.headers.set("Cache-Control", "private, no-store, max-age=0");
+    response.headers.set("Referrer-Policy", "no-referrer");
+    return response;
   }
 
   // TE-01: the parameter-free hub is prerendered. Catalog parameters (type,

@@ -8,7 +8,8 @@
     "download": "Vroege toegang aanvragen",
     "signin": "Inloggen",
     "invitations": "Uitnodigingen",
-    "explore": "Ontdekken"
+    "explore": "Ontdekken",
+    "journal": "Journal"
   },
   "downloadPage": {
     "metaTitle": "Download Toone voor macOS",
@@ -251,6 +252,10 @@
     "heading": "Praktisch werken met Toone",
     "intro": "Kies een nuttige workflow, verzamel de juiste context en beoordeel de resultaten.",
     "empty": "De Nederlandse gidsen worden voorbereid.",
+    "journalTitle": "Uit het Journal",
+    "journalIntro": "Release notes, uitgelichte routines en lanceringsnieuws van het team achter Toone.",
+    "journalLanguage": "Journal-berichten verschijnen in het Engels.",
+    "journalAll": "Alle Journal-berichten",
     "productGuidesTitle": "Productgidsen",
     "productGuidesIntro": "Hoe Toone werkt, één pagina per concept en functie.",
     "productGuidesLanguage": "Deze productgidsen zijn in het Engels.",
