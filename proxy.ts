@@ -14,6 +14,10 @@ const PREVIEW_BOTS =
   /LinkedInBot|facebookexternalhit|Facebot|Twitterbot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterestbot|redditbot|SkypeUriPreview|vkShare/i;
 
 const EXPLORE_HUB = /^\/([a-z]{2})\/explore\/?$/;
+/** Unprefixed How-to paths. How-to is English only. */
+const HOW_TO_PATH = /^\/how-to(\/.*)?$/;
+/** Unprefixed paths of the retired AI digest. */
+const AI_DIGEST_PATH = /^\/ai-digest(\/.*)?$/;
 /** Journal paths with or without a locale prefix (Journal contract §2, §10). */
 const JOURNAL_PATH = /^\/(?:([a-z]{2})\/)?journal(\/.*)?$/;
 const JOURNAL_PREVIEW = /^\/en\/journal\/preview\//;
@@ -66,6 +70,27 @@ export default function proxy(req: NextRequest) {
     const target = new URL(`/${routing.defaultLocale}/explore`, req.url);
     target.search = req.nextUrl.search;
     return NextResponse.redirect(target, 308);
+  }
+
+  // TECH-020: How-to is English only (every `/{locale}/how-to…` page 308s to
+  // `/en/how-to…`), so negotiating a locale on the unprefixed path only adds
+  // a hop: next-intl's 307 sent `Accept-Language: pt` visitors through
+  // `/pt/how-to…` before the 308 to English. One permanent hop instead.
+  const howTo = req.nextUrl.pathname.match(HOW_TO_PATH);
+  if (howTo) {
+    const target = new URL(`/${routing.defaultLocale}/how-to${howTo[1] ?? ""}`, req.url);
+    target.search = req.nextUrl.search;
+    return NextResponse.redirect(target, 308);
+  }
+
+  // TECH-024: the retired `/ai-digest/*` tree answers 410 at every URL. The
+  // unprefixed paths used to 307 into `/en/ai-digest…` first; serve the 410
+  // route directly so Google sees Gone on the URL it requested.
+  const aiDigest = req.nextUrl.pathname.match(AI_DIGEST_PATH);
+  if (aiDigest) {
+    const target = req.nextUrl.clone();
+    target.pathname = `/${routing.defaultLocale}/ai-digest${aiDigest[1] ?? ""}`;
+    return NextResponse.rewrite(target);
   }
 
   // Journal contract §10: the Journal is English only. The bare `/journal`

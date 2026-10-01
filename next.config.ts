@@ -60,6 +60,13 @@ const nextConfig: NextConfig = {
         destination: "https://trytoone.com/en/journal/:rest",
         permanent: true,
       },
+      // Unprefixed How-to paths are a 308 on the apex too (proxy.ts).
+      {
+        source: "/how-to/:rest*",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/how-to/:rest*",
+        permanent: true,
+      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "www.trytoone.com" }],
