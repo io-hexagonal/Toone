@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "AI workspace for your agentic workflows & routines",
-      "heroTag": "Turn recurring work, like a weekly client report or a literature scan, into a routine that gives you a result you can review.\nWatch it run step by step, pause or edit as it goes, and run it again whenever you need it.",
+      "heroTag": "Build complex, reliable AI workflows just by describing them.\nFollow each run on a live graph that shows the step in progress. Pause, edit, and resume right where it stopped.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "Turn recurring work, like a weekly client report or a literature scan, into a routine that gives you a result you can review. Watch it run step by step, pause or edit as it goes, and run it again whenever you need it.",
+    "lead": "Build complex, reliable AI workflows just by describing them. Follow each run on a live graph that shows the step in progress. Pause, edit, and resume right where it stopped.",
     "cta": "Explore Toone"
   },
   "auth": {

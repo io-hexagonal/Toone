@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
-      "heroTag": "Transformez un travail récurrent, comme un rapport client hebdomadaire ou une veille bibliographique, en une routine qui vous livre un résultat à vérifier.\nSuivez chaque étape, mettez en pause ou modifiez en cours de route, et relancez-la quand vous en avez besoin.",
+      "heroTag": "Créez des workflows IA complexes et fiables simplement en les décrivant.\nSuivez chaque exécution sur un graphe en direct qui montre l’étape en cours. Mettez en pause, modifiez et reprenez exactement là où elle s’est arrêtée.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "seeAllFeatures": "Voir toutes les fonctionnalités",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "L’espace de travail IA pour vos workflows agentiques",
-    "lead": "Transformez un travail récurrent, comme un rapport client hebdomadaire ou une veille bibliographique, en une routine qui vous livre un résultat à vérifier. Suivez chaque étape, mettez en pause ou modifiez en cours de route, et relancez-la quand vous en avez besoin.",
+    "lead": "Créez des workflows IA complexes et fiables simplement en les décrivant. Suivez chaque exécution sur un graphe en direct qui montre l’étape en cours. Mettez en pause, modifiez et reprenez exactement là où elle s’est arrêtée.",
     "cta": "Découvrir Toone"
   },
   "auth": {

@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
-      "heroTag": "Maak van terugkerend werk, zoals een wekelijks klantrapport of een literatuurscan, een routine die je een resultaat geeft dat je kunt controleren.\nVolg elke stap, pauzeer of bewerk onderweg en voer de routine opnieuw uit wanneer je die nodig hebt.",
+      "heroTag": "Bouw complexe, betrouwbare AI-workflows door ze gewoon te beschrijven.\nVolg elke run in een live diagram dat de huidige stap toont. Pauzeer, bewerk en ga precies verder waar hij stopte.",
       "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "seeAllFeatures": "Bekijk alle functies",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "De AI-werkruimte voor jouw agentische workflows",
-    "lead": "Maak van terugkerend werk, zoals een wekelijks klantrapport of een literatuurscan, een routine die je een resultaat geeft dat je kunt controleren. Volg elke stap, pauzeer of bewerk onderweg en voer de routine opnieuw uit wanneer je die nodig hebt.",
+    "lead": "Bouw complexe, betrouwbare AI-workflows door ze gewoon te beschrijven. Volg elke run in een live diagram dat de huidige stap toont. Pauzeer, bewerk en ga precies verder waar hij stopte.",
     "cta": "Ontdek Toone"
   },
   "auth": {

@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
-      "heroTag": "Transforme trabalho recorrente, como um relatório semanal para um cliente ou uma pesquisa bibliográfica, numa rotina que lhe entrega um resultado que pode rever.\nAcompanhe cada passo, pause ou edite pelo caminho e volte a executá-la sempre que precisar.",
+      "heroTag": "Crie fluxos de IA complexos e fiáveis apenas descrevendo-os.\nAcompanhe cada execução num grafo em tempo real que mostra o passo em curso. Pause, edite e retome exatamente onde parou.",
       "featuresTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
       "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
       "seeAllFeatures": "Ver todas as funcionalidades",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
-    "lead": "Transforme trabalho recorrente, como um relatório semanal para um cliente ou uma pesquisa bibliográfica, numa rotina que lhe entrega um resultado que pode rever. Acompanhe cada passo, pause ou edite pelo caminho e volte a executá-la sempre que precisar.",
+    "lead": "Crie fluxos de IA complexos e fiáveis apenas descrevendo-os. Acompanhe cada execução num grafo em tempo real que mostra o passo em curso. Pause, edite e retome exatamente onde parou.",
     "cta": "Explorar o Toone"
   },
   "auth": {

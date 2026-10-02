@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-      "heroTag": "Trasforma un lavoro ricorrente, come un report settimanale per un cliente o una ricerca bibliografica, in una routine che ti consegna un risultato da verificare.\nSegui ogni passaggio, metti in pausa o modifica mentre procede e rieseguila quando ti serve.",
+      "heroTag": "Crea flussi di IA complessi e affidabili semplicemente descrivendoli.\nSegui ogni esecuzione su un grafo dal vivo che mostra il passaggio in corso. Metti in pausa, modifica e riprendi esattamente da dove si era fermata.",
       "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
@@ -184,7 +184,7 @@
   },
   "statement": {
     "title": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-    "lead": "Trasforma un lavoro ricorrente, come un report settimanale per un cliente o una ricerca bibliografica, in una routine che ti consegna un risultato da verificare. Segui ogni passaggio, metti in pausa o modifica mentre procede e rieseguila quando ti serve.",
+    "lead": "Crea flussi di IA complessi e affidabili semplicemente descrivendoli. Segui ogni esecuzione su un grafo dal vivo che mostra il passaggio in corso. Metti in pausa, modifica e riprendi esattamente da dove si era fermata.",
     "cta": "Scopri Toone"
   },
   "auth": {
