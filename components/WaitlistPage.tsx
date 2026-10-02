@@ -176,7 +176,7 @@ export default function WaitlistPage() {
       </div>
 
       <p className="waitlist-privacy">
-        {t("emailPrivacyNotice")}{" "}<Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
+        <Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
         <PrivacyChoicesButton />
       </p>
 

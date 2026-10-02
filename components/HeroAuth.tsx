@@ -368,7 +368,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                   {status === "error" ? t("authError") : t("authNote")}
                 </p>
                 <p className="ha-note ha-privacy">
-                  {t("emailPrivacyNotice")}{" "}<Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
+                  <Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}
                   <PrivacyChoicesButton />
                 </p>
               </>

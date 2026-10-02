@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
-      "heroTag": "Créez des workflows IA complexes et fiables simplement en les décrivant.\nSuivez chaque exécution sur un graphe en direct qui montre l’étape en cours. Mettez en pause, modifiez et reprenez exactement là où elle s’est arrêtée.",
+      "heroTag": "Créez des workflows IA complexes et fiables en les décrivant.\nSuivez chaque exécution étape par étape sur un graphe en direct. Mettez en pause, modifiez et reprenez là où elle s’est arrêtée.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "seeAllFeatures": "Voir toutes les fonctionnalités",
@@ -121,7 +121,6 @@
     "waitlistSub": "Laissez votre email pour demander un accès anticipé. Nous vous contacterons lorsqu’une place sera disponible.",
     "waitlistExisting": "Vous utilisez déjà Toone ?",
     "waitlistSignIn": "Se connecter",
-    "emailPrivacyNotice": "Nous utilisons votre adresse e-mail pour gérer votre demande d’accès anticipé.",
     "emailPrivacyLink": "Politique de confidentialité",
     "productLanguageDisclosure": "L’application de bureau est actuellement disponible uniquement en anglais.",
     "heroTag2": "Transformez les tâches récurrentes en résultats utiles avec des agents spécialisés, tout en gardant le contrôle.",
@@ -184,7 +183,7 @@
   },
   "statement": {
     "title": "L’espace de travail IA pour vos workflows agentiques",
-    "lead": "Créez des workflows IA complexes et fiables simplement en les décrivant. Suivez chaque exécution sur un graphe en direct qui montre l’étape en cours. Mettez en pause, modifiez et reprenez exactement là où elle s’est arrêtée.",
+    "lead": "Créez des workflows IA complexes et fiables en les décrivant. Suivez chaque exécution étape par étape sur un graphe en direct. Mettez en pause, modifiez et reprenez là où elle s’est arrêtée.",
     "cta": "Découvrir Toone"
   },
   "auth": {

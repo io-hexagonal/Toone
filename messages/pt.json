@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
-      "heroTag": "Crie fluxos de IA complexos e fiáveis apenas descrevendo-os.\nAcompanhe cada execução num grafo em tempo real que mostra o passo em curso. Pause, edite e retome exatamente onde parou.",
+      "heroTag": "Crie fluxos de IA complexos e fiáveis descrevendo-os.\nAcompanhe cada execução passo a passo num grafo em tempo real. Pause, edite e retome onde parou.",
       "featuresTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
       "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
       "seeAllFeatures": "Ver todas as funcionalidades",
@@ -121,7 +121,6 @@
     "waitlistSub": "Deixe o seu email para pedir acesso antecipado. Entraremos em contacto quando houver uma vaga.",
     "waitlistExisting": "Já utiliza o Toone?",
     "waitlistSignIn": "Entrar",
-    "emailPrivacyNotice": "Usamos seu e-mail para gerenciar seu pedido de acesso antecipado.",
     "emailPrivacyLink": "Política de privacidade",
     "productLanguageDisclosure": "O aplicativo desktop está disponível atualmente apenas em inglês.",
     "heroTag2": "Transforme trabalho recorrente em resultados úteis, com agentes especializados e mantendo o controlo.",
@@ -184,7 +183,7 @@
   },
   "statement": {
     "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
-    "lead": "Crie fluxos de IA complexos e fiáveis apenas descrevendo-os. Acompanhe cada execução num grafo em tempo real que mostra o passo em curso. Pause, edite e retome exatamente onde parou.",
+    "lead": "Crie fluxos de IA complexos e fiáveis descrevendo-os. Acompanhe cada execução passo a passo num grafo em tempo real. Pause, edite e retome onde parou.",
     "cta": "Explorar o Toone"
   },
   "auth": {

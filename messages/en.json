@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "AI workspace for your agentic workflows & routines",
-      "heroTag": "Build complex, reliable AI workflows just by describing them.\nFollow each run on a live graph that shows the step in progress. Pause, edit, and resume right where it stopped.",
+      "heroTag": "Build complex, reliable AI workflows by describing them.\nWatch each run step by step on a live graph. Pause, edit, and resume where it stopped.",
       "featuresTitle": "The AI workspace for your agentic workflows",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
@@ -121,7 +121,6 @@
     "waitlistSub": "Leave your email to request early access. We will contact you when a place is available.",
     "waitlistExisting": "Already using Toone?",
     "waitlistSignIn": "Sign in",
-    "emailPrivacyNotice": "We use your email to manage your early access request.",
     "emailPrivacyLink": "Privacy policy",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
     "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
@@ -184,7 +183,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "Build complex, reliable AI workflows just by describing them. Follow each run on a live graph that shows the step in progress. Pause, edit, and resume right where it stopped.",
+    "lead": "Build complex, reliable AI workflows by describing them. Watch each run step by step on a live graph. Pause, edit, and resume where it stopped.",
     "cta": "Explore Toone"
   },
   "auth": {

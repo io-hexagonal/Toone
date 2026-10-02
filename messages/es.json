@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "El espacio de trabajo de IA para tus flujos agénticos",
-      "heroTag": "Crea flujos de IA complejos y fiables con solo describirlos.\nSigue cada ejecución en un grafo en vivo que muestra el paso en curso. Pausa, edita y reanuda justo donde se detuvo.",
+      "heroTag": "Crea flujos de IA complejos y fiables describiéndolos.\nSigue cada ejecución paso a paso en un grafo en vivo. Pausa, edita y reanuda donde se detuvo.",
       "featuresTitle": "El espacio de trabajo de IA para tus flujos agénticos",
       "featuresSub": "Un espacio para tus agentes, tus flujos de trabajo y tus resultados.",
       "seeAllFeatures": "Ver todas las funciones",
@@ -121,7 +121,6 @@
     "waitlistSub": "Deja tu email para solicitar acceso anticipado. Te contactaremos cuando haya una plaza disponible.",
     "waitlistExisting": "¿Ya utilizas Toone?",
     "waitlistSignIn": "Iniciar sesión",
-    "emailPrivacyNotice": "Usamos tu correo para gestionar tu solicitud de acceso anticipado.",
     "emailPrivacyLink": "Política de privacidad",
     "productLanguageDisclosure": "La aplicación de escritorio está disponible actualmente solo en inglés.",
     "heroTag2": "Convierte el trabajo recurrente en resultados útiles con agentes especializados y manteniendo el control.",
@@ -184,7 +183,7 @@
   },
   "statement": {
     "title": "El espacio de trabajo de IA para tus flujos agénticos",
-    "lead": "Crea flujos de IA complejos y fiables con solo describirlos. Sigue cada ejecución en un grafo en vivo que muestra el paso en curso. Pausa, edita y reanuda justo donde se detuvo.",
+    "lead": "Crea flujos de IA complejos y fiables describiéndolos. Sigue cada ejecución paso a paso en un grafo en vivo. Pausa, edita y reanuda donde se detuvo.",
     "cta": "Explorar Toone"
   },
   "auth": {

@@ -35,7 +35,7 @@
   "landing": {
     "personal": {
       "heroTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-      "heroTag": "Crea flussi di IA complessi e affidabili semplicemente descrivendoli.\nSegui ogni esecuzione su un grafo dal vivo che mostra il passaggio in corso. Metti in pausa, modifica e riprendi esattamente da dove si era fermata.",
+      "heroTag": "Crea flussi di IA complessi e affidabili descrivendoli.\nSegui ogni esecuzione passo dopo passo su un grafo dal vivo. Metti in pausa, modifica e riprendi da dove si era fermata.",
       "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
@@ -121,7 +121,6 @@
     "waitlistSub": "Lascia la tua email per richiedere accesso anticipato. Ti contatteremo quando sarà disponibile un posto.",
     "waitlistExisting": "Usi già Toone?",
     "waitlistSignIn": "Accedi",
-    "emailPrivacyNotice": "Usiamo la tua email per gestire la richiesta di accesso anticipato.",
     "emailPrivacyLink": "Informativa sulla privacy",
     "productLanguageDisclosure": "L’app desktop è attualmente disponibile solo in inglese.",
     "heroTag2": "Trasforma le attività ricorrenti in risultati utili con agenti specializzati, mantenendo il controllo.",
@@ -184,7 +183,7 @@
   },
   "statement": {
     "title": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-    "lead": "Crea flussi di IA complessi e affidabili semplicemente descrivendoli. Segui ogni esecuzione su un grafo dal vivo che mostra il passaggio in corso. Metti in pausa, modifica e riprendi esattamente da dove si era fermata.",
+    "lead": "Crea flussi di IA complessi e affidabili descrivendoli. Segui ogni esecuzione passo dopo passo su un grafo dal vivo. Metti in pausa, modifica e riprendi da dove si era fermata.",
     "cta": "Scopri Toone"
   },
   "auth": {
