@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
+import LocalePicker from "@/components/LocalePicker";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -40,6 +41,7 @@ export default async function Footer({
               color: rgba(255,255,255,0.92); font-size: 19px;
             }
             .ftr-legal { margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.64); }
+            .ftr-lang { margin-top: 16px; }
             .ftr-cols { display: flex; gap: 64px; flex-wrap: wrap; }
             .ftr-heading {
               font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em;
@@ -77,6 +79,9 @@ export default async function Footer({
             </Link>
             <div className="ftr-legal">
               © {new Date().getFullYear()} Toone — {t("rights")}
+            </div>
+            <div className="ftr-lang">
+              <LocalePicker variant="footer" />
             </div>
           </div>
           <div className="ftr-cols">

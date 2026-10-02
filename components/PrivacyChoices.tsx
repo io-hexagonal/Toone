@@ -63,7 +63,7 @@ export default function PrivacyChoices() {
   if (!open) return null;
 
   return (
-    <aside className={styles.panel} aria-label={t("title")}>
+    <aside className={styles.panel} aria-label={t("title")} data-privacy-panel>
       <div className={styles.copy}>
         <h2>{t("title")}</h2>
         <p>{t("description")} <Link href="/privacy">{t("details")}</Link></p>

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
+import LocalePicker from "@/components/LocalePicker";
 
 type Props = {
   homePath?: "/" | "/business";
@@ -85,6 +86,9 @@ export default async function Navigation({
           {t("howTo")}
         </Link>
         <Link href="/request-access" className="minimal-link">{t("download")}</Link>
+        <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
+          <LocalePicker variant="header" />
+        </span>
 
       </nav>
     </>

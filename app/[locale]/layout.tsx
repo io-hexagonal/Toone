@@ -9,6 +9,7 @@ import localFont from "next/font/local";
 import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 import PrivacyChoices from "@/components/PrivacyChoices";
+import LocaleSuggestion from "@/components/LocaleSuggestion";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
 export const viewport: Viewport = {
@@ -267,6 +268,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           {children}
           <AnnouncementModal />
           <PrivacyChoices />
+          <LocaleSuggestion />
         </NextIntlClientProvider>
       </body>
     </html>

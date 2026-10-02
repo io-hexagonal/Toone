@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
+import LocalePicker from "@/components/LocalePicker";
 
 /**
  * Morphing landing header — one element, two states.
@@ -86,12 +87,15 @@ export default function SiteHeader({
 
             .hdr2 .links { display: flex; align-items: center; gap: 26px; margin-left: auto; }
             .hdr2 .links a:not(.dl) {
-              color: rgba(255,255,255,0.62); text-decoration: none;
+              color: rgba(255,255,255,0.62); text-decoration: none; white-space: nowrap;
               font-size: 14.5px; font-weight: 500;
               transition: color 0.4s ease, opacity 0.2s ease;
             }
             .hdr2 .links a:not(.dl):hover { opacity: 0.75; }
             .hdr2[data-scrolled="true"] .links a:not(.dl) { color: #1d1c19; }
+
+            .hdr2 .lp { color: rgba(255,255,255,0.62); transition: color 0.4s ease; }
+            .hdr2[data-scrolled="true"] .lp { color: #1d1c19; }
 
             .hdr2 .dl {
               font-family: var(--font-wordmark), system-ui, sans-serif;
@@ -105,7 +109,7 @@ export default function SiteHeader({
 
             @media (max-width: 720px) {
               .hdr2 { padding: 16px 20px; gap: 14px; }
-              .hdr2 .links { gap: 16px; }
+              .hdr2 .links { gap: 12px; }
               .hdr2 .links a[data-optional] { display: none; }
               .hdr2 .dl { padding: 10px 14px; font-size: 12px; }
             }
@@ -129,6 +133,7 @@ export default function SiteHeader({
           </Link>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
+          <LocalePicker variant="header" />
           <Link href="/signin">{t("signin")}</Link>
           <InvitationAdminLink />
           <Link
