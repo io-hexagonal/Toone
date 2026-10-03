@@ -127,9 +127,27 @@ export type PackageRequirements = {
   resource_bindings?: string[];
 };
 
+/** A Toone-managed ledger a shared routine keeps between runs: its
+ * definition only (shape and lifecycle); records are never published. */
+export type PackageLedger = {
+  id: string;
+  name: string;
+  purpose: string;
+  shape: { key: string; fields: Record<string, string> };
+  lifecycle: "global" | "perRun" | "perPeriod" | "custom" | string;
+  period?: string;
+  key?: string;
+  rotate_on?: string;
+  completion?: string;
+  carry_forward?: string;
+  closed_statuses?: string[];
+};
+
 export type WorkflowPackage = {
   format_version: number;
+  /** 3 when the package ships ledger definitions. */
   routine_schema_version: number;
+  ledgers?: PackageLedger[];
   minimum_app_version?: string;
   root_key: string;
   members: PackageMember[];

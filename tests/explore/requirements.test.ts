@@ -41,3 +41,14 @@ test("legacy dependencies remain visible while parent-bound child inputs are not
   ]};
   assert.deepEqual(requirementFacts(pkg).youProvide, ["external/editor", "editing", "Your brief"]);
 });
+
+test("ledgers are included as kept records and never requested from the person", () => {
+  const pkg: WorkflowPackage = {
+    format_version: 2, routine_schema_version: 3, root_key: "root",
+    ledgers: [{id: "ph-contacts", name: "PH contacts", purpose: "Never contact twice", shape: {key: "linkedin_url", fields: {name: "string"}}, lifecycle: "global"}],
+    members: [{key: "root", source_routine_id: "r", payload: {inputs: [{id: "campaign", description: "Campaign control file", requirement: "dispatch"}]}}],
+  };
+  const facts = requirementFacts(pkg);
+  assert.deepEqual(facts.youProvide, ["Campaign control file"]);
+  assert.deepEqual(facts.included, ["PH contacts (kept between runs)"]);
+});

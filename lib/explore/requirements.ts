@@ -8,6 +8,11 @@ export function requirementFacts(pkg: WorkflowPackage) {
     ...(pkg.requirements?.skill_ids ?? []).filter((id) => !pkg.skills?.some((skill) => skill.id === id)),
   ];
   const produces: string[] = [];
+  // Ledgers are created by Toone on install from their definitions; they are
+  // never something the person provides.
+  for (const ledger of pkg.ledgers ?? []) {
+    included.push(`${ledger.name.trim() || ledger.id} (kept between runs)`);
+  }
   for (const resource of pkg.resources ?? []) {
     if (resource.mode === "seed_text" || resource.mode === "seed_directory") {
       const input = pkg.members.find((member) => member.key === resource.member_key)?.payload.inputs?.find((input) => input.id === resource.input_id);
