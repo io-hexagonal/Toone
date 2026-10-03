@@ -109,7 +109,26 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           Toone is built around local organization files and working context. This
           policy distinguishes that local product data from information you choose
-          to submit through the website, waitlist, contact form, or account service.
+          to submit through the website, waitlist, contact form, or account service,
+          and from the features that send information off your Mac.
+        </p>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Toone Editions
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          Toone for Mac comes in two editions: <strong>Toone (Direct)</strong>,
+          downloaded from trytoone.com, and <strong>Toone (Mac App Store)</strong>,
+          distributed by Apple. Where the editions handle information differently,
+          this policy says so.
         </p>
 
         <h2
@@ -169,6 +188,28 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           to you, protect the service, and administer early access.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          If you choose Sign in with Apple on the website, Apple returns an
+          identity token: a statement signed by Apple that contains a stable Apple
+          account identifier and, when available, your email address. That address
+          may be an Apple private relay address if you chose to hide your email.
+          The first time you authorize Toone, Apple may also provide your name. The
+          website sends the identity token, that name, and any invitation code you
+          are redeeming to the Toone account service, which checks Apple&apos;s
+          signature and uses the identifier, email address, and name to find or
+          create your Toone account. The website does not send Apple&apos;s
+          authorization code to Toone, and Toone does not store Apple access or
+          refresh tokens. Apple handles your authentication under its own{" "}
+          <a
+            href="https://www.apple.com/legal/privacy/"
+            target="_blank"
+            rel="noopener"
+            style={{ color: "rgba(100,180,255,0.8)", textDecoration: "none" }}
+          >
+            privacy policy
+          </a>
+          .
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           Website analytics events do not include form text, names, email addresses,
           passwords, authentication tokens, or account identifiers.
         </p>
@@ -185,7 +226,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Usage Analytics
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          The Toone desktop app sends usage events, such as &quot;an organization
+          Toone (Direct) sends usage events, such as &quot;an organization
           was created,&quot; to our self-hosted analytics (Umami). Events never
           include prompts, conversations, file contents, file paths, routine
           steps, agent instructions, or organization names. When you are signed
@@ -194,6 +235,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           analytics session. When you are signed out, events use a random
           per-install identifier instead. You can turn usage analytics off at any
           time in Settings, which also discards events that have not been sent.
+          Toone (Mac App Store) does not include usage analytics.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           With your permission, this website loads our self-hosted, cookieless
@@ -224,6 +266,10 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Sign-in stores an account session in your browser for authenticated
           features, until you sign out or the session expires. If you decline
           analytics, its script is not loaded; allowing it adds no analytics cookie.
+          When a sign-in page shows the Sign in with Apple button, it loads
+          Apple&apos;s sign-in script and button image from Apple&apos;s servers,
+          so Apple receives ordinary connection information such as your IP
+          address.
         </p>
 
         <h2
@@ -238,11 +284,15 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Local-First Architecture
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          All conversations, files, and project data remain on your device. Toone
+          Conversations, files, and project data are stored on your device. Toone
           does not upload that local working context to its account, website, or
-          analytics services. Account data, waitlist requests, contact requests,
-          and optional relay connections are handled separately as described in
-          this policy.
+          analytics services on its own. It leaves your Mac when you use a feature
+          that needs it: requests to your AI provider, the cloud relay, Live Share,
+          and sharing a routine on Explore, each described below. If you use speech
+          input, macOS speech recognition turns your voice into text; depending on
+          your language and system settings, Apple may process that audio on its
+          servers. Account data, waitlist requests, contact requests, and Toone Pro
+          purchases are handled separately as described in this policy.
         </p>
 
         <h2
@@ -257,11 +307,15 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Third-Party AI Providers
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          Toone connects to AI providers (such as Anthropic or OpenAI) by letting
-          you connect your own Anthropic or OpenAI account. Authentication is
-          handled through your terminal using each provider&apos;s CLI. When you send
-          a message, it is transmitted directly from your device to the
-          provider&apos;s API. Toone does not proxy, log, or retain these requests.
+          Toone connects to AI providers by letting you connect your own account.
+          Toone (Direct) supports Anthropic Claude and OpenAI Codex; Toone (Mac App
+          Store) supports OpenAI Codex only. You sign in through each
+          provider&apos;s own command-line tool, which Toone runs for you and which
+          opens the provider&apos;s sign-in page in your browser. When you send a
+          message or run a routine, the request is transmitted directly from your
+          device to the provider&apos;s API. A request can include your prompts and
+          the files, tool output, and built-in browser content the agent works
+          with. Toone does not proxy, log, or retain these requests.
           Please refer to your chosen provider&apos;s privacy policy for how they
           handle your data:
         </p>
@@ -311,8 +365,81 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           a direct local-network WebSocket or the optional Toone cloud relay. The
           cloud-relay transport uses TLS plus application-level end-to-end
           encryption, so the relay forwards encrypted application frames rather
-          than readable conversation or project content. AI execution and project
-          access remain on the Mac.
+          than readable conversation or project content. To pair and route
+          connections, the relay stores the Mac and phone device identifiers and
+          the IP address that created the connection. AI execution and project
+          access remain on the Mac. The mobile connection is available in Toone
+          (Direct), not in Toone (Mac App Store).
+        </p>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Live Share and Explore
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          These features are available in Toone (Direct). When you use Live Share,
+          Toone&apos;s services receive the information needed to run the share,
+          including the email address of each person you invite, and pass the live
+          session between your Mac and the people you approve. Those people can see
+          the workspace content you make available to them.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          When you share a routine on Explore, the app sends Toone a public copy of
+          it for review: its steps, agents, Skills, and any included files you
+          confirm, together with its listing page and cover image. Approved
+          listings are published on trytoone.com with your account name as the
+          author.
+        </p>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Toone Pro (Mac App Store)
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          In Toone (Mac App Store), Toone Pro is an in-app purchase. Apple
+          processes the payment under its own terms and privacy policy; Toone does
+          not receive your payment card details. The app attaches a random
+          identifier for your Toone account to the purchase, then sends Toone&apos;s
+          server the signed transaction record Apple provides and, for
+          subscriptions, Apple&apos;s signed renewal information. Toone&apos;s
+          server can also receive signed notifications from Apple when a purchase
+          renews, expires, or is refunded. The server checks Apple&apos;s signature
+          and stores what it needs to grant Pro: the purchase identifier, the
+          product, whether it is a subscription or a lifetime purchase, its status,
+          its expiry, grace-period, and revocation dates, whether it renews
+          automatically, the App Store environment, and when Apple signed the
+          latest update.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          Without Pro, an account can create a limited number of routines. To
+          count them, Toone&apos;s server records each routine creation with a
+          random ID, the time, and whether it counted. The app also sends
+          Apple&apos;s signed app-transaction record when it can, and Toone stores
+          its app-transaction ID so the free limit applies once per Apple Account.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          If you have Pro, you can give someone a guest month by entering their
+          email address. Toone&apos;s server stores that address with the guest
+          pass and emails the person an invitation that shows your account name,
+          or your email address if your account has no name. So that each person
+          receives at most one guest month, Toone also keeps a keyed hash of every
+          address that activates one. If Toone gives you complimentary Pro, the
+          grant is recorded with your email address, and Toone may email you
+          before it ends.
         </p>
 
         <h2
@@ -353,9 +480,9 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Updates
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          Desktop installers are available through authenticated Toone downloads.
-          The service receives your account credentials and ordinary connection information to authorise delivery.
-          Existing apps check public update feeds hosted by GitHub, which is subject to{" "}
+          Toone (Direct) installers are available through authenticated Toone downloads.
+          The service receives your account session token and ordinary connection information to authorise delivery.
+          Existing Direct apps check public update feeds hosted by GitHub, which is subject to{" "}
           <a
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
             target="_blank"
@@ -365,6 +492,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
             GitHub&apos;s privacy policy
           </a>
           . GitHub receives ordinary connection information such as your IP address during an update check. Toone does not send your account credentials to GitHub for that check.
+          Apple delivers Toone (Mac App Store) and its updates under Apple&apos;s own terms and privacy policy.
         </p>
 
         <h2
