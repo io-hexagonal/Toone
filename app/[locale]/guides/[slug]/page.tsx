@@ -11,6 +11,7 @@ import {
   publicationUrl,
 } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
+import { openGraphLocale } from "@/i18n/open-graph";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -67,8 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: resolvedPublication.title,
       description: resolvedPublication.description,
       siteName: "Toone",
-      locale,
-      alternateLocale: alternateLocales.filter((alternate) => alternate !== locale),
+      ...openGraphLocale(locale, alternateLocales),
       publishedTime: resolvedPublication.published,
       modifiedTime: resolvedPublication.updated,
       authors: [resolvedPublication.author],

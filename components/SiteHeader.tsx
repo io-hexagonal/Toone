@@ -133,7 +133,7 @@ export default function SiteHeader({
           </Link>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
-          <LocalePicker variant="header" />
+          <LocalePicker />
           <Link href="/signin">{t("signin")}</Link>
           <InvitationAdminLink />
           <Link

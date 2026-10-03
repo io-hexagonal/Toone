@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { openGraphLocale } from "@/i18n/open-graph";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import AuthenticatedDownloadGrid from "@/components/AuthenticatedDownloadGrid";
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // layout's locale-home languages from merging in.
     alternates: { canonical: url, languages: {} },
     // og:url follows the canonical (R7) instead of inheriting the locale home.
-    openGraph: { type: "website", url, siteName: "Toone" },
+    openGraph: { type: "website", url, siteName: "Toone", ...openGraphLocale(locale, []) },
   };
 }
 

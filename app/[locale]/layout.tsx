@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { locales } from "@/i18n/routing";
+import { openGraphLocale } from "@/i18n/open-graph";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
@@ -167,7 +168,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t("ogTitle"),
       description: t("ogDescription"),
       siteName: "Toone",
-      locale: locale === "en" ? "en_US" : locale,
+      ...openGraphLocale(locale),
       // Dimensions must match the real files (they were declared at half size,
       // 1200x630, while the assets are 2400x1260). Scrapers use these to
       // reserve layout before the image downloads.

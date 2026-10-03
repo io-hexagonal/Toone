@@ -172,15 +172,16 @@ test("id URLs issue permanent redirects to the slug URL, including translated re
   assert.equal(followed.status, 200);
   assert.ok(followed.url.endsWith(`/en/explore/routines/${routine.slug}`));
 });
-test("all translated routes have localized chrome with noindex and English canonicals", async () => {
+test("all translated hubs have localized chrome, noindex and a self canonical", async () => {
   for (const locale of ["pt", "es", "fr", "de", "it", "nl", "ru"]) {
     const { response, html } = await get(`/${locale}/explore`);
     assert.equal(response.status, 200);
     assert.match(html, /<meta name="robots" content="noindex, follow"/);
-    assert.match(
-      html,
-      /<link rel="canonical" href="https:\/\/trytoone.com\/en\/explore"/,
+    assert.ok(
+      html.includes(`<link rel="canonical" href="https://trytoone.com/${locale}/explore"/>`),
+      locale,
     );
+    assert.doesNotMatch(html, /<link rel="alternate" hreflang=/i, `${locale}: a noindex hub declares no hreflang`);
     const messages = JSON.parse(
       readFileSync(
         new URL(`../../messages/${locale}.json`, import.meta.url),

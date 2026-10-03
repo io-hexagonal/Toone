@@ -5,7 +5,7 @@ import {
   APPLE_STANDARD_EULA_URL,
   TERMS_CANONICAL,
 } from "../../lib/legal/terms";
-import { locales } from "../../i18n/routing";
+import { ENGLISH_ONLY_PATHS, locales } from "../../i18n/routing";
 
 const read = (path: string) => fs.readFileSync(path, "utf8");
 const page = read("app/[locale]/terms/page.tsx");
@@ -35,17 +35,16 @@ test("footer Terms labels exist in every locale", () => {
 });
 
 test("footer links to English-only pages resolve to /en/ (Ahrefs F32, TECH-020)", () => {
-  const navigation = read("lib/navigation.ts");
-  const list = navigation.match(/ENGLISH_ONLY_PATHS = \[([^\]]*)\]/);
-  assert.ok(list, "ENGLISH_ONLY_PATHS not found");
-  const englishOnly = [...list[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+  const englishOnly: readonly string[] = ENGLISH_ONLY_PATHS;
   assert.ok(englishOnly.includes("/terms"));
+  assert.match(read("lib/navigation.ts"), /ENGLISH_ONLY_PATHS\.some\(/, "Link resolves the shared list to /en");
 
   const footer = read("components/Footer.tsx");
   for (const [, href] of footer.matchAll(/<Link href="(\/[a-z-]+)">/g)) {
     const pagePath = `app/[locale]${href}/page.tsx`;
     if (!fs.existsSync(pagePath)) continue;
-    if (!read(pagePath).includes(`permanentRedirect("/en${href}")`)) continue;
+    const source = read(pagePath);
+    if (!source.includes(`redirectToEnglish("/en${href}"`) && !source.includes(`permanentRedirect("/en${href}")`)) continue;
     assert.ok(englishOnly.includes(href), `${href} redirects non-English locales but is missing from ENGLISH_ONLY_PATHS`);
   }
 });

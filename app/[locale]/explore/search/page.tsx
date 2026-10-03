@@ -6,8 +6,9 @@ import { parseCatalogQuery } from "@/lib/explore/presentation";
 /**
  * Request-time view of `/[locale]/explore?…` (type, search, tag, taxonomy
  * facets, page). `proxy.ts` rewrites those URLs here, so the public URL keeps
- * its query string and the canonical stays `/en/explore`. Never indexable
- * (TECH-007), including a direct visit to this path.
+ * its query string and the canonical stays the hub's (`/en/explore`, or the
+ * non-English hub itself). Never indexable (TECH-007), including a direct
+ * visit to this path.
  */
 type Props = {
   params: Promise<{ locale: string }>;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { openGraphLocale } from "@/i18n/open-graph";
 import { TooneLandingPage } from "../page";
 
 type Props = {
@@ -57,7 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: ogTitle,
       description: ogDescription,
       siteName: "Toone",
-      locale: isEnglish ? "en_US" : locale,
+      // No og:locale:alternate: hreflang declares no other language either.
+      ...openGraphLocale(locale, []),
       // Next shallow-merges metadata: a route-level `openGraph` replaces the
       // root object wholesale, so the images must be restated here or the
       // route ships without og:image (audit P2-6).

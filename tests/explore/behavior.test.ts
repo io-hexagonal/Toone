@@ -289,6 +289,24 @@ test("revalidation authenticates exact bytes, rejects bad event ids and missing 
   );
 });
 
+test("non-English hubs are noindex with a self canonical and no hreflang; the English hub is unchanged", () => {
+  const pt = exploreMetadata("pt", "/explore", "Explorar", "Rotinas", null, { selfCanonical: true });
+  assert.equal(pt.alternates.canonical, "https://trytoone.com/pt/explore");
+  assert.deepEqual(pt.alternates.languages, {});
+  assert.equal(pt.robots.index, false);
+  assert.equal(pt.openGraph.url, pt.alternates.canonical);
+  assert.equal(pt.openGraph.locale, "pt_BR");
+
+  const en = exploreMetadata("en", "/explore", "Explore", "Routines", null, { selfCanonical: true });
+  assert.equal(en.alternates.canonical, "https://trytoone.com/en/explore");
+  assert.deepEqual(en.alternates.languages, {
+    en: "https://trytoone.com/en/explore",
+    "x-default": "https://trytoone.com/en/explore",
+  });
+  assert.equal(en.robots.index, true);
+  assert.equal(en.openGraph.locale, "en_US");
+});
+
 test("SEO uses English canonical, noindex translations, and one HowTo step per visible root step", () => {
   const detail = fixture("routine-detail");
   const metadata = exploreMetadata(

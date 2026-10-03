@@ -1,6 +1,7 @@
 import AuthPage from "@/components/AuthPage";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { openGraphLocale } from "@/i18n/open-graph";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: `https://trytoone.com/${locale}/signin` },
     robots: { index: false, follow: true },
     // og:url follows the canonical (R7) instead of inheriting the locale home.
-    openGraph: { type: "website", url: `https://trytoone.com/${locale}/signin`, siteName: "Toone" },
+    openGraph: { type: "website", url: `https://trytoone.com/${locale}/signin`, siteName: "Toone", ...openGraphLocale(locale, []) },
   };
 }
 

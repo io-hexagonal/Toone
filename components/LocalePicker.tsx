@@ -1,41 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useLocale } from "next-intl";
-import { usePathname } from "@/lib/navigation";
 import { locales } from "@/i18n/routing";
+import { usePageAlternates } from "@/lib/hooks/usePageAlternates";
 import {
   LOCALE_COPY,
   isLocale,
   localeHref,
-  readAlternates,
   rememberLocaleChoice,
 } from "@/lib/locale-preference";
 
 /**
- * Language picker for the header and footer. Each language links to this
- * page's hreflang alternate when it has one, else to that language's home,
- * and remembers the choice (localStorage + next-intl's NEXT_LOCALE cookie).
- * Full page loads on purpose: the server renders the new language.
+ * Language picker for the header. Each language links to this page's
+ * hreflang alternate when it has one, else to that language's home, and
+ * stores the explicit choice (the `toone_locale` cookie). Full page loads on
+ * purpose: the server renders the new language. The menu stays in the DOM
+ * while closed (`hidden`), so its links are in the server HTML too; the
+ * footer's LocaleLinks are the visible, always-rendered set.
  */
-type Props = {
-  variant: "header" | "footer";
-};
-
-export default function LocalePicker({ variant }: Props) {
+export default function LocalePicker() {
   const current = useLocale();
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [alternates, setAlternates] = useState<ReturnType<typeof readAlternates>>({});
+  const alternates = usePageAlternates();
   const root = useRef<HTMLDivElement>(null);
-
-  // Re-read after each navigation; metadata can arrive a beat after render.
-  useEffect(() => {
-    const read = () => setAlternates(readAlternates(document, window.location.origin));
-    read();
-    const timer = window.setTimeout(read, 600);
-    return () => window.clearTimeout(timer);
-  }, [pathname]);
+  const menuId = useId();
 
   useEffect(() => {
     if (!open) return;
@@ -57,7 +46,7 @@ export default function LocalePicker({ variant }: Props) {
   const copy = LOCALE_COPY[current];
 
   return (
-    <div className={`lp lp-${variant}`} ref={root}>
+    <div className="lp lp-header" ref={root}>
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -74,9 +63,9 @@ export default function LocalePicker({ variant }: Props) {
               position: absolute; z-index: 60; min-width: 180px; margin: 0; padding: 6px;
               list-style: none; background: #f0ede6; border-radius: 12px;
               box-shadow: 0 14px 40px rgba(0,0,0,0.32);
+              top: calc(100% + 10px); right: 0;
             }
-            .lp-header .lp-menu { top: calc(100% + 10px); right: 0; }
-            .lp-footer .lp-menu { bottom: calc(100% + 8px); left: 0; }
+            .lp-menu[hidden] { display: none; }
             /* Out-specifies host link styles (e.g. .hdr2 .links a:not(.dl)). */
             .lp ul.lp-menu a.lp-item {
               display: flex; justify-content: space-between; gap: 16px;
@@ -86,8 +75,6 @@ export default function LocalePicker({ variant }: Props) {
             .lp ul.lp-menu a.lp-item:hover, .lp ul.lp-menu a.lp-item:focus-visible { background: rgba(29,28,25,0.08); outline: none; opacity: 1; }
             .lp ul.lp-menu a.lp-item[aria-current="true"] { font-weight: 600; }
             .lp-menu .lp-code { color: rgba(29,28,25,0.45); font-size: 12px; text-transform: uppercase; }
-            .lp-footer .lp-btn { font-size: 13.5px; color: rgba(255,255,255,0.62); padding: 0; }
-            .lp-footer .lp-btn:hover { color: rgba(255,255,255,0.95); opacity: 1; }
             @media (max-width: 720px) {
               .lp-header .lp-name { display: none; }
             }
@@ -99,6 +86,7 @@ export default function LocalePicker({ variant }: Props) {
         className="lp-btn"
         aria-haspopup="true"
         aria-expanded={open}
+        aria-controls={menuId}
         aria-label={`${copy.label}: ${copy.name}`}
         onClick={() => setOpen((value) => !value)}
       >
@@ -106,27 +94,25 @@ export default function LocalePicker({ variant }: Props) {
           <circle cx="12" cy="12" r="9" />
           <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
         </svg>
-        <span className="lp-name">{variant === "header" ? current.toUpperCase() : copy.name}</span>
+        <span className="lp-name">{current.toUpperCase()}</span>
       </button>
-      {open && (
-        <ul className="lp-menu" role="list">
-          {locales.map((locale) => (
-            <li key={locale}>
-              <a
-                className="lp-item"
-                href={localeHref(locale, alternates)}
-                hrefLang={locale}
-                lang={locale}
-                aria-current={locale === current ? "true" : undefined}
-                onClick={() => rememberLocaleChoice(locale)}
-              >
-                <span>{LOCALE_COPY[locale].name}</span>
-                <span className="lp-code">{locale}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="lp-menu" id={menuId} role="list" hidden={!open}>
+        {locales.map((locale) => (
+          <li key={locale}>
+            <a
+              className="lp-item"
+              href={localeHref(locale, alternates)}
+              hrefLang={locale}
+              lang={locale}
+              aria-current={locale === current ? "true" : undefined}
+              onClick={() => rememberLocaleChoice(locale)}
+            >
+              <span>{LOCALE_COPY[locale].name}</span>
+              <span className="lp-code">{locale}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

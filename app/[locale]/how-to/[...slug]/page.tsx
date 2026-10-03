@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ProductShowcasePage from "@/components/showcases/ProductShowcasePage";
 import { getProductGuidePage, getProductGuideSlugs } from "@/lib/product-showcase";
 
 type Props = {
   params: Promise<{ locale: string; slug: string[] }>;
+  searchParams: PageSearchParams;
 };
 
 export const dynamicParams = false;
@@ -52,10 +54,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function HowToEntry({ params }: Props) {
+export default async function HowToEntry({ params, searchParams }: Props) {
   const { locale, slug: segments } = await params;
   const slug = segments.join("/");
-  if (locale !== "en") permanentRedirect(`/en/how-to/${slug}`);
+  if (locale !== "en") await redirectToEnglish(`/en/how-to/${slug}`, searchParams);
 
   const page = getProductGuidePage(slug);
   if (!page) notFound();

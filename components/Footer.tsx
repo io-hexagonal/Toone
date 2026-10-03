@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
-import LocalePicker from "@/components/LocalePicker";
+import LocaleLinks from "@/components/LocaleLinks";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -81,7 +81,7 @@ export default async function Footer({
               © {new Date().getFullYear()} Toone — {t("rights")}
             </div>
             <div className="ftr-lang">
-              <LocalePicker variant="footer" />
+              <LocaleLinks />
             </div>
           </div>
           <div className="ftr-cols">

@@ -7,6 +7,7 @@ import { getPublications } from "@/lib/content";
 import { getLatestPosts } from "@/lib/journal/api";
 import { PostCard } from "@/components/journal/JournalParts";
 import { locales, type Locale } from "@/i18n/routing";
+import { openGraphLocale } from "@/i18n/open-graph";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -44,8 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t("ogTitle"),
       description: t("ogDescription"),
       siteName: "Toone",
-      locale,
-      alternateLocale: locales.filter((alternateLocale) => alternateLocale !== locale),
+      ...openGraphLocale(locale),
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },
   };

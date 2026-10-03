@@ -5,6 +5,7 @@ import type {
   BundlePublicDetail,
   ListingProfilePublic,
 } from "./types";
+import { openGraphLocale } from "@/i18n/open-graph";
 
 export type CatalogQuery = {
   type: "all" | "routines" | "bundles";
@@ -183,9 +184,13 @@ export function exploreMetadata(
   title: string,
   description: string,
   cover: string | null,
-  options: { imageAlt?: string; indexable?: boolean } = {},
+  options: { imageAlt?: string; indexable?: boolean; selfCanonical?: boolean } = {},
 ) {
-  const canonical = `${SITE}/en${path}`;
+  // `selfCanonical` (the hub): a non-English copy is `noindex` and its own
+  // canonical. `noindex` plus a canonical pointing elsewhere are conflicting
+  // signals; this way the copy simply stays out of the index.
+  const self = options.selfCanonical === true && locale !== "en";
+  const canonical = self ? `${SITE}/${locale}${path}` : `${SITE}/en${path}`;
   // Scrapers need a fetchable URL for og:image; the inline data-URL cover the
   // pre-contract server sends would only bloat the head (~250 KB twice).
   const url = cover && /^https?:\/\//.test(cover) ? cover : null;
@@ -193,10 +198,11 @@ export function exploreMetadata(
   description = metaDescription(description);
   // TECH-021 (Ahrefs F10): a record kept out of Search must not be declared as
   // an hreflang target, so its English canonical drops the en/x-default pair.
-  // Translations still point at the English canonical when it is indexable.
+  // Translations still point at the English canonical when it is indexable,
+  // except a self-canonical copy, which as a `noindex` page declares no set.
   // The empty map stops the root layout's locale-home set from merging in.
   const languages: Record<string, string> =
-    options.indexable === false ? {} : { en: canonical, "x-default": canonical };
+    options.indexable === false || self ? {} : { en: canonical, "x-default": canonical };
   return {
     title,
     description,
@@ -208,6 +214,7 @@ export function exploreMetadata(
       title,
       description,
       siteName: "Toone",
+      ...openGraphLocale(locale, []),
       images: image ? [image] : [`${SITE}/assets/og/toone-og.png`],
     },
     twitter: {

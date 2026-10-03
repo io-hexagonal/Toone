@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
+import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
 import {
@@ -8,7 +8,7 @@ import {
   TERMS_UPDATED_DATE,
 } from "@/lib/legal/terms";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function TermsPage({ params }: Props) {
+export default async function TermsPage({ params, searchParams }: Props) {
   const { locale } = await params;
-  if (locale !== "en") permanentRedirect("/en/terms");
+  if (locale !== "en") await redirectToEnglish("/en/terms", searchParams);
   setRequestLocale(locale);
 
   return (

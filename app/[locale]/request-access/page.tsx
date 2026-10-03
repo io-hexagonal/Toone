@@ -1,6 +1,7 @@
 import WaitlistPage from "@/components/WaitlistPage";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { openGraphLocale } from "@/i18n/open-graph";
 
 const TITLE = "Request early access to Toone | AI routines on macOS";
 const DESCRIPTION =
@@ -42,6 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: "website",
         url: `https://trytoone.com/${locale}/request-access`,
         siteName: "Toone",
+        ...openGraphLocale(locale, []),
         images: ["https://trytoone.com/assets/og/toone-og.png"],
       },
     };

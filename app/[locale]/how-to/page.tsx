@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
+import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ProductShowcasePage from "@/components/showcases/ProductShowcasePage";
 import { getProductGuidePage } from "@/lib/product-showcase";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: PageSearchParams;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -43,9 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function HowToOverview({ params }: Props) {
+export default async function HowToOverview({ params, searchParams }: Props) {
   const { locale } = await params;
-  if (locale !== "en") permanentRedirect("/en/how-to");
+  if (locale !== "en") await redirectToEnglish("/en/how-to", searchParams);
 
   setRequestLocale(locale);
   const page = getProductGuidePage("");

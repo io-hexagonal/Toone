@@ -1,11 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
+import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: PageSearchParams;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -37,9 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PrivacyPage({ params }: Props) {
+export default async function PrivacyPage({ params, searchParams }: Props) {
   const { locale } = await params;
-  if (locale !== "en") permanentRedirect("/en/privacy");
+  if (locale !== "en") await redirectToEnglish("/en/privacy", searchParams);
   setRequestLocale(locale);
 
   return (
@@ -102,7 +103,7 @@ export default async function PrivacyPage({ params }: Props) {
             letterSpacing: "0.02em",
           }}
         >
-          Updated: September 26, 2026
+          Updated: October 3, 2026
         </p>
 
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
@@ -214,9 +215,13 @@ export default async function PrivacyPage({ params }: Props) {
           Cookies &amp; Browser Storage
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          The site uses a session cookie named NEXT_LOCALE to remember your
-          language. It stores your analytics choice in your browser for up to six
-          months. Sign-in stores an account session in your browser for authenticated
+          Choosing a language in the language menu or the language suggestion
+          stores a cookie named toone_locale for up to 12 months, so trytoone.com
+          opens in that language next time. Dismissing the language suggestion
+          stores toone.locale.dismissed in your browser&apos;s local storage,
+          which is not sent to Toone. The site stores your analytics choice in
+          your browser for up to six months.
+          Sign-in stores an account session in your browser for authenticated
           features, until you sign out or the session expires. If you decline
           analytics, its script is not loaded; allowing it adds no analytics cookie.
         </p>

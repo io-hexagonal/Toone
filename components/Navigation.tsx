@@ -87,7 +87,7 @@ export default async function Navigation({
         </Link>
         <Link href="/request-access" className="minimal-link">{t("download")}</Link>
         <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
-          <LocalePicker variant="header" />
+          <LocalePicker />
         </span>
 
       </nav>

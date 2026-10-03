@@ -1,13 +1,19 @@
-import { locales, type Locale } from "@/i18n/routing";
+import { LOCALE_CHOICE_COOKIE, locales, type Locale } from "@/i18n/routing";
 
 /**
- * Language choice on the site, without touching the root redirect.
+ * Language choice on the site, without touching the root redirect's meaning
+ * for crawlers.
  *
- * `/` stays a permanent 308 to `/en` (proxy.ts, R6), so the browser language
- * is honoured on the client instead: the picker lets anyone switch, and a
- * dismissible suggestion offers the visitor's language when the page exists
- * in it. Both only link to the page's declared hreflang alternates, so they
- * never send anyone to a page that does not exist in that language.
+ * `/` stays a permanent 308 to `/en` for everyone without an explicit choice
+ * (proxy.ts, R6). The browser language is honoured on the client instead: the
+ * language links let anyone switch, and a dismissible suggestion offers the
+ * visitor's language when the page exists in it. Both only link to the page's
+ * declared hreflang alternates, so they never send anyone to a page that does
+ * not exist in that language, and nothing here ever redirects.
+ *
+ * Only the language links and the suggestion's "View in …" button store a
+ * choice (the `toone_locale` cookie, which proxy.ts reads on `/` and on
+ * unprefixed paths). "No thanks" stores a dismissal, never a language.
  */
 
 /** Each language named in itself, plus the suggestion copy in that language. */
@@ -25,10 +31,13 @@ export const LOCALE_COPY: Record<
   ru: { name: "Русский", label: "Язык", available: "Этот сайт доступен на русском языке.", cta: "Открыть на русском", dismiss: "Нет, спасибо" },
 };
 
-/** The visitor's explicit choice (picker or suggestion), per browser. */
-export const LOCALE_CHOICE_KEY = "toone.locale.choice";
-/** next-intl's locale cookie, so unprefixed paths follow the choice too. */
-const LOCALE_COOKIE = "NEXT_LOCALE";
+/** "No thanks" on the suggestion, per browser. Local storage only, never sent. */
+export const LOCALE_DISMISSED_KEY = "toone.locale.dismissed";
+/** Stored by the previous version, which also counted "No thanks" as a choice. */
+const LEGACY_CHOICE_KEY = "toone.locale.choice";
+/** next-intl's cookie, written by the previous picker for a year. Now unread. */
+const LEGACY_COOKIE = "NEXT_LOCALE";
+const CHOICE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function isLocale(value: string | null | undefined): value is Locale {
   return value != null && (locales as readonly string[]).includes(value);
@@ -71,50 +80,92 @@ export function localeHref(locale: Locale, alternates: Partial<Record<Locale, st
   return alternates[locale] ?? `/${locale}`;
 }
 
+/** The explicit choice in a `Cookie` header string (`document.cookie`). */
+export function localeChoiceFromCookies(cookies: string): Locale | null {
+  for (const pair of cookies.split(";")) {
+    const [name, ...value] = pair.trim().split("=");
+    if (name === LOCALE_CHOICE_COOKIE) {
+      const locale = value.join("=");
+      return isLocale(locale) ? locale : null;
+    }
+  }
+  return null;
+}
+
 export function savedLocaleChoice(): Locale | null {
   try {
-    const value = window.localStorage.getItem(LOCALE_CHOICE_KEY);
-    return isLocale(value) ? value : null;
+    return localeChoiceFromCookies(document.cookie);
   } catch {
     return null;
   }
 }
 
-/** Remembers an explicit choice and aligns next-intl's cookie with it. */
-export function rememberLocaleChoice(locale: Locale): void {
+export function suggestionDismissed(): boolean {
   try {
-    window.localStorage.setItem(LOCALE_CHOICE_KEY, locale);
+    return window.localStorage.getItem(LOCALE_DISMISSED_KEY) != null;
   } catch {
-    // Private mode: the cookie below still carries the choice.
+    return false;
   }
-  document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=31536000; samesite=lax`;
+}
+
+/** Drops what the previous version stored, so none of it outlives this one. */
+export function forgetLegacyChoice(): void {
+  try {
+    window.localStorage.removeItem(LEGACY_CHOICE_KEY);
+  } catch {
+    // Storage blocked: nothing was stored there either.
+  }
+  if (document.cookie.split(";").some((pair) => pair.trim().startsWith(`${LEGACY_COOKIE}=`))) {
+    document.cookie = `${LEGACY_COOKIE}=; path=/; max-age=0; samesite=lax`;
+  }
 }
 
 /**
- * What to do on a page in `current`, given the visitor's browser languages,
- * their saved choice and the page's alternates:
- * - `redirect`: they chose another language before and this page exists in
- *   it, and they arrived from outside the site (never fight in-site clicks);
- * - `suggest`: no choice yet, and their browser language differs and exists;
- * - `none` otherwise.
+ * Remembers an explicit choice (a language link or "View in …") for a year,
+ * so `/` and unprefixed links open in it. A fresh choice also lifts an
+ * earlier "No thanks": the suggestion then follows the language just chosen.
+ */
+export function rememberLocaleChoice(locale: Locale): void {
+  const secure = window.location.protocol === "https:" ? "; secure" : "";
+  document.cookie = `${LOCALE_CHOICE_COOKIE}=${locale}; path=/; max-age=${CHOICE_MAX_AGE}; samesite=lax${secure}`;
+  try {
+    window.localStorage.removeItem(LOCALE_DISMISSED_KEY);
+  } catch {
+    // Private mode: the cookie above still carries the choice.
+  }
+  forgetLegacyChoice();
+}
+
+/** "No thanks": stop suggesting on this browser. Stores no language. */
+export function dismissLocaleSuggestion(): void {
+  try {
+    window.localStorage.setItem(LOCALE_DISMISSED_KEY, "1");
+  } catch {
+    // Private mode: the offer closes for this page only.
+  }
+  forgetLegacyChoice();
+}
+
+/**
+ * Whether to offer another language on a page in `current`:
+ * - never once the visitor dismissed the offer on this browser;
+ * - otherwise the target is their explicit choice, or, without one, the
+ *   first browser language the site supports;
+ * - offered only when it differs from `current` and this page exists in it.
+ * Never a redirect: the language in the URL is the one served.
  */
 export function localeAction(input: {
   current: Locale;
   languages: readonly string[];
   saved: Locale | null;
+  dismissed: boolean;
   alternates: Partial<Record<Locale, string>>;
-  enteredFromOutside: boolean;
-}): { kind: "none" } | { kind: "redirect" | "suggest"; locale: Locale; href: string } {
-  const { current, languages, saved, alternates, enteredFromOutside } = input;
-  if (saved) {
-    if (saved !== current && enteredFromOutside && alternates[saved]) {
-      return { kind: "redirect", locale: saved, href: alternates[saved] };
-    }
-    return { kind: "none" };
-  }
-  const preferred = preferredSupportedLocale(languages);
-  if (preferred && preferred !== current && alternates[preferred]) {
-    return { kind: "suggest", locale: preferred, href: alternates[preferred] };
+}): { kind: "none" } | { kind: "suggest"; locale: Locale; href: string } {
+  const { current, languages, saved, dismissed, alternates } = input;
+  if (dismissed) return { kind: "none" };
+  const target = saved ?? preferredSupportedLocale(languages);
+  if (target && target !== current && alternates[target]) {
+    return { kind: "suggest", locale: target, href: alternates[target] };
   }
   return { kind: "none" };
 }

@@ -12,6 +12,17 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Bing reads a page's language from Content-Language. Only locale-prefixed
+  // paths match (`:path*` includes the bare `/en`); `/api`, `/_next`,
+  // `/assets` and the root files never start with a locale.
+  async headers() {
+    return [
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:path*",
+        headers: [{ key: "Content-Language", value: ":locale" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // F03: `www` URLs whose apex target is itself a redirect (proxy.ts sends

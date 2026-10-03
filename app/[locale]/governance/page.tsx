@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import type { Article, BreadcrumbList, WithContext } from "schema-dts";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ArticlePage from "@/components/ArticlePage";
 import { getPublication } from "@/lib/content";
 import { gitLastCommitDate } from "@/lib/source-date";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -35,9 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function GovernancePage({ params }: Props) {
+export default async function GovernancePage({ params, searchParams }: Props) {
   const { locale } = await params;
-  if (locale !== "en") permanentRedirect("/en/governance");
+  if (locale !== "en") await redirectToEnglish("/en/governance", searchParams);
   setRequestLocale(locale);
   const publication = getPublication("ai-agent-governance");
   if (!publication) notFound();

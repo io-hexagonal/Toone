@@ -49,7 +49,7 @@ const ENGLISH_ONLY_ROUTES = [
   { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
   // `/explore` is the public routine and bundle directory. Its seven non-English
   // locales render translated chrome around English catalog content and are
-  // `noindex` with an English canonical, so only `/en/explore` is listed. The
+  // `noindex` (self-canonical, no hreflang), so only `/en/explore` is listed. The
   // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
   // revalidates at runtime; this file stays `force-static` so the git-derived
   // `lastmod` values above are computed on the build host, where git exists.

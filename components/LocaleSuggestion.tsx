@@ -6,19 +6,25 @@ import { usePathname } from "@/lib/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
   LOCALE_COPY,
+  dismissLocaleSuggestion,
+  forgetLegacyChoice,
   isLocale,
   localeAction,
   readAlternates,
   rememberLocaleChoice,
   savedLocaleChoice,
+  suggestionDismissed,
 } from "@/lib/locale-preference";
 
 /**
- * Offers the visitor's browser language when this page exists in it, in that
- * language ("Voir en français"), and sends a returning visitor who chose a
- * language back to it when they arrive from outside the site. Client-only, so
- * crawlers and the root's permanent redirect are untouched. Sits above the
- * privacy panel while that panel is open.
+ * Offers the visitor's chosen language, or without a choice their browser
+ * language, when this page exists in it, in that language ("Voir en
+ * français"). It only ever offers: the URL's language is the one served, so a
+ * search result in Portuguese opens in Portuguese whatever was chosen before.
+ * Rendered after hydration and for every user agent alike; `data-nosnippet`
+ * keeps the offer out of search snippets (Google honours it on `section`,
+ * `div` and `span`, not `aside`). Sits above the privacy panel while that
+ * panel is open.
  */
 export default function LocaleSuggestion() {
   const current = useLocale();
@@ -28,25 +34,16 @@ export default function LocaleSuggestion() {
 
   useEffect(() => {
     if (!isLocale(current)) return;
+    forgetLegacyChoice();
     const decide = () => {
-      let enteredFromOutside = true;
-      try {
-        enteredFromOutside = !document.referrer || new URL(document.referrer).origin !== window.location.origin;
-      } catch {
-        // Unparseable referrer: treat as outside.
-      }
       const action = localeAction({
         current,
         languages: navigator.languages?.length ? navigator.languages : [navigator.language],
         saved: savedLocaleChoice(),
+        dismissed: suggestionDismissed(),
         alternates: readAlternates(document, window.location.origin),
-        enteredFromOutside,
       });
-      if (action.kind === "redirect") {
-        window.location.replace(action.href);
-      } else {
-        setOffer(action.kind === "suggest" ? { locale: action.locale, href: action.href } : null);
-      }
+      setOffer(action.kind === "suggest" ? { locale: action.locale, href: action.href } : null);
     };
     // Metadata (hreflang) can stream in just after hydration.
     const timer = window.setTimeout(decide, 400);
@@ -74,11 +71,12 @@ export default function LocaleSuggestion() {
   const copy = LOCALE_COPY[offer.locale];
 
   return (
-    <aside
+    <section
       className="lsg"
       lang={offer.locale}
       aria-label={copy.label}
       data-locale-suggestion={offer.locale}
+      data-nosnippet=""
       style={{ bottom: `calc(max(16px, env(safe-area-inset-bottom)) + ${lift}px)` }}
     >
       <style
@@ -116,8 +114,8 @@ export default function LocaleSuggestion() {
         <button
           type="button"
           onClick={() => {
-            // Staying is a choice too: never ask again on this browser.
-            rememberLocaleChoice(current);
+            // Not a language choice: stop asking on this browser, nothing more.
+            dismissLocaleSuggestion();
             setOffer(null);
           }}
         >
@@ -127,6 +125,6 @@ export default function LocaleSuggestion() {
           {copy.cta}
         </a>
       </div>
-    </aside>
+    </section>
   );
 }
