@@ -188,17 +188,21 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           to you, protect the service, and administer early access.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          If you choose Sign in with Apple on the website, Apple returns an
-          identity token: a statement signed by Apple that contains a stable Apple
-          account identifier and, when available, your email address. That address
-          may be an Apple private relay address if you chose to hide your email.
-          The first time you authorize Toone, Apple may also provide your name. The
-          website sends the identity token, that name, and any invitation code you
-          are redeeming to the Toone account service, which checks Apple&apos;s
-          signature and uses the identifier, email address, and name to find or
-          create your Toone account. The website does not send Apple&apos;s
-          authorization code to Toone, and Toone does not store Apple access or
-          refresh tokens. Apple handles your authentication under its own{" "}
+          If you choose Sign in with Apple on the website or in Toone (Mac App
+          Store), Apple returns an identity token: a statement signed by Apple
+          that contains a stable Apple account identifier and, when available, your
+          email address. That address may be an Apple private relay address if you
+          chose to hide your email. The first time you authorize Toone, Apple may
+          also provide your name. The website or the app sends the identity token
+          and that name to the Toone account service, together with any invitation
+          code you are redeeming on the website. The account service checks
+          Apple&apos;s signature and uses the identifier, email address, and name
+          to find or create your Toone account. Neither the website nor the app
+          sends Apple&apos;s authorization code to Toone, and Toone does not store
+          Apple access or refresh tokens. The Mac app also keeps Apple&apos;s
+          account identifier with your session on your Mac, so it can sign you out
+          if you stop using Sign in with Apple with Toone. Apple handles your
+          authentication under its own{" "}
           <a
             href="https://www.apple.com/legal/privacy/"
             target="_blank"
@@ -287,12 +291,13 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Conversations, files, and project data are stored on your device. Toone
           does not upload that local working context to its account, website, or
           analytics services on its own. It leaves your Mac when you use a feature
-          that needs it: requests to your AI provider, the cloud relay, Live Share,
-          and sharing a routine on Explore, each described below. If you use speech
-          input, macOS speech recognition turns your voice into text; depending on
-          your language and system settings, Apple may process that audio on its
-          servers. Account data, waitlist requests, contact requests, and Toone Pro
-          purchases are handled separately as described in this policy.
+          that needs it: requests to your AI provider, the cloud relay, a Business,
+          Live Share, and sharing a routine on Explore, each described below. If
+          you use speech input, macOS speech recognition turns your voice into
+          text; depending on your language and system settings, Apple may process
+          that audio on its servers. Account data, waitlist requests, contact
+          requests, and Toone Pro purchases are handled separately as described in
+          this policy.
         </p>
 
         <h2
@@ -381,14 +386,18 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
             marginBottom: 12,
           }}
         >
-          Live Share and Explore
+          Business, Live Share, and Explore
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          These features are available in Toone (Direct). When you use Live Share,
-          Toone&apos;s services receive the information needed to run the share,
-          including the email address of each person you invite, and pass the live
-          session between your Mac and the people you approve. Those people can see
-          the workspace content you make available to them.
+          These features are available in Toone (Direct). If you set up a
+          Business, Toone stores its name, the email address and role of each
+          person you invite, and the names of the organizations you add to it, and
+          emails each invited person an invitation that shows the Business name
+          and your email address. When you use Live Share, Toone&apos;s services
+          receive the information needed to run the share, including the email
+          address of each person you invite, and pass the live session between your
+          Mac and the people you approve. Those people can see the workspace
+          content you make available to them.
         </p>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           When you share a routine on Explore, the app sends Toone a public copy of
