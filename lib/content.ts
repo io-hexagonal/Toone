@@ -49,6 +49,7 @@ export const RESERVED_ROOT_EDITORIAL_SLUGS = [
   "showcases",
   "signin",
   "signup",
+  "terms",
 ] as const;
 
 const reservedRootEditorialSlugs = new Set<string>(RESERVED_ROOT_EDITORIAL_SLUGS);

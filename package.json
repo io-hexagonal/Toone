@@ -14,11 +14,12 @@
     "content:check": "npm run content:validate",
     "prebuild": "npm run content:validate",
     "typecheck": "tsc --noEmit",
-    "test": "npm run content:check && npm run test:explore && npm run test:journal && npm run test:routing && npm run typecheck",
+    "test": "npm run content:check && npm run test:explore && npm run test:journal && npm run test:routing && npm run test:legal && npm run typecheck",
     "explore:mock": "node scripts/explore-mock-api.mjs",
     "test:explore": "node --import tsx --test tests/explore/*.test.ts tests/explore/*.test.tsx",
     "test:journal": "node --import tsx --test tests/journal/*.test.ts",
     "test:routing": "node --import tsx --test tests/routing/*.test.ts",
+    "test:legal": "node --import tsx --test tests/legal/*.test.ts",
     "test:explore:http": "node --test tests/explore/http.test.mjs && node --test tests/explore/outage.test.mjs"
   },
   "dependencies": {

@@ -116,6 +116,7 @@ export default async function Footer({
               <Link href="/contact">{t("contact")}</Link>
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
+              <Link href="/terms">{t("terms")}</Link>
 
             </div>
           </div>

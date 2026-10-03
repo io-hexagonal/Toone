@@ -36,6 +36,7 @@ const CANONICAL_ENGLISH_LOCALIZED_ROUTES = [
 
 const ENGLISH_ONLY_ROUTES = [
   { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
+  { path: "/terms", source: "app/[locale]/terms/page.tsx" },
   { path: "/about", source: "app/[locale]/about/page.tsx" },
   { path: "/contact", source: "app/[locale]/contact/page.tsx" },
   { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
