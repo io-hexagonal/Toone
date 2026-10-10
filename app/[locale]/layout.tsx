@@ -68,6 +68,15 @@ function isSupportedLocale(locale: string): locale is (typeof locales)[number] {
   return locales.includes(locale as (typeof locales)[number]);
 }
 
+// BRAND-002: only verified, live profiles Toone controls, shared by the
+// Organization and SoftwareApplication nodes. The similarly named X account is
+// unrelated to Toone and must never be claimed here. Wikidata Q141510503 was
+// removed after Wikidata deleted the item on 2026-09-21.
+const sameAs = [
+  "https://github.com/io-hexagonal/Toone",
+  "https://www.producthunt.com/products/toone",
+];
+
 const siteSchema: Graph = {
   "@context": "https://schema.org",
   "@graph": [
@@ -87,13 +96,7 @@ const siteSchema: Graph = {
       },
       description:
         "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
-      // BRAND-002: only profiles Toone controls. The similarly named X account
-      // is unrelated to Toone and must never be claimed here.
-      sameAs: [
-        "https://github.com/io-hexagonal/Toone",
-        "https://www.producthunt.com/products/toone",
-        "https://www.wikidata.org/wiki/Q141510503",
-      ],
+      sameAs,
       parentOrganization: {
         "@type": "Organization",
         "@id": "https://hexagonal.io/#organization",
@@ -125,11 +128,7 @@ const siteSchema: Graph = {
       description:
         "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
       publisher: { "@id": "https://trytoone.com/#organization" },
-      sameAs: [
-        "https://github.com/io-hexagonal/Toone",
-        "https://www.producthunt.com/products/toone",
-        "https://www.wikidata.org/wiki/Q141510503",
-      ],
+      sameAs,
     },
   ],
 };
