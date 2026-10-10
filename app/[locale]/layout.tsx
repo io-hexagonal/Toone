@@ -75,6 +75,8 @@ function isSupportedLocale(locale: string): locale is (typeof locales)[number] {
 const sameAs = [
   "https://github.com/io-hexagonal/Toone",
   "https://www.producthunt.com/products/toone",
+  // PLACEHOLDER: replace with the live Mac App Store URL the owner confirms.
+  "https://apps.apple.com/app/toone/idTBD",
 ];
 
 const siteSchema: Graph = {
