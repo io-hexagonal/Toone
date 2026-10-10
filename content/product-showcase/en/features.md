@@ -14,29 +14,11 @@ Summon an agent from anywhere and begin without navigating back through the full
 
 [Explore Agent Spotlight](/how-to/features/agent-spotlight).
 
-### Workspace windows
+### Your workspace
 
-Choose how Toone’s panels occupy the desktop, fit other application windows around them, and select the visual style that works for you.
+Size Toone's panels and fit other windows around them, [switch between open projects](/how-to/features/workspace-windows#project-switcher), [keep project files beside your agents](/how-to/features/workspace-windows#project-explorer), and [turn on Zen mode](/how-to/features/workspace-windows#zen-mode).
 
-[Explore workspace windows](/how-to/features/workspace-windows).
-
-### Zen mode
-
-Place ambient video behind your Toone panels when you want a calmer, more focused working environment.
-
-[Explore Zen mode](/how-to/features/zen-mode).
-
-### Project switcher
-
-Keep several projects open, switch between them from the numbered strip, and see when an inactive project has new activity.
-
-[Explore the Project switcher](/how-to/features/project-switcher).
-
-### Project Explorer
-
-Browse the active project’s files from the right-side panel and change the project folder without leaving the workspace.
-
-[Explore Project Explorer](/how-to/features/project-explorer).
+[Set up your workspace](/how-to/features/workspace-windows).
 
 ## Workflows
 

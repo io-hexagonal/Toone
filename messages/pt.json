@@ -279,7 +279,7 @@
         "description": "Abra o Agent Spotlight sobre qualquer app para chegar ao agente, projeto ou thread certo sem perder o foco."
       },
       "workspaceWindows": {
-        "title": "Janelas da área de trabalho",
+        "title": "Configurar a área de trabalho",
         "description": "Redimensione o Toone de um companheiro compacto para uma área de trabalho completa e ajuste as outras janelas à sua volta."
       },
       "projectSwitcher": {

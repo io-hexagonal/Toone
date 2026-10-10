@@ -17,8 +17,8 @@ const PRODUCT_GUIDES = [
   ["features", "/en/how-to/features"],
   ["agentSpotlight", "/en/how-to/features/agent-spotlight"],
   ["workspaceWindows", "/en/how-to/features/workspace-windows"],
-  ["projectSwitcher", "/en/how-to/features/project-switcher"],
-  ["zenMode", "/en/how-to/features/zen-mode"],
+  ["projectSwitcher", "/en/how-to/features/workspace-windows#project-switcher"],
+  ["zenMode", "/en/how-to/features/workspace-windows#zen-mode"],
 ] as const;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

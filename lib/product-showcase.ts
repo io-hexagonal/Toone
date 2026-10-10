@@ -107,26 +107,8 @@ export const PRODUCT_GUIDE_NAV: ProductGuideNavSection[] = [
       },
       {
         slug: "features/workspace-windows",
-        label: "Workspace windows",
+        label: "Your workspace",
         contentFile: "features/workspace-windows.md",
-        nested: true,
-      },
-      {
-        slug: "features/zen-mode",
-        label: "Zen mode",
-        contentFile: "features/zen-mode.md",
-        nested: true,
-      },
-      {
-        slug: "features/project-switcher",
-        label: "Project switcher",
-        contentFile: "features/project-switcher.md",
-        nested: true,
-      },
-      {
-        slug: "features/project-explorer",
-        label: "Project Explorer",
-        contentFile: "features/project-explorer.md",
         nested: true,
       },
     ],

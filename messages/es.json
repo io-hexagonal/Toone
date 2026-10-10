@@ -279,7 +279,7 @@
         "description": "Abre Agent Spotlight sobre cualquier app para llegar al agente, proyecto o hilo adecuado sin perder la concentración."
       },
       "workspaceWindows": {
-        "title": "Ventanas del espacio de trabajo",
+        "title": "Configura tu espacio de trabajo",
         "description": "Cambia el tamaño de Toone de un acompañante compacto a un espacio de trabajo completo y ajusta tus otras ventanas a su alrededor."
       },
       "projectSwitcher": {

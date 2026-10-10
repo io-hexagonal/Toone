@@ -22,4 +22,4 @@ Use the project and agent identity shown in Spotlight to confirm where the conve
 
 Agent Spotlight is useful for quick questions, continuing an active thread, or handing the next piece of work to a specialized agent while another application remains in focus.
 
-Next: [Workspace windows](/how-to/features/workspace-windows).
+Next: [Set up your workspace](/how-to/features/workspace-windows).
