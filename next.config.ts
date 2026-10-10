@@ -80,6 +80,14 @@ const nextConfig: NextConfig = {
         destination: "https://trytoone.com/en/how-to",
         permanent: true,
       },
+      // Folded workspace pages (see below): one hop from `www` too.
+      {
+        source:
+          "/:locale(en|pt|es|fr|de|it|nl|ru)?/how-to/features/:slug(zen-mode|project-switcher|project-explorer)",
+        has: [{ type: "host", value: "www.trytoone.com" }],
+        destination: "https://trytoone.com/en/how-to/features/workspace-windows",
+        permanent: true,
+      },
       {
         source: "/how-to/:rest+",
         has: [{ type: "host", value: "www.trytoone.com" }],
@@ -97,6 +105,20 @@ const nextConfig: NextConfig = {
       {
         source: "/:locale(en|pt|es|fr|de|it|nl|ru)/how-to/features/workflow-library",
         destination: "/en/how-to/features/explore",
+        permanent: true,
+      },
+      // Zen mode, Project switcher and Project Explorer were folded into the
+      // workspace page (strategy 2026-10-10). How-to is English-only, so every
+      // locale prefix and the bare path land on /en.
+      {
+        source:
+          "/:locale(en|pt|es|fr|de|it|nl|ru)/how-to/features/:slug(zen-mode|project-switcher|project-explorer)",
+        destination: "/en/how-to/features/workspace-windows",
+        permanent: true,
+      },
+      {
+        source: "/how-to/features/:slug(zen-mode|project-switcher|project-explorer)",
+        destination: "/en/how-to/features/workspace-windows",
         permanent: true,
       },
       // BC-09 (owner decision 2026-09-28): Showcases is retired and Explore
