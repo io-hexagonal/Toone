@@ -30,6 +30,14 @@ export default function ResourcesSection() {
           background: rgba(255,255,255,.46); transition: transform .25s,border-color .25s;
         }
         .resource-preview-card:hover { transform: translateY(-4px); border-color: rgba(29,28,25,.3); }
+        .resource-preview-more {
+          margin-top: 22px; color: rgba(29,28,25,.64); font-size: 13px; line-height: 1.6;
+        }
+        .resource-preview-more a {
+          color: inherit; text-decoration: none;
+          border-bottom: 1px solid rgba(29,28,25,.24); padding-bottom: 1px;
+        }
+        .resource-preview-more a:hover { color: #1d1c19; border-color: #1d1c19; }
         .resource-preview-type {
           color: rgba(29,28,25,.48); font-size: 10px; font-weight: 750;
           letter-spacing: .15em; text-transform: uppercase;
@@ -72,6 +80,15 @@ export default function ResourcesSection() {
           </a>
         ))}
       </div>
+      <p className="resource-preview-more">
+        New to routines? Read{" "}
+        <a href="/en/ai-agent-routines">what an AI agent routine is</a>, or start from one someone
+        already built in{" "}
+        <a href="/en/journal/introducing-explore-reviewed-ai-routines">
+          Explore, a library of reviewed routines you can add to Toone
+        </a>
+        .
+      </p>
     </section>
   );
 }
