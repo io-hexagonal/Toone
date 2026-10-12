@@ -4,7 +4,7 @@ import SiteHeader from "@/components/SiteHeader";
 import HeroAuth from "@/components/HeroAuth";
 import StatementSection from "@/components/StatementSection";
 import FaqSection from "@/components/FaqSection";
-import PartnerBand from "@/components/PartnerBand";
+import SupportBand from "@/components/SupportBand";
 import Footer from "@/components/Footer";
 import ResourcesSection from "@/components/ResourcesSection";
 import LandingAudienceBar, {
@@ -116,33 +116,25 @@ export async function TooneLandingPage({
               background: radial-gradient(ellipse at center,
                 rgba(29,28,25,0.045) 0%, rgba(29,28,25,0.015) 42%, transparent 70%);
             }
-            /* --- partner band (static: real partners, no loop) --- */
-            .pb-wrap { position: relative; text-align: center; padding: 66px 0 4px; }
-            .pb-label {
+            /* --- support band (programmes Toone belongs to) --- */
+            .sb-wrap { position: relative; text-align: center; padding: 66px 0 4px; }
+            .sb-label {
               color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
-              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 36px;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 30px;
             }
-            .pb-row {
-              display: flex; align-items: center; justify-content: center;
-              gap: 54px; flex-wrap: wrap;
-            }
-            .pb-item {
-              display: flex; align-items: center; justify-content: center; gap: 13px;
-              height: 34px; text-decoration: none;
+            .sb-item {
+              display: inline-flex; align-items: center; gap: 12px;
+              height: 36px; color: #1d1c19; text-decoration: none;
+              font-family: var(--font-claude-serif), Georgia, serif;
+              font-size: 25px; font-weight: 400; letter-spacing: -0.01em;
               opacity: 0.62; transition: opacity 0.25s;
-              /* the partner marks are white-on-transparent assets; on cream
-                 they render as ink silhouettes */
-              filter: brightness(0);
             }
-            a.pb-item:hover { opacity: 1; }
-            .pb-sep { width: 1px; height: 26px; background: rgba(29,28,25,0.16); }
-            .pb-more {
-              color: rgba(29,28,25,0.45); font-size: 13.5px; font-style: italic;
-            }
+            .sb-item:hover { opacity: 1; }
+            .sb-mark { width: 26px; height: 26px; flex-shrink: 0; display: block; }
             @media (max-width: 640px) {
-              .pb-row { gap: 26px; }
-              .pb-sep { display: none; }
-              .pb-label { font-size: 10px; letter-spacing: 0.14em; }
+              .sb-label { font-size: 10px; letter-spacing: 0.14em; }
+              .sb-item { font-size: 22px; gap: 10px; }
+              .sb-mark { width: 23px; height: 23px; }
             }
 
             .section { position: relative; max-width: 1000px; margin: 0 auto; padding-top: 104px; }
@@ -307,7 +299,7 @@ export async function TooneLandingPage({
         <StatementSection audience={audience} />
 
         <div className="sections">
-          {audience === "business" && <PartnerBand />}
+          <SupportBand />
 
           <section className="section ai-native-section" id="how">
             <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>

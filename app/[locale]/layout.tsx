@@ -5,7 +5,7 @@ import { openGraphLocale } from "@/i18n/open-graph";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
-import { Playfair_Display, Rubik } from "next/font/google";
+import { Newsreader, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
@@ -42,15 +42,14 @@ const pixel = localFont({
 });
 
 /**
- * Truleaf's brand display face. Loaded only so their wordmark renders in their
- * own typeface wherever we show it (partner marquee, showcases page) — see
- * components/TruleafWordmark.tsx. next/font self-hosts it, so this adds no
- * third-party request at runtime.
+ * Stand-in for Anthropic Serif in the "Claude Startups" lockup
+ * (components/SupportBand.tsx). Anthropic's own faces are proprietary
+ * (© Anthropic PBC, no licence to embed), so this is the closest SIL OFL serif.
  */
-const playfair = Playfair_Display({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-playfair",
+  weight: ["400"],
+  variable: "--font-claude-serif",
   display: "swap",
   preload: false,
 });
@@ -244,7 +243,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   };
 
   return (
-    <html lang={locale} className={`${playfair.variable} ${pixel.variable} ${rubik.variable}`}>
+    <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable}`}>
       <head>
         {/* hreflang comes from the metadata API (alternates.languages),
             which subpages override with their own URLs — a hardcoded block
