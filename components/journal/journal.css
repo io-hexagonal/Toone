@@ -1,21 +1,25 @@
 /* Journal: dated releases, routine spotlights and launches (contract §10).
    Same visual language as /resources and the guides: dark hero, cream body
-   (#f0ede6), ink #1d1c19, periwinkle eyebrows, 1080px measure. Every rule is
-   scoped under `.jr-` so the stylesheet can load next to Explore's. */
+   (#f0ede6), ink #1d1c19, periwinkle eyebrows. Every rule is scoped under
+   `.jr-` so the stylesheet can load next to Explore's.
+   Side gutters match the flat site header (10vw per side, 24px floor; 20px
+   on phones, like .hdr2) so the Journal lines up with the wordmark the way
+   /how-to and Explore do. Set them through --jr-gutter only. */
 
 .jr-shell {
   min-height: 100vh;
   background: #f0ede6;
   color: #1d1c19;
   overflow-wrap: anywhere;
+  --jr-gutter: max(24px, 10vw);
 }
 .jr-shell .hdr2 { overflow-wrap: normal; }
-.jr-width { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.jr-width { padding-inline: var(--jr-gutter); }
 
 /* ---------- hero ---------- */
 .jr-hero {
   position: relative; overflow: hidden; background: #141413; color: #fff;
-  padding: 146px 24px 72px;
+  padding: 146px var(--jr-gutter) 72px;
 }
 .jr-hero::before {
   content: ''; position: absolute; inset: auto auto -320px 50%;
@@ -23,7 +27,7 @@
   background: radial-gradient(circle, rgba(119,139,255,0.16), transparent 66%);
   pointer-events: none;
 }
-.jr-hero-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+.jr-hero-inner { position: relative; }
 .jr-breadcrumb {
   display: flex; flex-wrap: wrap; gap: 8px; color: rgba(255,255,255,0.55);
   font-size: 12px; margin-bottom: 40px;
@@ -61,7 +65,7 @@
 .jr-rss svg { width: 13px; height: 13px; }
 
 /* ---------- list ---------- */
-.jr-list { padding: 72px 0 110px; }
+.jr-list { padding-block: 72px 110px; }
 .jr-grid {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px;
   margin: 0; padding: 0; list-style: none;
@@ -193,17 +197,17 @@
 }
 .jr-disclosure a { color: rgba(255,255,255,0.75); text-underline-offset: 3px; }
 .jr-hero-cover {
-  position: relative; max-width: 1080px; margin: 52px auto 0; border-radius: 22px; overflow: hidden;
+  position: relative; margin: 52px 0 0; border-radius: 22px; overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.45);
 }
 .jr-hero-cover img { display: block; width: 100%; height: auto; }
 
 .jr-article-layout {
   display: grid; grid-template-columns: minmax(0, 760px) 200px;
-  gap: 70px; max-width: 1080px; margin: 0 auto; padding: 88px 24px 110px;
+  gap: 70px; justify-content: space-between; padding: 88px var(--jr-gutter) 110px;
   align-items: start;
 }
-.jr-article-layout.jr-no-toc { grid-template-columns: minmax(0, 760px); justify-content: center; }
+.jr-article-layout.jr-no-toc { grid-template-columns: minmax(0, 760px); justify-content: start; }
 .jr-body { min-width: 0; }
 .jr-body > p:first-child { font-size: 21px; line-height: 1.72; color: rgba(29,28,25,0.82); }
 .jr-body h2 {
@@ -309,7 +313,7 @@
 .jr-close-links a { display: inline-flex; align-items: center; gap: 6px; }
 .jr-close-links svg { width: 13px; height: 13px; flex: none; }
 .jr-body .jr-close a { color: #fff; }
-.jr-related { padding: 0 0 110px; }
+.jr-related { padding-bottom: 110px; }
 .jr-related h2 {
   margin: 0 0 26px; font-size: clamp(24px, 3vw, 30px); letter-spacing: -.03em; font-weight: 640;
 }
@@ -339,9 +343,10 @@
   .jr-toc { display: none; }
 }
 @media (max-width: 720px) {
-  .jr-hero { padding: 118px 20px 56px; }
+  .jr-shell { --jr-gutter: 20px; }
+  .jr-hero { padding-top: 118px; padding-bottom: 56px; }
   .jr-hero-intro { font-size: 17px; }
-  .jr-list { padding: 48px 0 80px; }
+  .jr-list { padding-block: 48px 80px; }
   .jr-grid { grid-template-columns: 1fr; gap: 18px; }
   .jr-card--lead .jr-card-link { display: flex; }
   .jr-card--lead .jr-cover { aspect-ratio: 16 / 9; min-height: 0; }
