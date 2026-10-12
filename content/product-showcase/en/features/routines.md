@@ -20,7 +20,18 @@ Routines can delegate to specialized agents and call smaller routines. This lets
 
 ## Observe and improve each run
 
-Run the routine with a real input, watch how work moves through it, and inspect the result. If something fails or becomes unclear, revise the relevant instruction and run it again with the change visible.
+Run the routine with a real input, watch how work moves through it, and inspect the result. If a result is unclear, revise the relevant instruction and run it again with the change visible.
+
+## Fix a failed step and keep going
+
+When a step fails, the run doesn't have to start over. Toone fixes the routine and continues the same run from the failed step, keeping the work earlier steps already finished. Each routine has an **Auto-fix** setting in its inspector that decides how much Toone does on its own:
+
+- **Off:** the step's agent explains the failure; fixes happen only when you ask.
+- **Suggest** (the default): Toone and the step's agent propose a fix, and nothing changes until you confirm it.
+- **Auto safe fix:** Toone fixes the failed step's own text and continues. The issue card shows the change with **Revert**.
+- **Auto-fix:** Toone works out the fix, including changes to the routine's structure, and continues.
+
+In every mode, Toone stops and asks you when only you can unblock the step: a sign-in, an approval, a missing input, or a step that may already have sent something outside Toone. An automatic fix never changes who a step sends to, permissions, credentials, or the step's provider or model. Temporary problems, such as a provider timing out, are retried twice unchanged before Toone asks you.
 
 ## Inspect early runs
 

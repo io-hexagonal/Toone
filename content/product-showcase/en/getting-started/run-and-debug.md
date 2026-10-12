@@ -19,6 +19,12 @@ Click any step in the graph and choose **Focus thread** to open the conversation
 
 Notice which agent is working, what step is underway, and whether Toone is waiting for input or approval. If it is waiting on you, the thread is where you answer.
 
+## When a step fails
+
+A failed step shows an issue card in the run's thread: what went wrong and what Toone can do about it. With the default **Suggest** setting, Toone proposes a fix and waits; confirm it and the run continues from that step, keeping everything earlier steps produced. You can also tell the agent in the thread what to change, choose **Retry as is**, or cancel the run.
+
+Once you trust a routine, you can let Toone apply fixes itself: open the routine's inspector and change **Auto-fix**. [Routines](/how-to/features/routines#fix-a-failed-step-and-keep-going) explains each mode and when Toone still stops for you.
+
 ## Inspect the result
 
 When the run finishes, open the produced brief and compare it with the routine’s expected sections. This is easier when each step states what it must deliver, as in [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) on Explore. Look for missing evidence, unclear assumptions, or a result saved in the wrong place. The run stays in the routine's execution history, so you can come back to it later and compare it with the next one.
