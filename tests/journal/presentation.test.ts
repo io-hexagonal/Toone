@@ -10,6 +10,7 @@ import {
   disclosureText,
   escapeXml,
   hubForSegment,
+  journalTitle,
   listBreadcrumbSchema,
   listMetadata,
   listPath,
@@ -127,6 +128,20 @@ test("an empty hub or index is noindex, follow but keeps its canonical", () => {
     assert.deepEqual(meta.robots, { index: false, follow: true });
     assert.equal(meta.alternates?.canonical, `https://trytoone.com${listPath(hub)}`);
   }
+});
+
+test("journal titles name Toone once and stay within 60 characters (TECH-008, F38)", () => {
+  assert.deepEqual(listMetadata(null, 1).title, { absolute: "Toone Journal: Releases, Routines and Launches" });
+  assert.deepEqual(listMetadata(null, 2).title, { absolute: "Toone Journal: Releases, Routines and Launches (Page 2)" });
+  assert.deepEqual(listMetadata(hubForSegment("releases"), 1).title, { absolute: "Toone Releases and Changelog" });
+  assert.deepEqual(listMetadata(hubForSegment("launches"), 1).title, { absolute: "Toone Launches and Announcements" });
+  assert.deepEqual(listMetadata(hubForSegment("routines"), 1).title, { absolute: "Routine Spotlights from Explore | Toone" });
+  assert.deepEqual(postMetadata(detail(0)).title, { absolute: "Toone 1.0.79: Run Controls and Clearer Installs" });
+  assert.deepEqual(postMetadata(detail(1)).title, { absolute: "Automating Launch Content with AI Agents | Toone" });
+  // A title the suffix would push past 60 goes out as written.
+  assert.deepEqual(journalTitle("A Weekly Research Digest Routine for Busy Product Teams"), {
+    absolute: "A Weekly Research Digest Routine for Busy Product Teams",
+  });
 });
 
 test("previews are noindex, nofollow and have no canonical", () => {

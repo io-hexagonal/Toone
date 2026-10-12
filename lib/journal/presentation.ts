@@ -209,6 +209,19 @@ function englishAlternates(canonical: string): NonNullable<Metadata["alternates"
   };
 }
 
+const TITLE_MAX = 60;
+
+/**
+ * `<title>` for a Journal page: the brand once and at most 60 characters
+ * (TECH-008, Ahrefs F38). Absolute, so the root `%s | Toone` template never
+ * runs; the suffix is added only when the title does not already name Toone
+ * and still fits.
+ */
+export function journalTitle(title: string): { absolute: string } {
+  const branded = `${title} | Toone`;
+  return { absolute: /toone/i.test(title) || branded.length > TITLE_MAX ? title : branded };
+}
+
 /**
  * Index, page n and the three hubs: self-canonical, `index, follow` (§10).
  * A list with no posts at all (a hub before its first post of that type, or
@@ -227,7 +240,7 @@ export function listMetadata(
   const title = page > 1 ? `${baseTitle} (Page ${page})` : baseTitle;
   const description = hub ? hub.description : JOURNAL_DESCRIPTION;
   return {
-    title: { absolute: `${title} | Toone` },
+    title: journalTitle(title),
     description,
     alternates: englishAlternates(canonical),
     robots: { index: !empty, follow: true },
@@ -254,7 +267,7 @@ export function postMetadata(post: JournalPostDetail): Metadata {
   const image = postImage(post);
   const images = [{ url: image.url, width: image.width, height: image.height, alt: image.alt }];
   return {
-    title: post.title,
+    title: journalTitle(post.title),
     description: post.description,
     alternates: englishAlternates(canonical),
     robots: { index: true, follow: true },
