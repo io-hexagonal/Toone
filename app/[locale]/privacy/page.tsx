@@ -334,7 +334,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
         >
           <li style={{ marginBottom: 6 }}>
             <a
-              href="https://www.anthropic.com/privacy"
+              href="https://www.anthropic.com/legal/privacy"
               target="_blank"
               rel="noopener"
               style={{ color: "rgba(100,180,255,0.8)", textDecoration: "none" }}
@@ -344,7 +344,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           </li>
           <li style={{ marginBottom: 6 }}>
             <a
-              href="https://openai.com/privacy"
+              href="https://openai.com/policies/privacy-policy/"
               target="_blank"
               rel="noopener"
               style={{ color: "rgba(100,180,255,0.8)", textDecoration: "none" }}
