@@ -31,7 +31,7 @@
 
 /* ---------- hero (dark) ---------- */
 .explore-hero {
-  padding: 176px 0 64px;
+  padding: var(--site-hero-top) 0 64px;
   background: #141413;
   color: #fff;
 }
@@ -40,7 +40,7 @@
 }
 /* The index header stays compact so the Featured carousel fits on screen. */
 .explore-hero-index {
-  padding: 132px 0 40px;
+  padding: var(--site-hero-top) 0 40px;
 }
 .explore-hero-index .explore-intro {
   margin-bottom: 0;
@@ -1271,7 +1271,6 @@
 }
 @media (max-width: 760px) {
   .explore-hero {
-    padding-top: 135px;
     padding-bottom: 44px;
   }
   .explore-hero-detail {

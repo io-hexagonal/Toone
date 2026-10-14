@@ -81,7 +81,7 @@ test("API joins versioned prefix, encodes filters, caches tags, and distinguishe
   await assert.rejects(listRoutines(), /array/);
 });
 
-test("mixed pagination sorts globally, excludes bundle-only routines, and reaches beyond 100", async (t) => {
+test("mixed pagination lists bundles first, includes every routine, and reaches beyond 100", async (t) => {
   const routine = fixture("routine-entry");
   const bundle = fixture("bundle-entry");
   const routines = Array.from({ length: 125 }, (_, i) => ({
@@ -100,7 +100,7 @@ test("mixed pagination sorts globally, excludes bundle-only routines, and reache
     if (url.pathname.endsWith("/tags")) return response([]);
     const data = url.pathname.endsWith("/workflows") ? routines : bundles;
     if (url.pathname.endsWith("/workflows"))
-      assert.equal(url.searchParams.get("listing"), "standalone");
+      assert.equal(url.searchParams.get("listing"), "all", "bundle members are listed like any routine");
     assert.equal(url.searchParams.get("query"), "evidence");
     assert.equal(url.searchParams.get("tag"), "research");
     const offset = Number(url.searchParams.get("offset") || 0);
@@ -116,16 +116,27 @@ test("mixed pagination sorts globally, excludes bundle-only routines, and reache
   });
   assert.equal(page.total, 250);
   assert.equal(page.items.length, 20);
-  assert.deepEqual(
-    page.items.slice(0, 2).map((x) => x.type),
-    ["routine", "bundle"],
-  );
+  // All 125 bundles (positions 0-124) come before any routine, so page 11
+  // (positions 200-219) is routines 75-94, newest first.
+  assert.ok(page.items.every((x) => x.type === "routine"));
   assert.equal(page.items[0].entry.title, routine.title);
   assert.equal(
     "workflow_id" in page.items[0].entry && page.items[0].entry.workflow_id,
-    "wfl_00000100",
+    "wfl_00000075",
   );
   assert.ok(calls.some((url) => url.searchParams.get("offset") === "100"));
+  const first = await loadCatalog({ type: "all", query: "evidence", tag: "research", page: 1 });
+  assert.deepEqual(
+    first.items.slice(0, 2).map((x) => ("bundle_id" in x.entry ? x.entry.bundle_id : x.entry.workflow_id)),
+    ["wfb_00000000", "wfb_00000001"],
+    "a bundle leads even when a routine was approved later",
+  );
+  const boundary = await loadCatalog({ type: "all", query: "evidence", tag: "research", page: 7 });
+  assert.deepEqual(
+    boundary.items.slice(4, 6).map((x) => x.type),
+    ["bundle", "routine"],
+    "routines start right after the last bundle",
+  );
 });
 
 test("cover URLs cannot escape the API prefix or accept executable data", () => {

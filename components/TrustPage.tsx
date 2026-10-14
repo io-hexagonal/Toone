@@ -25,7 +25,7 @@ export default function TrustPage({
         dangerouslySetInnerHTML={{
           __html: `
             .trust-page {
-              max-width: 760px; margin: 0 auto; padding: 132px 24px 112px;
+              max-width: 760px; margin: 0 auto; padding: var(--site-hero-top) 24px 112px;
               color: rgba(255,255,255,0.74);
             }
             .trust-eyebrow {
@@ -60,7 +60,7 @@ export default function TrustPage({
             .trust-page a { color: #b9d9ff; text-underline-offset: 3px; }
             .trust-page a:hover { color: #e0efff; }
             @media (max-width: 640px) {
-              .trust-page { padding-top: 112px; padding-bottom: 84px; }
+              .trust-page { padding-bottom: 84px; }
               .trust-lede { font-size: 16px; }
             }
           `,

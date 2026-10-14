@@ -19,13 +19,7 @@
 /* ---------- hero ---------- */
 .jr-hero {
   position: relative; overflow: hidden; background: #141413; color: #fff;
-  padding: 146px var(--jr-gutter) 72px;
-}
-.jr-hero::before {
-  content: ''; position: absolute; inset: auto auto -320px 50%;
-  width: 960px; height: 640px; transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(119,139,255,0.16), transparent 66%);
-  pointer-events: none;
+  padding: var(--site-hero-top) var(--jr-gutter) 72px;
 }
 .jr-hero-inner { position: relative; }
 .jr-breadcrumb {
@@ -344,7 +338,7 @@
 }
 @media (max-width: 720px) {
   .jr-shell { --jr-gutter: 20px; }
-  .jr-hero { padding-top: 118px; padding-bottom: 56px; }
+  .jr-hero { padding-bottom: 56px; }
   .jr-hero-intro { font-size: 17px; }
   .jr-list { padding-block: 48px 80px; }
   .jr-grid { grid-template-columns: 1fr; gap: 18px; }

@@ -1,13 +1,14 @@
 import ExploreFilters from "./ExploreFilters";
 import FeaturedCarousel, { type FeaturedSlide } from "./FeaturedCarousel";
 import {hasTaxonomyFilters, termLabel} from "@/lib/explore/taxonomy";
-import { getCatalog, listRoutines, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
+import { getCatalog, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
 import {
   catalogHref,
   type CatalogQuery,
   type CatalogItem,
   cardText,
   exploreMetadata,
+  featuredCover,
   featuredItems,
   SITE,
   EXPLORE_GUIDES,
@@ -60,22 +61,12 @@ export default async function ExploreCatalog({ locale, query }: { locale: string
   const active = { ...query, page: catalog.page };
   // Featured only on the plain first view, never on a search or filter.
   const unfiltered = !query.query && !query.tag && !hasTaxonomyFilters(query) && query.type === "all" && catalog.page === 1;
-  // Routines listed only inside a bundle never reach the grid; the plain view
-  // still links each one so every public record is one click from the hub.
-  let bundleOnly: CatalogItem[] = [];
-  if (unfiltered) {
-    try {
-      bundleOnly = (await listRoutines({ listing: "bundle_only" })).items.map((entry) => ({ type: "routine" as const, entry }));
-    } catch {
-      bundleOnly = [];
-    }
-  }
   const libraryTerms = (kind: "category" | "useful_for") =>
     (catalog.taxonomy?.terms ?? [])
       .filter((term) => term.kind === kind && term.active)
       .sort((a, b) => a.sort_order - b.sort_order);
   const featured: FeaturedSlide[] = unfiltered
-    ? featuredItems(catalog.items, (item) => !!resolveCardCoverUrl(item.entry)).map((item) => {
+    ? featuredItems(catalog.items, (item) => !!featuredCover(item, resolveCardCoverUrl)).map((item) => {
         const text = cardText(item.entry);
         const category = item.entry.classification?.category_id;
         return {
@@ -87,7 +78,7 @@ export default async function ExploreCatalog({ locale, query }: { locale: string
           title: text.title,
           summary: text.summary,
           cta: item.type === "bundle" ? ui.viewBundle : ui.viewRoutine,
-          coverUrl: resolveCardCoverUrl(item.entry) as string,
+          coverUrl: featuredCover(item, resolveCardCoverUrl) as string,
         };
       })
     : [];
@@ -265,17 +256,6 @@ export default async function ExploreCatalog({ locale, query }: { locale: string
               </a>
             )}
           </nav>
-        )}
-        {bundleOnly.length > 0 && (
-          <section className="explore-library-section" aria-labelledby="explore-in-bundles">
-            <h2 id="explore-in-bundles">{ui.inBundlesHeading}</h2>
-            <p>{ui.inBundlesBody}</p>
-            <div className="explore-grid">
-              {bundleOnly.map((item) => (
-                <CatalogCard key={item.type + ("workflow_id" in item.entry ? item.entry.workflow_id : item.entry.bundle_id)} item={item} taxonomy={catalog.taxonomy} locale={locale} ui={ui} />
-              ))}
-            </div>
-          </section>
         )}
         {unfiltered && (
           <section className="explore-library-section explore-about" aria-labelledby="explore-about">

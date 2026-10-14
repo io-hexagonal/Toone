@@ -7,8 +7,11 @@
 }
 
 .hero {
-  min-height: 420px;
-  padding: 186px max(24px, 10vw) 72px;
+  /* The hero sits below the 36px LandingAudienceBar, so it reserves the shared
+     page-top space (globals.css) minus the bar. min-height shrank by the same
+     amount the top padding did, so it still only catches very short heroes. */
+  min-height: 330px;
+  padding: calc(var(--site-hero-top) - 36px) max(24px, 10vw) 72px;
   background:
     #141413;
   color: #fff;
@@ -325,8 +328,8 @@
 
 @media (max-width: 760px) {
   .hero {
-    min-height: 390px;
-    padding: 152px 20px 58px;
+    min-height: 337px;
+    padding: calc(var(--site-hero-top) - 36px) 20px 58px;
   }
 
   .readingArea {

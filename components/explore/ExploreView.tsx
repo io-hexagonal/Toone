@@ -91,8 +91,6 @@ export const COPY_KEYS = [
   "learnRoutines",
   "exploreGuide",
   "setupGuide",
-  "inBundlesHeading",
-  "inBundlesBody",
   "aboutHeading",
   "aboutWhat",
   "aboutReview",

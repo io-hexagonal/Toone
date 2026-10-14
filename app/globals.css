@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+/*
+ * Page-top rhythm shared by every page's first section (eyebrow / H1 hero).
+ * The site header is fixed and floats over the hero, so each hero reserves
+ * this much space above its first line of text, measured from the top of the
+ * viewport. The values are the /explore hub's, the reference page: 132px on
+ * desktop, 135px at 760px and below. A hero that starts below the 36px
+ * LandingAudienceBar subtracts the bar's height instead of adding its own.
+ */
+:root {
+  --site-hero-top: 132px;
+}
+@media (max-width: 760px) {
+  :root {
+    --site-hero-top: 135px;
+  }
+}

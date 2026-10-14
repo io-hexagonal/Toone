@@ -636,7 +636,8 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   // so a type filter shares the cached responses instead of adding a probe;
   // the excluded source's items are simply dropped.
   const [allRoutines, allBundles] = await Promise.all([
-    listRoutines({ ...filters, listing: "standalone" }),
+    // Every routine, bundle members included: the bundle-only flag is retired.
+    listRoutines({ ...filters, listing: "all" }),
     listBundles(filters),
   ]);
   const routines =
@@ -667,7 +668,7 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   }
   await Promise.all([
     extend(routines, (offset) =>
-      listRoutines({ ...filters, listing: "standalone", offset }),
+      listRoutines({ ...filters, listing: "all", offset }),
     ),
     extend(bundles, (offset) => listBundles({ ...filters, offset })),
   ]);
@@ -675,8 +676,10 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
     ...routines.items.map((entry) => ({ type: "routine" as const, entry })),
     ...bundles.items.map((entry) => ({ type: "bundle" as const, entry })),
   ];
+  // Bundles first, then routines; newest approval first within each.
   items.sort(
     (a, b) =>
+      (a.type === b.type ? 0 : a.type === "bundle" ? -1 : 1) ||
       Date.parse(b.entry.approved_at) - Date.parse(a.entry.approved_at) ||
       ("workflow_id" in a.entry
         ? a.entry.workflow_id
@@ -703,7 +706,7 @@ export async function getExploreTaxonomy(): Promise<ExploreTaxonomy | null> {
 }
 
 export async function getExploreFacets(query: CatalogQuery): Promise<ExploreFacet[]> {
-  const result = await getJson<ExploreFacet[]>("explore/facets", {query: query.query, tag: query.tag, category: query.category, topic: query.topics, useful_for: query.usefulFor, type: query.type, listing: "standalone"}, [EXPLORE_TAG]);
+  const result = await getJson<ExploreFacet[]>("explore/facets", {query: query.query, tag: query.tag, category: query.category, topic: query.topics, useful_for: query.usefulFor, type: query.type, listing: "all"}, [EXPLORE_TAG]);
   if (!result) return [];
   if (!Array.isArray(result.data) || result.data.some((f) => typeof f.term_id !== "string" || !Number.isSafeInteger(f.routines) || !Number.isSafeInteger(f.bundles) || f.routines < 0 || f.bundles < 0))
     throw new ExploreApiError("explore/facets", 502, "invalid facets");

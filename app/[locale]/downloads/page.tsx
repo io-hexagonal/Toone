@@ -39,7 +39,7 @@ export default async function DownloadPage({ params }: Props) {
           __html: `
             .download-page {
               min-height: 100vh; max-width: 980px; margin: 0 auto;
-              padding: 132px 24px 120px; color: rgba(255,255,255,0.94);
+              padding: var(--site-hero-top) 24px 120px; color: rgba(255,255,255,0.94);
             }
             .download-head { text-align: center; margin: 0 auto 54px; max-width: 700px; }
             .download-eyebrow {
@@ -134,7 +134,6 @@ export default async function DownloadPage({ params }: Props) {
             .download-waitlist-link:hover { text-decoration: underline; }
             .download-error { color: rgba(255,138,122,.95); text-align: center; margin: 20px 0 0; }
             @media (max-width: 720px) {
-              .download-page { padding-top: 110px; }
               .download-grid { grid-template-columns: 1fr; }
               .download-card { min-height: 290px; }
             }
