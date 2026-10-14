@@ -339,6 +339,24 @@ export function cardText(entry: {
  * newest approval first. Chosen from the unfiltered first page only; a
  * server-side "featured" flag can replace this rule without touching the UI.
  */
+/**
+ * The carousel shows a bundle through its first routine's image: the bundle
+ * cover carries its title, which the slide's filter and its own text cover.
+ * Falls back to the item's own cover.
+ */
+export function featuredCover(
+  item: CatalogItem,
+  resolve: (entry: { cover_url?: string | null; cover_image_data_url?: string | null }) => string | null,
+): string | null {
+  if (item.type === "bundle") {
+    const first = [...(item.entry.members ?? [])]
+      .sort((a, b) => a.position - b.position)
+      .find((member) => resolve(member));
+    if (first) return resolve(first);
+  }
+  return resolve(item.entry);
+}
+
 export function featuredItems(
   items: CatalogItem[],
   hasCover: (item: CatalogItem) => boolean,
