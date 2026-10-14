@@ -71,7 +71,7 @@ export default async function ResourcesPage({ params }: Props) {
       <style dangerouslySetInnerHTML={{ __html: `
         .resources-page { min-height: 100vh; background: #f0ede6; color: #1d1c19; }
         .resources-hero {
-          position: relative; overflow: hidden; padding: 148px 24px 92px;
+          position: relative; overflow: hidden; padding: var(--site-hero-top) 24px 92px;
           background: #141413; color: white;
         }
         .resources-hero-inner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; }
@@ -154,7 +154,7 @@ export default async function ResourcesPage({ params }: Props) {
           .product-guides li { grid-template-columns: 1fr; }
         }
         @media (max-width: 740px) {
-          .resources-hero { padding-top: 120px; padding-bottom: 70px; }
+          .resources-hero { padding-bottom: 70px; }
           .resources-grid { grid-template-columns: 1fr; padding-top: 58px; }
           .resource-card { min-height: 320px; }
         }

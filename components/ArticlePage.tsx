@@ -102,7 +102,7 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
             .article-shell { min-height: 100vh; background: #f0ede6; color: #1d1c19; }
             .article-hero {
               position: relative; overflow: hidden; background: #141413;
-              padding: 146px 24px 96px; color: white;
+              padding: var(--site-hero-top) 24px 96px; color: white;
             }
             .article-hero::before {
               content: ''; position: absolute; inset: auto auto -300px 50%;
@@ -214,7 +214,7 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
               .article-toc { display: none; }
             }
             @media (max-width: 640px) {
-              .article-hero { padding-top: 118px; padding-bottom: 68px; }
+              .article-hero { padding-bottom: 68px; }
               .article-layout { padding-top: 58px; }
               .article-body > p:first-child { font-size: 18px; }
               .article-body p, .article-body li { font-size: 15.5px; }
