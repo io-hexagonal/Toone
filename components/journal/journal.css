@@ -21,12 +21,6 @@
   position: relative; overflow: hidden; background: #141413; color: #fff;
   padding: var(--site-hero-top) var(--jr-gutter) 72px;
 }
-.jr-hero::before {
-  content: ''; position: absolute; inset: auto auto -320px 50%;
-  width: 960px; height: 640px; transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(119,139,255,0.16), transparent 66%);
-  pointer-events: none;
-}
 .jr-hero-inner { position: relative; }
 .jr-breadcrumb {
   display: flex; flex-wrap: wrap; gap: 8px; color: rgba(255,255,255,0.55);
