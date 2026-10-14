@@ -335,11 +335,6 @@ export function cardText(entry: {
 }
 
 /**
- * The Featured carousel: up to `limit` catalog items that have a cover,
- * newest approval first. Chosen from the unfiltered first page only; a
- * server-side "featured" flag can replace this rule without touching the UI.
- */
-/**
  * The carousel shows a bundle through its first routine's image: the bundle
  * cover carries its title, which the slide's filter and its own text cover.
  * Falls back to the item's own cover.
@@ -357,13 +352,19 @@ export function featuredCover(
   return resolve(item.entry);
 }
 
+/**
+ * The Featured carousel: up to `limit` bundles that have a cover, newest
+ * approval first; routines never appear in it. Chosen from the unfiltered
+ * first page only; a server-side "featured" flag can replace this rule
+ * without touching the UI.
+ */
 export function featuredItems(
   items: CatalogItem[],
   hasCover: (item: CatalogItem) => boolean,
   limit = 5,
 ): CatalogItem[] {
   return items
-    .filter(hasCover)
+    .filter((item) => item.type === "bundle" && hasCover(item))
     .sort((a, b) => Date.parse(b.entry.approved_at) - Date.parse(a.entry.approved_at))
     .slice(0, limit);
 }

@@ -9,18 +9,37 @@ function item(id: string, approvedAt: string, cover: boolean): CatalogItem {
   };
 }
 
-test("featured: only items with a cover, newest approval first, at most the limit", () => {
+function bundleItem(id: string, approvedAt: string, cover: boolean): CatalogItem {
+  return {
+    type: "bundle",
+    entry: { bundle_id: id, approved_at: approvedAt, cover_url: cover ? "x" : null, members: [] } as never,
+  };
+}
+
+const hasCover = (entry: CatalogItem) => !!(entry.entry as { cover_url?: string | null }).cover_url;
+const ids = (list: CatalogItem[]) =>
+  list.map((entry) => ("bundle_id" in entry.entry ? entry.entry.bundle_id : entry.entry.workflow_id));
+
+test("featured: only bundles with a cover, newest approval first, at most the limit", () => {
   const items = [
-    item("wfl_old", "2026-09-01T00:00:00Z", true),
-    item("wfl_nocover", "2026-09-30T00:00:00Z", false),
-    item("wfl_new", "2026-09-20T00:00:00Z", true),
-    item("wfl_mid", "2026-09-10T00:00:00Z", true),
+    bundleItem("wfb_old", "2026-09-01T00:00:00Z", true),
+    bundleItem("wfb_nocover", "2026-09-30T00:00:00Z", false),
+    bundleItem("wfb_new", "2026-09-20T00:00:00Z", true),
+    bundleItem("wfb_mid", "2026-09-10T00:00:00Z", true),
   ];
-  const hasCover = (entry: CatalogItem) => !!(entry.entry as { cover_url?: string | null }).cover_url;
-  const ids = (list: CatalogItem[]) => list.map((entry) => ("workflow_id" in entry.entry ? entry.entry.workflow_id : ""));
-  assert.deepEqual(ids(featuredItems(items, hasCover)), ["wfl_new", "wfl_mid", "wfl_old"]);
-  assert.deepEqual(ids(featuredItems(items, hasCover, 2)), ["wfl_new", "wfl_mid"]);
+  assert.deepEqual(ids(featuredItems(items, hasCover)), ["wfb_new", "wfb_mid", "wfb_old"]);
+  assert.deepEqual(ids(featuredItems(items, hasCover, 2)), ["wfb_new", "wfb_mid"]);
   assert.deepEqual(featuredItems([], hasCover), []);
+});
+
+test("featured: routines never appear, even newer ones with a cover", () => {
+  const items = [
+    item("wfl_newest", "2026-10-10T00:00:00Z", true),
+    bundleItem("wfb_a", "2026-09-01T00:00:00Z", true),
+    item("wfl_other", "2026-09-20T00:00:00Z", true),
+  ];
+  assert.deepEqual(ids(featuredItems(items, hasCover)), ["wfb_a"]);
+  assert.deepEqual(featuredItems([item("wfl_only", "2026-10-01T00:00:00Z", true)], hasCover), [], "no bundles: no carousel");
 });
 
 test("featured: a bundle shows its first routine's image, not its titled cover", () => {
