@@ -103,7 +103,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
             letterSpacing: "0.02em",
           }}
         >
-          Updated: October 3, 2026
+          Updated: October 14, 2026
         </p>
 
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
@@ -292,7 +292,8 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           does not upload that local working context to its account, website, or
           analytics services on its own. It leaves your Mac when you use a feature
           that needs it: requests to your AI provider, the cloud relay, a Business,
-          Live Share, and sharing a routine on Explore, each described below. If
+          Live Share, sharing a routine on Explore, and sharing site maps with the
+          Silk Network, each described below. If
           you use speech input, macOS speech recognition turns your voice into
           text; depending on your language and system settings, Apple may process
           that audio on its servers. Account data, waitlist requests, contact
@@ -321,6 +322,19 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           device to the provider&apos;s API. A request can include your prompts and
           the files, tool output, and built-in browser content the agent works
           with. Toone does not proxy, log, or retain these requests.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          The one exception is a small number of accounts Toone designates for
+          Apple&apos;s App Review, so reviewers can try Toone (Mac App Store)
+          without their own OpenAI account. For those accounts only, and only
+          while a review campaign is running, the app sends AI requests to
+          Toone&apos;s server, which forwards them to OpenAI under Toone&apos;s
+          own API account and streams the answer back. Toone&apos;s server does
+          not log the content of these requests. It keeps a spending record of
+          each request&apos;s size and cost under a daily pseudonym, so the
+          campaign&apos;s spending limits hold.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           Please refer to your chosen provider&apos;s privacy policy for how they
           handle your data:
         </p>
@@ -389,7 +403,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           Business, Live Share, and Explore
         </h2>
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          These features are available in Toone (Direct). If you set up a
+          Business and Live Share are available in Toone (Direct). If you set up a
           Business, Toone stores its name, the email address and role of each
           person you invite, and the names of the organizations you add to it, and
           emails each invited person an invitation that shows the Business name
@@ -402,9 +416,56 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
           When you share a routine on Explore, the app sends Toone a public copy of
           it for review: its steps, agents, Skills, and any included files you
-          confirm, together with its listing page and cover image. Approved
+          confirm, together with its listing page and cover image. Toone keeps
+          the submission linked to your account. Toone&apos;s team reviews it
+          before it is published, with help from an AI reviewer that processes
+          the submission through OpenAI under Toone&apos;s own account. Approved
           listings are published on trytoone.com with your account name as the
-          author.
+          author, and you can withdraw your own listings. Explore is available in
+          both editions.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          Browsing, searching, and installing from Explore does not send your
+          account information. If you report a listing, Toone stores your account
+          ID with the report, the listing, the reason you chose, and any note you
+          add (up to 1,000 characters). Reviewers see the report but not who sent
+          it. If you block a creator, Toone stores that you blocked them so the
+          app can hide their listings for you; the creator is not told. Toone
+          keeps resolved reports as long as it needs them for moderation and
+          safety.
+        </p>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Silk Network
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          When an agent saves or repairs a site map for a website in Toone&apos;s
+          built-in browser, the app can share the change with the Silk Network so
+          other Toone users can automate the same site. Sharing is on by default.
+          You can turn it off with the &quot;Share site maps with the Silk
+          Network&quot; option during setup, or later by right-clicking Your Site
+          Integrations in your organization and choosing Stop Sharing Site Maps
+          with Network.
+        </p>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          Before anything is sent, the app compares the change with the published
+          version and scans it on your Mac for email addresses, tokens, and other
+          sensitive values; a change with findings is not shared. Your AI provider
+          then reviews the change as part of your normal AI usage. Only a change
+          that passes both checks is sent to Toone, with your account: the
+          site&apos;s domain, name, and logo address, and the changed page
+          structure, such as selectors, URL patterns, and flow steps, with typed
+          values replaced by placeholders. Toone&apos;s team reviews it, and
+          approved changes are published to all Toone users, with you credited as
+          the contributor.
         </p>
 
         <h2
@@ -449,6 +510,33 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           address that activates one. If Toone gives you complimentary Pro, the
           grant is recorded with your email address, and Toone may email you
           before it ends.
+        </p>
+
+        <h2
+          style={{
+            fontSize: 16,
+            fontWeight: 600,
+            color: "rgba(255,255,255,0.9)",
+            marginTop: 36,
+            marginBottom: 12,
+          }}
+        >
+          Deleting Your Account
+        </h2>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+          In Toone (Mac App Store), you can delete your Toone account under
+          Settings &rarr; Account. You can also ask us using the contact details
+          below. Deletion erases your name, email address, and sign-in details
+          from your account and removes your sessions. Your Explore listings are
+          unpublished and their content is erased, and pending submissions are
+          withdrawn. Reports you sent stay with the listing they are about, but
+          lose your account ID and your note. Blocks you made, and blocks others
+          placed on you, are deleted. Pending Silk Network changes are withdrawn,
+          and published ones stay, credited to a former contributor. App Store
+          purchase records for Toone Pro are kept as records of the purchase but
+          are no longer linked to you; if you later sign in to a new account and
+          restore the purchase, it can be linked to that account. Apple keeps its
+          own records of your purchases.
         </p>
 
         <h2
