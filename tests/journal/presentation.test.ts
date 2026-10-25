@@ -30,12 +30,12 @@ beforeEach(() => {
 const fixture = JSON.parse(readFileSync(new URL("./fixtures/journal.json", import.meta.url), "utf8"));
 const detail = (index: number) => normalizePostDetail(fixture.posts[index]) as JournalPostDetail;
 
-test("post metadata: absolute canonical, og:url, en + x-default, article times, RSS alternate (§10)", () => {
+test("post metadata: absolute canonical, og:url, no hreflang, article times, RSS alternate (§10)", () => {
   const post = detail(0);
   const meta = postMetadata(post);
   const canonical = "https://trytoone.com/en/journal/toone-1-0-79-release-notes";
   assert.equal(meta.alternates?.canonical, canonical);
-  assert.deepEqual(meta.alternates?.languages, { en: canonical, "x-default": canonical });
+  assert.equal(meta.alternates?.languages, undefined);
   assert.deepEqual(meta.alternates?.types, {
     "application/rss+xml": [{ url: "https://trytoone.com/journal/feed.xml", title: "Toone Journal" }],
   });
@@ -211,7 +211,7 @@ test("sitemap: published posts with updated_at, index and non-empty hubs by thei
     ["https://trytoone.com/en/journal/b-post", "2026-09-03T00:00:00.000Z"],
   ]);
   assert.ok(!xml.includes("c-post"), "retired posts are not listed");
-  assert.match(xml, /hreflang="x-default" href="https:\/\/trytoone.com\/en\/journal\/a-post"/);
+  assert.ok(!xml.includes("hreflang") && !xml.includes("xhtml"), "no hreflang alternates (TECH-021)");
   assert.ok(!xml.includes("/en/journal/routines<"), "an empty hub is not listed");
   const onlyRetired = buildJournalSitemap([feed[2]]);
   assert.ok(!onlyRetired.includes("<url>"), "no published post: not even the index is listed");

@@ -45,7 +45,7 @@ export default function LocaleSuggestion() {
       });
       setOffer(action.kind === "suggest" ? { locale: action.locale, href: action.href } : null);
     };
-    // Metadata (hreflang) can stream in just after hydration.
+    // Metadata (the language versions) can stream in just after hydration.
     const timer = window.setTimeout(decide, 400);
     return () => window.clearTimeout(timer);
   }, [current, pathname]);

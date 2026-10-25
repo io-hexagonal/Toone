@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
         source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:path*",
         headers: [{ key: "Content-Language", value: ":locale" }],
       },
+      // TECH-021: English is the only indexed locale. Every page outside it
+      // already ships `<meta name="robots" content="noindex, follow">`
+      // (i18n/indexing.ts); this header holds the line for any route whose
+      // own `robots` metadata forgets it. Keep the list in step with
+      // INDEXED_LOCALES.
+      {
+        source: "/:locale(pt|es|fr|de|it|nl|ru)/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
     ];
   },
   async redirects() {

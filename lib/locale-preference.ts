@@ -1,4 +1,5 @@
 import { LOCALE_CHOICE_COOKIE, locales, type Locale } from "@/i18n/routing";
+import { LOCALE_VERSIONS_META } from "@/i18n/indexing";
 
 /**
  * Language choice on the site, without touching the root redirect's meaning
@@ -8,8 +9,9 @@ import { LOCALE_CHOICE_COOKIE, locales, type Locale } from "@/i18n/routing";
  * (proxy.ts, R6). The browser language is honoured on the client instead: the
  * language links let anyone switch, and a dismissible suggestion offers the
  * visitor's language when the page exists in it. Both only link to the page's
- * declared hreflang alternates, so they never send anyone to a page that does
- * not exist in that language, and nothing here ever redirects.
+ * declared language versions (i18n/indexing.ts, `localeVersions`), so they
+ * never send anyone to a page that does not exist in that language, and
+ * nothing here ever redirects.
  *
  * Only the language links and the suggestion's "View in …" button store a
  * choice (the `toone_locale` cookie, which proxy.ts reads on `/` and on
@@ -56,22 +58,31 @@ export function preferredSupportedLocale(languages: readonly string[]): Locale |
 }
 
 /**
- * The page's language versions from its `<link rel="alternate" hreflang>`
- * tags (metadata API; may be streamed into the body). Same-origin paths only.
+ * The page's language versions from its `toone-locale-versions` meta tag
+ * (metadata API; may be streamed into the body). Not hreflang: only English
+ * is indexed, so pages declare no hreflang (TECH-021). Same-origin paths only.
  */
 export function readAlternates(root: ParentNode, origin: string): Partial<Record<Locale, string>> {
   const result: Partial<Record<Locale, string>> = {};
-  root.querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang]').forEach((link) => {
-    const lang = link.getAttribute("hreflang");
-    const href = link.getAttribute("href");
-    if (!isLocale(lang) || !href) return;
+  const content = root.querySelector<HTMLMetaElement>(`meta[name="${LOCALE_VERSIONS_META}"]`)?.getAttribute("content");
+  if (!content) return result;
+  let versions: unknown;
+  try {
+    versions = JSON.parse(content);
+  } catch {
+    return result;
+  }
+  if (!versions || typeof versions !== "object") return result;
+  for (const [lang, href] of Object.entries(versions)) {
+    if (!isLocale(lang) || typeof href !== "string") continue;
     try {
       const url = new URL(href, origin);
+      if (url.origin !== origin) continue;
       result[lang] = `${url.pathname}${url.search}`;
     } catch {
       // Malformed href: offer nothing rather than a broken link.
     }
-  });
+  }
   return result;
 }
 

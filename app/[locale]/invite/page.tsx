@@ -7,9 +7,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  const t = await getTranslations({ locale, namespace: "auth" });
  return {
   title: t("inviteTitle"),
-  // noindex, so a self-canonical and no hreflang set (TECH-021) instead of the
-  // root layout's locale-home canonical and languages.
-  alternates: { canonical: `https://trytoone.com/${locale}/invite`, languages: {} },
+  // noindex, so a self-canonical (TECH-021) instead of the root layout's
+  // locale-home canonical.
+  alternates: { canonical: `https://trytoone.com/${locale}/invite` },
   robots: { index: false, follow: false },
   referrer: "no-referrer",
  };

@@ -13,7 +13,7 @@ import {
 
 /**
  * Language picker for the header. Each language links to this page's
- * hreflang alternate when it has one, else to that language's home, and
+ * language version when it has one, else to that language's home, and
  * stores the explicit choice (the `toone_locale` cookie). Full page loads on
  * purpose: the server renders the new language. The menu stays in the DOM
  * while closed (`hidden`), so its links are in the server HTML too; the

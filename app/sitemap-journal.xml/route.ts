@@ -6,8 +6,8 @@ import { buildJournalSitemap } from "@/lib/journal/presentation";
  * dynamic, built from `GET /v1/journal/feed` (data cache 600 s, tag
  * `journal`, expired by the webhook), published posts only with
  * `lastmod = updated_at`, plus the index and every hub that has a post, each
- * dated by its own newest post. Only `/en` URLs exist, so each entry carries the en and
- * x-default alternates of itself.
+ * dated by its own newest post. Only `/en` URLs exist, and no entry carries
+ * hreflang alternates: English is the only indexed locale (TECH-021).
  *
  * A feed outage, or a server that does not serve the feed yet, yields an
  * empty urlset (200) rather than an error: Google keeps previously
