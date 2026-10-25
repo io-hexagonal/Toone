@@ -3,10 +3,12 @@
  * (contract §2, §10). Pure functions over normalized posts so the pages,
  * route handlers and tests share one definition of every public surface.
  *
- * The Journal is English only: every canonical, hreflang and feed URL is the
- * `/en` one, and the other locales 308 to it (proxy.ts and each page).
+ * The Journal is English only: every canonical and feed URL is the `/en`
+ * one, and the other locales 308 to it (proxy.ts and each page). No hreflang:
+ * English is the only indexed locale (TECH-021).
  */
 import type { Metadata } from "next";
+import { localeVersions } from "@/i18n/indexing";
 import { resolveAssetUrl } from "./data";
 import type {
   JournalAssistance,
@@ -200,13 +202,17 @@ const RSS_ALTERNATE = {
   "application/rss+xml": [{ url: JOURNAL_FEED_URL, title: JOURNAL_NAME }],
 };
 
-/** English canonical with en + x-default alternates and the RSS link. */
+/**
+ * English canonical and the RSS link. No hreflang: English is the only
+ * indexed locale (TECH-021).
+ */
 function englishAlternates(canonical: string): NonNullable<Metadata["alternates"]> {
-  return {
-    canonical,
-    languages: { en: canonical, "x-default": canonical },
-    types: RSS_ALTERNATE,
-  };
+  return { canonical, types: RSS_ALTERNATE };
+}
+
+/** The Journal exists in English only; the language links offer that copy. */
+function englishVersions(canonical: string): Metadata["other"] {
+  return localeVersions(canonical.slice(`${SITE}/en`.length), ["en"]);
 }
 
 const TITLE_MAX = 60;
@@ -244,6 +250,7 @@ export function listMetadata(
     description,
     alternates: englishAlternates(canonical),
     robots: { index: !empty, follow: true },
+    other: englishVersions(canonical),
     openGraph: {
       type: "website",
       url: canonical,
@@ -271,6 +278,7 @@ export function postMetadata(post: JournalPostDetail): Metadata {
     description: post.description,
     alternates: englishAlternates(canonical),
     robots: { index: true, follow: true },
+    other: englishVersions(canonical),
     authors: [{ name: post.author.name, url: post.author.url ? absoluteSiteUrl(post.author.url) : undefined }],
     openGraph: {
       type: "article",
@@ -301,7 +309,7 @@ export function previewMetadata(post: JournalPostDetail): Metadata {
     title: { absolute: `Preview: ${post.title}` },
     description: post.description,
     robots: { index: false, follow: false, nocache: true },
-    alternates: { canonical: null, languages: {} },
+    alternates: { canonical: null },
     openGraph: null,
     twitter: null,
   };
@@ -484,12 +492,7 @@ export function buildRss(posts: JournalPostEntry[], now = new Date()): string {
 /* ---------- sitemap ---------- */
 
 function sitemapUrl(loc: string, lastmod: string): string {
-  return [
-    `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod>`,
-    `<xhtml:link rel="alternate" hreflang="en" href="${loc}"/>`,
-    `<xhtml:link rel="alternate" hreflang="x-default" href="${loc}"/>`,
-    "</url>",
-  ].join("");
+  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
 }
 
 /**
@@ -502,7 +505,7 @@ function sitemapUrl(loc: string, lastmod: string): string {
 export function buildJournalSitemap(feed: JournalFeedItem[] | null): string {
   const lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
   const published = (feed ?? []).filter((item) => item.state === "published");
   const iso = (value: string) => new Date(Date.parse(value)).toISOString();

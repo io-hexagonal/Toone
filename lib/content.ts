@@ -230,15 +230,6 @@ export function publicationUrl(publication: Publication, locale: Locale = public
   return `https://trytoone.com/${locale}${publication.canonicalPath}`;
 }
 
-export function publicationAlternates(slug: string, canonicalPath: string): Record<string, string> {
-  const languages: Record<string, string> = {};
-  for (const locale of getPublicationLocales(slug)) {
-    languages[locale] = `https://trytoone.com/${locale}${canonicalPath}`;
-  }
-  if (languages.en) languages["x-default"] = languages.en;
-  return languages;
-}
-
 export type TableOfContentsItem = { id: string; label: string; level: 2 | 3 };
 
 export function headingId(value: string): string {

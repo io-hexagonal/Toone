@@ -1,10 +1,5 @@
-import { locales } from "@/i18n/routing";
-import {
-  getGuideSlugs,
-  getPublication,
-  getPublicationLocales,
-  getRootEditorialSlugs,
-} from "@/lib/content";
+import { INDEXED_LOCALES } from "@/i18n/indexing";
+import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
 import { getProductGuideSlugs, getProductGuideSourcePath } from "@/lib/product-showcase";
 import { BUILD_DATE, gitLastCommitDate } from "@/lib/source-date";
 
@@ -13,24 +8,16 @@ export const dynamic = "force-static";
 const BASE_URL = "https://trytoone.com";
 
 /**
- * Only indexable 200 canonicals belong here (TECH-013, audit P2-8/P3-2).
- * `/early-access` stays out: it is the invitation-code gate and ships
- * `noindex`. The public request form it links to lives at `/request-access`
- * and is listed below, English only.
+ * Only indexable 200 canonicals belong here (TECH-013, audit P2-8/P3-2), and
+ * only English is indexed (TECH-021): the other seven locales still serve,
+ * `noindex, follow`, so none of their URLs is listed and no entry carries
+ * hreflang (`xhtml:link`) alternates. `/early-access` stays out: it is the
+ * invitation-code gate and ships `noindex`. The public request form it links
+ * to lives at `/request-access` and is listed below.
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
-] as const;
-
-/**
- * `/business` still serves in all eight locales, but only `/en/business` is a
- * distinct canonical. The seven non-English variants duplicate their locale
- * home verbatim and now canonicalise to it (G2 follow-up 1), so they are
- * non-canonical URLs and must not appear here (TECH-013) or in anyone's
- * hreflang set (TECH-010).
- */
-const CANONICAL_ENGLISH_LOCALIZED_ROUTES = [
   { path: "/business", source: "app/[locale]/business/page.tsx" },
 ] as const;
 
@@ -44,12 +31,11 @@ const ENGLISH_ONLY_ROUTES = [
   // (request -> personal code -> account). `/early-access` is the code gate
   // itself and stays `noindex`, so it is still absent from this list. Only
   // `/en/request-access` qualifies: the seven other locales render form-only
-  // copy and stay `noindex`, so they get neither a sitemap entry nor a
-  // hreflang alternate (TECH-010, TECH-013).
+  // copy and stay `noindex`, so they get no sitemap entry (TECH-013).
   { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
   // `/explore` is the public routine and bundle directory. Its seven non-English
   // locales render translated chrome around English catalog content and are
-  // `noindex` (self-canonical, no hreflang), so only `/en/explore` is listed. The
+  // `noindex` (self-canonical), so only `/en/explore` is listed. The
   // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
   // revalidates at runtime; this file stays `force-static` so the git-derived
   // `lastmod` values above are computed on the build host, where git exists.
@@ -90,88 +76,44 @@ function reportFallbacks(fallbacks: readonly string[]): void {
   );
 }
 
-function alternates(path: string): string {
-  const links = locales.map(
-    (locale) =>
-      `<xhtml:link rel="alternate" hreflang="${locale}" href="${BASE_URL}/${locale}${path}"/>`,
-  );
-  links.push(
-    `<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`,
-  );
-  return links.join("");
-}
-
-function englishAlternates(path: string): string {
-  const href = `${BASE_URL}/en${path}`;
-  return [
-    `<xhtml:link rel="alternate" hreflang="en" href="${href}"/>`,
-    `<xhtml:link rel="alternate" hreflang="x-default" href="${href}"/>`,
-  ].join("");
-}
-
-function publicationAlternateLinks(path: string, availableLocales: readonly string[]): string {
-  const links = availableLocales.map(
-    (locale) =>
-      `<xhtml:link rel="alternate" hreflang="${locale}" href="${BASE_URL}/${locale}${path}"/>`,
-  );
-  if (availableLocales.includes("en")) {
-    links.push(`<xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/en${path}"/>`);
-  }
-  return links.join("");
-}
-
-function url(loc: string, lastmod: string, alternateLinks: string) {
-  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod>${alternateLinks}</url>`;
+function url(loc: string, lastmod: string) {
+  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
 }
 
 export async function GET() {
   const { fallbacks, lastModified } = makeLastModified();
   const lines: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
 
-  for (const locale of locales) {
+  for (const locale of INDEXED_LOCALES) {
     for (const route of LOCALIZED_ROUTES) {
       const loc = `${BASE_URL}/${locale}${route.path}`;
-      lines.push(url(loc, lastModified(loc, route.source), alternates(route.path)));
+      lines.push(url(loc, lastModified(loc, route.source)));
     }
-  }
-
-  for (const route of CANONICAL_ENGLISH_LOCALIZED_ROUTES) {
-    const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(url(loc, lastModified(loc, route.source), englishAlternates(route.path)));
   }
 
   for (const slug of ["", ...getProductGuideSlugs()]) {
     const path = `/how-to${slug ? `/${slug}` : ""}`;
     const loc = `${BASE_URL}/en${path}`;
-    lines.push(
-      url(loc, lastModified(loc, getProductGuideSourcePath(slug)), englishAlternates(path)),
-    );
+    lines.push(url(loc, lastModified(loc, getProductGuideSourcePath(slug))));
   }
 
   // These trust surfaces are currently reviewed in English only. Their
   // non-English routes redirect until qualified translations are approved.
   for (const route of ENGLISH_ONLY_ROUTES) {
     const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(url(loc, lastModified(loc, route.source), englishAlternates(route.path)));
+    lines.push(url(loc, lastModified(loc, route.source)));
   }
 
   for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {
-    const availableLocales = getPublicationLocales(slug);
-    for (const locale of availableLocales) {
+    for (const locale of INDEXED_LOCALES) {
       const publication = getPublication(slug, locale);
       if (!publication) continue;
       // Articles keep their editorial `updated:` date: it is the reviewed,
       // translated-set-wide publication date, not a file mtime.
-      lines.push(
-        url(
-          `${BASE_URL}/${locale}${publication.canonicalPath}`,
-          publication.updated,
-          publicationAlternateLinks(publication.canonicalPath, availableLocales),
-        ),
-      );
+      lines.push(url(`${BASE_URL}/${locale}${publication.canonicalPath}`, publication.updated));
     }
   }
 
@@ -182,13 +124,7 @@ export async function GET() {
   const governance = getPublication("ai-agent-governance", "en");
   if (governance) {
     const loc = `${BASE_URL}/en${governance.canonicalPath}`;
-    lines.push(
-      url(
-        loc,
-        lastModified(loc, governance.sourcePath, governance.updated),
-        englishAlternates(governance.canonicalPath),
-      ),
-    );
+    lines.push(url(loc, lastModified(loc, governance.sourcePath, governance.updated)));
   }
   lines.push("</urlset>");
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { openGraphLocale } from "@/i18n/open-graph";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { TooneLandingPage } from "../page";
 
 type Props = {
@@ -8,16 +9,12 @@ type Props = {
 };
 
 /**
- * Only English `/business` is a distinct, indexable canonical. The seven
- * non-English variants render the same translated landing copy as their locale
- * home (same H1, same description) — audit P1-4 / G2 follow-up 1. They keep
- * serving, but they canonicalise to the locale home so the duplicate signal
- * consolidates there, and they are dropped from the sitemap.
- *
- * TECH-010 consequence: a canonicalised URL must not be claimed as anyone's
- * hreflang alternate, so the `/business` hreflang set collapses to `en` +
- * `x-default` and the non-English variants emit no `languages` at all (the
- * locale-home set they consolidate into already carries all eight locales).
+ * Only English `/business` is indexed. The seven non-English variants render
+ * the same translated landing copy as their locale home (audit P1-4). They
+ * keep serving, `noindex, follow` with a self-canonical like every other
+ * non-English page (TECH-021); they used to canonicalise to the locale home
+ * while staying `index, follow`, which sent two conflicting signals (audit
+ * H2). No hreflang: English is the only indexed locale.
  */
 const ENGLISH_BUSINESS_URL = "https://trytoone.com/en/business";
 
@@ -38,19 +35,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogTitle = isEnglish ? "Toone for business" : t("ogTitle");
   const ogDescription = isEnglish ? description : t("ogDescription");
 
-  const canonical = isEnglish ? ENGLISH_BUSINESS_URL : `https://trytoone.com/${locale}`;
+  const canonical = isEnglish ? ENGLISH_BUSINESS_URL : `https://trytoone.com/${locale}/business`;
 
   return {
     // `absolute` because the string already carries the brand; the root
     // template would otherwise double-brand it (audit P2-5).
     title: { absolute: title },
     description,
-    alternates: isEnglish
-      ? {
-          canonical,
-          languages: { en: ENGLISH_BUSINESS_URL, "x-default": ENGLISH_BUSINESS_URL },
-        }
-      : { canonical },
+    alternates: { canonical },
+    robots: localeRobots(locale),
+    other: localeVersions("/business"),
     openGraph: {
       type: "website",
       // og:url follows the canonical so the social graph consolidates with it.
@@ -58,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: ogTitle,
       description: ogDescription,
       siteName: "Toone",
-      // No og:locale:alternate: hreflang declares no other language either.
+      // No og:locale:alternate: no other language is declared either.
       ...openGraphLocale(locale, []),
       // Next shallow-merges metadata: a route-level `openGraph` replaces the
       // root object wholesale, so the images must be restated here or the
