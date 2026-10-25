@@ -162,14 +162,14 @@ function renderAuthPage(mode: "signin" | "invite"): string {
   );
 }
 
-test("the sign-in page shows Sign in with Apple beside Google and email when configured", () => {
+test("the sign-in page keeps Apple's button out of the server HTML when configured", () => {
   env.NEXT_PUBLIC_APPLE_SERVICES_ID = SERVICES_ID;
   env.NEXT_PUBLIC_APPLE_REDIRECT_URI = REDIRECT;
   const html = renderAuthPage("signin");
-  assert.match(html, /class="auth-apple"[^>]*aria-label="Sign in with Apple"[^>]*>.*?<img[^>]*appleid\.cdn-apple\.com\/appleid\/button/);
-  assert.ok(!html.includes('viewBox="0 0 814 1000"'));
-  // Disabled until Apple JS has loaded in the browser.
-  assert.match(html, /class="auth-apple" disabled="" aria-busy="true"/);
+  // The button mounts in the browser only: Apple's CDN answers crawlers with
+  // 403, so server-rendered artwork was reported as a broken image.
+  assert.ok(!html.includes('class="auth-apple"'));
+  assert.ok(!html.includes("appleid.cdn-apple.com"));
   assert.ok(html.includes("Continue with Google"));
   assert.ok(html.includes('type="password"'));
 });
@@ -187,6 +187,14 @@ test("the invitation page asks for the code before offering Apple", () => {
   const html = renderAuthPage("invite");
   assert.ok(!html.includes('class="auth-apple"'));
   assert.ok(html.includes(en.auth.inviteCode));
+});
+
+test("the button component renders nothing on the server, even when configured", () => {
+  const html = renderToStaticMarkup(createElement(AppleSignInButton, {
+    config: { clientId: SERVICES_ID, redirectURI: REDIRECT }, locale: "en", label: "Sign in with Apple",
+    buttonType: "sign-in", unavailableLabel: "n/a", onCredential: () => {}, onFailure: () => {},
+  }));
+  assert.equal(html, "");
 });
 
 test("the button component renders nothing without configuration", () => {
