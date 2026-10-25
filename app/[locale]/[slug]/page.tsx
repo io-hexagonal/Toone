@@ -8,11 +8,11 @@ import {
   getPublicationLocales,
   getRootEditorialSlugs,
   isRootEditorialPublication,
-  publicationAlternates,
   publicationUrl,
 } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
 import { openGraphLocale } from "@/i18n/open-graph";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -58,16 +58,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: resolvedPublication.title,
     description: resolvedPublication.description,
-    alternates: {
-      canonical: url,
-      languages: publication
-        ? publicationAlternates(slug, resolvedPublication.canonicalPath)
-        : {
-            en: publicationUrl(resolvedPublication, "en"),
-            "x-default": publicationUrl(resolvedPublication, "en"),
-          },
-    },
-    robots: publication ? { index: true, follow: true } : { index: false, follow: true },
+    // TECH-021: self-canonical, no hreflang, `noindex, follow` outside English.
+    alternates: { canonical: url },
+    robots: localeRobots(locale, Boolean(publication)),
+    other: localeVersions(resolvedPublication.canonicalPath, publication ? alternateLocales : ["en"]),
     openGraph: {
       type: "article",
       url,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
@@ -13,14 +14,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
       "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app published by Hexagonal.io and built on Claude Code and Codex.",
-    alternates: {
-      canonical: "https://trytoone.com/en/about",
-      languages: {
-        en: "https://trytoone.com/en/about",
-        "x-default": "https://trytoone.com/en/about",
-      },
-    },
-    robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    alternates: { canonical: "https://trytoone.com/en/about" },
+    robots: localeRobots(locale),
+    other: localeVersions("/about", ["en"]),
     openGraph: {
       type: "website",
       url: "https://trytoone.com/en/about",

@@ -6,6 +6,7 @@ import type {
   ListingProfilePublic,
 } from "./types";
 import { openGraphLocale } from "@/i18n/open-graph";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 
 export type CatalogQuery = {
   type: "all" | "routines" | "bundles";
@@ -184,30 +185,25 @@ export function exploreMetadata(
   title: string,
   description: string,
   cover: string | null,
-  options: { imageAlt?: string; indexable?: boolean; selfCanonical?: boolean } = {},
+  options: { imageAlt?: string; indexable?: boolean } = {},
 ) {
-  // `selfCanonical` (the hub): a non-English copy is `noindex` and its own
-  // canonical. `noindex` plus a canonical pointing elsewhere are conflicting
-  // signals; this way the copy simply stays out of the index.
-  const self = options.selfCanonical === true && locale !== "en";
-  const canonical = self ? `${SITE}/${locale}${path}` : `${SITE}/en${path}`;
+  // TECH-021: every copy is its own canonical. A non-English copy is
+  // `noindex, follow`; a canonical pointing at the English record as well
+  // would send two conflicting signals. No hreflang: English is the only
+  // indexed locale.
+  const canonical = `${SITE}/${locale}${path}`;
   // Scrapers need a fetchable URL for og:image; the inline data-URL cover the
   // pre-contract server sends would only bloat the head (~250 KB twice).
   const url = cover && /^https?:\/\//.test(cover) ? cover : null;
   const image = url && options.imageAlt ? { url, alt: options.imageAlt } : url;
   description = metaDescription(description);
-  // TECH-021 (Ahrefs F10): a record kept out of Search must not be declared as
-  // an hreflang target, so its English canonical drops the en/x-default pair.
-  // Translations still point at the English canonical when it is indexable,
-  // except a self-canonical copy, which as a `noindex` page declares no set.
-  // The empty map stops the root layout's locale-home set from merging in.
-  const languages: Record<string, string> =
-    options.indexable === false || self ? {} : { en: canonical, "x-default": canonical };
   return {
     title,
     description,
-    alternates: { canonical, languages },
-    robots: { index: locale === "en" && options.indexable !== false, follow: true },
+    alternates: { canonical },
+    robots: localeRobots(locale, options.indexable !== false),
+    // Explore content is English; the language links offer the English copy.
+    other: localeVersions(path, ["en"]),
     openGraph: {
       type: "website" as const,
       url: canonical,

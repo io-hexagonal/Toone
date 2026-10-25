@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { localeVersions } from "@/i18n/indexing";
 import SiteHeader from "@/components/SiteHeader";
 import HeroAuth from "@/components/HeroAuth";
 import StatementSection from "@/components/StatementSection";
@@ -23,6 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("siteTitle"),
     description: t("siteDescription"),
+    // The home exists in every locale; the language links use this map.
+    other: localeVersions(""),
   };
 }
 

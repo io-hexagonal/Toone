@@ -2,6 +2,7 @@ import WaitlistPage from "@/components/WaitlistPage";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { openGraphLocale } from "@/i18n/open-graph";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 
 const TITLE = "Request early access to Toone | AI routines on macOS";
 const DESCRIPTION =
@@ -16,28 +17,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // This is the public *request* page of the invitation-only funnel: leave an
   // email, receive a personal code, redeem it. `/early-access` is the code
   // gate and stays `noindex`; this page is the indexable conversion
-  // destination, so it carries a real title/description, a self-canonical,
-  // `en` + `x-default` hreflang, and a sitemap entry.
+  // destination, so it carries a real title/description, a self-canonical
+  // and a sitemap entry. No hreflang: English is the only indexed locale
+  // (TECH-021).
   //
   // The seven non-English routes render the form alone — the English content
-  // block above it is not translated yet — so they stay `noindex, follow` and
-  // emit no alternates (TECH-010 forbids advertising a hreflang set the
-  // page's own copy does not back).
+  // block above it is not translated yet — so they stay `noindex, follow`.
   //
   // `alternates` must still be set explicitly for them: omitting it lets the
   // root layout's metadata merge in, which canonicalised `/pt/request-access`
-  // to `https://trytoone.com/pt` and attached the nine locale-home hreflang
-  // links. A self-canonical plus an empty language map keeps the page honest
-  // and silent (TECH-010).
+  // to `https://trytoone.com/pt`. A self-canonical keeps the page honest
+  // (TECH-010).
   if (locale !== "en") {
     return {
       title: { absolute: TITLE },
       description: DESCRIPTION,
-      alternates: {
-        canonical: `https://trytoone.com/${locale}/request-access`,
-        languages: {},
-      },
-      robots: { index: false, follow: true },
+      alternates: { canonical: `https://trytoone.com/${locale}/request-access` },
+      robots: localeRobots(locale),
       // og:url follows the canonical (R7) instead of inheriting the locale home.
       openGraph: {
         type: "website",
@@ -54,11 +50,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // `%s | Toone` template from double-branding it (audit P2-5).
     title: { absolute: TITLE },
     description: DESCRIPTION,
-    alternates: {
-      canonical: CANONICAL,
-      languages: { en: CANONICAL, "x-default": CANONICAL },
-    },
-    robots: { index: true, follow: true },
+    alternates: { canonical: CANONICAL },
+    robots: localeRobots(locale),
+    other: localeVersions("/request-access", ["en"]),
     openGraph: {
       type: "website",
       url: CANONICAL,

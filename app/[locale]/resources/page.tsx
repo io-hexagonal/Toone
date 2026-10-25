@@ -6,7 +6,8 @@ import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
 import { getLatestPosts } from "@/lib/journal/api";
 import { PostCard } from "@/components/journal/JournalParts";
-import { locales, type Locale } from "@/i18n/routing";
+import { type Locale } from "@/i18n/routing";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { openGraphLocale } from "@/i18n/open-graph";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -26,19 +27,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = localeParam as Locale;
   const t = await getTranslations({ locale, namespace: "resources" });
   const url = `https://trytoone.com/${locale}/resources`;
-  const languages = Object.fromEntries(
-    locales.map((alternateLocale) => [alternateLocale, `https://trytoone.com/${alternateLocale}/resources`]),
-  );
   return {
     // Every locale's title carries the brand; `absolute` stops the root
     // template from double-branding it (audit P2-5, Ahrefs F26).
     title: { absolute: t("metaTitle") },
     description: t("metaDescription"),
-    alternates: {
-      canonical: url,
-      languages: { ...languages, "x-default": "https://trytoone.com/en/resources" },
-    },
-    robots: { index: true, follow: true },
+    // TECH-021: self-canonical, no hreflang, `noindex, follow` outside English.
+    alternates: { canonical: url },
+    robots: localeRobots(locale),
+    other: localeVersions("/resources"),
     openGraph: {
       type: "website",
       url,

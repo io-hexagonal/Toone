@@ -5,7 +5,7 @@ import { usePathname } from "@/lib/navigation";
 import { readAlternates } from "@/lib/locale-preference";
 
 /**
- * This page's hreflang alternates, by locale. Empty on the server and on the
+ * This page's language versions, by locale. Empty on the server and on the
  * first client render, so language links hydrate with the same `/xx` homes
  * the server sent, then point at the page's own versions. Re-read after each
  * navigation; metadata can arrive a beat after render.

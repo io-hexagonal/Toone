@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { locales } from "@/i18n/routing";
 import { openGraphLocale } from "@/i18n/open-graph";
+import { localeRobots } from "@/i18n/indexing";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
@@ -138,12 +139,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isSupportedLocale(locale)) notFound();
   const t = await getTranslations({ locale, namespace: "meta" });
 
-  const languages: Record<string, string> = {};
-  for (const l of locales) {
-    languages[l] = `https://trytoone.com/${l}`;
-  }
-  languages["x-default"] = "https://trytoone.com/en";
-
   return {
     title: {
       default: t("siteTitle"),
@@ -154,10 +149,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // engine since 2009 and a standing repo/live sync liability.
     applicationName: "Toone",
     metadataBase: new URL("https://trytoone.com"),
-    alternates: {
-      canonical: `https://trytoone.com/${locale}`,
-      languages,
-    },
+    // TECH-021: self-canonical and no hreflang. English is the only indexed
+    // locale, so no page declares language alternates. Routes that do not set
+    // `alternates` inherit this canonical, so every 200 route sets its own.
+    alternates: { canonical: `https://trytoone.com/${locale}`, },
     // og:title is deliberately NOT siteTitle. The <title> carries the SEO tail
     // ("| Built on Claude Code ..."), which social cards give no room for: it
     // pushed the real headline onto a second line on every platform.
@@ -213,7 +208,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     manifest: "/site.webmanifest",
-    robots: { index: true, follow: true },
+    // `noindex, follow` outside English (TECH-021). A route that sets its own
+    // `robots` replaces this one (TECH-011) and must use `localeRobots` too.
+    robots: localeRobots(locale),
     other: {
       // Ahrefs Webmaster Tools ownership proof (server-rendered on every locale
       // route because the bare root redirects and Ahrefs does not run JS).
@@ -245,9 +242,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable}`}>
       <head>
-        {/* hreflang comes from the metadata API (alternates.languages),
-            which subpages override with their own URLs — a hardcoded block
-            here would stamp home-page alternates onto every route. */}
+        {/* No hreflang (TECH-021): English is the only indexed locale. The
+            language links read each page's versions from the metadata API
+            (`localeVersions`, i18n/indexing.ts) instead. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

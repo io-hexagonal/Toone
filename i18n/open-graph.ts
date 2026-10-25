@@ -21,8 +21,8 @@ function isLocale(value: string): value is Locale {
 
 /**
  * `openGraph.locale` and `openGraph.alternateLocale` for a page in `locale`.
- * `available` lists the locales the page exists in — the same set as its
- * hreflang alternates, so a page without alternates declares none here.
+ * `available` lists the locales the page exists in, so a page that declares
+ * no other language version declares none here either.
  */
 export function openGraphLocale(
   locale: string,

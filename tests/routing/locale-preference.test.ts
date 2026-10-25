@@ -91,21 +91,36 @@ test("the explicit choice is read from toone_locale only", () => {
   assert.equal(localeChoiceFromCookies(""), null);
 });
 
-test("hreflang links become same-origin paths; unknown languages and x-default are ignored", () => {
-  const links = [
-    ["fr", "https://trytoone.com/fr/privacy"],
-    ["pt", "/pt/privacy?ref=x"],
-    ["x-default", "https://trytoone.com/en/privacy"],
-    ["ja", "https://trytoone.com/ja/privacy"],
-  ].map(([hreflang, href]) => ({
-    getAttribute: (name: string) => (name === "hreflang" ? hreflang : name === "href" ? href : null),
-  }));
-  const root = { querySelectorAll: () => links } as unknown as ParentNode;
+test("language versions come from the page's meta tag as same-origin paths; unknown languages and other origins are ignored", () => {
+  const versions = JSON.stringify({
+    fr: "https://trytoone.com/fr/resources",
+    pt: "/pt/resources?ref=x",
+    "x-default": "/en/resources",
+    ja: "/ja/resources",
+    de: "https://example.com/de/resources",
+    it: 42,
+  });
+  const root = {
+    querySelector: (selector: string) =>
+      selector === 'meta[name="toone-locale-versions"]'
+        ? { getAttribute: (name: string) => (name === "content" ? versions : null) }
+        : null,
+  } as unknown as ParentNode;
 
   assert.deepEqual(readAlternates(root, "https://trytoone.com"), {
-    fr: "/fr/privacy",
-    pt: "/pt/privacy?ref=x",
+    fr: "/fr/resources",
+    pt: "/pt/resources?ref=x",
   });
+});
+
+test("no meta tag, or a malformed one, offers no language versions", () => {
+  const withContent = (content: string | null) =>
+    ({
+      querySelector: () => (content === null ? null : { getAttribute: () => content }),
+    }) as unknown as ParentNode;
+  assert.deepEqual(readAlternates(withContent(null), "https://trytoone.com"), {});
+  assert.deepEqual(readAlternates(withContent("{not json"), "https://trytoone.com"), {});
+  assert.deepEqual(readAlternates(withContent('"/fr"'), "https://trytoone.com"), {});
 });
 
 test("language links fall back to the language home when the page has no alternate", () => {

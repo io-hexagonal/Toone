@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
@@ -16,14 +17,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: "Privacy Policy",
     description:
       "How Toone handles website, account, product, and analytics data, which data stays local on your Mac, and how to reach the team about a privacy request.",
-    alternates: {
-      canonical: "https://trytoone.com/en/privacy",
-      languages: {
-        en: "https://trytoone.com/en/privacy",
-        "x-default": "https://trytoone.com/en/privacy",
-      },
-    },
-    robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    alternates: { canonical: "https://trytoone.com/en/privacy" },
+    robots: localeRobots(locale),
+    other: localeVersions("/privacy", ["en"]),
     // R7: og:url must equal the canonical. Without a route-level `openGraph`
     // this page inherited the root layout's card, whose og:url is the locale
     // home, so the shared URL and the canonical disagreed.

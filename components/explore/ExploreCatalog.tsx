@@ -24,12 +24,12 @@ import {
 
 /**
  * Hub metadata: only the plain first view of `/en/explore` is indexable. The
- * other locales' hubs are `noindex` with a self canonical and no hreflang, and
- * neither the sitemap nor any indexable page's alternates list them.
+ * other locales' hubs are `noindex` with a self canonical, and no sitemap
+ * lists them (TECH-021).
  */
 export async function exploreCatalogMetadata(locale: string, query: CatalogQuery) {
   const ui = await getExploreCopy(locale);
-  const meta = exploreMetadata(locale, "/explore", ui.heading, ui.intro, null, { selfCanonical: true });
+  const meta = exploreMetadata(locale, "/explore", ui.heading, ui.intro, null);
   if (query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all" || query.page > 1)
     meta.robots.index = false;
   try {
