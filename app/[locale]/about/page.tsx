@@ -72,7 +72,7 @@ export default async function AboutPage({ params, searchParams }: Props) {
           <h2>Publisher and accountability</h2>
           <p>
             Toone is an independent product published by{` `}
-            <a href="https://hexagonal.io">Hexagonal.io</a>. It is not affiliated with Anthropic or
+            <a href="https://www.hexagonal.io/">Hexagonal.io</a>. It is not affiliated with Anthropic or
             OpenAI. Product, privacy, and release claims are checked against current
             product, repository, and release evidence before publication.
           </p>
