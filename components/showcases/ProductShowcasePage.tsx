@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { Article, WithContext } from "schema-dts";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import LandingAudienceBar from "@/components/LandingAudienceBar";
@@ -8,8 +9,10 @@ import ProductGuideNavScroll from "./ProductGuideNavScroll";
 import {
   PRODUCT_GUIDE_NAV,
   getAdjacentProductGuidePages,
+  getProductGuideSourcePath,
   type ProductGuidePage,
 } from "@/lib/product-showcase";
+import { gitLastCommitDate } from "@/lib/source-date";
 import styles from "./ProductShowcase.module.css";
 
 type Props = {
@@ -82,12 +85,41 @@ function GuideNavigation({ locale, activeSlug }: { locale: string; activeSlug: s
   );
 }
 
+/**
+ * Article JSON-LD for every product guide page, server-rendered (TECH-015,
+ * TECH-016). Toone wrote the guides, so the author is the organization.
+ * `dateModified` is the commit date of the backing markdown, the same source
+ * as the sitemap `lastmod` (TECH-013); it is left out when git is unavailable.
+ */
+function guideArticleSchema(page: ProductGuidePage): WithContext<Article> {
+  const url = `https://trytoone.com/en/how-to${page.slug ? `/${page.slug}` : ""}`;
+  const modified = gitLastCommitDate(getProductGuideSourcePath(page.slug));
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: page.title,
+    description: page.description,
+    inLanguage: "en",
+    ...(modified ? { dateModified: modified } : {}),
+    mainEntityOfPage: url,
+    author: { "@type": "Organization", "@id": "https://trytoone.com/#organization", name: "Toone" },
+    publisher: { "@id": "https://trytoone.com/#organization" },
+    image: "https://trytoone.com/assets/og/toone-og.png",
+  };
+}
+
 export default function ProductShowcasePage({ locale, page }: Props) {
   const headings = getHeadings(page.body);
   const adjacent = getAdjacentProductGuidePages(page.slug);
 
   return (
     <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(guideArticleSchema(page)).replace(/</g, "\\u003c"),
+        }}
+      />
       <LandingAudienceBar activeAudience="personal" />
       <SiteHeader landingPath="/" scrollThreshold={260} />
 
