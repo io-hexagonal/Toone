@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precisie voor je agentische workflows en routines",
       "heroTag": "Bouw complexe, betrouwbare AI-workflows door ze te beschrijven.\nKoppel je eigen accounts in een browser. Test, bewerk en ga verder waar hij stopte.",
-      "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
+      "featuresTitle": "Alles wat je agents nodig hebben om het werk te doen",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "seeAllFeatures": "Bekijk alle functies",
       "statement": {
@@ -86,7 +86,8 @@
     "macOS": "macOS",
     "soon": "Binnenkort",
     "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
-    "pillarsTitle": "De AI-werkruimte voor jouw agentische workflows",
+    "featuresEyebrow": "Functies",
+    "pillarsTitle": "Alles wat je agents nodig hebben om het werk te doen",
     "pillarsSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
     "collaborationTitle": "Je team werkt live samen",
     "collaborationTooltip": "Live samenwerking",
@@ -133,7 +134,148 @@
     "eaStep1": "Vraag toegang aan met je e-mailadres.",
     "eaStep2": "We sturen je een persoonlijke code zodra er een plek vrijkomt.",
     "eaStep3": "Verzilver de code, maak je account aan en download Toone.",
-    "exploreLink": "Ontdek routines voor:<br></br>Onderzoekers, SEO, Content, Founders, Outreach, AI-⁠engineers"
+    "exploreLink": "Ontdek routines voor:<br></br>Onderzoekers, SEO, Content, Founders, Outreach, AI-⁠engineers",
+    "howItWorks": {
+      "eyebrow": "Hoe het werkt",
+      "title": "Van gewone woorden naar een draaiende routine",
+      "sub": "Jij beschrijft het werk. Je agents doen het terwijl je meekijkt.",
+      "steps": {
+        "describe": {
+          "title": "Beschrijf het",
+          "body": "Leg het uit zoals aan een collega: wanneer, welke modellen, welke accounts. Toone tekent de graaf, jij kijkt hem na.",
+          "chips": {
+            "words": "Gewone woorden",
+            "schedule": "Op schema",
+            "accounts": "Je eigen accounts"
+          }
+        },
+        "run": {
+          "title": "Kijk hoe hij draait",
+          "body": "Agents werken parallel, elk op het model dat je koos, en elke stap licht live op in je eigen accounts.",
+          "chips": {
+            "parallel": "Parallelle agents",
+            "models": "Een model per agent",
+            "live": "Live graaf"
+          }
+        },
+        "resume": {
+          "title": "Pauzeer, bewerk, ga verder",
+          "body": "Contracten controleren elke uitkomst. Haalt een stap ze niet, dan pauzeert alleen die: pas hem aan en ga verder waar hij stopte.",
+          "chips": {
+            "contracts": "Contracten",
+            "fallbacks": "Fallbacks",
+            "resume": "Verder vanaf daar"
+          }
+        }
+      },
+      "prompt": "<k>Elke maandag om 9:00</k>: onderzoek onze niche met <k>4 parallelle agents op Haiku</k> en voeg samen wat ze vinden. Laat <k>een Opus-agent</k> de samenvatting controleren. Vind <k>minstens 20 nieuwe leads</k> op LinkedIn en <k>sla iedereen over die we al benaderd hebben</k>. Ontwerp 3 postvisuals in Figma, animeer de beste in Higgsfield en publiceer op Threads, Facebook en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+      "promptLabel": "Nieuwe routine",
+      "graph": {
+        "schedule": "ma 9:00",
+        "fallback": "1× opnieuw → vraag mij",
+        "research": "Onderzoek",
+        "merge": "Samenvoegen",
+        "review": "Review",
+        "findLeads": "Leads vinden",
+        "design": "Ontwerpen",
+        "publish": "Publiceren",
+        "min": "≥ 20",
+        "unique": "geen dubbele"
+      },
+      "run": {
+        "research": "4 Haiku-agents onderzoeken parallel",
+        "merge": "De 4 rapporten samenvoegen",
+        "review": "Opus controleert de samenvatting",
+        "leads": "Leads vinden op LinkedIn",
+        "contract": "Contract gehaald: ≥ 20, geen dubbele",
+        "design": "Ontwerpen in Figma, animeren in Higgsfield",
+        "publish": "Publiceren op Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: onder het contract",
+        "edit": "Uitbreiden naar EU + VK",
+        "note": "Afgeronde stappen houden hun resultaten."
+      }
+    },
+    "routineGraph": {
+      "routineName": "Wekelijkse outreach",
+      "research": "Onderzoek",
+      "findLeads": "Leads vinden",
+      "designFiles": "Ontwerpen",
+      "publishSocial": "Delen op social media",
+      "running": "Bezig",
+      "paused": "Gepauzeerd",
+      "resume": "Hervatten",
+      "subs": {
+        "research": ["Bronnen verzamelen", "Analyseren met Claude", "Controleren met ChatGPT", "Bevindingen samenvatten"],
+        "findLeads": ["Zoeken op LinkedIn", "Filteren op fit", "Profielen verrijken", "Leads selecteren"],
+        "designFiles": ["Merkstem ophalen", "Ontwerpen in Figma", "Witruimte controleren", "Animeren in Higgsfield"],
+        "publishSocial": ["Tekst per platform aanpassen", "Posten op Threads", "Posten op Facebook", "Posten op Instagram"]
+      }
+    },
+    "whyToone": {
+      "eyebrow": "Waarom Toone",
+      "title": "Een prompt met een timer is nog geen routine.",
+      "sub": "Chatassistenten kunnen een prompt inplannen. Toone voert een proces uit: dezelfde stappen, dezelfde controles en geheugen tussen runs. Herhaalbaar door ontwerp.",
+      "prompt": {
+        "label": "Een ingeplande prompt",
+        "note": "Begint elke keer opnieuw. Niemand controleert.",
+        "when": "Elke maandag",
+        "text": "Onderzoek onze niche en vind nieuwe leads",
+        "run": "Run {n}",
+        "leads": "{n} leads",
+        "duplicate": "dubbel",
+        "noSources": "geen bronnen"
+      },
+      "routine": {
+        "label": "Een Toone-routine",
+        "note": "Elke keer dezelfde stappen, gecontroleerd en onthouden.",
+        "ledger": "Register",
+        "known": "38 leads bekend",
+        "fresh": "20 nieuw deze run",
+        "duplicates": "0 dubbel"
+      },
+      "compare": {
+        "prompt": "Ingeplande prompt",
+        "toone": "Toone-routine",
+        "rows": {
+          "structure": {
+            "label": "Structuur",
+            "prompt": "Eén prompt, opnieuw gedraaid",
+            "toone": "Een graaf van stappen die je ziet en bewerkt"
+          },
+          "memory": {
+            "label": "Geheugen tussen runs",
+            "prompt": "Begint opnieuw: herhalingen en gaten",
+            "toone": "Een register: niets kwijt, niets dubbel"
+          },
+          "control": {
+            "label": "Ingrijpen tijdens een run",
+            "prompt": "Hij draait of niet",
+            "toone": "Pauzeer één stap, pas aan, ga verder waar hij stopte"
+          },
+          "checks": {
+            "label": "Controles",
+            "prompt": "Jij leest de uitkomst",
+            "toone": "Contracten houden slechte output tegen (≥ 20 leads, bronnen bij elke lead)"
+          },
+          "failures": {
+            "label": "Fouten",
+            "prompt": "Stil",
+            "toone": "Foutroutes: opnieuw proberen, ander model of jou vragen"
+          },
+          "models": {
+            "label": "Modellen",
+            "prompt": "Eén model",
+            "toone": "Een model per stap (Haiku parallel, Opus ter controle)"
+          }
+        },
+        "foot": "Gebruik de modellen waar je al voor betaalt. Toone voegt de laag toe die zij missen."
+      }
+    },
+    "closing": {
+      "title": "Geef je terugkerende werk aan agents die je aan het werk ziet."
+    }
   },
   "privacyChoices": {
     "title": "Cookies en analyse",
@@ -162,6 +304,7 @@
     "ogTitle": "Toone | De AI-werkruimte voor jouw agentische workflows"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Vragen, beantwoord.",
     "sub": "De korte versie van alles wat men ons vraagt.",
     "q1": "Wat is Toone?",

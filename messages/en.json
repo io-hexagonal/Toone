@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precision for your agentic workflows and routines",
       "heroTag": "Build complex, reliable AI workflows by describing them.\nAttach your own accounts in a browser. Test, edit, and resume where it stopped.",
-      "featuresTitle": "The AI workspace for your agentic workflows",
+      "featuresTitle": "Everything your agents need to get work done",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
       "statement": {
@@ -86,7 +86,8 @@
     "macOS": "macOS",
     "soon": "Soon",
     "heroTitle": "Run company operations as governed AI routines",
-    "pillarsTitle": "The AI workspace for your agentic workflows",
+    "featuresEyebrow": "Features",
+    "pillarsTitle": "Everything your agents need to get work done",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
     "collaborationTitle": "Your team works together live",
     "collaborationTooltip": "Live collaboration",
@@ -133,7 +134,148 @@
     "eaStep1": "Request access with your email.",
     "eaStep2": "We send a personal code when a place opens.",
     "eaStep3": "Redeem the code, create your account and download Toone.",
-    "exploreLink": "Explore routines for:<br></br>Researchers, SEO, Content, Founders, Outreach, AI engineers"
+    "exploreLink": "Explore routines for:<br></br>Researchers, SEO, Content, Founders, Outreach, AI engineers",
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "From plain words to a running routine",
+      "sub": "You describe the work. Your agents do it where you can see it.",
+      "steps": {
+        "describe": {
+          "title": "Describe it",
+          "body": "Brief it like a colleague: when it runs, which models, which accounts. Toone drafts the graph for you to check.",
+          "chips": {
+            "words": "Plain words",
+            "schedule": "On a schedule",
+            "accounts": "Your accounts"
+          }
+        },
+        "run": {
+          "title": "Watch it run",
+          "body": "Agents work in parallel, each on the model you chose, and every step lights up live on your own accounts.",
+          "chips": {
+            "parallel": "Parallel agents",
+            "models": "A model per agent",
+            "live": "Live graph"
+          }
+        },
+        "resume": {
+          "title": "Pause, edit, resume",
+          "body": "Contracts check every output. A step that falls short pauses alone: edit it and resume where it stopped.",
+          "chips": {
+            "contracts": "Contracts",
+            "fallbacks": "Fallbacks",
+            "resume": "Resume in place"
+          }
+        }
+      },
+      "prompt": "<k>Every Monday at 9:00</k>, research our niche with <k>4 parallel agents on Haiku</k> and merge what they find. Have <k>an Opus agent</k> check the summary. Find <k>at least 20 new leads</k> on LinkedIn — <k>skip anyone we’ve contacted</k>. Design 3 post visuals in Figma, animate the best one in Higgsfield, and publish to Threads, Facebook and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+      "promptLabel": "New routine",
+      "graph": {
+        "schedule": "Mon 9:00",
+        "fallback": "retry ×1 → ask me",
+        "research": "Research",
+        "merge": "Merge",
+        "review": "Review",
+        "findLeads": "Find leads",
+        "design": "Design",
+        "publish": "Publish",
+        "min": "≥ 20",
+        "unique": "no duplicates"
+      },
+      "run": {
+        "research": "4 Haiku agents research in parallel",
+        "merge": "Merge the 4 reports",
+        "review": "Opus checks the summary",
+        "leads": "Find leads on LinkedIn",
+        "contract": "Contract met: ≥ 20, no duplicates",
+        "design": "Design in Figma, animate in Higgsfield",
+        "publish": "Publish to Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: below the contract",
+        "edit": "Widen to EU + UK",
+        "note": "Finished steps keep their results."
+      }
+    },
+    "routineGraph": {
+      "routineName": "Weekly outreach",
+      "research": "Research",
+      "findLeads": "Find leads",
+      "designFiles": "Design files",
+      "publishSocial": "Publish to social media",
+      "running": "Running",
+      "paused": "Paused",
+      "resume": "Resume",
+      "subs": {
+        "research": ["Gather sources", "Analyse with Claude", "Cross-check with ChatGPT", "Summarise findings"],
+        "findLeads": ["Search LinkedIn", "Filter by fit", "Enrich profiles", "Shortlist leads"],
+        "designFiles": ["Fetch brand voice", "Design in Figma", "Review spacing", "Animate in Higgsfield"],
+        "publishSocial": ["Adapt copy per platform", "Post to Threads", "Post to Facebook", "Post to Instagram"]
+      }
+    },
+    "whyToone": {
+      "eyebrow": "Why Toone",
+      "title": "A prompt on a timer isn't a routine.",
+      "sub": "Chat assistants can schedule a prompt. Toone runs a process: the same steps, the same checks, and memory between runs. Repeatable by design.",
+      "prompt": {
+        "label": "A scheduled prompt",
+        "note": "Starts fresh every run. Nobody checks.",
+        "when": "Every Monday",
+        "text": "Research our niche and find new leads",
+        "run": "Run {n}",
+        "leads": "{n} leads",
+        "duplicate": "duplicate",
+        "noSources": "no sources"
+      },
+      "routine": {
+        "label": "A Toone routine",
+        "note": "The same steps every run, checked and remembered.",
+        "ledger": "Ledger",
+        "known": "38 leads known",
+        "fresh": "20 new this run",
+        "duplicates": "0 duplicates"
+      },
+      "compare": {
+        "prompt": "Scheduled prompt",
+        "toone": "Toone routine",
+        "rows": {
+          "structure": {
+            "label": "Structure",
+            "prompt": "One prompt, re-run",
+            "toone": "A graph of steps you can see and edit"
+          },
+          "memory": {
+            "label": "Memory between runs",
+            "prompt": "Starts fresh: repeats and gaps",
+            "toone": "A ledger: nothing lost, nothing repeated"
+          },
+          "control": {
+            "label": "Control mid-run",
+            "prompt": "It runs or it doesn't",
+            "toone": "Pause one step, edit, resume where it stopped"
+          },
+          "checks": {
+            "label": "Checks",
+            "prompt": "You read the output",
+            "toone": "Contracts stop bad output (≥ 20 leads, sources on every lead)"
+          },
+          "failures": {
+            "label": "Failures",
+            "prompt": "Silent",
+            "toone": "Failure routes: retry, switch model, or ask you"
+          },
+          "models": {
+            "label": "Models",
+            "prompt": "One model",
+            "toone": "A model per step (Haiku in parallel, Opus to verify)"
+          }
+        },
+        "foot": "Use the models you already pay for. Toone adds the layer they don't have."
+      }
+    },
+    "closing": {
+      "title": "Hand your repeat work to agents you can watch."
+    }
   },
   "privacyChoices": {
     "title": "Cookies & analytics",
@@ -162,6 +304,7 @@
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Questions, answered.",
     "sub": "The short version of everything people ask us.",
     "q1": "What is Toone?",

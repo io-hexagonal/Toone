@@ -50,7 +50,7 @@ Listings are free. Paid listings aren't available yet.
 
 ## 5. Follow the review
 
-The card changes to **Submitted for review**. Toone emails you when your submission has been reviewed. To check on it any time, open **Explore** in the app and switch to **My submissions**. Each item shows its status, and a rejected item includes the reviewer's note. The routine's row in your organization also shows a status such as **In review** or **Shared**.
+The card changes to **Submitted for review**. Toone emails you when your submission has been reviewed. To check on it any time, open **Explore** in the app and switch to **My submissions**. Each item shows its status: **Pending**, **Approved** or **Rejected**. A rejected item includes the reviewer's note. In the **Routines** panel, the routine's row also carries a badge such as **In review** or **Shared**.
 
 Once approved, the listing is public on [Explore](/explore) and anyone can add it by following [Import a routine from Explore](/how-to/getting-started/import-a-routine-from-explore). Choose **Copy link** in **My submissions** to send someone straight to it.
 
@@ -58,7 +58,7 @@ Once approved, the listing is public on [Explore](/explore) and anyone can add i
 
 - **Update:** choose **Share update** in **My submissions**, or **Share an update** from the routine's **Share…** menu. The current version stays live until the update is approved.
 - **Rejected:** fix what the reviewer's note describes, then choose **Re-share**.
-- **Withdraw:** while a submission is still in review, choose **Withdraw…** to take it back.
+- **Withdraw:** while a submission is still **Pending**, choose **Withdraw…** to take it back.
 
 Once a listing is approved you can't unpublish it yourself. [Contact Toone](/en/contact) if you need it removed.
 

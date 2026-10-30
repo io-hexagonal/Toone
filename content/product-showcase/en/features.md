@@ -106,13 +106,13 @@ Talk directly to agents and turn captured conversations into project context, de
 
 ### Mobile companion
 
-Pair an approved iPhone over the cloud or local network to reach Toone away from the Mac.
+Pair an approved iPhone through the cloud relay to reach Toone away from the Mac.
 
 [Explore the mobile companion](/how-to/features/mobile-companion).
 
 ### MCPs and integrations
 
-Enable MCP servers and reusable browser site maps globally or within the project that needs them.
+Enable MCP servers globally or within the project that needs them, and reuse browser site maps across all your projects.
 
 [Explore MCPs and integrations](/how-to/features/mcp-integrations).
 

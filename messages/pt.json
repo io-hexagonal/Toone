@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precisão para os seus fluxos agênticos e rotinas",
       "heroTag": "Crie fluxos de IA complexos e fiáveis descrevendo-os.\nLigue as suas próprias contas num navegador. Teste, edite e retome onde parou.",
-      "featuresTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
+      "featuresTitle": "Tudo o que os seus agentes precisam para fazer o trabalho",
       "featuresSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
       "seeAllFeatures": "Ver todas as funcionalidades",
       "statement": {
@@ -86,7 +86,8 @@
     "macOS": "macOS",
     "soon": "Em breve",
     "heroTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
-    "pillarsTitle": "O espaço de trabalho de IA para os seus fluxos agênticos",
+    "featuresEyebrow": "Funcionalidades",
+    "pillarsTitle": "Tudo o que os seus agentes precisam para fazer o trabalho",
     "pillarsSub": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
     "collaborationTitle": "Sua equipe trabalha junta ao vivo",
     "collaborationTooltip": "Colaboração ao vivo",
@@ -133,7 +134,148 @@
     "eaStep1": "Peça acesso com o seu email.",
     "eaStep2": "Enviamos um código pessoal quando surgir uma vaga.",
     "eaStep3": "Resgate o código, crie a sua conta e descarregue o Toone.",
-    "exploreLink": "Explorar rotinas para:<br></br>Investigadores, SEO, Conteúdo, Fundadores, Outreach, Engenheiros de IA"
+    "exploreLink": "Explorar rotinas para:<br></br>Investigadores, SEO, Conteúdo, Fundadores, Outreach, Engenheiros de IA",
+    "howItWorks": {
+      "eyebrow": "Como funciona",
+      "title": "De palavras simples a uma rotina em execução",
+      "sub": "Descreva o trabalho. Os seus agentes fazem-no à sua frente.",
+      "steps": {
+        "describe": {
+          "title": "Descreva-o",
+          "body": "Explique como a um colega: quando corre, que modelos, que contas. O Toone desenha o grafo para o rever.",
+          "chips": {
+            "words": "Palavras simples",
+            "schedule": "Com horário",
+            "accounts": "As suas contas"
+          }
+        },
+        "run": {
+          "title": "Acompanhe a execução",
+          "body": "Os agentes trabalham em paralelo, cada um no modelo que escolheu, e cada passo acende-se em direto nas suas contas.",
+          "chips": {
+            "parallel": "Agentes em paralelo",
+            "models": "Um modelo por agente",
+            "live": "Grafo em direto"
+          }
+        },
+        "resume": {
+          "title": "Pause, edite, retome",
+          "body": "Os contratos verificam cada resultado. Se um passo não os cumprir, só esse pausa: edite-o e retome onde parou.",
+          "chips": {
+            "contracts": "Contratos",
+            "fallbacks": "Alternativas",
+            "resume": "Retomar onde parou"
+          }
+        }
+      },
+      "prompt": "<k>Todas as segundas às 9:00</k>, pesquisa o nosso nicho com <k>4 agentes em paralelo no Haiku</k> e junta o que encontrarem. Pede a <k>um agente Opus</k> que reveja o resumo. Encontra <k>pelo menos 20 leads novos</k> no LinkedIn e <k>ignora quem já contactámos</k>. Cria 3 visuais no Figma, anima o melhor no Higgsfield e publica no Threads, Facebook e Instagram. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
+      "promptLabel": "Nova rotina",
+      "graph": {
+        "schedule": "seg. 9:00",
+        "fallback": "repetir ×1 → perguntar-me",
+        "research": "Pesquisar",
+        "merge": "Juntar",
+        "review": "Revisão",
+        "findLeads": "Encontrar leads",
+        "design": "Design",
+        "publish": "Publicar",
+        "min": "≥ 20",
+        "unique": "sem duplicados"
+      },
+      "run": {
+        "research": "4 agentes Haiku pesquisam em paralelo",
+        "merge": "Juntar os 4 relatórios",
+        "review": "O Opus revê o resumo",
+        "leads": "Encontrar leads no LinkedIn",
+        "contract": "Contrato cumprido: ≥ 20, sem duplicados",
+        "design": "Design no Figma, animação no Higgsfield",
+        "publish": "Publicar no Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: abaixo do contrato",
+        "edit": "Alargar a UE + Reino Unido",
+        "note": "Os passos concluídos mantêm os resultados."
+      }
+    },
+    "routineGraph": {
+      "routineName": "Prospeção semanal",
+      "research": "Pesquisar",
+      "findLeads": "Encontrar leads",
+      "designFiles": "Criar ficheiros",
+      "publishSocial": "Publicar nas redes",
+      "running": "Em curso",
+      "paused": "Em pausa",
+      "resume": "Retomar",
+      "subs": {
+        "research": ["Reunir fontes", "Analisar com o Claude", "Verificar com o ChatGPT", "Resumir conclusões"],
+        "findLeads": ["Pesquisar no LinkedIn", "Filtrar por perfil", "Enriquecer perfis", "Selecionar leads"],
+        "designFiles": ["Obter o tom da marca", "Desenhar no Figma", "Rever espaçamentos", "Animar no Higgsfield"],
+        "publishSocial": ["Adaptar o texto a cada rede", "Publicar no Threads", "Publicar no Facebook", "Publicar no Instagram"]
+      }
+    },
+    "whyToone": {
+      "eyebrow": "Porquê o Toone",
+      "title": "Um prompt com horário não é uma rotina.",
+      "sub": "Os assistentes de chat conseguem agendar um prompt. O Toone executa um processo: os mesmos passos, as mesmas verificações e memória entre execuções. Repetível de raiz.",
+      "prompt": {
+        "label": "Um prompt agendado",
+        "note": "Começa do zero a cada vez. Ninguém verifica.",
+        "when": "Todas as segundas",
+        "text": "Pesquisa o nosso nicho e encontra novos leads",
+        "run": "Execução {n}",
+        "leads": "{n} leads",
+        "duplicate": "duplicado",
+        "noSources": "sem fontes"
+      },
+      "routine": {
+        "label": "Uma rotina Toone",
+        "note": "Sempre os mesmos passos, verificados e memorizados.",
+        "ledger": "Registo",
+        "known": "38 leads conhecidos",
+        "fresh": "20 novos nesta execução",
+        "duplicates": "0 duplicados"
+      },
+      "compare": {
+        "prompt": "Prompt agendado",
+        "toone": "Rotina Toone",
+        "rows": {
+          "structure": {
+            "label": "Estrutura",
+            "prompt": "Um prompt, repetido",
+            "toone": "Um grafo de passos que pode ver e editar"
+          },
+          "memory": {
+            "label": "Memória entre execuções",
+            "prompt": "Começa do zero: repetições e falhas",
+            "toone": "Um registo: nada se perde, nada se repete"
+          },
+          "control": {
+            "label": "Controlo a meio",
+            "prompt": "Corre ou não corre",
+            "toone": "Pause um passo, edite e retome onde parou"
+          },
+          "checks": {
+            "label": "Verificações",
+            "prompt": "É você quem lê o resultado",
+            "toone": "Contratos travam maus resultados (≥ 20 leads, fontes em cada lead)"
+          },
+          "failures": {
+            "label": "Falhas",
+            "prompt": "Silenciosas",
+            "toone": "Rotas de falha: repetir, trocar de modelo ou perguntar-lhe"
+          },
+          "models": {
+            "label": "Modelos",
+            "prompt": "Um modelo",
+            "toone": "Um modelo por passo (Haiku em paralelo, Opus para verificar)"
+          }
+        },
+        "foot": "Use os modelos que já paga. O Toone acrescenta a camada que lhes falta."
+      }
+    },
+    "closing": {
+      "title": "Entregue o trabalho repetitivo a agentes que pode ver a trabalhar."
+    }
   },
   "privacyChoices": {
     "title": "Cookies e análise",
@@ -162,6 +304,7 @@
     "ogTitle": "Toone | O espaço de trabalho de IA para os seus fluxos agênticos"
   },
   "faq": {
+    "eyebrow": "Perguntas frequentes",
     "title": "Perguntas, respondidas.",
     "sub": "A versão curta de tudo o que nos perguntam.",
     "q1": "O que é o Toone?",

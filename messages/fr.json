@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "La précision pour vos workflows agentiques et routines",
       "heroTag": "Créez des workflows IA complexes et fiables en les décrivant.\nConnectez vos propres comptes dans un navigateur. Testez, modifiez et reprenez là où il s’est arrêté.",
-      "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
+      "featuresTitle": "Tout ce dont vos agents ont besoin pour faire le travail",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "seeAllFeatures": "Voir toutes les fonctionnalités",
       "statement": {
@@ -86,7 +86,8 @@
     "macOS": "macOS",
     "soon": "Bientot",
     "heroTitle": "L’espace de travail IA pour vos workflows agentiques",
-    "pillarsTitle": "L’espace de travail IA pour vos workflows agentiques",
+    "featuresEyebrow": "Fonctionnalités",
+    "pillarsTitle": "Tout ce dont vos agents ont besoin pour faire le travail",
     "pillarsSub": "Un espace pour vos agents, vos processus et vos résultats.",
     "collaborationTitle": "Votre équipe travaille ensemble en direct",
     "collaborationTooltip": "Collaboration en direct",
@@ -133,7 +134,148 @@
     "eaStep1": "Demandez l'accès avec votre e-mail.",
     "eaStep2": "Nous vous envoyons un code personnel dès qu'une place se libère.",
     "eaStep3": "Utilisez le code, créez votre compte et téléchargez Toone.",
-    "exploreLink": "Explorer des routines pour :<br></br>Chercheurs, SEO, Contenu, Fondateurs, Prospection, Ingénieurs IA"
+    "exploreLink": "Explorer des routines pour :<br></br>Chercheurs, SEO, Contenu, Fondateurs, Prospection, Ingénieurs IA",
+    "howItWorks": {
+      "eyebrow": "Comment ça marche",
+      "title": "De quelques mots à une routine en marche",
+      "sub": "Vous décrivez le travail. Vos agents le font sous vos yeux.",
+      "steps": {
+        "describe": {
+          "title": "Décrivez-le",
+          "body": "Briefez-le comme un collègue : quand il tourne, quels modèles, quels comptes. Toone dessine le graphe, vous le vérifiez.",
+          "chips": {
+            "words": "Vos mots",
+            "schedule": "Planifié",
+            "accounts": "Vos comptes"
+          }
+        },
+        "run": {
+          "title": "Regardez-la tourner",
+          "body": "Les agents travaillent en parallèle, chacun sur le modèle choisi, et chaque étape s’allume en direct sur vos comptes.",
+          "chips": {
+            "parallel": "Agents en parallèle",
+            "models": "Un modèle par agent",
+            "live": "Graphe en direct"
+          }
+        },
+        "resume": {
+          "title": "Mettez en pause, modifiez, reprenez",
+          "body": "Des contrats vérifient chaque résultat. Une étape qui n’y répond pas se met seule en pause : modifiez-la, puis reprenez.",
+          "chips": {
+            "contracts": "Contrats",
+            "fallbacks": "Plans de repli",
+            "resume": "Reprise sur place"
+          }
+        }
+      },
+      "prompt": "<k>Chaque lundi à 9 h</k>, étudie notre niche avec <k>4 agents en parallèle sur Haiku</k> et fusionne leurs résultats. Fais vérifier la synthèse par <k>un agent Opus</k>. Trouve <k>au moins 20 nouveaux leads</k> sur LinkedIn, <k>sans personne déjà contactée</k>. Crée 3 visuels dans Figma, anime le meilleur dans Higgsfield et publie sur Threads, Facebook et Instagram. <k>Si une étape échoue, réessaie une fois, puis demande-moi.</k>",
+      "promptLabel": "Nouvelle routine",
+      "graph": {
+        "schedule": "lun. 9 h",
+        "fallback": "réessai ×1 → me demander",
+        "research": "Recherche",
+        "merge": "Fusion",
+        "review": "Relecture",
+        "findLeads": "Trouver des leads",
+        "design": "Design",
+        "publish": "Publier",
+        "min": "≥ 20",
+        "unique": "sans doublons"
+      },
+      "run": {
+        "research": "4 agents Haiku cherchent en parallèle",
+        "merge": "Fusion des 4 rapports",
+        "review": "Opus vérifie la synthèse",
+        "leads": "Trouver des leads sur LinkedIn",
+        "contract": "Contrat rempli : ≥ 20, sans doublons",
+        "design": "Design dans Figma, animation dans Higgsfield",
+        "publish": "Publication sur Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads : sous le contrat",
+        "edit": "Élargir à l’UE + UK",
+        "note": "Les étapes terminées gardent leurs résultats."
+      }
+    },
+    "routineGraph": {
+      "routineName": "Prospection hebdomadaire",
+      "research": "Recherche",
+      "findLeads": "Prospection",
+      "designFiles": "Conception",
+      "publishSocial": "Publier sur les réseaux",
+      "running": "En cours",
+      "paused": "En pause",
+      "resume": "Reprendre",
+      "subs": {
+        "research": ["Rassembler les sources", "Analyser avec Claude", "Recouper avec ChatGPT", "Résumer les résultats"],
+        "findLeads": ["Chercher sur LinkedIn", "Filtrer par pertinence", "Enrichir les profils", "Présélectionner les leads"],
+        "designFiles": ["Récupérer le ton de marque", "Concevoir dans Figma", "Vérifier les espacements", "Animer dans Higgsfield"],
+        "publishSocial": ["Adapter le texte par réseau", "Publier sur Threads", "Publier sur Facebook", "Publier sur Instagram"]
+      }
+    },
+    "whyToone": {
+      "eyebrow": "Pourquoi Toone",
+      "title": "Un prompt programmé n’est pas une routine.",
+      "sub": "Les assistants de chat savent programmer un prompt. Toone exécute un processus : les mêmes étapes, les mêmes vérifications et une mémoire d’une exécution à l’autre. Reproductible par conception.",
+      "prompt": {
+        "label": "Un prompt programmé",
+        "note": "Repart de zéro à chaque fois. Personne ne vérifie.",
+        "when": "Chaque lundi",
+        "text": "Étudie notre niche et trouve de nouveaux leads",
+        "run": "Exécution {n}",
+        "leads": "{n} leads",
+        "duplicate": "doublon",
+        "noSources": "sans sources"
+      },
+      "routine": {
+        "label": "Une routine Toone",
+        "note": "Les mêmes étapes à chaque fois, vérifiées et mémorisées.",
+        "ledger": "Registre",
+        "known": "38 leads connus",
+        "fresh": "20 nouveaux cette fois",
+        "duplicates": "0 doublon"
+      },
+      "compare": {
+        "prompt": "Prompt programmé",
+        "toone": "Routine Toone",
+        "rows": {
+          "structure": {
+            "label": "Structure",
+            "prompt": "Un prompt, relancé",
+            "toone": "Un graphe d’étapes visible et modifiable"
+          },
+          "memory": {
+            "label": "Mémoire entre exécutions",
+            "prompt": "Repart de zéro : doublons et oublis",
+            "toone": "Un registre : rien de perdu, rien en double"
+          },
+          "control": {
+            "label": "Contrôle en cours",
+            "prompt": "Ça tourne ou pas",
+            "toone": "Mettre une étape en pause, la modifier, reprendre là où elle s’est arrêtée"
+          },
+          "checks": {
+            "label": "Vérifications",
+            "prompt": "Vous relisez le résultat",
+            "toone": "Des contrats bloquent les mauvais résultats (≥ 20 leads, une source par lead)"
+          },
+          "failures": {
+            "label": "Échecs",
+            "prompt": "Silencieux",
+            "toone": "Plans de repli : réessayer, changer de modèle ou vous demander"
+          },
+          "models": {
+            "label": "Modèles",
+            "prompt": "Un seul modèle",
+            "toone": "Un modèle par étape (Haiku en parallèle, Opus pour vérifier)"
+          }
+        },
+        "foot": "Gardez les modèles que vous payez déjà. Toone ajoute la couche qui leur manque."
+      }
+    },
+    "closing": {
+      "title": "Confiez votre travail répétitif à des agents que vous voyez travailler."
+    }
   },
   "privacyChoices": {
     "title": "Cookies et statistiques",
@@ -162,6 +304,7 @@
     "ogTitle": "Toone | L’espace de travail IA pour vos workflows agentiques"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Questions, réponses.",
     "sub": "La version courte de tout ce qu'on nous demande.",
     "q1": "Qu'est-ce que Toone ?",
