@@ -1,0 +1,160 @@
+/* Rail hover cards and the New Chat agent picker
+   (LeftOrchestratorView.swift:2190-2516). Tokens from the parent .root. */
+
+/* railHoverCardSurface :2280-2297: .regularMaterial r12 (continuous),
+   1pt separator stroke, pinned dark, shadow black .22 r12 y4.
+   CALIBRATE: the material's fill over a panel (no desktop behind it here). */
+.card {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  width: 250px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(46, 46, 48, 0.94);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 0 0 1px var(--tu-sep),
+    0 4px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* RailHoverCardTitle: HStack(spacing 6) [icon in an 18pt frame, title],
+   callout semibold, accent */
+.title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+  color: var(--tu-accent);
+}
+
+.titleIcon {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 18px;
+}
+
+/* detail: caption, textSecondary, leading inset 18 + 6 */
+.detail {
+  padding-left: 24px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+/* NewChatAgentPicker :2425-2510 in a native NSPopover (arrowEdge
+   .trailing), width 300, panel surface, dark.
+   CALIBRATE: the popover silhouette (radius, arrow, hairline) is AppKit's. */
+.popover {
+  position: absolute;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 300px;
+  border-radius: 12px;
+  background: var(--tu-panel);
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.2),
+    0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* the popover arrow on its leading edge, pointing at the rail button */
+.arrow {
+  position: absolute;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  transform: rotate(45deg);
+  border-radius: 2px;
+  background: var(--tu-panel);
+  box-shadow: -0.5px 0.5px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* header: VStack(spacing 4), padding 12 */
+.pickerHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+}
+
+/* Typography.Panel.title 17 semibold */
+.pickerTitle {
+  font-size: 17px;
+  line-height: 21px;
+  font-weight: 600;
+  color: var(--tu-text-1);
+}
+
+/* Typography.Panel.subtitle 13 regular, textSecondary */
+.pickerSubtitle {
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--tu-text-2);
+}
+
+.pickerDivider {
+  height: 1px;
+  background: var(--tu-sep);
+}
+
+.pickerSearch {
+  padding: 4px 8px;
+}
+
+/* LazyVStack(spacing 2), padding h6, bottom 6 */
+.pickerList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 6px 6px;
+}
+
+/* row: HStack(spacing 10), padding 10; hover accent .10 r8 */
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.pickerRow[data-hover="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+}
+
+.pickerIcon {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 20px;
+  color: var(--tu-accent);
+}
+
+.pickerLines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* callout medium, textPrimary */
+.pickerName {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
+  color: var(--tu-text-1);
+}
+
+/* caption, textSecondary */
+.pickerDepartment {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}

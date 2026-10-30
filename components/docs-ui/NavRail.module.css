@@ -1,0 +1,129 @@
+/* P3 NavRail (LeftOrchestratorView.swift:2517-3105). See NavRail.tsx. */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; /* Spacing.xs */
+  flex: none;
+  width: 45px; /* navigationRailWidth 44 + the 1pt Divider beside it */
+  padding: 8px 4px; /* Spacing.sm vertical, Spacing.xs horizontal */
+  padding-right: 5px;
+  /* innerBackgroundColor @0.24 */
+  background: color-mix(in srgb, var(--tu-inner) 24%, transparent);
+  border-right: 1px solid var(--tu-sep);
+}
+
+/* RailButton / creationButton: 32², r8, 16pt semibold symbol */
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--tu-text-2);
+}
+
+.item[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 17%, transparent);
+  color: var(--tu-accent);
+}
+
+.item[data-state="hover"] {
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  color: var(--tu-accent);
+  transform: scale(1.07);
+}
+
+.item[data-disabled="true"] {
+  opacity: 0.38;
+}
+
+/* selected: 2×16 accent capsule on the leading edge, offset x −2 */
+.bar {
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  width: 2px;
+  height: 16px;
+  border-radius: 1px;
+  background: var(--tu-accent);
+}
+
+/* "plus.circle.fill" 9pt bold, palette (inner bg, secondary/accent), offset 4/3 */
+.plus {
+  position: absolute;
+  right: 3px;
+  bottom: 5px;
+  display: flex;
+  --tu-glyph-knockout: var(--tu-inner);
+  border-radius: 50%;
+}
+
+/* count badge: 8pt rounded bold white on an orange capsule, ≥13², black .35 ring, offset 4/−4 */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2.5px;
+  border-radius: 999px;
+  background: var(--tu-warning);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-family: var(--tu-font-rounded);
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Divider().overlay(separatorColor).padding(.vertical, 2) */
+.divider {
+  flex: none;
+  align-self: stretch;
+  height: 1px;
+  margin: 2px 0;
+  background: var(--tu-sep);
+}
+
+/* Routine menu option: 28², 11pt semibold symbol, tertiary; selected accent .17 + 1pt accent stroke */
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-3);
+}
+
+.option[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 17%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-accent);
+  color: var(--tu-accent);
+}
+
+.option[data-state="hover"] {
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  color: var(--tu-accent);
+  transform: scale(1.08);
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+  min-height: 8px;
+}

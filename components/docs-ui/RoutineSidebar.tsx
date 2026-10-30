@@ -260,9 +260,12 @@ type RunRowProps = {
   stages?: { title: string; phase: StagePhase }[];
   /** Compact run controls (a live run whose routine is not selected). */
   controls?: { canPause: boolean; canContinue: boolean; canCancel: boolean };
+  /** Sealed run, expanded: "Restart from a step…" and "Edit routine" under
+   * the steps (RoutineRunHistoryRowView.swift:255-292). */
+  actions?: boolean;
 };
 
-export function RunRow({ number, pill, age, summary, meta, expanded = false, stages, controls }: RunRowProps) {
+export function RunRow({ number, pill, age, summary, meta, expanded = false, stages, controls, actions = false }: RunRowProps) {
   return (
     <div className={styles.runOuter}>
       <div
@@ -299,6 +302,7 @@ export function RunRow({ number, pill, age, summary, meta, expanded = false, sta
                 <span className={styles.stageLabel}>{stage.phase}</span>
               </div>
             ))}
+            {actions ? <RunActions /> : null}
           </div>
         ) : null}
       </div>
@@ -314,5 +318,24 @@ export function RunControls({ canPause, canContinue, canCancel }: NonNullable<Ru
       <span className={styles.runControlSlot}>{canContinue ? <Glyph name="play.fill" size={10} /> : null}</span>
       <span className={styles.runControlSlot}>{canCancel ? <Glyph name="stop.fill" size={10} /> : null}</span>
     </span>
+  );
+}
+
+/**
+ * A sealed run's actions (RoutineRunHistoryRowView.swift:255-292): VStack
+ * spacing 4, top 4; Divider at 0.5 opacity; HStack spacing 12 of two
+ * borderless accent labels in .caption medium (the restart menu hides its
+ * indicator).
+ */
+function RunActions() {
+  const label = { fontSize: 10, lineHeight: "13px", fontWeight: 500, color: "var(--tu-accent)", whiteSpace: "nowrap" } as const;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingTop: 4 }}>
+      <div style={{ height: 1, background: "var(--tu-sep)", opacity: 0.5 }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 12, minHeight: 18 }}>
+        <span style={label}>Restart from a step…</span>
+        <span style={label}>Edit routine</span>
+      </div>
+    </div>
   );
 }

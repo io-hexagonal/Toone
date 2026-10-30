@@ -1,0 +1,203 @@
+/* P13 QuestionCard (QuestionSharedComponents.swift, AsyncQuestionComposer.swift).
+   Reads --tu-* tokens from docs-ui.module.css (.root). Line heights are SF
+   Pro's natural ones: body 13 → 16, subheadline 11 → 14, caption 10 → 13. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--tu-card); /* threadCardBackground, full width, no radius */
+}
+
+/* ---- header ---------------------------------------------------------- */
+
+.header {
+  display: flex;
+  align-items: center;
+  color: var(--tu-accent);
+}
+
+.headerLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 48px;
+  padding: 0 8px 0 16px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  color: var(--tu-accent);
+  font-size: 10px; /* .caption.bold */
+  font-weight: 700;
+  line-height: 13px;
+  white-space: nowrap;
+}
+
+.count {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+/* QuestionHeaderControl: 14pt medium glyph in a 32×32 frame + 8 padding */
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: 8px;
+  border-radius: 6px;
+  color: var(--tu-accent);
+}
+
+/* ---- body ------------------------------------------------------------ */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.question {
+  margin: 0;
+  font-size: 11px; /* .subheadline */
+  line-height: 14px;
+  color: var(--tu-label-1);
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-label-2) 30%, transparent);
+}
+
+.option[data-selected="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-accent);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--tu-label-2);
+  color: var(--tu-accent);
+}
+
+.mark[data-multi="true"] {
+  border-radius: 4px;
+}
+
+.option[data-selected="true"] .mark {
+  box-shadow: inset 0 0 0 1.5px var(--tu-accent);
+}
+
+.markDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tu-accent);
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 2px; /* centre the 14pt line on the 18pt mark (top-aligned HStack) */
+}
+
+.optionLabel {
+  font-size: 11px; /* .subheadline */
+  line-height: 14px;
+  color: var(--tu-label-1);
+}
+
+.option[data-selected="true"] .optionLabel {
+  font-weight: 600;
+}
+
+.optionDescription {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+/* QuestionAnswerFieldStyle: plain TextField, padding 12, inputBackground, r8 */
+.field {
+  min-height: calc(var(--tu-q-lines, 2) * 16px + 24px);
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--tu-input);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-label-2) 30%, transparent);
+  font-size: 13px; /* body */
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+.field[data-emphasized="true"] {
+  box-shadow: inset 0 0 0 1px var(--tu-accent);
+}
+
+.placeholder {
+  color: var(--tu-label-3); /* placeholderTextColor, calibrate */
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footnote {
+  flex: 1 1 auto;
+  font-size: 10px; /* .caption .secondary */
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+/* .borderedProminent .tint(accent), regular size: CALIBRATE (native). In
+   Smoky Quartz AppKit keeps a white label on the light grey fill. */
+.send {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: var(--tu-accent);
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.send[data-disabled="true"] {
+  opacity: 0.4;
+}

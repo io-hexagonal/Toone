@@ -1,0 +1,152 @@
+/* calendar-week: CalendarHeaderView / CalendarWeekView / CalendarBottomBar geometry. */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+/* .headline */
+.title {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 700;
+  color: var(--tu-text-1);
+  white-space: nowrap;
+}
+
+/* Button("Today").buttonStyle(.bordered).controlSize(.small).tint(accent).
+   CALIBRATE: native bezel; tinted bordered draws the label in the tint. */
+.today {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--tu-accent) 18%, transparent);
+  color: var(--tu-accent);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-3);
+}
+
+/* Divider().opacity(0.3). CALIBRATE */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.grid {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* frame(width: 50) + .padding(.trailing, 4) */
+.timeColumn {
+  flex: none;
+  width: 54px;
+}
+
+/* caption2, textTertiary, frame(height: 50, alignment: .topTrailing) */
+.hourLabel {
+  height: 50px;
+  padding-right: 4px;
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--tu-text-3);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dayColumn {
+  flex: none;
+  min-width: 0;
+}
+
+/* VStack(spacing: 2) in a 40pt frame */
+.dayHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 40px;
+}
+
+.weekday {
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--tu-text-3);
+}
+
+/* .body.bold(), frame 28×28, Circle */
+.dayNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: -3px; /* the VStack is 43pt tall inside its 40pt frame */
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tu-text-1);
+}
+
+.dayNumber[data-today="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 15%, transparent);
+  color: var(--tu-accent);
+}
+
+.slots {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Rectangle().fill(textTertiary @0.1).frame(height: 1) at the top of each hour */
+.hourLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--tu-text-3) 10%, transparent);
+}
+
+.bottomBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  min-height: 32px;
+}
+
+.todayCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--tu-text-3);
+}
+
+.newEvent {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--tu-accent);
+}

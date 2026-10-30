@@ -1,0 +1,115 @@
+/*
+ * P10 Chat composer (ChatPanelView.swift chatInputBar :2421-2596,
+ * inputOptionsMenu :2789-2912, ChatInputView.swift ChatComposerTextField
+ * :14-113). Used by Chat.tsx's <ChatComposer>. Tokens from docs-ui.module.css.
+ */
+
+/* Input row: HStack spacing 8, padding 16 (Spacing.md) on all sides */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+/* Mode badge ("PLAN" / "LOOP"): caption2 bold white, padding 6/3, capsule */
+.mode {
+  flex: none;
+  padding: 3px 6px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+}
+
+/* Model chip: HStack 3; "OPUS · HIGH" caption2 bold + chevron.down 7 bold;
+   textSecondary on hoverBackground, padding 6/3, capsule */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--tu-hover);
+  color: var(--tu-text-2);
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ChatComposerTextField: padding h12 (Control.horizontalPadding), v8;
+   lineLimit(2...20) → at least two body lines; inputBackground .88, r12,
+   1pt inputBorder */
+.field {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-input) 88%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-input-border);
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--tu-label-1);
+}
+
+.placeholder {
+  color: var(--tu-label-3);
+}
+
+/* Send: .glassProminent (macOS 26) / .borderedProminent, circle, large,
+   18² arrow.up 12 bold label, tinted with the theme accent.
+   calibrate: native glass button diameter, fill and disabled look. */
+.send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--tu-accent);
+  color: #fff;
+}
+
+.send[data-disabled="true"] {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--tu-label-3);
+}
+
+/* Stop: same button tinted red, stop.fill 11 bold */
+.send[data-variant="stop"] {
+  background: var(--tu-error);
+  color: #fff;
+}
+
+/* SAFE badge (ChatPanelView.swift:2527-2556): HStack 2 [exclamationmark.triangle.fill
+   8 bold when not enforcing] "SAFE" caption2 bold white, padding 6/3, capsule,
+   Color.green when active, Color.orange otherwise. */
+.safe {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--tu-success);
+  color: #fff;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  --tu-glyph-knockout: var(--tu-warning);
+}
+
+.safe[data-active="false"] {
+  background: var(--tu-warning);
+}
+
+/* overlays (tooltip, open menu) anchor to the chip */
+.chip {
+  position: relative;
+}

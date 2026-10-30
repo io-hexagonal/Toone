@@ -11,6 +11,10 @@ estimatedTime: "3–5 minutes"
 
 Run the routine once with a small, real input. The point of the first run is not the result; it is to check that the pipeline works end to end and is not more complex than it needs to be. Run it from the **Routines** panel with **Run**, or ask the agent to run it for you.
 
+```toone-ui
+routine-toolbar-run
+```
+
 ## Watch the work
 
 Open the **Routines** panel. Routines that are in progress appear under **Running** at the top of the list, with their current stage. Select the running routine to open its graph and check its execution: each step lights up as it starts, and the status shows whether the routine is running, retrying, waiting for input, or paused.
@@ -41,10 +45,22 @@ Once you trust a routine, you can let Toone apply fixes itself: open the routine
 
 When the run finishes, open the produced brief and compare it with the routine’s expected sections. This is easier when each step states what it must deliver, as in [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) on Explore. Look for missing evidence, unclear assumptions, or a result saved in the wrong place. The run stays in the routine's execution history, so you can come back to it later and compare it with the next one.
 
+```toone-ui
+run-history-completed
+```
+
 ## Improve and repeat
 
 Change one instruction based on what you observed, then run the same routine again. Keeping the change small makes the effect understandable. If you would rather not edit alone, open the routine and ask an agent to make the change; it edits the routine while you watch, just as it did while drafting.
 
+```toone-ui
+draft-step-inspector
+```
+
 ## You completed the operating loop
 
 You now have a project, an agent, a repeatable routine, an observable run, and a durable output. Continue with [Core concepts](/how-to/concepts) or browse [Features](/how-to/features). To add routines other people have built, [import one from Explore](/how-to/getting-started/import-a-routine-from-explore); to publish yours, [share it on Explore](/how-to/getting-started/share-a-routine-on-explore).
+
+```toone-ui
+operating-loop
+```

@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import styles from "./Chat.module.css";
+import composerStyles from "./Composer.module.css";
 import { Glyph } from "./glyphs";
 
 /**
@@ -27,7 +28,7 @@ import { Glyph } from "./glyphs";
  *   Menu with "Fork conversation" / "Create routine"). Opacity 0 unless the
  *   message is hovered, so hidden actions still take their space.
  *
- * The Composer (ChatInputView.swift) is not drawn yet.
+ * - ChatComposer: the input row under the transcript (see its own comment).
  */
 
 export type ChatSide = "user" | "agent";
@@ -151,5 +152,84 @@ export function MessageActions({
         {branchMenu ? <span className={styles.branchMenu}>{branchMenu}</span> : null}
       </span>
     </span>
+  );
+}
+
+/**
+ * ChatComposer: the chat panel's input row in its idle state (no
+ * attachments, not recording). Sources: ChatPanelView.swift chatInputBar
+ * :2421-2596 (HStack spacing 8, padding 16; [mode badge] [model chip]
+ * [text field] [send / stop]), inputOptionsMenu label :2890-2906
+ * (modelChipLabel :2920-2926: "OPUS · HIGH"; nil when everything inherits,
+ * then only the chevron shows), sendButton :2391-2417, ChatInputView.swift
+ * :14-113 (field). Placeholder per ChatViewModel.ChatMode.placeholder
+ * ("Type a message..." in the default mode). Styles: Composer.module.css.
+ */
+export function ChatComposer({
+  placeholder = "Type a message...",
+  text,
+  chip,
+  mode,
+  action = "send",
+  safe,
+  safeOverlay,
+  chipOverlay,
+}: {
+  placeholder?: string;
+  /** Typed draft; when absent the placeholder shows and Send is disabled. */
+  text?: string;
+  /** Model chip label, e.g. "OPUS · HIGH"; omit for an all-inherited chip (chevron only). */
+  chip?: string;
+  /** Chat mode badge: PLAN (AppColors.primary) or LOOP (orange). */
+  mode?: "PLAN" | "LOOP";
+  /** "stop" while the agent is working. */
+  action?: "send" | "stop";
+  /**
+   * The SAFE badge (ChatPanelView.swift:2527-2556, Direct edition only):
+   * green when Safe Mode is enforcing (Claude + healthy hook), orange with a
+   * warning triangle otherwise. Drawn between the mode badge and the chip.
+   */
+  safe?: "active" | "inactive";
+  /** Drawn inside the SAFE badge's box (position: relative), e.g. its <Tooltip />. */
+  safeOverlay?: ReactNode;
+  /** Drawn inside the model chip's box (position: relative), e.g. its open <Menu />. */
+  chipOverlay?: ReactNode;
+}) {
+  const canSend = Boolean(text);
+  return (
+    <div className={composerStyles.bar}>
+      {mode ? (
+        <span
+          className={composerStyles.mode}
+          style={{ background: mode === "LOOP" ? "var(--tu-warning)" : "var(--tu-accent)" }}
+        >
+          {mode}
+        </span>
+      ) : null}
+      {safe ? (
+        <span className={composerStyles.safe} data-active={safe === "active" ? "true" : "false"}>
+          {safe === "active" ? null : <Glyph name="exclamationmark.triangle.fill" size={9} weight="bold" />}
+          SAFE
+          {safeOverlay}
+        </span>
+      ) : null}
+      <span className={composerStyles.chip}>
+        {chip ? <span>{chip}</span> : null}
+        <Glyph name="chevron.down" size={8} weight="bold" />
+        {chipOverlay}
+      </span>
+      <span className={composerStyles.field}>
+        {text ? text : <span className={composerStyles.placeholder}>{placeholder}</span>}
+      </span>
+      {action === "stop" ? (
+        <span className={composerStyles.send} data-variant="stop">
+          <Glyph name="stop.fill" size={12} />
+        </span>
+      ) : (
+        <span className={composerStyles.send} data-disabled={canSend ? undefined : "true"}>
+          <Glyph name="arrow.up" size={14} weight="bold" />
+        </span>
+      )}
+    </div>
   );
 }

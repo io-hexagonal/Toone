@@ -1,0 +1,46 @@
+/* Routine inspector Auto-fix tile (RoutineSidebarComponents.swift:608-691).
+   Reads --tu-* tokens from docs-ui.module.css (.root). */
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 9px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tu-inner) 42%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-sep); /* .stroke(separator, 1) */
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: stretch;
+}
+
+/* Label("Auto-fix", systemImage:) .caption .secondary */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px; /* calibrate */
+  flex: 1 1 auto;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+/* ProgressView slot, 16×16, empty while not saving */
+.spinnerSlot {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+/* .caption, AppColors.textSecondary, maxWidth 520, top 6 */
+.help {
+  margin: 6px 0 0;
+  max-width: 520px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}

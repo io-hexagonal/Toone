@@ -10,9 +10,13 @@ pageType: "feature"
 
 Many useful processes depend on websites rather than APIs. Browser sessions give agents a way to work through those interfaces while keeping the browser context connected to the project. The shared routine [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6), for example, checks its sources in Toone's browser and only reads what it finds.
 
+```toone-ui
+agent-browser-consent
+```
+
 ## Use an authenticated session
 
-Bring a session from your default browser into Toone when a task depends on an account you have already signed into. This avoids treating every browser task as a fresh, disconnected environment.
+Bring a session from your default browser into Toone when a task depends on an account you have already signed into. This avoids treating every browser task as a fresh, disconnected environment. Bringing in a session from your default browser is not available in the Mac App Store edition.
 
 ```toone-ui
 browser-login-import
@@ -22,8 +26,16 @@ browser-login-import
 
 Browser work should remain understandable to the person responsible for the project. Follow which session and page are involved, then intervene when a step requires judgment, approval, or corrected input.
 
+```toone-ui
+browser-agent-tab
+```
+
 ## Use deliberate boundaries
 
 Connect only the browser context needed for the task. An authenticated session can expose sensitive capabilities, so its scope should match the agent’s role and the outcome you asked it to produce. [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) works this way: it researches launch sites and prepares only the accounts you authorize for each one.
+
+```toone-ui
+browser-site-approval
+```
 
 Next: [Routines](/how-to/features/routines).

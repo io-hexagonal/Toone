@@ -25,13 +25,22 @@ import { PanelHeader } from "./PanelHeader";
  * CALIBRATE: the small bordered "Open" button (native control).
  */
 
-export function BrowserHeader() {
+/**
+ * `appStore`: the App Store edition's AgentBrowserPrivacyButton (`hand.raised`
+ * 10 bold secondary, before the collapse button; InAppBrowserPanel.swift:115-122).
+ */
+export function BrowserHeader({ appStore = false }: { appStore?: boolean } = {}) {
   return (
     <PanelHeader
       icon="globe"
       title="Browser"
       trailing={
         <>
+          {appStore ? (
+            <span className={styles.iconButton}>
+              <Glyph name="hand.raised" size={11} weight="bold" />
+            </span>
+          ) : null}
           <span className={styles.iconButton}>
             <Glyph name="chevron.up" size={11} weight="bold" />
           </span>

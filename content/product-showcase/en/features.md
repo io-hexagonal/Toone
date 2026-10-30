@@ -38,6 +38,10 @@ Browse the active project’s files from the right-side panel and change the pro
 
 [Explore Project Explorer](/how-to/features/project-explorer).
 
+```toone-ui
+panel-layouts
+```
+
 ## Workflows
 
 ### Browser sessions
@@ -76,6 +80,10 @@ Keep automated and system work separate from your direct conversations while ret
 
 [Explore background threads](/how-to/features/background-threads).
 
+```toone-ui
+routine-running-graph
+```
+
 ## Control and safety
 
 ### Project History
@@ -89,6 +97,10 @@ Use readable checkpoints and a visual timeline to understand what changed in a p
 Screen Claude tool results against forbidden topics before the output reaches a conversation, with fail-closed behavior and an audit log.
 
 [Explore Safe Mode](/how-to/features/safe-mode).
+
+```toone-ui
+timeline-list
+```
 
 ## Connect
 
@@ -121,3 +133,7 @@ Enable MCP servers globally or within the project that needs them, and reuse bro
 Connect OpenAI Codex or Anthropic Claude while Toone maintains the project structure around the selected provider.
 
 [Explore AI providers](/how-to/features/ai-providers).
+
+```toone-ui
+settings-global-mcps
+```

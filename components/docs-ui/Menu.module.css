@@ -72,3 +72,20 @@
   margin: 5px 10px;
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* Section header (SwiftUI Section("…") → NSMenuItem.sectionHeader on macOS 14+):
+   11pt semibold, secondary label, aligned with the item labels. Calibrate. */
+.header {
+  display: flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 22px 0 9px;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.header[data-icons="true"] {
+  padding-left: 33px;
+}

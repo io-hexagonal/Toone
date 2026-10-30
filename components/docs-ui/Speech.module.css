@@ -1,0 +1,220 @@
+/* Voice + meeting pieces (RecordingIndicatorView.swift, RichMessageBubble.swift
+   AudioMessageBubble, ChatPanelView.swift meetingListeningCard). */
+
+/* ---- RecordingIndicator ------------------------------------------- */
+
+.recording {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mic {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.micRing,
+.micInner {
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* static: the ring at its settled state (scale 1.2, opacity 0.6) */
+.micRing {
+  inset: 0;
+  background: color-mix(in srgb, var(--tu-accent) 15%, transparent);
+  transform: scale(1.2);
+  opacity: 0.6;
+}
+
+.micInner {
+  width: 26px;
+  height: 26px;
+  background: color-mix(in srgb, var(--tu-accent) 25%, transparent);
+}
+
+.locale {
+  flex: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--tu-accent) 15%, transparent);
+  color: var(--tu-accent);
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 700;
+}
+
+.bars {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2.5px;
+  height: 24px;
+}
+
+.bar {
+  width: 3px;
+  border-radius: 1.5px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--tu-accent) 90%, transparent),
+    color-mix(in srgb, var(--tu-accent) 50%, transparent)
+  );
+  transform: scaleY(var(--bar-static));
+}
+
+/* .body, primary, lineLimit 2, truncationMode .head */
+.live {
+  display: -webkit-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+.listening {
+  flex: 1 1 auto;
+  font-size: 13px;
+  color: var(--tu-text-3);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .micRing {
+    animation: ring 1.2s ease-in-out infinite alternate;
+  }
+
+  .bar {
+    animation: bar var(--bar-duration) ease-in-out var(--bar-delay) infinite alternate;
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+@keyframes bar {
+  from {
+    transform: scaleY(var(--bar-rest));
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---- AudioMessageBubble ------------------------------------------- */
+
+.audio {
+  --audio-tint: var(--tu-accent);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--audio-tint) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--audio-tint) 25%, transparent);
+  color: var(--audio-tint);
+}
+
+.audio[data-room="true"] {
+  --audio-tint: var(--tu-warning);
+}
+
+/* .subheadline, textPrimary */
+.audioLabel {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--tu-text-1);
+  white-space: nowrap;
+}
+
+.audioBars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+}
+
+.audioBars > span {
+  width: 2.5px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--audio-tint) 60%, transparent);
+}
+
+/* ---- MeetingListeningCard ----------------------------------------- */
+
+.meeting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-error) 8%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-error) 25%, transparent);
+}
+
+.meetingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meetingText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.meetingTitle {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+  color: var(--tu-text-1);
+}
+
+.meetingSub {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+.meetingCount {
+  flex: none;
+  font-size: 10px;
+  color: var(--tu-text-3);
+}
+
+.stop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tu-error) 85%, transparent);
+  color: #fff;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+}

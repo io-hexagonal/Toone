@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import styles from "./DestinationHeader.module.css";
 import { Glyph } from "./glyphs";
 
@@ -12,7 +13,16 @@ import { Glyph } from "./glyphs";
  * textSecondary, in the ≥28² icon button style. A separator Divider runs
  * along the bottom.
  */
-export function DestinationHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+export function DestinationHeader({
+  title,
+  subtitle,
+  actions,
+}: {
+  title: string;
+  subtitle?: string;
+  /** Icon buttons drawn before sidebar.right (e.g. the chat's copy / close). */
+  actions?: ReactNode;
+}) {
   return (
     <div className={styles.header}>
       <span className={styles.iconButton}>
@@ -22,7 +32,9 @@ export function DestinationHeader({ title, subtitle }: { title: string; subtitle
         <span className={styles.title}>{title}</span>
         {subtitle ? <span className={styles.subtitle}>{subtitle}</span> : null}
       </span>
-      <span className={styles.iconButton} style={{ marginLeft: "auto" }}>
+      <span style={{ marginLeft: "auto" }} />
+      {actions}
+      <span className={styles.iconButton}>
         <Glyph name="sidebar.right" size={15} weight="medium" />
       </span>
     </div>

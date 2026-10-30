@@ -23,8 +23,10 @@ import { Glyph } from "./glyphs";
  *   WorkflowCoverImageView, WorkflowCatalogDTOs.swift:868-902).
  *
  * Covers are flat gradient placeholders, never the real cover art.
- * Not built yet (no scene needs them): ListingHero, ListingSection,
- * ListingProfileCard (ListingProfilePage.swift:10-80, 84-458).
+ * Listing page blocks (end of file): ListingSection, ListingProfileCard,
+ * ListingKeyValueBox / Line, ListingLabel, ListingBodyText, ListingItemTitle
+ * (ListingProfilePage.swift:253-458).
+ * Not built yet (no scene needs it): ListingHero (ListingProfilePage.swift:10-80).
  */
 
 export function ExploreCover({
@@ -175,5 +177,112 @@ export function ExploreListingCard({ listing, back }: { listing: ExploreListing;
       tags={listing.tags}
       title={listing.title}
     />
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Listing page building blocks (ListingProfilePage.swift:253-458)     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * ListingProfileSection (ListingProfilePage.swift:253-302): Divider, then the
+ * heading (body semibold, tracking -0.25) 16 below it, content 12 below
+ * that, 24 after the section. `collapsible` sections show an accent
+ * `chevron.right` (13 semibold, spacing 10), rotated 90° when open.
+ */
+export function ListingSection({
+  title,
+  collapsible = false,
+  open = true,
+  children,
+}: {
+  title: string;
+  collapsible?: boolean;
+  /** Only for collapsible sections (they start closed in the app). */
+  open?: boolean;
+  children?: ReactNode;
+}) {
+  const showContent = !collapsible || open;
+  return (
+    <section className={styles.listingSection}>
+      <div className={styles.listingDivider} />
+      <div className={styles.listingHeadingRow}>
+        {collapsible ? (
+          <span className={styles.listingDisclosure} style={open ? { transform: "rotate(90deg)" } : undefined}>
+            <Glyph name="chevron.right" size={13} weight="semibold" />
+          </span>
+        ) : null}
+        <span className={styles.listingHeading}>{title}</span>
+      </div>
+      {showContent ? children : null}
+    </section>
+  );
+}
+
+/** ListingProfileCard (:304-316): VStack spacing 6, padding 18, card fill r16 + border. */
+export function ListingProfileCard({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return (
+    <div className={styles.listingCard} style={style}>
+      {children}
+    </div>
+  );
+}
+
+/** ListingBodyText (:429-446): 13 regular; secondary unless primary / tertiary. */
+export function ListingBodyText({
+  children,
+  primary = false,
+  tertiary = false,
+}: {
+  children: ReactNode;
+  primary?: boolean;
+  tertiary?: boolean;
+}) {
+  return (
+    <span className={styles.listingBody} data-tone={primary ? "primary" : tertiary ? "tertiary" : undefined}>
+      {children}
+    </span>
+  );
+}
+
+/** ListingLabel (:448-458): uppercased, 11 semibold, tracking 1.0, tertiary. */
+export function ListingLabel({ children }: { children: string }) {
+  return <span className={styles.listingLabel}>{children.toUpperCase()}</span>;
+}
+
+/** Item title: Typography.Listing.itemTitle (body semibold), primary. */
+export function ListingItemTitle({ children, link = false }: { children: ReactNode; link?: boolean }) {
+  return (
+    <span className={styles.listingItemTitle} data-link={link ? "true" : undefined}>
+      {children}
+    </span>
+  );
+}
+
+/** ListingKeyValueLine (:365-375): label over a primary value, top padding 4. */
+export function ListingKeyValueLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className={styles.listingKeyValueLine}>
+      <ListingLabel>{label}</ListingLabel>
+      <ListingBodyText primary>{value}</ListingBodyText>
+    </div>
+  );
+}
+
+/**
+ * ListingKeyValueBox (:318-339): rows split by dividers; each row HStack
+ * first-baseline spacing 16, key 13 semibold primary in 150, value body
+ * secondary, padding 10/14; card fill r16 + border.
+ */
+export function ListingKeyValueBox({ rows, style }: { rows: [string, string][]; style?: CSSProperties }) {
+  return (
+    <div className={styles.listingKeyValueBox} style={style}>
+      {rows.map(([key, value], index) => (
+        <div className={styles.listingKeyValueRow} data-divider={index > 0 ? "true" : undefined} key={key}>
+          <span className={styles.listingKey}>{key}</span>
+          <ListingBodyText>{value}</ListingBodyText>
+        </div>
+      ))}
+    </div>
   );
 }

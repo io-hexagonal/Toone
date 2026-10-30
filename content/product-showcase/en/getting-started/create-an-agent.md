@@ -31,11 +31,23 @@ An agent is most useful when its responsibility is narrow enough to evaluate. Fo
 
 If acme.com already has a doc that describes the product, the audience, or the tone of voice, add it as context now. The briefs will be grounded in it from the first run.
 
+```toone-ui
+agent-purpose-reply
+```
+
 ## Test the agent directly
 
 Open a conversation with the agent and ask it to explain how it would approach a small research question about acme.com. This checks that the provider connection works and gives you a chance to refine the role before automating it.
 
+```toone-ui
+spotlight-chat-panel
+```
+
 ## Checkpoint
+
+```toone-ui
+agent-created-status
+```
 
 The agent should respond within the scope you gave it, and it should already know whatever context you attached. If the answer is too broad, narrow the responsibility rather than adding many special cases.
 

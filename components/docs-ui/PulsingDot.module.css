@@ -1,0 +1,24 @@
+/* PulsingDot.swift: opacity 0.3 ↔ 1, shadow colour @0.6 radius size/2. */
+
+.dot {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+  background: var(--pd-color);
+  box-shadow: 0 0 var(--pd-blur) color-mix(in srgb, var(--pd-color) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dot {
+    animation: pulse var(--pd-duration) ease-in-out infinite alternate;
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}

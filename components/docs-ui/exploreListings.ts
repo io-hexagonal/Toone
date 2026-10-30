@@ -73,3 +73,68 @@ export const EXPLORE_LISTINGS = {
     cover: "linear-gradient(135deg, #7a5a4e 0%, #8a7152 50%, #5c5450 100%)",
   },
 } satisfies Record<string, ExploreListing>;
+
+/**
+ * Listing page data for Launch Surface Preparation (public listing_profile
+ * from GET api.trytoone.com/v1/workflows/launch-surface-preparation-xzmzpbkf,
+ * copied 2026-10-30). Only the sections the figures show; third parties are
+ * the first two of 20, in the API's order. `reviewNote` is the
+ * third_party_reviews note the app appends to the party's own note
+ * (ListingProfilePage.swift:193-218).
+ */
+export const LAUNCH_SURFACE_PROFILE = {
+  youProvide: [
+    {
+      label: "Launch sites",
+      description: "Confirm or edit the included 20-site candidate catalog; select 1–20 sites per run.",
+      example: "Product Hunt, Fazier, BetaList, Peerlist, or all 20 candidates",
+    },
+    {
+      label: "Approved product facts",
+      description: "Product details, links, audience and claims you allow the routines to use.",
+      example: "Product name, website and approved description",
+    },
+    {
+      label: "Account permissions",
+      description: "Explicit permission for any account or profile preparation; research-only is the default.",
+      example: "Research only for all sites",
+    },
+  ],
+  timeAndEffort: {
+    youPrepare: "Your product facts, links, target sites, and any account permissions.",
+    runEstimate: "Varies by site count and account access; review the drafts before publishing.",
+  },
+  customization: [
+    {
+      label: "Target launch sites",
+      defaultValue: "Editable catalog of 20 candidate sites",
+      allowed: "1–20 selected sites",
+      note: "Confirm the sites for this run; some may be ineligible or require a paid route.",
+    },
+    {
+      label: "Account preparation",
+      defaultValue: "Research only",
+      allowed: "Research only or approved site-specific preparation",
+      note: "Permission must be explicit.",
+    },
+  ],
+  thirdParties: [
+    {
+      name: "SourceForge",
+      domain: "sourceforge.net",
+      actions: ["reads public pages"],
+      cost: "Cost not listed",
+      note: "Candidate only; confirm current product fit, access, rules and cost before any preparation.",
+      reviewNote:
+        "Check the correct software-directory route and availability; the open-source project route has separate requirements.",
+    },
+    {
+      name: "Product Hunt",
+      domain: "producthunt.com",
+      actions: ["reads public pages", "prepares a profile"],
+      cost: "Free",
+      note: "Check current account eligibility and launch rules. No official affiliation.",
+      reviewNote: "",
+    },
+  ],
+} as const;

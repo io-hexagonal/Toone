@@ -164,6 +164,29 @@ const GLYPHS = {
       <path d="M12.6 9v5M10.1 11.5h5" />
     </>
   ),
+  // folder with a small gear in the lower-right corner (project root)
+  "folder.badge.gearshape": (
+    <>
+      <path d="M8.6 12.6H2.8a1.2 1.2 0 0 1-1.2-1.2V4.6a1.2 1.2 0 0 1 1.2-1.2h3.4l1.6 1.6h5.4a1.2 1.2 0 0 1 1.2 1.2v1.4" />
+      <circle cx="12.2" cy="11.6" r="1.3" />
+      <path d="M12.2 8.6v.9M12.2 13.7v.9M9.2 11.6h.9M14.3 11.6h.9M10.1 9.5l.6.6M13.7 13.1l.6.6M10.1 13.7l.6-.6M13.7 10.1l.6-.6" />
+    </>
+  ),
+  // folder with a question mark beside it (no project selected)
+  "folder.badge.questionmark": (
+    <>
+      <path d="M8.4 12.6H2.8a1.2 1.2 0 0 1-1.2-1.2V4.6a1.2 1.2 0 0 1 1.2-1.2h3.4l1.6 1.6h5.4a1.2 1.2 0 0 1 1.2 1.2v.6" />
+      <path d="M10.4 9.2a1.8 1.8 0 1 1 2.6 1.6c-.5.3-.8.6-.8 1.2v.3" />
+      <circle cx="12.2" cy="14.3" r="0.45" fill="currentColor" stroke="none" />
+    </>
+  ),
+  // three stacked plates, top one filled (org root)
+  "square.stack.3d.up.fill": (
+    <>
+      <path d="M8 1.8l6 3-6 3-6-3z" fill="currentColor" />
+      <path d="M2 8l6 3 6-3M2 11.2l6 3 6-3" />
+    </>
+  ),
   "doc.text": (
     <>
       <path d="M4.2 1.6h4.9l3.3 3.3v8.3a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 13.2V2.8a1.2 1.2 0 0 1 1.2-1.2z" />
@@ -373,6 +396,387 @@ const GLYPHS = {
       <path d="M5.5 8.2l1.7 1.7 3.3-3.6" />
     </>
   ),
+  // ---- share / submissions (batch2-share) -------------------------------
+  checkmark: <path d="M3.4 8.4l3 3 6.2-6.8" />,
+  "chevron.up.chevron.down": <path d="M5 6.2L8 3.4l3 2.8M5 9.8l3 2.8 3-2.8" />,
+  clock: (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M8 4.4V8l2.6 1.6" />
+    </>
+  ),
+  "checkmark.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M5.2 8.2l1.9 1.9 3.7-4" />
+    </>
+  ),
+  "exclamationmark.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M8 4.6v4.2" />
+      <circle cx="8" cy="11.2" r=".6" fill="currentColor" />
+    </>
+  ),
+  link: (
+    <>
+      <path d="M7 9a2.6 2.6 0 0 0 3.7 0l2.2-2.2a2.6 2.6 0 0 0-3.7-3.7L8.3 4" />
+      <path d="M9 7a2.6 2.6 0 0 0-3.7 0L3.1 9.2a2.6 2.6 0 0 0 3.7 3.7l.9-.9" />
+    </>
+  ),
+  "doc.text.magnifyingglass": (
+    <>
+      <path d="M8.4 14H4.2a1.4 1.4 0 0 1-1.4-1.4V3.4A1.4 1.4 0 0 1 4.2 2h4.4l3.2 3.2v2" />
+      <path d="M5.2 6.2h3M5.2 8.6h2" />
+      <circle cx="11" cy="11" r="2.1" />
+      <path d="M12.5 12.5l1.6 1.6" />
+    </>
+  ),
+  "arrow.clockwise": (
+    <>
+      <path d="M13 8a5 5 0 1 1-1.5-3.6" />
+      <path d="M11.9 1.9v2.8H9.1" />
+    </>
+  ),
+  "square.and.arrow.up": (
+    <>
+      <path d="M5.6 6.4H4.4a1.2 1.2 0 0 0-1.2 1.2v5.2A1.2 1.2 0 0 0 4.4 14h7.2a1.2 1.2 0 0 0 1.2-1.2V7.6a1.2 1.2 0 0 0-1.2-1.2h-1.2" />
+      <path d="M8 9.6V1.8M5.6 4.2L8 1.8l2.4 2.4" />
+    </>
+  ),
+  // ---- getting started (batch2-gs) ----------------------------------------
+  "bubble.left": (
+    <path d="M4 2.6h8a2.2 2.2 0 0 1 2.2 2.2v4.4A2.2 2.2 0 0 1 12 11.4H6.6l-3.4 2.6v-2.7A2.2 2.2 0 0 1 1.8 9.2V4.8A2.2 2.2 0 0 1 4 2.6z" />
+  ),
+  "bubble.left.fill": (
+    <path
+      d="M4 2.6h8a2.2 2.2 0 0 1 2.2 2.2v4.4A2.2 2.2 0 0 1 12 11.4H6.6l-3.4 2.6v-2.7A2.2 2.2 0 0 1 1.8 9.2V4.8A2.2 2.2 0 0 1 4 2.6z"
+      fill="currentColor"
+    />
+  ),
+  "bubble.left.and.text.bubble.right": (
+    <>
+      <path d="M6.6 3.2h6a1.6 1.6 0 0 1 1.6 1.6v3a1.6 1.6 0 0 1-1.6 1.6h-.4v1.8l-2-1.8" />
+      <path d="M3.4 6.4h5.4A1.6 1.6 0 0 1 10.4 8v3a1.6 1.6 0 0 1-1.6 1.6H5.6l-2.4 2v-2A1.6 1.6 0 0 1 1.8 11V8a1.6 1.6 0 0 1 1.6-1.6z" />
+      <path d="M4 8.9h4.2M4 10.6h2.6" strokeWidth="1" />
+    </>
+  ),
+  "plus.circle.fill": (
+    <>
+      <circle cx="8" cy="8" r="6.8" fill="currentColor" stroke="none" />
+      <path d="M8 4.8v6.4M4.8 8h6.4" stroke={K} strokeWidth="1.8" />
+    </>
+  ),
+  "person.crop.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <circle cx="8" cy="6.4" r="2.2" />
+      <path d="M4 12.6c.9-1.5 2.3-2.3 4-2.3s3.1.8 4 2.3" />
+    </>
+  ),
+  person: (
+    <>
+      <circle cx="8" cy="5" r="2.8" />
+      <path d="M2.8 14c0-3 2.3-5 5.2-5s5.2 2 5.2 5" />
+    </>
+  ),
+  "pin.fill": (
+    <>
+      <path d="M5.4 1.8h5.2l-.8 4.4 2.4 2.6v1H3.8v-1l2.4-2.6z" fill="currentColor" />
+      <path d="M8 9.8v4.6" />
+    </>
+  ),
+  "person.crop.circle.badge.plus": (
+    <>
+      <path d="M13.9 8.6A6 6 0 1 1 8.6 2.1" />
+      <circle cx="7.6" cy="7" r="2.1" />
+      <path d="M3.8 12.6c.9-1.4 2.2-2.2 3.8-2.2s2.9.8 3.8 2.2" />
+      <path d="M13 1.2v4.6M10.7 3.5h4.6" />
+    </>
+  ),
+  timer: (
+    <>
+      <circle cx="8" cy="9" r="5.6" />
+      <path d="M8 9V5.8M6.4 1.6h3.2M8 1.6v1.8" />
+    </>
+  ),
+  flag: <path d="M3.4 14.4V2.2M3.4 2.6c3-1.4 5.6 1.4 9.2 0v6.6c-3.6 1.4-6.2-1.4-9.2 0" />,
+  ellipsis: (
+    <>
+      <circle cx="3" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="8" cy="8" r="1.15" fill="currentColor" stroke="none" />
+      <circle cx="13" cy="8" r="1.15" fill="currentColor" stroke="none" />
+    </>
+  ),
+  "arrow.up.forward": <path d="M4 12L12 4M5.6 4H12v6.4" />,
+  "exclamationmark.triangle": (
+    <>
+      <path d="M7 2.4a1.15 1.15 0 0 1 2 0l5.6 9.8a1.15 1.15 0 0 1-1 1.7H2.4a1.15 1.15 0 0 1-1-1.7z" />
+      <path d="M8 6v3.2" />
+      <circle cx="8" cy="11.4" r=".55" fill="currentColor" />
+    </>
+  ),
+  "point.3.filled.connected.trianglepath.dotted": (
+    <>
+      <path d="M8 3.6L3.6 11.6M8 3.6l4.4 8M4.4 12.6h7.2" strokeDasharray="1.2 1.6" />
+      <circle cx="8" cy="3" r="1.9" fill="currentColor" />
+      <circle cx="3" cy="12.6" r="1.9" fill="currentColor" />
+      <circle cx="13" cy="12.6" r="1.9" fill="currentColor" />
+    </>
+  ),
+  "paperplane.fill": (
+    <path d="M14.4 1.6L1.6 7l5 2 2 5 5.8-12.4zM6.6 9l7.8-7.4" fill="currentColor" strokeWidth="1" />
+  ),
+  // ---- settings (batch2-settings): sidebar destinations + form rows ------
+  "hand.raised": (
+    <path d="M5.2 9.4V4.4a1 1 0 0 1 2 0v3M7.2 7.2V2.8a1 1 0 0 1 2 0v4.4M9.2 7.2V3.6a1 1 0 0 1 2 0v4.2M11.2 7.6V5.6a1 1 0 0 1 2 0v4a4.8 4.8 0 0 1-4.8 4.8h-.4a4.2 4.2 0 0 1-3.4-1.7L2.6 10.2a1 1 0 0 1 1.6-1.2l1 1.2" />
+  ),
+  // agent-browser-consent: four finger bars, a palm and a thumb, filled
+  "hand.raised.fill": (
+    <g fill="currentColor" stroke="none">
+      <rect x="4.5" y="3.2" width="2.2" height="7.4" rx="1.1" />
+      <rect x="6.9" y="1.8" width="2.2" height="8.4" rx="1.1" />
+      <rect x="9.3" y="2.6" width="2.2" height="7.6" rx="1.1" />
+      <rect x="11.7" y="4.6" width="2" height="6" rx="1" />
+      <path d="M4.5 8.6h9.2v1.6a4.6 4.6 0 0 1-4.6 4.6h-.6a4.4 4.4 0 0 1-3.5-1.8L2.4 10.4a1.1 1.1 0 0 1 1.7-1.4l.4.5z" />
+    </g>
+  ),
+  "person.badge.shield.checkmark": (
+    <>
+      <circle cx="6" cy="4.8" r="2.3" />
+      <path d="M1.6 13.2a4.4 4.4 0 0 1 6.6-3.6" />
+      <path d="M12 8.2l2.6 1v2.1a2.9 2.9 0 0 1-2.6 3 2.9 2.9 0 0 1-2.6-3V9.2z" />
+      <path d="M10.9 11.3l.8.8 1.4-1.6" />
+    </>
+  ),
+  "rectangle.split.2x1": (
+    <>
+      <rect x="1.6" y="3" width="12.8" height="10" rx="1.6" />
+      <path d="M8 3v10" />
+    </>
+  ),
+  "rectangle.on.rectangle": (
+    <>
+      <rect x="4.8" y="5.2" width="9.6" height="8" rx="1.4" />
+      <path d="M2 10.4V4a1.4 1.4 0 0 1 1.4-1.4h8" />
+    </>
+  ),
+  "arrow.triangle.2.circlepath": (
+    <path d="M2.8 7.4A5.2 5.2 0 0 1 12.2 4.8M13.2 8.6A5.2 5.2 0 0 1 3.8 11.2M12.6 2.2v2.9H9.7M3.4 13.8v-2.9h2.9" />
+  ),
+  "mic.badge.plus": (
+    <>
+      <rect x="3.8" y="1.4" width="4.4" height="7.4" rx="2.2" />
+      <path d="M2 7.2a4 4 0 0 0 8 0M6 11.2v2.8M12.6 9.2v4.6M10.3 11.5h4.6" />
+    </>
+  ),
+  keyboard: (
+    <>
+      <rect x="1.2" y="3.8" width="13.6" height="8.8" rx="1.4" />
+      <path d="M3.8 6.6h.8M6.2 6.6h.8M8.6 6.6h.8M11 6.6h.8M3.8 8.6h.8M6.2 8.6h.8M8.6 8.6h.8M11 8.6h.8M5 10.6h6" />
+    </>
+  ),
+  "sparkles.tv": (
+    <>
+      <rect x="1.4" y="3" width="13.2" height="9" rx="1.6" />
+      <path d="M5.6 14.2h4.8" />
+      <path d="M8 5l.7 1.8 1.8.7-1.8.7L8 10l-.7-1.8-1.8-.7 1.8-.7z" fill="currentColor" strokeWidth="0.6" />
+    </>
+  ),
+  iphone: (
+    <>
+      <rect x="4.4" y="1.2" width="7.2" height="13.6" rx="1.8" />
+      <path d="M7 2.9h2" />
+    </>
+  ),
+  "person.badge.key": (
+    <>
+      <circle cx="6" cy="4.8" r="2.3" />
+      <path d="M1.6 13.2a4.4 4.4 0 0 1 6.4-3.8" />
+      <circle cx="12" cy="9" r="1.7" />
+      <path d="M12 10.7v3.6M12 12.8h1.3" />
+    </>
+  ),
+  "xmark.circle.fill": (
+    <>
+      <circle cx="8" cy="8" r="6.8" fill="currentColor" stroke="none" />
+      <path d="M5.7 5.7l4.6 4.6M10.3 5.7l-4.6 4.6" stroke={K} strokeWidth="1.6" />
+    </>
+  ),
+  "info.circle.fill": (
+    <>
+      <circle cx="8" cy="8" r="6.8" fill="currentColor" stroke="none" />
+      <path d="M8 7.2v4" stroke={K} strokeWidth="1.6" />
+      <circle cx="8" cy="4.9" r=".9" fill={K} stroke="none" />
+    </>
+  ),
+  "puzzlepiece.extension.fill": (
+    <path
+      d="M2.4 5.2h3.2a1.8 1.8 0 1 1 3.4 0h3.2v3.2a1.8 1.8 0 1 1 0 3.4v2.4H2.4v-3a1.8 1.8 0 1 0 0-3z"
+      fill="currentColor"
+    />
+  ),
+  "chevron.left.forwardslash.chevron.right": (
+    <path d="M4.8 4.6L1.6 8l3.2 3.4M11.2 4.6L14.4 8l-3.2 3.4M9.3 3.2L6.7 12.8" />
+  ),
+  "book.closed": (
+    <>
+      <rect x="3" y="1.8" width="10" height="12.4" rx="1.2" />
+      <path d="M5.4 1.8v12.4M7.6 4.6h3.2" />
+    </>
+  ),
+  brain: (
+    <path d="M8 2.8v10.6M8 3.8a2.3 2.3 0 0 0-4.3 1.1 2.3 2.3 0 0 0-1 4 2.3 2.3 0 0 0 1.9 3.5A2 2 0 0 0 8 13M8 3.8a2.3 2.3 0 0 1 4.3 1.1 2.3 2.3 0 0 1 1 4 2.3 2.3 0 0 1-1.9 3.5A2 2 0 0 1 8 13M5.2 7.4h1.4M9.4 9.6h1.4" />
+  ),
+  "list.number": (
+    <path d="M6.6 4h7.6M6.6 8h7.6M6.6 12h7.6M2.4 2.9l.9-.6v3.1M2.2 7a.9.9 0 0 1 1.7.4c0 .6-1.7 1.3-1.7 2h1.8M2.3 11h1.6l-.9 1.1a.8.8 0 1 1-.8 1.3" />
+  ),
+  // ---- question card (batch2-routines) ----------------------------------
+  minus: <path d="M3.4 8h9.2" />,
+  "arrow.right": <path d="M2.6 8h10.6M8.8 3.6L13.2 8l-4.4 4.4" />,
+  // ---- calendar, timeline, live share, voice, MCPs (batch2-features) ----
+  "questionmark.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M6.2 6.3a1.8 1.8 0 1 1 2.6 1.6c-.5.3-.8.7-.8 1.2v.3" />
+      <circle cx="8" cy="11.4" r=".55" fill="currentColor" stroke="none" />
+    </>
+  ),
+  sparkles: (
+    <>
+      <path d="M6.4 2.4l1.1 3.1 3.1 1.1-3.1 1.1-1.1 3.1-1.1-3.1-3.1-1.1 3.1-1.1z" />
+      <path d="M12 9.4l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z" />
+    </>
+  ),
+  "plus.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M8 5v6M5 8h6" />
+    </>
+  ),
+  "pencil.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M5.4 10.6l.4-1.7 3.9-3.9 1.3 1.3-3.9 3.9z" />
+    </>
+  ),
+  "exclamationmark.shield.fill": (
+    <>
+      <path d="M8 1.4l5.4 2v4.2c0 3.3-2.3 5.8-5.4 7-3.1-1.2-5.4-3.7-5.4-7V3.4z" fill="currentColor" stroke="none" />
+      <path d="M8 4.8v4" stroke={K} strokeWidth="1.6" />
+      <circle cx="8" cy="11.2" r=".85" fill={K} stroke="none" />
+    </>
+  ),
+  waveform: <path d="M2 7v2M4.4 5v6M6.8 2.6v10.8M9.2 4.6v6.8M11.6 6.2v3.6M14 7.2v1.6" />,
+  creditcard: (
+    <>
+      <rect x="1.6" y="3.4" width="12.8" height="9.2" rx="1.6" />
+      <path d="M1.6 6.4h12.8M4 10.2h2.6" />
+    </>
+  ),
+  flask: (
+    <>
+      <path d="M6.2 1.8h3.6M6.8 1.8v4.4l-4 6.6a1 1 0 0 0 .9 1.4h8.6a1 1 0 0 0 .9-1.4l-4-6.6V1.8" />
+      <path d="M4.4 10.2h7.2" />
+    </>
+  ),
+  // ---- routine inspector, toolbar and row menu (batch A) -----------------
+  bolt: <path d="M9.4 1.2L3.4 9.2h4l-1 5.6 6.2-8.2H8.6z" />,
+  doc: <path d="M4.2 1.6h4.9l3.3 3.3v8.3a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 13.2V2.8a1.2 1.2 0 0 1 1.2-1.2zM9 1.8v3.2h3.2" />,
+  eye: (
+    <>
+      <path d="M1.2 8c1.6-2.9 4-4.4 6.8-4.4s5.2 1.5 6.8 4.4c-1.6 2.9-4 4.4-6.8 4.4S2.8 10.9 1.2 8z" />
+      <circle cx="8" cy="8" r="2.1" />
+    </>
+  ),
+  "square.and.pencil": (
+    <>
+      <path d="M7.2 2.6H3.6a1.4 1.4 0 0 0-1.4 1.4v8.4a1.4 1.4 0 0 0 1.4 1.4H12a1.4 1.4 0 0 0 1.4-1.4V8.8" />
+      <path d="M12.2 1.8l2 2-6.4 6.4-2.6.6.6-2.6z" />
+    </>
+  ),
+  "rectangle.stack.badge.plus": (
+    <>
+      <rect x="1.8" y="6" width="9.4" height="7.6" rx="1.4" />
+      <path d="M3.4 4h6.4M5 2h3.4" />
+      <path d="M13.2 5.2v5M10.7 7.7h5" strokeWidth="1.5" />
+    </>
+  ),
+  "square.stack.3d.up": (
+    <>
+      <path d="M8 1.8l6 3-6 3-6-3z" />
+      <path d="M2 8l6 3 6-3M2 11.2l6 3 6-3" />
+    </>
+  ),
+  "clock.badge.checkmark": (
+    <>
+      <path d="M13.6 6.4A6 6 0 1 0 7.4 14" />
+      <path d="M8 4.4V8l2 1.2" />
+      <path d="M9.6 12.2l1.8 1.8 3.4-3.6" strokeWidth="1.5" />
+    </>
+  ),
+  // ---- settings, menus and sheets (batch E) ------------------------------
+  "macbook.and.iphone": (
+    <>
+      <rect x="1.6" y="3.4" width="9.2" height="6.4" rx="0.9" />
+      <path d="M0.6 11.6h8.2" />
+      <rect x="11.6" y="5.4" width="3.8" height="7.4" rx="0.9" />
+    </>
+  ),
+  "dot.radiowaves.left.and.right": (
+    <>
+      <circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none" />
+      <path d="M5.4 5.4a3.7 3.7 0 0 0 0 5.2M10.6 5.4a3.7 3.7 0 0 1 0 5.2" />
+      <path d="M3.4 3.4a6.5 6.5 0 0 0 0 9.2M12.6 3.4a6.5 6.5 0 0 1 0 9.2" />
+    </>
+  ),
+  network: (
+    <>
+      <circle cx="8" cy="8" r="6.2" />
+      <path d="M8 1.8c-1.8 1.7-2.6 3.8-2.6 6.2s.8 4.5 2.6 6.2M8 1.8c1.8 1.7 2.6 3.8 2.6 6.2s-.8 4.5-2.6 6.2" />
+      <path d="M1.8 8h12.4" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M3.4 11.4h9.2l-1.2-1.6V7a3.4 3.4 0 0 0-6.8 0v2.8z" />
+      <path d="M6.6 13.2a1.5 1.5 0 0 0 2.8 0" />
+    </>
+  ),
+  // ---- chat tool rows (batch B) -------------------------------------------
+  /** DetailedToolCallRow's Bash icon: a window with a prompt and a cursor line. */
+  terminal: (
+    <>
+      <rect x="1.6" y="2.6" width="12.8" height="10.8" rx="2" />
+      <path d="M4.4 6.2l2 1.8-2 1.8M8 10.2h3.4" />
+    </>
+  ),
+  // ---- iPhone companion tab bar (batch F, AppRouter.swift AppTab.icon) -----
+  "person.2.fill": (
+    <>
+      <circle cx="5.6" cy="5.4" r="2.4" fill="currentColor" />
+      <path d="M1.4 13.4c0-2.5 1.8-4.1 4.2-4.1s4.2 1.6 4.2 4.1z" fill="currentColor" />
+      <circle cx="11.2" cy="4.6" r="2" fill="currentColor" />
+      <path d="M11 8.6c2.2 0 3.6 1.4 3.6 3.6h-3.2c0-1.4-.4-2.6-1.2-3.4z" fill="currentColor" />
+    </>
+  ),
+  "building.2.fill": (
+    <>
+      <path d="M1.8 14.2V6.4h5v7.8zM6.8 14.2V2.2h7.4v12z" fill="currentColor" />
+      <path d="M1 14.2h14" />
+      <path d="M9.2 4.8h2.6M9.2 7.4h2.6M9.2 10h2.6M3.6 9h1.4M3.6 11.4h1.4" stroke={K} strokeWidth="1.1" />
+    </>
+  ),
+  "gearshape.fill": (
+    <>
+      <path
+        d="M8 1.4v1.8M8 12.8v1.8M1.4 8h1.8M12.8 8h1.8M3.3 3.3l1.3 1.3M11.4 11.4l1.3 1.3M3.3 12.7l1.3-1.3M11.4 4.6l1.3-1.3"
+        strokeWidth="2.2"
+      />
+      <circle cx="8" cy="8" r="4.8" fill="currentColor" />
+      <circle cx="8" cy="8" r="1.8" fill={K} stroke="none" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type GlyphName = keyof typeof GLYPHS;
@@ -380,6 +784,8 @@ export type GlyphName = keyof typeof GLYPHS;
 export const GLYPH_NAMES = Object.keys(GLYPHS) as GlyphName[];
 
 const WEIGHTS = {
+  /** SF "light"/"thin": large decorative symbols (empty states). */
+  light: 0.8,
   regular: 1.3,
   medium: 1.45,
   semibold: 1.65,

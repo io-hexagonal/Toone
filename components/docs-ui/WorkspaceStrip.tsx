@@ -23,6 +23,8 @@ export type WorkspacePillSpec = {
   active?: boolean;
   hover?: boolean;
   unread?: boolean;
+  /** Drawn inside the pill (e.g. the hovered pill's <Tooltip>). */
+  overlay?: ReactNode;
 };
 
 type Props = {
@@ -49,6 +51,7 @@ export function WorkspacePill({ pill, showClose }: { pill: WorkspacePillSpec; sh
           <Glyph name="xmark" size={8} weight="bold" />
         </span>
       ) : null}
+      {pill.overlay}
     </span>
   );
 }

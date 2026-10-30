@@ -11,6 +11,10 @@ estimatedTime: "2 minutes"
 
 A project is the home for a body of work in Toone. It keeps the people-facing name of the work together with the agents, routines, tools, files, and context used to carry it out.
 
+```toone-ui
+org-panel-overview
+```
+
 Each project contains its own set of agents, MCP servers, routines, and context. Nothing leaks between projects, so what you set up for one body of work stays available there and does not clutter the others.
 
 ## Create the project
@@ -37,5 +41,9 @@ Avoid designing a large system at this stage. One clear boundary is enough to ex
 ## Checkpoint
 
 Open the project and confirm that you can reach its Agents and Routines panels. An empty project is expected; you will add the first agent next.
+
+```toone-ui
+agents-empty
+```
 
 Next: [Create your first agent](/how-to/getting-started/create-an-agent).

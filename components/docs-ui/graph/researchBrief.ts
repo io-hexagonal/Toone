@@ -27,6 +27,8 @@ export const ID = {
   step: (n: 1 | 2 | 3 | 4) => `draft/step/s${n}`,
   subRoutine: "draft/subroutine/investigate-a-topic",
   artefact: "draft/artefact/research-brief",
+  /** Steps of the expanded sub-routine (RoutineDraftGraphBuilder.subRoutineStepNodeId). */
+  subStep: (n: 1 | 2) => `draft/subroutine/investigate-a-topic/step/s${n}`,
 };
 
 type Options = {
@@ -35,9 +37,17 @@ type Options = {
   /** "Artefacts" chip. When off the routine card shows "+1". */
   showArtefacts: boolean;
   runState?: Partial<Record<string, RunState>>;
+  /** Sub-routine disclosed (its chevron, or selecting its card): its own
+   * steps join the graph after it (appendExpandedSubRoutine). Default off. */
+  expandSubRoutine?: boolean;
 };
 
-export function researchBriefGraph({ showInputs, showArtefacts, runState = {} }: Options): LaidOutGraph {
+export function researchBriefGraph({
+  showInputs,
+  showArtefacts,
+  runState = {},
+  expandSubRoutine = false,
+}: Options): LaidOutGraph {
   const [s1, s2, s3, s4] = DEMO.routine.steps;
   const nodes: GraphNode[] = [
     {
@@ -57,9 +67,16 @@ export function researchBriefGraph({ showInputs, showArtefacts, runState = {} }:
       kind: "subRoutine",
       label: DEMO.subRoutine.name,
       sublabel: DEMO.routine.owner,
-      expanded: false,
+      expanded: expandSubRoutine,
     },
   ];
+  if (expandSubRoutine) {
+    const [g1, g2] = DEMO.subRoutine.steps;
+    nodes.push(
+      { id: ID.subStep(1), kind: "step", label: `1. ${g1}`, stepIns: ["topic"], stepOuts: ["sources"] },
+      { id: ID.subStep(2), kind: "step", label: `2. ${g2}`, stepIns: ["sources"], stepOuts: ["findings"] },
+    );
+  }
   if (showInputs) {
     nodes.push({ id: ID.input, kind: "input", label: "Topic", sublabel: "user · topic" });
   }
@@ -80,6 +97,13 @@ export function researchBriefGraph({ showInputs, showArtefacts, runState = {} }:
     { from: ID.step(3), to: ID.step(4), kind: "stepChain" },
     { from: ID.step(2), to: ID.subRoutine, kind: "parent" },
   ];
+  if (expandSubRoutine) {
+    // The child's entry step hangs off its card; its steps chain (stepChain).
+    edges.push(
+      { from: ID.subRoutine, to: ID.subStep(1), kind: "stepChain" },
+      { from: ID.subStep(1), to: ID.subStep(2), kind: "stepChain" },
+    );
+  }
   if (showInputs) edges.push({ from: ID.input, to: ID.step(1), kind: "flow" });
   if (showArtefacts) edges.push({ from: ID.step(4), to: ID.artefact, kind: "produces" });
 
@@ -88,8 +112,13 @@ export function researchBriefGraph({ showInputs, showArtefacts, runState = {} }:
     [ID.step(1)],
     [ID.step(2)],
     [ID.step(3), ID.subRoutine],
-    [ID.step(4)],
-    ...(showArtefacts ? [[ID.artefact]] : []),
+    // id order: "draft/step/s4" < "draft/subroutine/…/step/s1"
+    expandSubRoutine ? [ID.step(4), ID.subStep(1)] : [ID.step(4)],
+    ...(expandSubRoutine
+      ? [showArtefacts ? [ID.artefact, ID.subStep(2)] : [ID.subStep(2)]]
+      : showArtefacts
+        ? [[ID.artefact]]
+        : []),
   ];
   return layoutLayers(nodes, edges, layers);
 }

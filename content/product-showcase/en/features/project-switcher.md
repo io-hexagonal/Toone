@@ -10,17 +10,33 @@ pageType: "feature"
 
 The project strip appears above the main workspace when multiple projects are enabled. Each project has a numbered pill so its active agents, threads, and files remain one short switch away.
 
+```toone-ui
+workspace-strip-states
+```
+
 ## Add and remove projects
 
 Use the plus control to select another project folder. Toone can keep up to nine workspaces in the strip, and inactive entries can be closed without deleting their project folders.
+
+```toone-ui
+workspace-strip-add
+```
 
 ## Switch by number
 
 The number attached to each project provides a stable visual reference and a keyboard destination. Use the displayed Option-number shortcut to move directly to that project.
 
+```toone-ui
+workspace-strip-shortcut
+```
+
 ## Notice activity elsewhere
 
 An inactive project can pulse when it has unread agent activity. You can stay focused on the current project while retaining a visible signal that another one needs attention.
+
+```toone-ui
+workspace-strip-unread
+```
 
 During a remote Live Share session, the same strip becomes the place to switch between the projects made available by the host.
 

@@ -1,0 +1,46 @@
+/* RecentThreadRailList (LeftOrchestratorView.swift:3229-3445). See RailThreads.tsx. */
+
+/* LazyVStack spacing 3 (navigationRailThreadSpacing), padding v4 (…ListInset) */
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 0;
+}
+
+/* threadButton: bubble.left.fill 10 semibold in a 28² frame, r8 */
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-3);
+}
+
+.item[data-dot="processing"] {
+  color: var(--tu-accent);
+}
+
+.item[data-dot="unseen"] {
+  color: var(--tu-success);
+}
+
+.item[data-dot="attention"] {
+  color: var(--tu-warning);
+}
+
+/* selected: accent glyph + 1pt accent stroke */
+.item[data-state="selected"] {
+  color: var(--tu-accent);
+  box-shadow: inset 0 0 0 1px var(--tu-accent);
+}
+
+/* hovered: accent glyph on accent .10, scale 1.10 */
+.item[data-state="hover"] {
+  color: var(--tu-accent);
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  transform: scale(1.1);
+}

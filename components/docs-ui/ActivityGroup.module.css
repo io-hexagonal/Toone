@@ -1,0 +1,97 @@
+/* Tool activity group + DetailedToolCallRow (ChatActivityGroupView.swift:3-58,
+   RichMessageBubble.swift:1142-1300). Tokens from docs-ui.module.css. */
+
+/* VStack(alignment: .leading, spacing: 6) */
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* HStack spacing 6, .caption textSecondary, padding h10, min-h 30, capsule */
+.capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+  white-space: nowrap;
+}
+
+/* VStack(alignment: .leading, spacing: 0): row, then the result */
+.call {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+/* HStack spacing 6, padding 8/4, threadCardBackground, r4 */
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--tu-card);
+  white-space: nowrap;
+}
+
+.icon {
+  display: inline-flex;
+  justify-content: center;
+  width: 14px;
+  color: var(--tu-success); /* AppColors.toolCompleted */
+}
+
+/* .caption.bold() textPrimary */
+.title {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+  color: var(--tu-text-1);
+}
+
+/* 10pt monospaced, textTertiary (link colour when the row opens a file) */
+.input {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--tu-font-mono);
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+.input[data-link="true"] {
+  color: var(--tu-accent);
+}
+
+/* 11pt mono textPrimary, padding 8, full width, threadCardBackground, r4,
+   0.5pt threadCardBorder, 2pt above */
+.result {
+  display: block;
+  align-self: stretch;
+  margin-top: 2px;
+  padding: 8px;
+  border-radius: 4px;
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 0.5px var(--tu-card-border);
+  font-family: var(--tu-font-mono);
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--tu-text-1);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.result[data-error="true"] {
+  background: color-mix(in srgb, var(--tu-error) 10%, transparent);
+  color: var(--tu-error);
+}

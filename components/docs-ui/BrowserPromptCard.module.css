@@ -1,0 +1,108 @@
+/* BrowserPromptCard: the browser panel's inline prompt surface
+   (AgentBrowserPrivacyViews.swift, BrowserSessionImportView.swift). Tokens from .root. */
+
+.wrap {
+  padding: 0 8px 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--tu-input) 72%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--tu-accent);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* .subheadline semibold (11), wraps (fixedSize vertical) */
+.title {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  color: var(--tu-text-1);
+}
+
+/* .caption (10) secondary */
+.subtitle {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+.strong {
+  font-weight: 700;
+  color: var(--tu-text-2);
+}
+
+/* HStack spacing 4 (ViewThatFits picks the row when it fits) */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* .caption2 (10) tertiary */
+.note {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+/* Small native buttons (11pt label): CALIBRATE */
+.button {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* .borderedProminent tinted with the accent: AppKit keeps a white label on
+   Smoky Quartz's 0.72 grey (the low-contrast case LayoutStyle.swift:342-348). */
+.button[data-kind="prominent"] {
+  background: var(--tu-accent);
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-weight: 500;
+}
+
+.button[data-kind="bordered"] {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.12),
+    0 0.5px 1px rgba(0, 0, 0, 0.3);
+  color: var(--tu-text-1);
+}
+
+/* .borderless: the label in the tint */
+.button[data-kind="borderless"] {
+  padding: 0 6px;
+  color: var(--tu-accent);
+}

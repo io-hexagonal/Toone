@@ -10,16 +10,32 @@ pageType: "feature"
 
 Zen mode turns the desktop behind your Toone panels into an ambient video surface. The panels remain available while the surrounding environment becomes less visually fragmented.
 
+```toone-ui
+zen-mode-schematic
+```
+
 ## Choose the atmosphere
 
 Select an ambient video in Settings before activating Zen mode. The chosen video becomes the background for the panel workspace, and the selection remains available for the next session.
+
+```toone-ui
+zen-video-grid
+```
 
 ## Enter and leave quickly
 
 Toggle Zen mode from Toone or assign its global shortcut. Press Escape when you want to leave the mode and return to the ordinary desktop.
 
+```toone-ui
+settings-zen-toggle-hotkey
+```
+
 ## Control the audio
 
 When the selected media includes audio, use the Toone menu controls to mute or unmute it without leaving Zen mode.
+
+```toone-ui
+menubar-zen-menu
+```
 
 Next: [Project switcher](/how-to/features/project-switcher).

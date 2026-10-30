@@ -1,0 +1,194 @@
+/* P16 InspectorCard + MetaTile (RoutineCreatorPanelView.swift). See InspectorCard.tsx. */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headline {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--tu-label-1);
+}
+
+/* Button("Discuss with agent", systemImage:) .plain, .caption, .secondary */
+.discuss {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+  white-space: nowrap;
+}
+
+/* summary card: padding 14, innerBackground .42, r12, 1pt separator */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-inner) 42%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-sep);
+}
+
+/* Label(title, systemImage: "N.circle.fill") .title3 semibold */
+.cardTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 19px;
+  color: var(--tu-label-1);
+}
+
+.cardText {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-label-2);
+}
+
+/* LazyVGrid adaptive(minimum: N): row spacing 10, default column spacing 8 */
+.grid {
+  display: grid;
+  gap: 10px 8px;
+  align-self: stretch;
+}
+
+/* metadata(): padding 9, innerBackground .42, r8, 1pt separator */
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 9px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tu-inner) 42%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-sep);
+}
+
+.tileLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+.tileValue {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  color: var(--tu-label-1);
+}
+
+/* Menu { … } label: Label(…).font(.caption), .menuStyle(.borderlessButton). Native: calibrate. */
+.menuLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-1);
+  white-space: nowrap;
+}
+
+.menuChevron {
+  margin-left: 1px;
+  color: var(--tu-label-2);
+}
+
+/* previewSection: VStack spacing 9, title .headline */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.caption {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+.subheadline {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  color: var(--tu-label-1);
+}
+
+/* Label(text, systemImage:) .callout */
+.labelRow {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-label-1);
+}
+
+.labelRow > svg {
+  margin-top: 1px;
+}
+
+/* previewRow: HStack top spacing 10, padding 10, r9, innerBackground .38, 1pt separator */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  padding: 10px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--tu-inner) 38%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-sep);
+}
+
+.rowIcon {
+  display: flex;
+  color: var(--tu-accent);
+  margin-top: 1px;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  color: var(--tu-label-1);
+}
+
+.rowScope {
+  display: flex;
+  color: var(--tu-label-2);
+}
+
+.numberCircle {
+  flex: none;
+}

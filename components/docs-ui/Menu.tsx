@@ -19,23 +19,37 @@ import { Glyph, type GlyphName } from "./glyphs";
  */
 
 export type MenuItem =
-  | { label: string; icon?: GlyphName; highlighted?: boolean; disabled?: boolean; shortcut?: string }
+  | {
+      label: string;
+      icon?: GlyphName;
+      highlighted?: boolean;
+      disabled?: boolean;
+      shortcut?: string;
+      /** A submenu (SwiftUI `Menu` inside a menu): trailing chevron.right. */
+      submenu?: boolean;
+    }
+  /** A section title (SwiftUI `Section("…")` in a menu): small, secondary, not selectable. Calibrate. */
+  | { header: string }
   | "separator";
 
 export function Menu({ items, style }: { items: MenuItem[]; style?: CSSProperties }) {
-  const hasIcons = items.some((item) => item !== "separator" && item.icon);
+  const hasIcons = items.some((item) => item !== "separator" && "label" in item && item.icon);
   return (
     <div className={styles.menu} style={style}>
       {items.map((item, i) =>
         item === "separator" ? (
           <div className={styles.separator} key={`sep-${i}`} />
+        ) : "header" in item ? (
+          <div className={styles.header} data-icons={hasIcons ? "true" : undefined} key={`header-${item.header}`}>
+            {item.header}
+          </div>
         ) : (
           <div
             className={styles.item}
             data-disabled={item.disabled ? "true" : undefined}
             data-highlighted={item.highlighted ? "true" : undefined}
             data-icons={hasIcons ? "true" : undefined}
-            key={item.label}
+            key={`${item.label}-${i}`}
           >
             {item.icon ? (
               <span className={styles.icon}>
@@ -44,6 +58,11 @@ export function Menu({ items, style }: { items: MenuItem[]; style?: CSSPropertie
             ) : null}
             <span className={styles.label}>{item.label}</span>
             {item.shortcut ? <span className={styles.shortcut}>{item.shortcut}</span> : null}
+            {item.submenu ? (
+              <span className={styles.shortcut} style={{ display: "inline-flex", marginRight: -12 }}>
+                <Glyph name="chevron.right" size={10} weight="semibold" />
+              </span>
+            ) : null}
           </div>
         ),
       )}
