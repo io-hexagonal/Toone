@@ -215,20 +215,62 @@
     },
     "whyToone": {
       "eyebrow": "Why Toone",
-      "title": "Your AI work is scattered. Toone runs it.",
-      "sub": "The same work, before and after it becomes a routine.",
-      "before": "Before",
-      "after": "After",
-      "beforeCaption": "Your AI work lives in chat tabs, prompt notes, copied lists and posts you publish by hand.",
-      "afterCaption": "Toone turns it into one routine that runs on your own accounts, one step at a time, where you can watch it.",
-      "chips": {
-        "chatgpt": "ChatGPT · New chat",
-        "claude": "Claude · Research",
-        "prompt": "prompt v7 (final).txt",
-        "leads": "Leads copied from LinkedIn",
-        "figma": "Campaign visuals v3",
-        "instagram": "Post to Instagram manually",
-        "sticky": "Rerun the research on Monday!"
+      "title": "A prompt on a timer isn't a routine.",
+      "sub": "Chat assistants can schedule a prompt. Toone runs a process: the same steps, the same checks, and memory between runs. Repeatable by design.",
+      "prompt": {
+        "label": "A scheduled prompt",
+        "note": "Starts fresh every run. Nobody checks.",
+        "when": "Every Monday",
+        "text": "Research our niche and find new leads",
+        "run": "Run {n}",
+        "leads": "{n} leads",
+        "duplicate": "duplicate",
+        "noSources": "no sources"
+      },
+      "routine": {
+        "label": "A Toone routine",
+        "note": "The same steps every run, checked and remembered.",
+        "ledger": "Ledger",
+        "known": "38 leads known",
+        "fresh": "20 new this run",
+        "duplicates": "0 duplicates"
+      },
+      "compare": {
+        "prompt": "Scheduled prompt",
+        "toone": "Toone routine",
+        "rows": {
+          "structure": {
+            "label": "Structure",
+            "prompt": "One prompt, re-run",
+            "toone": "A graph of steps you can see and edit"
+          },
+          "memory": {
+            "label": "Memory between runs",
+            "prompt": "Starts fresh: repeats and gaps",
+            "toone": "A ledger: nothing lost, nothing repeated"
+          },
+          "control": {
+            "label": "Control mid-run",
+            "prompt": "It runs or it doesn't",
+            "toone": "Pause one step, edit, resume where it stopped"
+          },
+          "checks": {
+            "label": "Checks",
+            "prompt": "You read the output",
+            "toone": "Contracts stop bad output (≥ 20 leads, sources on every lead)"
+          },
+          "failures": {
+            "label": "Failures",
+            "prompt": "Silent",
+            "toone": "Failure routes: retry, switch model, or ask you"
+          },
+          "models": {
+            "label": "Models",
+            "prompt": "One model",
+            "toone": "A model per step (Haiku in parallel, Opus to verify)"
+          }
+        },
+        "foot": "Use the models you already pay for. Toone adds the layer they don't have."
       }
     },
     "closing": {

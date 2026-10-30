@@ -215,20 +215,62 @@
     },
     "whyToone": {
       "eyebrow": "Por qué Toone",
-      "title": "Tu trabajo con IA está disperso. Toone lo ejecuta.",
-      "sub": "El mismo trabajo, antes y después de convertirse en una rutina.",
-      "before": "Antes",
-      "after": "Después",
-      "beforeCaption": "Tu trabajo con IA vive en pestañas de chat, notas con prompts, listas copiadas y publicaciones que haces a mano.",
-      "afterCaption": "Toone lo convierte en una sola rutina que se ejecuta con tus propias cuentas, paso a paso, a la vista.",
-      "chips": {
-        "chatgpt": "ChatGPT · Nuevo chat",
-        "claude": "Claude · Investigación",
-        "prompt": "prompt v7 (final).txt",
-        "leads": "Leads copiados de LinkedIn",
-        "figma": "Visuales de campaña v3",
-        "instagram": "Publicar en Instagram a mano",
-        "sticky": "¡Repetir la investigación el lunes!"
+      "title": "Un prompt con horario no es una rutina.",
+      "sub": "Los asistentes de chat pueden programar un prompt. Toone ejecuta un proceso: los mismos pasos, las mismas comprobaciones y memoria entre ejecuciones. Repetible por diseño.",
+      "prompt": {
+        "label": "Un prompt programado",
+        "note": "Empieza de cero cada vez. Nadie lo revisa.",
+        "when": "Cada lunes",
+        "text": "Investiga nuestro nicho y encuentra nuevos leads",
+        "run": "Ejecución {n}",
+        "leads": "{n} leads",
+        "duplicate": "duplicado",
+        "noSources": "sin fuentes"
+      },
+      "routine": {
+        "label": "Una rutina de Toone",
+        "note": "Los mismos pasos cada vez, revisados y recordados.",
+        "ledger": "Registro",
+        "known": "38 leads conocidos",
+        "fresh": "20 nuevos en esta ejecución",
+        "duplicates": "0 duplicados"
+      },
+      "compare": {
+        "prompt": "Prompt programado",
+        "toone": "Rutina de Toone",
+        "rows": {
+          "structure": {
+            "label": "Estructura",
+            "prompt": "Un prompt, repetido",
+            "toone": "Un grafo de pasos que puedes ver y editar"
+          },
+          "memory": {
+            "label": "Memoria entre ejecuciones",
+            "prompt": "Empieza de cero: repeticiones y huecos",
+            "toone": "Un registro: nada se pierde, nada se repite"
+          },
+          "control": {
+            "label": "Control a mitad",
+            "prompt": "Se ejecuta o no",
+            "toone": "Pausa un paso, edítalo y reanuda donde se detuvo"
+          },
+          "checks": {
+            "label": "Comprobaciones",
+            "prompt": "Tú lees el resultado",
+            "toone": "Los contratos frenan los malos resultados (≥ 20 leads, fuentes en cada lead)"
+          },
+          "failures": {
+            "label": "Fallos",
+            "prompt": "Silenciosos",
+            "toone": "Rutas de fallo: reintentar, cambiar de modelo o preguntarte"
+          },
+          "models": {
+            "label": "Modelos",
+            "prompt": "Un solo modelo",
+            "toone": "Un modelo por paso (Haiku en paralelo, Opus para verificar)"
+          }
+        },
+        "foot": "Usa los modelos que ya pagas. Toone añade la capa que les falta."
       }
     },
     "closing": {

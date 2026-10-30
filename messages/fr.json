@@ -215,20 +215,62 @@
     },
     "whyToone": {
       "eyebrow": "Pourquoi Toone",
-      "title": "Votre travail avec l’IA est éparpillé. Toone l’exécute.",
-      "sub": "Le même travail, avant et après en avoir fait une routine.",
-      "before": "Avant",
-      "after": "Après",
-      "beforeCaption": "Votre travail avec l’IA vit dans des onglets de chat, des notes de prompts, des listes copiées et des publications faites à la main.",
-      "afterCaption": "Toone en fait une seule routine qui s’exécute avec vos propres comptes, étape par étape, sous vos yeux.",
-      "chips": {
-        "chatgpt": "ChatGPT · Nouveau chat",
-        "claude": "Claude · Recherche",
-        "prompt": "prompt v7 (final).txt",
-        "leads": "Prospects copiés de LinkedIn",
-        "figma": "Visuels campagne v3",
-        "instagram": "Publier sur Instagram à la main",
-        "sticky": "Relancer la recherche lundi !"
+      "title": "Un prompt programmé n’est pas une routine.",
+      "sub": "Les assistants de chat savent programmer un prompt. Toone exécute un processus : les mêmes étapes, les mêmes vérifications et une mémoire d’une exécution à l’autre. Reproductible par conception.",
+      "prompt": {
+        "label": "Un prompt programmé",
+        "note": "Repart de zéro à chaque fois. Personne ne vérifie.",
+        "when": "Chaque lundi",
+        "text": "Étudie notre niche et trouve de nouveaux leads",
+        "run": "Exécution {n}",
+        "leads": "{n} leads",
+        "duplicate": "doublon",
+        "noSources": "sans sources"
+      },
+      "routine": {
+        "label": "Une routine Toone",
+        "note": "Les mêmes étapes à chaque fois, vérifiées et mémorisées.",
+        "ledger": "Registre",
+        "known": "38 leads connus",
+        "fresh": "20 nouveaux cette fois",
+        "duplicates": "0 doublon"
+      },
+      "compare": {
+        "prompt": "Prompt programmé",
+        "toone": "Routine Toone",
+        "rows": {
+          "structure": {
+            "label": "Structure",
+            "prompt": "Un prompt, relancé",
+            "toone": "Un graphe d’étapes visible et modifiable"
+          },
+          "memory": {
+            "label": "Mémoire entre exécutions",
+            "prompt": "Repart de zéro : doublons et oublis",
+            "toone": "Un registre : rien de perdu, rien en double"
+          },
+          "control": {
+            "label": "Contrôle en cours",
+            "prompt": "Ça tourne ou pas",
+            "toone": "Mettre une étape en pause, la modifier, reprendre là où elle s’est arrêtée"
+          },
+          "checks": {
+            "label": "Vérifications",
+            "prompt": "Vous relisez le résultat",
+            "toone": "Des contrats bloquent les mauvais résultats (≥ 20 leads, une source par lead)"
+          },
+          "failures": {
+            "label": "Échecs",
+            "prompt": "Silencieux",
+            "toone": "Plans de repli : réessayer, changer de modèle ou vous demander"
+          },
+          "models": {
+            "label": "Modèles",
+            "prompt": "Un seul modèle",
+            "toone": "Un modèle par étape (Haiku en parallèle, Opus pour vérifier)"
+          }
+        },
+        "foot": "Gardez les modèles que vous payez déjà. Toone ajoute la couche qui leur manque."
       }
     },
     "closing": {

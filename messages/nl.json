@@ -215,20 +215,62 @@
     },
     "whyToone": {
       "eyebrow": "Waarom Toone",
-      "title": "Je AI-werk is versnipperd. Toone voert het uit.",
-      "sub": "Hetzelfde werk, voor en nadat het een routine wordt.",
-      "before": "Voor",
-      "after": "Na",
-      "beforeCaption": "Je AI-werk zit verspreid over chattabbladen, promptnotities, gekopieerde lijsten en posts die je met de hand plaatst.",
-      "afterCaption": "Toone maakt er één routine van die met je eigen accounts draait, stap voor stap, terwijl je meekijkt.",
-      "chips": {
-        "chatgpt": "ChatGPT · Nieuwe chat",
-        "claude": "Claude · Onderzoek",
-        "prompt": "prompt v7 (definitief).txt",
-        "leads": "Leads gekopieerd uit LinkedIn",
-        "figma": "Campagnevisuals v3",
-        "instagram": "Handmatig op Instagram plaatsen",
-        "sticky": "Maandag het onderzoek opnieuw doen!"
+      "title": "Een prompt met een timer is nog geen routine.",
+      "sub": "Chatassistenten kunnen een prompt inplannen. Toone voert een proces uit: dezelfde stappen, dezelfde controles en geheugen tussen runs. Herhaalbaar door ontwerp.",
+      "prompt": {
+        "label": "Een ingeplande prompt",
+        "note": "Begint elke keer opnieuw. Niemand controleert.",
+        "when": "Elke maandag",
+        "text": "Onderzoek onze niche en vind nieuwe leads",
+        "run": "Run {n}",
+        "leads": "{n} leads",
+        "duplicate": "dubbel",
+        "noSources": "geen bronnen"
+      },
+      "routine": {
+        "label": "Een Toone-routine",
+        "note": "Elke keer dezelfde stappen, gecontroleerd en onthouden.",
+        "ledger": "Register",
+        "known": "38 leads bekend",
+        "fresh": "20 nieuw deze run",
+        "duplicates": "0 dubbel"
+      },
+      "compare": {
+        "prompt": "Ingeplande prompt",
+        "toone": "Toone-routine",
+        "rows": {
+          "structure": {
+            "label": "Structuur",
+            "prompt": "Eén prompt, opnieuw gedraaid",
+            "toone": "Een graaf van stappen die je ziet en bewerkt"
+          },
+          "memory": {
+            "label": "Geheugen tussen runs",
+            "prompt": "Begint opnieuw: herhalingen en gaten",
+            "toone": "Een register: niets kwijt, niets dubbel"
+          },
+          "control": {
+            "label": "Ingrijpen tijdens een run",
+            "prompt": "Hij draait of niet",
+            "toone": "Pauzeer één stap, pas aan, ga verder waar hij stopte"
+          },
+          "checks": {
+            "label": "Controles",
+            "prompt": "Jij leest de uitkomst",
+            "toone": "Contracten houden slechte output tegen (≥ 20 leads, bronnen bij elke lead)"
+          },
+          "failures": {
+            "label": "Fouten",
+            "prompt": "Stil",
+            "toone": "Foutroutes: opnieuw proberen, ander model of jou vragen"
+          },
+          "models": {
+            "label": "Modellen",
+            "prompt": "Eén model",
+            "toone": "Een model per stap (Haiku parallel, Opus ter controle)"
+          }
+        },
+        "foot": "Gebruik de modellen waar je al voor betaalt. Toone voegt de laag toe die zij missen."
       }
     },
     "closing": {

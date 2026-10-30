@@ -330,7 +330,9 @@ export type IconName =
   | "chat"
   | "key"
   | "fan"
-  | "pulse";
+  | "pulse"
+  | "graph"
+  | "ledger";
 
 const ICONS: Record<IconName, ReactNode> = {
   clock: (
@@ -377,6 +379,20 @@ const ICONS: Record<IconName, ReactNode> = {
     </>
   ),
   pulse: <path d="M1.8 8.6h2.6l1.6-4.2 2.6 7.2 1.8-4.4.8 1.4h2.8" />,
+  graph: (
+    <>
+      <rect x="2.4" y="2.2" width="5.6" height="3.2" rx="1" />
+      <rect x="8" y="10.6" width="5.6" height="3.2" rx="1" />
+      <path d="M5.2 5.4v2.2c0 1 .8 1.8 1.8 1.8h3c.6 0 .8.4.8.8v.4" />
+    </>
+  ),
+  ledger: (
+    <>
+      <path d="M3.6 3.4c0-.7.5-1.2 1.2-1.2h7.6v9.6H4.8c-.7 0-1.2.5-1.2 1.2V3.4Z" />
+      <path d="M3.6 13c0 .7.5 1.2 1.2 1.2h7.6v-2.4" />
+      <path d="M6.2 5.2h3.8M6.2 7.6h2.6" />
+    </>
+  ),
 };
 
 /** list.bullet.rectangle, the app's routine-kind glyph. */
