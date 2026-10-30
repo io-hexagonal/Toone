@@ -34,8 +34,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Kontrolle über Ihre agentischen Workflows und Routinen",
-      "heroTag": "Erstellen Sie komplexe, zuverlässige KI-Workflows, indem Sie sie beschreiben.\nVerfolgen Sie jeden Lauf Schritt für Schritt in einem Live-Graphen. Pausieren, bearbeiten und dort fortsetzen, wo er angehalten hat.",
+      "heroTitle": "Präzision für Ihre agentischen Workflows und Routinen",
+      "heroTag": "Erstellen Sie komplexe, zuverlässige KI-Workflows, indem Sie sie beschreiben.\nVerbinden Sie Ihre eigenen Konten in einem Browser. Testen, bearbeiten und dort fortsetzen, wo er angehalten hat.",
       "featuresTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
       "featuresSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
       "seeAllFeatures": "Alle Funktionen ansehen",
@@ -133,7 +133,7 @@
     "eaStep1": "Frage mit deiner E-Mail-Adresse Zugang an.",
     "eaStep2": "Wir schicken dir einen persönlichen Code, sobald ein Platz frei wird.",
     "eaStep3": "Löse den Code ein, erstelle dein Konto und lade Toone herunter.",
-    "exploreLink": "KI-Workflows & Routinen entdecken"
+    "exploreLink": "Routinen entdecken für:<br></br>Forschende, SEO, Content, Gründer, Outreach, KI-⁠Engineers"
   },
   "privacyChoices": {
     "title": "Cookies und Analyse",

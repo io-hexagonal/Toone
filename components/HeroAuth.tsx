@@ -327,8 +327,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
             {t(audience === "personal" ? "personal.heroTag" : "heroTag2")}
           </p>
           <Link className="ha-explore" href="/explore">
-            {t("exploreLink")}
-            <span aria-hidden="true">→</span>
+            <span>
+              {t.rich("exploreLink", { br: () => <br /> })}
+              {/* Inline so the arrow follows the last word, wherever the list wraps. */}
+              <span aria-hidden="true">{"  "}→</span>
+            </span>
           </Link>
           {locale !== "en" && (
             <p className="ha-language">{t("productLanguageDisclosure")}</p>
