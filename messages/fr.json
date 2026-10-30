@@ -34,8 +34,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Le contrôle de vos workflows agentiques et routines",
-      "heroTag": "Créez des workflows IA complexes et fiables en les décrivant.\nSuivez chaque exécution étape par étape sur un graphe en direct. Mettez en pause, modifiez et reprenez là où elle s’est arrêtée.",
+      "heroTitle": "La précision pour vos workflows agentiques et routines",
+      "heroTag": "Créez des workflows IA complexes et fiables en les décrivant.\nConnectez vos propres comptes dans un navigateur. Testez, modifiez et reprenez là où il s’est arrêté.",
       "featuresTitle": "L’espace de travail IA pour vos workflows agentiques",
       "featuresSub": "Un espace pour vos agents, vos processus et vos résultats.",
       "seeAllFeatures": "Voir toutes les fonctionnalités",
@@ -133,7 +133,7 @@
     "eaStep1": "Demandez l'accès avec votre e-mail.",
     "eaStep2": "Nous vous envoyons un code personnel dès qu'une place se libère.",
     "eaStep3": "Utilisez le code, créez votre compte et téléchargez Toone.",
-    "exploreLink": "Explorer les workflows IA et les routines"
+    "exploreLink": "Explorer des routines pour :<br></br>Chercheurs, SEO, Contenu, Fondateurs, Prospection, Ingénieurs IA"
   },
   "privacyChoices": {
     "title": "Cookies et statistiques",

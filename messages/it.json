@@ -34,8 +34,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Il controllo dei tuoi flussi agentici e delle tue routine",
-      "heroTag": "Crea flussi di IA complessi e affidabili descrivendoli.\nSegui ogni esecuzione passo dopo passo su un grafo dal vivo. Metti in pausa, modifica e riprendi da dove si era fermata.",
+      "heroTitle": "Precisione per i tuoi flussi agentici e le tue routine",
+      "heroTag": "Crea flussi di IA complessi e affidabili descrivendoli.\nCollega i tuoi account in un browser. Testa, modifica e riprendi da dove si era fermato.",
       "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
@@ -133,7 +133,7 @@
     "eaStep1": "Richiedi l'accesso con la tua email.",
     "eaStep2": "Ti inviamo un codice personale quando si libera un posto.",
     "eaStep3": "Riscatta il codice, crea il tuo account e scarica Toone.",
-    "exploreLink": "Esplora flussi di IA e routine"
+    "exploreLink": "Esplora routine per:<br></br>Ricercatori, SEO, Contenuti, Founder, Outreach, Ingegneri IA"
   },
   "privacyChoices": {
     "title": "Cookie e analisi",
