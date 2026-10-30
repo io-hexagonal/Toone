@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precision for your agentic workflows and routines",
       "heroTag": "Build complex, reliable AI workflows by describing them.\nAttach your own accounts in a browser. Test, edit, and resume where it stopped.",
-      "featuresTitle": "The AI workspace for your agentic workflows",
+      "featuresTitle": "Everything your agents need to get work done",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
       "statement": {
@@ -86,7 +86,7 @@
     "macOS": "macOS",
     "soon": "Soon",
     "heroTitle": "Run company operations as governed AI routines",
-    "pillarsTitle": "The AI workspace for your agentic workflows",
+    "pillarsTitle": "Everything your agents need to get work done",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
     "collaborationTitle": "Your team works together live",
     "collaborationTooltip": "Live collaboration",
@@ -133,7 +133,58 @@
     "eaStep1": "Request access with your email.",
     "eaStep2": "We send a personal code when a place opens.",
     "eaStep3": "Redeem the code, create your account and download Toone.",
-    "exploreLink": "Explore routines for:<br></br>Researchers, SEO, Content, Founders, Outreach, AI engineers"
+    "exploreLink": "Explore routines for:<br></br>Researchers, SEO, Content, Founders, Outreach, AI engineers",
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "From plain words to a running routine",
+      "sub": "You describe the work. Your agents do it where you can see it.",
+      "steps": {
+        "describe": {
+          "title": "Describe it",
+          "body": "Tell Toone the work in plain words and it drafts the routine for you."
+        },
+        "run": {
+          "title": "Watch it run",
+          "body": "Each step lights up on a live graph as it works, using your own accounts."
+        },
+        "resume": {
+          "title": "Pause, edit, resume",
+          "body": "Step in at any point, change what you need, and pick up where it stopped."
+        }
+      },
+      "prompt": "Every Monday, research our niche, find new leads on LinkedIn and design the visuals in Figma."
+    },
+    "routineGraph": {
+      "routineName": "Weekly outreach",
+      "research": "Research",
+      "findLeads": "Find leads",
+      "designFiles": "Design files",
+      "publishSocial": "Publish to social media",
+      "running": "Running",
+      "paused": "Paused",
+      "resume": "Resume"
+    },
+    "whyToone": {
+      "eyebrow": "Why Toone",
+      "title": "Your AI work is scattered. Toone runs it.",
+      "sub": "The same work, before and after it becomes a routine.",
+      "before": "Before",
+      "after": "After",
+      "beforeCaption": "Your AI work lives in chat tabs, prompt notes, copied lists and posts you publish by hand.",
+      "afterCaption": "Toone turns it into one routine that runs on your own accounts, one step at a time, where you can watch it.",
+      "chips": {
+        "chatgpt": "ChatGPT · New chat",
+        "claude": "Claude · Research",
+        "prompt": "prompt v7 (final).txt",
+        "leads": "Leads copied from LinkedIn",
+        "figma": "Campaign visuals v3",
+        "instagram": "Post to Instagram manually",
+        "sticky": "Rerun the research on Monday!"
+      }
+    },
+    "closing": {
+      "title": "Hand your repeat work to agents you can watch."
+    }
   },
   "privacyChoices": {
     "title": "Cookies & analytics",

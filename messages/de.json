@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Präzision für Ihre agentischen Workflows und Routinen",
       "heroTag": "Erstellen Sie komplexe, zuverlässige KI-Workflows, indem Sie sie beschreiben.\nVerbinden Sie Ihre eigenen Konten in einem Browser. Testen, bearbeiten und dort fortsetzen, wo er angehalten hat.",
-      "featuresTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
+      "featuresTitle": "Alles, was Ihre Agenten für ihre Arbeit brauchen",
       "featuresSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
       "seeAllFeatures": "Alle Funktionen ansehen",
       "statement": {
@@ -86,7 +86,7 @@
     "macOS": "macOS",
     "soon": "Bald",
     "heroTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
-    "pillarsTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
+    "pillarsTitle": "Alles, was Ihre Agenten für ihre Arbeit brauchen",
     "pillarsSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
     "collaborationTitle": "Dein Team arbeitet live zusammen",
     "collaborationTooltip": "Live-Zusammenarbeit",
@@ -133,7 +133,58 @@
     "eaStep1": "Frage mit deiner E-Mail-Adresse Zugang an.",
     "eaStep2": "Wir schicken dir einen persönlichen Code, sobald ein Platz frei wird.",
     "eaStep3": "Löse den Code ein, erstelle dein Konto und lade Toone herunter.",
-    "exploreLink": "Routinen entdecken für:<br></br>Forschende, SEO, Content, Gründer, Outreach, KI-⁠Engineers"
+    "exploreLink": "Routinen entdecken für:<br></br>Forschende, SEO, Content, Gründer, Outreach, KI-⁠Engineers",
+    "howItWorks": {
+      "eyebrow": "So funktioniert es",
+      "title": "Von einfachen Worten zur laufenden Routine",
+      "sub": "Sie beschreiben die Arbeit. Ihre Agenten erledigen sie vor Ihren Augen.",
+      "steps": {
+        "describe": {
+          "title": "Beschreiben",
+          "body": "Beschreiben Sie die Arbeit in einfachen Worten, und Toone entwirft daraus die Routine."
+        },
+        "run": {
+          "title": "Beim Laufen zusehen",
+          "body": "Jeder Schritt leuchtet in einem Live-Graphen auf, während er arbeitet – mit Ihren eigenen Konten."
+        },
+        "resume": {
+          "title": "Pausieren, bearbeiten, fortsetzen",
+          "body": "Greifen Sie jederzeit ein, ändern Sie, was nötig ist, und machen Sie dort weiter, wo die Routine angehalten hat."
+        }
+      },
+      "prompt": "Recherchiere jeden Montag unsere Nische, finde neue Leads auf LinkedIn und gestalte die Visuals in Figma."
+    },
+    "routineGraph": {
+      "routineName": "Wöchentliche Akquise",
+      "research": "Recherche",
+      "findLeads": "Leads finden",
+      "designFiles": "Dateien gestalten",
+      "publishSocial": "In sozialen Medien posten",
+      "running": "Läuft",
+      "paused": "Pausiert",
+      "resume": "Fortsetzen"
+    },
+    "whyToone": {
+      "eyebrow": "Warum Toone",
+      "title": "Ihre KI-Arbeit ist verstreut. Toone führt sie aus.",
+      "sub": "Dieselbe Arbeit, vorher und nachdem sie zur Routine wird.",
+      "before": "Vorher",
+      "after": "Nachher",
+      "beforeCaption": "Ihre KI-Arbeit steckt in Chat-Tabs, Prompt-Notizen, kopierten Listen und Posts, die Sie von Hand veröffentlichen.",
+      "afterCaption": "Toone macht daraus eine Routine, die Schritt für Schritt mit Ihren eigenen Konten läuft, während Sie zusehen.",
+      "chips": {
+        "chatgpt": "ChatGPT · Neuer Chat",
+        "claude": "Claude · Recherche",
+        "prompt": "prompt v7 (final).txt",
+        "leads": "Leads aus LinkedIn kopiert",
+        "figma": "Kampagnen-Visuals v3",
+        "instagram": "Manuell auf Instagram posten",
+        "sticky": "Montag die Recherche wiederholen!"
+      }
+    },
+    "closing": {
+      "title": "Übergeben Sie wiederkehrende Arbeit an Agenten, denen Sie zusehen können."
+    }
   },
   "privacyChoices": {
     "title": "Cookies und Analyse",

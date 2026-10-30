@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precisione per i tuoi flussi agentici e le tue routine",
       "heroTag": "Crea flussi di IA complessi e affidabili descrivendoli.\nCollega i tuoi account in un browser. Testa, modifica e riprendi da dove si era fermato.",
-      "featuresTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
+      "featuresTitle": "Tutto ciò che serve ai tuoi agenti per lavorare",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
       "statement": {
@@ -86,7 +86,7 @@
     "macOS": "macOS",
     "soon": "Presto",
     "heroTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
-    "pillarsTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
+    "pillarsTitle": "Tutto ciò che serve ai tuoi agenti per lavorare",
     "pillarsSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
     "collaborationTitle": "Il tuo team lavora insieme in diretta",
     "collaborationTooltip": "Collaborazione in diretta",
@@ -133,7 +133,58 @@
     "eaStep1": "Richiedi l'accesso con la tua email.",
     "eaStep2": "Ti inviamo un codice personale quando si libera un posto.",
     "eaStep3": "Riscatta il codice, crea il tuo account e scarica Toone.",
-    "exploreLink": "Esplora routine per:<br></br>Ricercatori, SEO, Contenuti, Founder, Outreach, Ingegneri IA"
+    "exploreLink": "Esplora routine per:<br></br>Ricercatori, SEO, Contenuti, Founder, Outreach, Ingegneri IA",
+    "howItWorks": {
+      "eyebrow": "Come funziona",
+      "title": "Da poche parole a una routine in esecuzione",
+      "sub": "Tu descrivi il lavoro. I tuoi agenti lo svolgono sotto i tuoi occhi.",
+      "steps": {
+        "describe": {
+          "title": "Descrivilo",
+          "body": "Spiega a Toone il lavoro con parole semplici e lui prepara la bozza della routine."
+        },
+        "run": {
+          "title": "Guardala in azione",
+          "body": "Ogni passaggio si illumina su un grafo dal vivo mentre lavora, con i tuoi account."
+        },
+        "resume": {
+          "title": "Metti in pausa, modifica, riprendi",
+          "body": "Intervieni in qualsiasi momento, cambia ciò che serve e riprendi da dove si era fermata."
+        }
+      },
+      "prompt": "Ogni lunedì, fai ricerca sulla nostra nicchia, trova nuovi lead su LinkedIn e crea le grafiche in Figma."
+    },
+    "routineGraph": {
+      "routineName": "Outreach settimanale",
+      "research": "Ricerca",
+      "findLeads": "Trova lead",
+      "designFiles": "Crea i file",
+      "publishSocial": "Pubblica sui social",
+      "running": "In corso",
+      "paused": "In pausa",
+      "resume": "Riprendi"
+    },
+    "whyToone": {
+      "eyebrow": "Perché Toone",
+      "title": "Il tuo lavoro con l'IA è sparso ovunque. Toone lo esegue.",
+      "sub": "Lo stesso lavoro, prima e dopo essere diventato una routine.",
+      "before": "Prima",
+      "after": "Dopo",
+      "beforeCaption": "Il tuo lavoro con l'IA vive tra schede di chat, note di prompt, liste copiate e post pubblicati a mano.",
+      "afterCaption": "Toone lo trasforma in un'unica routine che gira con i tuoi account, un passaggio alla volta, sotto i tuoi occhi.",
+      "chips": {
+        "chatgpt": "ChatGPT · Nuova chat",
+        "claude": "Claude · Ricerca",
+        "prompt": "prompt v7 (finale).txt",
+        "leads": "Lead copiati da LinkedIn",
+        "figma": "Grafiche campagna v3",
+        "instagram": "Pubblicare su Instagram a mano",
+        "sticky": "Rifare la ricerca lunedì!"
+      }
+    },
+    "closing": {
+      "title": "Affida il lavoro ripetitivo ad agenti che puoi vedere all'opera."
+    }
   },
   "privacyChoices": {
     "title": "Cookie e analisi",

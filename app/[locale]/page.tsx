@@ -7,6 +7,9 @@ import FaqSection from "@/components/FaqSection";
 import SupportBand from "@/components/SupportBand";
 import Footer from "@/components/Footer";
 import ResourcesSection from "@/components/ResourcesSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import BeforeAfterSection from "@/components/BeforeAfterSection";
+import ClosingCtaBand from "@/components/ClosingCtaBand";
 import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
@@ -157,6 +160,11 @@ export async function TooneLandingPage({
               letter-spacing: -0.02em; margin-bottom: 9px;
             }
             .section .sub { color: rgba(29,28,25,0.55); font-size: 14.5px; margin-bottom: 40px; }
+            /* small-caps label above an H2 (How it works, Why Toone) */
+            .section .eyebrow {
+              color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;
+            }
 
             /* The highlighted collaboration row makes shared presence tangible
                without letting the decorative cursors take control of the page. */
@@ -314,6 +322,8 @@ export async function TooneLandingPage({
         <div className="sections">
           <SupportBand />
 
+          <HowItWorksSection />
+
           <section className="section ai-native-section" id="how">
             <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
             <p className="sub">
@@ -385,7 +395,9 @@ export async function TooneLandingPage({
             </div>
           </section>
 
+          <BeforeAfterSection />
           <ResourcesSection />
+          <ClosingCtaBand />
           <FaqSection />
         </div>
       </main>

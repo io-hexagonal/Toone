@@ -36,7 +36,7 @@
     "personal": {
       "heroTitle": "Precisie voor je agentische workflows en routines",
       "heroTag": "Bouw complexe, betrouwbare AI-workflows door ze te beschrijven.\nKoppel je eigen accounts in een browser. Test, bewerk en ga verder waar hij stopte.",
-      "featuresTitle": "De AI-werkruimte voor jouw agentische workflows",
+      "featuresTitle": "Alles wat je agents nodig hebben om het werk te doen",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "seeAllFeatures": "Bekijk alle functies",
       "statement": {
@@ -86,7 +86,7 @@
     "macOS": "macOS",
     "soon": "Binnenkort",
     "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
-    "pillarsTitle": "De AI-werkruimte voor jouw agentische workflows",
+    "pillarsTitle": "Alles wat je agents nodig hebben om het werk te doen",
     "pillarsSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
     "collaborationTitle": "Je team werkt live samen",
     "collaborationTooltip": "Live samenwerking",
@@ -133,7 +133,58 @@
     "eaStep1": "Vraag toegang aan met je e-mailadres.",
     "eaStep2": "We sturen je een persoonlijke code zodra er een plek vrijkomt.",
     "eaStep3": "Verzilver de code, maak je account aan en download Toone.",
-    "exploreLink": "Ontdek routines voor:<br></br>Onderzoekers, SEO, Content, Founders, Outreach, AI-⁠engineers"
+    "exploreLink": "Ontdek routines voor:<br></br>Onderzoekers, SEO, Content, Founders, Outreach, AI-⁠engineers",
+    "howItWorks": {
+      "eyebrow": "Hoe het werkt",
+      "title": "Van gewone woorden naar een draaiende routine",
+      "sub": "Jij beschrijft het werk. Je agents doen het terwijl je meekijkt.",
+      "steps": {
+        "describe": {
+          "title": "Beschrijf het",
+          "body": "Vertel Toone in gewone woorden wat er moet gebeuren en Toone schetst de routine voor je."
+        },
+        "run": {
+          "title": "Kijk hoe hij draait",
+          "body": "Elke stap licht op in een live diagram terwijl hij werkt, met je eigen accounts."
+        },
+        "resume": {
+          "title": "Pauzeer, bewerk, ga verder",
+          "body": "Grijp op elk moment in, pas aan wat nodig is en ga verder waar hij stopte."
+        }
+      },
+      "prompt": "Onderzoek elke maandag onze niche, vind nieuwe leads op LinkedIn en ontwerp de visuals in Figma."
+    },
+    "routineGraph": {
+      "routineName": "Wekelijkse outreach",
+      "research": "Onderzoek",
+      "findLeads": "Leads vinden",
+      "designFiles": "Bestanden ontwerpen",
+      "publishSocial": "Op sociale media plaatsen",
+      "running": "Bezig",
+      "paused": "Gepauzeerd",
+      "resume": "Hervatten"
+    },
+    "whyToone": {
+      "eyebrow": "Waarom Toone",
+      "title": "Je AI-werk is versnipperd. Toone voert het uit.",
+      "sub": "Hetzelfde werk, voor en nadat het een routine wordt.",
+      "before": "Voor",
+      "after": "Na",
+      "beforeCaption": "Je AI-werk zit verspreid over chattabbladen, promptnotities, gekopieerde lijsten en posts die je met de hand plaatst.",
+      "afterCaption": "Toone maakt er één routine van die met je eigen accounts draait, stap voor stap, terwijl je meekijkt.",
+      "chips": {
+        "chatgpt": "ChatGPT · Nieuwe chat",
+        "claude": "Claude · Onderzoek",
+        "prompt": "prompt v7 (definitief).txt",
+        "leads": "Leads gekopieerd uit LinkedIn",
+        "figma": "Campagnevisuals v3",
+        "instagram": "Handmatig op Instagram plaatsen",
+        "sticky": "Maandag het onderzoek opnieuw doen!"
+      }
+    },
+    "closing": {
+      "title": "Geef je terugkerende werk aan agents die je aan het werk ziet."
+    }
   },
   "privacyChoices": {
     "title": "Cookies en analyse",
