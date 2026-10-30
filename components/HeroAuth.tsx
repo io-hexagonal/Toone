@@ -4,6 +4,7 @@ import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import HeroGlitter from "@/components/HeroGlitter";
+import HeroGraphBackground from "@/components/HeroGraphBackground";
 import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
@@ -319,6 +320,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
 
       <section className="hero-auth">
         <HeroGlitter />
+        <HeroGraphBackground />
         <div className="ha-left">
           <h1 className="ha-title">
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
