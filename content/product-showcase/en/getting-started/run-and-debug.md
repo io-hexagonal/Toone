@@ -17,6 +17,10 @@ Open the **Routines** panel. Routines that are in progress appear under **Runnin
 
 Click any step in the graph and choose **Focus thread** to open the conversation of the agent working on it. From there you can check the agent's work as it happens and follow along with what it reads, decides, and writes. When the agent is working on the web, click into the browser to see exactly what it is looking at and doing on the internet.
 
+```toone-ui
+routine-running-graph
+```
+
 Notice which agent is working, what step is underway, and whether Toone is waiting for input or approval. If it is waiting on you, the thread is where you answer.
 
 ## When a step fails

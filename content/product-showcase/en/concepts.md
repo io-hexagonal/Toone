@@ -48,6 +48,10 @@ The draft fills in as you talk to the agent. You review it in the graph, use **D
 
 A routine is a graph of steps. Each step has a job, something it consumes, and something it outputs, and clicking a step in the graph shows all three.
 
+```toone-ui
+draft-pipeline-graph
+```
+
 A sub-routine is a step that is a routine in its own right. When a piece of work is reusable, such as "investigate a topic", make it a sub-routine so several routines can share it and you can improve it in one place. Small, focused routines are quicker to test; compose them into a bigger one once they are reliable, or chain them by having the last step of one routine call the next.
 
 ## Run

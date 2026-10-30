@@ -57,6 +57,10 @@ The routine should produce something you can inspect. Naming the expected sectio
 
 Before publishing, walk through the draft in the Routines panel. The graph shows every step and sub-routine; click any of them to see what it does, what it consumes, and what it outputs. This is the fastest way to catch a step that is doing too much, or an output that nothing downstream uses.
 
+```toone-ui
+draft-pipeline-graph
+```
+
 If a step is not right, you do not have to fix it alone. Select it and press **Discuss with agent** to open a conversation about that step only. Describe what should change, and the agent updates the draft while you watch.
 
 ## Publish it

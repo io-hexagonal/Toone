@@ -5,6 +5,7 @@ import LandingAudienceBar from "@/components/LandingAudienceBar";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import ProductGuideNavScroll from "./ProductGuideNavScroll";
+import ToonUiFigure from "@/components/docs-ui/ToonUiFigure";
 import {
   PRODUCT_GUIDE_NAV,
   getAdjacentProductGuidePages,
@@ -51,6 +52,31 @@ function textFromChildren(children: ReactNode): string {
   if (typeof children === "string" || typeof children === "number") return String(children);
   if (Array.isArray(children)) return children.map(textFromChildren).join("");
   return "";
+}
+
+/** Body text of a hast node (the scene id inside a ```toone-ui fence). */
+function hastText(node: unknown): string {
+  if (!node || typeof node !== "object") return "";
+  const value = (node as { value?: unknown }).value;
+  if (typeof value === "string") return value;
+  const children = (node as { children?: unknown[] }).children;
+  return Array.isArray(children) ? children.map(hastText).join("") : "";
+}
+
+const TOONE_UI_LANGUAGE = "language-toone-ui";
+
+/** The ```toone-ui code element inside a <pre>, if this is one. */
+function tooneUiCode(pre: unknown): unknown {
+  const children = (pre as { children?: unknown[] } | undefined)?.children ?? [];
+  return children.find((child) => {
+    const element = child as { tagName?: string; properties?: { className?: unknown } };
+    const className = element.properties?.className;
+    return (
+      element.tagName === "code" &&
+      Array.isArray(className) &&
+      className.includes(TOONE_UI_LANGUAGE)
+    );
+  });
 }
 
 function guideHref(locale: string, slug: string): string {
@@ -132,6 +158,23 @@ export default function ProductShowcasePage({ locale, page }: Props) {
                 h3: ({ children }) => {
                   const label = textFromChildren(children);
                   return <h3 id={headingId(label)}>{children}</h3>;
+                },
+                // ```toone-ui fences render a docs UI figure (components/docs-ui)
+                // instead of a code block; the fence body is the scene id.
+                pre: ({ node, children, ...props }) => {
+                  const code = tooneUiCode(node);
+                  if (code) return <ToonUiFigure id={hastText(code).trim()} />;
+                  return <pre {...props}>{children}</pre>;
+                },
+                code: ({ node, className, children, ...props }) => {
+                  if (className?.split(" ").includes(TOONE_UI_LANGUAGE)) {
+                    return <ToonUiFigure id={hastText(node).trim()} />;
+                  }
+                  return (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  );
                 },
                 a: ({ href = "", children }) => {
                   // Locale-prefix internal links so they don't hop through a
