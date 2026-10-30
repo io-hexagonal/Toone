@@ -122,19 +122,32 @@ export async function TooneLandingPage({
               color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
               letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 30px;
             }
+            .sb-row {
+              display: flex; align-items: center; justify-content: center;
+              gap: 18px 56px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0;
+            }
             .sb-item {
-              display: inline-flex; align-items: center; gap: 12px;
+              display: inline-flex; align-items: center; gap: 11px;
               height: 36px; color: #1d1c19; text-decoration: none;
-              font-family: var(--font-claude-serif), Georgia, serif;
-              font-size: 25px; font-weight: 400; letter-spacing: -0.01em;
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-size: 19px; font-weight: 500; letter-spacing: -0.01em;
               opacity: 0.62; transition: opacity 0.25s;
             }
             .sb-item:hover { opacity: 1; }
-            .sb-mark { width: 26px; height: 26px; flex-shrink: 0; display: block; }
+            .sb-logo { display: block; flex-shrink: 0; fill: currentColor; }
+            .sb-logo--claude { height: 25px; width: auto; transform: translateY(-1px); }
+            /* The AWS letters sit above the smile, so centring the whole mark
+               lifts the letters above the text; drop it to share the baseline. */
+            .sb-logo--aws { height: 30px; width: auto; transform: translateY(8px); }
+            .sb-accent { transition: fill 0.25s; }
+            .sb-item:hover .sb-accent--claude { fill: #d97757; }
+            .sb-item:hover .sb-accent--aws { fill: #ff9900; }
             @media (max-width: 640px) {
               .sb-label { font-size: 10px; letter-spacing: 0.14em; }
-              .sb-item { font-size: 22px; gap: 10px; }
-              .sb-mark { width: 23px; height: 23px; }
+              .sb-row { gap: 14px 36px; }
+              .sb-item { font-size: 17px; gap: 9px; }
+              .sb-logo--claude { height: 22px; }
+              .sb-logo--aws { height: 26px; transform: translateY(7px); }
             }
 
             .section { position: relative; max-width: 1000px; margin: 0 auto; padding-top: 104px; }
