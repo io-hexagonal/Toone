@@ -158,11 +158,17 @@
       "routineName": "Wekelijkse outreach",
       "research": "Onderzoek",
       "findLeads": "Leads vinden",
-      "designFiles": "Bestanden ontwerpen",
-      "publishSocial": "Op sociale media plaatsen",
+      "designFiles": "Ontwerpen",
+      "publishSocial": "Delen op social media",
       "running": "Bezig",
       "paused": "Gepauzeerd",
-      "resume": "Hervatten"
+      "resume": "Hervatten",
+      "subs": {
+        "research": ["Bronnen verzamelen", "Analyseren met Claude", "Controleren met ChatGPT", "Bevindingen samenvatten"],
+        "findLeads": ["Zoeken op LinkedIn", "Filteren op fit", "Profielen verrijken", "Leads selecteren"],
+        "designFiles": ["Merkstem ophalen", "Ontwerpen in Figma", "Witruimte controleren", "Animeren in Higgsfield"],
+        "publishSocial": ["Tekst per platform aanpassen", "Posten op Threads", "Posten op Facebook", "Posten op Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Waarom Toone",

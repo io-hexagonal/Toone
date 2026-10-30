@@ -158,11 +158,17 @@
       "routineName": "Wöchentliche Akquise",
       "research": "Recherche",
       "findLeads": "Leads finden",
-      "designFiles": "Dateien gestalten",
-      "publishSocial": "In sozialen Medien posten",
+      "designFiles": "Gestaltung",
+      "publishSocial": "Social Media posten",
       "running": "Läuft",
       "paused": "Pausiert",
-      "resume": "Fortsetzen"
+      "resume": "Fortsetzen",
+      "subs": {
+        "research": ["Quellen sammeln", "Mit Claude analysieren", "Mit ChatGPT gegenprüfen", "Ergebnisse zusammenfassen"],
+        "findLeads": ["Auf LinkedIn suchen", "Nach Passung filtern", "Profile anreichern", "Leads auswählen"],
+        "designFiles": ["Markenstimme abrufen", "In Figma gestalten", "Abstände prüfen", "In Higgsfield animieren"],
+        "publishSocial": ["Text je Plattform anpassen", "Auf Threads posten", "Auf Facebook posten", "Auf Instagram posten"]
+      }
     },
     "whyToone": {
       "eyebrow": "Warum Toone",

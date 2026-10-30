@@ -157,12 +157,18 @@
     "routineGraph": {
       "routineName": "Prospection hebdomadaire",
       "research": "Recherche",
-      "findLeads": "Trouver des prospects",
-      "designFiles": "Créer les fichiers",
-      "publishSocial": "Publier sur les réseaux sociaux",
+      "findLeads": "Prospection",
+      "designFiles": "Conception",
+      "publishSocial": "Publier sur les réseaux",
       "running": "En cours",
       "paused": "En pause",
-      "resume": "Reprendre"
+      "resume": "Reprendre",
+      "subs": {
+        "research": ["Rassembler les sources", "Analyser avec Claude", "Recouper avec ChatGPT", "Résumer les résultats"],
+        "findLeads": ["Chercher sur LinkedIn", "Filtrer par pertinence", "Enrichir les profils", "Présélectionner les leads"],
+        "designFiles": ["Récupérer le ton de marque", "Concevoir dans Figma", "Vérifier les espacements", "Animer dans Higgsfield"],
+        "publishSocial": ["Adapter le texte par réseau", "Publier sur Threads", "Publier sur Facebook", "Publier sur Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Pourquoi Toone",

@@ -158,11 +158,17 @@
       "routineName": "Prospección semanal",
       "research": "Investigar",
       "findLeads": "Encontrar leads",
-      "designFiles": "Diseñar archivos",
-      "publishSocial": "Publicar en redes sociales",
+      "designFiles": "Crear diseños",
+      "publishSocial": "Publicar en redes",
       "running": "En curso",
       "paused": "En pausa",
-      "resume": "Reanudar"
+      "resume": "Reanudar",
+      "subs": {
+        "research": ["Reunir fuentes", "Analizar con Claude", "Contrastar con ChatGPT", "Resumir conclusiones"],
+        "findLeads": ["Buscar en LinkedIn", "Filtrar por encaje", "Enriquecer perfiles", "Preseleccionar leads"],
+        "designFiles": ["Obtener la voz de marca", "Diseñar en Figma", "Revisar espaciados", "Animar en Higgsfield"],
+        "publishSocial": ["Adaptar el texto a cada red", "Publicar en Threads", "Publicar en Facebook", "Publicar en Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Por qué Toone",

@@ -162,7 +162,13 @@
       "publishSocial": "Pubblica sui social",
       "running": "In corso",
       "paused": "In pausa",
-      "resume": "Riprendi"
+      "resume": "Riprendi",
+      "subs": {
+        "research": ["Raccogliere le fonti", "Analizzare con Claude", "Verificare con ChatGPT", "Riassumere i risultati"],
+        "findLeads": ["Cercare su LinkedIn", "Filtrare per affinità", "Arricchire i profili", "Selezionare i lead"],
+        "designFiles": ["Recuperare il tono del brand", "Progettare in Figma", "Controllare le spaziature", "Animare in Higgsfield"],
+        "publishSocial": ["Adattare il testo ai social", "Pubblicare su Threads", "Pubblicare su Facebook", "Pubblicare su Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Perché Toone",

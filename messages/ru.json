@@ -159,10 +159,16 @@
       "research": "Исследование",
       "findLeads": "Поиск лидов",
       "designFiles": "Дизайн файлов",
-      "publishSocial": "Публикация в соцсетях",
+      "publishSocial": "Пост в соцсети",
       "running": "Идёт",
       "paused": "Пауза",
-      "resume": "Продолжить"
+      "resume": "Продолжить",
+      "subs": {
+        "research": ["Собрать источники", "Анализ с Claude", "Проверка в ChatGPT", "Сводка выводов"],
+        "findLeads": ["Поиск в LinkedIn", "Отбор по критериям", "Дополнить профили", "Шорт-лист лидов"],
+        "designFiles": ["Голос бренда", "Дизайн в Figma", "Проверка отступов", "Анимация в Higgsfield"],
+        "publishSocial": ["Адаптация текста", "Пост в Threads", "Пост в Facebook", "Пост в Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Почему Toone",

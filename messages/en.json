@@ -162,7 +162,13 @@
       "publishSocial": "Publish to social media",
       "running": "Running",
       "paused": "Paused",
-      "resume": "Resume"
+      "resume": "Resume",
+      "subs": {
+        "research": ["Gather sources", "Analyse with Claude", "Cross-check with ChatGPT", "Summarise findings"],
+        "findLeads": ["Search LinkedIn", "Filter by fit", "Enrich profiles", "Shortlist leads"],
+        "designFiles": ["Fetch brand voice", "Design in Figma", "Review spacing", "Animate in Higgsfield"],
+        "publishSocial": ["Adapt copy per platform", "Post to Threads", "Post to Facebook", "Post to Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Why Toone",

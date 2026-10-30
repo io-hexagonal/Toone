@@ -159,10 +159,16 @@
       "research": "Pesquisar",
       "findLeads": "Encontrar leads",
       "designFiles": "Criar ficheiros",
-      "publishSocial": "Publicar nas redes sociais",
+      "publishSocial": "Publicar nas redes",
       "running": "Em curso",
       "paused": "Em pausa",
-      "resume": "Retomar"
+      "resume": "Retomar",
+      "subs": {
+        "research": ["Reunir fontes", "Analisar com o Claude", "Verificar com o ChatGPT", "Resumir conclusões"],
+        "findLeads": ["Pesquisar no LinkedIn", "Filtrar por perfil", "Enriquecer perfis", "Selecionar leads"],
+        "designFiles": ["Obter o tom da marca", "Desenhar no Figma", "Rever espaçamentos", "Animar no Higgsfield"],
+        "publishSocial": ["Adaptar o texto a cada rede", "Publicar no Threads", "Publicar no Facebook", "Publicar no Instagram"]
+      }
     },
     "whyToone": {
       "eyebrow": "Porquê o Toone",
