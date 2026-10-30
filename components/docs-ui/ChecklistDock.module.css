@@ -1,0 +1,275 @@
+/* P11 ChecklistDock (ConversationChecklist.swift:64-283). Tokens from .root. */
+
+.dock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  /* popoverBackground (= innerBackground) @0.55 over the hudWindow blur;
+     there is no desktop behind a docs figure, so the blur reads as a slight
+     darkening of the panel. */
+  background: color-mix(in srgb, var(--tu-inner) 55%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+}
+
+.cover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 48px;
+  height: 27px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.cover[data-placeholder="true"] {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Checklist.headline 13 semibold primary */
+.headline {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+/* Checklist.title 12 secondary, one line */
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+/* Gauge: CALIBRATE ring weight and label */
+.gauge {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: 30px;
+  height: 30px;
+}
+
+.gaugeLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tu-text-1);
+  font-size: 7px; /* 8pt × 0.6 scale ≈ 4.8; drawn at 7 so the digits survive */
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.2px;
+}
+
+/* Divider().opacity(0.4): system separator (≈ white .10) at 40% */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rows {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  column-gap: 16px;
+  row-gap: 6px;
+  padding: 8px 16px;
+  max-height: 180px;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rowIcon {
+  display: inline-flex;
+  justify-content: center;
+  flex: none;
+  width: 14px;
+  /* first-text-baseline alignment: sit the 13px glyph on the 12px label's baseline */
+  transform: translateY(2px);
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rowLine {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Checklist.row 12, primary; done rows secondary */
+.rowLabel {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-1);
+}
+
+.rowLabel[data-done="true"] {
+  color: var(--tu-text-2);
+}
+
+/* Checklist.detail 11 tertiary */
+.rowNote,
+.rowDetail {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--tu-text-3);
+}
+
+.rowNote {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rowDetail {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* ProgressView().controlSize(.mini) */
+.spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-top-color: var(--tu-text-2);
+}
+
+@keyframes tuChecklistSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: tuChecklistSpin 0.9s linear infinite;
+  }
+}
+
+/* Cover chooser */
+.coverOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 16px;
+}
+
+.coverOptionRow {
+  display: flex;
+  gap: 8px;
+}
+
+.coverOption {
+  position: relative;
+  flex: 1 1 0;
+  aspect-ratio: 16 / 9;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.coverOption[data-chosen="true"] {
+  box-shadow: inset 0 0 0 2px var(--tu-accent);
+}
+
+.coverNumber {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.coverCheck {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: inline-flex;
+  --tu-glyph-knockout: #fff;
+}
+
+/* Actions: HStack spacing 8, padding 16 / bottom 8 */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px 8px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.error {
+  font-size: 11px;
+  color: var(--tu-error);
+}
+
+/* Small native push button with Typography.UI.button (13 medium). CALIBRATE. */
+.action {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.12),
+    0 0.5px 1px rgba(0, 0, 0, 0.3);
+  color: var(--tu-text-1);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* .borderedProminent tinted accent: Smoky Quartz's 0.72 grey gets a white
+   label from AppKit (LayoutStyle.swift:342-348) */
+.action[data-prominent="true"] {
+  background: var(--tu-accent);
+  color: #fff;
+}

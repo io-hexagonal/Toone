@@ -1,0 +1,168 @@
+/* P8 AgentRow + the Agents destination (LeftOrchestratorView.swift,
+   AgentActivityIcon.swift). Tokens from the parent .root. */
+
+/* AgentRow: VStack(4) > HStack(spacing 4) [card label, + button];
+   padding h8 v2 (LeftOrchestratorView.swift:4825-4990) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+}
+
+/* AgentDirectoryCardLabel: HStack(spacing 8), padding h8 v7, min-h 66,
+   panelRowSurface (r8; selected accent .12 + 0.5pt accent .32) */
+.card {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 66px;
+  padding: 7px 8px;
+  border-radius: 8px;
+}
+
+.card[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 12%, transparent);
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-accent) 32%, transparent);
+}
+
+.card[data-state="hover"] {
+  background: var(--tu-hover);
+}
+
+/* VStack(leading, spacing 3) */
+.lines {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* .subheadline.weight(.semibold), textPrimary */
+.name {
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-text-1);
+}
+
+/* .caption2.weight(.medium), textSecondary */
+.department {
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 500;
+  color: var(--tu-text-2);
+}
+
+/* .caption, textSecondary (textTertiary for "No thread messages yet") */
+.preview {
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-text-2);
+}
+
+.preview[data-empty="true"] {
+  color: var(--tu-text-3);
+}
+
+/* thread count: caption2 monospacedDigit semibold, secondary, padding h6,
+   min-h 18, hoverBackground capsule */
+.count {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--tu-hover);
+  color: var(--tu-text-2);
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* chevron 9pt bold tertiary in a 12pt frame */
+.chevron {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 12px;
+  color: var(--tu-text-3);
+}
+
+/* New Thread: plus 13 medium textSecondary, IconButtonStyle (≥28², r8) */
+.plus {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-2);
+}
+
+/* AgentInteractionSectionHeader :4521-4541: caption2 semibold uppercased,
+   kerning 0.65, tertiary · 1pt separator; HStack(8), padding h16, top 8 */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 0;
+}
+
+.sectionTitle {
+  flex: none;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  letter-spacing: 0.65px;
+  text-transform: uppercase;
+  color: var(--tu-text-3);
+}
+
+.sectionRule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--tu-sep);
+}
+
+/* Agents destination */
+.destination {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+/* SearchField padding h8 v4 */
+.search {
+  padding: 4px 8px;
+}
+
+/* WorkspaceHierarchyView.localHierarchy: VStack(spacing 8), padding v8 */
+.list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+/* Divider + "Create agent" (.borderedProminent, padding 16, .ultraThinMaterial) */
+.bottomBar {
+  flex: none;
+  padding: 16px;
+  border-top: 1px solid var(--tu-sep);
+  background: rgba(255, 255, 255, 0.03);
+}

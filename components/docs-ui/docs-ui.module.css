@@ -1,0 +1,827 @@
+/*
+ * Docs UI kit: Smoky Quartz tokens + shared primitive styles.
+ *
+ * Every value comes from the desktop app (apps/toone-desktop/Toone/Toone/),
+ * see docs/research/2026-10-30-docs-ui-figures/plan.md §2.1 for the source
+ * of each token. 1 pt in the app = 1 CSS px here.
+ *
+ * Everything is scoped under `.root` (the dark crop inside a Figure), so no
+ * token or rule leaks into the cream guide page.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
+
+.root {
+  /* Surfaces (LayoutStyle.swift, Smoky Quartz = .neutralGlass) */
+  --tu-panel: #262628; /* frozen glass placeholder, calibrate from capture */
+  --tu-inner: #1a1a1a; /* innerBackgroundColor, white 0.10 */
+  --tu-input: #1f1f1f; /* inputBackground */
+  --tu-bubble-agent: #242424;
+  --tu-code: #242424;
+  --tu-card: rgba(38, 38, 38, 0.3); /* threadCardBackground */
+  --tu-card-border: rgba(255, 255, 255, 0.08);
+  --tu-sep: rgba(255, 255, 255, 0.1); /* separatorColor */
+  --tu-input-border: rgba(255, 255, 255, 0.15);
+  --tu-panel-border: rgba(255, 255, 255, 0.15);
+
+  /* Accent and state */
+  --tu-accent: #b8b8b8; /* white 0.72 */
+  --tu-control-tint: #d1d1d1; /* white 0.82, prominent button fill */
+  --tu-running: #ebebeb; /* routineRunningColor */
+  --tu-bubble-user: color-mix(in srgb, var(--tu-accent) 15%, transparent);
+
+  /* Pipeline kind colours (LayoutStyle.swift:649-655) */
+  --tu-pipe-input: #b3b8c7;
+  --tu-pipe-routine: #ccb8a6;
+  --tu-pipe-artefact: #ebebeb;
+  --tu-pipe-department: #8c8c8c;
+
+  /* AppColors.text* (Colors.swift:42-44) */
+  --tu-text-1: rgba(255, 255, 255, 0.95);
+  --tu-text-2: rgba(255, 255, 255, 0.7);
+  --tu-text-3: rgba(255, 255, 255, 0.45);
+
+  /* SwiftUI hierarchical styles (.primary/.secondary/.tertiary) in dark mode */
+  --tu-label-1: rgba(255, 255, 255, 0.85);
+  --tu-label-2: rgba(255, 255, 255, 0.55);
+  --tu-label-3: rgba(255, 255, 255, 0.25);
+
+  --tu-hover: rgba(255, 255, 255, 0.1);
+  --tu-selected: rgba(255, 255, 255, 0.15);
+  --tu-border-subtle: rgba(255, 255, 255, 0.1);
+  --tu-border-medium: rgba(255, 255, 255, 0.2);
+
+  /* System colours, dark */
+  --tu-success: #30d158;
+  --tu-warning: #ff9f0a;
+  --tu-error: #ff453a;
+  --tu-info: #0a84ff;
+
+  /* Scales (DesignTokens.swift) */
+  --tu-r-xs: 4px;
+  --tu-r-sm: 8px;
+  --tu-r-md: 12px;
+  --tu-r-lg: 16px;
+  --tu-r-xl: 24px;
+
+  --tu-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --tu-font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --tu-font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  position: relative;
+  box-sizing: border-box;
+  background: var(--tu-panel);
+  color: var(--tu-text-1);
+  font-family: var(--tu-font);
+  font-size: 13px;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  color-scheme: dark;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ */
+/* Figure frame (plan §0.2)                                            */
+/* ------------------------------------------------------------------ */
+
+.figure {
+  /* bleed 16px into the column gutters so the frame shadow does not cost
+     the crop any width (Figure measures figure width minus 32) */
+  margin: 22px -16px 34px;
+  padding: 0;
+}
+
+.scaleBox {
+  position: relative;
+  margin: 0 auto;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  /* keep the frame shadow visible: the box is padded by the shadow reach */
+  padding: 12px 16px 20px;
+  box-sizing: content-box;
+}
+
+.frame {
+  overflow: hidden;
+  transform-origin: 0 0;
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--tu-panel-border);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.caption {
+  margin: 0 auto;
+  max-width: 560px;
+  padding: 0 16px;
+  color: #6e6a62;
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* Text styles (macOS dark text styles, Typography.swift)              */
+/* ------------------------------------------------------------------ */
+
+.t-caption {
+  font-size: 10px;
+}
+
+.t-callout {
+  font-size: 12px;
+}
+
+.t-body {
+  font-size: 13px;
+}
+
+.t-subheadline {
+  font-size: 11px;
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Glyphs                                                              */
+/* ------------------------------------------------------------------ */
+
+.glyph {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+/* ------------------------------------------------------------------ */
+/* P1 Surface                                                          */
+/* ------------------------------------------------------------------ */
+
+.surface {
+  position: relative;
+}
+
+.surface-panel {
+  background: var(--tu-panel);
+  border-radius: 24px;
+}
+
+.surface-card {
+  background: var(--tu-card);
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.surface-inset {
+  background: color-mix(in srgb, var(--tu-inner) 42%, transparent);
+  border-radius: 8px;
+}
+
+.surface-row {
+  border-radius: 8px;
+}
+
+.surface-row[data-state="hover"] {
+  background: var(--tu-hover);
+}
+
+.surface-row[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 12%, transparent);
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-accent) 32%, transparent);
+}
+
+.surface-row[data-state="drop"] {
+  background: color-mix(in srgb, var(--tu-accent) 18%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--tu-accent) 65%, transparent);
+}
+
+/* ------------------------------------------------------------------ */
+/* P2 PanelHeader                                                      */
+/* ------------------------------------------------------------------ */
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.panelHeaderIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--tu-text-2);
+}
+
+.panelHeaderTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tu-text-1);
+}
+
+.panelHeaderSubtitle {
+  font-size: 10px;
+  color: var(--tu-text-3);
+}
+
+.panelHeaderTrailing {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/* P5 Buttons                                                          */
+/* ------------------------------------------------------------------ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: none;
+  white-space: nowrap;
+  font-family: inherit;
+  border: 0;
+  margin: 0;
+  color: var(--tu-label-1);
+}
+
+/* IconButton (ButtonStyles.swift): ≥28², r8, hover white .10, pressed white .15 */
+.button-icon {
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tu-text-2);
+}
+
+.button-icon[data-state="hover"] {
+  background: var(--tu-hover);
+}
+
+.button-icon[data-state="pressed"] {
+  background: var(--tu-selected);
+  transform: scale(0.96);
+}
+
+/* macOS .borderedProminent tinted with controlTint: dark label on light fill.
+   Native geometry: calibrate from capture. */
+.button-prominent {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--tu-control-tint);
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* macOS .bordered .controlSize(.small). Native: calibrate from capture. */
+.button-bordered {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+  color: var(--tu-label-1);
+  font-size: 11px;
+}
+
+/* Routine action buttons live in RoutineActionButton.tsx (RoutineActionButtonStyle.swift). */
+
+/* Setup button (SetupFlowChoiceStepView.swift:77-101) */
+.button-setup {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  color: var(--tu-text-1);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* .buttonStyle(.plain) with a Label: no chrome */
+.button-plain {
+  padding: 0;
+  background: transparent;
+  color: var(--tu-label-1);
+}
+
+.button[data-disabled="true"] {
+  opacity: 0.35;
+}
+
+/* ------------------------------------------------------------------ */
+/* P7 Field                                                            */
+/* ------------------------------------------------------------------ */
+
+/* SearchField.swift: magnifyingglass 13, min-h 32, r12, inputBg .78,
+   stroke inputBorder .8 / 0.5pt; focused accent .65 / 1pt */
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* SearchField.swift:21, Spacing.sm */
+  min-height: 32px;
+  padding: 0 8px; /* SearchField.swift:50-51 */
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-input) 78%, transparent);
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-input-border) 80%, transparent);
+  color: var(--tu-text-1);
+  font-size: 13px;
+}
+
+.field[data-focused="true"] {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 65%, transparent);
+}
+
+.field-url {
+  gap: 6px;
+  padding: 0 10px;
+  background: color-mix(in srgb, var(--tu-input) 88%, transparent);
+}
+
+.fieldIcon {
+  color: var(--tu-text-3);
+}
+
+.fieldPlaceholder {
+  color: var(--tu-text-3);
+}
+
+/* ------------------------------------------------------------------ */
+/* P9 Pill / Badge                                                     */
+/* ------------------------------------------------------------------ */
+
+/* RoutineStatusPill (RoutineSidebarComponents.swift:47-86):
+   11/600, padding 6/1.5, tone @.18; neutral = hover fill */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 1.5px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tu-pill-tone, var(--tu-text-2));
+  background: color-mix(in srgb, var(--tu-pill-tone, transparent) 18%, transparent);
+}
+
+.statusPill[data-tone="neutral"] {
+  background: var(--tu-hover);
+  color: var(--tu-text-2);
+}
+
+/* LiveBadge (RoutinePipelineGraphComponents.swift:318-347) */
+.liveBadge {
+  --tu-live: var(--tu-running);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 2px 4px;
+  border-radius: 999px;
+  font-family: var(--tu-font-rounded);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.35px;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--tu-live);
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--tu-live) 18%, transparent), transparent),
+    color-mix(in srgb, var(--tu-live) 16%, transparent);
+}
+
+.liveBadge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--tu-live) 75%, transparent),
+    color-mix(in srgb, var(--tu-live) 28%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.liveBadge[data-caution="true"] {
+  --tu-live: var(--tu-warning);
+}
+
+/* Toolbar status chip (RoutineDraftPipelineView.swift:240-282) */
+.statusChip {
+  --tu-chip: var(--tu-running);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: var(--tu-chip);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--tu-chip) 16%, transparent), transparent),
+    color-mix(in srgb, var(--tu-chip) 12%, transparent);
+}
+
+.statusChip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.75px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--tu-chip) 70%, transparent),
+    color-mix(in srgb, var(--tu-chip) 25%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.statusChip[data-caution="true"] {
+  --tu-chip: var(--tu-warning);
+}
+
+/* Small capsule badge (share status, "Recommended", mode badges) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tu-badge-tone, var(--tu-accent));
+  background: color-mix(in srgb, var(--tu-badge-tone, var(--tu-accent)) 12%, transparent);
+}
+
+/* Rail count badge (LeftOrchestratorView): 8 bold, orange capsule ≥13² */
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--tu-warning);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------ */
+/* P15 GraphKit                                                        */
+/* ------------------------------------------------------------------ */
+
+/* Container (RoutineDraftPipelineView.swift:99-107): r14, inner .38,
+   1pt separator .75 stroke, clipped (so only its inner half shows). */
+.graphContainer {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--tu-inner) 38%, transparent);
+}
+
+.graphContainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-sep) 75%, transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.graphDivider {
+  height: 1px;
+  background: var(--tu-sep);
+}
+
+/* Toolbar: padding 8/4, HStack spacing 6, horizontal ScrollView (clips) */
+.graphToolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.graphToolbarTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: none;
+}
+
+.graphToolbarTitle > :first-child {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--tu-label-1);
+}
+
+.graphToolbarTitle > :last-child {
+  font-size: 10px;
+  color: var(--tu-label-3);
+}
+
+.toolbarDivider {
+  flex: none;
+  width: 1px;
+  margin: 0 2px;
+  background: var(--tu-sep);
+}
+
+/* Disclosure chip (RoutineDraftPipelineView.swift chip()) */
+.graphChip {
+  position: relative;
+  flex: none;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  color: var(--tu-label-2);
+  background: color-mix(in srgb, var(--tu-input) 50%, transparent);
+  box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--tu-input-border) 40%, transparent);
+}
+
+.graphChip[data-active="true"] {
+  color: var(--tu-label-1);
+  background: color-mix(in srgb, var(--tu-accent) 25%, transparent);
+  box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--tu-accent) 60%, transparent);
+}
+
+.graphToolbarButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  font-size: 10px;
+  color: var(--tu-label-1);
+}
+
+.graphToolbarButton[data-tone="secondary"] {
+  color: var(--tu-label-2);
+}
+
+.graphToolbarButton[data-disabled="true"] {
+  color: var(--tu-label-3);
+}
+
+/* Canvas: a viewport onto model space. The world is translated to the
+   viewport centre and scaled by `zoom`, like the app's scaleEffect/offset. */
+.graphCanvas {
+  position: relative;
+  overflow: hidden;
+}
+
+.graphWorld {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+
+.graphEdges {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.graphNode {
+  position: absolute;
+  transition: opacity 250ms ease-in-out;
+}
+
+/* Node card surface (RoutineNodeSurfaceModifier). The border is drawn
+   inside the shape (strokeBorder), nothing is drawn outside the card. */
+.nodeSurface {
+  --tu-node-border: var(--tu-sep);
+  --tu-node-border-width: 1.5px;
+  --tu-node-fill-opacity: 90%;
+  position: relative;
+  isolation: isolate;
+}
+
+.nodeSurface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--tu-inner) var(--tu-node-fill-opacity), transparent);
+}
+
+.nodeSurface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: var(--tu-node-border-width);
+  background: var(--tu-node-border);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* Running: rim falls off from the state colour to 30% toward the bottom */
+.nodeSurface[data-running="true"]::after {
+  background: linear-gradient(
+    to bottom,
+    var(--tu-node-border),
+    color-mix(in srgb, var(--tu-node-border) 30%, transparent)
+  );
+}
+
+/* Wash (breathes 0.10 ↔ 0.22) + inner sheen (0.14 → clear at centre) */
+.nodeWash,
+.nodeSheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.nodeWash {
+  background: var(--tu-node-border);
+  opacity: 0.16; /* reduced motion: steady */
+}
+
+.nodeSheen {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--tu-node-border) 14%, transparent),
+    transparent 50%
+  );
+}
+
+@keyframes tuBreath {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 0.22;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nodeWash {
+    opacity: 0.1;
+    animation: tuBreath 1.9s ease-in-out infinite alternate;
+  }
+}
+
+/* Standard card: 180×48, r10, HStack spacing 4, padding 8/4 */
+.nodeCard {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+
+.nodeCardText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.nodeCardTitle {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 13px;
+  color: var(--tu-text-1);
+}
+
+.nodeCardSubtitle {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+.nodeCardTrailing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.nodeArtefactCount {
+  font-size: 10px;
+  color: color-mix(in srgb, var(--tu-pipe-artefact) 80%, transparent);
+}
+
+/* Step card: 150×36, r8, fill .85, border 1 (2 selected), caption2 medium */
+.stepStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stepCard {
+  --tu-node-border-width: 1px;
+  --tu-node-fill-opacity: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--tu-text-1);
+}
+
+.stepBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 3;
+}
+
+.stepStub {
+  max-width: 170px;
+  font-size: 8px;
+  line-height: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Focus strip under the canvas (RoutineDraftPipelineView.swift:78-97) */
+.focusStrip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+}
+
+.focusStripLabel {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--tu-label-1);
+}

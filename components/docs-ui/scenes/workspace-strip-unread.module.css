@@ -1,0 +1,8 @@
+/* workspace-strip-unread: the unread pill's resting (reduced-motion) state
+   sits mid-pulse (stroke accent .55, glow .2) instead of the primitive's
+   peak; the pulse animation itself (WorkspaceStrip.module.css) still wins
+   while it runs. Spec: coverage-audit D7. */
+.wrap span[data-unread="true"] {
+  outline-color: color-mix(in srgb, var(--tu-accent) 55%, transparent);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--tu-accent) 20%, transparent);
+}

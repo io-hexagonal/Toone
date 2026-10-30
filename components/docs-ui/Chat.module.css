@@ -1,0 +1,123 @@
+/* P10 Chat (RichMessageBubble.swift, TranscriptMessagePresentation.swift,
+   MarkdownTextView.swift). Reads --tu-* tokens from docs-ui.module.css. */
+
+.transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Spacing.sm */
+}
+
+.message {
+  display: flex;
+}
+
+.message[data-side="user"] {
+  justify-content: flex-end;
+}
+
+/* VStack(spacing: Spacing.xs), with Spacer(minLength: 60) on the far side */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: calc(100% - 60px);
+  min-width: 0;
+}
+
+.message[data-side="user"] .column {
+  align-items: flex-end;
+}
+
+.message[data-side="agent"] .column {
+  align-items: flex-start;
+}
+
+.bubble {
+  padding: 8px; /* Spacing.sm */
+  border-radius: 12px; /* CornerRadius.medium */
+  font-size: 13px; /* inherited .body */
+  line-height: 16px;
+  color: var(--tu-text-1);
+  overflow-wrap: break-word;
+}
+
+.bubble[data-side="user"] {
+  background: var(--tu-bubble-user); /* accent @0.15 */
+}
+
+.bubble[data-side="agent"] {
+  background: var(--tu-bubble-agent); /* white 0.14 */
+}
+
+.prose {
+  display: block;
+}
+
+.para,
+.li {
+  margin: 0;
+}
+
+/* blocks are joined by "\n\n" (one blank line), list items by "\n" */
+.para + .para,
+.para + .li,
+.li + .para {
+  margin-top: 16px;
+}
+
+.strong {
+  font-weight: 700;
+  color: var(--tu-text-1);
+}
+
+.bullet {
+  white-space: pre;
+  color: var(--tu-text-2);
+}
+
+.code {
+  font-family: var(--tu-font-mono);
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--tu-text-1);
+}
+
+/* metadataView: HStack(spacing: 8) */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 13px;
+}
+
+.time {
+  font-size: 10px; /* .caption2 */
+  line-height: 13px;
+  color: var(--tu-text-3);
+  white-space: nowrap;
+}
+
+/* messageActionOverlay: HStack(spacing: 8) of 10pt symbols, textTertiary */
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tu-text-3);
+}
+
+.actions[data-visible="false"] {
+  opacity: 0;
+}
+
+.branch {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The open NSMenu hangs below the borderless menu button. Calibrate. */
+.branchMenu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: -6px;
+  z-index: 5;
+}

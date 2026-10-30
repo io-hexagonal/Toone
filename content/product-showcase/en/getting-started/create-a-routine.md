@@ -11,12 +11,20 @@ estimatedTime: "4 minutes"
 
 A routine describes work that should be carried out consistently. It names the input, the responsible agent, the expected process, and the output. Once published, it can be run again and again with different inputs, and every run leaves a trail you can inspect.
 
+```toone-ui
+run-history-completed
+```
+
 ## Two ways to start
 
 You never write a routine by hand. Both paths open a conversation in which you and an agent build the routine together, and both end in a draft you review before publishing.
 
 - **Talk to an agent.** Ask the Research Assistant to do the work once: “Research how acme.com compares to its two main competitors on pricing and write me a brief.” When the result is useful, choose **Create routine** on that message. Toone opens a drafting thread that already knows what you asked for and what came back.
-- **Start from the Routines panel.** Open the **Routines** panel, switch to **Routine Drafts**, and press **+**. This creates an empty draft and a conversation in which you describe the routine from scratch.
+- **Start from the Routines panel.** Open the **Routines** panel, switch to **Drafts**, and press **+**. This creates an empty draft and a conversation in which you describe the routine from scratch.
+
+```toone-ui
+chat-create-routine-menu
+```
 
 Use the first path when you have already seen a good result and want to keep it. Use the second when you know what the routine should do but have not run it yet.
 
@@ -27,6 +35,10 @@ Do not begin with steps. Begin by telling the agent what the routine is for and 
 - **Intent:** turn a topic or question about acme.com's market into a brief the growth team can act on.
 - **Input:** a topic or question.
 - **Objective:** a readable brief with a summary, the evidence found, open uncertainties, and suggested next steps, saved as a file in the project.
+
+```toone-ui
+drafting-thread-intent
+```
 
 That is enough for the agent to propose a first version of the routine. And don't worry if you can't state it that cleanly yet: the agents will help you self-correct as you go.
 
@@ -41,6 +53,10 @@ For best results, or if you are not sure what the pipeline should look like, deb
 
 When a step is a repeatable job in its own right, ask the agent to make it a sub-routine instead of a step. “Investigate a topic” is a good candidate: other routines in the acme.com growth project will want it too. Sub-routines keep each routine short and let you improve a piece of work in one place.
 
+```toone-ui
+drafting-thread-breakdown
+```
+
 The draft fills in as you talk. Check its steps, inputs, outputs, and completion criteria in the panel, and keep refining until it reads the way you would explain the job to a colleague.
 
 ## Tip: make small routines, then orchestrate them into a bigger one
@@ -49,24 +65,48 @@ Focused routines are quicker to test and iterate. Build a routine that does one 
 
 [Product Launch Essentials](/explore/bundles/product-launch-essentials-trwv3k5g) splits a launch into two focused routines: [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf) prepares launch sites and drafts, and [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6) turns an approved brief into reviewed content. If a shared routine already does the job, you can [import it from Explore](/how-to/getting-started/import-a-routine-from-explore) instead of starting from scratch.
 
+```toone-ui
+graph-handoff
+```
+
 ## Make success visible
 
 The routine should produce something you can inspect. Naming the expected sections and the destination file makes it easy to tell whether a run completed correctly, and gives the agent a concrete target instead of “write something good.”
+
+```toone-ui
+draft-artefact-inspector
+```
 
 ## Review the draft
 
 Before publishing, walk through the draft in the Routines panel. The graph shows every step and sub-routine; click any of them to see what it does, what it consumes, and what it outputs. This is the fastest way to catch a step that is doing too much, or an output that nothing downstream uses.
 
+```toone-ui
+draft-pipeline-graph
+```
+
 If a step is not right, you do not have to fix it alone. Select it and press **Discuss with agent** to open a conversation about that step only. Describe what should change, and the agent updates the draft while you watch.
+
+```toone-ui
+draft-step-inspector
+```
 
 ## Publish it
 
 Once the agent has drafted the routine and you have reviewed it, publish it to the organization. Either tell the agent you want it published, or press **Publish** on the draft in the Routines panel.
+
+```toone-ui
+draft-header-publish
+```
 
 Publishing makes the routine part of the project: it appears under **Routines**, any agent in the project can be handed it, and it can be run, scheduled, and called from other routines. You can keep editing it afterwards; publishing is not the end of the conversation, only the point where the routine becomes real.
 
 ## Checkpoint
 
 Before running it, verify that the published routine names the Research Assistant as the responsible agent, accepts a topic as input, and states what the final brief must contain and where it is saved.
+
+```toone-ui
+routine-definition-card
+```
 
 Next: [Run, watch, and debug the routine](/how-to/getting-started/run-and-debug).

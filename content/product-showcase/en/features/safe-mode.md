@@ -10,18 +10,34 @@ pageType: "feature"
 
 Safe Mode screens command results, file reads, and web content produced through Claude tools. When the selected redaction model finds a forbidden topic, that content is replaced before it reaches the agent conversation.
 
+```toone-ui
+composer-safe-badge
+```
+
 ## Define forbidden topics
 
 Add the subjects that should not appear in tool output and customize the redaction prompt when the default policy is not specific enough for the project.
+
+```toone-ui
+settings-safe-mode
+```
 
 ## Fail closed
 
 If screening fails, Safe Mode withholds the output instead of passing it through unreviewed. Choosing a faster screening model can change speed and precision, but it does not weaken that failure behavior.
 
+```toone-ui
+chat-tool-output-withheld
+```
+
 ## Inspect the audit trail
 
 The audit log is a file on your Mac, not a view inside Toone. It records the screening outcome for each tool call and the post-redaction text the model received, shortened for long results. In **Settings → Mode**, choose **Reveal Audit Log** to open it in Finder. Review it when validating that the configured boundaries are behaving as intended.
 
-Safe Mode currently requires the Claude provider; Codex sessions cannot use this redaction hook.
+```toone-ui
+settings-safe-mode-audit
+```
+
+Safe Mode currently requires the Claude provider; Codex sessions cannot use this redaction hook. Safe Mode is not available in the Mac App Store edition.
 
 Next: [Live Share](/how-to/features/live-share).

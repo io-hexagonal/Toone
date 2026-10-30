@@ -1,0 +1,66 @@
+/* explore-browser: the left panel's destination header and Explore list. */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 8px;
+  /* Divider().overlay(separatorColor) at the bottom of the header */
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.19);
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-2);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* .headline: 13 bold */
+.title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--tu-label-1);
+}
+
+/* .caption2 .secondary */
+.subtitle {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+.sectionPicker {
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+/* Divider().overlay(separatorColor): system separator + white .10 on top */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.19);
+}
+
+/* catalogList: LazyVStack spacing 8, padding 8, innerBackground @0.12 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: color-mix(in srgb, var(--tu-inner) 12%, transparent);
+}

@@ -1,0 +1,156 @@
+/*
+ * Project Explorer pieces: PanelDisclosureHeader, WorkspaceBrowserHeader,
+ * WorkspaceFileRowLabel. Values are the Swift ones (see ProjectExplorer.tsx);
+ * tokens come from docs-ui.module.css (.root).
+ */
+
+/* PanelDisclosureHeader (PanelHeader.swift:136-176): HStack spacing 4,
+   padding h16, min-h 32 (Control.regularHeight), textSecondary. */
+.disclosure {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 16px;
+  color: var(--tu-text-2);
+}
+
+/* chevron 9 semibold in a 12-wide frame */
+.disclosureChevron {
+  display: inline-flex;
+  justify-content: center;
+  width: 12px;
+  flex: none;
+}
+
+/* icon 13 medium in a 16-wide frame */
+.disclosureIcon {
+  display: inline-flex;
+  justify-content: center;
+  width: 16px;
+  flex: none;
+}
+
+/* .caption.weight(.semibold) */
+.disclosureTitle {
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+}
+
+.disclosureCount {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* WorkspaceBrowserHeader (WorkspacePresentationRows.swift:11-52): HStack
+   spacing 4, padding h16, min-h 32; title callout semibold textPrimary. */
+.browserHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 16px;
+}
+
+.browserTitle {
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+  color: var(--tu-text-1);
+}
+
+/* badge: caption2 medium secondary, padding h4, min-h 18, hover fill capsule */
+.browserBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--tu-hover);
+  color: var(--tu-text-2);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* .buttonStyle(.icon): ≥28², r8; arrow.clockwise 13 medium secondary */
+.browserRefresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-left: auto;
+  border-radius: 8px;
+  color: var(--tu-text-2);
+}
+
+/* WorkspaceFileRowLabel (WorkspacePresentationRows.swift:169-242): HStack
+   spacing 4, padding leading level × 16 then h4, min-h 32, panelRowSurface
+   (r8; hover white .10; selected accent .12 + 0.5 accent .32). */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding-right: 4px;
+  border-radius: 8px;
+}
+
+.row[data-state="hover"] {
+  background: var(--tu-hover);
+}
+
+.row[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 12%, transparent);
+  box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-accent) 32%, transparent);
+}
+
+/* chevron (.caption, textTertiary) or an empty 14-wide slot */
+.rowChevron {
+  display: inline-flex;
+  justify-content: center;
+  width: 14px;
+  flex: none;
+  color: var(--tu-text-3);
+}
+
+/* "+" badge: caption2 bold monospaced, staleness tier colour */
+.rowBadge {
+  flex: none;
+  font-family: var(--tu-font-mono);
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 700;
+}
+
+.rowIcon {
+  display: inline-flex;
+  flex: none;
+}
+
+/* .callout textPrimary, one line */
+.rowTitle {
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-1);
+}
+
+.rowMeta {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 10px;
+  color: var(--tu-text-3);
+  white-space: nowrap;
+}

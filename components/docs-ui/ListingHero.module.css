@@ -1,0 +1,79 @@
+/* P18 ListingHero (ListingProfilePage.swift:10-80). See ListingHero.tsx. */
+
+.hero {
+  display: flex;
+  flex-direction: column; /* ViewThatFits fallback: cover above the text */
+  align-items: flex-start;
+  gap: 20px;
+  padding: 28px;
+  border-radius: 18px;
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.hero[data-layout="row"] {
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  align-self: stretch;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Typography.Listing.eyebrow 11 bold, tracking widest / 1.4 */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 13px;
+  letter-spacing: 1.43px;
+  color: var(--tu-accent);
+}
+
+/* Typography.Listing.title = .body semibold, tracking −0.5 */
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+  color: var(--tu-text-1);
+}
+
+/* .body, lineSpacing 3, textSecondary, max 620 */
+.summary {
+  max-width: 620px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--tu-text-2);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* chip 12 medium, padding 12/6, accent .08 capsule + threadCardBorder */
+.chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  white-space: nowrap;
+  color: var(--tu-text-2);
+  background: color-mix(in srgb, var(--tu-accent) 8%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}

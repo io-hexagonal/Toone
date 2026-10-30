@@ -15,6 +15,10 @@ Open the **Agents** panel and choose **Create agent**. The flow has three parts:
 2. **Describe its purpose and tasks.** This step is optional, but it is where the agent takes shape. Say what the agent is responsible for, what kinds of tasks it should take on, and what a good result looks like. Toone turns that description into the agent's role and capabilities.
 3. **Give it custom context.** Also optional. Point the agent at material it should pick up every time it works, such as markdown files with brand guidelines, a positioning doc, or notes on the audience. That context travels with the agent, so you never have to paste it into a conversation again.
 
+```toone-ui
+agent-name-field
+```
+
 If you skip the optional steps, you get a general-purpose agent with the name you gave it. You can add purpose and context later as you learn what the agent needs.
 
 ## Start with a role, not a personality
@@ -27,11 +31,23 @@ An agent is most useful when its responsibility is narrow enough to evaluate. Fo
 
 If acme.com already has a doc that describes the product, the audience, or the tone of voice, add it as context now. The briefs will be grounded in it from the first run.
 
+```toone-ui
+agent-purpose-reply
+```
+
 ## Test the agent directly
 
 Open a conversation with the agent and ask it to explain how it would approach a small research question about acme.com. This checks that the provider connection works and gives you a chance to refine the role before automating it.
 
+```toone-ui
+spotlight-chat-panel
+```
+
 ## Checkpoint
+
+```toone-ui
+agent-created-status
+```
 
 The agent should respond within the scope you gave it, and it should already know whatever context you attached. If the answer is too broad, narrow the responsibility rather than adding many special cases.
 

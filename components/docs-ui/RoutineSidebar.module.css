@@ -1,0 +1,403 @@
+/*
+ * P14 RoutineSidebar. Numbers from RoutineSidebarComponents.swift,
+ * OrganizationOverviewView.swift and RoutineRunHistoryRowView.swift (see the
+ * header of RoutineSidebar.tsx). Line heights follow the macOS text styles:
+ * body 13/16, callout 12/15, caption & caption2 10/13.
+ */
+
+/* Column: innerBackground @0.18 over the panel (RCP:517) */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--tu-inner) 18%, transparent);
+}
+
+.switcherBar {
+  padding: 8px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--tu-sep);
+}
+
+/* ROV:756-771: HStack spacing 4, padding v8 h16 */
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+}
+
+.filterButton {
+  display: inline-flex;
+  flex: none;
+  color: var(--tu-text-2);
+}
+
+/* 28² frame, body glyph, green when the compositions are clean */
+.diagnosticsButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-success);
+}
+
+.scrollArea {
+  background: color-mix(in srgb, var(--tu-inner) 5%, transparent);
+}
+
+/* CurrentRoutinesView: list background innerBackground @0.05 (Smoky Quartz);
+   LazyVStack spacing 4, padding h16, bottom 16 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 16px 16px;
+}
+
+/* routineListHeading: caption semibold, padding 8 / 4, spacing 4 */
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  color: var(--tu-text-2);
+}
+
+.heading[data-kind="running"] {
+  color: var(--tu-success);
+}
+
+.heading[data-kind="paused"] {
+  color: var(--tu-accent);
+}
+
+.headingCount {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* routineFamilyCard: padding v3, inputBackground @0.34, r12,
+   separator @0.65 1pt stroke; rows inside: VStack spacing 1 */
+.familyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 3px 0;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-input) 34%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-sep) 65%, transparent);
+}
+
+/* ---- routine row ------------------------------------------------------ */
+
+/* outer: padding h4 (cardInset), v1 (0 for a sub-routine) */
+.rowOuter {
+  padding: 1px 4px;
+}
+
+.rowOuter[data-sub="true"] {
+  padding: 0 4px;
+}
+
+/* inner: spacing 4, padding h6 v3 (v2 sub), min-h 28 (24 sub), r8 */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  padding: 3px 6px;
+  border-radius: 8px;
+}
+
+.row[data-sub="true"] {
+  min-height: 24px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.row[data-selected="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 16%, transparent);
+}
+
+.disclosure {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 14px;
+  color: var(--tu-text-3);
+}
+
+/* RoutineScheduleDot: 6pt, success fill or a 1pt tertiary ring */
+.scheduleDot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--tu-text-3);
+}
+
+.scheduleDot[data-on="true"] {
+  background: var(--tu-success);
+  box-shadow: none;
+}
+
+/* sub-routine mark: arrow.turn.down.right caption2 tertiary in the 6pt dot
+   column (the glyph overflows its frame, centred, as in SwiftUI) */
+.subMark {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 6px;
+  overflow: visible;
+  color: var(--tu-text-3);
+}
+
+.rowIcon {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 16px;
+  color: var(--tu-accent);
+}
+
+.rowName {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+.row[data-sub="true"] .rowName {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+/* Spacer(minLength: 4) + the fixed-size trailing items */
+.rowTrailing {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding-left: 4px;
+}
+
+.subCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--tu-text-3);
+}
+
+.note {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+/* RoutineHistoryCountLabel: caption2 medium, secondary, spacing 3 */
+.historyCount {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--tu-text-2);
+}
+
+/* ---- execution history ------------------------------------------------ */
+
+/* RoutineHistoryHeader: height 22, padding top 4, trailing 8 */
+.historyHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding-top: 4px;
+  padding-right: 8px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  color: var(--tu-text-2);
+}
+
+.historyHeaderIcon {
+  display: inline-flex;
+  justify-content: center;
+  width: 16px;
+  color: var(--tu-text-3);
+}
+
+/* run rows: padding h4 outside; inside v5, leading 6 + 18, trailing 8, r8;
+   expanded fill inputBackground @0.3. VStack spacing 3. */
+.runOuter {
+  padding: 0 4px;
+}
+
+.runOuter + .runOuter {
+  margin-top: 1px; /* VStack(spacing: runSpacing 2) inside the card's spacing 1 */
+}
+
+.run {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 8px;
+  border-radius: 8px;
+}
+
+.run[data-expanded="true"] {
+  background: color-mix(in srgb, var(--tu-input) 30%, transparent);
+}
+
+.runIdentity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.runChevron {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  width: 12px;
+  color: var(--tu-text-3);
+}
+
+.runNumber {
+  flex: none;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tu-text-1);
+}
+
+.runAge {
+  flex: none;
+  margin-left: auto;
+  padding-left: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--tu-text-3);
+}
+
+.runSummary {
+  padding-left: 16px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+/* meta: HStack spacing 6, min-h 18, leading 16 */
+.runMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 18px;
+  padding-left: 16px;
+}
+
+.runMetaText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--tu-text-3);
+}
+
+/* RoutineRunCompactControls: three 22² slots, spacing 2, caption glyphs,
+   borderless, secondary */
+.runControls {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  color: var(--tu-text-2);
+}
+
+.runControlSlot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+/* expanded detail: leading 16, top 2; stage rows h18 + v1, spacing 4 */
+.runDetail {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+  padding-top: 2px;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 1px 0;
+}
+
+.stageIcon {
+  display: inline-flex;
+  flex: none;
+  width: 12px;
+}
+
+.stageNumber {
+  flex: none;
+  width: 20px;
+  text-align: right;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--tu-text-3);
+}
+
+.stageTitle {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+.stageLabel {
+  flex: none;
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}

@@ -1,0 +1,306 @@
+/* P18 ExploreBlocks. Values from ListingProfilePage.swift:466-599 and
+   WorkflowExplorerView.swift:369-395; tokens from the parent .root. */
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px; /* DesignTokens.Spacing.md */
+  padding: 12px;
+  border-radius: 12px; /* CornerRadius.medium */
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.coverSlot {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 144px;
+  height: 81px;
+}
+
+.cover {
+  display: block;
+  flex: none;
+  overflow: hidden;
+}
+
+.cover[data-stroke="true"] {
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+/* The ZStack centres both covers in the 144×81 slot */
+.bundleCovers {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bundleCovers > * {
+  left: 6px;
+  top: 3.5px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Typography.Listing.label: 11 semibold, tracking 1.0, accent */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 13px;
+  letter-spacing: 1px;
+  color: var(--tu-accent);
+  white-space: nowrap;
+}
+
+/* ExplorePriceTag: UI.badge 11/600 accent, padding 8/2 */
+.priceTag {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 13px;
+  color: var(--tu-accent);
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+/* Listing.cardTitle: 15 semibold, primary, 2 lines */
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 19px;
+  color: var(--tu-text-1);
+}
+
+/* Listing.cardMetaEmphasis: 12 semibold */
+.metaEmphasis {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.metaEmphasisInline {
+  font-weight: 600;
+}
+
+/* Listing.cardMeta: 12 regular secondary, 3 lines */
+.summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.audience {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.meta {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-3);
+}
+
+/* ExploreAuthorByline: HStack spacing 4, mark 13pt, cardMeta tertiary */
+.byline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-3);
+}
+
+.tooneMark {
+  display: inline-block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background: url("/assets/brand/toone-mark-pixel.svg") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+
+/* FlowLayout spacing 6, top padding 2; tag: cardMeta secondary, padding 8/2,
+   Capsule().stroke(threadCardBorder) */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.chevron {
+  display: inline-flex;
+  flex: none;
+  margin-left: 8px; /* Spacer(minLength: 8) */
+  padding-top: 4px;
+  color: var(--tu-text-3);
+}
+
+/* ------------------------------------------------------------------ */
+/* Listing page building blocks (ListingProfilePage.swift:253-458)     */
+/* ------------------------------------------------------------------ */
+
+/* ListingProfileSection: VStack spacing 12, bottom padding 24 */
+.listingSection {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+/* Divider().overlay(separatorColor) */
+.listingDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.19);
+}
+
+.listingHeadingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+}
+
+.listingDisclosure {
+  display: inline-flex;
+  flex: none;
+  color: var(--tu-accent);
+}
+
+/* Listing.sectionTitle: body semibold, tracking -0.25, primary */
+.listingHeading {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: -0.25px;
+  color: var(--tu-text-1);
+}
+
+/* ListingProfileCard: spacing 6, padding 18, threadCardBackground r16 + border */
+.listingCard {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+/* Listing.body 13 regular */
+.listingBody {
+  font-size: 13px;
+  line-height: 17px;
+  color: var(--tu-text-2);
+}
+
+.listingBody[data-tone="primary"] {
+  color: var(--tu-text-1);
+}
+
+.listingBody[data-tone="tertiary"] {
+  color: var(--tu-text-3);
+}
+
+/* Listing.label 11 semibold, tracking 1.0, tertiary */
+.listingLabel {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 13px;
+  letter-spacing: 1px;
+  color: var(--tu-text-3);
+}
+
+/* Listing.itemTitle: body semibold primary; a Link is tinted accent */
+.listingItemTitle {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+.listingItemTitle[data-link="true"] {
+  color: var(--tu-accent);
+}
+
+.listingKeyValueLine {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+}
+
+.listingKeyValueBox {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.listingKeyValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 14px;
+}
+
+.listingKeyValueRow[data-divider="true"] {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.19);
+}
+
+/* Listing.emphasis 13 semibold primary, 150 wide */
+.listingKey {
+  flex: none;
+  width: 150px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
+  color: var(--tu-text-1);
+}

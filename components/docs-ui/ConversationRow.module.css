@@ -1,0 +1,153 @@
+/* Conversations destination (LeftOrchestratorView.swift:3644-3870).
+   Tokens from the parent .root. SwiftUI .secondary / .tertiary map to
+   --tu-label-2 / --tu-label-3. */
+
+.search {
+  padding: 4px 8px;
+}
+
+/* segmented Active / Archived: padding h8, bottom 4 */
+.scope {
+  padding: 0 8px 4px;
+}
+
+/* LazyVStack(spacing 2), padding h8, bottom 8 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+
+/* sectionHeader: caption2 semibold uppercased, kerning 0.6, secondary;
+   padding h4, top 8, bottom 2 */
+.section {
+  padding: 8px 4px 2px;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--tu-label-2);
+}
+
+/* threadRow: HStack(top, spacing 8), padding h8 v4, min-h 52, r8,
+   Color.secondary @0.06 (selected accent .14 + 1pt accent .6) */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 52px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.033);
+}
+
+.row[data-selected="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 60%, transparent);
+}
+
+/* ThreadIndicatorDot (SystemThreadRow.swift:14-37): 7pt, top padding 5 */
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--tu-text-3);
+}
+
+.dot[data-dot="processing"] {
+  background: var(--tu-accent);
+}
+
+.dot[data-dot="unseen"] {
+  background: var(--tu-success);
+}
+
+.dot[data-dot="attention"] {
+  background: var(--tu-warning);
+}
+
+.lines {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* line 1: HStack(spacing 4) [pin.fill 8 semibold secondary] title callout
+   medium · Spacer(4) · relative time caption2 monospacedDigit tertiary */
+.titleLine {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pin {
+  display: inline-flex;
+  flex: none;
+  color: var(--tu-text-2);
+}
+
+.title {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-label-1);
+}
+
+.time {
+  flex: none;
+  margin-left: auto;
+  padding-left: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--tu-label-3);
+}
+
+/* line 2: "agent · department", caption2 secondary */
+.meta {
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-label-2);
+}
+
+/* line 3: HStack(firstTextBaseline, spacing 3), caption2:
+   "<author>:" medium textSecondary · preview textPrimary */
+.previewLine {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  min-width: 0;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.author {
+  flex: none;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--tu-text-2);
+}
+
+.preview {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-text-1);
+}

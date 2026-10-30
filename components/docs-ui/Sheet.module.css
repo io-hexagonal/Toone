@@ -1,0 +1,35 @@
+/* P19 Sheet. Every value is a CALIBRATE guess (see Sheet.tsx). */
+
+/* The presenting panel behind the sheet. The sheet hangs from the top. */
+.stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 24px 24px;
+  /* the panel reads a little darker behind a sheet */
+  background: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)), var(--tu-panel);
+}
+
+.sheet {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 12px;
+  border-radius: 16px;
+  background: #2c2c2e;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.14),
+    0 0 0 0.5px rgba(0, 0, 0, 0.5),
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.25);
+  color: var(--tu-label-1);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

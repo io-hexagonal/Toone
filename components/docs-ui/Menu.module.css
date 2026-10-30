@@ -1,0 +1,91 @@
+/* P19 Menu: native dark NSMenu lookalike (macOS 26). Every value is a guess
+   to calibrate from a capture; see Menu.tsx. */
+
+.menu {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 120px;
+  padding: 5px;
+  border-radius: 11px;
+  background: rgba(42, 42, 44, 0.96);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.14),
+    0 0 0 0.5px rgba(0, 0, 0, 0.5),
+    0 10px 28px rgba(0, 0, 0, 0.42),
+    0 2px 6px rgba(0, 0, 0, 0.22);
+  font-family: var(--tu-font);
+  white-space: nowrap;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 22px 0 9px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  margin-right: 6px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* items without an icon in a menu that has icons keep the icon column */
+.item[data-icons="true"]:not(:has(.icon)) {
+  padding-left: 33px;
+}
+
+.label {
+  flex: 1 0 auto;
+}
+
+.shortcut {
+  margin-left: 24px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.item[data-highlighted="true"] {
+  /* Smoky Quartz accent, not the system blue: the figures stay in the theme. */
+  background: color-mix(in srgb, var(--tu-accent) 34%, transparent);
+  color: #fff;
+}
+
+.item[data-highlighted="true"] .icon,
+.item[data-highlighted="true"] .shortcut {
+  color: #fff;
+}
+
+.item[data-disabled="true"] {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.separator {
+  height: 1px;
+  margin: 5px 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Section header (SwiftUI Section("…") → NSMenuItem.sectionHeader on macOS 14+):
+   11pt semibold, secondary label, aligned with the item labels. Calibrate. */
+.header {
+  display: flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 22px 0 9px;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.header[data-icons="true"] {
+  padding-left: 33px;
+}

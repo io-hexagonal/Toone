@@ -1,0 +1,208 @@
+/* P13b MultiQuestionCard (AIQuestionView.swift MultiQuestionView, AIQuestionCard,
+   AIOptionButton) and the chat's question overlay (ChatPanelView.swift:1428-1450).
+   Tokens from docs-ui.module.css (.root). SwiftUI `.secondary` = --tu-label-2.
+   Line heights are SF Pro's natural ones: 13 → 16, 11 → 14, 10 → 13. */
+
+/* ---- overlay ------------------------------------------------------------- */
+
+.overlay {
+  position: relative;
+  padding: 16px;
+  border-radius: 16px 16px 0 0;
+  /* popoverBackground (= innerBackground) @0.9 over the blur */
+  background: color-mix(in srgb, var(--tu-inner) 90%, transparent);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 -10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- MultiQuestionView --------------------------------------------------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tu-label-2) 5%, transparent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* default HStack spacing */
+}
+
+/* .headline: 13pt bold on macOS */
+.headerTitle {
+  flex: 1 1 auto;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--tu-text-1);
+}
+
+.progress {
+  display: flex;
+  gap: 4px;
+}
+
+.capsule {
+  flex: 1 1 0;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tu-label-2) 30%, transparent);
+}
+
+.capsule[data-on="true"] {
+  background: var(--tu-accent);
+}
+
+/* ---- AIQuestionCard ------------------------------------------------------- */
+
+.question {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  color: var(--tu-accent);
+  font-size: 10px; /* .caption.bold */
+  font-weight: 700;
+  line-height: 13px;
+  white-space: nowrap;
+}
+
+.questionText {
+  font-size: 11px; /* .subheadline */
+  line-height: 14px;
+  color: var(--tu-text-1);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+}
+
+/* ---- AIOptionButton ------------------------------------------------------- */
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tu-label-2) 5%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-label-2) 30%, transparent);
+}
+
+.option[data-focused="true"] {
+  background: var(--tu-hover);
+  /* a centred 2pt stroke: 1pt inside, 1pt outside */
+  box-shadow:
+    inset 0 0 0 1px var(--tu-accent),
+    0 0 0 1px var(--tu-accent);
+}
+
+.option[data-selected="true"] {
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-accent);
+}
+
+.option[data-selected="true"][data-focused="true"] {
+  box-shadow:
+    inset 0 0 0 1px var(--tu-accent),
+    0 0 0 1px var(--tu-accent);
+}
+
+.ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--tu-label-2);
+}
+
+.option[data-selected="true"] .ring {
+  box-shadow: inset 0 0 0 1.5px var(--tu-accent);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tu-accent);
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 2px; /* top-aligned HStack: the 14pt line sits on the 18pt ring */
+}
+
+.optionLabel {
+  font-size: 11px; /* .subheadline */
+  line-height: 14px;
+  color: var(--tu-text-1);
+}
+
+.option[data-selected="true"] .optionLabel {
+  font-weight: 600;
+}
+
+.optionDescription {
+  font-size: 10px; /* .caption .secondary */
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+/* ---- navigation ----------------------------------------------------------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--tu-label-2);
+}
+
+/* plain button: padding 16/8, min-w 100, r8, white label */
+.next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 100px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tu-label-2) 30%, transparent);
+  color: #fff;
+  font-size: 13px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.next[data-enabled="true"] {
+  background: var(--tu-accent);
+}

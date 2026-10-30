@@ -1,0 +1,180 @@
+/* Live Share (SessionBannerView.swift, PersonalLiveSharePanel.swift).
+   SwiftUI .secondary → --tu-label-2. */
+
+.banner {
+  --ls-tone: var(--tu-success);
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--ls-tone) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ls-tone) 28%, transparent);
+  color: var(--tu-label-1);
+}
+
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tu-label-2);
+}
+
+.dot[data-live="true"] {
+  background: var(--ls-tone);
+}
+
+.bannerTitle {
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.spacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+}
+
+.pill {
+  --ls-pill: var(--tu-success);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ls-pill) 14%, transparent);
+  color: var(--ls-pill);
+  font-family: var(--tu-font-mono);
+  font-size: 9px;
+  line-height: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pill[data-transport="true"] {
+  background: color-mix(in srgb, var(--ls-pill) 16%, transparent);
+}
+
+/* .buttonStyle(.borderless).font(.caption): CALIBRATE label colour */
+.borderless {
+  flex: none;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-accent);
+  white-space: nowrap;
+}
+
+/* ---- access request -------------------------------------------------- */
+
+.request {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 10px;
+  border-radius: 8px;
+  /* .background(.quaternary.opacity(0.35)): quaternary label white 0.10. CALIBRATE */
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--tu-label-1);
+}
+
+.requestName {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+}
+
+.requestEmail {
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.mono {
+  font-family: var(--tu-font-mono);
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.deviceRow {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 6px;
+}
+
+/* .borderless .controlSize(.mini). CALIBRATE */
+.copyKey {
+  flex: none;
+  font-size: 9px;
+  line-height: 13px;
+  color: var(--tu-accent);
+}
+
+.secondary {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-label-2);
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-warning);
+}
+
+.warning > svg {
+  margin-top: 1px;
+}
+
+.actions {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Native push buttons, regular size. CALIBRATE all three. */
+.push {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 24px;
+  padding: 0 11px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  color: var(--tu-label-1);
+  white-space: nowrap;
+}
+
+/* role: .destructive draws the title in system red */
+.push[data-role="destructive"] {
+  color: var(--tu-error);
+}
+
+/* .borderedProminent tinted with the theme accent (controlTint) */
+.push[data-prominent="true"] {
+  background: var(--tu-control-tint);
+  box-shadow: none;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
+}

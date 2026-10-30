@@ -1,0 +1,196 @@
+/* P8 System Threads row (SystemThreadRow.swift:39-249) */
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 52px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  /* Color.secondary (white ~.55) @0.06 */
+  background: rgba(255, 255, 255, 0.033);
+}
+
+.row[data-state="hover"] {
+  background: var(--tu-hover);
+}
+
+.row[data-state="selected"] {
+  background: color-mix(in srgb, var(--tu-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 60%, transparent);
+}
+
+/* ThreadIndicatorDot: 7pt, top padding 5 */
+.dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--tu-text-3);
+}
+
+.dot[data-dot="processing"] {
+  background: var(--tu-accent);
+}
+
+.dot[data-dot="unseen"] {
+  background: var(--tu-success);
+}
+
+.dot[data-dot="attention"] {
+  background: var(--tu-warning);
+}
+
+.lines {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* line 1: HStack(firstTextBaseline, spacing 4), Spacer(min 4), time */
+.titleLine {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.title {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.routine {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  color: var(--tu-text-1);
+}
+
+.runLabel {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--tu-text-2);
+}
+
+/* layoutPriority(1): the step keeps its width before the routine name */
+.step {
+  flex: none;
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--tu-text-1);
+}
+
+.time {
+  flex: none;
+  margin-left: auto;
+  padding-left: 4px;
+  font-size: 10px;
+  line-height: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--tu-text-3);
+}
+
+/* line 2: caption2, spacing 3 */
+.statusLine,
+.previewLine {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  min-width: 0;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.statusLine[data-stop="true"],
+.previewLine[data-stop="true"] {
+  padding-right: 28px;
+}
+
+.agent {
+  flex: none;
+  white-space: nowrap;
+  color: var(--tu-text-2);
+}
+
+.sep {
+  flex: none;
+  color: var(--tu-text-3);
+}
+
+.status {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-text-2);
+}
+
+.status[data-tone="warning"] {
+  font-weight: 600;
+  color: var(--tu-warning);
+}
+
+.status[data-tone="error"] {
+  font-weight: 600;
+  color: var(--tu-error);
+}
+
+.author {
+  flex: none;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--tu-text-3);
+}
+
+.preview {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tu-text-2);
+}
+
+/* Stop overlay: trailing, vertically centred, padding 4, 24² frame */
+.stop {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  color: var(--tu-text-2);
+}
+
+.stop[data-hover="true"] {
+  color: var(--tu-error);
+}
+
+/* EmbeddedThreadDirectoryView (LeftOrchestratorView.swift:3514-3537) */
+.search {
+  padding: 4px 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
