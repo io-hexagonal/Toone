@@ -39,6 +39,7 @@ export default async function FaqSection() {
         }}
       />
       <section className="section" id="faq">
+        <p className="eyebrow">{t("eyebrow")}</p>
         <h2>{t("title")}</h2>
         <p className="sub">{t("sub")}</p>
         <div className="faq-list">

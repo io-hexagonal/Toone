@@ -7,6 +7,9 @@ import FaqSection from "@/components/FaqSection";
 import SupportBand from "@/components/SupportBand";
 import Footer from "@/components/Footer";
 import ResourcesSection from "@/components/ResourcesSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import BeforeAfterSection from "@/components/BeforeAfterSection";
+import ClosingCtaBand from "@/components/ClosingCtaBand";
 import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
@@ -105,7 +108,7 @@ export async function TooneLandingPage({
                the dark footer sits on cream with ink text. */
             .sections {
               position: relative; z-index: 5; background: #f0ede6; color: #1d1c19;
-              padding: 0 24px 120px;
+              padding: 0 24px clamp(80px, 9vw, 120px);
               overflow: hidden;
             }
             /* lantern wash — stops the section reading as one flat slab */
@@ -117,37 +120,64 @@ export async function TooneLandingPage({
                 rgba(29,28,25,0.045) 0%, rgba(29,28,25,0.015) 42%, transparent 70%);
             }
             /* --- support band (programmes Toone belongs to) --- */
-            .sb-wrap { position: relative; text-align: center; padding: 66px 0 4px; }
+            .sb-wrap { position: relative; text-align: center; padding: clamp(36px, 4vw, 48px) 0 0; }
             .sb-label {
               color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
-              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 30px;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 26px;
+            }
+            .sb-row {
+              display: flex; align-items: center; justify-content: center;
+              gap: 18px 56px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0;
             }
             .sb-item {
-              display: inline-flex; align-items: center; gap: 12px;
+              display: inline-flex; align-items: center; gap: 11px;
               height: 36px; color: #1d1c19; text-decoration: none;
-              font-family: var(--font-claude-serif), Georgia, serif;
-              font-size: 25px; font-weight: 400; letter-spacing: -0.01em;
+              font-family: var(--font-wordmark), system-ui, sans-serif;
+              font-size: 19px; font-weight: 500; letter-spacing: -0.01em;
               opacity: 0.62; transition: opacity 0.25s;
             }
             .sb-item:hover { opacity: 1; }
-            .sb-mark { width: 26px; height: 26px; flex-shrink: 0; display: block; }
+            .sb-logo { display: block; flex-shrink: 0; fill: currentColor; }
+            .sb-logo--claude { height: 25px; width: auto; transform: translateY(-1px); }
+            /* The AWS letters sit above the smile, so centring the whole mark
+               lifts the letters above the text; drop it to share the baseline. */
+            .sb-logo--aws { height: 30px; width: auto; transform: translateY(8px); }
+            .sb-accent { transition: fill 0.25s; }
+            .sb-item:hover .sb-accent--claude { fill: #d97757; }
+            .sb-item:hover .sb-accent--aws { fill: #ff9900; }
             @media (max-width: 640px) {
               .sb-label { font-size: 10px; letter-spacing: 0.14em; }
-              .sb-item { font-size: 22px; gap: 10px; }
-              .sb-mark { width: 23px; height: 23px; }
+              .sb-row { gap: 14px 36px; }
+              .sb-item { font-size: 17px; gap: 9px; }
+              .sb-logo--claude { height: 22px; }
+              .sb-logo--aws { height: 26px; transform: translateY(7px); }
             }
 
-            .section { position: relative; max-width: 1000px; margin: 0 auto; padding-top: 104px; }
+            /* One rhythm for every editorial section: the same top space, the
+               same eyebrow → title → sub stack, the same gap into the content. */
+            .section {
+              position: relative; max-width: 1000px; margin: 0 auto;
+              padding-top: clamp(72px, 8vw, 104px);
+            }
             .section h2 {
               font-family: var(--font-wordmark), system-ui, sans-serif;
-              color: #1d1c19; font-size: 27px; font-weight: 600;
-              letter-spacing: -0.02em; margin-bottom: 9px;
+              color: #1d1c19; font-size: clamp(25px, 2.2vw, 30px); font-weight: 600;
+              line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 10px; text-wrap: balance;
             }
-            .section .sub { color: rgba(29,28,25,0.55); font-size: 14.5px; margin-bottom: 40px; }
+            .section .sub {
+              color: rgba(29,28,25,0.58); font-size: 15px; line-height: 1.6;
+              max-width: 74ch; margin-bottom: clamp(28px, 3vw, 40px);
+            }
+            /* small-caps label above an H2 (How it works, Why Toone) */
+            .section .eyebrow {
+              color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
+              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;
+            }
 
             /* The highlighted collaboration row makes shared presence tangible
                without letting the decorative cursors take control of the page. */
             .ai-native-section { isolation: isolate; }
+            .ai-native-section > .eyebrow,
             .ai-native-section > h2,
             .ai-native-section > .sub,
             .ai-native-section > .pillars {
@@ -301,7 +331,10 @@ export async function TooneLandingPage({
         <div className="sections">
           <SupportBand />
 
+          <HowItWorksSection />
+
           <section className="section ai-native-section" id="how">
+            <p className="eyebrow">{t("featuresEyebrow")}</p>
             <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
             <p className="sub">
               {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
@@ -372,7 +405,9 @@ export async function TooneLandingPage({
             </div>
           </section>
 
+          <BeforeAfterSection />
           <ResourcesSection />
+          <ClosingCtaBand />
           <FaqSection />
         </div>
       </main>
