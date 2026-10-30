@@ -12,7 +12,7 @@ import { Glyph, type GlyphName } from "./glyphs";
  * - corner radius 11, 5px inner padding;
  * - item height 24, 13pt regular label at white .85, 16px icon column at
  *   x = 10, label at x = 34, 22px right padding;
- * - highlighted item: system accent (default blue) fill, r7, white label/icon;
+ * - highlighted item: theme accent fill (Smoky Quartz grey; the docs keep every figure in the theme), r7, white label/icon;
  * - separator: 1px white 10% with 10px side margins and 5px vertical margins.
  * SwiftUI menu items built with `Button("…", systemImage:)` show their symbol
  * on macOS 26 menus.

@@ -53,7 +53,8 @@
 }
 
 .item[data-highlighted="true"] {
-  background: #0a6cf0;
+  /* Smoky Quartz accent, not the system blue: the figures stay in the theme. */
+  background: color-mix(in srgb, var(--tu-accent) 34%, transparent);
   color: #fff;
 }
 

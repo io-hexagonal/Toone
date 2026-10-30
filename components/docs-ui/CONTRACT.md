@@ -109,6 +109,7 @@ components/docs-ui/
 ## Rules
 
 - **Dark only, Smoky Quartz.** The app has no light theme. No light variants.
+- **Theme colours only.** No system blue: menu highlights, selections, links and focus rings use `--tu-accent` (Smoky Quartz grey). Placeholder art (covers, thumbnails) uses neutral or warm greys. The only hues allowed are the app's status colours (success green, warning orange, error red) where the app shows them.
 - **Demo data only**: names, counts and times from `demo.ts` (plan §0.4).
   Extend `demo.ts` if you need something new; never put real user data,
   real emails, or real file paths in a figure. Times are relative

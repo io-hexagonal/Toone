@@ -42,7 +42,7 @@ export const EXPLORE_LISTINGS = {
     author: "Toone Team",
     tags: ["product-launch", "marketing"],
     price: "Free",
-    cover: "linear-gradient(135deg, #3d4a5c 0%, #5b6b7a 48%, #8d8a80 100%)",
+    cover: "linear-gradient(135deg, #3a3938 0%, #5c5955 48%, #8d877e 100%)",
   },
   launchContent: {
     kind: "routine",
@@ -55,7 +55,7 @@ export const EXPLORE_LISTINGS = {
     author: "Toone Team",
     tags: [],
     price: "Free",
-    cover: "linear-gradient(135deg, #4a4258 0%, #6d6378 55%, #9a8f86 100%)",
+    cover: "linear-gradient(135deg, #4a4542 0%, #6e6660 55%, #9a8f86 100%)",
   },
   launchEssentials: {
     kind: "bundle",
@@ -70,6 +70,6 @@ export const EXPLORE_LISTINGS = {
     tags: ["product-launch", "marketing"],
     price: "Free",
     memberCount: 2,
-    cover: "linear-gradient(135deg, #7a5550 0%, #8a7152 50%, #5e5470 100%)",
+    cover: "linear-gradient(135deg, #7a5a4e 0%, #8a7152 50%, #5c5450 100%)",
   },
 } satisfies Record<string, ExploreListing>;
