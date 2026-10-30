@@ -1,5 +1,5 @@
 // Generated from docs/promos/2026-10-29-graph-connections (tools/build-hero-v3.cjs +
-// tools/hero-graph-bg-v3.js). Edit there and regenerate; do not hand-edit.
+// tools/hero-graph-bg-v3.js) by tools/port-to-site.py. Edit there and regenerate; do not hand-edit.
 // The runtime is the approved standalone script, unwrapped from its IIFE so the React component
 // can hand it the root element (the standalone page found it via document.currentScript).
 // It stores its teardown on root.__hgbDestroy; HeroGraphBackground calls that on unmount.
@@ -154,7 +154,8 @@ export function startHeroGraph(rootEl) {
     return [a[2 * i] + (a[2 * i + 2] - a[2 * i]) * r, a[2 * i + 1] + (a[2 * i + 3] - a[2 * i + 1]) * r];
   }
 
-  var mqCompact = window.matchMedia && window.matchMedia('(max-width: 1599px)');
+  // The edge (compact) layout is used at every width (owner's choice, 2026-10-30).
+  var mqCompact = window.matchMedia && window.matchMedia('all');
   var setName = function () { return mqCompact && mqCompact.matches ? 'c' : 'f'; };
 
   // one sub-step card: run 0..1 (running treatment), done 0..1 (finished pip), wash
