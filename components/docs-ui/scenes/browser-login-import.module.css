@@ -1,0 +1,98 @@
+/* browser-login-import: BrowserSessionImportCard (.firstBrowserOpen). */
+
+.cardWrap {
+  padding: 0 8px 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--tu-input) 72%, transparent);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--tu-accent);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* .subheadline semibold (11) */
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  color: var(--tu-text-1);
+}
+
+/* .caption (10) secondary */
+.subtitle {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+/* HStack spacing 4 (ViewThatFits picks the row at this width) */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* .borderedProminent .controlSize(.small), tinted accent: CALIBRATE */
+.prominent {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--tu-accent);
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* .borderless .controlSize(.small): label in the tint. CALIBRATE */
+.borderless {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 22px;
+  padding: 0 6px;
+  color: var(--tu-accent);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* .caption2 (10) tertiary */
+.privacy {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}

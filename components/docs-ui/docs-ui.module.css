@@ -317,32 +317,7 @@
   font-size: 11px;
 }
 
-/* RoutineActionButtonStyle: callout medium, padding 12, ≥28, r8 */
-.button-routine-primary,
-.button-routine-secondary,
-.button-routine-quiet {
-  min-height: 28px;
-  padding: 0 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.button-routine-primary {
-  background: var(--tu-control-tint);
-  color: rgba(0, 0, 0, 0.85);
-}
-
-.button-routine-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.15);
-  color: var(--tu-text-1);
-}
-
-.button-routine-quiet {
-  background: transparent;
-  color: var(--tu-text-2);
-}
+/* Routine action buttons live in RoutineActionButton.tsx (RoutineActionButtonStyle.swift). */
 
 /* Setup button (SetupFlowChoiceStepView.swift:77-101) */
 .button-setup {
@@ -375,9 +350,9 @@
 .field {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px; /* SearchField.swift:21, Spacing.sm */
   min-height: 32px;
-  padding: 0 10px;
+  padding: 0 8px; /* SearchField.swift:50-51 */
   border-radius: 12px;
   background: color-mix(in srgb, var(--tu-input) 78%, transparent);
   box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-input-border) 80%, transparent);
@@ -390,6 +365,8 @@
 }
 
 .field-url {
+  gap: 6px;
+  padding: 0 10px;
   background: color-mix(in srgb, var(--tu-input) 88%, transparent);
 }
 

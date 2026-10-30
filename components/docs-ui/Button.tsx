@@ -15,9 +15,6 @@ export type ButtonVariant =
   | "icon"
   | "prominent"
   | "bordered"
-  | "routine-primary"
-  | "routine-secondary"
-  | "routine-quiet"
   | "setup"
   | "plain";
 
@@ -37,9 +34,6 @@ const ICON_SIZE: Record<ButtonVariant, number> = {
   icon: 16,
   prominent: 14,
   bordered: 12,
-  "routine-primary": 13,
-  "routine-secondary": 13,
-  "routine-quiet": 13,
   setup: 14,
   plain: 11,
 };

@@ -20,6 +20,10 @@ Start wherever is convenient.
 - **On the web.** Browse [Explore](/explore) and open a routine or bundle. Choose **Use this routine** (some pages label it **Open in Toone**). Your browser hands the listing to the Toone app, which switches to Explore and opens it. If the app isn't installed, the page takes you to the access request instead.
 - **In the app.** Click the **Routines** icon in the left rail and choose **Explore**. Search, or switch between **All**, **Routines** and **Bundles**, then open a listing.
 
+```toone-ui
+explore-browser
+```
+
 ## 2. Review the listing
 
 Read what the routine produces, who it is for, how it works and what it needs from you. The **Prepared during setup** section lists what Toone will ask for or find on your behalf. **Works with** lists tools that must be connected.
@@ -39,6 +43,10 @@ You only get a question card for inputs it couldn't resolve, one at a time and w
 ## 4. Connect anything that's missing
 
 If the routine needs a tool that isn't connected yet, the checklist shows a **Connect** row with where to connect it in Settings. Connect it yourself, then choose **Check connections again**. The setup assistant never enters credentials or creates accounts for you.
+
+```toone-ui
+setup-checklist-connect
+```
 
 ## 5. Run it now or later
 

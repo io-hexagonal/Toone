@@ -1,0 +1,72 @@
+/* P5 RoutineActionButton (RoutineActionButtonStyle.swift). Tokens come from
+   docs-ui.module.css (.root); this file only reads --tu-* variables. */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 12px; /* .callout */
+  font-weight: 500; /* .medium */
+  line-height: 15px;
+  min-height: 28px; /* Control.compactHeight */
+  padding: 0 12px; /* Control.horizontalPadding */
+  border-radius: 8px; /* CornerRadius.small, continuous */
+  background: transparent;
+  color: var(--tu-text-1);
+}
+
+.button[data-size="compact"] {
+  font-size: 10px; /* .caption */
+  line-height: 13px;
+  min-height: 20px;
+  padding: 0 10px; /* Spacing.sm + 2 */
+  border-radius: 6px; /* CornerRadius.micro + 2 */
+}
+
+.button[data-size="compact"][data-kind="quiet"],
+.button[data-size="compact"][data-kind="link"] {
+  padding: 0 6px; /* Spacing.xs + 2 */
+}
+
+.button[data-kind="primary"] {
+  background: var(--tu-accent);
+  color: #14161e; /* AppColors.darkBase */
+}
+
+.button[data-kind="primary"][data-hover="true"] {
+  filter: brightness(1.06);
+}
+
+.button[data-kind="secondary"] {
+  background: var(--tu-hover); /* white 0.10 */
+  box-shadow: inset 0 0 0 1px var(--tu-card-border); /* threadCardBorder, 1pt inside */
+  color: var(--tu-text-1);
+}
+
+.button[data-kind="secondary"][data-hover="true"] {
+  background: var(--tu-selected); /* white 0.15 */
+}
+
+.button[data-kind="quiet"] {
+  color: var(--tu-text-2);
+}
+
+.button[data-kind="quiet"][data-hover="true"] {
+  background: var(--tu-hover);
+  color: var(--tu-text-1);
+}
+
+.button[data-kind="link"] {
+  color: var(--tu-accent);
+}
+
+.button[data-kind="link"][data-hover="true"] {
+  background: var(--tu-hover);
+}
+
+.button[data-disabled="true"] {
+  opacity: 0.38;
+}

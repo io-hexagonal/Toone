@@ -5,8 +5,11 @@ import { ID, researchBriefGraph } from "../graph/researchBrief";
 import type { SceneDefinition } from "../scene";
 
 /**
- * Published routine graph during Run #3, step 2 selected (zoom 1, as after
- * "Focus selection", panned a little so the sub-routine fits).
+ * Published routine graph during Run #3, step 2 selected. Viewport: pinch
+ * zoom 1.12 (card text ≥11px in the guide column), centred on step 2 … the
+ * sub-routine column so step 1 and step 4 sit wholly off-frame (at zoom 1
+ * the 616px canvas is 16px too wide to hide both, so one would be sliced). Toolbar ends on
+ * "Run setup": at 640px the app's ScrollView would clip "Artefacts" mid-word.
  *
  * Runtime state as RoutineDraftRuntimePresentation builds it: the routine
  * node, the running step and the live sub-routine are `running` (it never
@@ -20,7 +23,8 @@ import type { SceneDefinition } from "../scene";
 const WIDTH = 640;
 const INSET = 12;
 const CANVAS_W = WIDTH - INSET * 2;
-const CANVAS_H = 196;
+const CANVAS_H = 184;
+const ZOOM = 1.12;
 
 const graph = researchBriefGraph({
   showInputs: false,
@@ -28,12 +32,14 @@ const graph = researchBriefGraph({
   runState: { [ID.routine]: "running", [ID.step(2)]: "running", [ID.subRoutine]: "running" },
 });
 
-const sub = graph.nodes.find((n) => n.id === ID.subRoutine)!;
-const step3 = graph.nodes.find((n) => n.id === ID.step(3))!;
-// Keep the step-3 / sub-routine column fully in view (14px air on the right).
+const node = (id: string) => graph.nodes.find((n) => n.id === id)!;
+const step2 = node(ID.step(2));
+const sub = node(ID.subRoutine);
+const step3 = node(ID.step(3));
+// Centre step 2 … sub-routine horizontally, step 3 / sub-routine vertically.
 const PAN = {
-  x: CANVAS_W / 2 - (sub.x + sub.w / 2) - 14,
-  y: -(step3.y + sub.y) / 2,
+  x: -(((step2.x - step2.w / 2) + (sub.x + sub.w / 2)) / 2) * ZOOM,
+  y: -((step3.y + sub.y) / 2) * ZOOM,
 };
 
 function RoutineRunningGraph() {
@@ -48,6 +54,7 @@ function RoutineRunningGraph() {
             published
             status={{ summary: `Running · ${DEMO.subRoutine.name}` }}
             summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+            clipAfter="runSetup"
           />
         }
       >
@@ -57,7 +64,7 @@ function RoutineRunningGraph() {
           pan={PAN}
           selectedId={ID.step(2)}
           width={CANVAS_W}
-          zoom={1}
+          zoom={ZOOM}
         />
       </GraphContainer>
     </div>

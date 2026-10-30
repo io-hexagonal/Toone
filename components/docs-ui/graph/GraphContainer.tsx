@@ -9,8 +9,11 @@ import { StatusChip } from "../Pill";
  * (Features/Organization/Views/RoutineDraftPipelineView.swift:56-231).
  * Container: r14, innerBackground @0.38, 1pt separator @0.75, clipped.
  * Toolbar: title + summary · [status chip] · Run setup / Artefacts / Steps
- * chips · fit + "Focus selection". The toolbar is a horizontal ScrollView,
- * so anything past the right edge is clipped (no wrapping).
+ * chips · fit + "Focus selection". The toolbar is a horizontal ScrollView
+ * (:137) with no truncation or overflow menu: at a narrow width the app shows
+ * the leading items and clips the rest mid-word at the right edge. A 640px
+ * figure is narrower than the real panel, so figures pass `clipAfter` to end
+ * the toolbar on the last item that fits whole instead of slicing one.
  */
 
 export function GraphContainer({
@@ -56,6 +59,10 @@ export function pipelineSummary(counts: {
   return `${counts.steps} steps · ${counts.subRoutines} sub-routines · ${values} · ${resources} · ${counts.artefacts} artefacts`;
 }
 
+/** Toolbar items in the app's order, leading → trailing. */
+const TOOLBAR_ITEMS = ["runSetup", "artefacts", "steps", "fit", "focus"] as const;
+export type ToolbarItem = (typeof TOOLBAR_ITEMS)[number];
+
 function ToolbarDivider({ height }: { height: number }) {
   return <span className={styles.toolbarDivider} style={{ height }} />;
 }
@@ -66,6 +73,7 @@ export function GraphToolbar({
   status,
   chips,
   hasSelection,
+  clipAfter = "focus",
 }: {
   /** "Routine pipeline" when published, "Draft pipeline" otherwise. */
   published: boolean;
@@ -74,7 +82,10 @@ export function GraphToolbar({
   status?: { summary: string; caution?: boolean; runCount?: number };
   chips: { runSetup: boolean; artefacts: boolean; steps: boolean };
   hasSelection: boolean;
+  /** Last item drawn; everything after it is past the figure's right edge. */
+  clipAfter?: ToolbarItem;
 }) {
+  const shows = (item: ToolbarItem) => TOOLBAR_ITEMS.indexOf(item) <= TOOLBAR_ITEMS.indexOf(clipAfter);
   return (
     <div className={styles.graphToolbar}>
       <div className={styles.graphToolbarTitle}>
@@ -88,23 +99,35 @@ export function GraphToolbar({
           <ToolbarDivider height={22} />
         </>
       ) : null}
-      <span className={styles.graphChip} data-active={chips.runSetup ? "true" : undefined}>
-        Run setup
-      </span>
-      <span className={styles.graphChip} data-active={chips.artefacts ? "true" : undefined}>
-        Artefacts
-      </span>
-      <span className={styles.graphChip} data-active={chips.steps ? "true" : undefined}>
-        Steps
-      </span>
-      <ToolbarDivider height={14} />
-      <span className={styles.graphToolbarButton} data-tone="secondary">
-        <Glyph name="arrow.up.left.and.arrow.down.right" size={11} />
-      </span>
-      <span className={styles.graphToolbarButton} data-disabled={hasSelection ? undefined : "true"}>
-        <Glyph name="scope" size={11} />
-        Focus selection
-      </span>
+      {shows("runSetup") ? (
+        <span className={styles.graphChip} data-active={chips.runSetup ? "true" : undefined}>
+          Run setup
+        </span>
+      ) : null}
+      {shows("artefacts") ? (
+        <span className={styles.graphChip} data-active={chips.artefacts ? "true" : undefined}>
+          Artefacts
+        </span>
+      ) : null}
+      {shows("steps") ? (
+        <span className={styles.graphChip} data-active={chips.steps ? "true" : undefined}>
+          Steps
+        </span>
+      ) : null}
+      {shows("fit") ? (
+        <>
+          <ToolbarDivider height={14} />
+          <span className={styles.graphToolbarButton} data-tone="secondary">
+            <Glyph name="arrow.up.left.and.arrow.down.right" size={11} />
+          </span>
+        </>
+      ) : null}
+      {shows("focus") ? (
+        <span className={styles.graphToolbarButton} data-disabled={hasSelection ? undefined : "true"}>
+          <Glyph name="scope" size={11} />
+          Focus selection
+        </span>
+      ) : null}
     </div>
   );
 }

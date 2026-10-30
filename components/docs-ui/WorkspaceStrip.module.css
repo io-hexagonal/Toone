@@ -1,0 +1,136 @@
+/*
+ * P4 WorkspaceStrip / WorkspacePill (UI/Layout/WorkspaceStripView.swift).
+ * Values are the Swift ones; tokens come from docs-ui.module.css (.root).
+ */
+
+/* Strip: height 44 (workspaceStripThickness), HStack spacing 6,
+   padding 16 / 7, horizontal ScrollView (clips sideways, no indicators).
+   Only the x axis clips, so a help tag can hang below the strip. */
+.strip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 7px 16px;
+  overflow-x: clip;
+  overflow-y: visible;
+  white-space: nowrap;
+}
+
+/* Pill: HStack spacing 6, padding 8 / 6, Capsule; stroke 1pt centred. */
+.pill {
+  --tu-pill-stroke: transparent;
+  --tu-pill-stroke-width: 1px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 6px 8px;
+  border-radius: 999px;
+  outline: var(--tu-pill-stroke-width) solid var(--tu-pill-stroke);
+  outline-offset: calc(var(--tu-pill-stroke-width) / -2);
+}
+
+.pill[data-active="true"] {
+  --tu-pill-stroke: color-mix(in srgb, var(--tu-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
+}
+
+/* Hover on an inactive pill: hoverBackground at half strength */
+.pill[data-hover="true"]:not([data-active="true"]) {
+  background: color-mix(in srgb, var(--tu-hover) 50%, transparent);
+}
+
+/* Unread (inactive only): 1.5pt accent stroke + accent glow r4, pulsing
+   0.3 ↔ 0.8 (glow 0 ↔ 0.4), easeInOut 0.8s autoreverse (:257-266).
+   Static fallback = the pulse's peak, so the state still reads. */
+.pill[data-unread="true"] {
+  --tu-pill-stroke-width: 1.5px;
+  --tu-pill-stroke: color-mix(in srgb, var(--tu-accent) 80%, transparent);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--tu-accent) 40%, transparent);
+}
+
+@keyframes tuPillPulse {
+  from {
+    outline-color: color-mix(in srgb, var(--tu-accent) 30%, transparent);
+    box-shadow: 0 0 4px transparent;
+  }
+  to {
+    outline-color: color-mix(in srgb, var(--tu-accent) 80%, transparent);
+    box-shadow: 0 0 4px color-mix(in srgb, var(--tu-accent) 40%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pill[data-unread="true"] {
+    animation: tuPillPulse 0.8s ease-in-out infinite alternate;
+  }
+}
+
+/* Index badge: 18², r4 continuous; 10pt black monospaced.
+   Active: white on iconColor (white .72) @ .8; else tertiary on hover fill. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--tu-hover);
+  color: var(--tu-text-3);
+  font-family: var(--tu-font-mono);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.pill[data-active="true"] .badge {
+  background: color-mix(in srgb, #b8b8b8 80%, transparent);
+  color: #fff;
+}
+
+/* Name: 11pt, semibold + textPrimary when active, regular + textSecondary */
+.name {
+  font-size: 11px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+.pill[data-active="true"] .name {
+  font-weight: 600;
+  color: var(--tu-text-1);
+}
+
+/* Hover close: xmark 7 bold, tertiary, 14² circle on hover fill */
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--tu-hover);
+  color: var(--tu-text-3);
+}
+
+/* "+" uses IconButtonStyle (ButtonStyles.swift:15-69): ≥28², r8,
+   hover white .10; plus 13 medium tertiary. */
+.add {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: var(--tu-text-3);
+}
+
+.add[data-hover="true"] {
+  background: var(--tu-hover);
+}

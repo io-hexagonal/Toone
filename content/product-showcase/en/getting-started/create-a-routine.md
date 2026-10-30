@@ -18,6 +18,10 @@ You never write a routine by hand. Both paths open a conversation in which you a
 - **Talk to an agent.** Ask the Research Assistant to do the work once: “Research how acme.com compares to its two main competitors on pricing and write me a brief.” When the result is useful, choose **Create routine** on that message. Toone opens a drafting thread that already knows what you asked for and what came back.
 - **Start from the Routines panel.** Open the **Routines** panel, switch to **Routine Drafts**, and press **+**. This creates an empty draft and a conversation in which you describe the routine from scratch.
 
+```toone-ui
+chat-create-routine-menu
+```
+
 Use the first path when you have already seen a good result and want to keep it. Use the second when you know what the routine should do but have not run it yet.
 
 ## Start with the intent and the objective

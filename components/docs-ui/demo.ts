@@ -28,10 +28,23 @@ export const DEMO = {
     started: "2 min ago",
   },
   artefact: "briefs/2026-10-30-pricing.md",
+  /** Idle routines listed under the running one (Routines sidebar). */
+  otherRoutines: {
+    digest: { name: "Weekly growth digest", owner: "Growth Writer", cadence: "Weekly" },
+    launchSites: { name: "Launch Surface Preparation", owner: "Launch Planner", cadence: "On demand" },
+  },
+  /** A routine whose steps run on two agents at once (orchestration). */
+  launchRoutine: {
+    name: "Launch day",
+    run: 4,
+    steps: ["Write the launch brief", "Prepare launch sites", "Draft launch posts"],
+  },
   explore: {
     routines: ["Launch Surface Preparation", "Launch Content Production"],
     bundle: "Product Launch Essentials",
   },
+  /** The in-app browser's page (URL field shows currentURL.absoluteString). */
+  browser: { url: "https://acme.com/", pageTitle: "Acme" },
   people: { you: "Sam Rivera", guest: "Alex Kim" },
   device: "Sam's iPhone",
   pairingCode: "K7Q2XD",

@@ -16,6 +16,10 @@ Open System Threads to see automated activity, current state, and the agent resp
 
 ## Stop work when necessary
 
+```toone-ui
+system-threads-list
+```
+
 Active background threads retain a stop control. This makes long-running or incorrect work interruptible without searching for the routine that originally created it.
 
 ## Return to previous work

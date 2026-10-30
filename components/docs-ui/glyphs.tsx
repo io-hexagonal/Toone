@@ -20,10 +20,55 @@ const GLYPHS = {
   "chevron.right": <path d="M6 3.2L10.8 8 6 12.8" />,
   "chevron.down": <path d="M3.2 6L8 10.8 12.8 6" />,
   "chevron.up": <path d="M3.2 10L8 5.2 12.8 10" />,
+  "chevron.left": <path d="M10 3.2L5.2 8 10 12.8" />,
+  "arrow.up.forward.square": (
+    <>
+      <path d="M7.4 2.6H4a1.6 1.6 0 0 0-1.6 1.6V12A1.6 1.6 0 0 0 4 13.6h7.8a1.6 1.6 0 0 0 1.6-1.6V8.6" />
+      <path d="M7.6 8.4l5.8-5.8M9.4 2.6h4v4" />
+    </>
+  ),
+  "globe.badge.chevron.backward": (
+    <>
+      <path d="M13.4 6.6A6 6 0 1 0 6.6 13.4" />
+      <path d="M7.6 2.1C6.4 3.4 5.6 5.5 5.6 7.9s.8 4.5 2 5.8M8.4 2.1c.9 1 1.6 2.4 1.9 4" />
+      <path d="M2 7.9h6.2M2.8 5h10.4" />
+      <path d="M13.6 9.6l-2.8 2.4 2.8 2.4" strokeWidth="1.9" />
+    </>
+  ),
+  photo: (
+    <>
+      <rect x="1.8" y="3" width="12.4" height="10" rx="1.8" />
+      <circle cx="5.4" cy="6.2" r="1.1" />
+      <path d="M2.2 12l3.6-3.4 2.4 2.2 2.6-3 3.2 3.6" />
+    </>
+  ),
+  "checkmark.seal.fill": (
+    <>
+      <path
+        d="M8 1.2l1.6 1.3 2-.2.6 2 1.8 1-.6 1.9.6 1.9-1.8 1-.6 2-2-.2L8 14.8l-1.6-1.3-2 .2-.6-2-1.8-1 .6-1.9-.6-1.9 1.8-1 .6-2 2 .2z"
+        fill="currentColor"
+        stroke="none"
+      />
+      <path d="M5.4 8.1l1.8 1.8 3.4-3.6" stroke={K} strokeWidth="1.6" />
+    </>
+  ),
   magnifyingglass: (
     <>
       <circle cx="6.8" cy="6.8" r="4.6" />
       <path d="M10.3 10.3L14 14" />
+    </>
+  ),
+  pencil: (
+    <>
+      <path d="M11.2 2.4l2.4 2.4-8 8-3.2.8.8-3.2z" />
+      <path d="M9.6 4l2.4 2.4" />
+    </>
+  ),
+  "info.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M8 7.2v4" />
+      <circle cx="8" cy="4.9" r=".55" fill="currentColor" />
     </>
   ),
   "person.badge.plus": (
@@ -299,6 +344,35 @@ const GLYPHS = {
     </>
   ),
   "bolt.fill": <path d="M9.4 1.2L3.4 9.2h4l-1 5.6 6.2-8.2H8.6z" fill="currentColor" strokeWidth="0.8" />,
+  // ---- routines sidebar (history, run controls, step states) -------------
+  circle: <circle cx="8" cy="8" r="6.2" />,
+  "circle.dotted": <circle cx="8" cy="8" r="6" strokeDasharray="0.01 2.36" strokeWidth="1.9" />,
+  "play.fill": <path d="M4.6 2.8v10.4l8.4-5.2z" fill="currentColor" strokeWidth="1" />,
+  "pause.fill": (
+    <>
+      <rect x="3.6" y="2.6" width="3" height="10.8" rx="1" fill="currentColor" stroke="none" />
+      <rect x="9.4" y="2.6" width="3" height="10.8" rx="1" fill="currentColor" stroke="none" />
+    </>
+  ),
+  "clock.arrow.circlepath": (
+    <>
+      <path d="M2.7 8.6A5.4 5.4 0 1 0 4.3 4.1" />
+      <path d="M4.6 1.9v2.5H2.1" />
+      <path d="M8.2 5.4v2.9l2 1.3" />
+    </>
+  ),
+  "line.3.horizontal.decrease.circle": (
+    <>
+      <circle cx="8" cy="8" r="6.4" />
+      <path d="M4.9 6.1h6.2M5.9 8.1h4.2M6.9 10.1h2.2" />
+    </>
+  ),
+  "checkmark.seal": (
+    <>
+      <path d="M8 1.2l2.18 1.53 2.63.46.46 2.63L14.8 8l-1.53 2.18-.46 2.63-2.63.46L8 14.8l-2.18-1.53-2.63-.46-.46-2.63L1.2 8l1.53-2.18.46-2.63 2.63-.46z" />
+      <path d="M5.5 8.2l1.7 1.7 3.3-3.6" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type GlyphName = keyof typeof GLYPHS;

@@ -19,6 +19,10 @@ Download the build that matches your version of macOS, open it, and follow the s
 
 Choose Codex or Claude during setup and complete the provider authentication. A project can contain many agents, but you only need one working provider to complete the quickstart.
 
+```toone-ui
+setup-provider-cards
+```
+
 ## Checkpoint
 
 You are ready to continue when Toone opens its project experience without asking you to finish provider setup.

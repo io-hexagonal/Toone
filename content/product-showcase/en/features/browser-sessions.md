@@ -14,6 +14,10 @@ Many useful processes depend on websites rather than APIs. Browser sessions give
 
 Bring a session from your default browser into Toone when a task depends on an account you have already signed into. This avoids treating every browser task as a fresh, disconnected environment.
 
+```toone-ui
+browser-login-import
+```
+
 ## Keep the context visible
 
 Browser work should remain understandable to the person responsible for the project. Follow which session and page are involved, then intervene when a step requires judgment, approval, or corrected input.

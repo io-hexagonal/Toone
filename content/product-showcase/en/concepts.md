@@ -32,6 +32,10 @@ A thread is one conversation with an agent. Some threads you start yourself, by 
 
 Threads are where you follow the work. From a running routine's graph, **Focus thread** opens the conversation of the agent on that step, and you can watch what it reads, decides, and writes. Automated threads live under **System Threads** so they never crowd out your own. See [Background threads](/how-to/features/background-threads).
 
+```toone-ui
+system-threads-list
+```
+
 ## Routine
 
 A routine is a repeatable process written in natural language. It names the input, the responsible agent, the steps, the output that must exist when it finishes, and the criteria that say the run succeeded. Once published, it can be run again with different inputs, scheduled, and called by other routines.
@@ -57,6 +61,10 @@ A sub-routine is a step that is a routine in its own right. When a piece of work
 ## Run
 
 A run is one execution of a routine. Runs make automation observable: routines that are in progress appear under **Running** at the top of the Routines panel, the graph lights up stage by stage, and the status shows whether the run is running, retrying, waiting for input, or paused.
+
+```toone-ui
+routines-list-running
+```
 
 Every run leaves a trail. It joins the routine's execution history as a resumable checkpoint, so you can compare runs, resume a stopped one, or stop a run that has gone wrong. The first run of a new routine is a test run: its job is to prove the pipeline works end to end. See [Run and debug](/how-to/getting-started/run-and-debug).
 

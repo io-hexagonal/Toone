@@ -10,8 +10,16 @@ import type { PlacedNode } from "./types";
  * centred. Border is accent when selected, the live colour @0.9 while running,
  * separator otherwise: step cards never show completed/failed colours.
  * Optional stubs above/below in 8pt (input / artefact colour), stack spacing 2.
- * The live badge is pinned top-trailing at (+6, −6).
+ * The live badge is an overlay pinned top-trailing at (+6, −6) (:270-275),
+ * drawn after the surface, so it sits above the border, but its capsule is
+ * translucent (live colour @0.16 + gradient), so in the app the card's top
+ * border shows through the middle of the badge text. Docs deviation: the
+ * badge is lifted to (+6, −BADGE_LIFT) so the border passes under the glyphs
+ * (through the capsule's bottom padding) instead of striking through them.
  */
+
+/** App: 6. Lifted so a 2pt selected border clears the 7pt badge glyphs. */
+const BADGE_LIFT = 10;
 
 function lastPathSegment(value: string): string {
   const stripped = value.split(" ")[0] ?? value;
@@ -45,7 +53,7 @@ export function StepCard({ node, selected, presentsLiveActivity = true }: Props)
         width={node.w}
       >
         <span className={styles.truncate} style={{ maxWidth: "100%" }}>{node.label}</span>
-        {live ? <LiveBadge label={node.liveLabel ?? "RUNNING"} style={{ position: "absolute", top: -6, right: -6, zIndex: 3 }} /> : null}
+        {live ? <LiveBadge label={node.liveLabel ?? "RUNNING"} style={{ position: "absolute", top: -BADGE_LIFT, right: -6, zIndex: 3 }} /> : null}
       </NodeSurface>
       {node.stepOuts?.length ? (
         <span className={styles.stepStub} style={{ color: "var(--tu-pipe-artefact)" }}>

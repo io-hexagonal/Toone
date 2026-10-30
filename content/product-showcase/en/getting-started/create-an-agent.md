@@ -15,6 +15,10 @@ Open the **Agents** panel and choose **Create agent**. The flow has three parts:
 2. **Describe its purpose and tasks.** This step is optional, but it is where the agent takes shape. Say what the agent is responsible for, what kinds of tasks it should take on, and what a good result looks like. Toone turns that description into the agent's role and capabilities.
 3. **Give it custom context.** Also optional. Point the agent at material it should pick up every time it works, such as markdown files with brand guidelines, a positioning doc, or notes on the audience. That context travels with the agent, so you never have to paste it into a conversation again.
 
+```toone-ui
+agent-name-field
+```
+
 If you skip the optional steps, you get a general-purpose agent with the name you gave it. You can add purpose and context later as you learn what the agent needs.
 
 ## Start with a role, not a personality

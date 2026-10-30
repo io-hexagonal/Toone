@@ -1,0 +1,153 @@
+/* P12 ActionCard (RoutineIssueCardView.swift). Reads --tu-* tokens from
+   docs-ui.module.css (.root). Line heights are SF Pro's natural ones:
+   body 13 → 16, callout 12 → 15, caption 10 → 13. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Spacing.sm */
+  padding: 12px; /* Control.horizontalPadding */
+  border-radius: 16px; /* CornerRadius.large */
+  background: var(--tu-card); /* threadCardBackground */
+  box-shadow: inset 0 0 0 1px var(--tu-card-border); /* strokeBorder 1pt */
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.headerGlyph {
+  display: inline-flex;
+  justify-content: center;
+  flex: none;
+  width: 16px; /* IconSize.small */
+  height: 16px; /* one body line: the 13pt symbol sits on the title's baseline */
+  align-items: center;
+  margin-top: -0.5px;
+}
+
+.headerTitle {
+  min-width: 0;
+  font-size: 13px; /* .body */
+  font-weight: 600; /* .semibold */
+  line-height: 16px;
+  color: var(--tu-text-1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.spacer {
+  flex: 1 0 8px; /* Spacer(minLength: Spacing.sm) */
+}
+
+.headerMeta {
+  flex: none;
+  font-size: 10px; /* .caption */
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--tu-text-3);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding-left: 24px; /* IconSize.small + Spacing.sm */
+}
+
+.detail {
+  margin: 0;
+  font-size: 12px; /* .callout */
+  line-height: 15px;
+  color: var(--tu-text-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.meta {
+  margin: 0;
+  font-size: 10px; /* .caption */
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+.iconLine {
+  display: flex;
+  align-items: baseline;
+  gap: 4px; /* Spacing.xs */
+}
+
+.iconLine > svg {
+  align-self: center;
+}
+
+.inset {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px; /* Spacing.xs */
+  padding: 8px; /* Spacing.sm */
+  border-radius: 8px; /* CornerRadius.small */
+  background: color-mix(in srgb, var(--tu-code) 60%, transparent); /* codeBackground @0.6 */
+}
+
+.proposalLabel {
+  font-size: 10px; /* .caption */
+  font-weight: 600;
+  line-height: 13px;
+  color: var(--tu-text-3);
+}
+
+.proposalChange {
+  font-size: 12px; /* .callout */
+  line-height: 15px;
+  color: var(--tu-text-1);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.proposalNote {
+  font-size: 10px;
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+/* Native DisclosureGroup, collapsed. Calibrate from a capture. */
+.disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 16px;
+  font-size: 10px; /* label: .caption, textSecondary */
+  line-height: 13px;
+  color: var(--tu-text-2);
+}
+
+.disclosureChevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  color: var(--tu-label-2);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Spacing.sm */
+}
+
+.actionSpacer {
+  flex: 1 0 0; /* Spacer(minLength: 8) minus the HStack gap already applied */
+}

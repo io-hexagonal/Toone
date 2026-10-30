@@ -15,6 +15,10 @@ Run the routine once with a small, real input. The point of the first run is not
 
 Open the **Routines** panel. Routines that are in progress appear under **Running** at the top of the list, with their current stage. Select the running routine to open its graph and check its execution: each step lights up as it starts, and the status shows whether the routine is running, retrying, waiting for input, or paused.
 
+```toone-ui
+routines-list-running
+```
+
 Click any step in the graph and choose **Focus thread** to open the conversation of the agent working on it. From there you can check the agent's work as it happens and follow along with what it reads, decides, and writes. When the agent is working on the web, click into the browser to see exactly what it is looking at and doing on the internet.
 
 ```toone-ui
@@ -26,6 +30,10 @@ Notice which agent is working, what step is underway, and whether Toone is waiti
 ## When a step fails
 
 A failed step shows an issue card in the run's thread: what went wrong and what Toone can do about it. With the default **Suggest** setting, Toone proposes a fix and waits; confirm it and the run continues from that step, keeping everything earlier steps produced. You can also tell the agent in the thread what to change, choose **Retry as is**, or cancel the run.
+
+```toone-ui
+issue-card-suggest
+```
 
 Once you trust a routine, you can let Toone apply fixes itself: open the routine's inspector and change **Auto-fix**. [Routines](/how-to/features/routines#fix-a-failed-step-and-keep-going) explains each mode and when Toone still stops for you.
 

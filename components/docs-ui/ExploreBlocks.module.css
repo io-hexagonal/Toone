@@ -1,0 +1,180 @@
+/* P18 ExploreBlocks. Values from ListingProfilePage.swift:466-599 and
+   WorkflowExplorerView.swift:369-395; tokens from the parent .root. */
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px; /* DesignTokens.Spacing.md */
+  padding: 12px;
+  border-radius: 12px; /* CornerRadius.medium */
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.coverSlot {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 144px;
+  height: 81px;
+}
+
+.cover {
+  display: block;
+  flex: none;
+  overflow: hidden;
+}
+
+.cover[data-stroke="true"] {
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+/* The ZStack centres both covers in the 144×81 slot */
+.bundleCovers {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bundleCovers > * {
+  left: 6px;
+  top: 3.5px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Typography.Listing.label: 11 semibold, tracking 1.0, accent */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 13px;
+  letter-spacing: 1px;
+  color: var(--tu-accent);
+  white-space: nowrap;
+}
+
+/* ExplorePriceTag: UI.badge 11/600 accent, padding 8/2 */
+.priceTag {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 13px;
+  color: var(--tu-accent);
+  background: var(--tu-card);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+/* Listing.cardTitle: 15 semibold, primary, 2 lines */
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 19px;
+  color: var(--tu-text-1);
+}
+
+/* Listing.cardMetaEmphasis: 12 semibold */
+.metaEmphasis {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.metaEmphasisInline {
+  font-weight: 600;
+}
+
+/* Listing.cardMeta: 12 regular secondary, 3 lines */
+.summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.audience {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+}
+
+.meta {
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-3);
+}
+
+/* ExploreAuthorByline: HStack spacing 4, mark 13pt, cardMeta tertiary */
+.byline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-3);
+}
+
+.tooneMark {
+  display: inline-block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background: url("/assets/brand/toone-mark-pixel.svg") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+
+/* FlowLayout spacing 6, top padding 2; tag: cardMeta secondary, padding 8/2,
+   Capsule().stroke(threadCardBorder) */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 15px;
+  color: var(--tu-text-2);
+  box-shadow: inset 0 0 0 1px var(--tu-card-border);
+}
+
+.chevron {
+  display: inline-flex;
+  flex: none;
+  margin-left: 8px; /* Spacer(minLength: 8) */
+  padding-top: 4px;
+  color: var(--tu-text-3);
+}

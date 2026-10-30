@@ -17,6 +17,10 @@ Each project contains its own set of agents, MCP servers, routines, and context.
 
 Click the **+** at the top of the window and choose an empty folder. Toone takes care of the rest: it scaffolds the project inside that folder, and from then on everything the project's agents produce lives there.
 
+```toone-ui
+workspace-strip-add
+```
+
 The folder name becomes the project name, so pick it with the scope in mind.
 
 ## Choose a useful scope
