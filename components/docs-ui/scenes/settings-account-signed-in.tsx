@@ -36,7 +36,7 @@ const MAGNIFY = 1.1;
 function SettingsAccountSignedIn() {
   return (
     <div style={{ zoom: MAGNIFY, width: WIDTH }}>
-      <SettingsWindow formPaddingTop={16} minHeight={150} selected="account">
+      <SettingsWindow formPaddingTop={16} minHeight={129} selected="account">
         <SettingsSection footer="Signing out returns you to the login screen." header="Account">
           <SettingsRow>
             <span style={{ display: "flex", flexDirection: "column", gap: 2, flex: "1 1 auto", minWidth: 0 }}>

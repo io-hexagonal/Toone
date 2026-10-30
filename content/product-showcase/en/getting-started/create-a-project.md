@@ -34,6 +34,10 @@ A project is a boundary around related work, and the name is how you draw it. Tw
 - **A focused subset**, such as **acme.com growth**. Everything inside is about growing that site: the agents, the routines they run, and the context they build up. Other work on acme.com, such as support or engineering, gets its own project.
 - **Something more general**, such as **acme.com**. One project holds all the work around the site, and agents specialize within it as it grows.
 
+```toone-ui
+project-scope-compare
+```
+
 Both work. Start with whichever matches how you think about the work today; you can always create another project later when a subset earns its own space.
 
 Avoid designing a large system at this stage. One clear boundary is enough to expose the whole operating loop.

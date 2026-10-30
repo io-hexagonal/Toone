@@ -34,4 +34,8 @@ meeting-summary-reply
 
 Meeting capture can contain transcription mistakes or ambiguous statements. Review important decisions and assigned actions before treating the generated record as authoritative.
 
+```toone-ui
+meeting-review-correction
+```
+
 Next: [Mobile companion](/how-to/features/mobile-companion).

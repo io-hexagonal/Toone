@@ -43,6 +43,7 @@ import { scene as liveShareHostCursor } from "./scenes/live-share-host-cursor";
 import { scene as liveShareHostStart } from "./scenes/live-share-host-start";
 import { scene as mcpApiKeySheet } from "./scenes/mcp-api-key-sheet";
 import { scene as meetingListening } from "./scenes/meeting-listening";
+import { scene as meetingReviewCorrection } from "./scenes/meeting-review-correction";
 import { scene as meetingSummaryReply } from "./scenes/meeting-summary-reply";
 import { scene as menubarZenMenu } from "./scenes/menubar-zen-menu";
 import { scene as mobileCompanionHome } from "./scenes/mobile-companion-home";
@@ -57,6 +58,7 @@ import { scene as panelLayouts } from "./scenes/panel-layouts";
 import { scene as projectExplorerEmpty } from "./scenes/project-explorer-empty";
 import { scene as projectExplorerTree } from "./scenes/project-explorer-tree";
 import { scene as projectPanelHide } from "./scenes/project-panel-hide";
+import { scene as projectScopeCompare } from "./scenes/project-scope-compare";
 import { scene as questionCardApproval } from "./scenes/question-card-approval";
 import { scene as railHoverTimeline } from "./scenes/rail-hover-timeline";
 import { scene as railRoutinesExplore } from "./scenes/rail-routines-explore";
@@ -67,6 +69,7 @@ import { scene as routineRunningGraph } from "./scenes/routine-running-graph";
 import { scene as routineToolbarRun } from "./scenes/routine-toolbar-run";
 import { scene as routinesListRunning } from "./scenes/routines-list-running";
 import { scene as runHistoryCompleted } from "./scenes/run-history-completed";
+import { scene as settingsAccountSignedIn } from "./scenes/settings-account-signed-in";
 import { scene as settingsDefaultModel } from "./scenes/settings-default-model";
 import { scene as settingsGlobalIntegrations } from "./scenes/settings-global-integrations";
 import { scene as settingsGlobalMcps } from "./scenes/settings-global-mcps";
@@ -145,6 +148,7 @@ const ALL: SceneDefinition[] = [
   liveShareHostStart,
   mcpApiKeySheet,
   meetingListening,
+  meetingReviewCorrection,
   meetingSummaryReply,
   menubarZenMenu,
   mobileCompanionHome,
@@ -159,6 +163,7 @@ const ALL: SceneDefinition[] = [
   projectExplorerEmpty,
   projectExplorerTree,
   projectPanelHide,
+  projectScopeCompare,
   questionCardApproval,
   railHoverTimeline,
   railRoutinesExplore,
@@ -169,6 +174,7 @@ const ALL: SceneDefinition[] = [
   routineToolbarRun,
   routinesListRunning,
   runHistoryCompleted,
+  settingsAccountSignedIn,
   settingsDefaultModel,
   settingsGlobalIntegrations,
   settingsGlobalMcps,
