@@ -86,6 +86,7 @@
     "macOS": "macOS",
     "soon": "Binnenkort",
     "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
+    "featuresEyebrow": "Functies",
     "pillarsTitle": "Alles wat je agents nodig hebben om het werk te doen",
     "pillarsSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
     "collaborationTitle": "Je team werkt live samen",
@@ -141,18 +142,60 @@
       "steps": {
         "describe": {
           "title": "Beschrijf het",
-          "body": "Vertel Toone in gewone woorden wat er moet gebeuren en Toone schetst de routine voor je."
+          "body": "Leg het uit zoals aan een collega: wanneer, welke modellen, welke accounts. Toone tekent de graaf, jij kijkt hem na.",
+          "chips": {
+            "words": "Gewone woorden",
+            "schedule": "Op schema",
+            "accounts": "Je eigen accounts"
+          }
         },
         "run": {
           "title": "Kijk hoe hij draait",
-          "body": "Elke stap licht op in een live diagram terwijl hij werkt, met je eigen accounts."
+          "body": "Agents werken parallel, elk op het model dat je koos, en elke stap licht live op in je eigen accounts.",
+          "chips": {
+            "parallel": "Parallelle agents",
+            "models": "Een model per agent",
+            "live": "Live graaf"
+          }
         },
         "resume": {
           "title": "Pauzeer, bewerk, ga verder",
-          "body": "Grijp op elk moment in, pas aan wat nodig is en ga verder waar hij stopte."
+          "body": "Contracten controleren elke uitkomst. Haalt een stap ze niet, dan pauzeert alleen die: pas hem aan en ga verder waar hij stopte.",
+          "chips": {
+            "contracts": "Contracten",
+            "fallbacks": "Fallbacks",
+            "resume": "Verder vanaf daar"
+          }
         }
       },
-      "prompt": "Onderzoek elke maandag onze niche, vind nieuwe leads op LinkedIn en ontwerp de visuals in Figma."
+      "prompt": "<k>Elke maandag om 9:00</k>: onderzoek onze niche met <k>4 parallelle agents op Haiku</k> en voeg samen wat ze vinden. Laat <k>een Opus-agent</k> de samenvatting controleren. Vind <k>minstens 20 nieuwe leads</k> op LinkedIn en <k>sla iedereen over die we al benaderd hebben</k>. Ontwerp 3 postvisuals in Figma, animeer de beste in Higgsfield en publiceer op Threads, Facebook en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+      "promptLabel": "Nieuwe routine",
+      "graph": {
+        "schedule": "ma 9:00",
+        "fallback": "1× opnieuw → vraag mij",
+        "research": "Onderzoek",
+        "merge": "Samenvoegen",
+        "review": "Review",
+        "findLeads": "Leads vinden",
+        "design": "Ontwerpen",
+        "publish": "Publiceren",
+        "min": "≥ 20",
+        "unique": "geen dubbele"
+      },
+      "run": {
+        "research": "4 Haiku-agents onderzoeken parallel",
+        "merge": "De 4 rapporten samenvoegen",
+        "review": "Opus controleert de samenvatting",
+        "leads": "Leads vinden op LinkedIn",
+        "contract": "Contract gehaald: ≥ 20, geen dubbele",
+        "design": "Ontwerpen in Figma, animeren in Higgsfield",
+        "publish": "Publiceren op Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: onder het contract",
+        "edit": "Uitbreiden naar EU + VK",
+        "note": "Afgeronde stappen houden hun resultaten."
+      }
     },
     "routineGraph": {
       "routineName": "Wekelijkse outreach",
@@ -219,6 +262,7 @@
     "ogTitle": "Toone | De AI-werkruimte voor jouw agentische workflows"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Vragen, beantwoord.",
     "sub": "De korte versie van alles wat men ons vraagt.",
     "q1": "Wat is Toone?",

@@ -86,6 +86,7 @@
     "macOS": "macOS",
     "soon": "Soon",
     "heroTitle": "Run company operations as governed AI routines",
+    "featuresEyebrow": "Features",
     "pillarsTitle": "Everything your agents need to get work done",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
     "collaborationTitle": "Your team works together live",
@@ -141,18 +142,60 @@
       "steps": {
         "describe": {
           "title": "Describe it",
-          "body": "Tell Toone the work in plain words and it drafts the routine for you."
+          "body": "Brief it like a colleague: when it runs, which models, which accounts. Toone drafts the graph for you to check.",
+          "chips": {
+            "words": "Plain words",
+            "schedule": "On a schedule",
+            "accounts": "Your accounts"
+          }
         },
         "run": {
           "title": "Watch it run",
-          "body": "Each step lights up on a live graph as it works, using your own accounts."
+          "body": "Agents work in parallel, each on the model you chose, and every step lights up live on your own accounts.",
+          "chips": {
+            "parallel": "Parallel agents",
+            "models": "A model per agent",
+            "live": "Live graph"
+          }
         },
         "resume": {
           "title": "Pause, edit, resume",
-          "body": "Step in at any point, change what you need, and pick up where it stopped."
+          "body": "Contracts check every output. A step that falls short pauses alone: edit it and resume where it stopped.",
+          "chips": {
+            "contracts": "Contracts",
+            "fallbacks": "Fallbacks",
+            "resume": "Resume in place"
+          }
         }
       },
-      "prompt": "Every Monday, research our niche, find new leads on LinkedIn and design the visuals in Figma."
+      "prompt": "<k>Every Monday at 9:00</k>, research our niche with <k>4 parallel agents on Haiku</k> and merge what they find. Have <k>an Opus agent</k> check the summary. Find <k>at least 20 new leads</k> on LinkedIn — <k>skip anyone we’ve contacted</k>. Design 3 post visuals in Figma, animate the best one in Higgsfield, and publish to Threads, Facebook and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+      "promptLabel": "New routine",
+      "graph": {
+        "schedule": "Mon 9:00",
+        "fallback": "retry ×1 → ask me",
+        "research": "Research",
+        "merge": "Merge",
+        "review": "Review",
+        "findLeads": "Find leads",
+        "design": "Design",
+        "publish": "Publish",
+        "min": "≥ 20",
+        "unique": "no duplicates"
+      },
+      "run": {
+        "research": "4 Haiku agents research in parallel",
+        "merge": "Merge the 4 reports",
+        "review": "Opus checks the summary",
+        "leads": "Find leads on LinkedIn",
+        "contract": "Contract met: ≥ 20, no duplicates",
+        "design": "Design in Figma, animate in Higgsfield",
+        "publish": "Publish to Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: below the contract",
+        "edit": "Widen to EU + UK",
+        "note": "Finished steps keep their results."
+      }
     },
     "routineGraph": {
       "routineName": "Weekly outreach",
@@ -219,6 +262,7 @@
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Questions, answered.",
     "sub": "The short version of everything people ask us.",
     "q1": "What is Toone?",

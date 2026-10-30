@@ -86,6 +86,7 @@
     "macOS": "macOS",
     "soon": "Pronto",
     "heroTitle": "El espacio de trabajo de IA para tus flujos agénticos",
+    "featuresEyebrow": "Funciones",
     "pillarsTitle": "Todo lo que tus agentes necesitan para hacer el trabajo",
     "pillarsSub": "Un espacio para tus agentes, tus flujos de trabajo y tus resultados.",
     "collaborationTitle": "Tu equipo trabaja en vivo",
@@ -141,18 +142,60 @@
       "steps": {
         "describe": {
           "title": "Descríbelo",
-          "body": "Cuéntale a Toone el trabajo con tus palabras y redactará la rutina por ti."
+          "body": "Explícalo como a un colega: cuándo se ejecuta, qué modelos, qué cuentas. Toone dibuja el grafo para que lo revises.",
+          "chips": {
+            "words": "Tus palabras",
+            "schedule": "Con horario",
+            "accounts": "Tus cuentas"
+          }
         },
         "run": {
           "title": "Míralo en marcha",
-          "body": "Cada paso se ilumina en un grafo en vivo mientras trabaja, con tus propias cuentas."
+          "body": "Los agentes trabajan en paralelo, cada uno con el modelo que elegiste, y cada paso se ilumina en directo en tus cuentas.",
+          "chips": {
+            "parallel": "Agentes en paralelo",
+            "models": "Un modelo por agente",
+            "live": "Grafo en directo"
+          }
         },
         "resume": {
           "title": "Pausa, edita, reanuda",
-          "body": "Intervén en cualquier momento, cambia lo que necesites y retoma donde se detuvo."
+          "body": "Los contratos revisan cada resultado. Si un paso no los cumple, solo él se pausa: edítalo y reanuda donde se detuvo.",
+          "chips": {
+            "contracts": "Contratos",
+            "fallbacks": "Alternativas",
+            "resume": "Reanuda donde iba"
+          }
         }
       },
-      "prompt": "Cada lunes, investiga nuestro nicho, encuentra nuevos leads en LinkedIn y diseña las piezas en Figma."
+      "prompt": "<k>Cada lunes a las 9:00</k>, investiga nuestro nicho con <k>4 agentes en paralelo con Haiku</k> y une lo que encuentren. Que <k>un agente con Opus</k> revise el resumen. Encuentra <k>al menos 20 leads nuevos</k> en LinkedIn y <k>omite a quien ya contactamos</k>. Diseña 3 visuales en Figma, anima el mejor en Higgsfield y publica en Threads, Facebook e Instagram. <k>Si un paso falla, reintenta una vez y luego pregúntame.</k>",
+      "promptLabel": "Nueva rutina",
+      "graph": {
+        "schedule": "lun. 9:00",
+        "fallback": "reintentar ×1 → preguntarme",
+        "research": "Investigar",
+        "merge": "Unir",
+        "review": "Revisión",
+        "findLeads": "Encontrar leads",
+        "design": "Diseñar",
+        "publish": "Publicar",
+        "min": "≥ 20",
+        "unique": "sin duplicados"
+      },
+      "run": {
+        "research": "4 agentes Haiku investigan en paralelo",
+        "merge": "Unir los 4 informes",
+        "review": "Opus revisa el resumen",
+        "leads": "Encontrar leads en LinkedIn",
+        "contract": "Contrato cumplido: ≥ 20, sin duplicados",
+        "design": "Diseñar en Figma, animar en Higgsfield",
+        "publish": "Publicar en Threads, Facebook, Instagram"
+      },
+      "pause": {
+        "reason": "12 / 20 leads: por debajo del contrato",
+        "edit": "Ampliar a UE + Reino Unido",
+        "note": "Los pasos terminados conservan sus resultados."
+      }
     },
     "routineGraph": {
       "routineName": "Prospección semanal",
@@ -219,6 +262,7 @@
     "ogTitle": "Toone | El espacio de trabajo de IA para tus flujos agénticos"
   },
   "faq": {
+    "eyebrow": "Preguntas frecuentes",
     "title": "Preguntas, respondidas.",
     "sub": "La versión corta de todo lo que nos preguntan.",
     "q1": "¿Qué es Toone?",

@@ -86,6 +86,7 @@
     "macOS": "macOS",
     "soon": "Bald",
     "heroTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
+    "featuresEyebrow": "Funktionen",
     "pillarsTitle": "Alles, was Ihre Agenten für ihre Arbeit brauchen",
     "pillarsSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
     "collaborationTitle": "Dein Team arbeitet live zusammen",
@@ -141,18 +142,60 @@
       "steps": {
         "describe": {
           "title": "Beschreiben",
-          "body": "Beschreiben Sie die Arbeit in einfachen Worten, und Toone entwirft daraus die Routine."
+          "body": "Briefen Sie es wie ein Teammitglied: wann es läuft, welche Modelle, welche Konten. Toone entwirft den Graphen zum Prüfen.",
+          "chips": {
+            "words": "Einfache Worte",
+            "schedule": "Nach Zeitplan",
+            "accounts": "Ihre Konten"
+          }
         },
         "run": {
           "title": "Beim Laufen zusehen",
-          "body": "Jeder Schritt leuchtet in einem Live-Graphen auf, während er arbeitet – mit Ihren eigenen Konten."
+          "body": "Agenten arbeiten parallel, jeder mit dem Modell Ihrer Wahl, und jeder Schritt leuchtet live auf Ihren eigenen Konten auf.",
+          "chips": {
+            "parallel": "Parallele Agenten",
+            "models": "Modell pro Agent",
+            "live": "Live-Graph"
+          }
         },
         "resume": {
           "title": "Pausieren, bearbeiten, fortsetzen",
-          "body": "Greifen Sie jederzeit ein, ändern Sie, was nötig ist, und machen Sie dort weiter, wo die Routine angehalten hat."
+          "body": "Vorgaben prüfen jedes Ergebnis. Verfehlt ein Schritt sie, pausiert nur er: anpassen und dort fortsetzen, wo er stand.",
+          "chips": {
+            "contracts": "Vorgaben",
+            "fallbacks": "Fallbacks",
+            "resume": "Nahtlos fortsetzen"
+          }
         }
       },
-      "prompt": "Recherchiere jeden Montag unsere Nische, finde neue Leads auf LinkedIn und gestalte die Visuals in Figma."
+      "prompt": "<k>Jeden Montag um 9:00</k> unsere Nische mit <k>4 parallelen Agenten auf Haiku</k> recherchieren und die Ergebnisse zusammenführen. <k>Ein Opus-Agent</k> prüft die Zusammenfassung. Auf LinkedIn <k>mindestens 20 neue Leads</k> finden – <k>niemanden, den wir schon kontaktiert haben</k>. 3 Post-Visuals in Figma gestalten, das beste in Higgsfield animieren und auf Threads, Facebook und Instagram veröffentlichen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+      "promptLabel": "Neue Routine",
+      "graph": {
+        "schedule": "Mo 9:00",
+        "fallback": "1× wiederholen → fragen",
+        "research": "Recherche",
+        "merge": "Zusammenführen",
+        "review": "Prüfung",
+        "findLeads": "Leads finden",
+        "design": "Gestaltung",
+        "publish": "Veröffentlichen",
+        "min": "≥ 20",
+        "unique": "keine Duplikate"
+      },
+      "run": {
+        "research": "4 Haiku-Agenten recherchieren parallel",
+        "merge": "Die 4 Berichte zusammenführen",
+        "review": "Opus prüft die Zusammenfassung",
+        "leads": "Leads auf LinkedIn finden",
+        "contract": "Vorgabe erfüllt: ≥ 20, keine Duplikate",
+        "design": "In Figma gestalten, in Higgsfield animieren",
+        "publish": "Auf Threads, Facebook, Instagram posten"
+      },
+      "pause": {
+        "reason": "12 / 20 Leads: unter der Vorgabe",
+        "edit": "Auf EU + UK ausweiten",
+        "note": "Fertige Schritte behalten ihre Ergebnisse."
+      }
     },
     "routineGraph": {
       "routineName": "Wöchentliche Akquise",
@@ -219,6 +262,7 @@
     "ogTitle": "Toone | Der KI-Arbeitsbereich für Ihre agentischen Workflows"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Fragen, beantwortet.",
     "sub": "Die Kurzfassung von allem, was man uns fragt.",
     "q1": "Was ist Toone?",

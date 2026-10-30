@@ -24,7 +24,7 @@ export default async function BeforeAfterSection() {
           __html: `
             .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
             .ba-panel {
-              position: relative; min-height: 420px; padding: 22px 24px 28px;
+              position: relative; min-height: 420px; padding: 24px 26px 28px;
               border: 1px solid rgba(29,28,25,0.1); border-radius: 18px; overflow: hidden;
             }
             .ba-panel--before { background: rgba(29,28,25,0.035); }
@@ -93,7 +93,7 @@ export default async function BeforeAfterSection() {
             .ba-insta   { top: 80%; left: 33%;  --r: 2.5deg; z-index: 1; }
 
             @media (max-width: 860px) {
-              .ba-grid { grid-template-columns: 1fr; gap: 36px; }
+              .ba-grid { grid-template-columns: 1fr; gap: 32px; }
             }
             @media (max-width: 640px) {
               .ba-panel { min-height: 350px; padding: 18px 16px 22px; }

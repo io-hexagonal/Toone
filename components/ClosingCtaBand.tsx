@@ -17,13 +17,13 @@ export default async function ClosingCtaBand() {
           __html: `
             .cta-band { text-align: center; }
             .cta-band-inner {
-              padding: 64px 24px 68px;
+              padding: clamp(48px, 6vw, 64px) 24px;
               border-top: 1px solid rgba(29,28,25,0.12);
               border-bottom: 1px solid rgba(29,28,25,0.12);
             }
             .cta-band h2#cta-band-title {
               font-size: clamp(26px, 3vw, 36px); line-height: 1.15;
-              max-width: 22ch; margin: 0 auto 30px; text-wrap: balance;
+              max-width: 22ch; margin: 0 auto 28px; text-wrap: balance;
             }
             .cta-band .pill {
               display: inline-block; border-radius: 999px; text-decoration: none;
