@@ -1,7 +1,7 @@
 ---
 title: "Mobile companion"
 navTitle: "Mobile companion"
-description: "Pair your iPhone with the Toone app on your Mac to follow and control agent work over the cloud or your local network, and revoke devices anytime."
+description: "Pair your iPhone with the Toone app on your Mac to follow and control agent work through the cloud relay, and revoke devices anytime."
 eyebrow: "Feature · Connect"
 pageType: "feature"
 ---
@@ -12,11 +12,7 @@ The mobile companion connects to the Toone instance running on your Mac. Use it 
 
 ## Connect through the cloud
 
-Start mobile pairing from Settings and enter the displayed code on the mobile device. The relay maintains the connection when the phone and Mac are not on the same local network.
-
-## Connect on the local network
-
-Optionally allow direct connections from devices on the same network. macOS may request permission for Toone to accept incoming connections before local pairing can operate.
+Start mobile pairing in **Settings → Mobile** and enter the displayed code on the mobile device. The phone always connects through the relay, so it works whether or not the phone and Mac are on the same network.
 
 ## Approve and revoke devices
 
