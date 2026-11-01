@@ -93,6 +93,14 @@ const siteSchema: Graph = {
         "https://www.producthunt.com/products/toone",
         "https://www.wikidata.org/wiki/Q141510503",
       ],
+      founder: {
+        "@type": "Person",
+        "@id": "https://trytoone.com/en/about#founder",
+        name: "Matheus Paranhos",
+        jobTitle: "Founder",
+        url: "https://trytoone.com/en/about",
+        sameAs: ["https://www.linkedin.com/in/matheusbparanhos/"],
+      },
       parentOrganization: {
         "@type": "Organization",
         "@id": "https://hexagonal.io/#organization",
