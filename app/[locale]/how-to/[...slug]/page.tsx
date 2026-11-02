@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { notFound } from "next/navigation";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
@@ -30,11 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: { absolute: `${page.title} | ${suffix}` },
     description: page.description,
-    alternates: {
-      canonical,
-      languages: { en: canonical, "x-default": canonical },
-    },
-    robots: locale === "en" ? undefined : { index: false, follow: true },
+    alternates: { canonical },
+    robots: localeRobots(locale),
+    other: localeVersions(`/how-to/${slug}`, ["en"]),
     openGraph: {
       type: "article",
       url: canonical,

@@ -11,8 +11,9 @@ import { isExploreIndexable } from "@/lib/explore/presentation";
  * and the CDN holds the rendered XML for the same 600 s via `s-maxage`, so a
  * newly approved record is listed within ten minutes.
  *
- * Only `/en/...` is listed: the other locales are `noindex` with an English
- * canonical (contract §11), so they get neither an entry nor an alternate.
+ * Only `/en/...` is listed: the other locales are `noindex, follow` with a
+ * self-canonical (TECH-021), so they get no entry, and no entry carries
+ * hreflang alternates.
  * CONTENT-022 (v1.7.0): every approved record is listed unless a reviewer set
  * `noindex`; the feed's `indexable` flag carries that server-side rule.
  * A feed outage yields an empty urlset (200) rather than an error: Google
@@ -34,22 +35,14 @@ function warnNotServedOnce() {
   console.warn("[sitemap-explore] feed route not available; listing no items");
 }
 
-function englishAlternates(path: string): string {
-  const href = `${BASE_URL}/en${path}`;
-  return [
-    `<xhtml:link rel="alternate" hreflang="en" href="${href}"/>`,
-    `<xhtml:link rel="alternate" hreflang="x-default" href="${href}"/>`,
-  ].join("");
-}
-
-function url(loc: string, lastmod: string, alternateLinks: string) {
-  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod>${alternateLinks}</url>`;
+function url(loc: string, lastmod: string) {
+  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
 }
 
 export async function GET() {
   const lines: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
 
   let ok = true;
@@ -67,13 +60,7 @@ export async function GET() {
         const lastmod = Date.parse(item.updated_at || item.approved_at);
         if (!Number.isFinite(lastmod)) continue;
         const path = `/explore/${item.type}s/${slug}`;
-        lines.push(
-          url(
-            `${BASE_URL}/en${path}`,
-            new Date(lastmod).toISOString(),
-            englishAlternates(path),
-          ),
-        );
+        lines.push(url(`${BASE_URL}/en${path}`, new Date(lastmod).toISOString()));
       }
     }
   } catch (error) {

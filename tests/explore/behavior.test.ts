@@ -301,24 +301,20 @@ test("revalidation authenticates exact bytes, rejects bad event ids and missing 
 });
 
 test("non-English hubs are noindex with a self canonical and no hreflang; the English hub is unchanged", () => {
-  const pt = exploreMetadata("pt", "/explore", "Explorar", "Rotinas", null, { selfCanonical: true });
-  assert.equal(pt.alternates.canonical, "https://trytoone.com/pt/explore");
-  assert.deepEqual(pt.alternates.languages, {});
-  assert.equal(pt.robots.index, false);
+  const pt = exploreMetadata("pt", "/explore", "Explorar", "Rotinas", null);
+  assert.deepEqual(pt.alternates, { canonical: "https://trytoone.com/pt/explore" });
+  assert.deepEqual(pt.robots, { index: false, follow: true });
   assert.equal(pt.openGraph.url, pt.alternates.canonical);
   assert.equal(pt.openGraph.locale, "pt_BR");
+  assert.deepEqual(JSON.parse(pt.other["toone-locale-versions"]), { en: "/en/explore" });
 
-  const en = exploreMetadata("en", "/explore", "Explore", "Routines", null, { selfCanonical: true });
-  assert.equal(en.alternates.canonical, "https://trytoone.com/en/explore");
-  assert.deepEqual(en.alternates.languages, {
-    en: "https://trytoone.com/en/explore",
-    "x-default": "https://trytoone.com/en/explore",
-  });
-  assert.equal(en.robots.index, true);
+  const en = exploreMetadata("en", "/explore", "Explore", "Routines", null);
+  assert.deepEqual(en.alternates, { canonical: "https://trytoone.com/en/explore" });
+  assert.deepEqual(en.robots, { index: true, follow: true });
   assert.equal(en.openGraph.locale, "en_US");
 });
 
-test("SEO uses English canonical, noindex translations, and one HowTo step per visible root step", () => {
+test("SEO: self canonical, noindex translations without hreflang, and one HowTo step per visible root step", () => {
   const detail = fixture("routine-detail");
   const metadata = exploreMetadata(
     "pt",
@@ -327,15 +323,15 @@ test("SEO uses English canonical, noindex translations, and one HowTo step per v
     detail.summary,
     null,
   );
-  assert.equal(
-    metadata.alternates.canonical,
-    `https://trytoone.com/en/explore/routines/${detail.slug}`,
-  );
-  assert.equal(metadata.robots.index, false);
-  assert.equal(
-    metadata.alternates.languages["x-default"],
-    metadata.alternates.canonical,
-  );
+  assert.deepEqual(metadata.alternates, {
+    canonical: `https://trytoone.com/pt/explore/routines/${detail.slug}`,
+  });
+  assert.deepEqual(metadata.robots, { index: false, follow: true });
+  const english = exploreMetadata("en", `/explore/routines/${detail.slug}`, detail.title, detail.summary, null);
+  assert.deepEqual(english.alternates, {
+    canonical: `https://trytoone.com/en/explore/routines/${detail.slug}`,
+  });
+  assert.deepEqual(english.robots, { index: true, follow: true });
   const schema = routineSchema(detail);
   assert.equal(
     schema.step.length,

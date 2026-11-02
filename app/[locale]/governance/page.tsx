@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import type { Article, BreadcrumbList, WithContext } from "schema-dts";
 import { notFound } from "next/navigation";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: publication.title,
     description: publication.description,
-    alternates: { canonical: url, languages: { en: url, "x-default": url } },
-    robots: locale === "en" ? { index: true, follow: true } : { index: false, follow: true },
+    alternates: { canonical: url },
+    robots: localeRobots(locale),
+    other: localeVersions("/governance", ["en"]),
     openGraph: {
       type: "article",
       url,

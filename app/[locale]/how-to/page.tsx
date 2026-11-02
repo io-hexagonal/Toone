@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ProductShowcasePage from "@/components/showcases/ProductShowcasePage";
@@ -20,11 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // template used to append a second "| Toone" (audit P2-5).
     title: { absolute: `${page.title} | Product guide` },
     description: page.description,
-    alternates: {
-      canonical,
-      languages: { en: canonical, "x-default": canonical },
-    },
-    robots: locale === "en" ? undefined : { index: false, follow: true },
+    alternates: { canonical },
+    robots: localeRobots(locale),
+    other: localeVersions("/how-to", ["en"]),
     openGraph: {
       type: "website",
       url: canonical,

@@ -30,9 +30,9 @@ export const ENGLISH_ONLY_PATHS = [
 export const routing = defineRouting({
   locales,
   defaultLocale: "en",
-  // Metadata owns hreflang so the HTML and sitemap can share one canonical
-  // x-default. next-intl's automatic Link header uses unprefixed defaults,
-  // which conflicted with the governed /en x-default URLs.
+  // No hreflang anywhere, HTML, sitemap or HTTP header: English is the only
+  // indexed locale (TECH-021, i18n/indexing.ts). next-intl's automatic Link
+  // header would declare every locale as an alternate, so it stays off.
   alternateLinks: false,
   // No NEXT_LOCALE cookie, read or written. next-intl set it on `/en` for
   // every visitor whose Accept-Language was not English, which then pinned

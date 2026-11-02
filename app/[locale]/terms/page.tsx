@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
@@ -16,11 +17,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Root template appends "| Toone"; the brand stays out of this title (F33).
     title: "Terms and Licenses",
     description: "Where to find the license terms for Toone from the Mac App Store and Toone downloaded directly.",
-    alternates: {
-      canonical: TERMS_CANONICAL,
-      languages: { en: TERMS_CANONICAL, "x-default": TERMS_CANONICAL },
-    },
-    robots: { index: locale === "en", follow: true },
+    alternates: { canonical: TERMS_CANONICAL },
+    robots: localeRobots(locale),
+    other: localeVersions("/terms", ["en"]),
     openGraph: {
       type: "website",
       url: TERMS_CANONICAL,

@@ -18,9 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: { index: false, follow: false },
     title: t("metaTitle"),
     description: t("metaDescription"),
-    // noindex, so no hreflang set (TECH-021). The empty map keeps the root
-    // layout's locale-home languages from merging in.
-    alternates: { canonical: url, languages: {} },
+    // noindex, so a self-canonical (TECH-021) instead of the root layout's
+    // locale-home canonical.
+    alternates: { canonical: url },
     // og:url follows the canonical (R7) instead of inheriting the locale home.
     openGraph: { type: "website", url, siteName: "Toone", ...openGraphLocale(locale, []) },
   };
