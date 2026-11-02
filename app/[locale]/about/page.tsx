@@ -114,7 +114,7 @@ export default async function AboutPage({ params, searchParams }: Props) {
           <h2>Publisher and accountability</h2>
           <p>
             Toone is an independent product published by{` `}
-            <a href="https://hexagonal.io">Hexagonal.io</a>. It is supported by the{` `}
+            <a href="https://www.hexagonal.io/">Hexagonal.io</a>. It is supported by the{` `}
             <a href="https://claude.com/programs/startups">Claude Startups</a> and AWS Startups
             programmes, and is not otherwise affiliated with or endorsed by Anthropic, OpenAI, or
             AWS. Product, privacy, and release claims are checked against current product,
