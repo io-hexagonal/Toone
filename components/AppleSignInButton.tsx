@@ -27,11 +27,14 @@ type Props = {
  * The button face is served by Apple, including its logo and localized title.
  * Apple JS is loaded lazily and the popup opens straight from the click so
  * browsers keep the user gesture and each request gets a fresh state.
+ *
+ * Nothing renders until mount: Apple's button CDN answers crawlers with 403,
+ * so artwork in the server HTML showed up as a broken image in site audits.
  */
 export default function AppleSignInButton({
   config, locale, label, buttonType, unavailableLabel, disabled, onCredential, onFailure,
 }: Props) {
-  const [scriptState, setScriptState] = useState<"loading" | "ready" | "unavailable" | "hidden">("loading");
+  const [scriptState, setScriptState] = useState<"mounting" | "loading" | "ready" | "unavailable" | "hidden">("mounting");
   const [pending, setPending] = useState(false);
   const pendingRef = useRef(false);
 
@@ -41,6 +44,7 @@ export default function AppleSignInButton({
       setScriptState("hidden");
       return;
     }
+    setScriptState("loading");
     let cancelled = false;
     loadAppleScript(locale).then(
       () => { if (!cancelled) setScriptState("ready"); },
@@ -49,7 +53,7 @@ export default function AppleSignInButton({
     return () => { cancelled = true; };
   }, [config, locale]);
 
-  if (!config || scriptState === "hidden") return null;
+  if (!config || scriptState === "mounting" || scriptState === "hidden") return null;
   if (scriptState === "unavailable") {
     return <p className="auth-google-unavailable" role="status">{unavailableLabel}</p>;
   }
