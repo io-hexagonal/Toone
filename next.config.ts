@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { VERCEL_APP_HOST_PATTERN } from "./lib/vercel-host";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -29,6 +30,14 @@ const nextConfig: NextConfig = {
       {
         source: "/:locale(pt|es|fr|de|it|nl|ru)/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
+      // Duplicate Vercel hosts (toone-landing*.vercel.app) stay out of the
+      // index; trytoone.com is the only indexable host (lib/vercel-host.ts).
+      // robots.txt stays open there so crawlers can read this header.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: VERCEL_APP_HOST_PATTERN }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
       },
     ];
   },
