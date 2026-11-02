@@ -1,7 +1,7 @@
 import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
 import { getProductGuideSlugs, getProductGuideSourcePath } from "@/lib/product-showcase";
-import { BUILD_DATE, gitLastCommitDate } from "@/lib/source-date";
+import { gitLastCommitDate } from "@/lib/source-date";
 
 export const dynamic = "force-static";
 
@@ -38,50 +38,57 @@ const ENGLISH_ONLY_ROUTES = [
   // `noindex` (self-canonical), so only `/en/explore` is listed. The
   // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
   // revalidates at runtime; this file stays `force-static` so the git-derived
-  // `lastmod` values above are computed on the build host, where git exists.
+  // `lastmod` values above are computed on the build host (omitted if it has no git).
   { path: "/explore", source: "app/[locale]/explore/page.tsx" },
 ] as const;
 
 /**
  * `lastmod` for a route: the date of the last commit that touched the file
- * backing it, falling back to the build date. `changefreq`/`priority` were
- * dropped — Google has ignored both since 2023 (audit P3-2).
+ * backing it, then the page's declared editorial date if it has one. When
+ * neither is known the entry is listed with no `<lastmod>` at all (TECH-013).
+ * `changefreq`/`priority` were dropped — Google has ignored both since 2023
+ * (audit P3-2).
  *
- * The fallback used to be silent, so a renamed or mistyped source path would
- * emit a permanently-today `lastmod` that no one could see (G2 follow-up 5).
- * Every fallback is now recorded and reported as a build warning naming the
- * URLs affected.
+ * The last resort used to be the build date. Vercel builds (Git and CLI
+ * alike) can lack usable git history, so on 2026-11-02 39 of 46 URLs claimed
+ * a change on deploy day with no content change. Google stops trusting
+ * `lastmod` that is wrong, and an absent `lastmod` is valid sitemap XML, so an
+ * unknown date is now omitted rather than invented. Each omission is still
+ * reported as a build warning naming the URLs affected, so a renamed or
+ * mistyped source path stays visible (G2 follow-up 5).
  */
 function makeLastModified() {
-  const fallbacks: string[] = [];
+  const omitted: string[] = [];
   return {
-    fallbacks,
-    lastModified(loc: string, sourcePath: string | null, declaredDate?: string): string {
+    omitted,
+    lastModified(loc: string, sourcePath: string | null, declaredDate?: string): string | null {
       const committed = gitLastCommitDate(sourcePath);
       if (committed) return committed;
       if (declaredDate) return declaredDate;
-      fallbacks.push(loc);
-      return BUILD_DATE;
+      omitted.push(loc);
+      return null;
     },
   };
 }
 
-function reportFallbacks(fallbacks: readonly string[]): void {
-  if (fallbacks.length === 0) return;
+function reportOmitted(omitted: readonly string[]): void {
+  if (omitted.length === 0) return;
   console.warn(
-    `[sitemap] WARNING: lastmod fell back to the build date (${BUILD_DATE}) for ` +
-      `${fallbacks.length} URL(s). Their declared source path is missing, untracked ` +
-      `or absent from git history, so these dates are not real content dates:\n` +
-      fallbacks.map((loc) => `  - ${loc}`).join("\n"),
+    `[sitemap] WARNING: lastmod omitted for ${omitted.length} URL(s). Their git ` +
+      `date is unknown (source path missing or untracked, or no git history on ` +
+      `the build host), so no date is published for them:\n` +
+      omitted.map((loc) => `  - ${loc}`).join("\n"),
   );
 }
 
-function url(loc: string, lastmod: string) {
-  return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
+function url(loc: string, lastmod: string | null) {
+  return lastmod
+    ? `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`
+    : `<url><loc>${loc}</loc></url>`;
 }
 
 export async function GET() {
-  const { fallbacks, lastModified } = makeLastModified();
+  const { omitted, lastModified } = makeLastModified();
   const lines: string[] = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -128,7 +135,7 @@ export async function GET() {
   }
   lines.push("</urlset>");
 
-  reportFallbacks(fallbacks);
+  reportOmitted(omitted);
 
   return new Response(lines.join("\n"), {
     headers: {

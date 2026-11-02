@@ -7,11 +7,10 @@ import { execFileSync } from "node:child_process";
  * site was last deployed (TECH-013). Frontmatter `updated:` is hand-maintained
  * and drifts — `/en/governance` reported 2026-09-11 for copy edited 2026-09-20
  * (G2 follow-up 4) — so the commit date of the file backing a route is the
- * authority, with the hand-written date as the only fallback.
+ * authority, with the hand-written date as the only fallback. There is no
+ * build-date fallback: a deploy is not a content change, so an unknown date
+ * stays unknown (callers omit it).
  */
-
-/** Fallback when git history is unavailable (e.g. a shallow CI checkout). */
-export const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 const cache = new Map<string, string | null>();
 
