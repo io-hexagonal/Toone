@@ -19,33 +19,6 @@ import type { SceneDefinition } from "../scene";
  * sub-routine, then the execution history), with Run #3's row expanded too
  * (its step list). Two idle routines follow under "Routines".
  *
- * Sources: RoutineCreatorPanelView.swift:482-561 (column + switcher);
- * OrganizationOverviewView.swift:666-771 (sections, controls row),
- * :1010-1150 (family card, history, run row inputs), :1255-1270 (no run
- * button in the Routines panel), :1304-1360 (row model: Running pill = accent,
- * dot on while running, sub count, history count); RoutineSidebarComponents.swift;
- * RoutineRunHistoryRowView.swift:57-304; RoutineRunHistoryRow.swift:207-330
- * (summary, age and meta strings); RoutineRunControlsView.swift:205-250.
- *
- * Code vs plan:
- * - The run row's second line is the run's boundary label without the phase
- *   its pill restates: the checkpoint label is "<step title> · running"
- *   (AgentSessionManager.swift:4876), so it reads "Investigate a topic", not
- *   "Investigating: <topic>".
- * - The routine row shows the stage nowhere; the stage is on the run row
- *   (summary) and in the expanded run's step list (plan verification item 10).
- * - Expanding the routine also lists its sub-routine inside the card, and the
- *   history lists every recent run (up to 5 sealed), so Runs #2 and #1 appear
- *   under Run #3. A sub-routine never appears as its own row under
- *   "Routines" (ROV visibleMainRoutines), so the plan's idle "Investigate a
- *   topic" row is replaced by another main routine.
- * - The routine is not selected, so Run #3 keeps its compact run controls
- *   (Pause, empty Continue slot, Cancel) on its meta line (ROV:1048-1050).
- * - No sub-routine count ("⑂ 1") on the running row: the row's trailing info
- *   is a ViewThatFits (RSC:500-515) that drops the count before the name
- *   truncates, and "Produce a research brief" + the Running pill + the
- *   history count already overflow the sidebar's max width (320, used here).
- *
  * Drawn at MAGNIFY × the app's points so the 10pt caption text stays ≥11px
  * at the guide column; everything inside keeps the app's proportions.
  * Calibrate: column width (320 = max; 285 is the ideal), the stop.fill tint (a destructive

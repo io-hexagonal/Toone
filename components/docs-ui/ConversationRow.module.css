@@ -1,5 +1,5 @@
-/* Conversations destination (LeftOrchestratorView.swift:3644-3870).
-   Tokens from the parent .root. SwiftUI .secondary / .tertiary map to
+/* Conversations destination. Tokens from the parent .root. SwiftUI
+   .secondary / .tertiary map to
    --tu-label-2 / --tu-label-3. */
 
 .search {
@@ -19,7 +19,7 @@
   padding: 0 8px 8px;
 }
 
-/* sectionHeader: caption2 semibold uppercased, kerning 0.6, secondary;
+/* Section header: caption2 semibold uppercased, kerning 0.6, secondary;
    padding h4, top 8, bottom 2 */
 .section {
   padding: 8px 4px 2px;
@@ -31,7 +31,7 @@
   color: var(--tu-label-2);
 }
 
-/* threadRow: HStack(top, spacing 8), padding h8 v4, min-h 52, r8,
+/* Thread row: HStack(top, spacing 8), padding h8 v4, min-h 52, r8,
    Color.secondary @0.06 (selected accent .14 + 1pt accent .6) */
 .row {
   display: flex;
@@ -48,7 +48,7 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 60%, transparent);
 }
 
-/* ThreadIndicatorDot (SystemThreadRow.swift:14-37): 7pt, top padding 5 */
+/* Thread indicator dot: 7pt, top padding 5 */
 .dot {
   flex: none;
   width: 7px;
@@ -126,7 +126,7 @@
 }
 
 /* line 3: HStack(firstTextBaseline, spacing 3), caption2:
-   "<author>:" medium textSecondary · preview textPrimary */
+   "<author>:" medium secondary · preview primary */
 .previewLine {
   display: flex;
   align-items: baseline;

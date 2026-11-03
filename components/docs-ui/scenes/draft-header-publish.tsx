@@ -16,34 +16,14 @@ import type { SceneDefinition } from "../scene";
  * card expanded (its sub-draft "Investigate a topic" inside); the top of the
  * draft graph on the right.
  *
- * Sources (RCP = APP/Features/Organization/Views/RoutineCreatorPanelView.swift):
- * - header RCP:398-450, status RCP:3264-3271; toolbar RCP:452-480;
- *   draftActions RCP:752-807 ("Focus conversation"
- *   bubble.left.and.text.bubble.right .bordered small; diagnostics
- *   exclamationmark.triangle 13 semibold, secondary with no findings
- *   RCP:833-862; add sub-routine point.3.filled.connected.trianglepath.dotted
- *   and discard trash as icon buttons; "Publish" paperplane.fill
- *   .borderedProminent small);
- * - sidebar RCP:482-521 (switcher padding 8, Divider, width 225…320,
- *   innerBackground @0.18), switcher RCP:523-561, draftSidebar RCP:563-580
- *   (LazyVStack spacing 5, padding 8), draftGroupRows RCP:597-640 (family
- *   card), draftTab RCP:975-1071 (row anatomy below);
- * - creator RCP:1082-1095 (padding 18) and the graph container (GraphKit),
- *   scrolled so the container's toolbar sits above the crop: at this panel
- *   width its horizontal ScrollView would clip the summary mid-word.
- *
- * draftTab (root): HStack spacing 4: disclosure chevron .caption tertiary in
- * a 14pt column; then the button label HStack spacing 4: RoutineScheduleDot
+ * Draft row (root): HStack spacing 4: disclosure chevron .caption tertiary in
+ * a 14pt column; then the button label HStack spacing 4: schedule dot
  * (off = "Not published"), doc.text .body accent in 16pt, name .body,
- * Spacer, RoutineStatusPill(status.rawValue, neutral); label padding v3 h5,
+ * Spacer, neutral status pill; label padding v3 h5,
  * min-h 28, selected accent @0.16 r8; row padding v4 h8.
  * Child (depth 1): no disclosure column; arrow.turn.down.right .caption2
  * tertiary in 6pt, doc.text .callout, name .callout, no pill; label padding
  * v2 h5, min-h 24; row padding leading 16, v1, h8.
- *
- * Code vs plan: the draft card's pill shows the raw status, "drafting"
- * (lowercase), not "Draft". The `+`'s help tag "Create a new routine draft"
- * is not drawn: the figure's state is the Publish button.
  *
  * Drawn at MAGNIFY × the app's points (10pt captions ≥11px at the guide
  * column). CALIBRATE: the small bordered / borderedProminent buttons (native).
@@ -167,7 +147,7 @@ function DraftHeaderPublish() {
                   clipAfter="runSetup"
                   hasSelection={false}
                   published={false}
-                  summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+                  summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
                 />
               }
             >

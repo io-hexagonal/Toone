@@ -7,18 +7,6 @@ import { Tooltip } from "../Tooltip";
  * The composer of a thread in Safe Mode: the green SAFE capsule before the
  * model chip, with its help tag showing.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Chat/Views/ChatPanelView.swift:2499-2575 (input row: HStack
- *   spacing 8, padding 16; [mode badge] [SAFE] [options chip] [field] [send]),
- *   :2527-2556 (SAFE: "SAFE" caption2 bold white, padding 6/3, capsule;
- *   Color.green only when the provider is Claude and the redaction hook is
- *   healthy, orange with a warning triangle otherwise; Direct edition only),
- *   :2768-2779 (safeModeBadgeHelp: "Safe mode active — tool outputs are
- *   redacted before reaching the model.").
- * - Composer: Chat.tsx <ChatComposer safe="active" />.
- *
- * Code vs spec: none.
- *
  * calibrate: the help tag (native NSToolTip). AppKit draws it under the
  * pointer and flips it above near the screen's bottom edge, where the
  * composer sits; it is drawn above the badge here. The crop starts just

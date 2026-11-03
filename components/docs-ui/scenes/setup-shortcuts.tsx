@@ -6,22 +6,6 @@ import type { SceneDefinition } from "../scene";
  * keycap rows (the Layout cards above and the Theme picker below are
  * cropped out).
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Setup/Views/LayoutHotkeysStepView.swift:38-56 (VStack leading
- *   spacing 12: "Shortcuts" 13 semibold textSecondary, uppercased, tracking
- *   0.5; rows VStack spacing 8); :58-72 (row: HStack spacing 12; keys in an
- *   HStack spacing 4 framed to width 90, leading; label 13 textPrimary);
- *   :74-88 (keycap, see Keycap.tsx).
- * - Core/Models/HotkeyBinding.swift:53-80 (defaults: ⌥Tab toggle app, ⌥§
- *   focus chat input, ⌥L toggle layout).
- * - Features/Setup/Views/SetupView.swift:43-46,216 (window 620 wide,
- *   content margin 32).
- *
- * Code vs plan: none in the strings. Note the app's own label "Cycle layout
- * theme" for ⌥L: the hotkey cycles the panel layout (Full Height → Zen →
- * Spotlight → Docked, AppDelegate.swift:1190-1201), not the colour theme;
- * the figure reproduces the Setup copy as written.
- *
  * calibrate: the Setup window surface is drawn with the frozen --tu-panel.
  */
 

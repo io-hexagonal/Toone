@@ -1,4 +1,4 @@
-/* P18 ListingHero (ListingProfilePage.swift:10-80). See ListingHero.tsx. */
+/* P18 ListingHero: the Explore listing page hero. See ListingHero.tsx. */
 
 .hero {
   display: flex;
@@ -33,7 +33,7 @@
   gap: 8px;
 }
 
-/* Typography.Listing.eyebrow 11 bold, tracking widest / 1.4 */
+/* eyebrow 11 bold, tracking widest / 1.4 */
 .eyebrow {
   font-size: 11px;
   font-weight: 700;
@@ -42,7 +42,7 @@
   color: var(--tu-accent);
 }
 
-/* Typography.Listing.title = .body semibold, tracking −0.5 */
+/* title = .body semibold, tracking −0.5 */
 .title {
   font-size: 13px;
   font-weight: 600;
@@ -51,7 +51,7 @@
   color: var(--tu-text-1);
 }
 
-/* .body, lineSpacing 3, textSecondary, max 620 */
+/* .body, lineSpacing 3, secondary, max 620 */
 .summary {
   max-width: 620px;
   font-size: 13px;
@@ -65,7 +65,7 @@
   gap: 8px;
 }
 
-/* chip 12 medium, padding 12/6, accent .08 capsule + threadCardBorder */
+/* chip 12 medium, padding 12/6, accent .08 capsule + card border */
 .chip {
   padding: 6px 12px;
   border-radius: 999px;

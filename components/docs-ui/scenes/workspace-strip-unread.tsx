@@ -8,16 +8,6 @@ import styles from "./workspace-strip-unread.module.css";
  * activity you have not looked at yet, so its pill pulses an accent outline
  * (and a soft glow). Project 3 is quiet.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/WorkspaceStripView.swift:207-209 (unread = inactive and
- *   `hasUnreadActivity`), :250-276 (1.5pt accent stroke 0.3 ↔ 0.8, accent
- *   glow r4 0 ↔ 0.4, easeInOut 0.8s autoreverse, forever);
- * - :197-249 (pill), :26-86 (strip), LeftOrchestratorView.swift:727-734
- *   (strip, then a separator). Pieces in WorkspaceStrip.tsx.
- *
- * Code vs plan: as planned. Opening the project clears the pulse (it only
- * draws on inactive pills).
- *
  * Motion: the pulse runs only under prefers-reduced-motion: no-preference;
  * the static state is mid-pulse (stroke 0.55, glow 0.2, this scene's CSS).
  */

@@ -1,14 +1,13 @@
 /**
- * Graph model, mirroring PipelineNode / PipelineEdge in the app
- * (Features/KnowledgeGraph). Scenes describe nodes and edges with these
+ * Graph model for the routine graph scenes. Scenes describe nodes and edges with these
  * types, place them with `layoutLayers`, and render with <GraphCanvas>.
  */
 
 export type NodeKind = "input" | "routine" | "subRoutine" | "artefact" | "step" | "department";
 
-/** Only `running` is ever produced by the Routine Creator graph at runtime
- * (RoutineDraftRuntimePresentation.runStateByNodeId); `completed`/`failed`
- * exist for the production Routines graph and only colour *standard* cards. */
+/** Only `running` is ever shown on the draft graph at runtime;
+ * `completed`/`failed` exist for the published routine graph and only colour
+ * *standard* cards. */
 export type RunState = "none" | "running" | "completed" | "failed";
 
 export type Health = "ok" | "broken" | "missing";

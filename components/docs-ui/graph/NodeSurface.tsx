@@ -3,8 +3,7 @@ import styles from "../docs-ui.module.css";
 import { cx } from "../cx";
 
 /**
- * Port of RoutineNodeSurfaceModifier (RoutinePipelineGraphComponents.swift:442-543),
- * legacy (non-glass) renderer: innerBackground fill, border drawn inside the
+ * Graph card surface, legacy (non-glass) renderer: inner background fill, border drawn inside the
  * shape; a running card adds a breathing wash, an inner sheen and a rim that
  * falls off toward the bottom. Nothing is drawn outside the card.
  */

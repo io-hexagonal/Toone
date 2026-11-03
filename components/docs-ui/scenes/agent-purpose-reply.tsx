@@ -21,28 +21,6 @@ import type { SceneDefinition } from "../scene";
  * reply with three responsibilities and a project doc to use as context, the
  * status panel working the purpose in, and the empty composer.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Core/Services/AgentSession/AgentSessionManager.swift:6559-6574 (the
- *   agent message), :7316-7341 (after naming the thread runs as the new
- *   agent and is titled with its name).
- * - APP/UI/Layout/LeftOrchestratorView.swift:1446-1471, :1936-1973 (header
- *   title = thread name, subtitle = "agent · department"), :1729-1817
- *   (copy / close actions).
- * - APP/Features/Chat/Views/ChatPanelView.swift:3014-3140
- *   (OrganizationCreationStatusPanel): while the background composer works
- *   the reply into the agent's role, a registered agent reads "Updating
- *   Research Assistant" / "Updating purpose in background" with a small
- *   ProgressView in the accent instead of the icon; padding 16,
- *   inputBackground @0.82, r12, 1pt separator stroke; xmark 24² dismiss.
- *   Panel padding h16 v8 above the composer's Divider (:1276-1287).
- * - Composer: Chat.tsx <ChatComposer> (all-inherited chip = chevron only).
- * - Context lives in the agent's Instructions, written from this chat
- *   (plan "Verification results" #2), so the doc is named by its project path.
- *
- * Code vs spec: the spec ends at "the composer below, empty"; the status
- * panel is on screen at that moment too (the purpose is being applied), so
- * it is drawn. No attachment chip (unverified for creation threads).
- *
  * calibrate: the ProgressView spinner (drawn static: 8 spokes).
  */
 

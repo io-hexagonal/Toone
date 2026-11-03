@@ -12,47 +12,6 @@ import styles from "./calendar-week.module.css";
  * generated from its trigger), one of your own events, and an event an agent
  * proposed that waits for confirmation.
  *
- * Sources (main repo, apps/toone-desktop/Toone/Toone/Features/Calendar/):
- * - Views/CalendarPanelView.swift:15-36: header · Divider().opacity(0.3) ·
- *   week grid · Divider().opacity(0.3) · bottom bar.
- * - Views/CalendarHeaderView.swift:22-79: HStack spacing 8, padding 16/8;
- *   chevron.left / chevron.right 13pt semibold textSecondary in .icon
- *   buttons; headerTitle .headline; "Today" .bordered .small tinted accent;
- *   Spacer; segmented Day / Week / Month at width 180; filter
- *   line.3.horizontal.decrease.circle .body textSecondary; close xmark 10pt
- *   bold textTertiary.
- * - ViewModels/CalendarViewModel.swift:138-155: week title "MMM d" + "–" +
- *   "d" of the last day, so a week that crosses a month reads "Oct 26–1"
- *   (the end has no month; a real quirk). Weeks start on Monday (:123-127).
- * - Views/CalendarWeekView.swift:25-29, 47-102, 194-225: hour height 50,
- *   6 AM start, time column 50 + 4 trailing padding (caption2 tertiary,
- *   top-trailing), day header 40 (EEE uppercased caption2 tertiary · day
- *   number body bold in a 28pt circle, accent @0.15 + accent text today),
- *   1pt hour lines textTertiary @0.1, no vertical lines; events span the full
- *   column width and are offset by their start time.
- *   The crop ends 50pt into Thursday's column (no events there).
- * - Views/CalendarEventView.swift (CalendarEventChip): chips.
- * - ViewModels/CalendarViewModel.swift:254-298: routine events are virtual:
- *   title = routine name, duration = estimatedDuration (30 min default),
- *   source .routine, read-only (CalendarPanelView.swift:84 opens them
- *   .readOnly).
- * - Views/CalendarBottomBar.swift:20-52: "calendar" + "N today" caption
- *   tertiary · Spacer · plus.circle.fill .body + "New Event" caption, accent.
- *
- * Code vs plan:
- * - The plan's "three-day slice": the week grid always lays out 7 equal
- *   columns. This crop shows the first three (Mon–Wed) and the start of
- *   Thursday at the width they have in a ~1,030pt-wide panel, and draws
- *   the header and bottom bar at the crop width (their Spacers absorb the
- *   difference). "Today" is the
- *   Wednesday so the today circle falls inside the crop.
- * - "Project events" (guide): the code stores events per project
- *   (coordination/knowledge/calendar/events, CalendarViewModel.swift:213-217)
- *   with participants, tags and a proposed/confirmed status; the grid chip
- *   shows only title, time and the routine/proposed marks.
- * - A confirmed agent event is drawn in AppColors.info (system blue); the
- *   figure shows the proposed (orange) state the plan asks for, so no blue.
- *
  * Calibrate: the native segmented control, the "Today" bordered button and
  * the Divider().opacity(0.3) tone.
  */

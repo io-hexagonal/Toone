@@ -8,8 +8,8 @@ export function requirementFacts(pkg: WorkflowPackage) {
     ...(pkg.requirements?.skill_ids ?? []).filter((id) => !pkg.skills?.some((skill) => skill.id === id)),
   ];
   const produces: string[] = [];
-  // Ledgers are created by Toone on install from their definitions; they are
-  // never something the person provides.
+  // Records a routine keeps between runs are created by Toone on install;
+  // they are never something the person provides.
   for (const ledger of pkg.ledgers ?? []) {
     included.push(`${ledger.name.trim() || ledger.id} (kept between runs)`);
   }

@@ -3,8 +3,7 @@ import styles from "./PulsingDot.module.css";
 
 /**
  * PulsingDot: the active-state dot (meeting mode, listening, browser tab
- * activity). Source: Features/Chat/Views/PulsingDot.swift (main repo):
- * Circle(size) in `color`, opacity 0.3 ↔ 1.0 easeInOut(duration) forever
+ * activity): Circle(size) in `color`, opacity 0.3 ↔ 1.0 easeInOut(duration) forever
  * (autoreverse), shadow color @0.6 radius size/2.
  *
  * Motion only under prefers-reduced-motion: no-preference; the static dot

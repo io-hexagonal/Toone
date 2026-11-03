@@ -5,12 +5,12 @@ import { Glyph } from "./glyphs";
 /**
  * P9 Pills and badges.
  *
- * - StatusPill: RoutineSidebarComponents.swift:47-86 (11/600, padding 6/1.5,
+ * - StatusPill: the routine sidebar status pill (11/600, padding 6/1.5,
  *   tone @0.18; `tone="neutral"` uses the hover fill).
- * - LiveBadge: RoutinePipelineGraphComponents.swift:318-347 ("RUNNING",
+ * - LiveBadge: the graph card's live badge ("RUNNING",
  *   7pt rounded bold, tracking 0.35). Caution labels (WAITING, PAUSED,
- *   RETRYING, STALLED, needs-fix) turn orange (`:415-420`).
- * - StatusChip: RoutineDraftPipelineView.swift:240-282 (waveform.path.ecg 9pt
+ *   RETRYING, STALLED, needs-fix) turn orange.
+ * - StatusChip: the graph toolbar's run status chip (waveform.path.ecg 9pt
  *   bold + caption2 semibold, running colour, orange for non-running).
  * - Badge: small accent capsule (share status, "Recommended", mode badges).
  * - CountBadge: rail count (8 bold, orange capsule ≥13²).
@@ -51,7 +51,7 @@ export function StatusChip({
   caution = false,
   runCount,
 }: {
-  /** e.g. "Running · Investigate a topic" (RoutineDraftRuntimePresentation.swift:370-393). */
+  /** e.g. "Running · Investigate a topic". */
   summary: string;
   /** true for any summary kind other than running (paused, waiting, retrying…). */
   caution?: boolean;

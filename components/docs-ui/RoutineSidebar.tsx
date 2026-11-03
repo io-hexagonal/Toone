@@ -8,27 +8,10 @@ import { StatusPill } from "./Pill";
 /**
  * P14 RoutineSidebar: the Routines panel's left column, Routines tab.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - column: RoutineCreatorPanelView.swift:482-521 (switcher padding 8, Divider,
- *   width 225…285…320, innerBackground @0.18); switcher :523-561 (CapsuleTabs);
- * - list: OrganizationOverviewView.swift:142-159 (CurrentRoutinesView, list
- *   background innerBackground @innerBackgroundOpacity = 0.05 for Smoky Quartz),
- *   :666-735 (sections, LazyVStack spacing 4, padding h16 / bottom 16, heading
- *   caption semibold, success for Running, padding 8 / 4), :756-771 (controls
- *   row: SearchField + filter + diagnostics, spacing 4, padding v8 h16),
- *   :800-855 (diagnostics 28² checkmark.seal, green when clean), :911-927
- *   (filter glyph, body, secondary), :1010-1059 (family card around a routine,
- *   its sub-routines and its history), :1061-1081 (history);
- * - RoutineSidebarComponents.swift: metrics :19-41, pill :47-86, schedule dot
- *   :109-129, history count :131-155, family card :162-173, history header
- *   :179-200, row :366-566;
- * - run row: RoutineRunHistoryRowView.swift:57-304; compact run controls
- *   RoutineRunControlsView.swift:205-250 (three 22² slots, spacing 2).
- *
  * Every row is a drawing (spans), never a control.
  */
 
-// RoutineSidebarMetrics (RoutineSidebarComponents.swift:19-41)
+// Sidebar metrics
 const M = {
   disclosure: 14,
   gap: 4,
@@ -36,10 +19,10 @@ const M = {
   icon: 16,
   runInset: 18, // disclosure + gap
   runChevron: 12,
-  runDetailInset: 16, // runChevron + gap
+  runDetailInset: 16, // run chevron + gap
   cardInset: 4,
   rowPadding: 6,
-  contentLeading: 10, // cardInset + rowPadding
+  contentLeading: 10, // card inset + row padding
   headerInset: 28,
   nameInset: 48,
 };
@@ -54,7 +37,7 @@ const TONE: Record<SidebarTone, string> = {
   danger: "var(--tu-error)",
 };
 
-/** RoutineStatusPill with the sidebar's tone names. */
+/** The routine status pill with the sidebar's tone names. */
 export function SidebarPill({ label, tone }: { label: string; tone: SidebarTone }) {
   return <StatusPill label={label} tone={TONE[tone]} />;
 }
@@ -97,7 +80,7 @@ export function RoutineControlsRow({ placeholder = "Search routines" }: { placeh
   );
 }
 
-/** CurrentRoutinesView's scroll area (controls row + list): innerBackground @0.05. */
+/** The routine list's scroll area (controls row + list): inner background @0.05. */
 export function RoutineScrollArea({ children }: { children: ReactNode }) {
   return <div className={styles.scrollArea}>{children}</div>;
 }
@@ -249,19 +232,21 @@ const STAGE_COLOR: Record<StagePhase, string> = {
 type RunRowProps = {
   number: number;
   pill: { label: string; tone: SidebarTone };
-  /** "2 min ago" (RoutineRunHistoryRow.ageLabel). */
+  /** "2 min ago". */
   age: string;
   /** The second line; nil for a completed run. */
   summary?: string;
-  /** "Manual · running 2 min" (RoutineRunHistoryRow.metaLabel). */
+  /** "Manual · running 2 min". */
   meta: string;
   expanded?: boolean;
   /** The latest checkpoint's steps, shown when expanded. */
   stages?: { title: string; phase: StagePhase }[];
   /** Compact run controls (a live run whose routine is not selected). */
   controls?: { canPause: boolean; canContinue: boolean; canCancel: boolean };
-  /** Sealed run, expanded: "Restart from a step…" and "Edit routine" under
-   * the steps (RoutineRunHistoryRowView.swift:255-292). */
+  /**
+   * Sealed run, expanded: "Restart from a step…" and "Edit routine" under
+   * the steps.
+   */
   actions?: boolean;
 };
 
@@ -322,7 +307,7 @@ export function RunControls({ canPause, canContinue, canCancel }: NonNullable<Ru
 }
 
 /**
- * A sealed run's actions (RoutineRunHistoryRowView.swift:255-292): VStack
+ * A sealed run's actions: VStack
  * spacing 4, top 4; Divider at 0.5 opacity; HStack spacing 12 of two
  * borderless accent labels in .caption medium (the restart menu hides its
  * indicator).

@@ -5,13 +5,13 @@ import { alpha, NodeSurface } from "./NodeSurface";
 import type { NodeKind, PlacedNode } from "./types";
 
 /**
- * Standard graph card (input / routine / sub-routine / artefact / department):
- * RoutinePipelineGraphComponents.swift:174-245. 180×48, r10, fill inner @0.90,
+ * Standard graph card (input / routine / sub-routine / artefact / department).
+ * 180×48, r10, fill inner @0.90,
  * inside border 1.5 (2 selected). Glyph `.caption` in the kind colour, title
  * caption medium, subtitle caption2 tertiary, optional trailing "+N",
  * disclosure chevron and health / live badge.
  *
- * The "N⌄" sub-routine count capsule (`:195-210`) is never shown in the app
+ * The "N⌄" sub-routine count capsule is never shown in the app
  * (plan §5.6), so it is not implemented.
  */
 
@@ -40,7 +40,7 @@ export function liveColor(label?: string): string {
 type Props = {
   node: PlacedNode;
   selected: boolean;
-  /** RoutineDraftPipelineView passes true; the org graph may pass false (spinner). */
+  /** The routine graph passes true; the org graph may pass false (spinner). */
   presentsLiveActivity?: boolean;
 };
 

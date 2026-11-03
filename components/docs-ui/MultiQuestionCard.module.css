@@ -1,5 +1,5 @@
-/* P13b MultiQuestionCard (AIQuestionView.swift MultiQuestionView, AIQuestionCard,
-   AIOptionButton) and the chat's question overlay (ChatPanelView.swift:1428-1450).
+/* P13b MultiQuestionCard (the card, each question and its option buttons) and
+   the chat's question overlay.
    Tokens from docs-ui.module.css (.root). SwiftUI `.secondary` = --tu-label-2.
    Line heights are SF Pro's natural ones: 13 → 16, 11 → 14, 10 → 13. */
 
@@ -9,14 +9,14 @@
   position: relative;
   padding: 16px;
   border-radius: 16px 16px 0 0;
-  /* popoverBackground (= innerBackground) @0.9 over the blur */
+  /* popover background (= inner background) @0.9 over the blur */
   background: color-mix(in srgb, var(--tu-inner) 90%, transparent);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.1),
     0 -10px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* ---- MultiQuestionView --------------------------------------------------- */
+/* ---- card ---------------------------------------------------------------- */
 
 .card {
   display: flex;
@@ -58,7 +58,7 @@
   background: var(--tu-accent);
 }
 
-/* ---- AIQuestionCard ------------------------------------------------------- */
+/* ---- question ------------------------------------------------------------ */
 
 .question {
   display: flex;
@@ -91,7 +91,7 @@
   align-self: stretch;
 }
 
-/* ---- AIOptionButton ------------------------------------------------------- */
+/* ---- option button ------------------------------------------------------- */
 
 .option {
   display: flex;

@@ -8,25 +8,6 @@ import type { SceneDefinition } from "../scene";
  * ("Research Assistant has been created. …") and, above the composer, the
  * creation status panel "Research Assistant created · Ready · Purpose is
  * optional". Cropped just above the composer's divider.
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Core/Services/AgentSession/AgentSessionManager.swift:6555-6574
- *   (finishOrganizationDraftNaming: status → awaitingPurpose, appends the
- *   assistant message "**\(name)** has been created. What would you like it
- *   to focus on? You can also start working with it now.");
- * - APP/Features/Chat/Views/ChatPanelView.swift:893-897 (the panel shows
- *   once the draft leaves .naming), :1276-1287 (padding h16 v8, then the
- *   composer's Divider), :3010-3133 (OrganizationCreationStatusPanel:
- *   registered agent, no worker running, empty purpose → headline
- *   "\(name) created", status "Ready · Purpose is optional"; HStack spacing
- *   8; person.crop.circle.badge.plus .title3 in the accent; VStack spacing
- *   2: callout semibold textPrimary / caption textSecondary; xmark caption
- *   semibold textSecondary in a 24² frame; padding 16; inputBackground
- *   @0.82, r12, 1pt separator stroke);
- * - bubble + meta: P10 Chat (RichMessageBubble.swift:90-187, 428-452;
- *   TranscriptMessagePresentation.swift:62-87).
- *
- * Code vs plan: none. The meta row shows a clock time (Text(style: .time)).
  */
 
 const WIDTH = 420;

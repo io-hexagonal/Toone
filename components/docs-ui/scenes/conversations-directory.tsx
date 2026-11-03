@@ -9,23 +9,6 @@ import type { SceneDefinition } from "../scene";
  * pinned and three recent, with the Active / Archived switch above them.
  * The rail's recent strip (two chats) sits under the Conversations button.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:1279-1297 (destination),
- *   :3644-3870 (ConversationsDirectoryView: search, segmented, Pinned /
- *   Recent, rows), :3229-3445 (rail recent strip, RailThreads.tsx);
- * - APP/Features/Chat/Models/ThreadClassification.swift:33-55 (a routine
- *   drafting thread you chatted in counts as your conversation, so
- *   "Produce a research brief" is listed);
- * - pieces in ConversationRow.tsx; rail in NavRail.tsx.
- *
- * Code vs plan:
- * - The plan's source note holds: "Recent Threads" (RecentThreadsView,
- *   :4294-4356) has no caller; the live surfaces are this destination and
- *   the rail strip.
- * - Section headers only appear when something is pinned (:3709-3716).
- * - Times are the last human interaction, formatted
- *   `.relative(presentation: .named)` ("2 minutes ago", "yesterday").
- *
  * CALIBRATE: the native segmented control. Drawn at MAGNIFY × the app's
  * points (caption2 stays legible).
  */

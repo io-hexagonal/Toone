@@ -6,27 +6,10 @@ import { Glyph } from "./glyphs";
 /**
  * P18 ExploreBlocks: the Explore catalog card and its pieces.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - ExploreCatalogCard: APP/Features/WorkflowCatalog/ListingProfilePage.swift:506-599
- *   (HStack top, spacing 16; cover 144×81; text VStack spacing 5; padding 12;
- *   threadCardBackground r12 + 1pt threadCardBorder; chevron.right 12 semibold
- *   tertiary, top 4).
- * - Eyebrow: Typography.Listing.label (11 semibold, NOT bold as plan §2.2 says),
- *   tracking 1.0, accent, uppercased (Typography.swift:131, LetterSpacing.wider).
- * - ExplorePriceTag: ListingProfilePage.swift:466-481 (11/600 accent, padding
- *   8/2, threadCardBackground capsule + threadCardBorder).
- * - ExploreAuthorByline: ListingProfilePage.swift:483-503 ("By Toone" + the
- *   TooneMarkPixel image at 13pt for official items, cardMeta tertiary).
- * - Routine cover: WorkflowExplorerView.swift:369-379 (r8 + 1pt threadCardBorder).
- * - Bundle covers: WorkflowExplorerView.swift:381-395 (two 132×74, the second
- *   member's rotated 5° and offset 4/-3 behind the bundle's; r10 default from
- *   WorkflowCoverImageView, WorkflowCatalogDTOs.swift:868-902).
- *
  * Covers are flat gradient placeholders, never the real cover art.
  * Listing page blocks (end of file): ListingSection, ListingProfileCard,
- * ListingKeyValueBox / Line, ListingLabel, ListingBodyText, ListingItemTitle
- * (ListingProfilePage.swift:253-458).
- * Not built yet (no scene needs it): ListingHero (ListingProfilePage.swift:10-80).
+ * ListingKeyValueBox / Line, ListingLabel, ListingBodyText, ListingItemTitle.
+ * The listing hero lives in ListingHero.tsx.
  */
 
 export function ExploreCover({
@@ -42,7 +25,7 @@ export function ExploreCover({
   width?: number;
   height?: number;
   radius?: number;
-  /** 1pt threadCardBorder stroke (routine cards draw one, bundle covers don't). */
+  /** 1pt card-border stroke (routine cards draw one, bundle covers don't). */
   stroke?: boolean;
   style?: CSSProperties;
 }) {
@@ -55,7 +38,7 @@ export function ExploreCover({
   );
 }
 
-/** Routine card cover: 144×81, CornerRadius.small (8) + threadCardBorder. */
+/** Routine card cover: 144×81, r8 + card-border stroke. */
 export function RoutineCardCover({ background }: { background: string }) {
   return <ExploreCover background={background} radius={8} stroke />;
 }
@@ -104,7 +87,7 @@ type CardProps = {
   cover: ReactNode;
 };
 
-/** ExploreCatalogCard (ListingProfilePage.swift:506-599). */
+/** The Explore catalog card. */
 export function ExploreCard({
   eyebrow,
   title,
@@ -181,11 +164,11 @@ export function ExploreListingCard({ listing, back }: { listing: ExploreListing;
 }
 
 /* ------------------------------------------------------------------ */
-/* Listing page building blocks (ListingProfilePage.swift:253-458)     */
+/* Listing page building blocks                                       */
 /* ------------------------------------------------------------------ */
 
 /**
- * ListingProfileSection (ListingProfilePage.swift:253-302): Divider, then the
+ * ListingSection: Divider, then the
  * heading (body semibold, tracking -0.25) 16 below it, content 12 below
  * that, 24 after the section. `collapsible` sections show an accent
  * `chevron.right` (13 semibold, spacing 10), rotated 90° when open.
@@ -219,7 +202,7 @@ export function ListingSection({
   );
 }
 
-/** ListingProfileCard (:304-316): VStack spacing 6, padding 18, card fill r16 + border. */
+/** ListingProfileCard: VStack spacing 6, padding 18, card fill r16 + border. */
 export function ListingProfileCard({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <div className={styles.listingCard} style={style}>
@@ -228,7 +211,7 @@ export function ListingProfileCard({ children, style }: { children: ReactNode; s
   );
 }
 
-/** ListingBodyText (:429-446): 13 regular; secondary unless primary / tertiary. */
+/** ListingBodyText: 13 regular; secondary unless primary / tertiary. */
 export function ListingBodyText({
   children,
   primary = false,
@@ -245,12 +228,12 @@ export function ListingBodyText({
   );
 }
 
-/** ListingLabel (:448-458): uppercased, 11 semibold, tracking 1.0, tertiary. */
+/** ListingLabel: uppercased, 11 semibold, tracking 1.0, tertiary. */
 export function ListingLabel({ children }: { children: string }) {
   return <span className={styles.listingLabel}>{children.toUpperCase()}</span>;
 }
 
-/** Item title: Typography.Listing.itemTitle (body semibold), primary. */
+/** Item title: body semibold, primary. */
 export function ListingItemTitle({ children, link = false }: { children: ReactNode; link?: boolean }) {
   return (
     <span className={styles.listingItemTitle} data-link={link ? "true" : undefined}>
@@ -259,7 +242,7 @@ export function ListingItemTitle({ children, link = false }: { children: ReactNo
   );
 }
 
-/** ListingKeyValueLine (:365-375): label over a primary value, top padding 4. */
+/** ListingKeyValueLine: label over a primary value, top padding 4. */
 export function ListingKeyValueLine({ label, value }: { label: string; value: string }) {
   return (
     <div className={styles.listingKeyValueLine}>
@@ -270,7 +253,7 @@ export function ListingKeyValueLine({ label, value }: { label: string; value: st
 }
 
 /**
- * ListingKeyValueBox (:318-339): rows split by dividers; each row HStack
+ * ListingKeyValueBox: rows split by dividers; each row HStack
  * first-baseline spacing 16, key 13 semibold primary in 150, value body
  * secondary, padding 10/14; card fill r16 + border.
  */

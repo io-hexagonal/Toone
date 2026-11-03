@@ -1,11 +1,9 @@
 /*
- * P14 RoutineSidebar. Numbers from RoutineSidebarComponents.swift,
- * OrganizationOverviewView.swift and RoutineRunHistoryRowView.swift (see the
- * header of RoutineSidebar.tsx). Line heights follow the macOS text styles:
+ * P14 RoutineSidebar. Numbers match the shipped app. Line heights follow the macOS text styles:
  * body 13/16, callout 12/15, caption & caption2 10/13.
  */
 
-/* Column: innerBackground @0.18 over the panel (RCP:517) */
+/* Column: inner background @0.18 over the panel */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -21,7 +19,7 @@
   background: var(--tu-sep);
 }
 
-/* ROV:756-771: HStack spacing 4, padding v8 h16 */
+/* Controls row: HStack spacing 4, padding v8 h16 */
 .controlsRow {
   display: flex;
   align-items: center;
@@ -51,7 +49,7 @@
   background: color-mix(in srgb, var(--tu-inner) 5%, transparent);
 }
 
-/* CurrentRoutinesView: list background innerBackground @0.05 (Smoky Quartz);
+/* Routine list: background inner @0.05 (Smoky Quartz);
    LazyVStack spacing 4, padding h16, bottom 16 */
 .list {
   display: flex;
@@ -60,7 +58,7 @@
   padding: 0 16px 16px;
 }
 
-/* routineListHeading: caption semibold, padding 8 / 4, spacing 4 */
+/* list heading: caption semibold, padding 8 / 4, spacing 4 */
 .heading {
   display: flex;
   align-items: center;
@@ -85,7 +83,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* routineFamilyCard: padding v3, inputBackground @0.34, r12,
+/* routine family card: padding v3, input background @0.34, r12,
    separator @0.65 1pt stroke; rows inside: VStack spacing 1 */
 .familyCard {
   display: flex;
@@ -99,7 +97,7 @@
 
 /* ---- routine row ------------------------------------------------------ */
 
-/* outer: padding h4 (cardInset), v1 (0 for a sub-routine) */
+/* outer: padding h4 (card inset), v1 (0 for a sub-routine) */
 .rowOuter {
   padding: 1px 4px;
 }
@@ -136,7 +134,7 @@
   color: var(--tu-text-3);
 }
 
-/* RoutineScheduleDot: 6pt, success fill or a 1pt tertiary ring */
+/* schedule dot: 6pt, success fill or a 1pt tertiary ring */
 .scheduleDot {
   flex: none;
   width: 6px;
@@ -211,7 +209,7 @@
   color: var(--tu-text-3);
 }
 
-/* RoutineHistoryCountLabel: caption2 medium, secondary, spacing 3 */
+/* history count: caption2 medium, secondary, spacing 3 */
 .historyCount {
   display: inline-flex;
   flex: none;
@@ -226,7 +224,7 @@
 
 /* ---- execution history ------------------------------------------------ */
 
-/* RoutineHistoryHeader: height 22, padding top 4, trailing 8 */
+/* history header: height 22, padding top 4, trailing 8 */
 .historyHeader {
   display: flex;
   align-items: center;
@@ -254,7 +252,7 @@
 }
 
 .runOuter + .runOuter {
-  margin-top: 1px; /* VStack(spacing: runSpacing 2) inside the card's spacing 1 */
+  margin-top: 1px; /* run spacing 2 inside the card's spacing 1 */
 }
 
 .run {
@@ -333,7 +331,7 @@
   color: var(--tu-text-3);
 }
 
-/* RoutineRunCompactControls: three 22² slots, spacing 2, caption glyphs,
+/* compact run controls: three 22² slots, spacing 2, caption glyphs,
    borderless, secondary */
 .runControls {
   display: inline-flex;

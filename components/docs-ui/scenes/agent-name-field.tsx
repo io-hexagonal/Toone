@@ -9,23 +9,6 @@ import type { SceneDefinition } from "../scene";
  * end) and the helper reads "Press Return to create agent". The chat body
  * under the header stays clear and the composer is hidden until the agent
  * exists.
- *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/LeftOrchestratorView.swift:11-84 (OrganizationCreatorTitleField:
- *   VStack spacing 1; TextField .headline in the accent; caption2 .secondary
- *   helper; padding 8/4; accent .1 fill, r7; 1pt accent .35 stroke);
- *   :1362-1405 (destinationHeaderContent: sidebar.left / sidebar.right icon
- *   buttons, HStack 8, padding 8, min height 44, separator below);
- *   :1446-1462 (naming state uses the field as the title);
- *   :1784-1817 (header actions: Copy Entire Conversation, Close Thread).
- * - Features/Chat/Views/ChatPanelView.swift:882-891 (body kept clear while
- *   naming).
- * - Core/Services/AgentSession/AgentSessionManager.swift:6416-6474
- *   (beginAgentDraft: thread titled "Create Agent").
- *
- * Code vs plan: the header does not show a "Create Agent" title in this
- * state. "Create Agent" is the thread's custom title (thread lists); the
- * header shows only the name field (LeftOrchestratorView.swift:1450-1462).
  */
 
 const WIDTH = 420;

@@ -1,13 +1,13 @@
-/* Routine draft card in chat (RichMessageBubble.swift:525-650). Tokens from docs-ui.module.css. */
+/* Routine draft card in chat. Tokens from docs-ui.module.css. */
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Spacing.sm */
+  gap: 8px;
   width: 100%;
   box-sizing: border-box;
-  padding: 16px; /* Spacing.md */
-  border-radius: 12px; /* CornerRadius.medium */
+  padding: 16px;
+  border-radius: 12px; /* medium radius */
   background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 28%, transparent);
 }
@@ -33,14 +33,14 @@
   color: var(--tu-text-1);
 }
 
-/* .caption, textSecondary */
+/* .caption, secondary */
 .status {
   font-size: 10px;
   line-height: 13px;
   color: var(--tu-text-2);
 }
 
-/* Spacer(minLength: 16) then chevron.right caption semibold textTertiary */
+/* Spacer(minLength: 16) then chevron.right caption semibold tertiary */
 .chevron {
   display: inline-flex;
   margin-left: auto;

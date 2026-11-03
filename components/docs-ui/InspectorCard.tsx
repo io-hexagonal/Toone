@@ -6,35 +6,6 @@ import styles from "./InspectorCard.module.css";
  * P16 InspectorCard + MetaTile: the Routines panel's definition inspector
  * (the pane under the graph that describes the selected node).
  *
- * Sources: APP/Features/Organization/Views/RoutineCreatorPanelView.swift
- * (APP = apps/toone-desktop/Toone/Toone/):
- * - InspectorPreview / InspectorHeader: definitionPreview :1144-1171 (VStack
- *   spacing 14; HStack: selection title .headline, Spacer, "Discuss with
- *   agent" bubble.left.and.bubble.right, .plain, .caption, .secondary;
- *   hidden when inspecting a published routine); titles :1813-1829;
- * - InspectorSummaryCard: stepDefinitionPreview :1256-1290 / routine
- *   :1172-1208 (VStack spacing 10, padding 14, innerBackground .42, r12,
- *   1pt separator). With `title`, draws the card's title row:
- *   Label(step.title, systemImage: "N.circle.fill") .title3 semibold
- *   (`number`), then `text` in .callout .secondary;
- * - MetaTileGrid: LazyVGrid(.adaptive(minimum: 180), spacing 10) (150 for
- *   the routine definition); column spacing is the default 8;
- * - InspectorTile / TileLabel / MetaTile: metadata() :2159-2203 (VStack
- *   spacing 5; Label caption secondary; value callout medium, 2 lines;
- *   padding 9, innerBackground .42, r8, 1pt separator; empty value →
- *   "To be decided"). Same tile as the Auto-fix tile
- *   (RoutineSidebarComponents.swift:608-691);
- * - InspectorMenuLabel: the draft's borderless Menu selectors (step model,
- *   executor, execution) :1563-1680, Label(…).font(.caption). CALIBRATE:
- *   native .borderlessButton menu (label colour, indicator chevron);
- * - InspectorSection: previewSection :2205-2219 (VStack spacing 9, title
- *   .headline, empty message .callout .secondary);
- * - InspectorRow: previewRow :2221-2298 (HStack top spacing 10; icon in the
- *   accent; title callout medium, detail caption secondary, spacing 2;
- *   optional `scope` button; padding 10, innerBackground .38 (.62 hovered),
- *   r9, 1pt separator);
- * - InspectorDetail: detailList :2300-2307 ("Label: a, b" caption secondary).
- *
  * Strokes are SwiftUI `.stroke` (centred on the edge); drawn as a 1px inset
  * ring, a half-point difference.
  */

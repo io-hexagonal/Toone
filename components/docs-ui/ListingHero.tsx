@@ -5,21 +5,6 @@ import styles from "./ListingHero.module.css";
 /**
  * P18 ListingHero: the top card of an Explore listing page.
  *
- * Source: APP/Features/WorkflowCatalog/ListingProfilePage.swift:10-80
- * (APP = apps/toone-desktop/Toone/Toone/):
- * - ViewThatFits: HStack (text ≥320, spacing 32, cover 300×225) when it fits,
- *   otherwise VStack spacing 20 with the cover (4:3, ≤360 wide) above the
- *   text. The HStack needs ≥708pt, wider than any docs figure, so figures
- *   use `layout="stacked"` (the default);
- * - padding 28, threadCardBackground, r18 continuous, threadCardBorder;
- * - text VStack spacing 14: eyebrow (11 bold, tracking 2/1.4, accent,
- *   uppercased) + ExplorePriceTag; title (.body semibold, tracking −0.5,
- *   textPrimary); summary (.body, lineSpacing 3, textSecondary, ≤620);
- *   chips (FlowLayout spacing 8; 12 medium textSecondary, padding 12/6,
- *   accent .08 capsule + threadCardBorder); then the actions;
- * - cover: WorkflowCoverImageView r18 + threadCardBorder stroke, shadow
- *   black .25 radius 16 y 8. Covers are flat placeholders, never real art.
- *
  * To show a page scrolled past most of the cover, give the hero a negative
  * top margin inside the scene's crop (the Figure clips it).
  */

@@ -8,22 +8,6 @@ import type { SceneDefinition } from "../scene";
  * in: both routines ticked, department Launch, the review confirmation
  * ticked, so both buttons are enabled.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/Features/WorkflowCatalog/):
- * - RoutineBundleDetail.swift:212-252 (installCard: ListingProfileCard with
- *   "Add to your organization" itemTitle; one Toggle per member, in the
- *   bundle's order, labelled with ListingBodyText(primary); Picker
- *   "Department" ("Choose department" + the organization's departments),
- *   Listing.body, maxWidth 360; Toggle .checkbox "I reviewed the included
- *   routines, agents, Skills and support files."; HStack Spacer · "Create
- *   editable branches" · "Add to organization" .borderedProminent tinted
- *   accent, both UI.button 13 medium);
- * - placement: pageBody :159-170 (the card comes first, 24 above the body);
- * - ListingProfileCard: ListingProfilePage.swift:304-316 (spacing 6,
- *   padding 18, r16, threadCardBackground + border).
- * Members: the public bundle Product Launch Essentials (exploreListings.ts).
- *
- * Code vs plan: none. It is an inline card on the bundle page, not a sheet.
- *
  * CALIBRATE: checkbox (a SwiftUI Toggle in a VStack takes the macOS
  * checkbox style), the pop-up button and both push buttons.
  */

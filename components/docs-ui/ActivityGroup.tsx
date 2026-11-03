@@ -4,29 +4,8 @@ import { Glyph, type GlyphName } from "./glyphs";
 
 /**
  * Tool activity in the transcript: a run of tool-only messages compacted into
- * one capsule (CompactedToolMessagesView), expandable to one row per tool
- * call (DetailedToolCallRow), whose result can expand in turn.
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Chat/Views/RichMessageBubble.swift:1573-1584
- *   (CompactedToolMessagesView: HStack [group] Spacer(minLength: 60)).
- * - APP/Features/Chat/Views/ChatActivityGroupView.swift:3-58: VStack leading
- *   spacing 6; capsule = HStack spacing 6 [checkmark.circle.fill in the
- *   group colour, or exclamationmark.circle.fill] summary [· N failed red]
- *   [chevron.down caption2, rotated 180° when expanded]; font caption,
- *   textSecondary; padding h10, min-h 30; fill colour @0.10 (0.18 hovered);
- *   colour = toolCompleted (= success green) when done, red on failure.
- * - APP/Features/Chat/Models/ChatActivityGroup.swift:292-297 (summary: the
- *   tool's display name, "Name, +N" for several, "Actions, +N" when mixed).
- * - APP/Features/Chat/Views/RichMessageBubble.swift:1142-1300
- *   (DetailedToolCallRow): row = HStack spacing 6 [icon 10pt toolCompleted,
- *   14 wide] [title caption bold textPrimary] [input 10pt mono textTertiary,
- *   or link colour + arrow.up.right 8pt when it is a file the row opens]
- *   [chevron.up/down 8pt textTertiary when a result can expand]; padding
- *   8/4, threadCardBackground, r4. Expanded result: 11pt mono textPrimary
- *   (toolFailed on error), lineLimit 20, padding 8, full width,
- *   threadCardBackground (toolFailed @0.1 on error), r4, 0.5pt
- *   threadCardBorder, 2pt above.
+ * one capsule, expandable to one row per tool call, whose result can expand
+ * in turn.
  */
 
 export function ActivityGroup({
@@ -35,7 +14,7 @@ export function ActivityGroup({
   expanded = false,
   children,
 }: {
-  /** ChatActivityGroup.summary, e.g. "Bash" or "Read, +2". */
+  /** The group's summary, e.g. "Bash" or "Read, +2". */
   summary: string;
   /** Number of failed calls (red tone, "· N failed"). */
   failed?: number;
@@ -74,9 +53,9 @@ export function ToolCallRow({
   opensFile,
   result,
 }: {
-  /** DetailedToolCallRow.toolIcon: Read doc.text, Bash terminal, WebFetch globe, other gear… */
+  /** Tool icon: Read doc.text, Bash terminal, WebFetch globe, other gear… */
   icon: GlyphName;
-  /** ToolDisplayName.humanize(toolName), e.g. "Bash". */
+  /** The tool's display name, e.g. "Bash". */
   title: string;
   /** Shortened tool input (last 3 path components, or ≤60 chars). */
   input?: string;

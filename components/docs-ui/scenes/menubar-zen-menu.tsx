@@ -6,26 +6,6 @@ import type { SceneDefinition } from "../scene";
  * The Toone menu-bar item's right-click menu while Zen mode is active, over
  * the ambient video (a neutral grey stand-in). "Mute Audio" is highlighted.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - App/AppDelegate.swift:549-631 (menuBarClicked: right-click or
- *   control-click builds an NSMenu: update item + separator; while Zen is
- *   active a disabled "Zen Mode" item, "Mute Audio" / "Unmute Audio", "Exit
- *   Zen Mode", separator; "Speech Language" with a locale submenu;
- *   "Settings..." ⌘, (three full stops in the code); "Content Library";
- *   "What's New…" only when a release note is available; "Guided Tour…";
- *   separator; "Quit Toone" ⌘Q).
- * - App/AppDelegate.swift:970-1023 (addUpdateMenuItems: with no update
- *   pending, "Check for Updates…" with the arrow.clockwise symbol, then a
- *   separator).
- * - App/AppDelegate.swift:416 + Assets.xcassets/MenuBarIcon.imageset (18pt
- *   template image: a hexagon ring of six segments around a hexagon),
- *   drawn here as a simple lookalike.
- *
- * Code vs plan: the plan lists only the Zen items, Speech Language and
- * Settings; the real menu also has Check for Updates…, Content Library,
- * Guided Tour… and Quit Toone, so the whole menu is drawn. "What's New…" is
- * left out (shown only when the catalogue has a release to show).
- *
  * CALIBRATE: NSMenu geometry (Menu.tsx), the menu bar strip's material and
  * height, the status item's pressed highlight, and the menu's offset under
  * the bar.

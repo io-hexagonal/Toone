@@ -3,14 +3,13 @@ import { layoutLayers } from "./layout";
 import type { GraphEdge, GraphNode, LaidOutGraph, RunState } from "./types";
 
 /**
- * The demo routine "Produce a research brief" as the Routine Creator graph
- * builds it (Core/Services/RoutineCreator/RoutineDraftGraphBuilder.swift) with
- * the Steps chip on. Shared by every scene that shows this routine's graph.
+ * The demo routine "Produce a research brief" as the routine graph shows it,
+ * with the Steps chip on. Shared by every scene that shows this routine's graph.
  *
  * Node ids follow the app ("draft/routine", "draft/step/<id>", …) because the
  * app id-sorts nodes inside a column.
  *
- * Builder facts reproduced here:
+ * Graph facts reproduced here:
  * - routine subtitle = owner name, plus the model only when the routine
  *   overrides it (no override → just "Research Assistant");
  * - step labels are numbered "N. Title";
@@ -27,7 +26,7 @@ export const ID = {
   step: (n: 1 | 2 | 3 | 4) => `draft/step/s${n}`,
   subRoutine: "draft/subroutine/investigate-a-topic",
   artefact: "draft/artefact/research-brief",
-  /** Steps of the expanded sub-routine (RoutineDraftGraphBuilder.subRoutineStepNodeId). */
+  /** Steps of the expanded sub-routine. */
   subStep: (n: 1 | 2) => `draft/subroutine/investigate-a-topic/step/s${n}`,
 };
 
@@ -38,7 +37,7 @@ type Options = {
   showArtefacts: boolean;
   runState?: Partial<Record<string, RunState>>;
   /** Sub-routine disclosed (its chevron, or selecting its card): its own
-   * steps join the graph after it (appendExpandedSubRoutine). Default off. */
+   * steps join the graph after it. Default off. */
   expandSubRoutine?: boolean;
 };
 
@@ -78,7 +77,7 @@ export function researchBriefGraph({
     );
   }
   if (showInputs) {
-    nodes.push({ id: ID.input, kind: "input", label: "Topic", sublabel: "user · topic" });
+    nodes.push({ id: ID.input, kind: "input", label: "Topic", sublabel: "Asked before each run" });
   }
   if (showArtefacts) {
     nodes.push({

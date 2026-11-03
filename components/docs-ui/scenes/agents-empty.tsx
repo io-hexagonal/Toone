@@ -9,25 +9,6 @@ import type { SceneDefinition } from "../scene";
  * selected, and the empty Agents roster ("No agents yet") above its
  * "Create agent" bottom bar.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - rail: P3 NavRail (LeftOrchestratorView.swift:2517-3105; destinations
- *   Core/Services/Window/PanelWindowService.swift:20-77). A new project has
- *   no recent threads, so nothing sits between Conversations and New Chat.
- * - LeftOrchestratorView.swift:1089-1108 (agentsDestination: header
- *   "Agents"; empty state VStack spacing 8: person.crop.circle.badge.plus
- *   34 light .secondary, "No agents yet" .headline, "Create your first
- *   agent to start building this organization." .caption .secondary centred
- *   max 280, padding 24, centred in the remaining height);
- * - :1139-1164 (Divider, then "Create agent" Label person.badge.plus,
- *   .borderedProminent full width, min-h 32, padding 16, .ultraThinMaterial);
- * - :1364-1444 (destination header, P2 DestinationHeader).
- *
- * Code vs plan: none. Theme note: the button is tinted
- * AppColors.primary = Color.accentColor (system accent; the AccentColor
- * asset is empty). The docs keep every figure in the theme, so it uses the
- * kit's prominent fill (Smoky Quartz controlTint). The three "emphasis"
- * pulses on first appearance (scale 1.025 + glow) are transient and not drawn.
- *
  * CALIBRATE: the borderedProminent bezel (height, radius, label colour) and
  * the .ultraThinMaterial bar fill.
  */

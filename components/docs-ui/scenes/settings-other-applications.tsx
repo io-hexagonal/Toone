@@ -6,18 +6,6 @@ import { SettingsRow, SettingsSection, SettingsWindow, Switch } from "../Setting
  * other app windows when Toone is shown" on, "Preserve previous layouts when
  * hidden" off, and the section footer.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Settings/Views/SettingsView.swift:1640-1683 (Section "Other
- *   Applications": two Toggles, the second .disabled while the first is
- *   off; the Accessibility warning row only while resizing is on and
- *   Accessibility is not granted; footer copy); :1631-1637 (the Panel
- *   Layout footer just above, shown at the top of the crop).
- * - The section is gated by EditionCapabilities .externalWindowTiling: the
- *   Mac App Store edition does not show it (SettingsView.swift:1640-1642).
- *
- * Code vs plan: none. The figure assumes Accessibility is already granted,
- * so the warning row with "Grant Access" / "Open System Settings" is absent.
- *
  * CALIBRATE: switches and grouped Form geometry (SettingsForm.tsx).
  */
 

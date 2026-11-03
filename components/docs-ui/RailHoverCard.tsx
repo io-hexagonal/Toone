@@ -4,23 +4,19 @@ import { Glyph, type GlyphName } from "./glyphs";
 import styles from "./RailHoverCard.module.css";
 
 /**
- * What floats beside the navigation rail (APP = apps/toone-desktop/Toone/Toone/,
- * file APP/UI/Layout/LeftOrchestratorView.swift).
+ * What floats beside the navigation rail.
  *
- * - RailHoverCard: NavigationRailHoverCard :2340-2378 (destinations; width
- *   250) and RoutineRailOptionHoverCard :2190-2232 (Routines / Explore
- *   options; width 250, 310 for a "Coming soon" Explore). Both: padding 16,
- *   VStack(spacing 4), RailHoverCardTitle :2236-2256 (icon in an 18pt
- *   column, spacing 6, callout semibold, theme accent), the detail (caption,
- *   textSecondary, leading inset 24); surface :2280-2297.
- *   Placement :2700-2758: x = rail width (44) + 8 for the card's left edge,
+ * - RailHoverCard: the hover card of a destination (width 250) or of a
+ *   Routines / Explore option (width 250, 310 for a "Coming soon" Explore).
+ *   Both: padding 16, VStack(spacing 4), a title (icon in an 18pt column,
+ *   spacing 6, callout semibold, theme accent), the detail (caption,
+ *   secondary text, leading inset 24).
+ *   Placement: x = rail width (44) + 8 for the card's left edge,
  *   vertically centred on the hovered item (clamped to the rail's height).
- *   Detail strings: railDetail :2308-2337, RoutineRailOption.detail
- *   :2165-2171.
- * - NewChatPicker: NewChatAgentPicker :2408-2516, shown in a native popover
- *   from the New Chat button (arrowEdge .trailing, :2826-2831): "New Chat"
- *   (Panel.title 17 semibold), "Choose an agent to start a new thread."
- *   (Panel.subtitle 13), padding 12; Divider; "Search agents" (padding h8
+ * - NewChatPicker: the New Chat agent picker, shown in a native popover
+ *   from the New Chat button (arrow on the trailing edge): "New Chat"
+ *   (title 17 semibold), "Choose an agent to start a new thread."
+ *   (subtitle 13), padding 12; Divider; "Search agents" (padding h8
  *   v4); rows sorted by name (`person` in the accent, 20 wide · name callout
  *   medium · department caption secondary; padding 10, hover accent .10 r8).
  *

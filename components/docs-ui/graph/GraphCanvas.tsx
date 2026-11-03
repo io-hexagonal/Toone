@@ -7,7 +7,7 @@ import { StepCard } from "./StepCard";
 import type { LaidOutGraph } from "./types";
 
 /**
- * The graph viewport (RoutineDraftPipelineView.pipelineCanvas). Model space is
+ * The graph viewport. Model space is
  * centred on the viewport, then scaled by `zoom` about the centre and shifted
  * by `pan`, exactly like the app's `.scaleEffect(zoom).offset(pan)`:
  *
@@ -96,7 +96,7 @@ export function GraphCanvas({
   );
 }
 
-/** Zoom the app picks on open (fitToView, 80px air on each side). */
+/** Zoom the app picks on open (fit to view, 80px air on each side). */
 export function fitZoom(graph: LaidOutGraph, width: number, height: number, pad = 80): number {
   const { width: cw, height: ch } = graph.contentSize;
   return Math.min(1, width / (cw + pad * 2), height / (ch + pad * 2));

@@ -5,28 +5,9 @@ import { ID, researchBriefGraph } from "../graph/researchBrief";
 import type { SceneDefinition } from "../scene";
 
 /**
- * Routine Creator draft graph of "Produce a research brief" with the
+ * Draft graph of "Produce a research brief" with the
  * sub-routine "Investigate a topic" expanded into its own steps, nothing
  * selected (expanded with the card's chevron).
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - card + chevron: APP/Features/KnowledgeGraph/Views/RoutinePipelineGraphComponents.swift:174-245
- *   (`chevron.up.circle.fill` while expanded, :219-227); parent edge :43-60
- *   (routine colour, resting 0.5, 2pt);
- * - expansion: APP/Features/Organization/Views/RoutineDraftPipelineView.swift:342-351
- *   (tapping the card selects it and expands it), :402-428 (chevron toggle,
- *   which expands without selecting);
- * - nodes / edges: APP/Core/Services/RoutineCreator/RoutineDraftGraphBuilder.swift:243-309
- *   (sub-routine card, parent edge from the calling step), :311-383
- *   (appendExpandedSubRoutine: child steps numbered from 1, the entry step
- *   hangs off the sub-routine card with a stepChain edge, steps chain);
- * - layout: :200 (layered as soon as a sub-routine is expanded),
- *   RoutinePipelineLayoutEngine, SugiyamaCore.
- *
- * Code vs plan: the plan puts the `chevron.up.circle.fill` on the routine
- * card "Produce a research brief". Both cards carry one (the routine's
- * steps are shown too), but the chevron that opens a sub-routine is on the
- * sub-routine card, so that is the one in frame.
  *
  * Crop: zoom 1.12 (card text ≥11px in the guide column). The sub-routine
  * card and its first step need 420pt of model space; the whole expansion
@@ -65,7 +46,7 @@ function SubroutineExpandedGraph() {
             clipAfter="fit"
             hasSelection={false}
             published={false}
-            summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+            summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
           />
         }
       >

@@ -7,30 +7,8 @@ import type { SceneDefinition } from "../scene";
  * while connected to Sam Rivera's project with read-only access, following
  * the host, over a direct peer-to-peer path.
  *
- * Sources (main repo, apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/LeftOrchestratorView.swift:825-856: the guest banner
- *   (hostName = guestHostName, orgNames = [guestOrgName], participants: [],
- *   transportPath always set, followTargetName = host), padding 8/6, Divider.
- * - Features/Business/Views/SessionBannerView.swift:59-210 (layout, risk
- *   colour, pills), :186-192 (guest pill: READ ONLY blue / READ & WRITE
- *   purple), :78-95 (FOLLOWING HOST blue + "Stop following"), :222-273
- *   (transport label), :285-290 ("In <host>'s <org>").
- * - Core/Services/BusinessSession/SessionTransport.swift:18-24 ("DIRECT P2P").
- * - Core/Services/BusinessSession/BusinessSessionCoordinator.swift:1668
- *   (personal sessions name the host by its display name).
- *
- * Code vs plan:
- * - Plan "In Sam's acme.com growth": the host's display name is used whole,
- *   so it reads "In Sam Rivera's acme.com growth".
- * - Plan "avatars": the guest banner gets participants: [], so a guest sees
- *   no avatars (only the host's banner draws them).
- * - The guest banner always carries the transport pill; DIRECT P2P (green)
- *   is the healthy path.
- * - READ ONLY and FOLLOWING HOST are hard-coded SwiftUI .blue in the app;
- *   the docs draw them in the theme accent (theme colours only).
- *
  * Calibrate: the borderless "Stop following" / "Leave" label colour (drawn
- * in the theme accent, which liveTheme() sets as .tint/.accentColor).
+ * in the theme accent).
  * Drawn at the width of a wide left panel: in a ~380pt panel the row is
  * crowded and SwiftUI truncates the title first.
  */

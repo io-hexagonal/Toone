@@ -4,22 +4,7 @@ import { Glyph, type GlyphName } from "./glyphs";
 
 /**
  * The Routines panel's top chrome: header, Divider, workspace toolbar,
- * Divider (RoutineCreatorPanelView.swift:177-190).
- *
- * Sources (RCP = APP/Features/Organization/Views/RoutineCreatorPanelView.swift):
- * - RoutinesPanelHeader: RCP:398-450. HStack spacing 10, padding 14:
- *   point.3.connected.trianglepath.dotted in the accent; VStack spacing 1 of
- *   "Routines" .headline over the status line .caption .secondary (Drafts:
- *   draftStatusText RCP:3264-3271 "Draft · revision N"; Routines:
- *   "Published · <cadence.displayName>"); Spacer; TooneProCreationBadge
- *   (App Store builds only, not drawn); `+` icon button (help "Create a new
- *   routine draft"); `xmark` 10 bold secondary icon button.
- * - RoutinesToolbar: RCP:452-480. HStack spacing 8 (Spacing.sm), padding
- *   h14 v8, innerBackground @0.25: `sidebar.left` icon button, Spacer, then
- *   the section's actions.
- * - ToolbarButton: macOS `.bordered` / `.borderedProminent` at
- *   `.controlSize(.small)` (Label title + systemImage). CALIBRATE: native
- *   geometry (height, radius, fill, label size), like Button's variants.
+ * Divider.
  *
  * Drawings only: every control is a <span>.
  */

@@ -7,14 +7,6 @@ import { WorkspaceStrip } from "../WorkspaceStrip";
  * 2 inactive, and the pointer resting on project 3, which shows its small
  * close button.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/WorkspaceStripView.swift:197-279 (pill: badge 18² r4 10pt black
- *   mono, name 11, padding 8/6, active accent .1 fill + .3 stroke; hover
- *   fill hoverBackground × .5; close xmark 7 bold in a 14² circle, only while
- *   hovered and when more than one workspace is open, :230-240).
- * - :26-86 (strip: HStack 6, padding 16/7, height 44; "+" while < 9).
- * - UI/Layout/LeftOrchestratorView.swift:727-734 (strip, then a separator).
- *
  * Slimmed per the coverage audit (D6/D7 de-dup note): the help tag now
  * lives in `workspace-strip-shortcut` and the unread pulse in
  * `workspace-strip-unread`, which sit further down the same page; this

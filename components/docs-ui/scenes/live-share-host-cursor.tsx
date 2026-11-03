@@ -9,34 +9,6 @@ import type { SceneDefinition } from "../scene";
  * the host's organization read-only, and the host's pointer moves over it
  * as a small dot labelled "Host" (here on Launch Planner).
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Business/Views/NativeLiveShareWorkspaceViews.swift:11-46
- *   (LiveShareParticipantCursorOverlay: 11pt dot with a 2pt white inner
- *   ring and a black .25 r2 shadow; capsule label 9pt semibold white,
- *   padding 5/2, offset 9/9), :48-63 (LiveShareFollowCursorOverlay: only
- *   while following the host, label "Host"), :301-397
- *   (RemoteOrganizationOverviewView: Agents (person.2, count) opened to one
- *   `person.circle` row per agent; Departments (building.2, count) opened to
- *   one `folder` row per department with its agent count; cursor overlay on
- *   the organization overview);
- * - APP/UI/Layout/RightProjectPanelView.swift:35-91 (header: a remote
- *   project hides "Change Project Directory", only `sidebar.right` stays),
- *   :123-154 (remoteProjectContent: Organization disclosure, the remote
- *   overview, Divider, "Files" disclosure);
- * - row pieces in OrgTree.tsx (OrgSectionHeaderView.swift).
- *
- * Code vs plan:
- * - The plan reuses org-panel-overview's surface. A guest sees a different,
- *   smaller tree (RemoteOrganizationOverviewView): Agents and Departments
- *   only, no Skills / Memory / Integrations / MCPs; drawn that way. The
- *   files section is titled "Files", not "Project".
- * - COLOUR DEVIATION (owner decision, CONTRACT "theme colours only"): the
- *   app draws the cursor and its label in system blue (`color: Color =
- *   .blue`, :15). This figure draws both in the theme accent (Smoky Quartz
- *   grey) and keeps the code's white ring and white label text.
- * - `person.circle` is drawn with the kit's `person.crop.circle` lookalike
- *   (the two symbols differ only in the crop).
- *
  * Motion: the dot follows the host's pointer live; a still figure shows one
  * position. Drawn at MAGNIFY × the app's points (same as org-panel-overview).
  */

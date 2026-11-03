@@ -1,5 +1,5 @@
-/* Voice + meeting pieces (RecordingIndicatorView.swift, RichMessageBubble.swift
-   AudioMessageBubble, ChatPanelView.swift meetingListeningCard). */
+/* Voice + meeting pieces: the recording indicator, the audio message bubble
+   and the meeting listening card. */
 
 /* ---- RecordingIndicator ------------------------------------------- */
 
@@ -139,7 +139,7 @@
   --audio-tint: var(--tu-warning);
 }
 
-/* .subheadline, textPrimary */
+/* .subheadline, primary */
 .audioLabel {
   font-size: 11px;
   line-height: 14px;

@@ -17,14 +17,6 @@ import type { SceneDefinition } from "../scene";
  * the pointer: "Share…" (routine-row-context-menu) or "Branch Routine…"
  * (routine-row-context-menu-branch, same drawing).
  *
- * Sources: OrganizationOverviewView.swift:1388-1530 (context menu), :14-27
- * (RoutineRowMenuGating: Add to Bundle only in the Routines panel, Share…
- * when Explore is enabled and the routine is current), :1226-1250 (Add to
- * Bundle submenu, rectangle.stack.badge.plus), :676-716 + :736-752 (list:
- * no headings while nothing runs, scheduled routines first);
- * RoutineSidebarComponents.swift:341-352, :366-566 (rows);
- * RoutineCreatorPanelView.swift:482-561 (column + switcher).
- *
  * Menu, top to bottom: the schedule toggle (shown when the routine is
  * admitted; this on-demand routine is not scheduled, so it reads "Enable
  * Schedule" clock.badge.checkmark), Divider, View Routine doc.text, Setup
@@ -33,14 +25,9 @@ import type { SceneDefinition } from "../scene";
  * Routine Health… waveform.path.ecg, Divider, then the submenus Proceed,
  * Cadence and Model (titles carry "(…)" only when overridden).
  *
- * Branch Routine… opens RoutineBranchSheet (WorkflowCatalog/RoutineBranchSheet.swift:18-19:
- * "duplicated as a new editable draft. The published source remains
- * unchanged."), the copy the branch caption paraphrases.
- *
- * Code vs plan: the first item is "Enable Schedule", not "Disable
- * Schedule": the toggle names the action, and an on-demand routine has no
- * schedule enabled. The row is in the Routines panel, not the right panel's
- * Organization section (audit Part 3, item 2).
+ * Branch Routine… opens a sheet that says the routine is "duplicated as a new
+ * editable draft. The published source remains unchanged.", the copy the
+ * branch caption paraphrases.
  *
  * Drawn at MAGNIFY × the app's points, like routines-list-running.
  * CALIBRATE: the whole NSMenu (P19), its anchor at the pointer, the

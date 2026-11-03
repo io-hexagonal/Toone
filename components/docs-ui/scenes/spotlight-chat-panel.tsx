@@ -13,40 +13,10 @@ import { WorkspaceStrip } from "../WorkspaceStrip";
  * The project (strip) and the agent · department (header subtitle) say
  * where the conversation belongs.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - geometry: UI/Windows/FloatingPanel.swift:65-68, :105-111 (Spotlight chat
- *   = 53% of the visible width × 1/3 of its height, centred);
- *   UI/Windows/PanelLayout.swift:20-33 (project panel hidden). Drawn for a
- *   1440 × 876 visible frame → 763 × 292pt, then scaled by ZOOM to the
- *   640px figure limit.
- * - UI/Layout/LeftOrchestratorView.swift:727-734 (strip + separator when
- *   several projects are open), :891-929 (rail + 1pt divider + destination),
- *   :1364-1444 (destination header), :1446-1471 (chat: title =
- *   currentChatTitle, subtitle = ConversationHeaderMetadata.label),
- *   :1729-1817 (thread actions: doc.on.doc "Copy Entire Conversation",
- *   xmark "Close Thread"; "LIVE" only while running), :1936-1974.
- * - Features/Chat/Views/ConversationHeaderMetadata.swift:12 ("agent · department").
- * - Features/Organization/Models/RoutineExecution.swift:1061-1083 (a chat's
- *   title is its generated customTitle, else the last user message).
- * - Composer: Chat.tsx <ChatComposer> (ChatPanelView.swift:2421-2596,
- *   ChatInputView.swift:14-113); bubbles: Chat.tsx.
- * - Rail: NavRail.tsx; Conversations is selected while a conversation is
- *   open (selectedOverride, LeftOrchestratorView.swift:2625-2628).
- *
- * Code vs plan:
- * - The plan's header title is "Research Assistant". With a thread open the
- *   title is the thread's name (RoutineExecution.displayName), here its
- *   generated title; "Chat with Research Assistant" only shows with no
- *   thread selected. The subtitle "Research Assistant · Growth" is as planned.
- * - The plan's crop is only the chat; the Spotlight panel also carries the
- *   project strip (multi-project on) and the rail (visible by default), so
- *   both are drawn.
- *
  * calibrate:
  * - Rail overflow: a 292pt panel is shorter than the rail's fixed buttons
  *   (≈390pt). The rail's VStack sits in a GeometryReader and is drawn
- *   clipped at the panel's bottom; the recent-thread strip gets 0 slots
- *   (LeftNavigationRailMetrics.visibleRecentSlots, :1985-2000).
+ *   clipped at the panel's bottom; the recent-thread strip gets 0 slots.
  * - Send button (.glassProminent circle, disabled while the field is empty)
  *   and the placeholder colour are native.
  * - The transcript is scrolled to its end, so its top padding is out of view.

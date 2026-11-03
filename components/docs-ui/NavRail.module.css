@@ -1,20 +1,20 @@
-/* P3 NavRail (LeftOrchestratorView.swift:2517-3105). See NavRail.tsx. */
+/* P3 NavRail: the left panel's navigation rail. See NavRail.tsx. */
 
 .rail {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px; /* Spacing.xs */
+  gap: 4px;
   flex: none;
-  width: 45px; /* navigationRailWidth 44 + the 1pt Divider beside it */
-  padding: 8px 4px; /* Spacing.sm vertical, Spacing.xs horizontal */
+  width: 45px; /* rail width 44 + the 1pt Divider beside it */
+  padding: 8px 4px;
   padding-right: 5px;
-  /* innerBackgroundColor @0.24 */
+  /* inner background @0.24 */
   background: color-mix(in srgb, var(--tu-inner) 24%, transparent);
   border-right: 1px solid var(--tu-sep);
 }
 
-/* RailButton / creationButton: 32², r8, 16pt semibold symbol */
+/* rail button / create button: 32², r8, 16pt semibold symbol */
 .item {
   position: relative;
   display: flex;

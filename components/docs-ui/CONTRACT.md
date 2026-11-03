@@ -1,15 +1,12 @@
 # Docs UI figures: contract for scene authors
 
 Small, code-drawn replicas of the Toone desktop app, embedded in the product
-guides (`content/product-showcase/en/**`). Read this file and
-`docs/research/2026-10-30-docs-ui-figures/plan.md` (in the main `toone` repo)
-before writing a scene. The plan lists every figure, its anchor, its state and
-the exact Swift sources.
+guides (`content/product-showcase/en/**`). Read this file and the figure plan
+before writing a scene. The plan lists every figure, its anchor and its state.
 
-**Ground truth is the Swift code** in
-`apps/toone-desktop/Toone/Toone/` (main `toone` repo). Read the files the plan
-names for your scene. Where the plan and the code disagree, follow the code and
-say so in the scene's header comment and your report.
+**Match the shipped app's look; keep source references in the private repo.**
+This repo is public: comments describe what a scene draws, never which app
+files, lines or symbols it reproduces.
 
 ## Layout
 
@@ -54,7 +51,7 @@ components/docs-ui/
    ```
 
    `Component` is a **server component**: no props, no hooks, no `"use client"`.
-   Put a header comment listing the Swift sources (file:line) you reproduced.
+   Put a header comment that says in plain words what the figure shows.
 2. Register it in `registry.ts`: one import line and one entry in `ALL`,
    both in alphabetical order (keeps parallel additions mergeable).
 3. Embed it in the guide at the plan's anchor, as its own paragraph:
@@ -115,8 +112,8 @@ components/docs-ui/
   real emails, or real file paths in a figure. Times are relative
   ("2 min ago", "Today").
 - **Faithful, not decorative**: same strings, sizes, paddings, radii and
-  colours as the Swift code, including its quirks (the graph summary really
-  says "1 sub-routines"). One state per figure, as the plan describes it.
+  colours as the shipped app. One state per figure, as the plan describes it.
+  Leave out internal settings and names the guide doesn't need.
 - **Natural width ≤ 640px.** Crop to the element the guide talks about.
 - **Motion** only inside `@media (prefers-reduced-motion: no-preference)`,
   with a static fallback that still shows the state (e.g. the running wash
@@ -137,9 +134,7 @@ components/docs-ui/
 3. Screenshot with Playwright (`chromium.launch({ channel: "chrome" })`,
    `deviceScaleFactor: 2`) at 1440 and 390 wide, plus a pass with
    `reducedMotion: "reduce"`. Dismiss the cookie banner ("Essential only")
-   first. Screenshot the `figure` element. A reference script is at
-   `/tmp/docs-ui-scripts/shoot.mjs` (Playwright resolves from
-   `/Users/matheusparanhos/Projects/node_modules`).
+   first. Screenshot the `figure` element.
 4. Open every PNG and check: no overflow or clipped text you didn't intend,
-   proportions match the Swift numbers, running glow not stronger than the
-   code's, figure scales as one piece at 390.
+   proportions match the app, running glow not stronger than the app's,
+   figure scales as one piece at 390.

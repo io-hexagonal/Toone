@@ -1,9 +1,8 @@
 /*
  * Docs UI kit: Smoky Quartz tokens + shared primitive styles.
  *
- * Every value comes from the desktop app (apps/toone-desktop/Toone/Toone/),
- * see docs/research/2026-10-30-docs-ui-figures/plan.md §2.1 for the source
- * of each token. 1 pt in the app = 1 CSS px here.
+ * Every value matches the shipped desktop app. 1 pt in the app = 1 CSS px
+ * here.
  *
  * Everything is scoped under `.root` (the dark crop inside a Figure), so no
  * token or rule leaks into the cream guide page.
@@ -14,31 +13,31 @@
 /* ------------------------------------------------------------------ */
 
 .root {
-  /* Surfaces (LayoutStyle.swift, Smoky Quartz = .neutralGlass) */
+  /* Surfaces (Smoky Quartz) */
   --tu-panel: #262628; /* frozen glass placeholder, calibrate from capture */
-  --tu-inner: #1a1a1a; /* innerBackgroundColor, white 0.10 */
-  --tu-input: #1f1f1f; /* inputBackground */
+  --tu-inner: #1a1a1a; /* inner background, white 0.10 */
+  --tu-input: #1f1f1f; /* input background */
   --tu-bubble-agent: #242424;
   --tu-code: #242424;
-  --tu-card: rgba(38, 38, 38, 0.3); /* threadCardBackground */
+  --tu-card: rgba(38, 38, 38, 0.3); /* thread card background */
   --tu-card-border: rgba(255, 255, 255, 0.08);
-  --tu-sep: rgba(255, 255, 255, 0.1); /* separatorColor */
+  --tu-sep: rgba(255, 255, 255, 0.1); /* separator */
   --tu-input-border: rgba(255, 255, 255, 0.15);
   --tu-panel-border: rgba(255, 255, 255, 0.15);
 
   /* Accent and state */
   --tu-accent: #b8b8b8; /* white 0.72 */
   --tu-control-tint: #d1d1d1; /* white 0.82, prominent button fill */
-  --tu-running: #ebebeb; /* routineRunningColor */
+  --tu-running: #ebebeb; /* routine running colour */
   --tu-bubble-user: color-mix(in srgb, var(--tu-accent) 15%, transparent);
 
-  /* Pipeline kind colours (LayoutStyle.swift:649-655) */
+  /* Pipeline kind colours */
   --tu-pipe-input: #b3b8c7;
   --tu-pipe-routine: #ccb8a6;
   --tu-pipe-artefact: #ebebeb;
   --tu-pipe-department: #8c8c8c;
 
-  /* AppColors.text* (Colors.swift:42-44) */
+  /* App text colours: primary, secondary, tertiary */
   --tu-text-1: rgba(255, 255, 255, 0.95);
   --tu-text-2: rgba(255, 255, 255, 0.7);
   --tu-text-3: rgba(255, 255, 255, 0.45);
@@ -59,7 +58,7 @@
   --tu-error: #ff453a;
   --tu-info: #0a84ff;
 
-  /* Scales (DesignTokens.swift) */
+  /* Scales */
   --tu-r-xs: 4px;
   --tu-r-sm: 8px;
   --tu-r-md: 12px;
@@ -141,7 +140,7 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Text styles (macOS dark text styles, Typography.swift)              */
+/* Text styles (macOS dark text styles)                                */
 /* ------------------------------------------------------------------ */
 
 .t-caption {
@@ -276,7 +275,7 @@
   color: var(--tu-label-1);
 }
 
-/* IconButton (ButtonStyles.swift): ≥28², r8, hover white .10, pressed white .15 */
+/* IconButton: ≥28², r8, hover white .10, pressed white .15 */
 .button-icon {
   min-width: 28px;
   min-height: 28px;
@@ -294,7 +293,7 @@
   transform: scale(0.96);
 }
 
-/* macOS .borderedProminent tinted with controlTint: dark label on light fill.
+/* macOS .borderedProminent tinted with the control tint: dark label on light fill.
    Native geometry: calibrate from capture. */
 .button-prominent {
   height: 28px;
@@ -317,9 +316,9 @@
   font-size: 11px;
 }
 
-/* Routine action buttons live in RoutineActionButton.tsx (RoutineActionButtonStyle.swift). */
+/* Routine action buttons live in RoutineActionButton.tsx. */
 
-/* Setup button (SetupFlowChoiceStepView.swift:77-101) */
+/* Setup button */
 .button-setup {
   padding: 10px 20px;
   border-radius: 8px;
@@ -345,14 +344,14 @@
 /* P7 Field                                                            */
 /* ------------------------------------------------------------------ */
 
-/* SearchField.swift: magnifyingglass 13, min-h 32, r12, inputBg .78,
-   stroke inputBorder .8 / 0.5pt; focused accent .65 / 1pt */
+/* Search field: magnifyingglass 13, min-h 32, r12, input background .78,
+   stroke input border .8 / 0.5pt; focused accent .65 / 1pt */
 .field {
   display: flex;
   align-items: center;
-  gap: 8px; /* SearchField.swift:21, Spacing.sm */
+  gap: 8px;
   min-height: 32px;
-  padding: 0 8px; /* SearchField.swift:50-51 */
+  padding: 0 8px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--tu-input) 78%, transparent);
   box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-input-border) 80%, transparent);
@@ -382,7 +381,7 @@
 /* P9 Pill / Badge                                                     */
 /* ------------------------------------------------------------------ */
 
-/* RoutineStatusPill (RoutineSidebarComponents.swift:47-86):
+/* Routine status pill:
    11/600, padding 6/1.5, tone @.18; neutral = hover fill */
 .statusPill {
   display: inline-flex;
@@ -402,7 +401,7 @@
   color: var(--tu-text-2);
 }
 
-/* LiveBadge (RoutinePipelineGraphComponents.swift:318-347) */
+/* LiveBadge: the graph card's live badge */
 .liveBadge {
   --tu-live: var(--tu-running);
   position: relative;
@@ -448,7 +447,7 @@
   --tu-live: var(--tu-warning);
 }
 
-/* Toolbar status chip (RoutineDraftPipelineView.swift:240-282) */
+/* Toolbar status chip */
 .statusChip {
   --tu-chip: var(--tu-running);
   position: relative;
@@ -506,7 +505,7 @@
   background: color-mix(in srgb, var(--tu-badge-tone, var(--tu-accent)) 12%, transparent);
 }
 
-/* Rail count badge (LeftOrchestratorView): 8 bold, orange capsule ≥13² */
+/* Rail count badge: 8 bold, orange capsule ≥13² */
 .countBadge {
   display: inline-flex;
   align-items: center;
@@ -525,7 +524,7 @@
 /* P15 GraphKit                                                        */
 /* ------------------------------------------------------------------ */
 
-/* Container (RoutineDraftPipelineView.swift:99-107): r14, inner .38,
+/* Container: r14, inner .38,
    1pt separator .75 stroke, clipped (so only its inner half shows). */
 .graphContainer {
   position: relative;
@@ -584,7 +583,7 @@
   background: var(--tu-sep);
 }
 
-/* Disclosure chip (RoutineDraftPipelineView.swift chip()) */
+/* Disclosure chip */
 .graphChip {
   position: relative;
   flex: none;
@@ -648,7 +647,7 @@
   transition: opacity 250ms ease-in-out;
 }
 
-/* Node card surface (RoutineNodeSurfaceModifier). The border is drawn
+/* Node card surface. The border is drawn
    inside the shape (strokeBorder), nothing is drawn outside the card. */
 .nodeSurface {
   --tu-node-border: var(--tu-sep);
@@ -812,7 +811,7 @@
   text-overflow: ellipsis;
 }
 
-/* Focus strip under the canvas (RoutineDraftPipelineView.swift:78-97) */
+/* Focus strip under the canvas */
 .focusStrip {
   display: flex;
   align-items: center;

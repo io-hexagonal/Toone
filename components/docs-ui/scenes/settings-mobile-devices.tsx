@@ -9,20 +9,6 @@ import { SettingsRow, SettingsSection, SettingsWindow } from "../SettingsForm";
  * its id prefix, "Last seen", the per-device trash button, and "Revoke All
  * Devices". The Cloud Relay section above it is `settings-mobile-pairing`.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Settings/Views/SettingsView.swift:1855-1887 (the page: "Cloud
- *   Relay" then "Approved Devices" with the footer "Devices that have
- *   completed the cryptographic handshake. Revoke to require re-pairing.");
- *   :2058-2106 (approvedDevicesList: name .medium; deviceId.prefix(8) +
- *   "..." caption monospaced .tertiary; "Last seen: …" caption .secondary
- *   with the relative .named format; trash in a .borderless destructive
- *   button, help "Revoke this device"; then Button("Revoke All Devices",
- *   role: .destructive) at caption size).
- *
- * Code vs plan: the plan's "2 min ago" is "2 minutes ago" in the app's
- * .named relative format. The crop starts at the Cloud Relay footer; the
- * sidebar band is scrolled so the Mobile row stays in view.
- *
  * CALIBRATE: grouped Form geometry; the borderless trash (drawn in the
  * accent tint the Form sets); whether AppKit tints the destructive "Revoke
  * All Devices" title red (drawn neutral, like settings-mobile-pairing).

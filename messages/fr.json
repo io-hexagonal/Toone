@@ -230,7 +230,7 @@
       "routine": {
         "label": "Une routine Toone",
         "note": "Les mêmes étapes à chaque fois, vérifiées et mémorisées.",
-        "ledger": "Registre",
+        "ledger": "Mémoire",
         "known": "38 leads connus",
         "fresh": "20 nouveaux cette fois",
         "duplicates": "0 doublon"
@@ -247,7 +247,7 @@
           "memory": {
             "label": "Mémoire entre exécutions",
             "prompt": "Repart de zéro : doublons et oublis",
-            "toone": "Un registre : rien de perdu, rien en double"
+            "toone": "Garde en mémoire ce qui est déjà fait : rien de perdu, rien en double"
           },
           "control": {
             "label": "Contrôle en cours",

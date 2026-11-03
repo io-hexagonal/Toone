@@ -1,4 +1,4 @@
-/* P5 RoutineActionButton (RoutineActionButtonStyle.swift). Tokens come from
+/* P5 RoutineActionButton. Tokens come from
    docs-ui.module.css (.root); this file only reads --tu-* variables. */
 
 .button {
@@ -11,9 +11,9 @@
   font-size: 12px; /* .callout */
   font-weight: 500; /* .medium */
   line-height: 15px;
-  min-height: 28px; /* Control.compactHeight */
-  padding: 0 12px; /* Control.horizontalPadding */
-  border-radius: 8px; /* CornerRadius.small, continuous */
+  min-height: 28px; /* compact control height */
+  padding: 0 12px; /* control padding */
+  border-radius: 8px; /* small radius, continuous */
   background: transparent;
   color: var(--tu-text-1);
 }
@@ -22,18 +22,18 @@
   font-size: 10px; /* .caption */
   line-height: 13px;
   min-height: 20px;
-  padding: 0 10px; /* Spacing.sm + 2 */
-  border-radius: 6px; /* CornerRadius.micro + 2 */
+  padding: 0 10px;
+  border-radius: 6px; /* micro radius + 2 */
 }
 
 .button[data-size="compact"][data-kind="quiet"],
 .button[data-size="compact"][data-kind="link"] {
-  padding: 0 6px; /* Spacing.xs + 2 */
+  padding: 0 6px;
 }
 
 .button[data-kind="primary"] {
   background: var(--tu-accent);
-  color: #14161e; /* AppColors.darkBase */
+  color: #14161e; /* dark base */
 }
 
 .button[data-kind="primary"][data-hover="true"] {
@@ -42,7 +42,7 @@
 
 .button[data-kind="secondary"] {
   background: var(--tu-hover); /* white 0.10 */
-  box-shadow: inset 0 0 0 1px var(--tu-card-border); /* threadCardBorder, 1pt inside */
+  box-shadow: inset 0 0 0 1px var(--tu-card-border); /* card border, 1pt inside */
   color: var(--tu-text-1);
 }
 

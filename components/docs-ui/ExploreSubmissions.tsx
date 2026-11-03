@@ -4,25 +4,6 @@ import { Glyph, type GlyphName } from "./glyphs";
 
 /**
  * Explore → My submissions pieces (P8 SubmissionRow, P9 SubmissionStatusBadge).
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - ExploreSubmissionCard: APP/Features/WorkflowCatalog/ExploreSubmissionComponents.swift:5-85
- *   (header HStack top spacing 8, padding 8, min-h 60; icon tile 32² r8
- *   accent .10 with a 16pt medium accent symbol; title 13 medium primary,
- *   subtitle 11 secondary, spacing 4; Spacer ≥8; badge; chevron 11 semibold
- *   secondary in 16×32; header uses panelRowSurface, selected = expanded:
- *   accent .12 + 0.5pt accent .32 border r8 (UI/Components/Layout/PanelHeader.swift:182-238);
- *   expanded body VStack spacing 16, padding 16, UI.label 13; whole card
- *   threadCardBackground .65, r8, 0.5pt separator .5 stroke);
- * - ExploreSubmissionStatusBadge :87-118 (Label(status.capitalized, symbol),
- *   UI.badge 11/600, colour green/orange/red, padding 8/4, colour .10 capsule);
- * - ExploreSubmissionNotes :120-154 (summary secondary; "Submitted …" /
- *   "Reviewed …" 11 secondary spacing 4; "Review note" Panel.sectionHeader
- *   12 semibold + reason secondary);
- * - PanelSectionHeader: UI/Components/Layout/PanelHeader.swift:100-133
- *   (HStack spacing 4, icon 13 medium in 16, caption 10 semibold, count
- *   caption2 semibold mono in a hover-fill capsule ≥18, secondary, padding
- *   h16, min-h 32).
  */
 
 export type SubmissionStatus = "pending" | "approved" | "rejected";

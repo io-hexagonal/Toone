@@ -1,4 +1,4 @@
-/* P8 System Threads row (SystemThreadRow.swift:39-249) */
+/* P8 System Threads row */
 
 .row {
   position: relative;
@@ -21,7 +21,7 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tu-accent) 60%, transparent);
 }
 
-/* ThreadIndicatorDot: 7pt, top padding 5 */
+/* indicator dot: 7pt, top padding 5 */
 .dot {
   flex: none;
   width: 7px;
@@ -183,7 +183,7 @@
   color: var(--tu-error);
 }
 
-/* EmbeddedThreadDirectoryView (LeftOrchestratorView.swift:3514-3537) */
+/* System Threads destination: search field and list */
 .search {
   padding: 4px 8px;
 }

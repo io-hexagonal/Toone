@@ -1,8 +1,7 @@
-/* P8 AgentRow + the Agents destination (LeftOrchestratorView.swift,
-   AgentActivityIcon.swift). Tokens from the parent .root. */
+/* P8 AgentRow + the Agents destination. Tokens from the parent .root. */
 
 /* AgentRow: VStack(4) > HStack(spacing 4) [card label, + button];
-   padding h8 v2 (LeftOrchestratorView.swift:4825-4990) */
+   padding h8 v2 */
 .row {
   display: flex;
   align-items: center;
@@ -10,8 +9,8 @@
   padding: 2px 8px;
 }
 
-/* AgentDirectoryCardLabel: HStack(spacing 8), padding h8 v7, min-h 66,
-   panelRowSurface (r8; selected accent .12 + 0.5pt accent .32) */
+/* Card label: HStack(spacing 8), padding h8 v7, min-h 66,
+   row surface (r8; selected accent .12 + 0.5pt accent .32) */
 .card {
   display: flex;
   flex: 1 1 auto;
@@ -41,7 +40,7 @@
   min-width: 0;
 }
 
-/* .subheadline.weight(.semibold), textPrimary */
+/* .subheadline.weight(.semibold), primary */
 .name {
   overflow: hidden;
   font-size: 11px;
@@ -52,7 +51,7 @@
   color: var(--tu-text-1);
 }
 
-/* .caption2.weight(.medium), textSecondary */
+/* .caption2.weight(.medium), secondary */
 .department {
   font-size: 10px;
   line-height: 12px;
@@ -60,7 +59,7 @@
   color: var(--tu-text-2);
 }
 
-/* .caption, textSecondary (textTertiary for "No thread messages yet") */
+/* .caption, secondary (tertiary for "No thread messages yet") */
 .preview {
   overflow: hidden;
   font-size: 10px;
@@ -75,7 +74,7 @@
 }
 
 /* thread count: caption2 monospacedDigit semibold, secondary, padding h6,
-   min-h 18, hoverBackground capsule */
+   min-h 18, hover-fill capsule */
 .count {
   display: inline-flex;
   flex: none;
@@ -99,7 +98,7 @@
   color: var(--tu-text-3);
 }
 
-/* New Thread: plus 13 medium textSecondary, IconButtonStyle (≥28², r8) */
+/* New Thread: plus 13 medium secondary, icon button (≥28², r8) */
 .plus {
   display: inline-flex;
   flex: none;
@@ -111,7 +110,7 @@
   color: var(--tu-text-2);
 }
 
-/* AgentInteractionSectionHeader :4521-4541: caption2 semibold uppercased,
+/* Section header: caption2 semibold uppercased,
    kerning 0.65, tertiary · 1pt separator; HStack(8), padding h16, top 8 */
 .sectionHeader {
   display: flex;
@@ -144,12 +143,12 @@
   min-width: 0;
 }
 
-/* SearchField padding h8 v4 */
+/* Search field padding h8 v4 */
 .search {
   padding: 4px 8px;
 }
 
-/* WorkspaceHierarchyView.localHierarchy: VStack(spacing 8), padding v8 */
+/* Roster: VStack(spacing 8), padding v8 */
 .list {
   display: flex;
   flex: 1 1 auto;

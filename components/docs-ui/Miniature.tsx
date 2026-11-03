@@ -8,7 +8,7 @@ import type { CSSProperties, ReactNode } from "react";
  * - <Miniature>: the scaling viewport. Children lay out at real size; the
  *   box shows `width × height` of them (from `origin`) at `scale`.
  * - SCREEN + panelFrames(): the floating panels' frames per layout, ported
- *   from FloatingPanel.swift `defaultFrame` (padding 8, gap 8; chat 28% /
+ *   from the app's default panel frames (padding 8, gap 8; chat 28% /
  *   project 24% of the visible width; Compact = 85% height with a 44pt top
  *   offset; Docked = chat 55% × 40% centred at the bottom, project 24% × 50%
  *   anchored 8pt right of it; Zen = (W − 24) × 2/3 and × 1/3, full height;
@@ -18,14 +18,12 @@ import type { CSSProperties, ReactNode } from "react";
  *   other layouts are not ported. Top-left origin (AppKit's is bottom-left;
  *   every case is symmetric or explicitly anchored, so the flip is per case).
  * - <Desktop>: the neutral grey desktop (no wallpaper art) or a backdrop.
- * - <ScreenPanel>: one floating panel on that desktop: r24
- *   (WindowSurfaceStyle.regularFloating, DesignTokens.swift:99-102), the
- *   frozen-glass fill, the 1pt white .15 border (LayoutStyle.swift:242-262)
- *   and Shadows.panel (Shadows.swift:66-69).
+ * - <ScreenPanel>: one floating panel on that desktop: r24, the
+ *   frozen-glass fill, the 1pt white .15 border and the panel shadow.
  * - <Callout>: a short label drawn in FIGURE coordinates, outside the
  *   scaled layer, so it stays ≥11px however small the screen gets.
- * - <Keycap>: LayoutHotkeysStepView.swift:73-86 (11pt rounded medium,
- *   padding 6/3, r4, inputBackground, 1pt borderMedium).
+ * - <Keycap>: the Setup shortcuts keycap (11pt rounded medium,
+ *   padding 6/3, r4, input background, 1pt medium border).
  *
  * Screen = 1440 × 900 (16:10, menu bar ignored), the same screen
  * scenes/panel-layouts.tsx uses for its tiles.
@@ -40,7 +38,7 @@ export type PanelFrames = { chat: Rect; project: Rect | null; middle: Rect | nul
 const PADDING = 8;
 const GAP = 8;
 
-/** FloatingPanel.swift:31-206 (`defaultFrame`) for chat, project and the middle panels. */
+/** The default frames of the chat, project and middle panels. */
 export function panelFrames(
   layout: PanelLayoutId,
   screen: { width: number; height: number } = SCREEN,
@@ -287,7 +285,7 @@ export function Callout({
   );
 }
 
-/** LayoutHotkeysStepView keycap. */
+/** The Setup shortcuts keycap. */
 export function Keycap({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <span

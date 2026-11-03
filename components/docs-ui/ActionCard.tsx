@@ -4,32 +4,30 @@ import { Glyph, type GlyphName } from "./glyphs";
 
 /**
  * P12 ActionCard: the app-owned card pinned above a thread's composer (the
- * routine Issue card and its relatives). Source:
- * Features/Chat/Views/RoutineIssueCardView.swift (main repo, desktop app).
+ * routine Issue card and its relatives).
  *
- * - ActionCard          card: padding 12 (Control.horizontalPadding), VStack
- *                       spacing 8, r16 continuous, threadCardBackground +
- *                       1pt threadCardBorder inside (:103-133).
+ * - ActionCard          card: padding 12, stacked 8pt apart, r16 continuous,
+ *                       card fill + 1pt card border inside.
  * - ActionCardHeader    glyph 13pt semibold in a 16pt column · 8 · title
  *                       body semibold (2 lines max) · Spacer · meta caption
- *                       tertiary · trailing (:516-555).
+ *                       tertiary · trailing.
  * - ActionCardRows      the rows under the header, indented 16 + 8 = 24 to
- *                       the title's text edge, VStack spacing 8 (:512, 557-562).
- * - ActionCardDetail    callout, textSecondary, up to 3 lines (:564-570).
- * - ActionCardMeta      caption, textTertiary (:572-577).
- * - ActionCardFootnote  info.circle caption tertiary + meta text (:590-597).
+ *                       the title's text edge, stacked 8pt apart.
+ * - ActionCardDetail    callout, secondary, up to 3 lines.
+ * - ActionCardMeta      caption, tertiary.
+ * - ActionCardFootnote  info.circle caption tertiary + meta text.
  * - ActionCardWarning   exclamationmark.triangle.fill caption warning +
- *                       callout secondary (:601-611).
+ *                       callout secondary.
  * - ActionCardInset     the proposal / diff / evidence surface: padding 8,
- *                       r8, codeBackground @0.6 (:826-833).
- * - ActionCardProposal  inside the inset, VStack spacing 4: label caption
+ *                       r8, code background @0.6.
+ * - ActionCardProposal  inside the inset, stacked 4pt apart: label caption
  *                       semibold tertiary, change callout primary (3 lines),
  *                       provenance, note caption secondary, "Show change"
- *                       disclosure (:629-653).
+ *                       disclosure.
  * - Disclosure          native DisclosureGroup, collapsed. CALIBRATE: the
  *                       chevron size, weight and gap are guesses.
- * - ActionCardActions   primary, secondary, Spacer(min 8), quiet; HStack
- *                       spacing 8 (:675-702). Pass RoutineActionButtons.
+ * - ActionCardActions   primary, secondary, Spacer(min 8), quiet; in a row
+ *                       8pt apart. Pass RoutineActionButtons.
  */
 
 export function ActionCard({ children, style }: { children: ReactNode; style?: CSSProperties }) {
@@ -108,7 +106,7 @@ export function ActionCardProposal({
   note,
   disclosure,
 }: {
-  /** "Proposed fix" or "Proposed retry" (RoutineIssueCardState.swift:692-697). */
+  /** "Proposed fix" or "Proposed retry". */
   label?: string;
   change: string;
   provenance?: string;

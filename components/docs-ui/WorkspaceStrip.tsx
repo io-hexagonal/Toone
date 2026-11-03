@@ -3,9 +3,8 @@ import { Glyph } from "./glyphs";
 import styles from "./WorkspaceStrip.module.css";
 
 /**
- * P4 WorkspaceStrip (UI/Layout/WorkspaceStripView.swift:13-113, pill
- * :197-279). The project strip across the top of the left panel
- * (LeftOrchestratorView.swift:727-734), followed there by a separator.
+ * P4 WorkspaceStrip: the project strip across the top of the left panel,
+ * followed there by a separator.
  *
  * - `pills`: one per workspace. `active` gets the accent capsule and the
  *   filled index badge; `hover` shows the half-strength hover fill and, when

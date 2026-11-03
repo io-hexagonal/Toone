@@ -8,18 +8,6 @@ import { NativeSegmented } from "./NativeSegmented";
 /**
  * The Conversations destination of the left panel and its rows.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/, file
- * APP/UI/Layout/LeftOrchestratorView.swift):
- * - conversationsDestination :1279-1297 (destination header
- *   "Conversations", then ConversationsDirectoryView);
- * - ConversationsDirectoryView :3644-3870: SearchField "Search
- *   conversations" (padding h8 v4); segmented Active / Archived, labels
- *   hidden (padding h8, bottom 4); LazyVStack(spacing 2) padding h8: a
- *   "Pinned" section, then "Recent" (headers only when something is
- *   pinned); sectionHeader :3765-3774; threadRow :3776-3870 (indicator
- *   dot · title with a pin.fill for pinned rows · relative time · "agent ·
- *   department" · "<author>: <preview>").
- *
  * The native segmented control is NativeSegmented (calibrate).
  */
 

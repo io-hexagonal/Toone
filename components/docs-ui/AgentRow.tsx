@@ -8,30 +8,7 @@ import { Glyph } from "./glyphs";
 /**
  * P8 AgentRow and the populated Agents destination of the left panel.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - Agents destination: APP/UI/Layout/LeftOrchestratorView.swift:1089-1164
- *   (header "Agents"; SearchField "Search agents or threads", padding h8 v4;
- *   the roster; Divider; "Create agent" person.badge.plus .borderedProminent
- *   full width, padding 16, .ultraThinMaterial).
- * - Roster: WorkspaceHierarchyView.localHierarchy :4699-4764 (VStack
- *   spacing 8, padding v8; one AgentInteractionSectionHeader per day, then
- *   the agents last talked to that day, newest first): section titles
- *   "Today" / "Yesterday" / "N days ago" / "No interactions yet"
- *   (:4453-4470); header :4521-4541.
- * - AgentRow :4825-4990: HStack(spacing 4) [AgentDirectoryCardLabel, the
- *   "New Thread" `plus` icon button (13 medium, textSecondary)], padding
- *   h8 v2.
- * - AgentDirectoryCardLabel: APP/UI/Components/AgentActivityIcon.swift:115-191
- *   (38pt AgentActivityIcon · name subheadline semibold · department
- *   caption2 medium secondary · last message "<author>: <first line>"
- *   caption, or "No thread messages yet" tertiary · thread count capsule +
- *   chevron when the agent has live threads; padding h8 v7, min-h 66,
- *   panelRowSurface).
- * - AgentActivityIcon :55-104: the avatar takes the theme accent; attention
- *   / completed / failed add a ring (orange .72 / success .65 / error .72,
- *   width max(1.5, size × 0.045)).
- *
- * The avatar (AgentBlobView, an animated soft body) is drawn as ONE static
+ * The avatar (in the app, an animated soft body) is drawn as ONE static
  * blob with two cut-out eyes (plan §5.4). It never animates here.
  */
 
@@ -43,7 +20,7 @@ const RING: Partial<Record<AgentActivity, string>> = {
   failed: "color-mix(in srgb, var(--tu-error) 72%, transparent)",
 };
 
-/** Static stand-in for AgentBlobView: an accent soft body with cut-out eyes. */
+/** Static stand-in for the agent avatar: an accent soft body with cut-out eyes. */
 export function AgentAvatar({ size = 38, activity = "idle" }: { size?: number; activity?: AgentActivity }) {
   const ring = RING[activity];
   const ringWidth = Math.max(1.5, size * 0.045);

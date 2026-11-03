@@ -2,19 +2,16 @@ import type { CSSProperties, ReactNode } from "react";
 import { Glyph, type GlyphName } from "./glyphs";
 
 /*
- * Primitives for the iPhone companion (apps/toone-mobile on the monorepo's
- * main), a different design system from the desktop (iOS 26). The phone
- * follows the desktop's theme (ThemeStore / AppSessionState.layoutStyle), so
- * these are the Smoky Quartz (`.neutralGlass`) values of
- * Presentation/DesignSystem/Theme/ThemeTokens.swift: darkBase white .08,
+ * Primitives for the iPhone companion, a different design system from the
+ * desktop (iOS 26). The phone follows the desktop's theme, so these are the
+ * Smoky Quartz values of the mobile theme: dark base white .08,
  * elevatedSurface white .12, cardBorder = white × (.15 × .5), text white
  * .95 / .70 / .45, accent white .72 (= --tu-accent), chip fill tint .12.
  *
- * Geometry (DesignTokens.swift): screen gutter 16, card padding 16,
+ * Geometry: screen gutter 16, card padding 16,
  * card radius 26 (continuous), section header ≥44 tall with 4pt side
  * padding, chip insets small 2/6 · regular 4/8, recent-thread card 240 wide,
- * carousel spacing 12, status dot 8. Type (Typography.swift Role, iOS
- * default sizes): large title 34 bold, row title 17 semibold, meta 15,
+ * carousel spacing 12, status dot 8. Type (iOS default sizes): large title 34 bold, row title 17 semibold, meta 15,
  * footnote 13, section header 13 semibold uppercase (tracking .3), badge 12
  * semibold.
  *

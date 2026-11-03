@@ -5,30 +5,6 @@ import type { SceneDefinition } from "../scene";
  * The five panel layouts as small schematic screens, each with the chat panel
  * and the Project Explorer panel drawn at the frames the app really gives
  * them. Full Height (the default) carries the selected-tile treatment.
- *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - geometry: UI/Windows/FloatingPanel.swift:31-206 (`defaultFrame`): padding
- *   8, gap 8; chat 28% / project 24% of the screen width (Full Height,
- *   Compact); Compact = 85% height with a 44pt top offset; Docked = chat
- *   55% × 40% centred at the bottom, project 24% × 50% anchored 8pt right of
- *   it; Zen = (W − 24) × 2/3 and × 1/3, full height; Spotlight = chat
- *   53% × 1/3 centred, project parked off-screen (PanelLayout.swift:20-33).
- * - tile vocabulary: Features/Setup/Views/LayoutHotkeysStepView.swift:107-136
- *   (card: VStack 6, padding 8/12, r8, borderSubtle stroke, selected =
- *   toolBackground fill + iconColor stroke; name 11pt, primary when selected
- *   else tertiary) and the PanelLayoutMockup :273-387 (screen black .4 r6 +
- *   white .1 stroke; chat accent .25, project accent .15, panel border
- *   white .15, r3).
- * - names: LayoutHotkeysStepView.swift:391-399; order PanelLayout.allCases.
- *
- * Code vs plan / quirks:
- * - The rectangles use FloatingPanel's real fractions, not the mockup's
- *   rounded ones (the mockup draws Docked's chat 45% wide; the app uses 55%).
- * - Docked: the project panel starts 8pt right of a centred 55% chat and is
- *   24% wide, so on any screen it runs ≈1.5% + 8pt past the right edge
- *   (nothing clamps it, PanelWindowService.swift:543-560). Drawn clipped by
- *   the screen, as the mockup clips. Calibrate against a capture.
- * - Screen = a 1440 × 900 visible frame (16:10, menu bar ignored).
  */
 
 const SCREEN_W = 1440;

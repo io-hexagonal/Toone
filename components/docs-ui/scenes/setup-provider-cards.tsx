@@ -9,27 +9,6 @@ import type { SceneDefinition } from "../scene";
  * button. Cropped to the step's scroll content; banner, the shell-search link
  * below Continue and the window chrome are left out.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Setup/Views/SetupView.swift:43-57 (SetupProviderLayout: content
- *   margin 32, column 180, description 28), :207-216 (dark, width 620),
- *   :404-420 (scroll viewport), :527-591 (step: VStack 24; title .headline,
- *   description 12 secondary max 460; cards HStack 12; Continue 13 medium,
- *   padding 16/8, r8, white .12 + 1pt white .2), :914-1018 (card: r12 box
- *   120 tall, white .06/.02 fill, white .3 @1.5 / .08 @1 stroke clipped to
- *   the shape so only its inner half shows; icon 40² @ .8; name 14 semibold
- *   white .85; "Recommended" 8 semibold, padding 6/2, white .1 capsule;
- *   description 11, white .45), :1020-1034 (status badge 9 semibold,
- *   padding 10/4, r7, black .2, stroke white .22 ready / .12 otherwise).
- * - Features/Setup/Models/AIProviderReadiness.swift:20-26 ("Ready",
- *   "Not found").
- * - Resources/Distribution.plist:139-140 (DistributionDefaultAIProviderID =
- *   codex): the "Recommended" badge sits on OpenAI, not Anthropic.
- *
- * Code vs plan: with exactly one ready provider the view model auto-selects
- * it and skips this screen (AIProviderReadiness.swift:55-62,
- * SetupViewModel.swift:266-287). This state shows when the user comes back
- * to the chooser ("Choose another provider") after Anthropic was detected.
- *
  * calibrate: the Setup window surface (theme blur + overlay) is drawn with
  * the frozen --tu-panel fill.
  */

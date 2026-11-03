@@ -1,4 +1,4 @@
-/* calendar-week: CalendarHeaderView / CalendarWeekView / CalendarBottomBar geometry. */
+/* calendar-week: header, week grid and bottom bar geometry. */
 
 .header {
   display: flex;
@@ -62,7 +62,7 @@
   width: 54px;
 }
 
-/* caption2, textTertiary, frame(height: 50, alignment: .topTrailing) */
+/* caption2, tertiary, frame(height: 50, alignment: .topTrailing) */
 .hourLabel {
   height: 50px;
   padding-right: 4px;
@@ -118,7 +118,7 @@
   overflow: hidden;
 }
 
-/* Rectangle().fill(textTertiary @0.1).frame(height: 1) at the top of each hour */
+/* Rectangle().fill(tertiary @0.1).frame(height: 1) at the top of each hour */
 .hourLine {
   position: absolute;
   left: 0;

@@ -9,24 +9,6 @@ import { SettingsRow, SettingsSection, SettingsWindow } from "../SettingsForm";
  * (placed where the guide talks about the shortcut), so this crop ends at the
  * Ambient Video footer.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/ZenMode/Views/ZenModeSettingsView.swift:13-16 (two flexible
- *   grid columns, spacing Spacing.md 16); :30-55 (category VStack: title
- *   Typography.Panel.subtitle 13 regular, spacing Spacing.sm 8; categories
- *   spaced Spacing.lg 24; footer copy);
- *   :81-131 (ZenVideoCard: 16:9 thumbnail, title .body medium textPrimary,
- *   lineLimit 1, checkmark.circle.fill IconSize.small 16 in the accent when
- *   selected, padding Spacing.sm 8; background inputBackground .5; r12;
- *   stroke accent 2pt when selected, else threadCardBorder 1pt).
- * - Features/ZenMode/Models/ZenVideo.swift:9-18 (categories in order, the
- *   title is rawValue.capitalized), :168-189 + :191-209 (Nature = Earthscapes,
- *   Norway, Mountain Wilds, in that order).
- *
- * Code vs plan: the plan puts Mountain Wilds "next to Norway". Nature has
- * three videos in catalogue order, so the grid reads Earthscapes | Norway on
- * the first row and Mountain Wilds alone on the second. Thumbnails are neutral
- * grey stand-ins, not the bundled frames (plan §1, contract).
- *
  * CALIBRATE: grouped Form geometry.
  */
 

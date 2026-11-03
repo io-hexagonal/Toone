@@ -13,27 +13,6 @@ import type { SceneDefinition } from "../scene";
  * flow" with "Discuss with agent", the artefact row (path · format), its
  * description, "Produced by" and "Used by".
  *
- * Sources (RCP = APP/Features/Organization/Views/RoutineCreatorPanelView.swift):
- * - creator RCP:1082-1095 (ScrollView, VStack spacing 18, padding 18: graph,
- *   Divider, definitionPreview);
- * - definitionPreview RCP:1144-1171 (headline + Discuss with agent),
- *   selectionTitle RCP:1813-1829 ("Artefact flow");
- * - artefactPreview RCP:1424-1440 (VStack spacing 14: previewRow shippingbox,
- *   no `scope` button since its node is the selection; description .callout
- *   .secondary; stepLinks "Produced by" / "Used by");
- * - stepLinks RCP:2064-2081 (VStack spacing 8: .headline; empty →
- *   "No step binding declared" .caption .secondary; each step a
- *   Label(step.title, systemImage: "arrow.turn.down.right") .callout);
- * - graph: container + toolbar RoutineDraftPipelineView.swift:56-231, cards
- *   RoutinePipelineGraphComponents.swift:174-294 (GraphKit).
- *
- * Code vs plan:
- * - "Produced by" lists the step's title without its number: "Save the
- *   brief", not "4. Save the brief".
- * - The artefact's path is the routine's declared path as the shared demo
- *   graph draws it (graph/researchBrief.ts), "briefs/research-brief.md",
- *   not the plan's "briefs/{date}-{slug}.md".
- *
  * Drawn at MAGNIFY × the app's points (10pt captions ≥11px at the guide
  * column).
  */
@@ -60,7 +39,7 @@ function StepLinks({ title, steps }: { title: string; steps: string[] }) {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
       <span style={headline}>{title}</span>
       {steps.length === 0 ? (
-        <span style={{ fontSize: 10, lineHeight: "13px", color: "var(--tu-label-2)" }}>No step binding declared</span>
+        <span style={{ fontSize: 10, lineHeight: "13px", color: "var(--tu-label-2)" }}>Not used by another step</span>
       ) : (
         steps.map((step) => (
           <span
@@ -86,7 +65,7 @@ function DraftArtefactInspector() {
             clipAfter="steps"
             hasSelection
             published={false}
-            summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+            summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
           />
         }
       >

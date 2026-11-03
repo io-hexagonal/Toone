@@ -56,7 +56,7 @@
   background: rgba(255, 255, 255, 0.19);
 }
 
-/* catalogList: LazyVStack spacing 8, padding 8, innerBackground @0.12 */
+/* catalog list: LazyVStack spacing 8, padding 8, inner background @0.12 */
 .list {
   display: flex;
   flex-direction: column;

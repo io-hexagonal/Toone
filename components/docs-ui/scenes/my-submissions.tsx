@@ -16,31 +16,6 @@ import type { SceneDefinition } from "../scene";
  * Pending (collapsed), Approved (expanded, Copy link) and Rejected
  * (expanded, Review note).
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - host header: APP/UI/Layout/LeftOrchestratorView.swift:948-959,1366-1433
- *   (P2 DestinationHeader "Explore" / "Routines and bundles reviewed by Toone");
- * - APP/Features/WorkflowCatalog/WorkflowExplorerView.swift:129-196
- *   (explorerHeader: "Explore | My submissions" segmented, centred, padding
- *   16/8; Divider; then ExploreSubmissionsView);
- * - APP/Features/WorkflowCatalog/ExploreSubmissionsView.swift:89-131 (header
- *   "My submissions" UI.button 13 medium + `arrow.clockwise` icon button,
- *   padding h16, min-h 44; LazyVStack spacing 8, padding h8 / bottom 16;
- *   "Routines" PanelSectionHeader with `arrow.triangle.branch` and count;
- *   background innerBackground @0.12), rows :299-359 (subtitle
- *   "Revision N · <date>"; actions Inspect routine, Copy link when approved,
- *   Withdraw… when pending, Re-share when rejected and not live);
- * - P8/P9 in ExploreSubmissions.tsx (ExploreSubmissionComponents.swift:5-154).
- *
- * Code vs plan: none on the statuses (Pending / Approved / Rejected,
- * `status.rawValue.capitalized`). Notes:
- * - Dates are absolute here because the app formats them that way
- *   (`.abbreviated` date, `.shortened` time); the demo rule asks for relative
- *   times, which this view does not have.
- * - Each row expands on its own, so two open rows is a real state.
- * - The rejected row also offers "Re-share" (:355-358): the guide's next step.
- * - The approved row shows no "Share update": that action only appears when
- *   the local routine changed since it was shared (:430-449).
- *
  * CALIBRATE: the segmented control, the small bordered buttons (do
  * `Button(title, systemImage:)` labels show their icon in a bordered button
  * on macOS 26?), and the icon button.

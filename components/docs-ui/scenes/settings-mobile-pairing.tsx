@@ -13,17 +13,6 @@ import { SettingsRow, SettingsSection, SettingsWindow } from "../SettingsForm";
  * scrolled (a window shorter than its list) so the Mobile row stays in
  * view.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Settings/Views/SettingsView.swift:1855-1887 (the page: only
- *   "Cloud Relay" and "Approved Devices", with their footers); :1920-1960
- *   (.waitingForMobile: VStack spacing 12; Label "Waiting for mobile"
- *   icloud.and.arrow.down in orange; code cells 28pt bold monospaced, frame
- *   36×44, accent .1 fill, r6, padding h2; Copy Code with doc.on.doc and
- *   Cancel, both .bordered .small).
- *
- * Code vs plan: matches the plan. As verified (plan "Verification results"
- * item 5) the page has no local-network pairing on main: cloud relay only.
- *
  * CALIBRATE: grouped Form geometry; the small bordered buttons.
  */
 

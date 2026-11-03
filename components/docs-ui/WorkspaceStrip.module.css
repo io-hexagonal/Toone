@@ -1,9 +1,8 @@
 /*
- * P4 WorkspaceStrip / WorkspacePill (UI/Layout/WorkspaceStripView.swift).
- * Values are the Swift ones; tokens come from docs-ui.module.css (.root).
+ * P4 WorkspaceStrip / WorkspacePill. Values match the shipped app; tokens come from docs-ui.module.css (.root).
  */
 
-/* Strip: height 44 (workspaceStripThickness), HStack spacing 6,
+/* Strip: height 44, HStack spacing 6,
    padding 16 / 7, horizontal ScrollView (clips sideways, no indicators).
    Only the x axis clips, so a help tag can hang below the strip. */
 .strip {
@@ -38,13 +37,13 @@
   background: color-mix(in srgb, var(--tu-accent) 10%, transparent);
 }
 
-/* Hover on an inactive pill: hoverBackground at half strength */
+/* Hover on an inactive pill: hover fill at half strength */
 .pill[data-hover="true"]:not([data-active="true"]) {
   background: color-mix(in srgb, var(--tu-hover) 50%, transparent);
 }
 
 /* Unread (inactive only): 1.5pt accent stroke + accent glow r4, pulsing
-   0.3 ↔ 0.8 (glow 0 ↔ 0.4), easeInOut 0.8s autoreverse (:257-266).
+   0.3 ↔ 0.8 (glow 0 ↔ 0.4), easeInOut 0.8s autoreverse.
    Static fallback = the pulse's peak, so the state still reads. */
 .pill[data-unread="true"] {
   --tu-pill-stroke-width: 1.5px;
@@ -92,7 +91,7 @@
   color: #fff;
 }
 
-/* Name: 11pt, semibold + textPrimary when active, regular + textSecondary */
+/* Name: 11pt, semibold + primary text when active, regular + secondary text */
 .name {
   font-size: 11px;
   line-height: 13px;
@@ -117,7 +116,7 @@
   color: var(--tu-text-3);
 }
 
-/* "+" uses IconButtonStyle (ButtonStyles.swift:15-69): ≥28², r8,
+/* "+" uses the icon button style: ≥28², r8,
    hover white .10; plus 13 medium tertiary. */
 .add {
   position: relative;

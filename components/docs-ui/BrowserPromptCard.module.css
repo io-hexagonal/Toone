@@ -1,5 +1,4 @@
-/* BrowserPromptCard: the browser panel's inline prompt surface
-   (AgentBrowserPrivacyViews.swift, BrowserSessionImportView.swift). Tokens from .root. */
+/* BrowserPromptCard: the browser panel's inline prompt surface. Tokens from .root. */
 
 .wrap {
   padding: 0 8px 8px;
@@ -85,7 +84,7 @@
 }
 
 /* .borderedProminent tinted with the accent: AppKit keeps a white label on
-   Smoky Quartz's 0.72 grey (the low-contrast case LayoutStyle.swift:342-348). */
+   Smoky Quartz's 0.72 grey (the app's low-contrast case). */
 .button[data-kind="prominent"] {
   background: var(--tu-accent);
   box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.3);

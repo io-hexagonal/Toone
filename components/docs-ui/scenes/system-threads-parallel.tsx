@@ -7,24 +7,6 @@ import { SystemThreadRow, SystemThreadsDestination } from "../ThreadRow";
  * same time on two agents (Launch Planner, Growth Writer), after Research
  * Assistant finished the brief both build on.
  *
- * Sources: LeftOrchestratorView.swift:1259-1277 (destination), :1364-1444
- * (header), :3484-3560 (search + list); SystemThreadRow.swift:39-249;
- * ThreadsHoverButton.swift:187-330 (title "<routine> #N · <step>", status,
- * time); RoutineExecution.swift:1360-1371 (a step thread's title is
- * "<routine> · <step>"); ThreadActivityState.swift:35-47, 218-224, 252-295;
- * Message.swift:947-975 (live activity labels).
- *
- * Code vs plan:
- * - A working thread's status is its live activity (the current tool label,
- *   e.g. "Fetching webpage", ThreadActivityState.workSummary), never the word
- *   "Working": SystemThreadRowText.status shows the lifecycle label only for
- *   finished threads ("Completed").
- * - The plan's third row ("routine #3 · Organize the findings", Completed)
- *   would contradict Run #3 being on step 2 elsewhere in the guides; here the
- *   completed row is the step that fed both parallel steps.
- * - A finished thread's time is RelativeDateTimeFormatter .full ("4 minutes
- *   ago"); a running one reads "Running 1m 12s" (elapsedLabel).
- *
  * Drawn at MAGNIFY × the app's points so caption2 text stays ≥11px at the
  * guide column. Calibrate: the left panel's width (360 here) and the
  * Color.secondary @0.06 row fill.

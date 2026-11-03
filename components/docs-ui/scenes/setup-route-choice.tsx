@@ -7,27 +7,6 @@ import type { SceneDefinition } from "../scene";
  * footnote. The "Start Express setup" button below is left out (plan), as
  * are the banner and the window chrome.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Setup/Views/SetupFlowChoiceStepView.swift:27-44 (VStack spacing
- *   20, top padding 16), :48-61 (header: "Choose your setup" .headline;
- *   description 12 secondary, centred, max 460), :65-73 (footnote 11
- *   tertiary, centred, max 460, min-h 30), :105-133 (cards: HStack top
- *   spacing 12, equal width and height; VStack spacing 12, padding 14),
- *   :135-169 (header: HStack 10; 30² icon tile r8 iconColor .25 selected /
- *   .12; symbol 14 medium white .9 / .6; title 14 semibold white .85;
- *   tagline 11 white .45; VStack spacing 2), :171-178 ("Recommended" 8
- *   semibold white .82, padding 6/2, white .1 capsule), :180-198
- *   (highlights VStack 6; checkmark 9 semibold iconColor .9 / .5, spacing
- *   7; text 11 white .6), :200-211 (r12, fill white .06 / .02, stroke
- *   iconColor .55 @1.5 selected / white .08 @1), :216-263 (copy, icons
- *   bolt.fill / slider.horizontal.3).
- * - Features/Setup/Views/SetupView.swift:43-46,216 (window 620 wide,
- *   content margin 32 → 556).
- * - UI/Windows/LayoutStyle.swift:123-131 (iconColor, Smoky Quartz =
- *   white 0.72 = --tu-accent).
- *
- * Code vs plan: none.
- *
  * calibrate: the Setup window surface is drawn with the frozen --tu-panel.
  */
 

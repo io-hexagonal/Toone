@@ -1,8 +1,7 @@
 import type { EdgeKind, LaidOutGraph, PlacedEdge } from "./types";
 
 /**
- * Edge layer: port of RoutinePipelineEdgeLayer
- * (RoutinePipelineGraphComponents.swift:6-147). Drawn in model space inside
+ * Edge layer of the routine graph. Drawn in model space inside
  * the canvas world, so stroke widths scale with zoom like the app's Canvas.
  */
 

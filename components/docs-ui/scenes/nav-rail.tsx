@@ -11,26 +11,11 @@ import { SystemThreadRow, SystemThreadsDestination } from "../ThreadRow";
  * destination beside it lists them. Your own conversations stay in the
  * rail's recent strip above (two seen chats).
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - rail: P3 NavRail (UI/Layout/LeftOrchestratorView.swift:2517-3105, see
- *   NavRail.tsx); recent strip RecentThreadRailList :3229-3445 (RailThreads.tsx);
- * - badge: systemThreadsBadgeCount :2600-2608 (active system threads, plus
- *   calendar jobs with an unseen reply), railButton badge :3131-3141;
- * - destination: LeftOrchestratorView.swift:1259-1277, :3484-3560;
- *   SystemThreadRow.swift:39-249 (ThreadRow.tsx); rows as in
- *   system-threads-list (one run, two active threads).
- *
- * Code vs plan: the plan names the rail's neighbours "Agents, Browser,
- * Routines, Calendar, Timeline, Settings"; the code also draws Create Agent,
- * Conversations, the recent-conversation strip and New Chat above the
- * divider (LeftOrchestratorView.swift:2623-2670), so they are drawn too.
- * Live Share is Business-only and not shown.
- *
  * Drawn at MAGNIFY × the app's points (caption2 stays legible). Calibrate:
  * the left panel's width (403 incl. the rail, 28% of a 1440pt screen).
  */
 
-const PANEL_W = 403; // chat panel = 28% of a 1440pt screen (FloatingPanel.swift:46)
+const PANEL_W = 403; // chat panel = 28% of a 1440pt screen
 const MAGNIFY = 1.15;
 
 const ITEMS: NavRailItem[] = RAIL_ITEMS.map((item) =>

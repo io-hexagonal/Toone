@@ -8,23 +8,6 @@ import { RecordingIndicator } from "../Speech";
  * by the recording indicator with the live transcript, outlined in the
  * accent. The bottom of the chat panel, under Research Assistant's question.
  *
- * Sources (main repo, apps/toone-desktop/Toone/Toone/):
- * - Features/Chat/Views/ChatPanelView.swift:1286-1287 (Divider above the
- *   composer area), :2496-2508 (isRecording → RecordingIndicatorView with
- *   onCancel and the locale badge, padding 16/16), :2557-2567 (accent @0.5
- *   1.5pt r12 outline, inset 16 horizontally and 8 vertically, so the mic
- *   ring sits on the outline's left edge).
- * - Features/Speech/Views/RecordingIndicatorView.swift (RecordingIndicator).
- * - Core/Models/HotkeyBinding.swift:79-83 (push to talk = ⌥A, hold);
- *   App/AppDelegate.swift:1143-1162 (on release the transcript becomes a
- *   "Voice message" chip in the composer; the user sends it).
- *
- * Code vs plan:
- * - The plan cites ChatInputView.swift:178-187; that composer is only used
- *   by the Business remote-org view. The main chat panel draws its own
- *   (ChatPanelView.swift:2496), which adds the cancel button and the outline.
- * - The composer has no microphone button: voice is the ⌥A hotkey (caption).
- *
  * Drawn at MAGNIFY × the app's points.
  */
 

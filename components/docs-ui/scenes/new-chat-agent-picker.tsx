@@ -9,17 +9,6 @@ import type { SceneDefinition } from "../scene";
  * new thread.", "Search agents" and the three agents with their departments,
  * the pointer on Research Assistant.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:2808-2840 (createChatButton:
- *   highlighted while the picker is open; popover arrowEdge .trailing),
- *   :2842-2903 (creationButton: accent on accent .10, scale 1.07; the plus
- *   badge turns accent), :2408-2516 (NewChatAgentPicker: width 300, rows
- *   sorted by name, `person` + name + department, hover accent .10 r8).
- * - The panel behind the popover is left empty (the crop is about the picker).
- *
- * Code vs plan: as planned. The rows are sorted by name, so Growth Writer
- * comes first.
- *
  * CALIBRATE: the NSPopover silhouette (radius, arrow, hairline) and where
  * AppKit places it vertically: it is drawn inside the panel with its arrow
  * on the New Chat button. Drawn at MAGNIFY × the app's points.

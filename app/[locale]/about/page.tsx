@@ -52,7 +52,7 @@ export default async function AboutPage({ params, searchParams }: Props) {
           </p>
           <p>
             A routine is a process, not a prompt on a timer. It runs the same steps and the same
-            checks every time, keeps a ledger so nothing is lost or repeated between runs, and
+            checks every time, remembers what it already did, so nothing is lost or repeated between runs, and
             lets each step use the model that suits it. Contracts check each step&apos;s output; a
             step that falls short pauses on its own, so you can edit it and resume where it
             stopped while finished steps keep their results.

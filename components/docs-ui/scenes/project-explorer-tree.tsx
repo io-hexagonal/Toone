@@ -11,44 +11,10 @@ import type { SceneDefinition } from "../scene";
  * tree's root expanded and `briefs` open on the brief the routine just saved
  * (fresh green "+").
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/RightProjectPanelView.swift:35-91 (PanelHeader "Project
- *   Explorer", `folder` in sectionIconTint, then `folder.badge.plus`
- *   "Change Project Directory" and `sidebar.right` icon buttons, 13 medium),
- *   :156-200 (localProjectContent: Organization disclosure when the project
- *   has an organization, separator, Project disclosure, ProjectPanelView).
- * - UI/Components/Layout/PanelHeader.swift:37-74, :136-176.
- * - Features/Project/Views/ProjectPanelView.swift:58-63 (header, search,
- *   content), :196-219 (WorkspaceBrowserHeader = folder name, "Search files"
- *   with padding h16 / bottom 8), :411-444 (tree, padding 8).
- * - UI/Components/Layout/WorkspacePresentationRows.swift:11-52, :169-242.
- * - Features/Project/Models/FileTreeNode.swift:104-221 (folder.fill yellow
- *   .8, .md doc.text gray), Services/OrgTreeClassifier.swift:27-60, :78-84
- *   (project root = folder.badge.gearshape accent; the .toone folder that
- *   holds the organization = "Toone", square.stack.3d.up.fill accent),
- *   ViewModels/ProjectViewModel.swift:128-182 (root row at level 0, expanded
- *   on load :275; org node first, then folders, then files),
- *   Services/ProjectFileTreeLoader.swift:84-87 (folders first, then
- *   case-insensitive names).
- * - UI/Theme/Colors.swift:124-138 (fresh badge = green .90).
- *
- * Code vs plan:
- * - The plan lists a `.toone` row. The classifier renames the .toone folder
- *   that carries the organization to "Toone" with the org icon; drawn that
- *   way.
- * - The tree starts with the project root row ("acme.com growth", level 0),
- *   which the plan omits.
- * - A project with an organization also shows the "Organization" disclosure
- *   above "Project" (drawn collapsed so the crop stays on files).
- * - `notes.md` and `README.md` sit at the project root, not inside `briefs`
- *   (the plan's wording is ambiguous).
- * - Folder icons are the app's yellow (FileTreeNode "yellow" →
- *   .yellow.opacity(0.8)); the only non-status hue here, kept for fidelity.
- *
  * Drawn at MAGNIFY × the app's points so .caption text stays legible.
  */
 
-const PANEL_W = 346; // project panel = 24% of a 1440pt screen (FloatingPanel.swift:47)
+const PANEL_W = 346; // project panel = 24% of a 1440pt screen
 const MAGNIFY = 1.2;
 
 function ProjectExplorerTree() {

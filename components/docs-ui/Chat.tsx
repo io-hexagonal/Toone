@@ -5,25 +5,20 @@ import { Glyph } from "./glyphs";
 
 /**
  * P10 Chat: transcript, message bubble, meta row and hover actions.
- * Sources (desktop app, main repo):
- * - ChatTranscript: CPV messageList VStack(spacing: Spacing.sm) inside the
- *   ScrollView's .padding(Spacing.md) (ChatPanelView.swift:1502-1512, 1584-1586).
- * - ChatMessage: RichMessageBubble.bubble (RichMessageBubble.swift:90-187):
- *   HStack with Spacer(minLength: 60) on the far side, VStack spacing 4
- *   (Spacing.xs), aligned to the speaker's side.
- * - ChatBubble: TranscriptTextMessageSurface (TranscriptMessagePresentation.swift:62-87):
- *   padding 8, r12, userBubble = accent @0.15, assistantBubble = white 0.14.
- *   Text is MarkdownTextView, which sets no font: it inherits .body (13pt),
- *   not Typography.Chat.message (15pt, unused by the transcript).
- * - ChatProse / ChatParagraph / ChatListItem / ChatCode: MarkdownTextView's
- *   merged run (MarkdownTextView.swift:246-318): blocks joined by a blank
- *   line, consecutive list items by a single newline, bullet "•  " in
- *   textSecondary, inline code monospaced on white 0.10.
- * - ChatMeta: metadataView (RichMessageBubble.swift:428-452): HStack spacing 8;
- *   time (Text(style: .time)) caption2 textTertiary in an HStack spacing 4;
- *   the action overlay after it for the agent, before it for the user.
- * - MessageActions: messageActionOverlay (RichMessageBubble.swift:205-263):
- *   HStack spacing 8 of 10pt symbols in textTertiary: pencil (user, not
+ * - ChatTranscript: messages stacked 8pt apart, inside 16pt padding.
+ * - ChatMessage: HStack with Spacer(minLength: 60) on the far side, VStack
+ *   spacing 4, aligned to the speaker's side.
+ * - ChatBubble: padding 8, r12, user bubble = accent @0.15, assistant
+ *   bubble = white 0.14. The text sets no font of its own: it inherits
+ *   .body (13pt), not the 15pt chat size.
+ * - ChatProse / ChatParagraph / ChatListItem / ChatCode: the Markdown text as
+ *   one merged run: blocks joined by a blank line, consecutive list items by
+ *   a single newline, bullet "•  " in secondary, inline code monospaced on
+ *   white 0.10.
+ * - ChatMeta: HStack spacing 8; time (Text(style: .time)) caption2 tertiary
+ *   in an HStack spacing 4; the action overlay after it for the agent, before
+ *   it for the user.
+ * - MessageActions: HStack spacing 8 of 10pt symbols in tertiary: pencil (user, not
  *   guest), quote.bubble, doc.on.doc, arrow.triangle.branch (a borderless
  *   Menu with "Fork conversation" / "Create routine"). Opacity 0 unless the
  *   message is hovered, so hidden actions still take their space.
@@ -95,7 +90,7 @@ export function ChatListItem({ children, index }: { children: ReactNode; index?:
   );
 }
 
-/** Bold run (.body.bold()): MarkdownTextView.swift:753-765. */
+/** Bold run (.body.bold()). */
 export function ChatStrong({ children }: { children: ReactNode }) {
   return <span className={styles.strong}>{children}</span>;
 }
@@ -157,13 +152,11 @@ export function MessageActions({
 
 /**
  * ChatComposer: the chat panel's input row in its idle state (no
- * attachments, not recording). Sources: ChatPanelView.swift chatInputBar
- * :2421-2596 (HStack spacing 8, padding 16; [mode badge] [model chip]
- * [text field] [send / stop]), inputOptionsMenu label :2890-2906
- * (modelChipLabel :2920-2926: "OPUS · HIGH"; nil when everything inherits,
- * then only the chevron shows), sendButton :2391-2417, ChatInputView.swift
- * :14-113 (field). Placeholder per ChatViewModel.ChatMode.placeholder
- * ("Type a message..." in the default mode). Styles: Composer.module.css.
+ * attachments, not recording): HStack spacing 8, padding 16; [mode badge]
+ * [model chip] [text field] [send / stop]. The model chip reads e.g.
+ * "OPUS · HIGH", or only the chevron when everything inherits. The
+ * placeholder is "Type a message..." in the default mode. Styles:
+ * Composer.module.css.
  */
 export function ChatComposer({
   placeholder = "Type a message...",
@@ -180,13 +173,13 @@ export function ChatComposer({
   text?: string;
   /** Model chip label, e.g. "OPUS · HIGH"; omit for an all-inherited chip (chevron only). */
   chip?: string;
-  /** Chat mode badge: PLAN (AppColors.primary) or LOOP (orange). */
+  /** Chat mode badge: PLAN (accent) or LOOP (orange). */
   mode?: "PLAN" | "LOOP";
   /** "stop" while the agent is working. */
   action?: "send" | "stop";
   /**
-   * The SAFE badge (ChatPanelView.swift:2527-2556, Direct edition only):
-   * green when Safe Mode is enforcing (Claude + healthy hook), orange with a
+   * The SAFE badge (Direct edition only): green when Safe Mode is enforcing
+   * (Claude provider, screening healthy), orange with a
    * warning triangle otherwise. Drawn between the mode badge and the chip.
    */
   safe?: "active" | "inactive";

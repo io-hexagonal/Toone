@@ -16,17 +16,6 @@ import type { SceneDefinition } from "../scene";
  * After a captured meeting: you ask the agent to organize it, and its reply
  * lists decisions, open questions and next actions, then names the project
  * file it saved them to.
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Chat/Views/RichMessageBubble.swift:90-187 (bubbles, meta).
- * - APP/Features/Chat/Views/MarkdownTextView.swift:246-318 (one merged run:
- *   blocks joined by a blank line, consecutive list items by one newline,
- *   "•  " bullets in textSecondary, `code` monospaced on white 0.10);
- *   "**Decisions**" is a bold run (.body.bold(), :753-765).
- * - Chat.tsx (ChatProse / ChatListItem / ChatStrong / ChatCode).
- *
- * Code vs spec: none. The headings are bold paragraphs (as an agent writes
- * "**Decisions**"); a markdown "###" heading would render title3 semibold.
  */
 
 const WIDTH = 480;

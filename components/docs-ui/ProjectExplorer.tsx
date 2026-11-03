@@ -4,28 +4,23 @@ import styles from "./ProjectExplorer.module.css";
 
 /**
  * Project Explorer building blocks (right panel). Drawings, not controls.
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - DisclosureHeader: PanelDisclosureHeader (UI/Components/Layout/PanelHeader.swift:136-176).
- * - BrowserHeader: WorkspaceBrowserHeader (UI/Components/Layout/WorkspacePresentationRows.swift:11-52).
- * - FileTreeRow: WorkspaceFileRowLabel (same file :169-242), fed by
- *   ProjectTreeNodeView (Features/Project/Views/ProjectTreeNodeView.swift:68-87,
- *   :160-205): icon + colour from FileTreeNode (Features/Project/Models/
- *   FileTreeNode.swift:104-221), "+" badge coloured by staleness tier
- *   (UI/Theme/Colors.swift:124-138).
- * - FileTree: the tree's LazyVStack(spacing 0) with .padding(8)
- *   (Features/Project/Views/ProjectPanelView.swift:411-444).
+ * - DisclosureHeader: a section's disclosure header.
+ * - BrowserHeader: the file browser's header.
+ * - FileTreeRow: one file or folder row: icon and colour by file type, and a
+ *   "+" badge coloured by how recently the file changed.
+ * - FileTree: the tree's stack (spacing 0) with 8pt padding.
  */
 
-/** FileTreeNode icon colour names → the colours ProjectTreeNodeView maps them to. */
+/** File icon colour names → the colours the file tree draws them in. */
 export const FILE_ICON_COLOR = {
   accent: "var(--tu-accent)",
   /** .yellow.opacity(0.8): folders. systemYellow (dark) #FFD60A. */
   yellow: "rgba(255, 214, 10, 0.8)",
-  /** AppColors.textSecondary: md / txt / unknown files. */
+  /** Secondary text colour: md / txt / unknown files. */
   gray: "var(--tu-text-2)",
 } as const;
 
-/** AppColors.fileBadge* (Colors.swift:124-138): green .90 / .60, white .40 / .20. */
+/** File badge colours by recency: green .90 / .60, white .40 / .20. */
 export const FILE_BADGE_COLOR = {
   fresh: "color-mix(in srgb, var(--tu-success) 90%, transparent)",
   recent: "color-mix(in srgb, var(--tu-success) 60%, transparent)",

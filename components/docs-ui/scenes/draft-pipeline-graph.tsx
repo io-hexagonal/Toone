@@ -5,11 +5,7 @@ import { ID, researchBriefGraph } from "../graph/researchBrief";
 import type { SceneDefinition } from "../scene";
 
 /**
- * Routine Creator draft graph, Steps + Run setup chips on, nothing selected.
- * Sources: RoutineDraftPipelineView.swift:56-231 (container, toolbar),
- * RoutinePipelineGraphComponents.swift (cards, edges),
- * RoutineDraftGraphBuilder.swift (nodes/edges), RoutinePipelineLayoutEngine +
- * SugiyamaCore (layout).
+ * Draft routine graph, Steps + Run setup chips on, nothing selected.
  *
  * Crop: a pinch-zoomed state (zoom 1.12, so card text stays ≥11px at the
  * guide column's 0.99 scale) centred on step 2 → step 3 + the sub-routine
@@ -49,7 +45,7 @@ function DraftPipelineGraph() {
             chips={{ runSetup: true, artefacts: false, steps: true }}
             hasSelection={false}
             published={false}
-            summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+            summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
             clipAfter="fit"
           />
         }

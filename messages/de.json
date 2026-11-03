@@ -230,7 +230,7 @@
       "routine": {
         "label": "Eine Toone-Routine",
         "note": "Jedes Mal dieselben Schritte, geprüft und gemerkt.",
-        "ledger": "Register",
+        "ledger": "Gedächtnis",
         "known": "38 Leads bekannt",
         "fresh": "20 neu in diesem Lauf",
         "duplicates": "0 Duplikate"
@@ -247,7 +247,7 @@
           "memory": {
             "label": "Gedächtnis zwischen Läufen",
             "prompt": "Beginnt neu: Wiederholungen und Lücken",
-            "toone": "Ein Register: nichts geht verloren, nichts doppelt"
+            "toone": "Merkt sich, was schon erledigt ist: nichts geht verloren, nichts doppelt"
           },
           "control": {
             "label": "Eingreifen im Lauf",

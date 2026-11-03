@@ -7,23 +7,12 @@ import { PopUpButton, Radio } from "./NativeControls";
  * P17 SettingsForm: the Settings panel (a NavigationSplitView) with its
  * destination sidebar and a native grouped Form in the detail column.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/Settings/Views/SettingsView.swift:10-87 (destinations, labels,
- *   icons, order); :127-190 (sidebar rows: VStack spacing 3, padding 10;
- *   Label .body, semibold when selected; padding h10, minHeight 27, r7;
- *   selected accent .18 fill + accent .28 1pt stroke, accent text; column
- *   background innerBackgroundColor .46, width min 170 / ideal 190);
- *   :183-188 (detail background innerBackgroundColor .18); :205-222 (close
- *   button overlay); :251-273 (visibleDestinations); :106-121
- *   (themedSettingsForm: hidden scroll background + `.tint(accent)`, which is
- *   why switches and radios are Smoky Quartz grey, never system blue).
- *
  * CALIBRATE: the grouped Form (section box, header/footer insets, row height,
  * separators) and the switch / text field are native AppKit drawing with no
  * geometry in the repo (plan §5.2). The macOS 26 NavigationSplitView may also
  * inset its sidebar as a glass pane; this draws a flat column.
  *
- * Window width: the real panel is at least 940pt wide (SettingsView.swift:189-196).
+ * Window width: the real panel is at least 940pt wide.
  * Figures are ≤640, so scenes draw the window narrower and long footers wrap
  * onto more lines than in the app.
  */
@@ -51,7 +40,7 @@ export type SettingsDestinationId =
 /**
  * The sidebar as the Direct (website) edition shows it to a regular user:
  * Toone Pro is Store-only, Developer needs Developer Mode, Silk Review needs
- * the reviewer capability (SettingsView.swift:251-273, TooneProPolicy:55).
+ * the reviewer capability.
  * Icons map to the kit's lookalikes ("gear" → gearshape).
  */
 export const SETTINGS_DESTINATIONS: { id: SettingsDestinationId; label: string; icon: GlyphName }[] = [

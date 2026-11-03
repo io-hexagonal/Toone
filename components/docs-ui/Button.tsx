@@ -4,8 +4,7 @@ import { cx } from "./cx";
 import { Glyph, type GlyphName } from "./glyphs";
 
 /**
- * P5 Buttons. Sources: ButtonStyles.swift:15-69 (icon), RoutineActionButtonStyle.swift
- * (routine-*), SetupFlowChoiceStepView.swift:77-101 (setup). `prominent` and
+ * P5 Buttons: icon, routine-*, setup and native styles. `prominent` and
  * `bordered` are native macOS controls: their geometry is a placeholder until
  * calibrated against a capture.
  *

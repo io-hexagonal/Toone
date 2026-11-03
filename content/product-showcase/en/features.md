@@ -124,7 +124,7 @@ Pair an approved iPhone through the cloud relay to reach Toone away from the Mac
 
 ### MCPs and integrations
 
-Enable MCP servers globally or within the project that needs them, and reuse browser site maps across all your projects.
+Enable MCP servers globally or within the project that needs them. Website integrations an agent learns once are available in all your projects.
 
 [Explore MCPs and integrations](/how-to/features/mcp-integrations).
 

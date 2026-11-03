@@ -19,27 +19,6 @@ import type { SceneDefinition } from "../scene";
  * succeeded, then "Restart from a step…" and "Edit routine". Runs #2 and #1
  * stay collapsed. The scheduled digest sits first, the launch routine last.
  *
- * Sources: RoutineCreatorPanelView.swift:482-561 (column + switcher);
- * OrganizationOverviewView.swift:676-716 (no section headings while nothing
- * runs; scheduled routines first, :736-752), :1010-1090 (family card,
- * history); RoutineSidebarComponents.swift:131-230, :341-352 (pill: the
- * cadence, neutral), :366-566 (row); RoutineRunHistoryRowView.swift:57-304
- * (identity, meta, expanded steps and actions);
- * RoutineRunHistoryRow.swift:150-160 (badge "Completed"), :210-213 (no
- * summary line for a completed run), :295-345 (age and meta strings);
- * RoutineStatusVocabulary.swift:114-118 (stage labels).
- *
- * Code vs plan:
- * - The pill reads "Completed", not "Succeeded".
- * - A completed run has no summary line ("its pill and duration say it
- *   all"), so there is no "Saved briefs/…" line; the age is relative
- *   ("9 min ago"), never "Today".
- * - Runs #2 and #1 are Completed, as in routines-list-running on the same
- *   page (the plan's "Run #1 Failed" would contradict it).
- * - No sub-routine count on the routine row and no "asks each run" note:
- *   the row's trailing ViewThatFits drops both before the name truncates
- *   (RSC:500-515) at this width.
- *
  * Drawn at MAGNIFY × the app's points (10pt captions ≥11px at the guide
  * column), like routines-list-running. Calibrate: as routines-list-running.
  */

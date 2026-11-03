@@ -10,20 +10,6 @@ import type { SceneDefinition } from "../scene";
  * card opens beside the rail, over the Agents list: "Timeline" /
  * "Set up or review the workspace Git timeline."
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:2603-2660 (rail order; Timeline
- *   only outside the App Store build), :3082-3191 (railButton hover),
- *   :2726-2752 (destination hover card placement: left edge at rail + 8,
- *   centred on the item), :2340-2378 (NavigationRailHoverCard), :2308-2337
- *   (railDetail "Set up or review the workspace Git timeline."),
- *   :2236-2256 (title), :2280-2297 (surface);
- * - APP/Core/Services/Window/PanelWindowService.swift:52,71 (title
- *   "Timeline", `arrow.triangle.branch`).
- * - Behind the card: the Agents destination as in agents-roster.
- *
- * Code vs plan: as planned. The card appears after the shared hover delay
- * (HoverPreviewCoordinator); a still figure shows it open.
- *
  * CALIBRATE: the .regularMaterial fill of the card. Drawn at MAGNIFY × the
  * app's points.
  */

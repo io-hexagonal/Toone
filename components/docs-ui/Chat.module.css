@@ -1,10 +1,10 @@
-/* P10 Chat (RichMessageBubble.swift, TranscriptMessagePresentation.swift,
-   MarkdownTextView.swift). Reads --tu-* tokens from docs-ui.module.css. */
+/* P10 Chat: transcript, bubbles, Markdown text, meta row. Reads --tu-* tokens
+   from docs-ui.module.css. */
 
 .transcript {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Spacing.sm */
+  gap: 8px;
 }
 
 .message {
@@ -15,7 +15,7 @@
   justify-content: flex-end;
 }
 
-/* VStack(spacing: Spacing.xs), with Spacer(minLength: 60) on the far side */
+/* VStack(spacing: 4), with Spacer(minLength: 60) on the far side */
 .column {
   display: flex;
   flex-direction: column;
@@ -33,8 +33,8 @@
 }
 
 .bubble {
-  padding: 8px; /* Spacing.sm */
-  border-radius: 12px; /* CornerRadius.medium */
+  padding: 8px;
+  border-radius: 12px;
   font-size: 13px; /* inherited .body */
   line-height: 16px;
   color: var(--tu-text-1);
@@ -82,7 +82,7 @@
   color: var(--tu-text-1);
 }
 
-/* metadataView: HStack(spacing: 8) */
+/* Meta row: HStack(spacing: 8) */
 .meta {
   display: flex;
   align-items: center;
@@ -97,7 +97,7 @@
   white-space: nowrap;
 }
 
-/* messageActionOverlay: HStack(spacing: 8) of 10pt symbols, textTertiary */
+/* Hover actions: HStack(spacing: 8) of 10pt symbols, tertiary */
 .actions {
   display: inline-flex;
   align-items: center;

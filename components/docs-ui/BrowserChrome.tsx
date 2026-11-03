@@ -6,28 +6,12 @@ import { PanelHeader } from "./PanelHeader";
 /**
  * The in-app browser panel's chrome, shared by the browser figures.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - BrowserHeader: APP/Features/InAppBrowser/Views/InAppBrowserPanel.swift:115-145
- *   (PanelHeader "Browser" + `globe`; `chevron.up` and `xmark` 10 bold
- *   secondary icon buttons). The App Store edition adds a privacy button.
- * - BrowserToolbar: APP/Features/InAppBrowser/Views/InAppBrowserView.swift:102-180
- *   (HStack spacing 8, padding 16 / bottom 8; back `chevron.left` 13
- *   semibold, disabled without history; URL bar HStack spacing 4, `globe` in
- *   16×16 secondary, 13pt text, padding 8/4, min-h 32, inputBackground .88,
- *   r12, 0.5pt inputBorder; "Open" `.bordered` `.controlSize(.small)` with
- *   `arrow.up.forward.square`). The URL field shows `currentURL.absoluteString`.
- * - BrowserTabBar: APP/Features/InAppBrowser/Views/BrowserTabBarView.swift:27-119
- *   (min-h 32, innerBackground @ innerBackgroundOpacity×0.35; tabs HStack
- *   spacing 2, padding 8; tab HStack spacing 4, padding 8/4, active capsule
- *   white .12; agent name capsule 9 medium white on accent .6; `globe` 10 in
- *   14×14; title 11 (max 120); active `xmark` 8 bold in 14×14; `plus` 13 medium).
- *
  * CALIBRATE: the small bordered "Open" button (native control).
  */
 
 /**
- * `appStore`: the App Store edition's AgentBrowserPrivacyButton (`hand.raised`
- * 10 bold secondary, before the collapse button; InAppBrowserPanel.swift:115-122).
+ * `appStore`: the App Store edition's browser privacy button (`hand.raised`
+ * 10 bold secondary, before the collapse button).
  */
 export function BrowserHeader({ appStore = false }: { appStore?: boolean } = {}) {
   return (
@@ -78,7 +62,7 @@ export type BrowserTab = {
   active?: boolean;
   /** Agent-owned tab: the agent's name capsule. */
   agent?: string;
-  /** Background activity on an inactive tab: pulsing dot (PulsingDot.swift). */
+  /** Background activity on an inactive tab: pulsing dot. */
   activity?: boolean;
 };
 
@@ -117,7 +101,7 @@ export function BrowserTabBar({ tabs }: { tabs: BrowserTab[] }) {
   );
 }
 
-/** The web view area under the tab bar (innerBackgroundColor while blank). */
+/** The web view area under the tab bar (inner fill while blank). */
 export function BrowserContent({ height, children }: { height: number; children?: ReactNode }) {
   return (
     <div className={styles.content} style={{ height }}>

@@ -13,19 +13,6 @@ import type { SceneDefinition } from "../scene";
  * scale 1.08) and its card reads "Explore" / "Routines and bundles reviewed
  * by Toone."
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:2140-2187 (RoutineRailOption:
- *   titles, details, symbols; Direct shows both options), :2905-2926
- *   (routineMenu: the options in a VStack(spacing 0) under the Routines
- *   button), :2928-3021 (routineOptionButton: 28², 11pt semibold;
- *   hover accent + accent .10, scale 1.08), :2190-2232
- *   (RoutineRailOptionHoverCard, width 250), :2704-2722 (placement: left
- *   edge at rail + 8, centred on the option), :2236-2297 (title, surface).
- * - Behind the card: the Agents destination as in agents-roster.
- *
- * Code vs plan: as planned. Option hover cards only arm 300 ms after the
- * menu opens (:3046-3058); a still figure shows the settled state.
- *
  * CALIBRATE: the .regularMaterial fill of the card. Drawn at MAGNIFY × the
  * app's points.
  */

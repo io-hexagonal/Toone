@@ -5,25 +5,22 @@ import { Field } from "./Field";
 import { Glyph } from "./glyphs";
 
 /**
- * P8 Row, System Threads variant. Source: Features/Chat/Views/SystemThreadRow.swift.
+ * P8 Row, System Threads variant.
  *
- * - ThreadIndicatorDot :14-37: 7pt circle, top padding 5; processing = theme
+ * - Indicator dot: 7pt circle, top padding 5; processing = theme
  *   accent, unseen = success, attention / needs a fix = warning, seen = tertiary.
- * - Row :77-108: HStack(top, spacing 8) dot + VStack(spacing 2); padding h8 v4,
+ * - Row: HStack(top, spacing 8) dot + VStack(spacing 2); padding h8 v4,
  *   min-h 52, r8; fill secondary @0.06 (hover white .10, selected accent .14 +
  *   1pt accent .6 stroke).
- * - Line 1 :112-171: "<routine>" callout medium primary (truncates first),
+ * - Line 1: "<routine>" callout medium primary (truncates first),
  *   "#N" callout monospaced digits secondary, "· <step>" callout medium
  *   primary; trailing time caption2 monospaced tertiary.
- * - Line 2 :175-198: caption2, "<agent>" secondary · tertiary dot · status
+ * - Line 2: caption2, "<agent>" secondary · tertiary dot · status
  *   (regular secondary when neutral, semibold orange / red otherwise).
- * - Line 3 :202-219: caption2 preview, optional "<author>:" medium tertiary.
+ * - Line 3: caption2 preview, optional "<author>:" medium tertiary.
  *   Lines 2-3 keep 28pt free on the right while the Stop overlay shows.
- * - Stop :223-236: stop.circle 13pt regular in a 24² frame, trailing padding 4,
+ * - Stop: stop.circle 13pt regular in a 24² frame, trailing padding 4,
  *   secondary, red while hovered (xmark.circle for a queued thread).
- *
- * Text comes from ThreadRowTitle / SystemThreadRowText
- * (Features/Chat/Views/ThreadsHoverButton.swift:187-330).
  */
 
 export type ThreadDot = "processing" | "unseen" | "seen" | "attention";
@@ -99,8 +96,7 @@ export function SystemThreadRow({
 }
 
 /**
- * The System Threads destination of the left panel
- * (LeftOrchestratorView.swift:1259-1277, 3484-3560): destination header,
+ * The System Threads destination of the left panel: destination header,
  * "Search system threads" (padding h8 v4), then the rows (LazyVStack
  * spacing 2, padding h8, bottom 8).
  */

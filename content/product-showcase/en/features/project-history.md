@@ -16,7 +16,7 @@ rail-hover-timeline
 
 ## See what changed and who changed it
 
-Timeline entries retain the checkpoint message, author identity, and affected project state. Agent attribution settings help distinguish automated changes from work attributed to you.
+Timeline entries retain the checkpoint message, author identity, and affected project state.
 
 ```toone-ui
 timeline-list

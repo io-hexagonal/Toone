@@ -15,26 +15,19 @@ export function startHeroGraph(rootEl) {
   // out before the text column, fades back in and arrives at the first right step. Then a rest.
   // Edges never move; at most two dots move at once; one running card (+ its running sub-step).
   //
-  // Hover a step card → its sub-routine expands, mirroring the app (Toone desktop, paths under
-  // apps/toone-desktop/Toone/Toone/):
-  //  - Expansion is per sub-routine, toggled from the card: RoutineDraftPipelineView.swift:401-428
-  //    (isExpanded / toggleSubRoutine over disclosure.expandedSubRoutineIds).
-  //  - Child steps are step-kind nodes labelled "n. Title", chained parent → first step → … with
-  //    stepChain links: RoutineDraftGraphBuilder.swift:331-391.
-  //  - Step cards are 150 × 36, the strip hangs 46 below its parent with 24 between steps:
-  //    RoutinePipelineLayoutEngine.swift:26, :30-32, :436-475. Here: 196 × 36, run vertically,
-  //    36 / 12 (why: see SUB in build-hero-v3.cjs).
+  // Hover a step card → its sub-routine expands, mirroring the Toone desktop app:
+  //  - Expansion is per sub-routine, toggled from the card.
+  //  - Child steps are step-kind nodes labelled "n. Title", chained parent → first step → ….
+  //  - In the app, step cards are 150 × 36 and the strip hangs 46 below its parent with 24
+  //    between steps. Here: 196 × 36, run vertically, 36 / 12 (why: see SUB in build-hero-v3.cjs).
   //  - Step card: radius 8, fill .85, 1pt separator border, RUNNING badge pinned top-trailing at
-  //    (+6, −6), lit from within while running: RoutinePipelineGraphComponents.swift:247-276, :392-412.
-  //  - stepChain edges: straight, .secondary @.55, 1.2pt: RoutinePipelineGraphComponents.swift:56-57, :91-92.
-  //  - The "Show sub-routines" capsule "4⌄" (grey .4 @.18 at rest, theme accent @.18 when open):
-  //    RoutinePipelineGraphComponents.swift:195-210, accent from LayoutStyle.swift:338.
-  //  - Boundary: the Routine Creator graph container, r14, inner background @.38, separator @.75:
-  //    RoutineDraftPipelineView.swift:99-107.
-  //  - Focus dims the rest, a running node stays lit, easeInOut .25 s: RoutineDraftPipelineView.swift:357-363.
-  //  - A live sub-routine keeps its parent Running: RoutineDraftRuntimePresentation.swift:113-115.
-  //  - No spring on hover here (owner: no bounce, scale ≤ 1.03; the app uses 1.08 with a spring,
-  //    RoutinePipelineGraphComponents.swift:242-243).
+  //    (+6, −6), lit from within while running.
+  //  - Step chain edges: straight, .secondary @.55, 1.2pt.
+  //  - The "Show sub-routines" capsule "4⌄" (grey .4 @.18 at rest, theme accent @.18 when open).
+  //  - Boundary: the routine graph container, r14, inner background @.38, separator @.75.
+  //  - Focus dims the rest, a running node stays lit, easeInOut .25 s.
+  //  - A live sub-routine keeps its parent Running.
+  //  - No spring on hover here (owner: no bounce, scale ≤ 1.03; the app uses 1.08 with a spring).
   var root = rootEl;
   if (!root || root.__hgbDestroy) return;
   var CFG = {"uses":{"f":{"la":["claude","openai"],"lb":["linkedin"],"ra":["figma","higgsfield"],"rb":["threads","facebook","instagram"]},"c":{"la":["claude","openai"],"lb":["linkedin"],"ra":["figma","higgsfield"],"rb":["threads","facebook","instagram"]}},"into":{"lb":"la","ra":"lb","rb":"ra"},"hand":{"ra":"lb"},"subs":{"la":[null,"claude","openai",null],"lb":["linkedin",null,"linkedin",null],"ra":[null,"figma",null,"higgsfield"],"rb":[null,"threads","facebook","instagram"]},"loops":{"f":[["la","lb","ra","rb"]],"c":[["la","lb","ra","rb"]]}};

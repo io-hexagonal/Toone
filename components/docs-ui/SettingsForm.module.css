@@ -1,6 +1,6 @@
 /*
- * P17 SettingsForm (SettingsForm.tsx). Sidebar + detail values come from
- * SettingsView.swift:107-190; everything inside the detail column is a
+ * P17 SettingsForm (SettingsForm.tsx). Sidebar + detail values match the
+ * shipped app; everything inside the detail column is a
  * native grouped Form (`.formStyle(.grouped)`), whose geometry AppKit owns:
  * every value marked CALIBRATE is a close guess for macOS 26 dark, to be
  * replaced from a capture of the running app. Tokens come from the parent
@@ -17,7 +17,7 @@
 }
 
 /* Sidebar column: ScrollView > VStack(spacing 3) .padding(10),
-   background innerBackgroundColor.opacity(0.46) (SettingsView.swift:131-182).
+   background inner @0.46.
    Absolutely positioned list so the detail column alone sets the height. */
 .sidebar {
   position: relative;
@@ -68,7 +68,7 @@
   flex: none;
 }
 
-/* Detail column: innerBackgroundColor.opacity(0.18) (SettingsView.swift:186). */
+/* Detail column: inner background @0.18. */
 .detail {
   flex: 1 1 auto;
   min-width: 0;
@@ -83,7 +83,7 @@
   padding: 20px 20px 18px;
 }
 
-/* Close button overlay (SettingsView.swift:205-222): xmark 10 bold,
+/* Close button overlay: xmark 10 bold,
    .secondary, .buttonStyle(.icon) (28²), padding 10, top trailing. */
 .close {
   position: absolute;
@@ -137,7 +137,7 @@
   border-bottom-right-radius: 0;
 }
 
-/* Footer: Typography.caption (10pt) .secondary. CALIBRATE insets */
+/* Footer: caption (10pt) .secondary. CALIBRATE insets */
 .footer {
   padding: 6px 4px 0;
   font-size: 10px;

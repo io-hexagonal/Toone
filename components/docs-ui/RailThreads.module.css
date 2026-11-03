@@ -1,6 +1,6 @@
-/* RecentThreadRailList (LeftOrchestratorView.swift:3229-3445). See RailThreads.tsx. */
+/* The rail's recent-thread list. See RailThreads.tsx. */
 
-/* LazyVStack spacing 3 (navigationRailThreadSpacing), padding v4 (…ListInset) */
+/* LazyVStack spacing 3, padding v4 */
 .list {
   display: flex;
   flex-direction: column;
@@ -9,7 +9,7 @@
   padding: 4px 0;
 }
 
-/* threadButton: bubble.left.fill 10 semibold in a 28² frame, r8 */
+/* thread button: bubble.left.fill 10 semibold in a 28² frame, r8 */
 .item {
   display: flex;
   align-items: center;

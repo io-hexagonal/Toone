@@ -50,8 +50,7 @@ const STILL: Frame = { states: SPANS.map(() => "done"), leads: TARGET };
 
 /**
  * "A Toone routine" in Why Toone: the hero's chain with its contract and
- * fallback on the Find leads edge, and the ledger that carries over between
- * runs. While in view it runs one step at a time; out of view it holds where
+ * fallback on the Find leads edge, and what it remembers between runs. While in view it runs one step at a time; out of view it holds where
  * it was. Reduced motion shows the finished run, still.
  */
 export default function AfterRoutineRun({ steps, labels }: Props) {
