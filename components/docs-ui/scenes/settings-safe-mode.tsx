@@ -64,7 +64,7 @@ function SettingsSafeMode() {
         <SettingsRow style={{ display: "block" }}>
           <div
             style={{
-              height: 80,
+              height: 52,
               overflow: "hidden",
               fontFamily: "var(--tu-font-mono)",
               fontSize: 10,

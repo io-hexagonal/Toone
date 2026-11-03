@@ -63,6 +63,6 @@ export const scene: SceneDefinition = {
   radius: 16,
   label:
     "Settings, Routines page. Routine Inspector: Enable Routine Inspector is on, Inspect each routine's first runs has a stepper, Automatically apply validated fixes is off, and Keep inspection threads in Recent Threads is on. The footer reads: Toone reviews a new routine's first runs and flags problems.",
-  caption: "Settings → Routines: Toone reviews each new routine's first runs and flags problems.",
+  caption: "Settings → Routines: switch on Routine Inspector to review new routines.",
   Component: SettingsRoutineInspector,
 };

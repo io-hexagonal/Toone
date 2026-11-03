@@ -77,7 +77,7 @@ export function researchBriefGraph({
     );
   }
   if (showInputs) {
-    nodes.push({ id: ID.input, kind: "input", label: "Topic", sublabel: "user · topic" });
+    nodes.push({ id: ID.input, kind: "input", label: "Topic", sublabel: "Asked before each run" });
   }
   if (showArtefacts) {
     nodes.push({
