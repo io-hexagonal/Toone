@@ -36,7 +36,7 @@ spotlight-chat-panel
 
 Project files and working context are designed around the local workspace, while model requests necessarily leave the device for the selected provider. Consider the provider’s own account and data policies when deciding what an agent should receive.
 
-Toone tracks the installed provider CLI versions and can surface approved updates, minimum-version warnings, and blocked releases before an outdated runtime becomes an invisible source of failure.
+Toone keeps Claude Code and Codex up to date and warns you when one is too old to work.
 
 ```toone-ui
 settings-provider-versions
