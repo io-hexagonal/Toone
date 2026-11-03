@@ -7,27 +7,8 @@ import type { SceneDefinition } from "../scene";
 
 /**
  * The routine drafting thread after you state the intent, input and
- * objective: your message, the Routine Supervisor's first proposal, and the
+ * objective: your message, the agent's first proposal, and the
  * routine draft card for the checked revision 1 with Publish.
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Core/Services/AgentSession/AgentSessionManager.swift:9248-9290
- *   (createRoutineDraft: the thread runs as RoutineSupervisor.synthesizeAgent()
- *   — "Routine Supervisor", department id "system" — and is titled
- *   "Routine Creator · <draft name>", kept in sync at :12075-12079);
- *   APP/Features/Organization/Models/RoutineExecution.swift:1061-1065
- *   (displayName for a routine-creation thread).
- * - APP/UI/Layout/LeftOrchestratorView.swift:1446-1471, :1936-1973 (header:
- *   title = displayName; subtitle = "agent · department", the department's
- *   display name or, when the org has none for the id, the raw id).
- * - Card: RoutineDraftCard.tsx (RichMessageBubble.swift:525-697).
- * - Bubbles and meta: Chat.tsx (RichMessageBubble.swift:90-187).
- *
- * Code vs spec: the spec's header subtitle "Routine Supervisor · Draft
- * authoring" is the System Threads card's caption (LeftOrchestratorView.swift:
- * 4190-4193), not the chat header. The chat header shows the thread title
- * "Routine Creator · Produce a research brief" and the subtitle
- * "Routine Supervisor · system" (no org department has the id "system").
  */
 
 const WIDTH = 480;
@@ -45,8 +26,8 @@ function DraftingThreadIntent() {
             <Button icon="xmark" iconSize={15} variant="icon" />
           </>
         }
-        subtitle="Routine Supervisor · system"
-        title={`Routine Creator · ${routine}`}
+        subtitle="Toone"
+        title={`Drafting · ${routine}`}
       />
       <ChatTranscript>
         <ChatMessage meta={<ChatMeta side="user" time="11:02 AM" />} side="user">
@@ -84,7 +65,7 @@ export const scene: SceneDefinition = {
   id: "drafting-thread-intent",
   width: WIDTH,
   radius: 24,
-  label: `The routine drafting thread titled Routine Creator · ${DEMO.routine.name}, with the Routine Supervisor. Your message states the intent, the input and the objective. The supervisor replies that it drafted 4 steps and that step 2 looks reusable. Below, the routine draft card reads ${DEMO.routine.name}, Drafting · revision 1, with a Publish button.`,
+  label: `The routine drafting thread titled Drafting · ${DEMO.routine.name}, with Toone. Your message states the intent, the input and the objective. The agent replies that it drafted 4 steps and that step 2 looks reusable. Below, the routine draft card reads ${DEMO.routine.name}, Drafting · revision 1, with a Publish button.`,
   caption: "Give the intent, input and objective; the agent drafts the routine.",
   Component: DraftingThreadIntent,
 };

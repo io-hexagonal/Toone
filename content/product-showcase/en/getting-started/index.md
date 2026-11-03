@@ -62,7 +62,7 @@ Give the agent a narrow responsibility rather than a personality: investigate a 
 
 There are two ways to create a routine, and both end in a draft you can review before publishing:
 
-- **Talk to an agent.** Ask the agent for the work directly. Once a request produces a useful result, choose **Create routine** from that message and Toone opens a drafting thread with its Routine Supervisor, using the conversation as the starting point.
+- **Talk to an agent.** Ask the agent for the work directly. Once a request produces a useful result, choose **Create routine** from that message and Toone opens a drafting thread, using the conversation as the starting point.
 - **Start from the Routines panel.** Open the **Routines** panel, switch to **Drafts**, and press **+**. This creates an empty draft and a conversation in which you describe the routine.
 
 ```toone-ui
