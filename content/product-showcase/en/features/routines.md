@@ -51,7 +51,7 @@ When a step fails, the run doesn't have to start over. Toone fixes the routine a
 autofix-picker
 ```
 
-In every mode, Toone stops and asks you when only you can unblock the step: a sign-in, an approval, a missing input, or a step that may already have sent something outside Toone. An automatic fix never changes who a step sends to, permissions, credentials, or the step's provider or model. Temporary problems, such as a provider timing out, are retried twice unchanged before Toone asks you.
+In every mode, Toone stops and asks you when only you can unblock the step: a sign-in, an approval, a missing input, or a step that may already have sent something outside Toone. An automatic fix never changes who a routine contacts or what it can access.
 
 ```toone-ui
 issue-card-autofixed
@@ -59,9 +59,9 @@ issue-card-autofixed
 
 ## Inspect early runs
 
-Routine Inspector can review the first runs of each routine in a separate AI turn. It reports problems alongside the normal static checks and run-status badges, and can optionally apply a generated fix only after its diff passes local validation.
+With Routine Inspector on, Toone reviews a new routine's first runs and flags problems. Turn on **Automatically apply validated fixes** if you want it to fix them for you.
 
-Choose whether inspection threads remain in Recent Threads and whether a main routine should continue automatically when its current turn ends.
+Choose whether inspection threads remain in Recent Threads.
 
 ```toone-ui
 settings-routine-inspector

@@ -32,26 +32,11 @@ import { WorkspaceStrip } from "./WorkspaceStrip";
  * same moment: Run #3 of the research-brief routine is running while you
  * chat with Research Assistant in the acme.com growth project.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Chat panel: UI/Layout/LeftOrchestratorView.swift:727-734 (strip +
- *   separator), :891-929 (rail + divider + destination), :1364-1444
- *   (destination header), :2517-3211 (rail; System Threads badge = active
- *   system threads, 2 while Run #3 and its sub-routine work), :3229-3482
- *   (recent strip); composer ChatPanelView.swift:2421-2596. Same parts and
- *   strings as scenes/spotlight-chat-panel.tsx.
- * - Routines panel: Features/Organization/Views/RoutineCreatorPanelView.swift
- *   :178-191 (header / Divider / workspaceToolbar / Divider / sidebar +
- *   Divider + workspace), :398-451 (header: point.3.connected… in the
- *   accent, "Routines" headline, "Published · <cadence>", plus, xmark),
- *   :453-479 (toolbar: sidebar.left, then the selected routine's actions),
- *   :481-517 (sidebar ideal width 285, inner .18), :667-760 (actions while
- *   a run is live: RoutineRunControlsView Pause / Cancel run, then Setup,
- *   Babysit, Edit, Delete, all bordered small), :809-831 (graph, padding
- *   18). Sidebar rows as scenes/routines-list-running.tsx; the running
- *   routine is selected (selectRunningRoutineIfNeeded, :203), so its run
- *   controls live in the toolbar, not on the run row.
- * - Project Explorer: UI/Layout/RightProjectPanelView.swift:35-91, :156-200;
- *   tree as scenes/project-explorer-tree.tsx.
+ * The chat panel shares its parts and strings with
+ * scenes/spotlight-chat-panel.tsx, the Routines sidebar with
+ * scenes/routines-list-running.tsx and the Project Explorer tree with
+ * scenes/project-explorer-tree.tsx. The running routine is selected, so its
+ * run controls live in the toolbar, not on the run row.
  *
  * Simplified on purpose (each figure scales these to ~0.44, where they read
  * as shape, not text): the Routines workspace's definition preview under
@@ -187,7 +172,6 @@ export function RoutinesPanelContent({ width }: { width: number }) {
         <Button icon="pause.fill" label="Pause" variant="bordered" />
         <Button icon="stop.fill" label="Cancel run" variant="bordered" />
         <Button icon="slider.horizontal.3" label="Setup" variant="bordered" />
-        <Button icon="eye" label="Babysit" variant="bordered" />
         <Button icon="square.and.pencil" label="Edit" variant="bordered" />
         <Button disabled icon="trash" label="Delete" variant="bordered" />
       </div>
@@ -251,7 +235,7 @@ export function RoutinesPanelContent({ width }: { width: number }) {
                 hasSelection={false}
                 published
                 status={{ summary: `Running · ${DEMO.subRoutine.name}` }}
-                summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+                summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
               />
             }
           >

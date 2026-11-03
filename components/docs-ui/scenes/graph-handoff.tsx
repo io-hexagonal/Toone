@@ -12,31 +12,6 @@ import type { SceneDefinition } from "../scene";
  * (Launch Planner, the routine's owner) and "Draft launch posts" (Growth
  * Writer). Same run as the system-threads-parallel figure.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - edges: APP/Features/KnowledgeGraph/Views/RoutinePipelineGraphComponents.swift:54-55
- *   (handoff = department colour, resting 0.7), :89-113 (curve, dash [6, 4]);
- *   step chain = `.secondary` @0.55, straight;
- * - step stubs: same file :249-283 (8pt, ↓ input colour / ↑ artefact
- *   colour), :357-364 (first two values, last path segment); the executor
- *   only lives in the step's tooltip (:287-293), so nothing names an agent
- *   on a step card;
- * - graph: APP/Core/Services/RoutineCreator/RoutineDraftGraphBuilder.swift:96-127
- *   (an explicit transition is a stepChain edge, a structured agent handoff
- *   adds a `.handoff` edge between the same two steps);
- *   APP/Features/KnowledgeGraph/Layout/RoutinePipelineLayout.swift:91
- *   ("explicit execution boundary between workflow steps").
- *
- * Code vs plan: the plan draws two routine cards, "Launch Surface
- * Preparation" and "Launch Content Production", joined by a handoff edge.
- * The app has no such edge: handoffs only join two *steps of one routine*
- * (payload.handoffs), and the organization graph deliberately draws no
- * cross-routine edges (RoutinesGraphBuilder.swift:5-8). The two Explore
- * routines also declare no handoffs. So the figure shows the demo's
- * "Launch day" routine, whose steps mirror the two bundle routines.
- * A handoff always rides on a control-flow edge (RoutineRunBranching.swift:95-97),
- * so each dashed handoff curve runs alongside the straight step chain
- * between the same two steps, as in the app.
- *
  * Crop: zoom 1.12 (card text ≥11px in the guide column). Routine card +
  * three columns need 660pt of model space (zoom ≤ 0.93), so the routine
  * card "Launch day · Launch Planner" sits off-frame left; its chain edge
@@ -115,7 +90,7 @@ function GraphHandoff() {
             clipAfter="fit"
             hasSelection={false}
             published
-            summary={pipelineSummary({ steps: 3, subRoutines: 0, runValues: 1, resources: 0, artefacts: 3 })}
+            summary={pipelineSummary({ steps: 3, subRoutines: 0 })}
           />
         }
       >

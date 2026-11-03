@@ -11,13 +11,11 @@ import type { SceneDefinition } from "../scene";
  * the 616px canvas is 16px too wide to hide both, so one would be sliced). Toolbar ends on
  * "Run setup": at 640px the app's ScrollView would clip "Artefacts" mid-word.
  *
- * Runtime state as RoutineDraftRuntimePresentation builds it: the routine
+ * Runtime state as the app shows it: the routine
  * node, the running step and the live sub-routine are `running` (it never
  * marks anything completed, so step 1 has no green rim). The selected step's
- * border and wash use the accent (selection wins over the live colour,
- * RoutinePipelineGraphComponents.swift:402-405); its RUNNING badge keeps the
- * running colour. Sources: RoutineDraftPipelineView.swift:78-97 (focus strip),
- * :240-282 (status chip); RoutinePipelineGraphComponents.swift:318-347, 461-542.
+ * border and wash use the accent (selection wins over the live colour); its
+ * RUNNING badge keeps the running colour.
  */
 
 const WIDTH = 640;
@@ -53,7 +51,7 @@ function RoutineRunningGraph() {
             hasSelection
             published
             status={{ summary: `Running · ${DEMO.subRoutine.name}` }}
-            summary={pipelineSummary({ steps: 4, subRoutines: 1, runValues: 1, resources: 0, artefacts: 1 })}
+            summary={pipelineSummary({ steps: 4, subRoutines: 1 })}
             clipAfter="runSetup"
           />
         }

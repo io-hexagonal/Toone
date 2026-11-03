@@ -5,12 +5,11 @@ import { Glyph } from "../glyphs";
 import { StatusChip } from "../Pill";
 
 /**
- * Routine Creator graph container and toolbar
- * (Features/Organization/Views/RoutineDraftPipelineView.swift:56-231).
- * Container: r14, innerBackground @0.38, 1pt separator @0.75, clipped.
+ * Routine graph container and toolbar.
+ * Container: r14, inner background @0.38, 1pt separator @0.75, clipped.
  * Toolbar: title + summary · [status chip] · Run setup / Artefacts / Steps
  * chips · fit + "Focus selection". The toolbar is a horizontal ScrollView
- * (:137) with no truncation or overflow menu: at a narrow width the app shows
+ * with no truncation or overflow menu: at a narrow width the app shows
  * the leading items and clips the rest mid-word at the right edge. A 640px
  * figure is narrower than the real panel, so figures pass `clipAfter` to end
  * the toolbar on the last item that fits whole instead of slicing one.
@@ -42,21 +41,11 @@ export function GraphContainer({
   );
 }
 
-/**
- * The toolbar summary line, exactly as the app builds it. Note the app always
- * writes "sub-routines" and "artefacts" (no singular), while run values and
- * resources do pluralise (RoutineInputPresentation.summary).
- */
-export function pipelineSummary(counts: {
-  steps: number;
-  subRoutines: number;
-  runValues: number;
-  resources: number;
-  artefacts: number;
-}): string {
-  const values = `${counts.runValues} ${counts.runValues === 1 ? "run value" : "run values"}`;
-  const resources = `${counts.resources} ${counts.resources === 1 ? "resource" : "resources"}`;
-  return `${counts.steps} steps · ${counts.subRoutines} sub-routines · ${values} · ${resources} · ${counts.artefacts} artefacts`;
+/** The toolbar summary line, shortened for the guides: steps and sub-routines. */
+export function pipelineSummary(counts: { steps: number; subRoutines: number }): string {
+  const steps = `${counts.steps} ${counts.steps === 1 ? "step" : "steps"}`;
+  if (counts.subRoutines === 0) return steps;
+  return `${steps} · ${counts.subRoutines} ${counts.subRoutines === 1 ? "sub-routine" : "sub-routines"}`;
 }
 
 /** Toolbar items in the app's order, leading → trailing. */
