@@ -26,7 +26,7 @@ settings-global-mcps
 
 ## Reuse browser integrations
 
-Browser site maps describe repeatable interactions with a web service. Toone keeps them in one collection on your Mac, shared by all your projects, so a map that one project builds is ready for the others. **Settings → MCPs** lists them under **Global Integrations**, where you can turn a map off.
+Website integrations an agent learns once are available in all your projects; turn any of them off in **Settings → MCPs → Global Integrations**.
 
 ```toone-ui
 settings-global-integrations
