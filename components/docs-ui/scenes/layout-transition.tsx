@@ -8,20 +8,6 @@ import type { SceneDefinition } from "../scene";
  * each step one press of the layout hotkey ⌥L, with the same conversation
  * (and, once it is shown, the same project tree) in every layout. Schematic
  * screens at the real panel frames, in panel-layouts' tile vocabulary.
- *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Windows/PanelLayout.swift:10-33; geometry FloatingPanel.swift:31-206
- *   (ported in Miniature.tsx panelFrames).
- * - Hotkey: Core/Models/HotkeyBinding.swift:66-69 (default ⌥L, "Toggle
- *   layout"); cycle App/AppDelegate.swift:1190-1201: Full Height → Zen →
- *   Spotlight → Docked → Full Height (Compact → Full Height).
- * - Tile and keycap vocabulary: Features/Setup/Views/LayoutHotkeysStepView
- *   .swift:73-86 (keycap), :107-136 (layout card name 11pt), :273-387
- *   (PanelLayoutMockup).
- *
- * Code vs plan: the plan shows Spotlight → Full Height on one ⌥L arrow. In
- * the code ⌥L moves Spotlight to Docked, and Docked to Full Height, so the
- * figure draws both steps (two presses), not a jump the hotkey never makes.
  */
 
 const PAD = 16;

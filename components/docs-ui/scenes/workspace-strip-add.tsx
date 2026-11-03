@@ -9,15 +9,6 @@ import { WorkspaceStrip } from "../WorkspaceStrip";
  * help tag "Add Workspace (2/9)". Below the strip's separator the panel body
  * is left empty (the crop is about the strip).
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/WorkspaceStripView.swift:26-70 (strip: HStack 6, padding
- *   16/7, height 44), :74-86 ("+": plus 13 medium tertiary, .icon style,
- *   help "Add Workspace (count/max)"), :197-279 (pill);
- * - UI/Styles/ButtonStyles.swift:15-69 (IconButtonStyle hover fill);
- * - UI/Layout/LeftOrchestratorView.swift:727-734 (strip, then a separator,
- *   at the top of the left panel);
- * - maxWorkspaces = 9 (the help text's denominator).
- *
  * calibrate: the help tag is a native NSToolTip (drawn by components/docs-ui/
  * Tooltip.tsx) and AppKit puts it under the pointer; with no cursor in the
  * figure it sits just below the "+".

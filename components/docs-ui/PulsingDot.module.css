@@ -1,4 +1,4 @@
-/* PulsingDot.swift: opacity 0.3 ↔ 1, shadow colour @0.6 radius size/2. */
+/* Pulsing dot: opacity 0.3 ↔ 1, shadow colour @0.6 radius size/2. */
 
 .dot {
   display: inline-block;

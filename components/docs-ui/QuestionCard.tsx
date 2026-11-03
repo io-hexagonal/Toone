@@ -4,17 +4,15 @@ import { Glyph, type GlyphName } from "./glyphs";
 
 /**
  * P13 QuestionCard: the "ask the user" surfaces of a chat.
- * Sources (main repo, desktop app, Features/Chat/Views/):
- * - QuestionSharedComponents.swift: QuestionHeaderChip :14-34 (accent
- *   capsule: symbol + caption bold, padding 10/4, accent @0.1),
- *   QuestionOptionRow :36-104 (padding 12, HStack top spacing 12; 18pt
+ * - Question chip (accent capsule: symbol + caption bold, padding 10/4,
+ *   accent @0.1), option row (padding 12, HStack top spacing 12; 18pt
  *   radio/checkbox mark, 1.5 stroke; label subheadline, semibold when
  *   selected; optional caption description; selected = accent @0.1 fill +
- *   accent stroke, else secondary @0.3 stroke; r8), QuestionAnswerFieldStyle
- *   :106-124 (padding 12, inputBackground, r8, accent stroke while focused
+ *   accent stroke, else secondary @0.3 stroke; r8), answer field
+ *   (padding 12, input background, r8, accent stroke while focused
  *   or filled, else secondary @0.3);
- * - AsyncQuestionComposer.swift:29-205: the non-blocking card above the
- *   composer. Full-width band on threadCardBackground (no radius); header
+ * - The non-blocking card above the composer. Full-width band on the thread
+ *   card background (no radius); header
  *   min-h 48, padding leading 16 / trailing 8, chip "Question for you" (+
  *   "1 of N" caption secondary only when more than one is pending), then the
  *   minimize (`minus`) and close (`xmark`) controls: 14pt medium glyph in a

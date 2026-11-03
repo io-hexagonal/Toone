@@ -3,13 +3,12 @@ import styles from "./docs-ui.module.css";
 import { cx } from "./cx";
 
 /**
- * P1 Surface. Sources: FloatingPanel.swift:608-672 (panel, r24),
- * DesignTokens.swift:23 (card, r16), PanelHeader.swift:182-238 (row surface).
+ * P1 Surface: the panel, card, inset and row surfaces.
  *
  * - `panel`: frozen-glass panel fill, r24 (use when the crop shows a panel corner).
- * - `card`: threadCardBackground + 1pt threadCardBorder, r16.
- * - `inset`: innerBackground @0.42, r8 (inspector tiles, run rows).
- * - `row`: panelRowSurface, r8; `state` = hover | selected | drop.
+ * - `card`: thread card background + 1pt thread card border, r16.
+ * - `inset`: inner background @0.42, r8 (inspector tiles, run rows).
+ * - `row`: panel row surface, r8; `state` = hover | selected | drop.
  */
 export type SurfaceVariant = "panel" | "card" | "inset" | "row";
 

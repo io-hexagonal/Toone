@@ -9,31 +9,6 @@ import type { SceneDefinition } from "../scene";
  * thread), Growth Writer yesterday. The populated twin of `agents-empty`
  * (same rail, header and "Create agent" bar).
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:1089-1164 (agentsDestination),
- *   :4699-4764 (roster grouped by the day you last talked to each agent,
- *   newest first), :4453-4470 (section titles), :4521-4541 (section
- *   header), :4825-4990 (AgentRow + the "New Thread" plus);
- * - APP/UI/Components/AgentActivityIcon.swift:115-191 (card label), :55-104
- *   (avatar + status ring);
- * - rail: P3 NavRail (Agents selected). Pieces in AgentRow.tsx.
- *
- * Code vs plan:
- * - The plan writes each row as "Research Assistant · Growth". The card
- *   stacks the name, then the department on its own line, then the last
- *   message ("<author>: <first line>").
- * - The plan's "one activity dot": the roster has no dot. Activity lives on
- *   the avatar (an animated body; a ring for completed / attention /
- *   failed) and in the open-thread count. Research Assistant carries the
- *   green "completed" ring (a reply you have not opened yet).
- * - The plan puts all three under "Today". Sections follow the last human
- *   interaction per agent; Growth Writer is drawn under "Yesterday" to show
- *   the grouping. An agent with no open thread reads "No thread messages
- *   yet" even when you talked to it before (the preview comes from live
- *   threads only, :4993-5013).
- * - Avatars are one static blob with cut-out eyes in the theme accent
- *   (AgentBlobView is an animated mesh, plan §5.4).
- *
  * CALIBRATE: the borderedProminent bezel and the .ultraThinMaterial bar (as
  * in agents-empty). Drawn at MAGNIFY × the app's points (caption text stays
  * legible).

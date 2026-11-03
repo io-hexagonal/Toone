@@ -8,18 +8,6 @@ import { ChatPanelContent, ProjectPanelContent, ZenBackdrop } from "../WindowPar
  * chat left, Project Explorer right). The video is a flat warm-grey still in
  * the style of zen-video-grid's "Mountain Wilds" thumbnail, not real art.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - Features/ZenMode/Services/ZenModeWindowService.swift:7-11, :216-256 (a
- *   borderless window the size of the screen at .normal level, black while
- *   loading, ignores the mouse; the floating panels stay above it).
- * - Zen Mode does not change the panel layout: the toggle only shows that
- *   window (App/AppDelegate.swift:691-693, :737-741), so the panels keep the
- *   Full Height frames (FloatingPanel.swift:31-120). Not to be confused with
- *   the "Zen" panel layout (2/3 + 1/3).
- * - Features/ZenMode/Models/ZenVideo.swift (videos are YouTube embeds; the
- *   still stands in for one).
- * - Panel contents: WindowParts.tsx.
- *
  * Calibrate: real panels are glass and would show the video blurred through
  * them; drawn with the kit's frozen panel fill.
  */

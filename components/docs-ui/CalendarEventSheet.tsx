@@ -2,18 +2,8 @@ import type { ReactNode } from "react";
 import { Sheet, SheetStage } from "./Sheet";
 
 /**
- * The Calendar's event sheet (CalendarEventDetailView), shared by the
+ * The Calendar's event sheet, shared by the
  * calendar-routine-event and calendar-proposed-event scenes.
- *
- * Source: apps/toone-desktop/Toone/Toone/Features/Calendar/Views/
- * CalendarEventDetailView.swift:52-139: VStack leading spacing Spacing.md
- * 16; header HStack (title .headline textPrimary · Spacer · "Proposed"
- * caption2 orange on orange @0.12 capsule, padding 6/2 · "Routine" caption2
- * textTertiary on textTertiary @0.12 capsule); Divider().opacity(0.3);
- * content; Divider().opacity(0.3); actions. .padding() (16), width 460,
- * background layoutStyle.popoverBackground (= innerBackgroundColor,
- * LayoutStyle.swift:395-397). Presented with `.sheet` from the Calendar
- * panel (CalendarPanelView.swift:84-110), so it is a sheet, not a popover.
  *
  * CALIBRATE: the sheet window (Sheet.tsx) and the Divider tone at 0.3.
  */

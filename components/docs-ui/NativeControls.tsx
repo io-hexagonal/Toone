@@ -5,8 +5,7 @@ import { Glyph, type GlyphName } from "./glyphs";
 /**
  * Native AppKit controls drawn as pictures (P17 / P19 pieces): checkbox,
  * radio group, pop-up button and push buttons, dark appearance, tinted with
- * the theme accent the way `.liveTheme()` tints them
- * (APP/UI/Theme/LiveTheme.swift:27-36: `.tint(style.accent)`).
+ * the theme accent the way the app tints them (`.tint(accent)`).
  *
  * CALIBRATE: none of these have geometry in the repo (plan §5.2). Sizes,
  * fills, radii and the label gaps are close guesses for macOS 26 and must be
@@ -83,8 +82,8 @@ export function PopUpButton({
 
 /**
  * A push button. `prominent` = `.buttonStyle(.borderedProminent)` tinted with
- * the theme accent (Smoky Quartz's 0.72 grey gets a white label from AppKit,
- * LayoutStyle.swift:342-348). `small` = `.controlSize(.small)`.
+ * the theme accent (Smoky Quartz's 0.72 grey gets a white label from AppKit).
+ * `small` = `.controlSize(.small)`.
  */
 export function PushButton({
   label,
@@ -99,7 +98,7 @@ export function PushButton({
   icon?: GlyphName;
   prominent?: boolean;
   small?: boolean;
-  /** Override the control font (e.g. Typography.UI.button = 13 medium). */
+  /** Override the control font (e.g. button text = 13 medium). */
   fontSize?: number;
   fontWeight?: number;
   style?: CSSProperties;

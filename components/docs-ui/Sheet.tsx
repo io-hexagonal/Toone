@@ -6,7 +6,7 @@ import styles from "./Sheet.module.css";
  * panel that presents it.
  *
  * The SwiftUI view inside a sheet supplies its own padding and width
- * (e.g. ShareChooserSheet.swift:124, `.padding(24).frame(width: 520)`), so
+ * (e.g. the share chooser: `.padding(24).frame(width: 520)`), so
  * `Sheet` only paints the sheet window: its fill, corner, hairline and
  * shadow. `SheetStage` is the crop around it: the presenting panel's surface
  * with the sheet hanging from the top.

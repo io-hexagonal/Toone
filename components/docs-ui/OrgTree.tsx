@@ -3,27 +3,26 @@ import { Glyph, type GlyphName } from "./glyphs";
 import styles from "./OrgTree.module.css";
 
 /**
- * The right (project) panel's Organization tree (main repo,
- * apps/toone-desktop/Toone/Toone/).
+ * The right (project) panel's Organization tree.
  *
- * - PanelDisclosure   UI/Components/PanelHeader.swift (PanelDisclosureHeader):
+ * - PanelDisclosure   panel disclosure header:
  *                     HStack spacing 4: chevron 9pt semibold in a 12pt frame
  *                     · icon 13pt medium in a 16pt frame · title caption
- *                     semibold · Spacer; textSecondary; padding h16, min-h 32.
- * - OrgSectionHeader  Features/Organization/Views/OrgSectionHeaderView.swift:
+ *                     semibold · Spacer; secondary; padding h16, min-h 32.
+ * - OrgSectionHeader  section header:
  *                     HStack spacing 4: chevron (caption, tertiary, 14pt
  *                     frame) · icon .body secondary · title .body primary ·
  *                     count caption2 tertiary in a tertiary @0.15 capsule
  *                     (padding 5/1); padding leading 16 × level, vertical 4,
  *                     horizontal 8.
- * - OrgTypeHeader     MCPSectionView.swift:86-94: caption semibold tertiary,
+ * - OrgTypeHeader     MCP type header: caption semibold tertiary,
  *                     leading 16 + 8, top 4.
- * - McpRow            MCPSectionView.swift:96-147: 14pt gap · 6pt status dot
+ * - McpRow            MCP row: 14pt gap · 6pt status dot
  *                     (green ready, orange enabled-but-needs-key, white 0.3
  *                     off) · icon .body (accent, or white 0.4 off) · name
  *                     .body (primary, or white 0.4 off) · Spacer · badges;
  *                     padding leading 16 + horizontal 8, vertical 4.
- * - OrgBadge          MCPSectionView.swift:217-225: caption2, padding 5/1,
+ * - OrgBadge          MCP badge: caption2, padding 5/1,
  *                     colour @0.15 capsule, colour text.
  */
 
@@ -97,7 +96,7 @@ export function McpRow({
   icon: GlyphName;
   state: McpState;
   badges?: ReactNode;
-  /** Override the icon colour (the built-in row's seal is always accent). */
+  /** Override the icon colour. */
   iconColor?: string;
 }) {
   const off = state === "off";

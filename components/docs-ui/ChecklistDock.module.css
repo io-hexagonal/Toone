@@ -1,11 +1,11 @@
-/* P11 ChecklistDock (ConversationChecklist.swift:64-283). Tokens from .root. */
+/* P11 ChecklistDock. Tokens from .root. */
 
 .dock {
   position: relative;
   display: flex;
   flex-direction: column;
   border-radius: 14px;
-  /* popoverBackground (= innerBackground) @0.55 over the hudWindow blur;
+  /* Popover fill (= the inner fill) @0.55 over the HUD window blur;
      there is no desktop behind a docs figure, so the blur reads as a slight
      darkening of the panel. */
   background: color-mix(in srgb, var(--tu-inner) 55%, transparent);
@@ -42,7 +42,7 @@
   min-width: 0;
 }
 
-/* Checklist.headline 13 semibold primary */
+/* Headline: 13 semibold primary */
 .headline {
   font-size: 13px;
   font-weight: 600;
@@ -50,7 +50,7 @@
   color: var(--tu-text-1);
 }
 
-/* Checklist.title 12 secondary, one line */
+/* Title: 12 secondary, one line */
 .title {
   overflow: hidden;
   white-space: nowrap;
@@ -128,7 +128,7 @@
   min-width: 0;
 }
 
-/* Checklist.row 12, primary; done rows secondary */
+/* Row: 12, primary; done rows secondary */
 .rowLabel {
   font-size: 12px;
   line-height: 15px;
@@ -139,7 +139,7 @@
   color: var(--tu-text-2);
 }
 
-/* Checklist.detail 11 tertiary */
+/* Detail: 11 tertiary */
 .rowNote,
 .rowDetail {
   font-size: 11px;
@@ -249,7 +249,7 @@
   color: var(--tu-error);
 }
 
-/* Small native push button with Typography.UI.button (13 medium). CALIBRATE. */
+/* Small native push button with a 13 medium label. CALIBRATE. */
 .action {
   display: inline-flex;
   align-items: center;
@@ -268,7 +268,7 @@
 }
 
 /* .borderedProminent tinted accent: Smoky Quartz's 0.72 grey gets a white
-   label from AppKit (LayoutStyle.swift:342-348) */
+   label from AppKit */
 .action[data-prominent="true"] {
   background: var(--tu-accent);
   color: #fff;

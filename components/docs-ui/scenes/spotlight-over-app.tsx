@@ -11,22 +11,6 @@ import { ChatPanelContent, GenericAppWindow } from "../WindowParts";
  * spotlight-chat-panel (project strip, rail, "Research Assistant · Growth"
  * header, one exchange, composer).
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Windows/PanelLayout.swift:19-33 (`.spotlight`: project panel hidden;
- *   Docked and Spotlight float over the user's application instead of
- *   reserving a corridor, externalApplicationsFillVisibleScreen).
- * - UI/Windows/FloatingPanel.swift:65-111 (chat 53% × 1/3 of the visible
- *   frame, centred; project parked off-screen).
- * - Settings caption "Minimal centered chat panel. Project explorer is
- *   hidden." (Features/Settings/Views/SettingsView.swift:1625); reached with
- *   ⌥L (HotkeyBinding.swift:66-69; cycle AppDelegate.swift:1190-1201).
- * - Panel contents: WindowParts.tsx ChatPanelContent (transcript scrolled to
- *   its end; the rail's recent strip gets 0 slots in a 300pt panel).
- *
- * Code vs plan: the plan's header title is "Research Assistant"; with a
- * thread open the title is the thread's name and the subtitle reads
- * "Research Assistant · Growth" (as in spotlight-chat-panel).
- *
  * The other app is a generic shape, not a real application.
  */
 

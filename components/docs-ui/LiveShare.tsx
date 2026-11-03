@@ -3,36 +3,35 @@ import { Glyph, type GlyphName } from "./glyphs";
 import styles from "./LiveShare.module.css";
 
 /**
- * Live Share pieces (main repo, apps/toone-desktop/Toone/Toone/Features/Business/Views/).
+ * Live Share pieces.
  *
- * - SessionBanner        SessionBannerView.swift:59-292, placed at the top of
- *                        the left panel with padding 8/6 and a Divider below
- *                        (LeftOrchestratorView.swift:735-856). HStack spacing
+ * - SessionBanner        the session banner, placed at the top of the left
+ *                        panel with padding 8/6 and a Divider below. HStack spacing
  *                        8: 7pt dot in the risk colour · title caption
  *                        semibold · pills · borderless caption buttons ·
  *                        Spacer(8) · avatars (host only) · Leave / End.
  *                        Padding 10/6, risk colour @0.10 fill + @0.28 inside
  *                        stroke, r7. Risk: read-only green, a pending request
  *                        orange, an active effect purple.
- * - BannerPill           statusPill (:213-221): 9pt semibold monospaced,
+ * - BannerPill           status pill: 9pt semibold monospaced,
  *                        padding 6/2, colour @0.14 capsule, colour text.
- *                        `icon` gives the transport label (:244-273): same
+ *                        `icon` gives the transport label: same
  *                        type, colour @0.16, direct = green +
  *                        point.3.connected.trianglepath.dotted.
  * - BannerButton         Button(...).buttonStyle(.borderless).font(.caption).
- *                        CALIBRATE: drawn in the theme accent (liveTheme sets
- *                        .tint and .accentColor at every hosting root).
- * - AccessRequestCard    PersonalLiveSharePanel.swift:254-325: VStack spacing
+ *                        CALIBRATE: drawn in the theme accent (the app tints
+ *                        every hosting root with it).
+ * - AccessRequestCard    the access request card: VStack spacing
  *                        7, padding 10, quaternary @0.35 r8: name callout
  *                        semibold · email caption · "Account <id>" caption2
  *                        monospaced secondary · "Device <fingerprint>" + Copy
  *                        key (borderless, mini) · "Request expires …"
  *                        caption2 secondary · orange caption2 shield warning
  *                        · Deny (destructive) · Spacer · Read only · Read &
- *                        write (.borderedProminent) (:538-565).
+ *                        write (.borderedProminent).
  */
 
-/** SwiftUI dark system colours used by SessionBannerView. */
+/** SwiftUI dark system colours used by the session banner. */
 export const LIVE_SHARE_COLORS = {
   green: "var(--tu-success)",
   orange: "var(--tu-warning)",

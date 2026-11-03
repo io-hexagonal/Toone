@@ -1,5 +1,4 @@
-/* In-app browser chrome (InAppBrowserView.swift, BrowserTabBarView.swift).
-   Tokens from the parent .root. */
+/* In-app browser chrome: toolbar and tab bar. Tokens from the parent .root. */
 
 /* .buttonStyle(.icon): ≥28², r8; content is secondary */
 .iconButton {
@@ -125,11 +124,11 @@
   height: 6px;
   border-radius: 50%;
   background: var(--tu-accent);
-  /* PulsingDot.swift: shadow color .6, radius size/2 */
+  /* Pulsing dot: shadow color .6, radius size/2 */
   box-shadow: 0 0 3px color-mix(in srgb, var(--tu-accent) 60%, transparent);
 }
 
-/* PulsingDot.swift: opacity 0.3 ↔ 1.0, easeInOut, autoreverses */
+/* Pulsing dot: opacity 0.3 ↔ 1.0, easeInOut, autoreverses */
 @keyframes tuBrowserPulse {
   from {
     opacity: 0.3;

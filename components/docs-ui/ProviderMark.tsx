@@ -1,9 +1,8 @@
 import type { CSSProperties } from "react";
 
 /*
- * Provider marks shown on the Setup "Choose your AI" cards
- * (SetupView.swift:948-955: the ProviderAnthropic / ProviderOpenAI asset
- * images, white, 40×40, opacity 0.8).
+ * Provider marks shown on the Setup "Choose your AI" cards (white, 40×40,
+ * opacity 0.8).
  *
  * These are third-party trademarks used nominatively, mono, exactly like the
  * site's "Built on" strip: the path data is the vendored copy in

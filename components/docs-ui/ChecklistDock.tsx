@@ -5,27 +5,6 @@ import { Glyph } from "./glyphs";
  * P11 ChecklistDock: the live checklist docked above the message box of a
  * setup or share conversation.
  *
- * Source: APP/Features/WorkflowCatalog/ConversationalSession/ConversationChecklist.swift
- * - dock :64-97 (r14, popoverBackground (= innerBackground) @0.55 over the
- *   theme blur, 1pt white .08 strokeBorder; Divider().opacity(0.4) between parts);
- * - header :99-145 (HStack spacing 16, padding 16/8; cover 48×27 r5, or a
- *   white .06 placeholder with a `photo` glyph; headline 13 semibold primary,
- *   title 12 secondary one line; Gauge accessoryCircularCapacity scaled 0.6 in
- *   30×30 with an 8pt semibold "done/total"; `chevron.up` 12 tertiary,
- *   rotated 180° when expanded); the finished state shows a green
- *   `checkmark.seal.fill` instead of the gauge;
- * - cover chooser :147-198 ("Pick a cover" / "Cover", 16:9 tiles r7, number
- *   badge 18² black .55, chosen = 2pt accent border + checkmark);
- * - rows :200-232 (adaptive grid min 220, column gap 16, row gap 6, padding
- *   16/8, max height 180; icon column 14, HStack spacing 8 first-baseline;
- *   label 12 (done → secondary), note and detail 11 tertiary);
- * - actions :234-269 (padding 16 / bottom 8, right-aligned, UI.button 13
- *   medium, controlSize small; prominent ones `.borderedProminent` tinted accent);
- * - icons :271-281 (done checkmark.circle.fill success .85; working mini
- *   spinner; pending circle.dashed tertiary; waiting questionmark.circle.fill
- *   accent; attention exclamationmark.triangle.fill warning).
- * Fonts: Typography.Checklist (Typography.swift:141-147).
- *
  * CALIBRATE: the native Gauge (ring weight, track opacity, label size after
  * the 0.6 scale) and the small bordered / prominent buttons.
  */

@@ -744,14 +744,14 @@ const GLYPHS = {
     </>
   ),
   // ---- chat tool rows (batch B) -------------------------------------------
-  /** DetailedToolCallRow's Bash icon: a window with a prompt and a cursor line. */
+  /** The tool call row's Bash icon: a window with a prompt and a cursor line. */
   terminal: (
     <>
       <rect x="1.6" y="2.6" width="12.8" height="10.8" rx="2" />
       <path d="M4.4 6.2l2 1.8-2 1.8M8 10.2h3.4" />
     </>
   ),
-  // ---- iPhone companion tab bar (batch F, AppRouter.swift AppTab.icon) -----
+  // ---- iPhone companion tab bar (batch F) ---------------------------------
   "person.2.fill": (
     <>
       <circle cx="5.6" cy="5.4" r="2.4" fill="currentColor" />

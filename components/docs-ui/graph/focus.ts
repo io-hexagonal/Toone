@@ -1,8 +1,8 @@
 import type { LaidOutGraph } from "./types";
 
 /**
- * Port of RoutineGraphFocus (Core/Services/RoutineCreator/RoutineGraphInteraction.swift)
- * and the hover neighbourhood in RoutineDraftPipelineView.focusedNodeIds.
+ * Graph focus: which nodes stay lit around a selected or hovered node, as
+ * in the app.
  */
 
 export function focusNodeIds(graph: LaidOutGraph, nodeId: string): Set<string> {

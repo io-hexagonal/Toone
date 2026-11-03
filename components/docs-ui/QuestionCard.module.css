@@ -1,11 +1,11 @@
-/* P13 QuestionCard (QuestionSharedComponents.swift, AsyncQuestionComposer.swift).
-   Reads --tu-* tokens from docs-ui.module.css (.root). Line heights are SF
+/* P13 QuestionCard (the question chip, option rows, answer field and the
+   non-blocking question card above the composer). Reads --tu-* tokens from docs-ui.module.css (.root). Line heights are SF
    Pro's natural ones: body 13 → 16, subheadline 11 → 14, caption 10 → 13. */
 
 .card {
   display: flex;
   flex-direction: column;
-  background: var(--tu-card); /* threadCardBackground, full width, no radius */
+  background: var(--tu-card); /* card fill, full width, no radius */
 }
 
 /* ---- header ---------------------------------------------------------- */
@@ -147,7 +147,7 @@
   color: var(--tu-label-2);
 }
 
-/* QuestionAnswerFieldStyle: plain TextField, padding 12, inputBackground, r8 */
+/* answer field: plain TextField, padding 12, input background, r8 */
 .field {
   min-height: calc(var(--tu-q-lines, 2) * 16px + 24px);
   padding: 12px;

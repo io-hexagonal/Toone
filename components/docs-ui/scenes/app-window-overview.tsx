@@ -12,24 +12,6 @@ import { ChatPanelContent, ProjectPanelContent, RoutinesPanelContent } from "../
  * callouts name the parts; the UI underneath is the real kit at real
  * points, scaled to 640 / 1440.
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - geometry: UI/Windows/FloatingPanel.swift:31-120 (chat 28% and project
- *   24% of the width, full height, padding 8), :296-326 (Routines =
- *   `.routineCreator`, the middle area between them with 8pt gaps).
- * - panel contents: WindowParts.tsx (header comment lists every source):
- *   rail LeftOrchestratorView.swift:2517-2780, header :1364-1444, composer
- *   ChatPanelView.swift:2421-2596, Routines RoutineCreatorPanelView.swift
- *   :178-191, right panel RightProjectPanelView.swift:160-200.
- *
- * Code vs plan:
- * - The audit draws two panels (chat + Project Explorer). The overview hub
- *   also names routines and the graph, and the Routines panel opens in the
- *   middle of the same screen (FloatingPanel `.routineCreator`), so it is
- *   drawn there; with no middle panel open the centre shows the desktop.
- * - The chat's title is the thread's generated title ("Compare pricing
- *   pages"), not "Research Assistant" (see spotlight-chat-panel).
- * - Screen = 1440 × 900 (menu bar ignored), as panel-layouts.
- *
  * Calibrate: the frozen panel fill over a real grey desktop; the bordered
  * toolbar buttons (native); the graph's zoom (drawn framed on step 2 and its
  * sub-routine, as Focus selection would, not fit-to-view).

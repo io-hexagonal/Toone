@@ -15,27 +15,6 @@ import type { SceneDefinition } from "../scene";
 /**
  * The Launch Surface Preparation listing page, scrolled to "Prepared during
  * setup" (opened), "Customize" and the first row of "Works with".
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/Features/WorkflowCatalog/):
- * - ListingProfilePage.swift:84-229 (ListingProfileBody), prepared :128-148
- *   (intro + one VStack spacing 4 / padding v8 per item, Dividers between,
- *   "Example: " emphasis + body, then the "You prepare" / "Run time
- *   (estimate)" ListingKeyValueBox, top 8), customize :149-164, works with
- *   :165-171 (LazyVGrid adaptive min 220, spacing 14) and its cards :192-218
- *   (name as a Link tinted accent, ListingLabel domain, "What it does there",
- *   "Cost", "Review note" = the party note + the review note);
- * - building blocks :253-458 (section, card, key-value box/line, label, body);
- * - page column: WorkflowCatalogDetail.swift:140-153 (body ≤760 beside a
- *   250 details rail, padding 24); no third-party statuses are passed on
- *   this page (:256-257), so cards show no status word.
- * Data: the public listing (exploreListings.ts → LAUNCH_SURFACE_PROFILE).
- *
- * Code vs plan (§1, listing-prepared-works-with), the code wins:
- * - "Customize" sits between "Prepared during setup" and "Works with"
- *   (:149-164), so it is in the crop.
- * - The real listing has 3 prepared items, not 2.
- * - Its third parties do not include Figma: the grid starts with SourceForge
- *   and Product Hunt (20 sites in all); the crop shows that first row.
  */
 
 const WIDTH = 600;

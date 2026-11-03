@@ -1,4 +1,4 @@
-/* Routine inspector Auto-fix tile (RoutineSidebarComponents.swift:608-691).
+/* Routine inspector Auto-fix tile.
    Reads --tu-* tokens from docs-ui.module.css (.root). */
 
 .tile {
@@ -36,7 +36,7 @@
   height: 16px;
 }
 
-/* .caption, AppColors.textSecondary, maxWidth 520, top 6 */
+/* .caption, secondary, maxWidth 520, top 6 */
 .help {
   margin: 6px 0 0;
   max-width: 520px;

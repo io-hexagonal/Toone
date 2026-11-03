@@ -1,6 +1,6 @@
 # Explore prerelease announcement
 
-Generated on 2026-09-22 using the built-in image generation tool and the production `explore-cover-v2` art direction from `WorkflowCoverArtDirection.swift` in the Toone desktop repository.
+Generated on 2026-09-22 using the built-in image generation tool and the production `explore-cover-v2` art direction.
 
 - Objective: discover reusable work and bring useful routines together in a workspace.
 - Concept: shared possibility, expressed through confluence.

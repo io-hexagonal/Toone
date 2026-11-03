@@ -1,10 +1,8 @@
 import type { GraphEdge, GraphNode, LaidOutGraph, PlacedEdge, PlacedNode } from "./types";
 
 /**
- * Port of the coordinate phase of the app's layered layout
- * (Features/KnowledgeGraph/Layout/SugiyamaCore.swift `assignCoordinates`,
- * `relaxLayer`) with the Routine Creator config from
- * RoutinePipelineLayoutEngine.swift:42-47 (layer gap 90, row gap 28).
+ * Coordinate phase of a layered graph layout, with the routine graph's
+ * spacing (layer gap 90, row gap 28).
  *
  * The scene author supplies the layers (columns, left → right) and the order
  * inside each column (top → bottom). Work them out the way the app does:
@@ -131,7 +129,7 @@ export function layoutLayers(
   });
   const placedById = new Map(placed.map((n) => [n.id, n]));
 
-  // Routes: source right-centre → target left-centre (SugiyamaCore phase 7).
+  // Routes: source right-centre → target left-centre.
   const placedEdges: PlacedEdge[] = edges.flatMap((e) => {
     const a = placedById.get(e.from);
     const b = placedById.get(e.to);

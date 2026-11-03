@@ -23,38 +23,6 @@ import type { SceneDefinition } from "../scene";
  * the bottom. Connected through the relay (no connection bar: it only shows
  * while the link is down).
  *
- * Sources (apps/toone-mobile/TooneMobile/TooneMobile/, monorepo main):
- * - Presentation/Main/MainTabView.swift:24-56 (TabView: Agents, Routines,
- *   Activity, Organization, Settings; tint accent), :160-170 (connection bar
- *   hidden while connected), :194-233 (tabs; Activity badge = unread, 0 here).
- * - Presentation/Navigation/AppRouter.swift:6-41 (titles; icons person.2.fill,
- *   point.3.filled.connected.trianglepath.dotted, bolt.fill, building.2.fill,
- *   gearshape.fill).
- * - Presentation/Agents/AgentListView.swift:16-46 (large title "Agents",
- *   trailing clock.arrow.circlepath "Session History"), :156-237 (sections:
- *   Recent Threads with count, System Threads with "N running" chip and
- *   "See All", then a DepartmentSection per department; spacing 16, gutter
- *   16, padding v8).
- * - Components: RecentThreadCard.swift, SystemThreadCard.swift (header,
- *   routine · step, status line, ThreadLifecycleBadge "Working" with a
- *   spinner), DepartmentSection.swift + AgentCard.swift (status dot, name,
- *   "Current" chip for the selected agent, description, "N threads").
- * - Domain/Entities/Session.swift:161-169 (workTitle = routine · step),
- *   :225-235 (lifecycle labels).
- * - Theme: Presentation/DesignSystem/Theme/ThemeTokens.swift (Smoky Quartz,
- *   the desktop's theme, synced to the phone); DesignTokens.swift;
- *   Typography.swift Role.
- * - Pairing: relay only (AppConfiguration.swift:58-68; legacy LAN pairings
- *   purged, SecurityManager.swift:20-26).
- *
- * Code vs plan / notes:
- * - The plan says "a System Threads row ('See All')": it is a section header
- *   with a "2 running" chip and See All over a horizontal carousel of cards.
- * - Timestamps are absolute ("10:44 AM", "Yesterday"), as ThreadTimestamp
- *   formats them, not relative like the desktop figures.
- * - The `.searchable` "Find agents" field is not drawn: on iOS 26 its place
- *   (under the title, or in the bottom toolbar) is decided by the system.
- *
  * Calibrate: iOS 26 Liquid Glass tab bar and toolbar button (approximated as
  * a translucent capsule / circle); system font metrics; the static spinner.
  */

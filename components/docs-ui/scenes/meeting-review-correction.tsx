@@ -16,17 +16,6 @@ import type { SceneDefinition } from "../scene";
  * Reviewing the meeting record: in the same thread as
  * `meeting-summary-reply`, you correct the owner of one action item and the
  * agent replies with the corrected Next actions and updates the saved file.
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Chat/Views/RichMessageBubble.swift:90-187 (bubbles, meta).
- * - APP/Features/Chat/Views/MarkdownTextView.swift:246-318 (one merged run:
- *   blocks joined by a blank line, consecutive list items by one newline,
- *   "•  " bullets in textSecondary, `code` monospaced on white 0.10);
- *   "**Next actions**" is a bold run (.body.bold(), :753-765).
- * - Chat.tsx (ChatProse / ChatListItem / ChatStrong / ChatCode), used
- *   exactly as meeting-summary-reply uses them.
- *
- * Code vs spec: none. Times continue meeting-summary-reply's 11:31 AM.
  */
 
 const WIDTH = 480;

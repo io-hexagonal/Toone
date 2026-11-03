@@ -11,30 +11,6 @@ import type { SceneDefinition } from "../scene";
  * tracked", and its toolbar carries the prominent **Setup Timeline** button
  * (help "Open an agent conversation to set up history for this project").
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:1300-1308 (destination header
- *   "Timeline" + GitTimelinePanelView(showsPanelHeader: false));
- * - APP/Features/GitTimeline/GitTimelinePanelView.swift:219-238 (embedded
- *   toolbar: "Checked …" caption2 tertiary · Spacer · refresh icon button ·
- *   setupButton; HStack spacing 8, padding h16, min-h 32), :321-331
- *   (setupButton: "Setup Timeline", .borderedProminent, .controlSize(.small),
- *   shown for .notARepository), :280-290 (emptyState:
- *   `clock.arrow.circlepath` 28 tertiary, "This folder is not tracked"
- *   callout secondary, centred);
- * - GitTimelineStore.swift:106-112 (offersRepositorySetup), :216 ("Checked"
- *   is set after every read, tracked or not).
- * - Toolbar pieces from GitTimeline.module.css (as timeline-list).
- *
- * Code vs plan: the plan stacks Setup Timeline under the empty state and
- * names a "Timeline panel header (Timeline, refresh, close)". Opened from
- * the rail, the Timeline is a left-panel destination: its header is the
- * destination header and the button sits in the embedded toolbar next to
- * refresh, above the empty state (:219-238). The close button belongs to
- * the stand-alone panel header (:172-217), which the rail route hides.
- * No repository-root line: an untracked folder has no snapshot (:67-77).
- * The `wrench.and.screwdriver` "Set up history tools" button only shows
- * when Git or LFS is missing; not drawn.
- *
  * CALIBRATE: the small borderedProminent button (theme accent with the
  * white label AppKit picks for Smoky Quartz's grey). Drawn at MAGNIFY × the
  * app's points.

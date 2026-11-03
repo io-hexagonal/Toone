@@ -4,9 +4,9 @@ import { cx } from "./cx";
 import { Glyph, type GlyphName } from "./glyphs";
 
 /**
- * P7 Field. Sources: SearchField.swift:18-75 (search: magnifyingglass 13,
- * min-h 32, r12, inputBg .78, inputBorder .8 @ 0.5pt, focused accent .65 @ 1pt),
- * InAppBrowserView.swift:102-180 (url: inputBg .88).
+ * P7 Field. Search: magnifyingglass 13, min-h 32, r12, input fill .78,
+ * input border .8 @ 0.5pt, focused accent .65 @ 1pt. URL (the in-app
+ * browser's address field): input fill .88.
  *
  * Pass `value` for typed text, otherwise `placeholder` renders in tertiary.
  */

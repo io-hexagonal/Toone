@@ -2,11 +2,10 @@ import type { CSSProperties, ReactNode } from "react";
 import { Miniature, SCREEN, panelFrames, type PanelLayoutId, type Rect } from "./Miniature";
 
 /*
- * A schematic screen tile: one panel layout at its real FloatingPanel
- * frames (panelFrames), drawn in the vocabulary of scenes/panel-layouts.tsx
- * (Setup's PanelLayoutMockup, LayoutHotkeysStepView.swift:273-387: screen
- * black .4 r6 + white .1 stroke; chat accent .25, project accent .15, panel
- * border white .15), but large enough to carry "greeked" panel contents:
+ * A schematic screen tile: one panel layout at its real panel frames
+ * (panelFrames), drawn in the vocabulary of scenes/panel-layouts.tsx (the
+ * Setup layout mockup: screen black .4 r6 + white .1 stroke; chat accent .25,
+ * project accent .15, panel border white .15), but large enough to carry "greeked" panel contents:
  * the same conversation (strip, rail, header, two bubbles, composer) and the
  * same file tree in every tile, as grey shapes at the app's point sizes
  * (strip / rail / header 44, bubble 36, composer field 40, tree row 32), so

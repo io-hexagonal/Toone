@@ -7,26 +7,6 @@ import { Sheet, SheetFooter, SheetStage } from "../Sheet";
  * The Share sheet for the demo routine, before anything was shared:
  * "Share this routine" selected, Continue enabled.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/WorkflowCatalog/ConversationalShare/ShareChooserSheet.swift:95-124
- *   (VStack leading spacing 20, padding 24, width 520; title
- *   "Share “<root name>”" .title2.bold; radio-group Picker
- *   "What would you like to share?" with "Share this routine" (no live
- *   listing) / "Create a routine bundle" / "Share an update"; description
- *   .secondary; caption .caption .secondary; HStack Cancel · Spacer ·
- *   Continue .borderedProminent);
- * - copy :57-72 (with one sub-routine: "Publish this routine and its 1
- *   sub-routine to Explore as one item.");
- * - tint: `.liveTheme(layoutStyle)` (APP/UI/Theme/LiveTheme.swift:27-36), so
- *   the selected radio and Continue use the Smoky Quartz accent;
- * - presented from the Routines panel (OrganizationOverviewView.swift).
- *
- * Code vs plan: none. Notes: the "Which Explore listing is this?" chooser
- * (:149-168) only appears when the account already has a same-routine
- * listing from another workspace, so it is absent here; the third radio is
- * always present (:99-100), and Continue is enabled for a first share once
- * the status check finishes (:40-48), with no spinner.
- *
  * CALIBRATE: everything native: the sheet window (Sheet.tsx), the radio
  * group (label placement, 6pt row gap), the push buttons, and title2 bold at
  * 17pt on macOS 26.

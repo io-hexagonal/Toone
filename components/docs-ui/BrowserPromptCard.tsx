@@ -6,17 +6,6 @@ import styles from "./BrowserPromptCard.module.css";
  * agent-browsing consent card (App Store) and the agent's per-site login
  * import approval (Direct). Same surface as browser-login-import.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/Features/InAppBrowser/Views/):
- * - AgentBrowserPrivacyViews.swift:31-90 (AgentBrowserConsentCard);
- * - BrowserSessionImportView.swift:409-545 (BrowserSessionImportApprovalCard).
- * Both: VStack spacing 8, padding 8, r16 inputBackground @0.72 + 1pt
- * threadCardBorder, `.tint(accent)`; header HStack top spacing 8 (24×24
- * icon, VStack spacing 3: title .subheadline semibold primary, wraps; copy
- * .caption secondary); controls HStack spacing 4 (`ViewThatFits`, so they
- * stack when they don't fit on one line); note .caption2 tertiary. Placed
- * between the toolbar and the tab bar with padding 8 / bottom 8
- * (InAppBrowserPanel.swift:73-113).
- *
  * CALIBRATE: the small prominent / bordered / borderless buttons (native).
  */
 

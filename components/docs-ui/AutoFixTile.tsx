@@ -3,16 +3,13 @@ import { Glyph } from "./glyphs";
 import { NativeSegmented } from "./NativeSegmented";
 
 /**
- * The routine inspector's Auto-fix tile (RoutineAutoFixTile).
- * Source: Features/Organization/Views/RoutineSidebarComponents.swift:608-691
- * (main repo, desktop app); modes and help lines
- * Features/Organization/Models/Routine.swift:405-477.
+ * The routine inspector's Auto-fix tile, with its modes and help lines.
  *
  * VStack spacing 0: heading row (Label "Auto-fix" + `wand.and.stars`,
  * .caption .secondary; Spacer; a fixed 16×16 slot for the saving spinner),
  * then the segmented Picker (labels hidden, natural width, top 5), then the
- * mode's help line (.caption textSecondary, max width 520, top 6), then an
- * optional message line (top 6). Tile: padding 9, innerBackground @0.42 in
+ * mode's help line (.caption secondary, max width 520, top 6), then an
+ * optional message line (top 6). Tile: padding 9, inner fill @0.42 in
  * r8, 1pt separator stroke.
  *
  * CALIBRATE: the segmented control (native, see NativeSegmented) and the
@@ -21,7 +18,7 @@ import { NativeSegmented } from "./NativeSegmented";
 
 export type AutoFixMode = "off" | "suggest" | "safeFixes" | "auto";
 
-/** RoutineAutoFixMode.allCases order and displayName (= markdownValue). */
+/** The app's mode order and display names. */
 export const AUTO_FIX_MODES: { mode: AutoFixMode; label: string; help: string }[] = [
   {
     mode: "off",

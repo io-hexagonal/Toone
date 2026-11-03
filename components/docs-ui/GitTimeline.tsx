@@ -5,57 +5,54 @@ import { Glyph } from "./glyphs";
 
 /**
  * Project History (the Timeline): the left-panel destination's pieces.
- * Source: Features/GitTimeline/GitTimelinePanelView.swift (main repo) and
- * GitWorkingChangesView.swift.
  *
- * - TimelineDestination  LeftOrchestratorView.swift:1300-1308: destination
- *                        header "Timeline", then the panel with
- *                        showsPanelHeader false: the embedded toolbar
- *                        (:219-238: "Checked …" caption2 tertiary · Spacer ·
+ * - TimelineDestination  destination header "Timeline", then the panel
+ *                        without its own header: the embedded toolbar
+ *                        ("Checked …" caption2 tertiary · Spacer ·
  *                        arrow.clockwise icon button; padding h16, min-h 32),
- *                        Divider, and the repository root Label (:67-77:
- *                        folder + path, caption2 secondary, padding 14/6).
- * - TimelineSection      GitWorkingChangesView.swift:3-33: chevron.right 9pt
+ *                        Divider, and the repository root label (folder +
+ *                        path, caption2 secondary, padding 14/6).
+ * - TimelineSection      chevron.right 9pt
  *                        semibold rotated 90° when open · title caption2
  *                        semibold kerning 0.8 · count caption2 monospaced in
  *                        a secondary @0.12 capsule (padding 6/2); all
  *                        secondary; padding 14/10. `empty` is the line under
- *                        an empty open section (:48-54: caption tertiary,
+ *                        an empty open section (caption tertiary,
  *                        padding h30, bottom 12).
- * - PersonFilterBar      GitTimelinePanelView.swift:394-447: chips in a
+ * - PersonFilterBar      chips in a
  *                        secondary @0.08 r7 track (padding 2, spacing 2),
  *                        inset 14, vertical padding 8; chip = 6pt dot ·
  *                        caption (semibold when on) · padding 10/4, on =
  *                        secondary @0.18 r6.
- * - DayHeader            :496-503: title uppercased, caption2 semibold,
+ * - DayHeader            title uppercased, caption2 semibold,
  *                        kerning 0.8, secondary, padding h14 top 12 bottom 4.
- * - CommitRow            :518-569: 8pt person dot · VStack(spacing 1)
+ * - CommitRow            8pt person dot · VStack(spacing 1)
  *                        [subject callout medium · author caption secondary]
  *                        · Spacer(min 8) · reference chips · relative date
  *                        caption2 monospacedDigit tertiary; padding 14/7,
  *                        selected accent @0.12 r6; outer padding h6.
- * - ReferenceChip        :571-581: caption2 semibold, padding 7/2, capsule;
+ * - ReferenceChip        caption2 semibold, padding 7/2, capsule;
  *                        "you are here" accent @0.18 + accent text, "last
  *                        known backup" secondary @0.12.
- * - CompactBackRow       :251-264: Label("Timeline", chevron.left), caption
+ * - CompactBackRow       Label("Timeline", chevron.left), caption
  *                        semibold, plain; padding h16, min-h 32; Divider.
- * - CommitDetail         :665-709: VStack(spacing 12) padding 14: subject
+ * - CommitDetail         VStack(spacing 12) padding 14: subject
  *                        callout semibold · "agent-or-author · %ar" caption
  *                        secondary · "What happened here?" (sparkles,
  *                        caption semibold, .small) · "WHAT CHANGED" caption2
  *                        semibold kerning 0.8 secondary (+4 top) · file rows.
- * - FileRow              :712-750: change glyph 11pt in its tint (added
+ * - FileRow              change glyph 11pt in its tint (added
  *                        plus.circle green, deleted minus.circle red, else
  *                        pencil.circle secondary) · path caption · Spacer(6)
  *                        · "+N" green / "-N" red caption2 monospacedDigit.
  *
- * Person colours are hard-coded in the app (:51-53): blue, orange, green,
+ * Person colours are hard-coded in the app: blue, orange, green,
  * purple, pink, teal, by first appearance, newest contributor first.
  */
 
 /**
- * Per-person dots. The app uses SwiftUI .blue/.orange/.green/.purple/.pink/.teal
- * (GitTimelinePanelView.swift:51-53); the docs keep theme colours only, so the
+ * Per-person dots. The app uses SwiftUI .blue/.orange/.green/.purple/.pink/.teal;
+ * the docs keep theme colours only, so the
  * first person takes the Smoky Quartz accent and teal becomes the theme taupe.
  */
 export const PERSON_COLORS = ["var(--tu-accent)", "#ff9f0a", "#30d158", "#bf5af2", "#ff375f", "#d9ccc7"];

@@ -11,31 +11,6 @@ import type { SceneDefinition } from "../scene";
  * and the actions Confirm (green), Delete, Cancel and Save. Same event as
  * Wednesday's dashed chip in calendar-week.
  *
- * Sources (apps/toone-desktop/Toone/Toone/Features/Calendar/):
- * - Views/CalendarEventDetailView.swift:52-139 (sheet and header, see
- *   CalendarEventSheet.tsx; actions: Confirm .borderedProminent
- *   .tint(.green) for proposed events, Delete role .destructive, Spacer,
- *   Cancel, Save .borderedProminent); :186-267 (editableContent: TextField
- *   "Event title" .plain .body; HStack DatePicker labelsHidden · "to"
- *   textTertiary · DatePicker; TextFields "Topic", "Participants
- *   (comma-separated)", "Tags (comma-separated)", "Notes" (axis vertical,
- *   3…6 lines), all .plain .body; Toggle "Run an agent at the start time",
- *   which outside a Form is a checkbox); :271-319 (calendarExtrasContent:
- *   Divider, "Heads-ups" caption textSecondary, "Add heads-up" (plus)
- *   .borderless); :382-385 (extras shown in the Direct edition, edit mode,
- *   non-routine events with an organization).
- * - Views/CalendarPanelView.swift:84-105 (agent events open .edit; onConfirm
- *   only for proposed events).
- * - Models/CalendarEvent.swift:11-70 (participants, tags, status).
- *
- * Code vs plan:
- * - The plan's fields list leaves out Topic, Notes, the agent checkbox and
- *   the Heads-ups block; the code shows them, so they are drawn (Notes
- *   empty, showing its placeholder; no heads-ups yet; the project calendar
- *   playbook switch is off, so its toggle is absent).
- * - Dates are absolute in the app's date pickers, matching calendar-week.
- * - The topic reuses the demo run's topic.
- *
  * CALIBRATE: the sheet window; the native date pickers (text field +
  * stepper); the checkbox; the push buttons, the green Confirm fill, and
  * whether the destructive Delete title is red (drawn neutral); the

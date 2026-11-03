@@ -10,25 +10,6 @@ import { WorkspaceStrip } from "../WorkspaceStrip";
  * whose Agents list holds only Growth agents; right, a general project
  * ("acme.com") whose agents span Growth, Launch and Support.
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/UI/Layout/LeftOrchestratorView.swift:727-734 (WorkspaceStripView +
- *   separator, shown whenever multi-project is on, even with one project:
- *   WorkspaceManager.isMultiOrgEnabled is a setting), :891-929 (rail + 1pt
- *   divider + destination), :1089-1164 (Agents destination: header, search,
- *   roster), :4699-4764 / :4521-4541 / :4825-4990 (roster sections and rows).
- * - APP/UI/Layout/WorkspaceStripView.swift:13-113, :197-279 (strip, pill).
- * - Kit: WorkspaceStrip.tsx (P4), NavRail.tsx (P3), AgentRow.tsx (P8).
- *
- * Code vs spec:
- * - Each crop shows one project in the strip (pill 1, active): the two
- *   shapes are alternatives, not two projects open at once.
- * - The roster groups agents by the day you last talked to them, never by
- *   department, so the department shows on each card's second line. With
- *   no open threads every card reads "No thread messages yet".
- * - "Support Assistant" (Support) is not in plan §0.4; it was added to
- *   demo.ts as DEMO.supportAgent for this figure's general project.
- * - The crops end above the "Create agent" bar at the bottom of the panel.
- *
  * Each crop is drawn at ZOOM × the app's points so the 10pt department
  * line stays legible in a half-width column.
  */

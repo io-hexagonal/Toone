@@ -8,20 +8,6 @@ import type { SceneDefinition } from "../scene";
  * shows it in a 300pt column beside the list instead). "What happened here?"
  * opens a conversation that explains the checkpoint.
  *
- * Sources (main repo, apps/toone-desktop/Toone/Toone/Features/GitTimeline/):
- * - GitTimelinePanelView.swift:251-264 (compact back row "‹ Timeline"),
- *   :665-709 (detail content), :712-750 (file rows), :772-778 (explain →
- *   manager.explainCommit, reveals the chat panel).
- * - Core/Services/GitPlanCapture/PlanWorkChangeKind+Presentation.swift
- *   (added plus.circle green, modified pencil.circle secondary).
- *
- * Code vs plan:
- * - The plan's byline "Research Assistant · Today 10:42": the app writes
- *   the agent's name (or author) and git's relative date (%ar), so it reads
- *   "Research Assistant · 12 minutes ago".
- * - An added file has 0 deletions, and the row still prints "-0" (it prints
- *   any non-nil count).
- *
  * Calibrate: the native .small button's bezel.
  */
 

@@ -4,11 +4,11 @@ import { DEMO } from "./demo";
  * Public Explore listings used by the docs figures (plan §0.4: "the real public
  * listings already linked from the guides"). Card fields copied from the public
  * catalog API on 2026-10-30 (GET api.trytoone.com/v1/workflows/{slug} and
- * /v1/bundles), mapped the way ExploreCatalogCard shows them:
+ * /v1/bundles), mapped the way the app's Explore catalog card shows them:
  *
- * - title = display_title, summary = card_summary (presentedSummary),
+ * - title = display_title, summary = card_summary,
  * - category / audience = taxonomy labels of category_id / useful_for_ids,
- * - meta = ExploreCatalogCard.routineCounts(...) + "N results",
+ * - meta = the card's routine counts + "N results",
  * - author_official → "By Toone" with the Toone mark.
  *
  * Covers are NEVER the real art: each listing gets a flat gradient placeholder
@@ -79,8 +79,7 @@ export const EXPLORE_LISTINGS = {
  * from GET api.trytoone.com/v1/workflows/launch-surface-preparation-xzmzpbkf,
  * copied 2026-10-30). Only the sections the figures show; third parties are
  * the first two of 20, in the API's order. `reviewNote` is the
- * third_party_reviews note the app appends to the party's own note
- * (ListingProfilePage.swift:193-218).
+ * third_party_reviews note the app appends to the party's own note.
  */
 export const LAUNCH_SURFACE_PROFILE = {
   youProvide: [

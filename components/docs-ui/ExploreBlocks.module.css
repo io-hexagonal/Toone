@@ -1,12 +1,12 @@
-/* P18 ExploreBlocks. Values from ListingProfilePage.swift:466-599 and
-   WorkflowExplorerView.swift:369-395; tokens from the parent .root. */
+/* P18 ExploreBlocks: catalog card and listing page blocks. Tokens from the
+   parent .root. */
 
 .card {
   display: flex;
   align-items: flex-start;
-  gap: 16px; /* DesignTokens.Spacing.md */
+  gap: 16px; /* 16pt */
   padding: 12px;
-  border-radius: 12px; /* CornerRadius.medium */
+  border-radius: 12px;
   background: var(--tu-card);
   box-shadow: inset 0 0 0 1px var(--tu-card-border);
 }
@@ -58,7 +58,7 @@
   gap: 8px;
 }
 
-/* Typography.Listing.label: 11 semibold, tracking 1.0, accent */
+/* Listing label: 11 semibold, tracking 1.0, accent */
 .eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -68,7 +68,7 @@
   white-space: nowrap;
 }
 
-/* ExplorePriceTag: UI.badge 11/600 accent, padding 8/2 */
+/* ExplorePriceTag: badge 11/600 accent, padding 8/2 */
 .priceTag {
   display: inline-flex;
   align-items: center;
@@ -83,7 +83,7 @@
   box-shadow: inset 0 0 0 1px var(--tu-card-border);
 }
 
-/* Listing.cardTitle: 15 semibold, primary, 2 lines */
+/* Card title: 15 semibold, primary, 2 lines */
 .title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -95,7 +95,7 @@
   color: var(--tu-text-1);
 }
 
-/* Listing.cardMetaEmphasis: 12 semibold */
+/* Card meta, emphasised: 12 semibold */
 .metaEmphasis {
   font-size: 12px;
   font-weight: 600;
@@ -107,7 +107,7 @@
   font-weight: 600;
 }
 
-/* Listing.cardMeta: 12 regular secondary, 3 lines */
+/* Card meta: 12 regular secondary, 3 lines */
 .summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -134,7 +134,7 @@
   color: var(--tu-text-3);
 }
 
-/* ExploreAuthorByline: HStack spacing 4, mark 13pt, cardMeta tertiary */
+/* ExploreAuthorByline: HStack spacing 4, mark 13pt, card meta tertiary */
 .byline {
   display: inline-flex;
   align-items: center;
@@ -153,8 +153,8 @@
   image-rendering: pixelated;
 }
 
-/* FlowLayout spacing 6, top padding 2; tag: cardMeta secondary, padding 8/2,
-   Capsule().stroke(threadCardBorder) */
+/* Wrapping row, spacing 6, top padding 2; tag: card meta secondary, padding 8/2,
+   capsule with the card-border stroke */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -180,10 +180,10 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Listing page building blocks (ListingProfilePage.swift:253-458)     */
+/* Listing page building blocks                                       */
 /* ------------------------------------------------------------------ */
 
-/* ListingProfileSection: VStack spacing 12, bottom padding 24 */
+/* ListingSection: VStack spacing 12, bottom padding 24 */
 .listingSection {
   display: flex;
   flex-direction: column;
@@ -192,7 +192,7 @@
   padding-bottom: 24px;
 }
 
-/* Divider().overlay(separatorColor) */
+/* Divider in the separator colour */
 .listingDivider {
   height: 1px;
   background: rgba(255, 255, 255, 0.19);
@@ -211,7 +211,7 @@
   color: var(--tu-accent);
 }
 
-/* Listing.sectionTitle: body semibold, tracking -0.25, primary */
+/* Section title: body semibold, tracking -0.25, primary */
 .listingHeading {
   font-size: 13px;
   font-weight: 600;
@@ -220,7 +220,7 @@
   color: var(--tu-text-1);
 }
 
-/* ListingProfileCard: spacing 6, padding 18, threadCardBackground r16 + border */
+/* ListingProfileCard: spacing 6, padding 18, card fill r16 + border */
 .listingCard {
   display: flex;
   flex-direction: column;
@@ -233,7 +233,7 @@
   box-shadow: inset 0 0 0 1px var(--tu-card-border);
 }
 
-/* Listing.body 13 regular */
+/* Body: 13 regular */
 .listingBody {
   font-size: 13px;
   line-height: 17px;
@@ -248,7 +248,7 @@
   color: var(--tu-text-3);
 }
 
-/* Listing.label 11 semibold, tracking 1.0, tertiary */
+/* Label: 11 semibold, tracking 1.0, tertiary */
 .listingLabel {
   font-size: 11px;
   font-weight: 600;
@@ -257,7 +257,7 @@
   color: var(--tu-text-3);
 }
 
-/* Listing.itemTitle: body semibold primary; a Link is tinted accent */
+/* Item title: body semibold primary; a link is tinted accent */
 .listingItemTitle {
   font-size: 13px;
   font-weight: 600;
@@ -295,7 +295,7 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.19);
 }
 
-/* Listing.emphasis 13 semibold primary, 150 wide */
+/* Emphasis: 13 semibold primary, 150 wide */
 .listingKey {
   flex: none;
   width: 150px;

@@ -1,5 +1,4 @@
-/* Tool activity group + DetailedToolCallRow (ChatActivityGroupView.swift:3-58,
-   RichMessageBubble.swift:1142-1300). Tokens from docs-ui.module.css. */
+/* Tool activity group + tool call row. Tokens from docs-ui.module.css. */
 
 /* VStack(alignment: .leading, spacing: 6) */
 .group {
@@ -10,7 +9,7 @@
   min-width: 0;
 }
 
-/* HStack spacing 6, .caption textSecondary, padding h10, min-h 30, capsule */
+/* HStack spacing 6, .caption secondary, padding h10, min-h 30, capsule */
 .capsule {
   display: inline-flex;
   align-items: center;
@@ -32,7 +31,7 @@
   align-self: stretch;
 }
 
-/* HStack spacing 6, padding 8/4, threadCardBackground, r4 */
+/* HStack spacing 6, padding 8/4, card fill, r4 */
 .row {
   display: inline-flex;
   align-items: center;
@@ -48,10 +47,10 @@
   display: inline-flex;
   justify-content: center;
   width: 14px;
-  color: var(--tu-success); /* AppColors.toolCompleted */
+  color: var(--tu-success);
 }
 
-/* .caption.bold() textPrimary */
+/* .caption.bold() primary */
 .title {
   font-size: 10px;
   line-height: 13px;
@@ -59,7 +58,7 @@
   color: var(--tu-text-1);
 }
 
-/* 10pt monospaced, textTertiary (link colour when the row opens a file) */
+/* 10pt monospaced, tertiary (link colour when the row opens a file) */
 .input {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,8 +72,8 @@
   color: var(--tu-accent);
 }
 
-/* 11pt mono textPrimary, padding 8, full width, threadCardBackground, r4,
-   0.5pt threadCardBorder, 2pt above */
+/* 11pt mono primary, padding 8, full width, card fill, r4,
+   0.5pt card border, 2pt above */
 .result {
   display: block;
   align-self: stretch;

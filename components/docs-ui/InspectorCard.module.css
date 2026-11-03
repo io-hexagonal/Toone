@@ -1,4 +1,4 @@
-/* P16 InspectorCard + MetaTile (RoutineCreatorPanelView.swift). See InspectorCard.tsx. */
+/* P16 InspectorCard + MetaTile. See InspectorCard.tsx. */
 
 .preview {
   display: flex;
@@ -32,7 +32,7 @@
   white-space: nowrap;
 }
 
-/* summary card: padding 14, innerBackground .42, r12, 1pt separator */
+/* summary card: padding 14, inner fill .42, r12, 1pt separator */
 .card {
   display: flex;
   flex-direction: column;
@@ -68,7 +68,7 @@
   align-self: stretch;
 }
 
-/* metadata(): padding 9, innerBackground .42, r8, 1pt separator */
+/* metadata tile: padding 9, inner fill .42, r8, 1pt separator */
 .tile {
   display: flex;
   flex-direction: column;
@@ -116,7 +116,7 @@
   color: var(--tu-label-2);
 }
 
-/* previewSection: VStack spacing 9, title .headline */
+/* preview section: VStack spacing 9, title .headline */
 .section {
   display: flex;
   flex-direction: column;
@@ -151,7 +151,7 @@
   margin-top: 1px;
 }
 
-/* previewRow: HStack top spacing 10, padding 10, r9, innerBackground .38, 1pt separator */
+/* preview row: HStack top spacing 10, padding 10, r9, inner fill .38, 1pt separator */
 .row {
   display: flex;
   align-items: flex-start;

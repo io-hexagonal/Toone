@@ -4,10 +4,9 @@ import { PulsingDot } from "./PulsingDot";
 import styles from "./Speech.module.css";
 
 /**
- * Voice and meeting pieces (main repo, apps/toone-desktop/Toone/Toone/).
+ * Voice and meeting pieces.
  *
- * - RecordingIndicator   Features/Speech/Views/RecordingIndicatorView.swift:31-190.
- *                        HStack spacing 8: mic (32pt ZStack: outer ring accent
+ * - RecordingIndicator   HStack spacing 8: mic (32pt ZStack: outer ring accent
  *                        @0.15, scale 0.9 ↔ 1.2 + opacity 0 ↔ 0.6 over 1.2s;
  *                        inner 26pt accent @0.25; mic.fill 13pt semibold
  *                        accent) · locale badge (caption2 bold accent,
@@ -18,15 +17,13 @@ import styles from "./Speech.module.css";
  *                        0.06·i) · live text (.body, 2 lines, head
  *                        truncation; "Listening..." tertiary when empty) ·
  *                        Spacer · cancel xmark.circle.fill .title3 tertiary.
- * - AudioMessageBubble   Features/Chat/Views/RichMessageBubble.swift:1493-1566.
- *                        HStack spacing 8, padding 12/10: speaker.wave.2
+ * - AudioMessageBubble   HStack spacing 8, padding 12/10: speaker.wave.2
  *                        (Room, orange) or waveform (Voice, theme accent)
  *                        14pt medium · "<Room|Voice> message" subheadline ·
  *                        five 2.5pt bars 6/10/14/10/6 @0.6; tint @0.12 fill,
  *                        tint @0.25 1pt inside stroke, r12. The transcript
  *                        shows only on hover (not drawn).
- * - MeetingListeningCard Features/Chat/Views/ChatPanelView.swift:1795-1852.
- *                        VStack spacing 8, padding 8, red @0.08 fill + red
+ * - MeetingListeningCard VStack spacing 8, padding 8, red @0.08 fill + red
  *                        @0.25 1pt stroke, r12: PulsingDot(10, red) ·
  *                        "Meeting mode active" subheadline medium ·
  *                        "Listening to mic & system audio · EN" caption

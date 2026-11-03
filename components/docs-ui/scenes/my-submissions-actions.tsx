@@ -17,23 +17,6 @@ import type { SceneDefinition } from "../scene";
  * stays collapsed (its Re-share is in `my-submissions`, just above on the
  * same page).
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/WorkflowCatalog/ExploreSubmissionsView.swift:89-131
- *   (list header "My submissions" + refresh, "Routines" section), :299-327
- *   (routineRow: card body = details, then RoutineUpdateAction, bordered
- *   small, UI.button 13 medium), :329-338 (details: notes, then actions in an
- *   HStack(8)), :340-359 (actions: Inspect routine; Copy link when
- *   approved; "Withdraw…" role .destructive when pending; Re-share when
- *   rejected), :425-450 ("Share update" `arrow.triangle.2.circlepath`, only
- *   for a live listing whose local routine changed);
- * - P8/P9 pieces in ExploreSubmissions.tsx (ExploreSubmissionComponents.swift:5-154).
- *
- * Code vs plan: the plan pairs Pending/Withdraw with Rejected/Re-share. The
- * section is "Update or withdraw a listing", and `my-submissions` directly
- * above already shows the rejected row with its note and Re-share, so this
- * figure shows the update path (Share update on the approved row) instead.
- * "Withdraw…" has no symbol in the code (a plain destructive button).
- *
  * CALIBRATE: the small bordered buttons (as in my-submissions) and the
  * destructive label colour (system red on a bordered button).
  */

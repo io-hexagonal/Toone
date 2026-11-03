@@ -9,30 +9,6 @@ import styles from "./browser-login-import.module.css";
  * Toone" card between the toolbar and the tab bar (Safari is the only
  * supported browser found).
  *
- * Sources (APP = apps/toone-desktop/Toone/Toone/):
- * - card: APP/Features/InAppBrowser/Views/BrowserSessionImportView.swift:19-81
- *   (VStack spacing 8, padding 8, r16 inputBackground .72 + 1pt
- *   threadCardBorder, `.tint(accent)`; icon `globe.badge.chevron.backward`
- *   18 medium accent in 24×24; title .subheadline semibold primary, one line;
- *   subtitle .caption secondary; privacy note .caption2 tertiary), copy
- *   :83-127, controls :129-218 (`.firstBrowserOpen`, one source);
- * - placement: APP/Features/InAppBrowser/Views/InAppBrowserPanel.swift:37-100
- *   (header, toolbar, card padding 8 / bottom 8, then the tab bar);
- * - chrome: BrowserChrome.tsx (toolbar InAppBrowserView.swift:102-180,
- *   tab bar BrowserTabBarView.swift:27-119).
- *
- * Code vs plan (§1, browser-login-import), the code wins:
- * - With exactly one browser source, "Import all sites from Safari" is a
- *   `.borderedProminent` button too (importMenu :202-210), so two buttons are
- *   prominent, not only "Use as needed".
- * - The card is tinted with the theme accent, not `controlTint`, so in Smoky
- *   Quartz the prominent fills are the 0.72 grey with AppKit's white label
- *   (the low-contrast case LayoutStyle.swift:342-348 describes).
- * - The URL field shows `currentURL.absoluteString` ("https://acme.com/"),
- *   not a bare "acme.com".
- * - Direct edition only: the App Store build shows no import card
- *   (EditionCapabilities .browserCookieImport).
- *
  * CALIBRATE: the small prominent / borderless buttons (native controls) and
  * the borderless "Not now" label colour.
  */

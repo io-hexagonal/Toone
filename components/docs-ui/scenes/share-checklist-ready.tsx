@@ -5,29 +5,6 @@ import type { SceneDefinition } from "../scene";
 /**
  * The share checklist when everything is prepared and Toone waits for the
  * person's consent: every row done, the cover picked, "Yes, share it".
- *
- * Sources (APP = apps/toone-desktop/Toone/Toone/Features/WorkflowCatalog/):
- * - dock: P11 ChecklistDock (ConversationalSession/ConversationChecklist.swift:64-283);
- * - headline "Ready — waiting for your confirmation", title = the routine's
- *   name, rows and labels: ConversationalShare/ShareProgress.swift:20-80;
- * - row order: ConversationalShare/ShareSession.swift:870-984 (contract());
- * - actions, cover options: ShareProgress.swift:86-121 (cover picker stays
- *   while not submitted, "Yes, share it" prominent when ready for consent);
- * - "Yes, share it": ShareSession.swift:194 (ShareConsent.affirmative);
- * - three generated cover options: Core/Services/AgentSession/AgentSessionManager+Share.swift:991.
- *
- * Code vs plan (§1, share-checklist-ready), the code wins:
- * - "Explore checks" is only added to the contract when the local preflight
- *   finds a problem, and then it is blocked (ShareSession.swift:897-901), so a
- *   ready checklist has no "Explore checks" row: 7 rows, not 8.
- * - The header shows the 7/7 capacity gauge, tinted success because every
- *   row is done (ConversationChecklist.swift:66-79); the green
- *   `checkmark.seal.fill` only replaces it once the share is submitted.
- * - A generated cover keeps its picker visible with the heading "Cover" and
- *   the chosen tile outlined until submission (ShareProgress.swift:104-116).
- * - Expanded: `needsPerson` is true when ready for consent
- *   (ShareProgress.swift:17), so the dock opens itself.
- * Covers are flat neutral placeholders, never generated art.
  */
 
 const WIDTH = 480;

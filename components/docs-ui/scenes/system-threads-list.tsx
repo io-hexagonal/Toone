@@ -8,18 +8,6 @@ import { SystemThreadRow, SystemThreadsDestination } from "../ThreadRow";
  * first step. The pointer rests on the first row's stop control, which turns
  * red (the row takes the hover fill).
  *
- * Sources: as system-threads-parallel (LeftOrchestratorView.swift:1259-1277,
- * 1364-1444, 3484-3560; SystemThreadRow.swift:39-249, stop :223-236;
- * ThreadsHoverButton.swift:187-330; ThreadActivityState.swift:252-295).
- *
- * Code vs plan:
- * - "Waiting for agents" is the lifecycle label; an active row shows its
- *   work summary instead, which for a thread waiting on one child reads
- *   "Waiting for 1 child agent" (ThreadActivityState.swift:280-283).
- *   Calibrate: that a step invoking a sub-routine reports its child this way.
- * - A step thread's title names the routine that owns the step: the
- *   sub-routine's own step reads "Investigate a topic #3 · Gather sources".
- *
  * Drawn at MAGNIFY × the app's points (caption2 ≥11px at the guide column).
  */
 

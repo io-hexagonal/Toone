@@ -9,27 +9,12 @@ import { Tooltip } from "../Tooltip";
  * `sidebar.right` button at the end of its header: the button takes the
  * icon-button hover fill and its help tag reads "Hide Project Panel".
  *
- * Sources (apps/toone-desktop/Toone/Toone/):
- * - UI/Layout/RightProjectPanelView.swift:35-91 (PanelHeader "Project
- *   Explorer", `folder`; `folder.badge.plus` "Change Project Directory";
- *   `sidebar.right` posting .toggleProjectPanel, help "Hide Project Panel"
- *   :84), :156-200 (Organization and Project disclosures below);
- * - UI/Styles/ButtonStyles.swift:15-69 (icon button hover white .10);
- * - the left panel's counterpart: LeftOrchestratorView.swift:1391-1403
- *   (`sidebar.right` "Toggle Project Panel" in every destination header).
- * - Same header as project-explorer-tree.
- *
- * Code vs plan: the plan also lists `square.and.arrow.up` (Export
- * Project…). That button exists only in the App Store build, and only for
- * projects Toone keeps its own copy of (:53-72); the Direct build the
- * guides describe shows `folder.badge.plus` and `sidebar.right`, drawn here.
- *
  * calibrate: the help tag is a native NSToolTip (Tooltip.tsx); AppKit keeps
  * it on screen, so near the panel's right edge it sits right-aligned under
  * the button. Drawn at MAGNIFY × the app's points.
  */
 
-const PANEL_W = 346; // project panel = 24% of a 1440pt screen (FloatingPanel.swift:47)
+const PANEL_W = 346; // project panel = 24% of a 1440pt screen
 const MAGNIFY = 1.2;
 
 function ProjectPanelHide() {

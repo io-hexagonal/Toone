@@ -13,24 +13,7 @@ import type { SceneDefinition } from "../scene";
 /**
  * The Issue card of Run #3's failed "Investigate a topic" step, in the
  * proposed-fix state (B, Suggest mode), pinned above the composer of the
- * step's thread (16pt side inset, RoutineIssueCardView.swift:41-46).
- *
- * Sources (desktop app, main repo, APP = apps/toone-desktop/Toone/Toone/):
- * - APP/Features/Chat/Views/RoutineIssueCardView.swift: card :103-133,
- *   failureCard :196-215, header :516-555, rows :557-611, proposal :630-653,
- *   action row :680-708, inset :827-834;
- * - APP/Core/Services/RoutineRuns/RoutineIssueCardState.swift: Failure
- *   :247-262, ProposedFix :276-299, copy :503-542, failure() :637-651,
- *   proposedFix() :688-716;
- * - headline: APP/Core/Services/RoutineRuns/RoutineStatusVocabulary.swift:35-39;
- * - buttons: APP/Features/Chat/Views/RoutineActionButtonStyle.swift.
- *
- * Code vs plan: the headline is `stepsNeedFix` → "Investigate a topic needs
- * a fix", not "… failed"; and the proposed-fix header passes no meta, so
- * there is no "Run #3" (only the fixed-and-finished state shows "Run #N").
- * A proposal with a diff also shows a collapsed "Show change" disclosure.
- * The primary button is the theme accent with a dark-base label, not the
- * controlTint the kit once used for routine buttons (retired; see RoutineActionButton).
+ * step's thread (16pt side inset).
  *
  * Demo copy (not in the app): the detail line (the failure reason's first
  * line) and the proposal's change sentence.

@@ -3,7 +3,7 @@ import styles from "./docs-ui.module.css";
 import { Glyph, type GlyphName } from "./glyphs";
 
 /**
- * P2 PanelHeader (PanelHeader.swift:37-74): icon 16 in a 28 frame,
+ * P2 PanelHeader: icon 16 in a 28 frame,
  * subheadline (11) semibold title, optional caption2 subtitle, min height 44,
  * horizontal padding 16. `trailing` holds icon buttons (sidebar toggles etc.).
  */

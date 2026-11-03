@@ -5,12 +5,12 @@ import { alpha, NodeSurface } from "./NodeSurface";
 import type { PlacedNode } from "./types";
 
 /**
- * Step card: RoutinePipelineGraphComponents.swift:247-294. 150×36, r8,
+ * Step card. 150×36, r8,
  * fill inner @0.85, inside border 1 (2 selected), caption2 medium label
  * centred. Border is accent when selected, the live colour @0.9 while running,
  * separator otherwise: step cards never show completed/failed colours.
  * Optional stubs above/below in 8pt (input / artefact colour), stack spacing 2.
- * The live badge is an overlay pinned top-trailing at (+6, −6) (:270-275),
+ * The live badge is an overlay pinned top-trailing at (+6, −6),
  * drawn after the surface, so it sits above the border, but its capsule is
  * translucent (live colour @0.16 + gradient), so in the app the card's top
  * border shows through the middle of the badge text. Docs deviation: the

@@ -8,19 +8,6 @@ import type { SceneDefinition } from "../scene";
  * brief, and that message hovered with its branch menu open on
  * "Create routine".
  *
- * Sources (desktop app, main repo, APP = apps/toone-desktop/Toone/Toone/):
- * - transcript spacing/padding: APP/Features/Chat/Views/ChatPanelView.swift:1502-1512, 1584-1586;
- * - bubble + 60pt gutter: APP/Features/Chat/Views/RichMessageBubble.swift:90-187;
- * - surface: APP/Features/Chat/Views/TranscriptMessagePresentation.swift:62-87;
- * - meta row: RichMessageBubble.swift:428-452; actions + menu items :205-263
- *   ("Fork conversation" arrow.triangle.branch, "Create routine"
- *   point.3.connected.trianglepath.dotted);
- * - markdown run: APP/Features/Chat/Views/MarkdownTextView.swift:246-318.
- *
- * Code vs plan: message text is .body 13pt (the view sets no font), not the
- * 15pt Typography.Chat.message (plan §2.1 "Chat message 15 / 400"). The meta
- * row shows a clock time (Text(style: .time)), not a relative time.
- *
  * CALIBRATE: the open NSMenu (P19, every value), its offset under the
  * borderless menu button, and the highlight colour (system accent).
  */

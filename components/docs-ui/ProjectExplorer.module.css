@@ -1,11 +1,11 @@
 /*
- * Project Explorer pieces: PanelDisclosureHeader, WorkspaceBrowserHeader,
- * WorkspaceFileRowLabel. Values are the Swift ones (see ProjectExplorer.tsx);
+ * Project Explorer pieces: disclosure header, browser header, file row.
+ * Values match the shipped app (see ProjectExplorer.tsx);
  * tokens come from docs-ui.module.css (.root).
  */
 
-/* PanelDisclosureHeader (PanelHeader.swift:136-176): HStack spacing 4,
-   padding h16, min-h 32 (Control.regularHeight), textSecondary. */
+/* Disclosure header: HStack spacing 4, padding h16, min-h 32 (regular
+   control height), secondary text. */
 .disclosure {
   display: flex;
   align-items: center;
@@ -45,8 +45,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* WorkspaceBrowserHeader (WorkspacePresentationRows.swift:11-52): HStack
-   spacing 4, padding h16, min-h 32; title callout semibold textPrimary. */
+/* Browser header: HStack spacing 4, padding h16, min-h 32; title callout
+   semibold, primary text. */
 .browserHeader {
   display: flex;
   align-items: center;
@@ -92,8 +92,8 @@
   color: var(--tu-text-2);
 }
 
-/* WorkspaceFileRowLabel (WorkspacePresentationRows.swift:169-242): HStack
-   spacing 4, padding leading level × 16 then h4, min-h 32, panelRowSurface
+/* File row: HStack spacing 4, padding leading level × 16 then h4, min-h 32,
+   panel row surface
    (r8; hover white .10; selected accent .12 + 0.5 accent .32). */
 .row {
   display: flex;
@@ -113,7 +113,7 @@
   box-shadow: inset 0 0 0 0.5px color-mix(in srgb, var(--tu-accent) 32%, transparent);
 }
 
-/* chevron (.caption, textTertiary) or an empty 14-wide slot */
+/* chevron (.caption, tertiary) or an empty 14-wide slot */
 .rowChevron {
   display: inline-flex;
   justify-content: center;
@@ -136,7 +136,7 @@
   flex: none;
 }
 
-/* .callout textPrimary, one line */
+/* .callout primary, one line */
 .rowTitle {
   overflow: hidden;
   min-width: 0;

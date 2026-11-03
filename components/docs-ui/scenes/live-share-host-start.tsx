@@ -10,24 +10,6 @@ import { DEMO } from "../demo";
  * prominent "Start Personal Live Share". The crop ends at the Divider above
  * "Join a Personal Live Share".
  *
- * Sources (main repo, apps/toone-desktop/Toone/Toone/Features/Business/Views/):
- * - TeamHoverButton.swift:130-178 (LiveShareDestinationView: segmented
- *   Personal / Business picker, labels hidden, padding 12, then Divider and
- *   PersonalLiveSharePanel); :218-224 (a tab title gains " (N)" only with
- *   pending requests).
- * - PersonalLiveSharePanel.swift:24-68 (ScrollView, VStack spacing 14,
- *   padding 14; the sign-in row only when signed out; host section, Divider,
- *   join section); :102-140 (hostSection: VStack leading spacing 10; Label
- *   "Share from this Mac" macbook.and.iphone .headline; caption .secondary;
- *   with no seat yet: Picker "Organization" (menu) over the local org
- *   candidates, then Button Label("Start Personal Live Share",
- *   dot.radiowaves.left.and.right) .borderedProminent).
- * - BusinessRosterStore.swift:35-45 (candidates are local organizations,
- *   named like the workspace).
- *
- * Code vs plan: none. Signed in, so the "Sign in to start or join" row is
- * absent and Start is enabled.
- *
  * Calibrate: the segmented control, the menu pop-up and the prominent push
  * button (fill, height). Drawn at MAGNIFY × the app's points, like
  * live-share-access-requests.
