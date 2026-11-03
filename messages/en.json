@@ -230,7 +230,7 @@
       "routine": {
         "label": "A Toone routine",
         "note": "The same steps every run, checked and remembered.",
-        "ledger": "Ledger",
+        "ledger": "Memory",
         "known": "38 leads known",
         "fresh": "20 new this run",
         "duplicates": "0 duplicates"
@@ -247,7 +247,7 @@
           "memory": {
             "label": "Memory between runs",
             "prompt": "Starts fresh: repeats and gaps",
-            "toone": "A ledger: nothing lost, nothing repeated"
+            "toone": "Remembers what it already did: nothing lost, nothing repeated"
           },
           "control": {
             "label": "Control mid-run",

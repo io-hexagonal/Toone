@@ -230,7 +230,7 @@
       "routine": {
         "label": "Una routine Toone",
         "note": "Gli stessi passaggi ogni volta, controllati e ricordati.",
-        "ledger": "Registro",
+        "ledger": "Memoria",
         "known": "38 lead noti",
         "fresh": "20 nuovi in questa esecuzione",
         "duplicates": "0 duplicati"
@@ -247,7 +247,7 @@
           "memory": {
             "label": "Memoria tra esecuzioni",
             "prompt": "Riparte da zero: ripetizioni e buchi",
-            "toone": "Un registro: niente perso, niente ripetuto"
+            "toone": "Ricorda cosa ha già fatto: niente perso, niente ripetuto"
           },
           "control": {
             "label": "Controllo in corsa",

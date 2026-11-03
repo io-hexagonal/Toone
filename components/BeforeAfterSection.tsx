@@ -8,8 +8,8 @@ import { Icon, type IconName } from "@/components/HowItWorksGraph";
  * Toone is compared with (a scheduled prompt in a chat assistant, no brands):
  * one prompt and three runs that drift, repeating leads, losing sources and
  * falling short with nothing to say so. Right, the same work as a Toone
- * routine: the hero's chain with its contract and fallback, and the ledger
- * that carries over between runs. Then a light comparison, row by row.
+ * routine: the hero's chain with its contract and fallback, and what it
+ * remembers between runs. Then a light comparison, row by row.
  */
 
 /** Lead rows in each past run, by bar width; a repeat reuses an earlier width. */
@@ -93,7 +93,7 @@ const CSS = `
 .ba-lead i { display: block; height: 5px; border-radius: 3px; background: rgba(29,28,25,0.11); }
 .ba-lead .ba-tag { margin-left: auto; }
 
-/* --- right: the routine and its ledger --- */
+/* --- right: the routine and what it remembers --- */
 .ba-run { flex: 1; display: flex; flex-direction: column; }
 .ba-chain { flex: 1; display: grid; place-items: center; padding: 6px 0 24px; }
 .ba-ledger {

@@ -127,8 +127,8 @@ export type PackageRequirements = {
   resource_bindings?: string[];
 };
 
-/** A Toone-managed ledger a shared routine keeps between runs: its
- * definition only (shape and lifecycle); records are never published. */
+/** Records a shared routine keeps between runs: the definition only
+ * (shape and lifecycle); the records themselves are never published. */
 export type PackageLedger = {
   id: string;
   name: string;
@@ -145,7 +145,7 @@ export type PackageLedger = {
 
 export type WorkflowPackage = {
   format_version: number;
-  /** 3 when the package ships ledger definitions. */
+  /** 3 when the package ships definitions of records kept between runs. */
   routine_schema_version: number;
   ledgers?: PackageLedger[];
   minimum_app_version?: string;

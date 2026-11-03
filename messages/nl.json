@@ -230,7 +230,7 @@
       "routine": {
         "label": "Een Toone-routine",
         "note": "Elke keer dezelfde stappen, gecontroleerd en onthouden.",
-        "ledger": "Register",
+        "ledger": "Geheugen",
         "known": "38 leads bekend",
         "fresh": "20 nieuw deze run",
         "duplicates": "0 dubbel"
@@ -247,7 +247,7 @@
           "memory": {
             "label": "Geheugen tussen runs",
             "prompt": "Begint opnieuw: herhalingen en gaten",
-            "toone": "Een register: niets kwijt, niets dubbel"
+            "toone": "Onthoudt wat al gedaan is: niets kwijt, niets dubbel"
           },
           "control": {
             "label": "Ingrijpen tijdens een run",
