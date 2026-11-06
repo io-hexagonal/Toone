@@ -149,7 +149,8 @@ export async function TooneLandingPage({
             /* One rhythm for every editorial section: the same top space, the
                same eyebrow → title → sub stack, the same gap into the content. */
             .section {
-              position: relative; max-width: 1000px; margin: 0 auto;
+              /* Same width as the expanded header pill (SiteHeader: min(1080px, 100vw - 32px)). */
+              position: relative; max-width: 1080px; margin: 0 auto;
               padding-top: clamp(72px, 8vw, 104px);
             }
             .section h2 {
