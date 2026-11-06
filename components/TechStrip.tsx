@@ -11,7 +11,6 @@ import type { LandingAudience } from "@/components/LandingAudienceBar";
  *
  * Rendered monochrome, which is both on-brand and the lighter-touch way to use
  * marks we do not own: nominative "built on" use, no implication of endorsement.
- * Context7 ships only a full-colour raster mark, so it is greyscaled to match.
  */
 
 type Item = { name: string; href: string; icon: React.ReactNode };
@@ -72,12 +71,6 @@ const ITEMS: Item[] = [
     name: "Google",
     href: "https://ai.google",
     icon: <Svg>{GOOGLE_PATHS.map((d) => <path key={d.slice(0, 12)} d={d} />)}</Svg>,
-  },
-  {
-    name: "Context7",
-    href: "https://context7.com",
-    // eslint-disable-next-line @next/next/no-img-element
-    icon: <img src="/assets/tech/context7.png" alt="" className="ts-icon ts-raster" />,
   },
   {
     name: "OpenAI for Science",
