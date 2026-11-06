@@ -148,9 +148,11 @@ export async function TooneLandingPage({
 
             /* One rhythm for every editorial section: the same top space, the
                same eyebrow → title → sub stack, the same gap into the content. */
+            /* The homepage runs wider than the other pages; the shared header
+               and footer read --site-max so their edges line up with it. */
+            :root:has(.sections) { --site-max: 1300px; --site-gutter: 48px; }
             .section {
-              /* Same width as the expanded header pill (SiteHeader: min(1080px, 100vw - 32px)). */
-              position: relative; max-width: 1080px; margin: 0 auto;
+              position: relative; max-width: var(--site-max, 1300px); margin: 0 auto;
               padding-top: clamp(72px, 8vw, 104px);
             }
             .section h2 {

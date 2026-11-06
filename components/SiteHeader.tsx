@@ -59,7 +59,7 @@ export default function SiteHeader({
             }
             .hdr2[data-scrolled="true"] {
               top: 14px;
-              width: min(1080px, calc(100vw - 32px));
+              width: min(var(--site-max, 1080px), calc(100vw - var(--site-gutter, 32px)));
               padding: 10px 14px 10px 22px;
               border-radius: 999px;
               background-color: rgba(240, 237, 230, 0.94);

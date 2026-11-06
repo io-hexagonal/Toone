@@ -31,7 +31,7 @@ export default async function Footer({
               padding: 60px 24px 72px;
             }
             .ftr-wrap {
-              max-width: 1080px; margin: 0 auto;
+              max-width: var(--site-max, 1080px); margin: 0 auto;
               display: flex; justify-content: space-between; gap: 48px; flex-wrap: wrap;
             }
             .ftr-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
