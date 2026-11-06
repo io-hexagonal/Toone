@@ -1,7 +1,7 @@
 /**
  * Explore page layout for records with a listing profile (contract §13,
- * page spec §3): the job in plain words first, the routine definition last,
- * collapsed but still in the server HTML for builders, search and AI answers.
+ * page spec §3): the job in plain words first. The full routine definition
+ * is not shown on these pages.
  * Records without a profile keep the legacy layout in `ExploreView`.
  */
 import type { ReactNode } from "react";
@@ -28,7 +28,6 @@ import {
   Cover,
   FeatureGuides,
   IncludedInBundles,
-  RoutineDefinition,
   capitalize,
   formatDate,
   PriceTag,
@@ -444,16 +443,6 @@ export function ProfileBody(
         )}
         {routine && <IncludedInBundles detail={routine} ui={ui} locale={locale} />}
         <FeatureGuides detail={detail} ui={ui} />
-        {routine && (
-          <details className="explore-builders" id="builders">
-            <summary>
-              <h2>{ui.builders}</h2>
-            </summary>
-            <div className="explore-builders-body">
-              <RoutineDefinition detail={routine} ui={ui} builder />
-            </div>
-          </details>
-        )}
       </article>
       <aside className="explore-rail">
         <nav className="explore-toc" aria-label={ui.contents}>
@@ -465,7 +454,6 @@ export function ProfileBody(
           ))}
           {!!routine?.included_in_bundles?.length && <a href="#bundles">{ui.includedBundles}</a>}
           <a href="#features">{ui.featureGuidesHeading}</a>
-          {routine && <a href="#builders">{ui.builders}</a>}
         </nav>
         <ProfileDetailsCard detail={detail} ui={ui} locale={locale} />
         <a className="explore-back" href={`/${locale}/explore`}>

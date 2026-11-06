@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import LocalePicker from "@/components/LocalePicker";
+import SignedInLink from "@/components/SignedInLink";
 
 type Props = {
   homePath?: "/" | "/business";
@@ -79,12 +80,11 @@ export default async function Navigation({
           pointerEvents: "auto",
         }}
       >
-        <Link
-          href="/how-to"
-          className="minimal-link"
-        >
+        {/* How-to is reachable by URL and indexed, but only signed-in
+            visitors get the entry point. */}
+        <SignedInLink href="/how-to" className="minimal-link">
           {t("howTo")}
-        </Link>
+        </SignedInLink>
         <Link href="/request-access" className="minimal-link">{t("download")}</Link>
         <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
           <LocalePicker />

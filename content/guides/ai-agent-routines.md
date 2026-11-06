@@ -112,7 +112,7 @@ Closure records the accepted artifact, rejected claims, unresolved sources, revi
 
 ## How callback reconciliation can be recorded
 
-One inspected SEO Growth organization uses Markdown operating contracts with routine metadata, cadence, triggers, inputs, numbered workflow steps, outputs, escalation, and optional parent-child controls. Its documented cadence values include `Daily`, `Weekly`, `Monthly`, `Continuous`, and `OnDemand`, with time or interval syntax defined by that organization.
+One inspected SEO growth organization describes each routine with a cadence, triggers, inputs, numbered steps, outputs, escalation, and optional parent-child controls. Its routines run daily, weekly, monthly, continuously, or when someone starts them.
 
 The same documented design records callback states such as `CALLBACK_RESERVED`, `CALLBACK_DISPATCHED`, and `CALLBACK_CONSUMED`. It requires recovery checks before a repeat dispatch. Dated organization records also contain examples where an expired lease was reconciled as having no effect and an identity conflict was invalidated or quarantined before a successor attempt.
 

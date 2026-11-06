@@ -305,7 +305,7 @@ const h2s = (html) =>
     decode(m[1].replace(/<[^>]+>/g, "")).trim(),
   );
 
-test("profile routine renders every section in page-spec order with the builders' section collapsed in the HTML", async () => {
+test("profile routine renders every section in page-spec order without the routine definition", async () => {
   const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
   assert.equal(response.status, 200);
   const text = visible(html);
@@ -323,7 +323,6 @@ test("profile routine renders every section in page-spec order with the builders
     "FAQ",
     "Related routines",
     "Included in bundles",
-    "Full routine definition (for builders)",
   ];
   // What setup prepares starts closed; setup handles it.
   const setupSection = html.match(/<details[^>]*id="what-you-provide"[^>]*>/);
@@ -353,15 +352,10 @@ test("profile routine renders every section in page-spec order with the builders
   assert.match(html, /href="\/en\/ai-agent-routines"[^>]*>Learn how routines work/);
   assert.match(html, new RegExp(`href="/en/explore/routines/${routine.slug}"`), "related routine links");
   assert.match(html, new RegExp(`href="/en/explore/bundles/${PROFILE_BUNDLE_SLUG}"`), "bundle backlink");
-  // Builders' section: collapsed <details>, definition still server-rendered.
-  const builders = html.match(/<details class="explore-builders"[^>]*>([\s\S]*?)<\/details>\s*<\/article>/);
-  assert.ok(builders, "builders' details present");
-  assert.ok(!/<details class="explore-builders"[^>]*\bopen\b/.test(html), "collapsed by default");
-  assert.match(builders[1], /Validate the site list/);
-  assert.match(builders[1], /Done when/);
-  assert.match(builders[1], /Connected tools/);
-  assert.ok(!builders[1].includes("Completion criteria"));
-  assert.ok(!builders[1].includes("MCP servers"));
+  // No builders' section: the full routine definition is not published here.
+  assert.ok(!html.includes("explore-builders"));
+  assert.ok(!html.includes('href="#builders"'));
+  assert.ok(!visible(html).includes("Validate the site list"), "step titles stay off the profile page");
   // Cover alt, breadcrumb with category, CTAs with attribution.
   assert.ok(html.includes(`alt="${profileFixture.cover_alt}"`));
   assert.match(html, /href="\/en\/explore\?category=cat_marketing-sales"/);
@@ -423,7 +417,7 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
   const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
   assert.equal(response.status, 200);
-  assert.ok(!html.includes("explore-builders"));
+  assert.ok(!h2s(html).includes("What you get"), "legacy layout");
   assert.match(html, /Completion criteria/);
   assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
   // The server's indexable flag decides, not the profile's shape.
@@ -431,7 +425,7 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   await mode({});
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
   const restored = await get("/en/explore/routines/" + PROFILE_SLUG);
-  assert.match(restored.html, /explore-builders/);
+  assert.ok(h2s(restored.html).includes("What you get"), "profile layout restored");
 });
 
 test("bundle with a profile lists the routines inside in their plain wording", async () => {

@@ -289,19 +289,24 @@ export default function HowItWorksSection() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            /* The intro is centred over the two columns. */
+            .hiw > :is(.eyebrow, h2, .sub) { text-align: center; margin-left: auto; margin-right: auto; }
+
+            /* Two columns: the steps run the full height of the panel (rules
+               flush with its top and bottom edges) with room between them. */
             .hiw-grid {
-              display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-              gap: 48px; align-items: start;
+              display: grid; grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.17fr);
+              column-gap: clamp(48px, 6vw, 76px); align-items: stretch;
             }
 
             /* --- the step list: every step open, the active one in full ink --- */
             .hiw-steps { display: flex; flex-direction: column; }
-            .hiw-step { position: relative; border-bottom: 1px solid rgba(29,28,25,0.1); }
+            .hiw-step { position: relative; flex: 1 0 auto; display: flex; border-bottom: 1px solid rgba(29,28,25,0.1); }
             .hiw-step:first-child { border-top: 1px solid rgba(29,28,25,0.1); }
             .hiw-tab {
               all: unset; box-sizing: border-box; cursor: pointer; display: grid;
               grid-template-columns: 30px minmax(0, 1fr); width: 100%;
-              padding: 22px 4px 24px 2px; border-radius: 6px;
+              align-content: center; padding: 22px 4px 24px 2px; border-radius: 6px;
             }
             .hiw-tab:focus-visible { outline: 2px solid #1d1c19; outline-offset: 2px; }
             .hiw-num {
@@ -485,7 +490,7 @@ export default function HowItWorksSection() {
             .hiw[data-held] .hg-prog i { animation-play-state: paused; }
 
             @media (max-width: 960px) {
-              .hiw-grid { grid-template-columns: 1fr; gap: 32px; }
+              .hiw-grid { grid-template-columns: 1fr; gap: 32px; align-items: start; }
               .hiw-body { max-width: 60ch; }
             }
             @media (max-width: 640px) {

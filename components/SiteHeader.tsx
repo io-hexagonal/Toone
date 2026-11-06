@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
+import SignedInLink from "@/components/SignedInLink";
 
 /**
  * Morphing landing header — one element, two states.
@@ -58,7 +59,7 @@ export default function SiteHeader({
             }
             .hdr2[data-scrolled="true"] {
               top: 14px;
-              width: min(1080px, calc(100vw - 32px));
+              width: min(var(--site-max, 1080px), calc(100vw - var(--site-gutter, 32px)));
               padding: 10px 14px 10px 22px;
               border-radius: 999px;
               background-color: rgba(240, 237, 230, 0.94);
@@ -128,9 +129,9 @@ export default function SiteHeader({
           <span className="wm">toone</span>
         </Link>
         <nav className="links" aria-label="Primary">
-          <Link href="/how-to" data-optional>
+          <SignedInLink href="/how-to" data-optional>
             {t("howTo")}
-          </Link>
+          </SignedInLink>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
           <LocalePicker />

@@ -92,20 +92,10 @@ export async function TooneLandingPage({
             .ts-icon {
               width: 19px; height: 19px; flex-shrink: 0; display: block;
             }
-            /* Context7 ships only a full-colour raster tile; greyscale it so it
-               sits with the monochrome marks, and it is a filled square so it
-               reads heavier than the line marks at equal size. */
-            .ts-raster {
-              width: 17px; height: 17px; border-radius: 3px;
-              filter: grayscale(1) brightness(0.4);
-              opacity: 0.72; transition: filter 0.2s, opacity 0.2s;
-            }
-            .ts-item:hover .ts-raster { filter: none; opacity: 1; }
             @media (max-width: 640px) {
               .ts-row { gap: 12px 18px; }
               .ts-item { font-size: 12.5px; gap: 7px; }
               .ts-icon { width: 16px; height: 16px; }
-              .ts-raster { width: 15px; height: 15px; }
             }
             /* The light editorial world: everything between the dark hero and
                the dark footer sits on cream with ink text. */
@@ -158,8 +148,11 @@ export async function TooneLandingPage({
 
             /* One rhythm for every editorial section: the same top space, the
                same eyebrow → title → sub stack, the same gap into the content. */
+            /* The homepage runs wider than the other pages; the shared header
+               and footer read --site-max so their edges line up with it. */
+            :root:has(.sections) { --site-max: 1300px; --site-gutter: 48px; }
             .section {
-              position: relative; max-width: 1000px; margin: 0 auto;
+              position: relative; max-width: var(--site-max, 1300px); margin: 0 auto;
               padding-top: clamp(72px, 8vw, 104px);
             }
             .section h2 {
