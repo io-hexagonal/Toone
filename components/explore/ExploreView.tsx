@@ -101,9 +101,6 @@ export const COPY_KEYS = [
   "aboutShare",
   "aboutRoutineGuide",
   "routinesInside",
-  "builders",
-  "doneWhen",
-  "connectedTools",
   "routineName",
   "bundleName",
 
@@ -674,39 +671,16 @@ function initials(name: string) {
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
 }
-/**
- * Heading at `level + shift`. The fallback page renders the definition at
- * shift 0; inside the builders' `<details>` (under its own h2) it shifts by
- * one so the outline stays in order.
- */
-function H({
-  level,
-  shift,
-  children,
-}: {
-  level: 2 | 3 | 4;
-  shift: 0 | 1;
-  children: ReactNode;
-}) {
-  const Tag = `h${level + shift}` as "h2" | "h3" | "h4" | "h5";
-  return <Tag>{children}</Tag>;
-}
-/** Labels that differ between the legacy page and the builders' section. */
-type DefinitionLabels = { completion: string; mcps: string };
 function MemberContent({
   member,
   root,
   ui,
   agentNames,
-  shift = 0,
-  labels,
 }: {
   member: PackageMember;
   root: boolean;
   ui: ExploreCopy;
   agentNames: Map<string, string>;
-  shift?: 0 | 1;
-  labels: DefinitionLabels;
 }) {
   const payload = member.payload;
   return (
@@ -717,12 +691,12 @@ function MemberContent({
       {!root && (
         <header className="explore-member-head">
           <p className="explore-eyebrow">{ui.subRoutines}</p>
-          <H level={2} shift={shift}>{payload.name || member.key}</H>
+          <h2>{payload.name || member.key}</h2>
         </header>
       )}
       {payload.purpose && (
         <section className="explore-section">
-          <H level={2} shift={shift}>{ui.purpose}</H>
+          <h2>{ui.purpose}</h2>
           <div className="explore-lede">
             <Markdown text={payload.purpose} />
           </div>
@@ -731,19 +705,19 @@ function MemberContent({
       )}
       {!payload.purpose && payload.preamble && (
         <section className="explore-section">
-          <H level={2} shift={shift}>{ui.overview}</H>
+          <h2>{ui.overview}</h2>
           <Markdown text={payload.preamble} />
         </section>
       )}
       {payload.prerequisites && (
         <section className="explore-section">
-          <H level={2} shift={shift}>{ui.prerequisites}</H>
+          <h2>{ui.prerequisites}</h2>
           <Markdown text={payload.prerequisites} />
         </section>
       )}
       {!!payload.steps?.length && (
         <section className="explore-section">
-          <H level={2} shift={shift}>{ui.steps}</H>
+          <h2>{ui.steps}</h2>
           <ol className="explore-steps">
             {payload.steps.map((step, index) => {
               const executor = step.executorAgentId
@@ -759,7 +733,7 @@ function MemberContent({
                     <span className="explore-step-number" aria-hidden="true">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <H level={3} shift={shift}>{step.title}</H>
+                    <h3>{step.title}</h3>
                     {executor && (
                       <span className="explore-step-agent">
                         <span>{ui.runsAs}</span>
@@ -771,7 +745,7 @@ function MemberContent({
                     <Markdown text={step.description} />
                     {!!step.completionCriteria?.length && (
                       <div className="explore-criteria">
-                        <H level={4} shift={shift}>{labels.completion}</H>
+                        <h4>{ui.completion}</h4>
                         <ul>
                           {step.completionCriteria.map((criterion, i) => (
                             <li key={i}>
@@ -783,7 +757,7 @@ function MemberContent({
                     )}
                     {!!step.outcomes?.length && (
                       <div className="explore-outcomes">
-                        <H level={4} shift={shift}>{ui.outcomes}</H>
+                        <h4>{ui.outcomes}</h4>
                         <ul>
                           {step.outcomes.map((outcome) => (
                             <li key={outcome.id}>
@@ -818,7 +792,7 @@ function MemberContent({
       )}
       {payload.escalation && (
         <section className="explore-section">
-          <H level={2} shift={shift}>{ui.escalation}</H>
+          <h2>{ui.escalation}</h2>
           <Markdown text={payload.escalation} />
         </section>
       )}
@@ -827,22 +801,15 @@ function MemberContent({
 }
 /**
  * The routine definition as published: members, steps, agents, skills and
- * requirements. The legacy page shows it as the page body; a page with a
- * listing profile keeps it, collapsed, in the builders' section.
+ * requirements, shown as the body of a page without a listing profile.
  */
 export function RoutineDefinition({
   detail,
   ui,
-  builder = false,
 }: {
   detail: RoutinePublicDetail;
   ui: ExploreCopy;
-  builder?: boolean;
 }) {
-  const shift = builder ? 1 : 0;
-  const labels: DefinitionLabels = builder
-    ? { completion: ui.doneWhen, mcps: ui.connectedTools }
-    : { completion: ui.completion, mcps: ui.mcps };
   const pkg = detail.package;
   const root = pkg.members.find((member) => member.key === pkg.root_key);
   const children = pkg.members.filter((member) => member.key !== pkg.root_key);
@@ -856,11 +823,11 @@ export function RoutineDefinition({
   return (
     <>
       {root && (
-        <MemberContent member={root} root ui={ui} agentNames={agentNames} shift={shift} labels={labels} />
+        <MemberContent member={root} root ui={ui} agentNames={agentNames} />
       )}
       {!!children.length && (
         <section id="sub-routines" className="explore-section">
-          <H level={2} shift={shift}>{ui.subRoutines}</H>
+          <h2>{ui.subRoutines}</h2>
           {children.map((member) => (
             <MemberContent
               key={member.key}
@@ -868,15 +835,13 @@ export function RoutineDefinition({
               root={false}
               ui={ui}
               agentNames={agentNames}
-              shift={shift}
-              labels={labels}
             />
           ))}
         </section>
       )}
       {!!pkg.agents?.length && (
         <section id="agents" className="explore-section">
-          <H level={2} shift={shift}>{ui.agents}</H>
+          <h2>{ui.agents}</h2>
           <div className="explore-roster">
             {pkg.agents.map((agent) => (
               <article className="explore-agent" key={agent.source_id}>
@@ -885,7 +850,7 @@ export function RoutineDefinition({
                     {initials(agent.name)}
                   </span>
                   <div className="explore-agent-title">
-                    <H level={3} shift={shift}>{agent.name}</H>
+                    <h3>{agent.name}</h3>
                     <Markdown text={agent.description} />
                   </div>
                 </div>
@@ -901,7 +866,7 @@ export function RoutineDefinition({
                     )}
                     {!!agent.mcp_ids?.length && (
                       <li>
-                        <span>{labels.mcps}</span> {agent.mcp_ids.join(", ")}
+                        <span>{ui.mcps}</span> {agent.mcp_ids.join(", ")}
                       </li>
                     )}
                   </ul>
@@ -913,7 +878,7 @@ export function RoutineDefinition({
       )}
       {!!pkg.skills?.length && (
         <section id="skills" className="explore-section">
-          <H level={2} shift={shift}>{ui.skills}</H>
+          <h2>{ui.skills}</h2>
           {pkg.skills.map((skill) => (
             <details className="explore-skill" key={skill.id}>
               <summary>
@@ -925,7 +890,7 @@ export function RoutineDefinition({
         </section>
       )}
       <section id="requirements" className="explore-section">
-        <H level={2} shift={shift}>{ui.requirements}</H>
+        <h2>{ui.requirements}</h2>
         {factKinds.length > 0 && <dl className="explore-requirement-summary">
           {factKinds.map((kind) => <div key={kind}>
             <dt>{ui[kind]}</dt>
@@ -938,13 +903,13 @@ export function RoutineDefinition({
           <div className="explore-req-groups">
             {!!requirements?.model_ids?.length && (
               <div className="explore-req-group">
-                <H level={4} shift={shift}>{ui.models}</H>
+                <h4>{ui.models}</h4>
                 <Chips items={requirements.model_ids} />
               </div>
             )}
             {!!requirements?.mcp_ids?.length && (
               <div className="explore-req-group">
-                <H level={4} shift={shift}>{labels.mcps}</H>
+                <h4>{ui.mcps}</h4>
                 <Chips items={requirements.mcp_ids} />
               </div>
             )}

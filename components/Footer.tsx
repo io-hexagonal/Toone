@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
+import SignedInLink from "@/components/SignedInLink";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -104,9 +105,7 @@ export default async function Footer({
               <Link href="/resources">{nav("resources")}</Link>
               <Link href="/journal">{nav("journal")}</Link>
               <a href="/en/governance">{nav("governance")}</a>
-              <Link href="/how-to">
-                {nav("howTo")}
-              </Link>
+              <SignedInLink href="/how-to">{nav("howTo")}</SignedInLink>
             </div>
             <div>
               <p className="ftr-heading">{t("company")}</p>
