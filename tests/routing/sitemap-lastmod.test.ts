@@ -22,12 +22,15 @@ test("with git history, routes carry their commit date as lastmod", async () => 
   const map = entries(xml);
   for (const loc of [
     "https://trytoone.com/en",
-    "https://trytoone.com/en/how-to",
-    "https://trytoone.com/en/how-to/features/explore",
     "https://trytoone.com/en/about",
     "https://trytoone.com/en/explore",
   ]) {
     assert.ok(map.has(loc), `${loc} is listed`);
     assert.match(map.get(loc) ?? "", /^\d{4}-\d{2}-\d{2}$/, `${loc} has a git lastmod`);
   }
+});
+
+test("signed-in-only /how-to guides are not listed", async () => {
+  const xml = await (await siteSitemap()).text();
+  assert.doesNotMatch(xml, /\/how-to\b/);
 });

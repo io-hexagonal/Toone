@@ -1,6 +1,5 @@
 import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
-import { getProductGuideSlugs, getProductGuideSourcePath } from "@/lib/product-showcase";
 import { gitLastCommitDate } from "@/lib/source-date";
 
 export const dynamic = "force-static";
@@ -101,11 +100,7 @@ export async function GET() {
     }
   }
 
-  for (const slug of ["", ...getProductGuideSlugs()]) {
-    const path = `/how-to${slug ? `/${slug}` : ""}`;
-    const loc = `${BASE_URL}/en${path}`;
-    lines.push(url(loc, lastModified(loc, getProductGuideSourcePath(slug))));
-  }
+  // /how-to is for signed-in accounts only (lib/site-session.ts): not listed.
 
   // These trust surfaces are currently reviewed in English only. Their
   // non-English routes redirect until qualified translations are approved.

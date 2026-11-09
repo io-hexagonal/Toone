@@ -142,6 +142,37 @@ export function saveSession(session: ToneSession): void {
   } catch {
     // storage full / private mode — the in-memory session still works
   }
+  void syncSiteSession(session);
+}
+
+/**
+ * Mirrors the session into the site's httpOnly cookie (app/api/session) so
+ * server-rendered, signed-in-only pages (/how-to) can see it. Resolves to
+ * false when the API rejects the token (expired or revoked session).
+ */
+export async function syncSiteSession(session: ToneSession): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  try {
+    const res = await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: session.token, expiresAt: session.expiresAt }),
+      cache: "no-store",
+      credentials: "same-origin",
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function clearSiteSession(): void {
+  try {
+    void fetch("/api/session", { method: "DELETE", cache: "no-store", credentials: "same-origin", keepalive: true })
+      .catch(() => {});
+  } catch {
+    // no fetch (tests) — nothing to clear
+  }
 }
 
 export function loadSession(): ToneSession | null {
@@ -165,6 +196,7 @@ export function loadSession(): ToneSession | null {
 export function clearSession(): void {
   if (typeof window === "undefined") return;
   clearCapabilityCache();
+  clearSiteSession();
   try {
     localStorage.removeItem(SESSION_KEY);
   } catch {

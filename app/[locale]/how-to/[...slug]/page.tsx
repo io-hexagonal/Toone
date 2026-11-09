@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { notFound } from "next/navigation";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ProductShowcasePage from "@/components/showcases/ProductShowcasePage";
-import { getProductGuidePage, getProductGuideSlugs } from "@/lib/product-showcase";
+import HowToSignInGate from "@/components/showcases/HowToSignInGate";
+import { getProductGuidePage } from "@/lib/product-showcase";
+import { GATED_GUIDE_METADATA, GUIDE_ROBOTS } from "@/lib/how-to-access";
+import { hasSiteSession } from "@/lib/site-session";
 
 type Props = {
   params: Promise<{ locale: string; slug: string[] }>;
   searchParams: PageSearchParams;
 };
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return getProductGuideSlugs().map((slug) => ({ slug: slug.split("/") }));
-}
-
+// Signed-in accounts only (lib/site-session.ts): rendered per request, never
+// prerendered, cached or indexed. Unknown slugs 404 only for signed-in
+// requests, so the wall does not reveal which guides exist.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, slug: segments } = await params;
+  const { slug: segments } = await params;
   const slug = segments.join("/");
+  if (!(await hasSiteSession())) return GATED_GUIDE_METADATA(`/how-to/${slug}`);
   const page = getProductGuidePage(slug);
   if (!page) return {};
 
@@ -32,8 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: `${page.title} | ${suffix}` },
     description: page.description,
     alternates: { canonical },
-    robots: localeRobots(locale),
-    other: localeVersions(`/how-to/${slug}`, ["en"]),
+    robots: GUIDE_ROBOTS,
     openGraph: {
       type: "article",
       url: canonical,
@@ -58,9 +57,11 @@ export default async function HowToEntry({ params, searchParams }: Props) {
   const slug = segments.join("/");
   if (locale !== "en") await redirectToEnglish(`/en/how-to/${slug}`, searchParams);
 
+  setRequestLocale(locale);
+  if (!(await hasSiteSession())) return <HowToSignInGate path={`/how-to/${slug}`} />;
+
   const page = getProductGuidePage(slug);
   if (!page) notFound();
 
-  setRequestLocale(locale);
   return <ProductShowcasePage locale={locale} page={page} />;
 }
