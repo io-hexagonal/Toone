@@ -4,7 +4,8 @@ import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
 import { LEGAL_TRADER, type TraderField, type TraderKey } from "@/lib/legal/trader";
-import { LINK_SUPPORT_URL, LINK_TERMS_URL } from "@/lib/legal/terms";
+import { TOONE_PRO_SELLER } from "@/lib/legal/seller";
+import WebSales from "./WebSales";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -78,15 +79,7 @@ export default async function LegalNoticePage({ params, searchParams }: Props) {
 
       <section id="web-sales">
         <h2>Toone Pro sold on trytoone.com</h2>
-        <p>
-          Web purchases of Toone Pro are sold through Stripe&apos;s Managed Payments service. The
-          seller of the transaction and merchant of record is Sold through Link, LLC, a Stripe
-          company, under its <a href={LINK_TERMS_URL}>Sold through Link terms</a>. It collects VAT
-          and issues receipts and invoices. Payment support is at{" "}
-          <a href={LINK_SUPPORT_URL}>Link support</a>. The trader above provides Toone Pro and its
-          product support. The purchase terms are in the{" "}
-          <a href="/en/terms#toone-pro">Terms</a>.
-        </p>
+        <WebSales seller={TOONE_PRO_SELLER} />
       </section>
 
       <section id="complaints">
