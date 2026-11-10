@@ -26,39 +26,68 @@ function status(value: Partial<CheckoutStatus> & Pick<CheckoutStatus, "status" |
 
 /* ---- pure transitions */
 
-test("pending → active as soon as the entitlement says Pro", () => {
-  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO }, 0, CONFIG);
+test("no session: pending → active as soon as the entitlement says Pro", () => {
+  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO, hasSession: false }, 0, CONFIG);
   assert.deepEqual(state, { kind: "active", entitlement: PRO, ...NO_RECEIPT });
   assert.equal(delayMs, null);
   assert.equal(isFinalCheckoutReturn(state), true);
 });
 
+test("with a session: active only once the checkout is complete and the entitlement says Pro", () => {
+  const complete = status({ status: "complete", entitled: true });
+  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO, hasSession: true, checkout: complete }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "active", entitlement: PRO, ...NO_RECEIPT });
+  assert.equal(delayMs, null);
+});
+
 test("a complete, entitled checkout alone never turns Pro on", () => {
-  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: status({ status: "complete", entitled: true }) }, 0, CONFIG);
+  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: true, checkout: status({ status: "complete", entitled: true }) }, 0, CONFIG);
   assert.equal(state.kind, "pending");
+});
+
+test("already Pro (a code, a guest month): an open checkout is not active", () => {
+  const open = status({ status: "open", entitled: true, order_ref: "TOONE-SLOWPAY0001" });
+  const config = { ...CONFIG, timeoutMs: 60_000, processingAfterMs: 20_000 };
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO, hasSession: true, checkout: open }, 0, config);
+  assert.equal(step.state.kind, "pending");
+  step = stepCheckoutReturn(step.state, { entitlement: PRO, hasSession: true, checkout: open }, 20_000, config);
+  assert.deepEqual(step.state, { kind: "processing", orderRef: "TOONE-SLOWPAY0001", legalInvoice: null });
+});
+
+test("already Pro: an expired (refused or refunded) checkout is an error, not active", () => {
+  const expired = status({ status: "expired", entitled: true });
+  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO, hasSession: true, checkout: expired }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "error", reason: "expired", failure: null });
+});
+
+test("already Pro: without any checkout status the session is not confirmed", () => {
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO, hasSession: true, checkout: null }, 0, CONFIG);
+  assert.equal(step.state.kind, "pending");
+  step = stepCheckoutReturn(step.state, { entitlement: PRO, hasSession: true, checkout: null }, 10_000, CONFIG);
+  assert.deepEqual(step.state, { kind: "timeout" });
 });
 
 test("pending keeps polling with the backoff, the last delay repeating", () => {
   let state = initialCheckoutReturn();
   const delays: (number | null)[] = [];
   for (const elapsed of [0, 1_000, 3_000]) {
-    const step = stepCheckoutReturn(state, { entitlement: FREE }, elapsed, { ...CONFIG, timeoutMs: 60_000 });
+    const step = stepCheckoutReturn(state, { entitlement: FREE, hasSession: false }, elapsed, { ...CONFIG, timeoutMs: 60_000 });
     state = step.state;
     delays.push(step.delayMs);
   }
-  const step = stepCheckoutReturn(state, { entitlement: FREE }, 7_000, { ...CONFIG, timeoutMs: 60_000 });
+  const step = stepCheckoutReturn(state, { entitlement: FREE, hasSession: false }, 7_000, { ...CONFIG, timeoutMs: 60_000 });
   delays.push(step.delayMs);
   assert.deepEqual(delays, [1_000, 2_000, 4_000, 4_000]);
   assert.deepEqual(step.state, { kind: "pending", attempts: 4, reached: true, lastFailure: null, checkout: null });
 });
 
 test("the last wait is shortened so a final poll lands on the deadline", () => {
-  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 9_500, CONFIG);
+  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: false }, 9_500, CONFIG);
   assert.equal(step.delayMs, 500);
 });
 
 test("pending → timeout at the deadline once the API has answered", () => {
-  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 10_000, CONFIG);
+  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: false }, 10_000, CONFIG);
   assert.deepEqual(step.state, { kind: "timeout" });
   assert.equal(step.delayMs, null);
 });
@@ -70,7 +99,7 @@ test("pending → signed_out on a 401, immediately", () => {
 });
 
 test("pending → error(expired) when the checkout session expired unpaid", () => {
-  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: status({ status: "expired", entitled: false }) }, 0, CONFIG);
+  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: true, checkout: status({ status: "expired", entitled: false }) }, 0, CONFIG);
   assert.deepEqual(state, { kind: "error", reason: "expired", failure: null });
 });
 
@@ -85,7 +114,7 @@ test("transient failures keep polling; never reaching the API ends in error(unre
 });
 
 test("a failure at the deadline after an earlier answer is a timeout, not an error", () => {
-  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 0, CONFIG);
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: false }, 0, CONFIG);
   step = stepCheckoutReturn(step.state, { failure: { kind: "rate_limited" } }, 10_000, CONFIG);
   assert.deepEqual(step.state, { kind: "timeout" });
 });
@@ -93,19 +122,19 @@ test("a failure at the deadline after an earlier answer is a timeout, not an err
 test("active carries the order reference and legal invoice of the last checkout status", () => {
   const invoice = { status: "issued", number: "FR 2026/7", atcud: "JJ7K-7" } as const;
   let step = stepCheckoutReturn(initialCheckoutReturn(), {
-    entitlement: FREE, checkout: status({ status: "open", entitled: false, order_ref: "TOONE-ABCDEFGH12", legal_invoice: invoice }),
+    entitlement: FREE, hasSession: true, checkout: status({ status: "complete", entitled: false, order_ref: "TOONE-ABCDEFGH12", legal_invoice: invoice }),
   }, 0, CONFIG);
   // A failed status request (null) keeps the last answer.
-  step = stepCheckoutReturn(step.state, { entitlement: PRO, checkout: null }, 1_000, CONFIG);
+  step = stepCheckoutReturn(step.state, { entitlement: PRO, hasSession: true, checkout: null }, 1_000, CONFIG);
   assert.deepEqual(step.state, { kind: "active", entitlement: PRO, orderRef: "TOONE-ABCDEFGH12", legalInvoice: invoice });
 });
 
 test("a session still open after processingAfterMs is a delayed payment: processing", () => {
   const config = { ...CONFIG, timeoutMs: 60_000, processingAfterMs: 20_000 };
   const open = status({ status: "open", entitled: false, order_ref: "TOONE-SLOWPAY0001" });
-  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: open }, 19_999, config);
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: true, checkout: open }, 19_999, config);
   assert.equal(step.state.kind, "pending");
-  step = stepCheckoutReturn(step.state, { entitlement: FREE, checkout: open }, 20_000, config);
+  step = stepCheckoutReturn(step.state, { entitlement: FREE, hasSession: true, checkout: open }, 20_000, config);
   assert.deepEqual(step.state, { kind: "processing", orderRef: "TOONE-SLOWPAY0001", legalInvoice: null });
   assert.equal(step.delayMs, null);
   assert.equal(isFinalCheckoutReturn(step.state), true);
@@ -113,16 +142,16 @@ test("a session still open after processingAfterMs is a delayed payment: process
 
 test("at the deadline, an open session reads as processing, anything else as timeout", () => {
   const open = status({ status: "open", entitled: false, order_ref: "TOONE-SLOWPAY0001" });
-  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: open }, 0, CONFIG);
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: true, checkout: open }, 0, CONFIG);
   step = stepCheckoutReturn(step.state, { failure: { kind: "rate_limited" } }, 10_000, CONFIG);
   assert.deepEqual(step.state, { kind: "processing", orderRef: "TOONE-SLOWPAY0001", legalInvoice: null });
-  const complete = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: status({ status: "complete", entitled: false }) }, 10_000, CONFIG);
+  const complete = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: true, checkout: status({ status: "complete", entitled: false }) }, 10_000, CONFIG);
   assert.deepEqual(complete.state, { kind: "timeout" });
 });
 
 test("final states do not move", () => {
   for (const state of [{ kind: "timeout" }, { kind: "signed_out" }, { kind: "active", entitlement: PRO, ...NO_RECEIPT }] as CheckoutReturnState[]) {
-    assert.deepEqual(stepCheckoutReturn(state, { entitlement: PRO }, 0, CONFIG), { state, delayMs: null });
+    assert.deepEqual(stepCheckoutReturn(state, { entitlement: PRO, hasSession: false }, 0, CONFIG), { state, delayMs: null });
   }
 });
 
@@ -130,7 +159,7 @@ test("defaults: about a minute, starting at one second; processing after 20 s", 
   assert.equal(CHECKOUT_RETURN_DEFAULTS.timeoutMs, 60_000);
   assert.equal(CHECKOUT_RETURN_DEFAULTS.processingAfterMs, 20_000);
   assert.equal(CHECKOUT_RETURN_DEFAULTS.delaysMs[0], 1_000);
-  assert.equal(stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 0).delayMs, 1_000);
+  assert.equal(stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, hasSession: false }, 0).delayMs, 1_000);
 });
 
 /* ---- driver with a fake clock */
@@ -148,12 +177,16 @@ function fakeClock() {
 test("driver: polls entitlement and checkout status until Pro, reporting every state", async () => {
   const clock = fakeClock();
   const answers: Entitlement[] = [FREE, FREE, PRO];
+  const statuses: CheckoutStatus["status"][] = ["open", "complete", "complete"];
   const statusCalls: string[] = [];
   const states: string[] = [];
   const final = await pollCheckoutReturn({
     token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
     fetchEntitlement: async token => { assert.equal(token, "tok"); return answers.shift()!; },
-    fetchCheckoutStatus: async (_token, id): Promise<CheckoutStatus> => { statusCalls.push(id); return status({ status: "open", entitled: false }); },
+    fetchCheckoutStatus: async (_token, id): Promise<CheckoutStatus> => {
+      statusCalls.push(id);
+      return status({ status: statuses.shift()!, entitled: false });
+    },
     onState: state => states.push(state.kind),
   });
   assert.deepEqual(final, { kind: "active", entitlement: PRO, ...NO_RECEIPT });
@@ -196,15 +229,38 @@ test("driver: a 401 from the API ends the session state", async () => {
   assert.deepEqual(raw, { kind: "signed_out" });
 });
 
-test("driver: a failing checkout status request never decides the outcome", async () => {
+test("driver: a failing checkout status request keeps the last answer and polling goes on", async () => {
   const clock = fakeClock();
-  const answers = [FREE, PRO];
+  const answers = [FREE, PRO, PRO];
+  const results: (CheckoutStatus | Error)[] = [
+    status({ status: "complete", entitled: false }),
+    new BillingError({ kind: "rate_limited" }),
+    new BillingError({ kind: "rate_limited" }),
+  ];
   const final = await pollCheckoutReturn({
     token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
     fetchEntitlement: async () => answers.shift()!,
-    fetchCheckoutStatus: async () => { throw new BillingError({ kind: "forbidden" }); },
+    fetchCheckoutStatus: async () => {
+      const next = results.shift()!;
+      if (next instanceof Error) throw next;
+      return next;
+    },
   });
   assert.equal(final.kind, "active");
+  assert.deepEqual(clock.sleeps, [1_000]);
+});
+
+test("driver: an account already Pro sees its open purchase as not confirmed, never as active", async () => {
+  const clock = fakeClock();
+  const states: string[] = [];
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+    fetchEntitlement: async () => PRO,
+    fetchCheckoutStatus: async () => status({ status: "open", entitled: true }),
+    onState: state => states.push(state.kind),
+  });
+  assert.equal(final.kind, "processing");
+  assert.ok(!states.includes("active"));
 });
 
 test("driver: an expired session stops polling", async () => {

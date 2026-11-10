@@ -24,8 +24,9 @@ const NO_FALLBACK = "about:blank#toone-not-opened";
 
 /**
  * The page Stripe returns to. It confirms the purchase by polling the
- * account's entitlement (the checkout status is only a hint) and never
- * treats the address it was opened with as proof of payment.
+ * checkout status and the account's entitlement (Pro shows as on only when
+ * the checkout is complete and the entitlement says Pro) and never treats
+ * the address it was opened with as proof of payment.
  */
 export default function CheckoutReturn() {
   const t = useTranslations("billing.success");
@@ -198,6 +199,14 @@ export default function CheckoutReturn() {
             <h1>{t("expiredTitle")}</h1>
             <p>{t("expiredSub")}</p>
             <Link className="pro-return-button" href="/pricing">{t("seePricing")}</Link>
+          </>
+        )}
+
+        {view === "already_pro" && (
+          <>
+            <h1>{t("alreadyProTitle")}</h1>
+            <p>{t("alreadyProSub")}</p>
+            <Link className="pro-return-button" href="/account">{t("seeAccount")}</Link>
           </>
         )}
 
