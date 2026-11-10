@@ -76,12 +76,20 @@ type Via = "google" | "apple";
  * is where the account is used.
  */
 /**
- * Where to go after signing in, from `?next=`: only a signed-in-only page of
- * this site (/how-to and its guides), never an arbitrary URL.
+ * Where to go after signing in, from `?next=`: only a listed page of this
+ * site, never an arbitrary URL. Each pattern is anchored and allows no other
+ * query than the one it names.
  */
+const SIGN_IN_RETURN_PATHS: readonly RegExp[] = [
+  // /how-to and its guides (signed-in only)
+  /^\/how-to(\/[a-z0-9-]+)*\/?$/,
+  // /pricing, optionally with the plan the visitor chose
+  /^\/pricing(\?plan=(monthly|yearly|lifetime))?$/,
+];
+
 export function signInReturnPath(search: string): string | null {
   const next = new URLSearchParams(search).get("next");
-  return next && /^\/how-to(\/[a-z0-9-]+)*\/?$/.test(next) ? next : null;
+  return next && SIGN_IN_RETURN_PATHS.some((pattern) => pattern.test(next)) ? next : null;
 }
 
 export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {

@@ -18,6 +18,7 @@ export default async function Footer({
 }: Props) {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
+  const billing = await getTranslations("billing");
 
   return (
     <>
@@ -90,6 +91,7 @@ export default async function Footer({
               <p className="ftr-heading">{t("product")}</p>
               <Link href={`${landingPath}#how`}>{t("how")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
+              <Link href="/pricing">{billing("nav")}</Link>
               <Link
                 className="ftr-download"
                 href="/request-access"

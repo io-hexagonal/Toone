@@ -18,6 +18,8 @@ const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
   { path: "/business", source: "app/[locale]/business/page.tsx" },
+  // Toone Pro plans; prices come from the API at request time.
+  { path: "/pricing", source: "app/[locale]/pricing/page.tsx" },
 ] as const;
 
 const ENGLISH_ONLY_ROUTES = [
