@@ -18,12 +18,10 @@ import {
   TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS,
 } from "@/lib/legal/terms";
 import {
-  DIRECT_BLOCKED_COUNTRIES,
   DIRECT_INVOICE_WORKING_DAYS,
   LINK_SELLER_ENTITY,
   STRIPE_EU_ENTITY,
   isManagedPayments,
-  joinList,
   type TooneProSeller,
 } from "@/lib/legal/seller";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
@@ -140,14 +138,13 @@ function Invoices({ seller }: Props) {
         need a copy of an invoice, or one is missing, write to{" "}
         <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
       </p>
-      {DIRECT_BLOCKED_COUNTRIES.length > 0 ? (
-        <p id="not-sold-in">
-          Toone Pro is not sold to customers in {joinList(DIRECT_BLOCKED_COUNTRIES)} for now. If a
-          purchase is made from there anyway, judged by the billing address given at checkout, it
-          is refunded in full, Toone Pro is not activated, and you receive the credit note for the
-          refund.
-        </p>
-      ) : null}
+      {/* The blocked countries are server configuration: checkout names them, these terms don't. */}
+      <p id="not-sold-in">
+        Toone Pro can&apos;t be sold yet to some countries. Countries where we can&apos;t sell yet
+        are named at checkout, judged by the billing address you give there. A payment from one of
+        them is refunded in full and doesn&apos;t start Toone Pro, and you receive the credit note
+        for the refund.
+      </p>
     </>
   );
 }

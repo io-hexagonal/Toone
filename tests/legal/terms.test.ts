@@ -142,8 +142,8 @@ test("Direct: the trader sells, Stripe processes, Stripe Tax, a Portuguese invoi
     /reverse charge applies/,
     /credit note \(nota de crédito\)/,
     /Prices in euros include VAT for consumers/,
-    /not sold to customers in the United Kingdom for now/,
-    /refunded in full, Toone Pro is not activated/,
+    /Countries where we can't sell yet are named at checkout, judged by the billing address you give there/,
+    /A payment from one of them is refunded in full and doesn't start Toone Pro/,
   ]) {
     assert.match(text, phrase);
   }
@@ -276,4 +276,12 @@ test("while the trader details are incomplete the Terms never link or point to t
     /sold on trytoone\.com by Toone: the seller is Toone's publisher, Matheus Paranhos \(Hexagonal\.io\), an individual trader in Portugal, who is responsible for the sale, for delivering Toone Pro, and for support\./,
   );
   assert.match(terms("managed_payments", false), /merchant of record is Sold through Link, LLC/);
+});
+
+test("the Terms name no blocked country: the server's list is shown at checkout", () => {
+  assert.doesNotMatch(content, /United Kingdom|DIRECT_BLOCKED_COUNTRIES/);
+  for (const seller of TOONE_PRO_SELLERS) {
+    assert.doesNotMatch(terms(seller), /not sold to customers in/, seller);
+  }
+  assert.doesNotMatch(terms("managed_payments"), /named at checkout/);
 });

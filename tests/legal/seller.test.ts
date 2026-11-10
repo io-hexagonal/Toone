@@ -3,13 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 import {
-  DIRECT_BLOCKED_COUNTRIES,
   LINK_SELLER_ENTITY,
   STRIPE_EU_ENTITY,
   TOONE_PRO_SELLER,
   TOONE_PRO_SELLERS,
   isManagedPayments,
-  joinList,
 } from "../../lib/legal/seller";
 
 test("one seller-model switch, defaulting to Stripe Managed Payments", () => {
@@ -33,8 +31,8 @@ test("Terms, Privacy and the Legal notice all render the one switch", () => {
   }
 });
 
-test("Direct model blocks the UK until it is registered there", () => {
-  assert.deepEqual([...DIRECT_BLOCKED_COUNTRIES], ["the United Kingdom"]);
-  assert.equal(joinList(["a"]), "a");
-  assert.equal(joinList(["a", "b", "c"]), "a, b and c");
+test("no blocked country is hard-coded: the server's STRIPE_BLOCKED_BILLING_COUNTRIES is the one list", async () => {
+  const seller = await import("../../lib/legal/seller");
+  assert.ok(!("DIRECT_BLOCKED_COUNTRIES" in seller));
+  assert.doesNotMatch(fs.readFileSync("lib/legal/seller.ts", "utf8"), /United Kingdom/);
 });
