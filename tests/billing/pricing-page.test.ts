@@ -13,6 +13,7 @@ import {
   checkoutErrorKey,
   hasTemporaryPro,
   orderedPrices,
+  ownedMessageKey,
   ownedReason,
   planAvailability,
   readPricingParams,
@@ -119,7 +120,8 @@ test("which plans the account may buy", () => {
   const appStore = entitlement({ plan: "pro", source: "subscription", billing_provider: "app_store" });
   const web = entitlement({ plan: "pro", source: "subscription", billing_provider: "stripe" });
   const lifetime = entitlement({ plan: "pro", source: "lifetime", billing_provider: "stripe" });
-  const code = entitlement({ plan: "pro", source: "grant", billing_provider: "toone" });
+  const code = entitlement({ plan: "pro", source: "grant", billing_provider: "toone", expires_at: "2026-12-31T00:00:00Z" });
+  const permanent = entitlement({ plan: "pro", source: "grant", billing_provider: "toone", expires_at: null });
   const guest = entitlement({ plan: "pro", source: "guest", billing_provider: "toone" });
   const future = entitlement({ plan: "pro", source: "partner", billing_provider: "paddle" });
   for (const plan of ["pro_monthly", "pro_yearly", "pro_lifetime"] as const) {
@@ -130,12 +132,17 @@ test("which plans the account may buy", () => {
     assert.equal(planAvailability(plan, appStore), "app_store");
     assert.equal(planAvailability(plan, lifetime), "lifetime");
     assert.equal(planAvailability(plan, future), "other");
+    assert.equal(planAvailability(plan, permanent), "permanent_grant", "a code or grant without an end owns Pro for good");
   }
   assert.equal(planAvailability("pro_monthly", web), "web_subscription");
   assert.equal(planAvailability("pro_yearly", web), "web_subscription");
   assert.equal(planAvailability("pro_lifetime", web), "open", "a web subscription can move to Lifetime");
   assert.equal(hasTemporaryPro(code), true);
   assert.equal(hasTemporaryPro(web), false);
+  assert.equal(hasTemporaryPro(guest), true);
+  assert.equal(hasTemporaryPro(permanent), false, "Pro that never ends is not called temporary");
+  assert.equal(ownedMessageKey("permanent_grant"), "ownedPermanent");
+  assert.equal(checkoutErrorKey({ kind: "already_pro", source: "grant", provider: "toone" }), "ownedPermanent");
 });
 
 test("checkout failures map to copy, and already_pro names where Pro comes from", () => {
@@ -152,7 +159,7 @@ test("checkout failures map to copy, and already_pro names where Pro comes from"
   assert.equal(ownedReason("unknown", "unknown"), "other");
   const copy = messages.billing.pricing as Record<string, string>;
   assert.equal(copy.errConflict, "A checkout is already being prepared — try again in a moment.");
-  for (const key of ["errSession", "errUnavailable", "errRate", "errGeneric", "ownedAppStore", "ownedWeb", "ownedLifetime", "ownedOther"]) {
+  for (const key of ["errSession", "errUnavailable", "errRate", "errGeneric", "ownedAppStore", "ownedWeb", "ownedLifetime", "ownedPermanent", "ownedOther"]) {
     assert.ok(copy[key], key);
   }
   assert.match(copy.ownedAppStore, /App Store/);

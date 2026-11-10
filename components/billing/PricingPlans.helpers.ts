@@ -20,33 +20,44 @@ import {
 export const FROM_APP_STORAGE_KEY = "toone.pro.from";
 
 /** Why the account cannot buy a plan right now. */
-export type OwnedReason = "lifetime" | "app_store" | "web_subscription" | "other";
+export type OwnedReason = "lifetime" | "app_store" | "web_subscription" | "permanent_grant" | "other";
 
 /** How an existing Pro reads to the buyer, from the entitlement or a 409 `already_pro`. */
 export function ownedReason(source: ProSource | null, provider: BillingProvider | null): OwnedReason {
   if (source === "lifetime") return "lifetime";
   if (provider === "app_store") return "app_store";
   if (source === "subscription" && provider === "stripe") return "web_subscription";
+  // The server refuses a paid plan for a grant only when it never ends.
+  if (source === "grant") return "permanent_grant";
   return "other";
+}
+
+/** Pro from a code or an admin grant that never ends: a paid plan would add nothing. */
+function hasPermanentGrant(entitlement: Entitlement): boolean {
+  return entitlement.plan === "pro" && entitlement.source === "grant" && entitlement.expires_at === null;
 }
 
 /**
  * "open" when the plan can be bought, otherwise why not. The server decides
  * in the end (409 `already_pro`); this only avoids offering a checkout that
- * will be refused. Pro from a code or a guest month does not block a paid
- * plan, and a web subscription can still move to Lifetime.
+ * will be refused. Timed Pro from a code or a guest month does not block a
+ * paid plan, a code or grant without an end does, and a web subscription can
+ * still move to Lifetime.
  */
 export function planAvailability(plan: ProPlanId, entitlement: Entitlement | null): "open" | OwnedReason {
   if (!entitlement || entitlement.plan !== "pro") return "open";
+  if (hasPermanentGrant(entitlement)) return "permanent_grant";
   if (entitlement.source === "grant" || entitlement.source === "guest") return "open";
   const reason = ownedReason(entitlement.source, entitlement.billing_provider);
   if (reason === "web_subscription" && plan === "pro_lifetime") return "open";
   return reason;
 }
 
-/** True when the account's current Pro is temporary (a code or a guest month). */
+/** True when the account's current Pro is temporary (a code or grant with an end date, or a guest month). */
 export function hasTemporaryPro(entitlement: Entitlement | null): boolean {
-  return entitlement?.plan === "pro" && (entitlement.source === "grant" || entitlement.source === "guest");
+  if (!entitlement || entitlement.plan !== "pro") return false;
+  if (entitlement.source === "guest") return true;
+  return entitlement.source === "grant" && !hasPermanentGrant(entitlement);
 }
 
 /** `billing.pricing.*` message key for a plan the account already owns. */
@@ -55,6 +66,7 @@ export function ownedMessageKey(reason: OwnedReason): string {
     case "lifetime": return "ownedLifetime";
     case "app_store": return "ownedAppStore";
     case "web_subscription": return "ownedWeb";
+    case "permanent_grant": return "ownedPermanent";
     default: return "ownedOther";
   }
 }

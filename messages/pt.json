@@ -547,6 +547,7 @@
       "ownedAppStore": "A sua conta já tem o Toone Pro através da App Store.",
       "ownedWeb": "A sua conta já tem uma assinatura do Toone Pro feita em trytoone.com.",
       "ownedOther": "A sua conta já tem o Toone Pro.",
+      "ownedPermanent": "A sua conta já tem o Toone Pro para sempre, através de um código ou de uma oferta. Um plano pago não acrescentaria nada.",
       "upgradeLifetime": "Ainda pode mudar para o Vitalício: a sua assinatura deixa de renovar e termina no fim do período pago.",
       "temporaryPro": "O seu Toone Pro atual vem de um código ou de um passe de convidado. Um plano pago mantém o Pro ativo depois de terminar.",
       "soonTitle": "O Toone Pro na web chega em breve",

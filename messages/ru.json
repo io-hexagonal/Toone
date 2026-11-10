@@ -547,6 +547,7 @@
       "ownedAppStore": "Your account already has Toone Pro through the App Store.",
       "ownedWeb": "Your account already has a Toone Pro subscription from trytoone.com.",
       "ownedOther": "Your account already has Toone Pro.",
+      "ownedPermanent": "Your account already has Toone Pro for good, from a code or a gift. A paid plan would add nothing.",
       "upgradeLifetime": "You can still move to Lifetime: your subscription then stops renewing and ends with the period you paid for.",
       "temporaryPro": "Your current Toone Pro comes from a code or a guest pass. A paid plan keeps Pro on after it ends.",
       "soonTitle": "Toone Pro on the web is coming soon",
