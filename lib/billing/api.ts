@@ -218,8 +218,9 @@ export type Entitlement = {
 };
 
 /**
- * The legal (certified) invoice a Direct-mode purchase gets, sent as an
- * optional `legal_invoice` on the checkout status and the entitlement:
+ * The legal (certified) invoice a Direct-mode purchase gets, sent as
+ * `legal_invoice` on the checkout status (never on the entitlement, whose
+ * key set is frozen for the desktop; billing.md change 30):
  * `pending` while it is being issued (it is emailed), then `issued` with its
  * number and ATCUD. Servers without Direct mode never send it.
  */

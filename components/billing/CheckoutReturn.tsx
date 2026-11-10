@@ -7,7 +7,7 @@ import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { createOpenAttempt } from "@/lib/explore/presentation";
 import { initialCheckoutReturn, pollCheckoutReturn, type CheckoutReturnState } from "@/lib/billing/checkout-return";
-import { rememberOrderRef } from "@/lib/billing/order-ref";
+import { rememberCheckoutSession, rememberOrderRef } from "@/lib/billing/order-ref";
 import {
   TOONE_PRO_SUCCESS_URL,
   cameFromApp,
@@ -59,7 +59,10 @@ export default function CheckoutReturn() {
         if (next.kind === "signed_out" && token) endSession();
         // The account page shows it later in this browser (the server only returns it here).
         const orderRef = returnReceipt(next)?.orderRef;
-        if (orderRef) rememberOrderRef(userId, orderRef);
+        if (orderRef) {
+          rememberOrderRef(userId, orderRef);
+          rememberCheckoutSession(userId, checkout.id);
+        }
         // A processing checkout stays remembered, so a reload checks it again.
         if (next.kind === "active" || (next.kind === "error" && next.reason === "expired")) {
           forgetCheckoutSession(window);

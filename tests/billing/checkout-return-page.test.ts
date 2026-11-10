@@ -25,7 +25,7 @@ import {
 import { FROM_APP_STORAGE_KEY } from "../../components/billing/PricingPlans.helpers";
 import { legalInvoiceCopy } from "../../components/billing/legal-invoice";
 import { pollCheckoutReturn } from "../../lib/billing/checkout-return";
-import { recallOrderRef, rememberOrderRef } from "../../lib/billing/order-ref";
+import { recallCheckoutSession, recallOrderRef, rememberCheckoutSession, rememberOrderRef } from "../../lib/billing/order-ref";
 import { createTranslator } from "next-intl";
 import { normalizeEntitlement } from "../../lib/billing/api";
 import messages from "../../messages/en.json" with { type: "json" };
@@ -256,4 +256,20 @@ test("the order reference is remembered per account for the account page, canoni
   storage.setItem("toone.pro.order:usr_3", "<script>");
   assert.equal(recallOrderRef("usr_3", storage), null);
   assert.equal(recallOrderRef("usr_1", null), null);
+});
+
+test("the last checkout session is remembered per account for the account page's legal invoice", () => {
+  const storage = memoryStorage();
+  rememberCheckoutSession("usr_1", "cs_test_a1B2c3", storage);
+  assert.equal(recallCheckoutSession("usr_1", storage), "cs_test_a1B2c3");
+  assert.equal(recallCheckoutSession("usr_2", storage), null);
+  rememberCheckoutSession("usr_2", "cs_test_<script>", storage);
+  rememberCheckoutSession("usr_2", null, storage);
+  rememberCheckoutSession("", "cs_test_a1B2c3", storage);
+  assert.equal(recallCheckoutSession("usr_2", storage), null);
+  storage.setItem("toone.pro.checkout:usr_3", "javascript:alert(1)");
+  assert.equal(recallCheckoutSession("usr_3", storage), null);
+  assert.equal(recallCheckoutSession("usr_1", null), null);
+  const page = read("components/billing/CheckoutReturn.tsx");
+  assert.match(page, /rememberCheckoutSession\(userId, checkout\.id\)/);
 });

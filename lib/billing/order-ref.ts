@@ -40,3 +40,31 @@ export function recallOrderRef(userId: string, storage: StorageLike | null = def
     return null;
   }
 }
+
+const SESSION_PREFIX = "toone.pro.checkout:";
+const SESSION_ID = /^cs_[A-Za-z0-9_]{1,250}$/;
+
+/**
+ * Remember the Checkout Session of the account's last web purchase. The
+ * legal invoice (Direct sales) is only on `GET /billing/checkout/{id}`, not
+ * on the entitlement, so the account page reads it from this session.
+ */
+export function rememberCheckoutSession(userId: string, sessionId: unknown, storage: StorageLike | null = defaultStorage()): void {
+  if (!userId || typeof sessionId !== "string" || !SESSION_ID.test(sessionId) || !storage) return;
+  try {
+    storage.setItem(SESSION_PREFIX + userId, sessionId);
+  } catch {
+    // full or blocked: the success page still shows the invoice line
+  }
+}
+
+/** The remembered Checkout Session of this account, or null. */
+export function recallCheckoutSession(userId: string, storage: StorageLike | null = defaultStorage()): string | null {
+  if (!userId || !storage) return null;
+  try {
+    const value = storage.getItem(SESSION_PREFIX + userId);
+    return value && SESSION_ID.test(value) ? value : null;
+  } catch {
+    return null;
+  }
+}

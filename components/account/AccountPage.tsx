@@ -9,12 +9,14 @@ import { logout, type ToneSession } from "@/lib/api";
 import {
   billingFailure,
   getBillingFeaturesOrOff,
+  getCheckoutStatus,
   getEntitlement,
   startPortal,
   type BillingFeatures,
   type Entitlement,
+  type LegalInvoice,
 } from "@/lib/billing/api";
-import { recallOrderRef } from "@/lib/billing/order-ref";
+import { recallCheckoutSession, recallOrderRef } from "@/lib/billing/order-ref";
 import { APPLE_MANAGE_SUBSCRIPTIONS_URL } from "@/lib/legal/terms";
 import { legalInvoiceCopy } from "@/components/billing/legal-invoice";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
@@ -60,6 +62,17 @@ export function AccountHeader({ session, onSessionEnded }: { session: ToneSessio
   );
 }
 
+/** The legal invoice of the last web purchase made in this browser, if any. */
+async function lastPurchaseInvoice(session: ToneSession): Promise<LegalInvoice | null> {
+  const sessionId = recallCheckoutSession(session.user.id);
+  if (!sessionId) return null;
+  try {
+    return (await getCheckoutStatus(session.token, sessionId)).legal_invoice;
+  } catch {
+    return null; // the plan still shows; the line is optional
+  }
+}
+
 function AccountWorkspace({ session, onSessionEnded }: { session: ToneSession; onSessionEnded: () => void }) {
   const t = useTranslations("account.page");
   const common = useTranslations("account.common");
@@ -77,9 +90,13 @@ function AccountWorkspace({ session, onSessionEnded }: { session: ToneSession; o
     setLoading(true);
     setLoadError(false);
     try {
-      const [next, flags] = await Promise.all([getEntitlement(session.token), getBillingFeaturesOrOff()]);
+      const [next, flags, invoice] = await Promise.all([
+        getEntitlement(session.token), getBillingFeaturesOrOff(), lastPurchaseInvoice(session),
+      ]);
       if (!active.current) return;
-      setEntitlement(next);
+      // The entitlement carries no legal invoice (billing.md); the last
+      // purchase's checkout status does.
+      setEntitlement({ ...next, legal_invoice: next.legal_invoice ?? invoice });
       setFeatures(flags);
     } catch (caught) {
       if (!active.current) return;

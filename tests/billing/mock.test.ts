@@ -137,7 +137,7 @@ test("mock: a delayed payment keeps the session open until it clears", async () 
   assert.equal(cleared.kind, "active");
 });
 
-test("mock: Direct mode adds the legal invoice to the checkout status and the entitlement", async () => {
+test("mock: Direct mode adds the legal invoice to the checkout status, never the entitlement (as the server)", async () => {
   await scenario("direct");
   const session = await startCheckout(TOKEN, { plan: "pro_lifetime", locale: "pt", return: "web" });
   assert.equal((await getCheckoutStatus(TOKEN, session.session_id)).legal_invoice, null, "nothing before payment");
@@ -146,7 +146,7 @@ test("mock: Direct mode adds the legal invoice to the checkout status and the en
   assert.equal(status.legal_invoice?.status, "issued", "invoiceMs 0 issues at once");
   assert.match(status.legal_invoice?.number ?? "", /^FR TOONE2026\//);
   assert.match(status.legal_invoice?.atcud ?? "", /-/);
-  assert.deepEqual((await getEntitlement(TOKEN)).legal_invoice, status.legal_invoice);
+  assert.equal((await getEntitlement(TOKEN)).legal_invoice, null, "the entitlement key set is frozen (billing.md)");
 });
 
 test("mock: lifetime stays buyable over a Stripe subscription, not over App Store or lifetime Pro", async () => {

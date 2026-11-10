@@ -187,8 +187,7 @@ export function createBillingMock(options = {}) {
     };
     // Optional fields are omitted (not null) when unset, as an older server would.
     for (const key of ["billing_provider", "manage", "plan_interval"]) if (a[key] !== null) body[key] = a[key];
-    const invoice = a.billing_provider === "stripe" ? legalInvoice(state.purchase) : undefined;
-    if (invoice) body.legal_invoice = invoice;
+    // No legal_invoice here: the real server only sends it on the checkout status.
     return body;
   }
 
