@@ -1,0 +1,204 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import vm from "node:vm";
+import { test } from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { NextIntlClientProvider } from "next-intl";
+import { NextRequest } from "next/server";
+import proxy from "../../proxy";
+import { locales } from "../../i18n/routing";
+import { checkoutReturnMetadata } from "../../app/[locale]/success/return-metadata";
+import CheckoutReturn from "../../components/billing/CheckoutReturn";
+import {
+  CHECKOUT_SESSION_GLOBAL,
+  CHECKOUT_SESSION_STORAGE_KEY,
+  STRIP_SESSION_ID_SCRIPT,
+  TOONE_PRO_SUCCESS_URL,
+  cameFromApp,
+  forgetCheckoutSession,
+  returnPollConfig,
+  returnView,
+  takeCheckoutSessionId,
+} from "../../components/billing/CheckoutReturn.helpers";
+import { FROM_APP_STORAGE_KEY } from "../../components/billing/PricingPlans.helpers";
+import { pollCheckoutReturn } from "../../lib/billing/checkout-return";
+import { normalizeEntitlement } from "../../lib/billing/api";
+import messages from "../../messages/en.json" with { type: "json" };
+
+const read = (path: string) => fs.readFileSync(path, "utf8");
+
+function memoryStorage(initial: Record<string, string> = {}) {
+  const items = new Map(Object.entries(initial));
+  return {
+    items,
+    getItem: (key: string) => items.get(key) ?? null,
+    setItem: (key: string, value: string) => void items.set(key, value),
+    removeItem: (key: string) => void items.delete(key),
+  };
+}
+
+function fakeWindow(href: string, extra: Record<string, unknown> = {}) {
+  const win = {
+    location: { href },
+    replaced: [] as string[],
+    history: {
+      state: null as unknown,
+      replaceState(_data: unknown, _unused: string, url?: string | URL | null) {
+        win.replaced.push(String(url));
+        win.location.href = new URL(String(url), href).href;
+      },
+    },
+    sessionStorage: memoryStorage(),
+    ...extra,
+  };
+  return win;
+}
+
+/* ---- metadata */
+
+test("success and cancel are noindex, nofollow, no-referrer, self-canonical", () => {
+  for (const locale of locales) {
+    for (const path of ["/success", "/cancel"] as const) {
+      const meta = checkoutReturnMetadata(locale, path, "Title");
+      assert.deepEqual(meta.robots, { index: false, follow: false }, `${locale}${path}`);
+      assert.equal(meta.referrer, "no-referrer");
+      assert.equal(meta.alternates?.canonical, `https://trytoone.com/${locale}${path}`);
+    }
+  }
+  assert.match(read("app/[locale]/success/page.tsx"), /checkoutReturnMetadata\(locale, "\/success"/);
+  assert.match(read("app/[locale]/cancel/page.tsx"), /checkoutReturnMetadata\(locale, "\/cancel"/);
+});
+
+/* ---- the locale redirect keeps the checkout id */
+
+test("an unprefixed /success keeps ?session_id= through the locale redirect", () => {
+  const run = (path: string, headers: Record<string, string>) =>
+    proxy(new NextRequest(new URL(path, "https://trytoone.com"), { headers }));
+  const cases: Array<[Record<string, string>, string]> = [
+    [{ cookie: "toone_locale=de", "accept-language": "pt-BR" }, "de"],
+    [{ "accept-language": "pt-BR" }, "pt"],
+    [{}, "en"],
+  ];
+  for (const [headers, locale] of cases) {
+    const success = run("/success?session_id=cs_test_a1B2", headers);
+    assert.equal(success.status, 307, JSON.stringify(headers));
+    assert.equal(success.headers.get("location"), `https://trytoone.com/${locale}/success?session_id=cs_test_a1B2`);
+    const cancel = run("/cancel", headers);
+    assert.equal(cancel.headers.get("location"), `https://trytoone.com/${locale}/cancel`);
+  }
+  for (const locale of locales) {
+    const prefixed = run(`/${locale}/success?session_id=cs_test_a1B2`, {});
+    assert.equal(prefixed.headers.get("location"), null, locale);
+  }
+});
+
+/* ---- session_id is removed before anything else runs */
+
+test("the inline script removes session_id from the address and keeps it in memory", () => {
+  const win = fakeWindow("https://trytoone.com/en/success?session_id=cs_test_a1B2&return=app#top");
+  vm.runInNewContext(STRIP_SESSION_ID_SCRIPT, { window: win, URL });
+  assert.deepEqual(win.replaced, ["/en/success?return=app#top"]);
+  assert.equal((win as Record<string, unknown>)[CHECKOUT_SESSION_GLOBAL], "cs_test_a1B2");
+
+  const clean = fakeWindow("https://trytoone.com/en/success");
+  vm.runInNewContext(STRIP_SESSION_ID_SCRIPT, { window: clean, URL });
+  assert.deepEqual(clean.replaced, []);
+  assert.equal(CHECKOUT_SESSION_GLOBAL in clean, false);
+});
+
+test("the success page renders the strip script before the client component and never reads the query on the server", () => {
+  const page = read("app/[locale]/success/page.tsx");
+  const script = page.indexOf("STRIP_SESSION_ID_SCRIPT }}");
+  const client = page.indexOf("<CheckoutReturn");
+  assert.ok(script > 0 && client > script, "script first");
+  assert.doesNotMatch(page, /searchParams/);
+  const component = read("components/billing/CheckoutReturn.tsx");
+  assert.match(component, /takeCheckoutSessionId\(window\)/);
+});
+
+test("the page takes the id from the script, validates it and remembers it for a reload", () => {
+  const win = fakeWindow("https://trytoone.com/en/success", { [CHECKOUT_SESSION_GLOBAL]: "cs_test_a1B2" });
+  assert.equal(takeCheckoutSessionId(win), "cs_test_a1B2");
+  assert.equal(CHECKOUT_SESSION_GLOBAL in win, false, "the in-memory copy is consumed");
+  assert.equal(win.sessionStorage.getItem(CHECKOUT_SESSION_STORAGE_KEY), "cs_test_a1B2");
+
+  const reload = fakeWindow("https://trytoone.com/en/success", { sessionStorage: win.sessionStorage });
+  assert.equal(takeCheckoutSessionId(reload), "cs_test_a1B2");
+  forgetCheckoutSession(reload);
+  assert.equal(takeCheckoutSessionId(fakeWindow("https://trytoone.com/en/success", { sessionStorage: reload.sessionStorage })), null);
+
+  const forged = fakeWindow("https://trytoone.com/en/success", { [CHECKOUT_SESSION_GLOBAL]: "../../admin" });
+  assert.equal(takeCheckoutSessionId(forged), null);
+  assert.equal(forged.sessionStorage.items.size, 0);
+});
+
+test("without the script (client navigation) the id is still stripped from the address", () => {
+  const win = fakeWindow("https://trytoone.com/en/success?session_id=cs_test_a1B2");
+  assert.equal(takeCheckoutSessionId(win), "cs_test_a1B2");
+  assert.deepEqual(win.replaced, ["/en/success"]);
+  assert.equal(takeCheckoutSessionId(undefined), null);
+});
+
+test("'Return to Toone' is offered only when the app started the purchase", () => {
+  const win = fakeWindow("https://trytoone.com/en/success");
+  assert.equal(cameFromApp("", win), false);
+  assert.equal(cameFromApp("?return=app", win), true);
+  assert.equal(cameFromApp("?return=web", win), false);
+  win.sessionStorage.setItem(FROM_APP_STORAGE_KEY, "app");
+  assert.equal(cameFromApp("", win), true);
+  assert.equal(TOONE_PRO_SUCCESS_URL, "toone://pro/success");
+});
+
+/* ---- the URL is never proof */
+
+const FREE = normalizeEntitlement({ plan: "free", free_routine_creations: { used: 2, limit: 2 } });
+const PRO = normalizeEntitlement({ plan: "pro", source: "subscription", status: "active", billing_provider: "stripe" });
+
+function clock() {
+  let now = 0;
+  return { now: () => now, sleep: async (ms: number) => { now += ms; } };
+}
+
+test("a session the server calls complete and entitled is not Pro while the entitlement says free", async () => {
+  const time = clock();
+  const state = await pollCheckoutReturn({
+    token: "tok",
+    sessionId: "cs_test_a1B2",
+    fetchEntitlement: async () => FREE,
+    fetchCheckoutStatus: async () => ({ status: "complete", entitled: true }),
+    now: time.now,
+    sleep: time.sleep,
+  });
+  assert.equal(returnView(state, true), "timeout");
+});
+
+test("views: Pro from the entitlement is active; no checkout and free reads 'nothing to confirm'", async () => {
+  const time = clock();
+  const pro = await pollCheckoutReturn({ token: "tok", sessionId: null, fetchEntitlement: async () => PRO, now: time.now, sleep: time.sleep, config: returnPollConfig(false) });
+  assert.equal(returnView(pro, false), "active");
+  let calls = 0;
+  const free = await pollCheckoutReturn({
+    token: "tok", sessionId: null, fetchEntitlement: async () => { calls += 1; return FREE; },
+    now: time.now, sleep: time.sleep, config: returnPollConfig(false),
+  });
+  assert.equal(returnView(free, false), "none");
+  assert.equal(calls, 1, "one answer is enough without a checkout");
+  assert.equal(returnView({ kind: "signed_out" }, true), "signed_out");
+  assert.equal(returnView({ kind: "error", reason: "expired", failure: null }, true), "expired");
+  assert.equal(returnView({ kind: "error", reason: "unreachable", failure: null }, true), "unreachable");
+});
+
+test("the server HTML of the success page only says 'confirming'", () => {
+  const html = renderToStaticMarkup(createElement(NextIntlClientProvider, {
+    locale: "en", messages, timeZone: "UTC", children: createElement(CheckoutReturn),
+  }));
+  assert.match(html, /Confirming your payment/);
+  assert.doesNotMatch(html, /Toone Pro is on/);
+  assert.doesNotMatch(html, /session_id|cs_test/);
+});
+
+test("the cancel page says no charge was made and links back to pricing", () => {
+  assert.match(messages.billing.cancel.sub, /No charge was made/);
+  assert.match(read("app/[locale]/cancel/page.tsx"), /<Link className="pro-return-button" href="\/pricing">/);
+});
