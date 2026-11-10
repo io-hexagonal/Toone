@@ -479,6 +479,8 @@
   "footer": {
     "privacy": "Privacy",
     "terms": "Voorwaarden",
+    "withdrawContract": "Contract hier herroepen",
+    "cancelContract": "Contract hier opzeggen",
     "about": "Over Toone",
     "editorialPolicy": "Redactioneel beleid",
     "product": "Product",

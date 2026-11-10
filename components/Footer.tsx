@@ -120,6 +120,9 @@ export default async function Footer({
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
+              {/* Always shown, signed in or not, whatever the billing flags say: EU withdrawal function and German cancel button. */}
+              <Link href="/cancel-contract?kind=withdraw">{t("withdrawContract")}</Link>
+              <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>
               {/* English-only page; its label stays English in every locale. Hidden until the trader details are complete. */}
               {TRADER_DETAILS_COMPLETE && <Link href="/legal-notice">Legal notice</Link>}
 

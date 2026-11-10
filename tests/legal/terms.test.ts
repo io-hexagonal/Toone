@@ -295,3 +295,18 @@ test("the Terms name no blocked country: the server's list is shown at checkout"
   }
   assert.doesNotMatch(terms("managed_payments"), /named at checkout/);
 });
+
+test("the footer links the withdraw and cancel functions on every page, in every locale, unconditionally", () => {
+  const footer = read("components/Footer.tsx");
+  assert.match(footer, /<Link href="\/cancel-contract\?kind=withdraw">\{t\("withdrawContract"\)\}<\/Link>/);
+  assert.match(footer, /<Link href="\/cancel-contract\?kind=cancel">\{t\("cancelContract"\)\}<\/Link>/);
+  const block = footer.slice(footer.indexOf('href="/terms"'), footer.indexOf('kind=cancel'));
+  assert.doesNotMatch(block, /&&|\?\s*</, "not behind a flag or a session");
+  for (const locale of locales) {
+    const messages = JSON.parse(read(`messages/${locale}.json`));
+    assert.equal(messages.footer.withdrawContract, messages.account.page.withdrawLink, locale);
+    assert.equal(messages.footer.cancelContract, messages.account.page.cancelLink, locale);
+  }
+  const de = JSON.parse(read("messages/de.json"));
+  assert.equal(de.footer.cancelContract, "Verträge hier kündigen");
+});

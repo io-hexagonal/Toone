@@ -479,6 +479,8 @@
   "footer": {
     "privacy": "Konfidentsialnost",
     "terms": "Условия",
+    "withdrawContract": "Отказаться от договора здесь",
+    "cancelContract": "Расторгнуть договор здесь",
     "about": "О нас",
     "editorialPolicy": "Редакционная политика",
     "product": "Продукт",

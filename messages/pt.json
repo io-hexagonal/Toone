@@ -479,6 +479,8 @@
   "footer": {
     "privacy": "Privacidade",
     "terms": "Termos",
+    "withdrawContract": "Desistir do contrato aqui",
+    "cancelContract": "Cancelar contrato aqui",
     "about": "Sobre",
     "editorialPolicy": "Política editorial",
     "product": "Produto",
