@@ -12,6 +12,7 @@ import {
   TOONE_PRO_SUCCESS_URL,
   cameFromApp,
   forgetCheckoutSession,
+  offersAppReturn,
   returnReceipt,
   returnPollConfig,
   returnView,
@@ -36,6 +37,8 @@ export default function CheckoutReturn() {
   const [state, setState] = useState<CheckoutReturnState>(initialCheckoutReturn);
   const [round, setRound] = useState(0);
   const [notOpened, setNotOpened] = useState(false);
+  /** App purchases: the sign-in form is optional and shown only on request. */
+  const [signInRequested, setSignInRequested] = useState(false);
   const cancelOpen = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -120,7 +123,17 @@ export default function CheckoutReturn() {
     </div>
   );
 
-  if (view === "signed_out") {
+  const fromApp = checkout?.fromApp === true;
+  const appReturn = offersAppReturn(view, fromApp) && (
+    <>
+      <button type="button" className="pro-return-button" onClick={openToone} data-umami-event="pro-return-to-app">
+        {t("returnToApp")}
+      </button>
+      <p className="pro-return-muted">{notOpened ? t("returnHint") : t("returnNote")}</p>
+    </>
+  );
+
+  if (view === "signed_out" && (!fromApp || signInRequested)) {
     // The sign-in page is a full page of its own; the checkout id stays in
     // memory and polling resumes once a session exists.
     return (
@@ -154,14 +167,7 @@ export default function CheckoutReturn() {
             <h1>{t("activeTitle")}</h1>
             <p>{t("activeSub", { email: session?.user.email ?? "" })}</p>
             {receiptBlock}
-            {checkout?.fromApp ? (
-              <>
-                <button type="button" className="pro-return-button" onClick={openToone} data-umami-event="pro-return-to-app">
-                  {t("returnToApp")}
-                </button>
-                <p className="pro-return-muted">{notOpened ? t("returnHint") : t("returnNote")}</p>
-              </>
-            ) : (
+            {fromApp ? appReturn : (
               <>
                 <p className="pro-return-strong">{t("backToApp")}</p>
                 <p className="pro-return-muted">
@@ -177,6 +183,7 @@ export default function CheckoutReturn() {
             <h1>{t("processingTitle")}</h1>
             <p>{t("processingSub")}</p>
             {receiptBlock}
+            {appReturn}
             <button type="button" className="pro-return-button" onClick={retry}>{t("checkAgain")}</button>
           </>
         )}
@@ -185,6 +192,7 @@ export default function CheckoutReturn() {
           <>
             <h1>{t("timeoutTitle")}</h1>
             <p>{t("timeoutSub")}</p>
+            {appReturn}
             <button type="button" className="pro-return-button" onClick={retry}>{t("checkAgain")}</button>
           </>
         )}
@@ -193,6 +201,7 @@ export default function CheckoutReturn() {
           <>
             <h1>{t("unreachableTitle")}</h1>
             <p>{t("unreachableSub")}</p>
+            {appReturn}
             <button type="button" className="pro-return-button" onClick={retry}>{t("checkAgain")}</button>
           </>
         )}
@@ -219,8 +228,23 @@ export default function CheckoutReturn() {
             <p>{t("wrongAccountSub")}</p>
             {/* Only the signed-in account is named; the server never says who paid. */}
             {session?.user.email && <p className="pro-return-muted">{t("wrongAccountCurrent", { email: session.user.email })}</p>}
+            {appReturn}
             {/* Signing out shows the sign-in form; the checkout id stays, so the right account sees the purchase. */}
-            <button type="button" className="pro-return-button" onClick={endSession}>{t("switchAccount")}</button>
+            <button type="button" className="pro-return-button" onClick={() => { setSignInRequested(true); endSession(); }}>
+              {t("switchAccount")}
+            </button>
+          </>
+        )}
+
+        {view === "signed_out" && (
+          <>
+            {/* Started in the app: no web sign-in needed to get back; Toone checks the plan itself. */}
+            <h1>{t("appReturnTitle")}</h1>
+            <p>{t("appReturnSub")}</p>
+            {appReturn}
+            <button type="button" className="pro-return-link" onClick={() => setSignInRequested(true)}>
+              {t("appSignIn")}
+            </button>
           </>
         )}
 

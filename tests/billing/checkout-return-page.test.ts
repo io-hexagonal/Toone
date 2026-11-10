@@ -17,6 +17,7 @@ import {
   TOONE_PRO_SUCCESS_URL,
   cameFromApp,
   forgetCheckoutSession,
+  offersAppReturn,
   returnPollConfig,
   returnReceipt,
   returnView,
@@ -154,6 +155,33 @@ test("'Return to Toone' is offered only when the app started the purchase", () =
   assert.equal(TOONE_PRO_SUCCESS_URL, "toone://pro/success");
 });
 
+test("an app purchase offers 'Return to Toone' without a web session, in every view after payment", async () => {
+  for (const view of ["active", "processing", "timeout", "unreachable", "signed_out", "wrong_account"] as const) {
+    assert.equal(offersAppReturn(view, true), true, view);
+    assert.equal(offersAppReturn(view, false), false, `${view}: web purchases never get the deep link`);
+  }
+  for (const view of ["pending", "expired", "none", "already_pro"] as const) {
+    assert.equal(offersAppReturn(view, true), false, view);
+  }
+  const page = read("components/billing/CheckoutReturn.tsx");
+  // Signed out after an app purchase: the neutral return view; sign-in only on request.
+  assert.match(page, /if \(view === "signed_out" && \(!fromApp \|\| signInRequested\)\)/);
+  const signedOut = page.slice(page.indexOf('{view === "signed_out" && ('), page.indexOf('{view === "none" && ('));
+  assert.match(signedOut, /t\("appReturnTitle"\)[\s\S]*\{appReturn\}[\s\S]*setSignInRequested\(true\)[\s\S]*t\("appSignIn"\)/);
+  for (const view of ["processing", "timeout", "unreachable", "wrong_account"]) {
+    const start = page.indexOf(`{view === "${view}" && (`);
+    const block = page.slice(start, page.indexOf("</>", start));
+    assert.match(block, /\{appReturn\}/, view);
+  }
+  const t = createTranslator({ locale: "en", messages, namespace: "billing.success" });
+  assert.equal(t("appReturnTitle"), "Return to Toone");
+  assert.doesNotMatch(t("appReturnSub"), /payment (went through|received)/, "never claims a payment it has not seen");
+  for (const locale of locales) {
+    const local = (await import(`../../messages/${locale}.json`, { with: { type: "json" } })).default.billing.success;
+    for (const key of ["appReturnTitle", "appReturnSub", "appSignIn"]) assert.ok(local[key]?.trim(), `${locale}.${key}`);
+  }
+});
+
 /* ---- the URL is never proof */
 
 const FREE = normalizeEntitlement({ plan: "free", free_routine_creations: { used: 2, limit: 2 } });
@@ -218,7 +246,7 @@ test("wrong account: names only the signed-in account, never the payer, and offe
   // The only email shown is the signed-in session's.
   assert.deepEqual([...block.matchAll(/email: ([\w.?]+)/g)].map(match => match[1]), ["session.user.email"]);
   // Switching signs out (the sign-in form follows); the checkout id stays for the right account.
-  assert.match(block, /onClick=\{endSession\}>\{t\("switchAccount"\)\}/);
+  assert.match(block, /onClick=\{\(\) => \{ setSignInRequested\(true\); endSession\(\); \}\}>\s*\{t\("switchAccount"\)\}/);
   assert.match(page, /next\.kind === "active" \|\| \(next\.kind === "error" && next\.reason === "expired"\)/, "wrong_account keeps the checkout remembered");
   // Every locale has the copy (ru shows the English billing strings by design).
   for (const locale of locales) {

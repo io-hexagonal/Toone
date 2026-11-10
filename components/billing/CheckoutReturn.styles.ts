@@ -47,6 +47,11 @@ export const CHECKOUT_RETURN_STYLES = `
     font: inherit; font-weight: 650; transition: transform 0.16s ease;
   }
   .pro-return-button:hover { transform: translateY(-2px); }
+  .pro-return-link {
+    margin-top: 2px; border: 0; background: none; padding: 4px; cursor: pointer;
+    font: inherit; font-size: 13px; color: rgba(255,255,255,0.7);
+    text-decoration: underline; text-underline-offset: 3px;
+  }
   .pro-return-spinner {
     width: 22px; height: 22px; border-radius: 50%;
     border: 2px solid rgba(255,255,255,0.18); border-top-color: rgba(255,255,255,0.75);

@@ -127,6 +127,21 @@ export function returnView(state: CheckoutReturnState, hasCheckout: boolean): Re
   }
 }
 
+/**
+ * Views that offer "Return to Toone" when the desktop app started the
+ * purchase. The deep link only asks the app to refresh its plan, so it needs
+ * no web session: a buyer who paid in a browser that is not signed in (the
+ * usual case for the app), or is signed in to another account, still gets a
+ * way back.
+ */
+const APP_RETURN_VIEWS: ReadonlySet<ReturnView> = new Set<ReturnView>([
+  "active", "processing", "timeout", "unreachable", "signed_out", "wrong_account",
+]);
+
+export function offersAppReturn(view: ReturnView, fromApp: boolean): boolean {
+  return fromApp && APP_RETURN_VIEWS.has(view);
+}
+
 /** The order reference and legal invoice a final state shows, or null. */
 export function returnReceipt(state: CheckoutReturnState): CheckoutReceipt | null {
   return state.kind === "active" || state.kind === "processing"
