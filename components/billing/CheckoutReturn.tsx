@@ -7,14 +7,17 @@ import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { createOpenAttempt } from "@/lib/explore/presentation";
 import { initialCheckoutReturn, pollCheckoutReturn, type CheckoutReturnState } from "@/lib/billing/checkout-return";
+import { rememberOrderRef } from "@/lib/billing/order-ref";
 import {
   TOONE_PRO_SUCCESS_URL,
   cameFromApp,
   forgetCheckoutSession,
+  returnReceipt,
   returnPollConfig,
   returnView,
   takeCheckoutSessionId,
 } from "./CheckoutReturn.helpers";
+import { legalInvoiceCopy } from "./legal-invoice";
 
 /** Sentinel the open attempt "navigates" to when the app did not take over. */
 const NO_FALLBACK = "about:blank#toone-not-opened";
@@ -42,6 +45,7 @@ export default function CheckoutReturn() {
   useEffect(() => () => cancelOpen.current?.(), []);
 
   const token = session?.token ?? null;
+  const userId = session?.user.id ?? "";
   useEffect(() => {
     if (!ready || !checkout) return;
     const controller = new AbortController();
@@ -53,13 +57,17 @@ export default function CheckoutReturn() {
       onState: next => {
         setState(next);
         if (next.kind === "signed_out" && token) endSession();
+        // The account page shows it later in this browser (the server only returns it here).
+        const orderRef = returnReceipt(next)?.orderRef;
+        if (orderRef) rememberOrderRef(userId, orderRef);
+        // A processing checkout stays remembered, so a reload checks it again.
         if (next.kind === "active" || (next.kind === "error" && next.reason === "expired")) {
           forgetCheckoutSession(window);
         }
       },
     });
     return () => controller.abort();
-  }, [ready, checkout, token, round, endSession]);
+  }, [ready, checkout, token, userId, round, endSession]);
 
   const retry = useCallback(() => {
     setState(initialCheckoutReturn());
@@ -94,6 +102,19 @@ export default function CheckoutReturn() {
 
   const hasCheckout = checkout?.id != null;
   const view = !ready || !checkout ? "pending" : returnView(state, hasCheckout);
+  const receipt = returnReceipt(state);
+  const invoice = legalInvoiceCopy(receipt?.legalInvoice);
+  const receiptBlock = receipt && (receipt.orderRef || invoice) && (
+    <div className="pro-return-order">
+      {receipt.orderRef && <>
+        <p>{t.rich("orderRef", { ref: receipt.orderRef, code: (chunks) => <code>{chunks}</code> })}</p>
+        <p className="pro-return-muted">
+          {t.rich("orderRefNote", { link: (chunks) => <Link href="/cancel-contract">{chunks}</Link> })}
+        </p>
+      </>}
+      {invoice && <p data-invoice={receipt.legalInvoice?.status}>{"values" in invoice ? t(invoice.key, invoice.values) : t(invoice.key)}</p>}
+    </div>
+  );
 
   if (view === "signed_out") {
     // The sign-in page is a full page of its own; the checkout id stays in
@@ -128,6 +149,7 @@ export default function CheckoutReturn() {
           <>
             <h1>{t("activeTitle")}</h1>
             <p>{t("activeSub", { email: session?.user.email ?? "" })}</p>
+            {receiptBlock}
             {checkout?.fromApp ? (
               <>
                 <button type="button" className="pro-return-button" onClick={openToone} data-umami-event="pro-return-to-app">
@@ -143,6 +165,15 @@ export default function CheckoutReturn() {
                 </p>
               </>
             )}
+          </>
+        )}
+
+        {view === "processing" && (
+          <>
+            <h1>{t("processingTitle")}</h1>
+            <p>{t("processingSub")}</p>
+            {receiptBlock}
+            <button type="button" className="pro-return-button" onClick={retry}>{t("checkAgain")}</button>
           </>
         )}
 

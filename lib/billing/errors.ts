@@ -20,6 +20,8 @@ export type BillingFailure =
   /** The account must confirm its email address before this works. */
   | { kind: "email_verification_required" }
   | { kind: "rate_limited" }
+  /** 409 `conflict`: another request of this account (a Pro checkout being created) is still running. Retry shortly. */
+  | { kind: "conflict" }
   /** The signed-in account may not do this (admin routes). */
   | { kind: "forbidden" }
   /** Anything else, including network failures (`status` 0) and refused redirect URLs. */
@@ -73,6 +75,7 @@ export function mapApiError(error: ApiError, extra: { source?: unknown; provider
   if (code === "code_already_redeemed") return { kind: "code_already_redeemed" };
   if (code === "email_verification_required") return { kind: "email_verification_required" };
   if (INVALID_CODE_CODES.has(code)) return { kind: "invalid_code" };
+  if (code === "conflict") return { kind: "conflict" };
   if (status === 429 || RATE_CODES.has(code)) return { kind: "rate_limited" };
   if (status === 503 || UNAVAILABLE_CODES.has(code)) return { kind: "payments_unavailable" };
   if (status === 403 && code === "forbidden") return { kind: "forbidden" };

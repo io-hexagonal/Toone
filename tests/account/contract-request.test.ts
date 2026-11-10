@@ -1,25 +1,34 @@
 import "./css-modules";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { afterEach, test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import ContractRequestPage from "../../components/account/ContractRequestPage";
-import { contractOutcome, contractRequestFrom } from "../../components/account/contract-request";
+import { CONTRACT_NAME_MAX, ORDER_REF_MAX, contractOutcome, contractRequestFrom } from "../../components/account/contract-request";
 import { ApiError } from "../../lib/api";
 import { submitContractRequest } from "../../lib/billing/api";
 import en from "../../messages/en.json";
 
 /* /cancel-contract: login-free withdraw and cancel, two steps, one answer for every accepted request. */
 
-test("step 1 needs the purchase email and the order reference; both are trimmed", () => {
-  assert.deepEqual(contractRequestFrom("withdraw", " buyer@example.com ", " TOONE-1234 "), {
-    ok: true, request: { kind: "withdraw", email: "buyer@example.com", order_ref: "TOONE-1234" },
+test("step 1 needs the purchase email and a TOONE- order reference; the name is optional", () => {
+  assert.deepEqual(contractRequestFrom("withdraw", " buyer@example.com ", " toone-abcdefgh12 "), {
+    ok: true, request: { kind: "withdraw", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12" },
   });
-  assert.deepEqual(contractRequestFrom("cancel", "buyer@example", "TOONE-1"), { ok: false, error: "errEmail" });
-  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "   "), { ok: false, error: "errOrderRef" });
-  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "x".repeat(121)), { ok: false, error: "errOrderRef" });
-  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "TOONE\u0000-1"), { ok: false, error: "errOrderRef" });
+  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "TOONE-ABCDEFGH12", "  Ana Buyer "), {
+    ok: true, request: { kind: "cancel", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12", name: "Ana Buyer" },
+  });
+  assert.deepEqual(contractRequestFrom("cancel", "buyer@example", "TOONE-ABCDEFGH12"), { ok: false, error: "errEmail" });
+  for (const ref of ["   ", "TOONE-1", "1234", `TOONE-${"A".repeat(65)}`, "TOONE\u0000-ABCDEFGH12", "ORDER-ABCDEFGH12"]) {
+    assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", ref), { ok: false, error: "errOrderRef" }, ref);
+  }
+  assert.equal(ORDER_REF_MAX, 70);
+  assert.equal(CONTRACT_NAME_MAX, 200);
+  assert.equal(contractRequestFrom("cancel", "buyer@example.com", "TOONE-ABCDEFGH12", "é".repeat(200)).ok, true, "200 characters, not bytes");
+  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "TOONE-ABCDEFGH12", "x".repeat(201)), { ok: false, error: "errName" });
+  assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "TOONE-ABCDEFGH12", "Ana\nBuyer"), { ok: false, error: "errName" });
 });
 
 test("every accepted request gets the same outcome; errors never say whether a purchase exists", () => {
@@ -53,12 +62,12 @@ test("a 202 for an unknown email and for a real one resolve the same way, withou
   const outcomes = [];
   for (const email of ["known@example.com", "nobody@example.com"]) {
     let caught: unknown;
-    try { await submitContractRequest({ kind: "withdraw", email, order_ref: "TOONE-1" }); } catch (error) { caught = error; }
+    try { await submitContractRequest({ kind: "withdraw", email, order_ref: "TOONE-ABCDEFGH12", locale: "pt" }); } catch (error) { caught = error; }
     outcomes.push(contractOutcome(caught));
   }
   assert.deepEqual(outcomes, [{ state: "sent" }, { state: "sent" }]);
   assert.deepEqual(seen.map((call) => call.auth), [null, null]);
-  assert.deepEqual(seen[1].body, { kind: "withdraw", email: "nobody@example.com", order_ref: "TOONE-1" });
+  assert.deepEqual(seen[1].body, { kind: "withdraw", email: "nobody@example.com", order_ref: "TOONE-ABCDEFGH12", locale: "pt" });
 });
 
 test("the page opens on the two labelled functions, with no sign-in form", () => {
@@ -70,4 +79,12 @@ test("the page opens on the two labelled functions, with no sign-in form", () =>
   assert.match(html, /<button[^>]*type="button"[^>]*>Withdraw from contract here<\/button>/);
   assert.match(html, /<button[^>]*type="button"[^>]*>Cancel contract here<\/button>/);
   assert.doesNotMatch(html, /type="password"/);
+});
+
+test("the request sends the page's locale (the emailed link uses it) and the optional name", () => {
+  const page = fs.readFileSync("components/account/ContractRequestPage.tsx", "utf8");
+  assert.match(page, /submitContractRequest\(\{ kind, email: confirmedEmail, order_ref: confirmedRef, name: confirmedName, locale \}\)/);
+  assert.match(page, /id="contract-name"/);
+  assert.match(page, /autoComplete="name" maxLength=\{CONTRACT_NAME_MAX\}/);
+  assert.equal(en.account.contract.name, "Your name (optional)");
 });

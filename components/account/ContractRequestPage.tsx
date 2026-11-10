@@ -5,22 +5,22 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { submitContractRequest } from "@/lib/billing/api";
 import { APPLE_REPORT_A_PROBLEM_URL } from "@/lib/legal/terms";
-import { ORDER_REF_MAX, contractOutcome, contractRequestFrom, type ContractKind } from "./contract-request";
+import { CONTRACT_NAME_MAX, ORDER_REF_MAX, contractOutcome, contractRequestFrom, type ContractKind } from "./contract-request";
 import styles from "./account.module.css";
 
 type Step =
   | { name: "choose" }
   | { name: "details"; kind: ContractKind }
-  | { name: "confirm"; kind: ContractKind; email: string; orderRef: string }
+  | { name: "confirm"; kind: ContractKind; email: string; orderRef: string; person: string }
   | { name: "sent"; kind: ContractKind; email: string; at: Date };
 
 const SUPPORT_EMAIL = "hello@trytoone.com";
 
 /**
  * "Withdraw from contract here" and "Cancel contract here", without signing
- * in: (1) the purchase email and order reference, (2) an explicit confirm
- * button, then the same acknowledgement for every request. The emailed link
- * is what changes anything.
+ * in: (1) the purchase email, the order reference and an optional name,
+ * (2) an explicit confirm button, then the same acknowledgement for every
+ * request. The emailed link (in this page's locale) is what changes anything.
  */
 export default function ContractRequestPage() {
   const t = useTranslations("account.contract");
@@ -28,6 +28,7 @@ export default function ContractRequestPage() {
   const [step, setStep] = useState<Step>({ name: "choose" });
   const [email, setEmail] = useState("");
   const [orderRef, setOrderRef] = useState("");
+  const [person, setPerson] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -50,23 +51,25 @@ export default function ContractRequestPage() {
 
   function review(event: FormEvent, kind: ContractKind) {
     event.preventDefault();
-    const checked = contractRequestFrom(kind, email, orderRef);
+    const checked = contractRequestFrom(kind, email, orderRef, person);
     if (!checked.ok) {
-      setError(t(checked.error));
+      setError(checked.error === "errName" ? t("errName", { max: CONTRACT_NAME_MAX }) : t(checked.error));
       return;
     }
     setError("");
-    setStep({ name: "confirm", kind, email: checked.request.email, orderRef: checked.request.order_ref });
+    setStep({
+      name: "confirm", kind, email: checked.request.email, orderRef: checked.request.order_ref, person: checked.request.name ?? "",
+    });
   }
 
-  async function confirm(kind: ContractKind, confirmedEmail: string, confirmedRef: string) {
+  async function confirm(kind: ContractKind, confirmedEmail: string, confirmedRef: string, confirmedName: string) {
     if (busyRef.current) return;
     busyRef.current = true;
     setBusy(true);
     setError("");
     let caught: unknown;
     try {
-      await submitContractRequest({ kind, email: confirmedEmail, order_ref: confirmedRef });
+      await submitContractRequest({ kind, email: confirmedEmail, order_ref: confirmedRef, name: confirmedName, locale });
     } catch (failure) {
       caught = failure ?? new Error("failed");
     }
@@ -135,6 +138,10 @@ export default function ContractRequestPage() {
               <input id="contract-order" value={orderRef} onChange={(event) => setOrderRef(event.target.value)}
                 autoComplete="off" spellCheck={false} maxLength={ORDER_REF_MAX} required aria-describedby="contract-order-help" />
               <small id="contract-order-help">{t("orderRefHelp")}</small>
+              <label htmlFor="contract-name">{t("name")}</label>
+              <input id="contract-name" value={person} onChange={(event) => setPerson(event.target.value)}
+                autoComplete="name" maxLength={CONTRACT_NAME_MAX} aria-describedby="contract-name-help" />
+              <small id="contract-name-help">{t("nameHelp")}</small>
               {error && <p className={styles.error} role="alert">{error}</p>}
               <div className={styles.actions} style={{ marginTop: 18 }}>
                 <button className={styles.primary} type="submit">{t("continue")}</button>
@@ -150,12 +157,13 @@ export default function ContractRequestPage() {
             <dl className={styles.summary}>
               <dt>{t("email")}</dt><dd>{step.email}</dd>
               <dt>{t("orderRef")}</dt><dd>{step.orderRef}</dd>
+              {step.person && <><dt>{t("nameShort")}</dt><dd>{step.person}</dd></>}
             </dl>
             <p className={styles.notice}>{t("confirmNote")}</p>
             {error && <p className={styles.error} role="alert">{error}</p>}
             <div className={styles.actions}>
               <button className={styles.primary} type="button" disabled={busy}
-                onClick={() => void confirm(step.kind, step.email, step.orderRef)}>
+                onClick={() => void confirm(step.kind, step.email, step.orderRef, step.person)}>
                 {busy ? t("sending") : step.kind === "withdraw" ? t("confirmWithdraw") : t("confirmCancel")}
               </button>
               <button type="button" disabled={busy} onClick={() => setStep({ name: "details", kind: step.kind })}>{t("edit")}</button>

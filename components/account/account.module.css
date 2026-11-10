@@ -41,6 +41,8 @@
 .summary { border: 1px solid #ffffff14; border-radius: 12px; padding: 12px 14px; font-size: 14px; color: #d2cec4; overflow-wrap: anywhere; }
 .summary dt { color: #96938b; font-size: 12px; }
 .summary dd { margin: 0 0 8px; }
+.summary dd:last-child { margin-bottom: 0; }
+.orderRef { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; color: #f2efe8; letter-spacing: 0.02em; user-select: all; }
 .footerLinks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 28px; font-size: 13px; }
 .footerLinks a, .footerLinks button { color: #b2b0aa !important; }
 @media (max-width: 640px) {

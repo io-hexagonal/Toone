@@ -213,7 +213,30 @@ export type Entitlement = {
   free_routine_creations: FreeRoutineCreations | null;
   email_verification_required: boolean;
   guest_of: { email: string; name: string } | null;
+  /** Direct mode only: the Portuguese legal invoice of the last web purchase; null when absent. */
+  legal_invoice: LegalInvoice | null;
 };
+
+/**
+ * The legal (certified) invoice a Direct-mode purchase gets, sent as an
+ * optional `legal_invoice` on the checkout status and the entitlement:
+ * `pending` while it is being issued (it is emailed), then `issued` with its
+ * number and ATCUD. Servers without Direct mode never send it.
+ */
+export type LegalInvoice = {
+  status: "pending" | "issued";
+  number: string | null;
+  atcud: string | null;
+};
+
+/** Reads `legal_invoice`; anything missing, malformed or with an unknown status is null. */
+export function normalizeLegalInvoice(raw: unknown): LegalInvoice | null {
+  const r = record(raw);
+  if (!r) return null;
+  const status = enumValue(r.status, ["pending", "issued"] as const);
+  if (status !== "pending" && status !== "issued") return null;
+  return { status, number: str(r.number), atcud: str(r.atcud) };
+}
 
 export function normalizeEntitlement(raw: unknown): Entitlement {
   const e = record(raw) ?? {};
@@ -236,6 +259,7 @@ export function normalizeEntitlement(raw: unknown): Entitlement {
     guest_of: guest && typeof guest.email === "string"
       ? { email: guest.email, name: typeof guest.name === "string" ? guest.name : "" }
       : null,
+    legal_invoice: normalizeLegalInvoice(e.legal_invoice),
   };
 }
 
@@ -255,7 +279,11 @@ export type CheckoutSession = { checkout_url: string; session_id: string };
 
 /**
  * `POST /billing/checkout`. Resolves only with a URL on an allow-listed
- * Stripe Checkout host; navigate to `checkout_url` as returned.
+ * Stripe Checkout host; navigate to `checkout_url` as returned. The body is
+ * exactly `{plan, locale, return}`: the server builds the redirects and picks
+ * the price, and answers 400 if a client sends `success_url`, `cancel_url` or
+ * `price_id`. A 409 `conflict` (another checkout of this account is still
+ * being created) is the `conflict` failure.
  */
 export function startCheckout(token: string, input: CheckoutRequest): Promise<CheckoutSession> {
   return callNamingPro(token, async () => {
@@ -269,16 +297,33 @@ export function startCheckout(token: string, input: CheckoutRequest): Promise<Ch
 }
 
 export type CheckoutStatus = {
+  /** `open` after the buyer paid means a delayed payment method is still clearing. */
   status: "open" | "complete" | "expired" | "unknown";
   /** True once the payment has turned Pro on for this account. */
   entitled: boolean;
+  /** `TOONE-…`, the reference the login-free contract form asks for; null when absent or malformed. */
+  order_ref: string | null;
+  /** Direct mode only; null when absent. */
+  legal_invoice: LegalInvoice | null;
 };
+
+/** `TOONE-` and 8–64 letters or digits (the server's `ParseOrderRef`, any case). */
+const ORDER_REF = /^TOONE-[A-Z0-9]{8,64}$/i;
+
+/** The order reference in its canonical (upper-case) form, or null when it cannot be one. */
+export function normalizeOrderRef(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const ref = value.trim().toUpperCase();
+  return ORDER_REF.test(ref) ? ref : null;
+}
 
 export function normalizeCheckoutStatus(raw: unknown): CheckoutStatus {
   const r = record(raw) ?? {};
   return {
     status: enumValue(r.status, ["open", "complete", "expired"] as const) ?? "unknown",
     entitled: r.entitled === true,
+    order_ref: normalizeOrderRef(r.order_ref),
+    legal_invoice: normalizeLegalInvoice(r.legal_invoice),
   };
 }
 
@@ -303,18 +348,58 @@ export function startPortal(token: string, input: { locale: string; return: Bill
 
 /* ---- login-free contract requests (withdrawal / cancellation) */
 
-export type ContractRequest = { kind: "withdraw" | "cancel"; email: string; order_ref: string };
+export type ContractKind = "withdraw" | "cancel";
+
+export type ContractRequest = {
+  kind: ContractKind;
+  email: string;
+  order_ref: string;
+  /** Site locale; the emailed link and the emails use it. The server defaults to `en`. */
+  locale?: string;
+  /** Optional, at most 200 characters; stored with the request. */
+  name?: string;
+};
+
+/** The server's limit for `name` (characters). */
+export const CONTRACT_NAME_MAX = 200;
 
 /**
  * `POST /billing/contract-requests`. The server emails a confirmation link;
  * resolving only means the request was accepted, not that anything changed.
+ * An empty name is left out.
  */
 export function submitContractRequest(input: ContractRequest): Promise<void> {
   return call(async () => {
-    await publicRequest<unknown>("/billing/contract-requests", {
-      ...jsonBody({ kind: input.kind, email: input.email.trim(), order_ref: input.order_ref.trim() }),
+    const body: Record<string, string> = { kind: input.kind, email: input.email.trim(), order_ref: input.order_ref.trim() };
+    if (input.locale) body.locale = input.locale;
+    const name = input.name?.trim();
+    if (name) body.name = name;
+    await publicRequest<unknown>("/billing/contract-requests", { ...jsonBody(body), cache: "no-store" });
+  });
+}
+
+export type ContractOutcomeKind = "cancelled" | "withdrawn" | "nothing_to_cancel";
+
+export type ContractConfirmation = {
+  kind: ContractKind | "unknown";
+  outcome: ContractOutcomeKind | "unknown";
+};
+
+/**
+ * `POST /billing/contract-requests/confirm` with the token from the emailed
+ * link. Carries the request out once; confirming again returns the first
+ * outcome. 404 (`unknown`, status 404) means the link expired or is unknown.
+ */
+export function confirmContractRequest(token: string): Promise<ContractConfirmation> {
+  return call(async () => {
+    const raw = record(await publicRequest<unknown>("/billing/contract-requests/confirm", {
+      ...jsonBody({ token }),
       cache: "no-store",
-    });
+    })) ?? {};
+    return {
+      kind: enumValue(raw.kind, ["withdraw", "cancel"] as const) ?? "unknown",
+      outcome: enumValue(raw.outcome, ["cancelled", "withdrawn", "nothing_to_cancel"] as const) ?? "unknown",
+    };
   });
 }
 
@@ -338,7 +423,11 @@ export function normalizeBenefit(raw: unknown): CodeBenefit {
   return { kind, value: kind === "pro_days" || kind === "free_creations" || kind === "unknown" ? value : null };
 }
 
-export type CodeCheck = { benefit: CodeBenefit; entitlement: Entitlement | null };
+export type CodeCheck = {
+  benefit: CodeBenefit;
+  /** Always true on a 200: every refusal is the error `redeem` would return. */
+  redeemable: boolean;
+};
 export type CodeRedemption = { benefit: CodeBenefit; entitlement: Entitlement };
 
 function codeBody(code: string): RequestInit {
@@ -351,10 +440,7 @@ function codeBody(code: string): RequestInit {
 export function checkCode(token: string, code: string): Promise<CodeCheck> {
   return callNamingPro(token, async () => {
     const raw = record(await authedRequest<unknown>(token, "/me/codes/check", codeBody(code)));
-    return {
-      benefit: normalizeBenefit(raw),
-      entitlement: raw?.entitlement ? normalizeEntitlement(raw.entitlement) : null,
-    };
+    return { benefit: normalizeBenefit(raw), redeemable: raw?.redeemable !== false };
   });
 }
 
@@ -398,7 +484,13 @@ type CodeFields = {
 };
 
 export type AdminCodeInvitation = InvitationRecord & CodeFields;
-export type CreatedCodeInvitation = CreatedInvitation & Omit<CodeFields, "created_by">;
+export type CreatedCodeInvitation = CreatedInvitation & Omit<CodeFields, "created_by"> & {
+  /** Server warnings about the new code, e.g. `unlimited_pro_code`; empty when none. */
+  warnings: string[];
+};
+
+/** Admin create warning: unlimited uses and a Pro benefit. */
+export const UNLIMITED_PRO_CODE_WARNING = "unlimited_pro_code";
 
 function codeFields(raw: Raw): CodeFields {
   return {
@@ -443,7 +535,10 @@ export function createCodeInvitation(token: string, input: CreateCodeInvitationI
     }
     const raw = record(await authedRequest<unknown>(token, "/admin/invitations", jsonBody(body))) ?? {};
     const { created_by: _createdBy, ...fields } = codeFields(raw);
-    return { ...(raw as unknown as CreatedInvitation), ...fields };
+    const warnings = Array.isArray(raw.warnings)
+      ? raw.warnings.filter((warning): warning is string => typeof warning === "string" && warning !== "")
+      : [];
+    return { ...(raw as unknown as CreatedInvitation), ...fields, warnings };
   });
 }
 
@@ -454,53 +549,7 @@ export function revokeCodeInvitation(token: string, id: string): Promise<void> {
   });
 }
 
-export type CodeRedemptionRecord = {
-  id: string;
-  user_id: string;
-  email: string;
-  account_name: string;
-  /** How the code was used, e.g. signup, website or desktop. */
-  channel: string;
-  /** The benefit as it was when redeemed. */
-  benefit: CodeBenefit;
-  redeemed_at: string;
-};
-
-export type CodeRedemptionPage = { entries: CodeRedemptionRecord[]; has_more: boolean; limit: number };
-
-export function normalizeRedemptionPage(raw: unknown): CodeRedemptionPage {
-  const page = record(raw);
-  const list = Array.isArray(raw) ? raw : Array.isArray(page?.entries) ? (page.entries as unknown[]) : [];
-  const entries = list.flatMap(item => {
-    const entry = record(item);
-    if (!entry || typeof entry.id !== "string") return [];
-    const text = (key: string) => (typeof entry[key] === "string" ? (entry[key] as string) : "");
-    return [{
-      id: entry.id,
-      user_id: text("user_id"),
-      email: text("email"),
-      account_name: text("account_name"),
-      channel: text("channel"),
-      benefit: normalizeBenefit(entry),
-      redeemed_at: text("redeemed_at") || text("created_at"),
-    }];
-  });
-  return { entries, has_more: page?.has_more === true, limit: num(page?.limit) ?? entries.length };
-}
-
-/** `GET /admin/invitations/{id}/redemptions`, newest first, paginated by offset. */
-export function listInvitationRedemptions(
-  token: string, id: string, options: { offset?: number; limit?: number; signal?: AbortSignal } = {},
-): Promise<CodeRedemptionPage> {
-  return call(async () => {
-    const query = new URLSearchParams();
-    if (options.offset) query.set("offset", String(options.offset));
-    if (options.limit) query.set("limit", String(options.limit));
-    const suffix = query.toString() ? `?${query}` : "";
-    const raw = await authedRequest<unknown>(token, `/admin/invitations/${encodeURIComponent(id)}/redemptions${suffix}`, { signal: options.signal });
-    return normalizeRedemptionPage(raw);
-  });
-}
+/* The redemption ledger (cursor paging) lives in `./redemptions`. */
 
 /* ---- feature flags (public) */
 

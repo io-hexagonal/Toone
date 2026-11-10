@@ -4,7 +4,7 @@
  * specific feedback.
  */
 
-import type { CreateCodeInvitationInput } from "@/lib/billing/api";
+import { UNLIMITED_PRO_CODE_WARNING, type CreateCodeInvitationInput } from "@/lib/billing/api";
 
 export type BenefitChoice = "signup" | "pro_days" | "pro_lifetime" | "free_creations";
 
@@ -168,4 +168,11 @@ export function shareLink(options: { signupUrl: string; siteOrigin: string; code
 
 export function redeemLink(siteOrigin: string, code: string): string {
   return shareLink({ signupUrl: "", siteOrigin, code, admitsSignup: false });
+}
+
+/** Admin notes for the `warnings` of a created code; a warning this page does not know is shown by name. */
+export function createdWarningNotes(warnings: readonly string[]): string[] {
+  return warnings.map((warning) => warning === UNLIMITED_PRO_CODE_WARNING
+    ? "The server flagged this as an unlimited Pro code: anyone who has it gets Toone Pro. Share it carefully and revoke it when the campaign ends."
+    : `The server returned a warning: ${warning}.`);
 }

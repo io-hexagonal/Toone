@@ -9,6 +9,7 @@ import { GET as siteSitemap } from "../../app/sitemap.xml/route";
 import { pricingMetadata } from "../../app/[locale]/pricing/pricing-metadata";
 import PricingPlans from "../../components/billing/PricingPlans";
 import {
+  checkoutAvailable,
   checkoutErrorKey,
   hasTemporaryPro,
   orderedPrices,
@@ -99,6 +100,16 @@ test("with checkout off, there is no purchase control, only 'coming soon'", () =
   assert.doesNotMatch(html, /Sign in to buy|Checking your account/);
 });
 
+test("an empty price list (payments off answer 200 []) reads as 'coming soon', whatever the flag says", () => {
+  const prices = normalizePrices([
+    { plan: "pro_monthly", interval: "month", amount: 999, currency: "eur", display_price: "€9.99", tax_inclusive: true },
+  ]);
+  assert.equal(checkoutAvailable(true, prices), true);
+  assert.equal(checkoutAvailable(true, []), false);
+  assert.equal(checkoutAvailable(false, prices), false);
+  assert.match(fs.readFileSync("app/[locale]/pricing/page.tsx", "utf8"), /checkoutAvailable\(features\.stripe_pro_checkout, prices\)/);
+});
+
 /* ---- plan availability and errors */
 
 const entitlement = (raw: Record<string, unknown>) => normalizeEntitlement(raw);
@@ -131,6 +142,7 @@ test("checkout failures map to copy, and already_pro names where Pro comes from"
   assert.equal(checkoutErrorKey({ kind: "unauthenticated" }), "errSession");
   assert.equal(checkoutErrorKey({ kind: "payments_unavailable" }), "errUnavailable");
   assert.equal(checkoutErrorKey({ kind: "rate_limited" }), "errRate");
+  assert.equal(checkoutErrorKey({ kind: "conflict" }), "errConflict");
   assert.equal(checkoutErrorKey({ kind: "unknown", status: 0, code: "untrusted_redirect", message: "" }), "errGeneric");
   assert.equal(checkoutErrorKey({ kind: "already_pro", source: "subscription", provider: "app_store" }), "ownedAppStore");
   assert.equal(checkoutErrorKey({ kind: "already_pro", source: "subscription", provider: "stripe" }), "ownedWeb");
@@ -139,6 +151,7 @@ test("checkout failures map to copy, and already_pro names where Pro comes from"
   assert.equal(checkoutErrorKey({ kind: "already_pro", source: null, provider: null }), "ownedOther");
   assert.equal(ownedReason("unknown", "unknown"), "other");
   const copy = messages.billing.pricing as Record<string, string>;
+  assert.equal(copy.errConflict, "A checkout is already being prepared — try again in a moment.");
   for (const key of ["errSession", "errUnavailable", "errRate", "errGeneric", "ownedAppStore", "ownedWeb", "ownedLifetime", "ownedOther"]) {
     assert.ok(copy[key], key);
   }

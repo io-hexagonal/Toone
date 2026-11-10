@@ -31,6 +31,15 @@ export const CHECKOUT_RETURN_STYLES = `
   .pro-return-card .pro-return-strong { color: rgba(255,255,255,0.86); }
   .pro-return-card .pro-return-muted { font-size: 13px; color: rgba(255,255,255,0.5); }
   .pro-return-card a:not(.pro-return-button) { color: rgba(255,255,255,0.86); text-underline-offset: 3px; }
+  .pro-return-order {
+    width: 100%; margin-top: 4px; padding: 14px 16px; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .pro-return-order code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px;
+    color: rgba(255,255,255,0.92); letter-spacing: 0.02em; user-select: all; word-break: break-all;
+  }
   .pro-return-button {
     margin-top: 8px; display: inline-flex; justify-content: center; align-items: center;
     min-width: 200px; border-radius: 12px; padding: 13px 18px; border: 0;

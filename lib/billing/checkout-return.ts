@@ -9,8 +9,13 @@
  *   pending ──entitlement is Pro──────────────▶ active
  *      │  ──session expired unpaid─────────────▶ error (expired)
  *      │  ──401───────────────────────────────▶ signed_out
- *      │  ──deadline, API answered at least once▶ timeout ("still processing")
+ *      │  ──session still open after processingAfterMs▶ processing (a delayed
+ *      │      payment method is clearing; Pro turns on later, by email)
+ *      │  ──deadline, API answered at least once▶ timeout ("still confirming")
  *      └  ──deadline, API never answered────────▶ error (unreachable)
+ *
+ * `active` and `processing` carry the checkout's order reference (`TOONE-…`)
+ * and, in Direct mode, its legal invoice, when the status request returned them.
  */
 
 import {
@@ -19,8 +24,21 @@ import {
   isPro,
   type CheckoutStatus,
   type Entitlement,
+  type LegalInvoice,
 } from "./api";
 import { billingFailure, type BillingFailure } from "./errors";
+
+/** What the final states show about the purchase, from the last checkout status. */
+export type CheckoutReceipt = {
+  /** `TOONE-…` for the login-free contract form; null when the status had none. */
+  orderRef: string | null;
+  /** Direct mode only. */
+  legalInvoice: LegalInvoice | null;
+};
+
+function receiptOf(checkout: CheckoutStatus | null): CheckoutReceipt {
+  return { orderRef: checkout?.order_ref ?? null, legalInvoice: checkout?.legal_invoice ?? null };
+}
 
 export type CheckoutReturnState =
   | {
@@ -30,8 +48,12 @@ export type CheckoutReturnState =
     /** True once the API answered the entitlement request at least once. */
     reached: boolean;
     lastFailure: BillingFailure | null;
+    /** The last checkout status the API returned (a hint), null before any. */
+    checkout: CheckoutStatus | null;
   }
-  | { kind: "active"; entitlement: Entitlement }
+  | ({ kind: "active"; entitlement: Entitlement } & CheckoutReceipt)
+  /** Paid with a method that clears later: the session stays `open` until it does. */
+  | ({ kind: "processing" } & CheckoutReceipt)
   | { kind: "timeout" }
   | { kind: "signed_out" }
   | { kind: "error"; reason: "expired" | "unreachable"; failure: BillingFailure | null };
@@ -43,11 +65,17 @@ export type CheckoutReturnConfig = {
   timeoutMs: number;
   /** Waits between polls; the last value repeats. */
   delaysMs: readonly number[];
+  /**
+   * A session still `open` this long after the buyer came back is a delayed
+   * payment method (Managed Payments may offer them): stop with `processing`.
+   */
+  processingAfterMs: number;
 };
 
 export const CHECKOUT_RETURN_DEFAULTS: Readonly<CheckoutReturnConfig> = Object.freeze({
   timeoutMs: 60_000,
   delaysMs: Object.freeze([1_000, 1_500, 2_000, 3_000, 5_000]),
+  processingAfterMs: 20_000,
 });
 
 /** One poll's result: the entitlement (plus the checkout status, when asked), or why it failed. */
@@ -56,7 +84,7 @@ export type CheckoutReturnObservation =
   | { failure: BillingFailure };
 
 export function initialCheckoutReturn(): CheckoutReturnState {
-  return { kind: "pending", attempts: 0, reached: false, lastFailure: null };
+  return { kind: "pending", attempts: 0, reached: false, lastFailure: null, checkout: null };
 }
 
 export function isFinalCheckoutReturn(state: CheckoutReturnState): boolean {
@@ -78,34 +106,42 @@ export function stepCheckoutReturn(
   const attempts = state.attempts + 1;
   let reached = state.reached;
   let lastFailure = state.lastFailure;
+  let checkout = state.checkout;
 
   if ("failure" in observation) {
     if (observation.failure.kind === "unauthenticated") return { state: { kind: "signed_out" }, delayMs: null };
     // Everything else (network, rate limit, 5xx) may pass: keep polling until the deadline.
     lastFailure = observation.failure;
   } else {
+    // A failed status request (null) keeps the last answer.
+    if (observation.checkout) checkout = observation.checkout;
     if (isPro(observation.entitlement)) {
-      return { state: { kind: "active", entitlement: observation.entitlement }, delayMs: null };
+      return { state: { kind: "active", entitlement: observation.entitlement, ...receiptOf(checkout) }, delayMs: null };
     }
     if (observation.checkout?.status === "expired") {
       return { state: { kind: "error", reason: "expired", failure: null }, delayMs: null };
     }
     reached = true;
     lastFailure = null;
+    if (observation.checkout?.status === "open" && elapsedMs >= config.processingAfterMs) {
+      return { state: { kind: "processing", ...receiptOf(checkout) }, delayMs: null };
+    }
   }
 
   const remaining = config.timeoutMs - elapsedMs;
   if (remaining <= 0) {
-    const final: CheckoutReturnState = reached
-      ? { kind: "timeout" }
-      : { kind: "error", reason: "unreachable", failure: lastFailure };
+    const final: CheckoutReturnState = !reached
+      ? { kind: "error", reason: "unreachable", failure: lastFailure }
+      : checkout?.status === "open"
+        ? { kind: "processing", ...receiptOf(checkout) }
+        : { kind: "timeout" };
     return { state: final, delayMs: null };
   }
   const delays = config.delaysMs.length ? config.delaysMs : CHECKOUT_RETURN_DEFAULTS.delaysMs;
   const planned = delays[Math.min(attempts - 1, delays.length - 1)];
   // The last wait is cut short so one final poll lands on the deadline.
   return {
-    state: { kind: "pending", attempts, reached, lastFailure },
+    state: { kind: "pending", attempts, reached, lastFailure, checkout },
     delayMs: Math.max(0, Math.min(planned, remaining)),
   };
 }

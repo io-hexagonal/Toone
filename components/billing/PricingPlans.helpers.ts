@@ -66,6 +66,7 @@ export function checkoutErrorKey(failure: BillingFailure): string {
     case "already_pro": return ownedMessageKey(ownedReason(failure.source, failure.provider));
     case "payments_unavailable": return "errUnavailable";
     case "rate_limited": return "errRate";
+    case "conflict": return "errConflict";
     default: return "errGeneric";
   }
 }
@@ -110,6 +111,15 @@ export function tidyPricingSearch(search: string): string | null {
   params.delete("checkout");
   const rest = params.toString();
   return rest ? `?${rest}` : "";
+}
+
+/**
+ * Whether the page offers checkout: the capability flag says so and there is
+ * at least one known plan to buy. While payments are off the server answers
+ * prices with an empty list (200), which reads as "coming soon".
+ */
+export function checkoutAvailable(flag: boolean, prices: readonly Price[]): boolean {
+  return flag && orderedPrices(prices).length > 0;
 }
 
 /** Known plans in display order (monthly, yearly, lifetime); one price per plan. */
