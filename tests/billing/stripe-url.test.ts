@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { allowedStripeUrl, isAllowedStripeUrl, STRIPE_REDIRECT_HOSTS } from "../../lib/billing/stripe-url";
+import { allowedStripeUrl, isAllowedStripeUrl, STRIPE_REDIRECT_HOSTS, testRedirectHosts } from "../../lib/billing/stripe-url";
 
 test("checkout and portal URLs on the exact Stripe hosts are allowed", () => {
   assert.equal(isAllowedStripeUrl("https://checkout.stripe.com/c/pay/cs_test_a1B2#fid=x", "checkout"), true);
@@ -60,3 +60,37 @@ test("the allow-list is one frozen constant", () => {
   assert.equal(Object.isFrozen(STRIPE_REDIRECT_HOSTS.checkout), true);
   assert.equal(isAllowedStripeUrl("https://checkout.stripe.com/", "other" as never), false);
 });
+
+test("test redirect hosts apply only outside production", () => {
+  const saved = { env: process.env.NODE_ENV, hosts: process.env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS };
+  const env = process.env as Record<string, string | undefined>;
+  try {
+    env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS = "127.0.0.1:41443, bad host, fake.test";
+    env.NODE_ENV = "test";
+    assert.deepEqual(testRedirectHosts(), ["127.0.0.1:41443", "fake.test"]);
+    assert.equal(allowedStripeUrl("https://127.0.0.1:41443/c/pay/cs_test_1", "checkout"), "https://127.0.0.1:41443/c/pay/cs_test_1");
+    assert.equal(allowedStripeUrl("https://fake.test/p/session/x", "portal"), "https://fake.test/p/session/x");
+    // Still https only, exact host:port, no credentials.
+    assert.equal(allowedStripeUrl("http://127.0.0.1:41443/c/pay/cs_test_1", "checkout"), null);
+    assert.equal(allowedStripeUrl("https://127.0.0.1:41444/c/pay/cs_test_1", "checkout"), null);
+    assert.equal(allowedStripeUrl("https://u:p@127.0.0.1:41443/c/pay/cs_test_1", "checkout"), null);
+    assert.equal(allowedStripeUrl("https://checkout.stripe.com.evil.com/c/pay/cs_1", "checkout"), null);
+
+    env.NODE_ENV = "production";
+    assert.deepEqual(testRedirectHosts(), []);
+    assert.equal(allowedStripeUrl("https://127.0.0.1:41443/c/pay/cs_test_1", "checkout"), null);
+    assert.equal(allowedStripeUrl("https://fake.test/p/session/x", "portal"), null);
+    // The real hosts are unaffected either way.
+    assert.equal(isAllowedStripeUrl("https://checkout.stripe.com/c/pay/cs_test_a1", "checkout"), true);
+
+    delete env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS;
+    env.NODE_ENV = "test";
+    assert.deepEqual(testRedirectHosts(), []);
+    assert.equal(allowedStripeUrl("https://fake.test/p/session/x", "portal"), null);
+  } finally {
+    env.NODE_ENV = saved.env;
+    if (saved.hosts === undefined) delete env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS;
+    else env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS = saved.hosts;
+  }
+});
+

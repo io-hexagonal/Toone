@@ -18,6 +18,33 @@ export const STRIPE_REDIRECT_HOSTS: Readonly<Record<StripeRedirectKind, readonly
 });
 
 /**
+ * TEST-ONLY: extra `host` or `host:port` entries for the local fake Stripe of
+ * the monorepo's end-to-end harness (`scripts/e2e/pro-e2e.sh`), from
+ * `NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS` (comma-separated). Honoured only
+ * when the variable is set AND `NODE_ENV !== "production"`. `next build`
+ * inlines `NODE_ENV` as "production", so a production bundle drops this
+ * branch entirely, whatever the variable says.
+ */
+export function testRedirectHosts(): readonly string[] {
+  // Literal `process.env.*` reads: the bundler inlines both, and in a
+  // production build the early return makes the rest dead code.
+  if (process.env.NODE_ENV === "production") return [];
+  const raw = process.env.NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS;
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((entry) => entry.trim().toLowerCase())
+    .filter((entry) => /^[a-z0-9.-]+(:\d{1,5})?$/.test(entry));
+}
+
+function allowedTestUrl(url: string, parsed: URL): string | null {
+  const hosts = testRedirectHosts();
+  if (hosts.length === 0) return null;
+  if (parsed.protocol !== "https:" || parsed.username || parsed.password) return null;
+  return hosts.includes(parsed.host) && url.toLowerCase().startsWith(`https://${parsed.host}/`) ? parsed.href : null;
+}
+
+/**
  * The normalized URL to navigate to, or null when `url` is not a safe Stripe
  * page for `kind`. Navigate to the returned value, never to the raw input.
  */
@@ -32,6 +59,8 @@ export function allowedStripeUrl(url: unknown, kind: StripeRedirectKind): string
   } catch {
     return null;
   }
+  const testUrl = allowedTestUrl(url, parsed);
+  if (testUrl) return testUrl;
   if (parsed.protocol !== "https:") return null;
   if (parsed.username || parsed.password) return null;
   if (parsed.port) return null;
