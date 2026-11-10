@@ -123,19 +123,24 @@ async function call<T>(run: () => Promise<T>): Promise<T> {
 }
 
 /**
- * Like `call`, but an `already_pro` refusal is completed with the account's
- * current source and provider, read from the entitlement (best effort).
+ * Like `call`, but an `already_pro` refusal names the Pro that blocks the
+ * request: the error body's own `source` and `billing_provider` first, and
+ * only for a field the body leaves out, the account's current entitlement
+ * (best effort; it reports the highest-ranking Pro, not the blocking one).
  */
 async function callNamingPro<T>(token: string, run: () => Promise<T>): Promise<T> {
   try {
     return await run();
   } catch (error) {
     if (error instanceof ApiError && error.code === "already_pro") {
-      const entitlement = await getEntitlement(token).catch(() => null);
-      throw new BillingError(mapApiError(error, {
-        source: entitlement?.source,
-        provider: entitlement?.billing_provider,
-      }));
+      let source = proSource(error.fields.source);
+      let provider = billingProvider(error.fields.billing_provider);
+      if (source === null || provider === null) {
+        const entitlement = await getEntitlement(token).catch(() => null);
+        source ??= entitlement?.source ?? null;
+        provider ??= entitlement?.billing_provider ?? null;
+      }
+      throw new BillingError(mapApiError(error, { source, provider }));
     }
     throw asBillingError(error);
   }

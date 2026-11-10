@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, test } from "node:test";
-import { ApiError } from "../../lib/api";
+import { ApiError, apiErrorFrom } from "../../lib/api";
 import {
   BillingError,
   billingFailure,
@@ -370,6 +370,21 @@ test("already_pro names the account's current source and provider", async () => 
   const failure = await failureOf(startCheckout(TOKEN, { plan: "pro_lifetime", locale: "en", return: "web" }));
   assert.deepEqual(failure, { kind: "already_pro", source: "subscription", provider: "app_store" });
   assert.equal(calls[1].url, `${BASE}/me/entitlement`);
+});
+
+test("already_pro names the blocking Pro from the error body, not the entitlement", async () => {
+  // The Stripe yearly wins the entitlement, but the App Store subscription blocks Lifetime.
+  replies.push(reply(409, { code: "already_pro", message: "x", source: "subscription", billing_provider: "app_store" }));
+  replies.push(data(PRO_STRIPE));
+  const failure = await failureOf(startCheckout(TOKEN, { plan: "pro_lifetime", locale: "en", return: "web" }));
+  assert.deepEqual(failure, { kind: "already_pro", source: "subscription", provider: "app_store" });
+  assert.equal(calls.length, 1, "no entitlement lookup when the body names the blocker");
+});
+
+test("ApiError keeps the error body's extra top-level fields", () => {
+  const error = apiErrorFrom({ code: "already_pro", message: "x", source: "grant", billing_provider: "toone" }, 409);
+  assert.deepEqual(error.fields, { source: "grant", billing_provider: "toone" });
+  assert.deepEqual(apiErrorFrom({ error: { code: "x", message: "y", hint: 1 } }, 400).fields, { hint: 1 });
 });
 
 test("already_pro still maps when the entitlement lookup fails", async () => {
