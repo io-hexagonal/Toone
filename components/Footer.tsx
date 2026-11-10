@@ -4,6 +4,7 @@ import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
 import SignedInLink from "@/components/SignedInLink";
 import PricingLink from "@/components/billing/PricingLink";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -119,8 +120,8 @@ export default async function Footer({
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
-              {/* English-only page; its label stays English in every locale. */}
-              <Link href="/legal-notice">Legal notice</Link>
+              {/* English-only page; its label stays English in every locale. Hidden until the trader details are complete. */}
+              {TRADER_DETAILS_COMPLETE && <Link href="/legal-notice">Legal notice</Link>}
 
             </div>
           </div>

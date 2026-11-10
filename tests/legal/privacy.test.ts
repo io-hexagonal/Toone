@@ -18,12 +18,14 @@ import { TOONE_PRO_SELLERS, type TooneProSeller } from "../../lib/legal/seller";
 import { SITE_SESSION_COOKIE } from "../../lib/site-session";
 import { LOCALE_CHOICE_COOKIE } from "../../i18n/routing";
 import { LOCALE_DISMISSED_KEY } from "../../lib/locale-preference";
+import { TRADER_DETAILS_COMPLETE } from "../../lib/legal/trader";
 import PrivacyContent from "../../app/[locale]/privacy/PrivacyContent";
 
 const read = (path: string) => fs.readFileSync(path, "utf8");
 const page = read("app/[locale]/privacy/page.tsx");
-const privacy = (seller: TooneProSeller) => renderText(createElement(PrivacyContent, { seller }));
-const privacyHtml = (seller: TooneProSeller) => renderHtml(createElement(PrivacyContent, { seller }));
+/** Renders as published (Legal notice live) unless `traderDetails` is false. */
+const privacy = (seller: TooneProSeller, traderDetails = true) => renderText(createElement(PrivacyContent, { seller, traderDetails }));
+const privacyHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml(createElement(PrivacyContent, { seller, traderDetails }));
 
 test("Privacy page renders the seller model and the bumped date", () => {
   assert.match(page, /<PrivacyContent seller=\{TOONE_PRO_SELLER\} \/>/);
@@ -210,4 +212,31 @@ test("controller, transfers, rights, automated decisions, security, children, St
     assert.ok(html.includes("https://www.cnpd.pt"));
     assert.ok(html.includes('href="/en/legal-notice"'));
   }
+});
+
+test("Privacy follows TRADER_DETAILS_COMPLETE unless told otherwise", () => {
+  for (const seller of TOONE_PRO_SELLERS) {
+    assert.equal(
+      renderHtml(createElement(PrivacyContent, { seller })),
+      privacyHtml(seller, TRADER_DETAILS_COMPLETE),
+      seller,
+    );
+  }
+});
+
+test("while the trader details are incomplete the Privacy Policy never links or points to the Legal notice", () => {
+  for (const seller of TOONE_PRO_SELLERS) {
+    const html = privacyHtml(seller, false);
+    const text = privacy(seller, false);
+    assert.ok(!html.includes("/legal-notice"), `${seller}: links the Legal notice`);
+    assert.doesNotMatch(text, /Legal notice/, seller);
+    assert.match(text, /can be reached at hello@trytoone\.com\. His address and tax number are available on request at the same email address\. Toone has not appointed/);
+    assert.match(text, /Toone is published by Matheus Paranhos \(Hexagonal\.io\), Portugal\./);
+  }
+  assert.match(
+    privacy("direct", false),
+    /the seller is Toone's publisher, named under Who is responsible for your data, who is also the controller of the purchase data/,
+  );
+  assert.ok(privacyHtml("direct", false).includes('href="#controller"'));
+  assert.match(privacy("managed_payments", false), /the seller of the transaction is Sold through Link, LLC/);
 });
