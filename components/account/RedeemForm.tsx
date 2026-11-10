@@ -10,6 +10,7 @@ import {
   type CodeBenefit,
   type Entitlement,
 } from "@/lib/billing/api";
+import { forgetPendingCode } from "@/lib/billing/pending-code";
 import { benefitCopy, normalizeCode, redeemDoneCopy, redeemErrorKey } from "./redeem-code";
 import styles from "./account.module.css";
 
@@ -86,6 +87,7 @@ export default function RedeemForm({
     setError("");
     try {
       const result = await redeemCode(token, canonical);
+      forgetPendingCode();
       setStep({ name: "done", benefit: result.benefit, entitlement: result.entitlement });
       onRedeemed?.(result.entitlement);
     } catch (caught) {
