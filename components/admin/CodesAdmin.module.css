@@ -1,0 +1,15 @@
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row2 > div { min-width: 0; }
+.toggle { display: flex !important; align-items: flex-start; gap: 10px; cursor: pointer; line-height: 1.45; }
+.toggle input { width: auto !important; margin-top: 2px; }
+.warning { border: 1px solid #e3b26b55; background: #e3b26b12; color: #ecc78f; border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5; margin-top: 16px; }
+.benefit { display: inline-block; padding: 4px 9px; border-radius: 99px; color: #c9c1ee; background: #c9c1ee14; font-size: 11px; white-space: nowrap; }
+.benefit[data-kind="none"] { color: #aaa8a1; background: #ffffff09; }
+.drawerBackdrop { position: fixed; inset: 0; background: #0009; z-index: 50; display: flex; justify-content: flex-end; }
+.drawer { width: min(560px, 100vw); height: 100%; overflow-y: auto; background: #1b1b19; border-left: 1px solid #ffffff1c; padding: 26px 24px 40px; }
+.drawerHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+.drawer table td:nth-child(3) { min-width: auto !important; }
+.drawerFooter { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; }
+@media (max-width: 760px) {
+  .row2 { grid-template-columns: 1fr; }
+}
