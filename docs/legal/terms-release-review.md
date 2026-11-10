@@ -21,8 +21,8 @@ Connect. The page links to [Apple's current standard EULA](https://www.apple.com
    Store Connect.
 3. Confirm the public `/terms` redirect and `/en/terms` route return 200 after
    Vercel deployment and that the Store sign-in legal link opens this page.
-4. An account or website service contract, if desired, needs its own approved
-   text. This page creates no new account, subscription, or website obligation.
+4. Superseded on 2026-11-10: the page now carries the Toone Pro purchase
+   terms (see below), so it does create subscription obligations.
 
 The route is indexable, English only, and listed in the sitemap. Other locale
 routes redirect to `/en/terms`.
@@ -35,3 +35,47 @@ paywall links to `https://trytoone.com/terms` and Guideline 3.1.2 requires a
 working Terms of Use link. The privacy-policy rewrite and website Sign in with
 Apple from that branch were **not** included and remain unmerged. Item 1 above
 (no custom EULA in App Store Connect) is still unverified.
+
+## Toone Pro on the web (2026-11-10, branch `site/pro-legal`)
+
+Built on `main`; the unpushed `pro-terms-2026-10-29` branch was **not** merged.
+Its Apple disclosures, service-provider list, retention, controller, rights and
+CNPD text were reused, without its "Apple-only" and "5 free" statements.
+
+- `/en/terms#toone-pro`: web purchases first (Stripe Managed Payments; the
+  seller and merchant of record is Sold through Link, LLC), plans, VAT-inclusive
+  euro prices and US prices before tax, renewal and cancellation, a German
+  annual-renewal clause, no plan switching, a full refund of the first payment
+  within 14 days with the withdrawal right and a model form, Lifetime, one
+  account per purchase and no double billing, account deletion cancelling the
+  web subscription, codes, guest months, the Apple section for when Pro is sold
+  in the Mac App Store edition, conformity, complaints and governing law.
+  Free plan = 2 creations (`lib/legal/terms.ts`), with a transition clause for
+  accounts created under the former 5.
+- The Terms link to `/en/cancel-contract` ("Withdraw from contract here",
+  "Cancel contract here"), `/en/account` and `/en/pricing`. Those pages are
+  built in other packages; the links 404 until they ship, so ship them together.
+- `/en/privacy`: Stripe and Link (processor, plus independent controllers for
+  their own purposes), data categories, transfers, the withdrawal-consent
+  record, cancel/withdraw requests, codes, account deletion cancelling the
+  Stripe subscription and keeping invoices, the `toone_site_session` cookie,
+  service providers, retention, controller, legal bases, rights.
+- `/en/legal-notice`: new, English only, indexable, in the footer and the
+  sitemap. Its values come from `lib/legal/trader.ts`.
+
+### Release gate: owner data
+
+Every value in `lib/legal/trader.ts` starts with `TODO_OWNER` until the owner
+provides it. The check is skipped in `npm test` and must pass before the first
+live checkout:
+
+```sh
+LEGAL_RELEASE_CHECK=1 npm run test:legal
+```
+
+The values must match the EU trader details on the App Store listing.
+
+### Before the first live sale
+
+The checklist for counsel and the accountant is kept with the payments plan,
+outside this repository. Until it is cleared, do not deploy this branch.
