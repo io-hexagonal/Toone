@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
-import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ProductShowcasePage from "@/components/showcases/ProductShowcasePage";
+import HowToSignInGate from "@/components/showcases/HowToSignInGate";
 import { getProductGuidePage } from "@/lib/product-showcase";
+import { GATED_GUIDE_METADATA, GUIDE_ROBOTS } from "@/lib/how-to-access";
+import { hasSiteSession } from "@/lib/site-session";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: PageSearchParams;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
+// Signed-in accounts only (lib/site-session.ts): rendered per request, never
+// prerendered, cached or indexed.
+export async function generateMetadata(): Promise<Metadata> {
+  if (!(await hasSiteSession())) return GATED_GUIDE_METADATA("/how-to");
   const page = getProductGuidePage("");
   if (!page) return {};
 
@@ -22,8 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: `${page.title} | Product guide` },
     description: page.description,
     alternates: { canonical },
-    robots: localeRobots(locale),
-    other: localeVersions("/how-to", ["en"]),
+    robots: GUIDE_ROBOTS,
     openGraph: {
       type: "website",
       url: canonical,
@@ -48,6 +51,8 @@ export default async function HowToOverview({ params, searchParams }: Props) {
   if (locale !== "en") await redirectToEnglish("/en/how-to", searchParams);
 
   setRequestLocale(locale);
+  if (!(await hasSiteSession())) return <HowToSignInGate path="/how-to" />;
+
   const page = getProductGuidePage("");
   if (!page) throw new Error("Missing product guide overview");
 

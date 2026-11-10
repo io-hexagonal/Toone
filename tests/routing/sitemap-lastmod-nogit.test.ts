@@ -28,8 +28,6 @@ test("without git, lastmod is omitted, never the build date, and the build warns
   const bare = urls.filter((u) => !u.includes("<lastmod>"));
   for (const loc of [
     "https://trytoone.com/en",
-    "https://trytoone.com/en/how-to",
-    "https://trytoone.com/en/how-to/features/explore",
   ]) {
     assert.ok(bare.includes(`<url><loc>${loc}</loc></url>`), `${loc} has no lastmod`);
   }

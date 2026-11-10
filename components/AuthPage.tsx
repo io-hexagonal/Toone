@@ -16,6 +16,7 @@ import {
   loginGoogle,
   logout,
   signupInvitation,
+  syncSiteSession,
   type InvitationPreview,
   type ToneSession,
 } from "@/lib/api";
@@ -74,6 +75,15 @@ type Via = "google" | "apple";
  * "you're signed in" panel pointing at the macOS download — the desktop app
  * is where the account is used.
  */
+/**
+ * Where to go after signing in, from `?next=`: only a signed-in-only page of
+ * this site (/how-to and its guides), never an arbitrary URL.
+ */
+export function signInReturnPath(search: string): string | null {
+  const next = new URLSearchParams(search).get("next");
+  return next && /^\/how-to(\/[a-z0-9-]+)*\/?$/.test(next) ? next : null;
+}
+
 export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
   const t = useTranslations("auth");
   const locale = useLocale();
@@ -139,6 +149,12 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       onAuthenticated?.(s);
       track(event);
       if (mode === "invite") setStep("handle");
+      const returnPath = mode === "signin" ? signInReturnPath(window.location.search) : null;
+      if (returnPath) {
+        // The guide checks the server-side cookie: set it before going back.
+        await syncSiteSession(s);
+        router.replace(returnPath);
+      }
     } catch (e) {
       setError(friendlyError(e, via));
       // The code can expire or run out between the check and the signup.
