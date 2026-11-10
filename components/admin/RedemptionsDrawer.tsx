@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AdminCodeInvitation } from "@/lib/billing/api";
 import { listCodeLedger, type CodeLedgerEntry } from "@/lib/billing/redemptions";
+import { trapFocus } from "@/lib/focus-trap";
 import { benefitLabel } from "./code-form";
 import shell from "@/components/InvitationAdminPage.module.css";
 import styles from "./CodesAdmin.module.css";
@@ -30,6 +31,7 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
   const [error, setError] = useState("");
   const controller = useRef<AbortController | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLElement>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
 
@@ -54,15 +56,22 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
 
   useEffect(() => {
     void load(true, null);
+    return () => controller.current?.abort();
+  }, [load]);
+
+  // Modal while open: Tab stays inside, Escape closes, and focus goes back to
+  // what opened the drawer (its "Redemptions" button) once it closes.
+  useEffect(() => {
+    const release = dialog.current ? trapFocus(dialog.current) : () => {};
     closeButton.current?.focus();
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") closeRef.current(); };
     window.addEventListener("keydown", onKey);
-    return () => { controller.current?.abort(); window.removeEventListener("keydown", onKey); };
-  }, [load]);
+    return () => { window.removeEventListener("keydown", onKey); release(); };
+  }, []);
 
   return (
     <div className={styles.drawerBackdrop} onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <aside className={styles.drawer} role="dialog" aria-modal="true" aria-labelledby="redemptions-title">
+      <aside ref={dialog} className={styles.drawer} role="dialog" aria-modal="true" aria-labelledby="redemptions-title">
         <div className={styles.drawerHeader}>
           <div>
             <p className={shell.eyebrow}>Redemptions</p>

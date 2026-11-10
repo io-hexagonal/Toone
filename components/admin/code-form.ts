@@ -79,55 +79,66 @@ export const EMPTY_CODE_FORM: Readonly<CodeFormState> = Object.freeze({
   expiresAt: "",
 });
 
+/** The input a validation error is about, by element id on the admin page. */
+export type CodeFormField =
+  | "recipient-name"
+  | "custom-code"
+  | "code-benefit-value"
+  | "code-max-uses"
+  | "code-expiry"
+  | "code-expires-at"
+  | "code-email"
+  | "code-campaign";
+
 export type CodeFormResult =
   | { ok: true; input: CreateCodeInvitationInput }
-  | { ok: false; error: string };
+  | { ok: false; error: string; field: CodeFormField };
 
 /** Checks the form and builds the `POST /admin/invitations` body. */
 export function codeRequestFrom(state: CodeFormState, now = Date.now()): CodeFormResult {
   const name = state.name.trim();
-  if (!name) return { ok: false, error: state.audience === "shared" ? "Enter a name for this code." : "Enter the person’s name." };
-  if (name.length > 160) return { ok: false, error: "Keep the name under 160 characters." };
+  if (!name) return { ok: false, error: state.audience === "shared" ? "Enter a name for this code." : "Enter the person’s name.", field: "recipient-name" };
+  if (name.length > 160) return { ok: false, error: "Keep the name under 160 characters.", field: "recipient-name" };
 
   const minimum = minimumCodeLength(state);
   const canonical = state.customCode.toUpperCase().replace(/[\s-]/g, "");
   if (state.customCode.trim() && !new RegExp(`^[A-Z0-9]{${minimum},64}$`).test(canonical)) {
-    return { ok: false, error: `Use ${minimum}–64 letters or digits for a custom code. Spaces and hyphens are allowed.` };
+    return { ok: false, error: `Use ${minimum}–64 letters or digits for a custom code. Spaces and hyphens are allowed.`, field: "custom-code" };
   }
 
   if (state.benefit === "pro_days" && !(Number.isInteger(state.benefitValue) && state.benefitValue >= 1 && state.benefitValue <= PRO_DAYS_MAX)) {
-    return { ok: false, error: `Days of Pro must be a whole number from 1 to ${PRO_DAYS_MAX}.` };
+    return { ok: false, error: `Days of Pro must be a whole number from 1 to ${PRO_DAYS_MAX}.`, field: "code-benefit-value" };
   }
   if (state.benefit === "free_creations" && !(Number.isInteger(state.benefitValue) && state.benefitValue >= 1 && state.benefitValue <= FREE_CREATIONS_MAX)) {
-    return { ok: false, error: `Extra creations must be a whole number from 1 to ${FREE_CREATIONS_MAX}.` };
+    return { ok: false, error: `Extra creations must be a whole number from 1 to ${FREE_CREATIONS_MAX}.`, field: "code-benefit-value" };
   }
 
   if (state.audience === "shared" && !(Number.isInteger(state.maxUses) && state.maxUses >= 0 && state.maxUses <= MAX_USES_MAX)) {
-    return { ok: false, error: `Max uses must be a whole number from 0 (unlimited) to ${MAX_USES_MAX}.` };
+    return { ok: false, error: `Max uses must be a whole number from 0 (unlimited) to ${MAX_USES_MAX}.`, field: "code-max-uses" };
   }
   if (state.audience === "shared" && state.maxUses === 1) {
-    return { ok: false, error: "A shared code needs more than one use. Choose “One person” for a single use." };
+    return { ok: false, error: "A shared code needs more than one use. Choose “One person” for a single use.", field: "code-max-uses" };
   }
 
   const maxDays = maxValidityDays(state.benefit);
   if (!(Number.isInteger(state.days) && state.days >= 1 && state.days <= maxDays)) {
-    return { ok: false, error: `The code can be valid for at most ${maxDays} days.` };
+    return { ok: false, error: `The code can be valid for at most ${maxDays} days.`, field: "code-expiry" };
   }
   let expiresAtISO: string | undefined;
   if (state.expiresAt) {
     const instant = new Date(state.expiresAt).getTime();
     if (!Number.isFinite(instant) || instant <= now || instant > now + maxDays * DAY_MS) {
-      return { ok: false, error: `The exact expiry must be in the future and within ${maxDays} days.` };
+      return { ok: false, error: `The exact expiry must be in the future and within ${maxDays} days.`, field: "code-expires-at" };
     }
     expiresAtISO = new Date(instant).toISOString();
   }
 
   const email = state.email.trim();
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { ok: false, error: "Enter a valid email address, or leave it blank to share the code yourself." };
+    return { ok: false, error: "Enter a valid email address, or leave it blank to share the code yourself.", field: "code-email" };
   }
   const campaign = state.campaign.trim();
-  if (campaign.length > 80) return { ok: false, error: "Keep the campaign label under 80 characters." };
+  if (campaign.length > 80) return { ok: false, error: "Keep the campaign label under 80 characters.", field: "code-campaign" };
 
   const input: CreateCodeInvitationInput = { recipient_name: name, code: state.customCode.trim(), days: state.days };
   if (state.audience === "shared") input.max_uses = state.maxUses;

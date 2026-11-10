@@ -5,7 +5,15 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { submitContractRequest } from "@/lib/billing/api";
 import { APPLE_REPORT_A_PROBLEM_URL } from "@/lib/legal/terms";
-import { CONTRACT_NAME_MAX, ORDER_REF_MAX, contractOutcome, contractRequestFrom, type ContractKind } from "./contract-request";
+import { fieldErrorProps } from "@/lib/field-error";
+import {
+  CONTRACT_ERROR_FIELD,
+  CONTRACT_NAME_MAX,
+  ORDER_REF_MAX,
+  contractOutcome,
+  contractRequestFrom,
+  type ContractKind,
+} from "./contract-request";
 import styles from "./account.module.css";
 
 type Step =
@@ -15,6 +23,7 @@ type Step =
   | { name: "sent"; kind: ContractKind; email: string; at: Date };
 
 const SUPPORT_EMAIL = "hello@trytoone.com";
+const DETAILS_ERROR_ID = "contract-details-error";
 
 /**
  * "Withdraw from contract here" and "Cancel contract here", without signing
@@ -30,6 +39,8 @@ export default function ContractRequestPage() {
   const [orderRef, setOrderRef] = useState("");
   const [person, setPerson] = useState("");
   const [error, setError] = useState("");
+  /** Id of the input the details error is about; null for errors no field caused. */
+  const [errorField, setErrorField] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -46,6 +57,7 @@ export default function ContractRequestPage() {
 
   function choose(kind: ContractKind) {
     setError("");
+    setErrorField(null);
     setStep({ name: "details", kind });
   }
 
@@ -53,10 +65,14 @@ export default function ContractRequestPage() {
     event.preventDefault();
     const checked = contractRequestFrom(kind, email, orderRef, person);
     if (!checked.ok) {
+      const field = CONTRACT_ERROR_FIELD[checked.error];
       setError(checked.error === "errName" ? t("errName", { max: CONTRACT_NAME_MAX }) : t(checked.error));
+      setErrorField(field);
+      document.getElementById(field)?.focus();
       return;
     }
     setError("");
+    setErrorField(null);
     setStep({
       name: "confirm", kind, email: checked.request.email, orderRef: checked.request.order_ref, person: checked.request.name ?? "",
     });
@@ -86,6 +102,7 @@ export default function ContractRequestPage() {
 
   function restart() {
     setError("");
+    setErrorField(null);
     setStep({ name: "choose" });
   }
 
@@ -133,16 +150,19 @@ export default function ContractRequestPage() {
             <form onSubmit={(event) => review(event, step.kind)} noValidate>
               <label htmlFor="contract-email">{t("email")}</label>
               <input id="contract-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)}
-                autoComplete="email" maxLength={254} required />
+                autoComplete="email" maxLength={254} required
+                {...fieldErrorProps(errorField === "contract-email", DETAILS_ERROR_ID)} />
               <label htmlFor="contract-order">{t("orderRef")}</label>
               <input id="contract-order" value={orderRef} onChange={(event) => setOrderRef(event.target.value)}
-                autoComplete="off" spellCheck={false} maxLength={ORDER_REF_MAX} required aria-describedby="contract-order-help" />
+                autoComplete="off" spellCheck={false} maxLength={ORDER_REF_MAX} required
+                {...fieldErrorProps(errorField === "contract-order", DETAILS_ERROR_ID, "contract-order-help")} />
               <small id="contract-order-help">{t("orderRefHelp")}</small>
               <label htmlFor="contract-name">{t("name")}</label>
               <input id="contract-name" value={person} onChange={(event) => setPerson(event.target.value)}
-                autoComplete="name" maxLength={CONTRACT_NAME_MAX} aria-describedby="contract-name-help" />
+                autoComplete="name" maxLength={CONTRACT_NAME_MAX}
+                {...fieldErrorProps(errorField === "contract-name", DETAILS_ERROR_ID, "contract-name-help")} />
               <small id="contract-name-help">{t("nameHelp")}</small>
-              {error && <p className={styles.error} role="alert">{error}</p>}
+              {error && <p id={DETAILS_ERROR_ID} className={styles.error} role="alert">{error}</p>}
               <div className={styles.actions} style={{ marginTop: 18 }}>
                 <button className={styles.primary} type="submit">{t("continue")}</button>
                 <button type="button" onClick={restart}>{t("back")}</button>

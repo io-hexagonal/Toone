@@ -15,6 +15,7 @@ import {
   type CreatedCodeInvitation,
 } from "@/lib/billing/api";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
+import { fieldErrorProps } from "@/lib/field-error";
 import { accessOutcome, adminTitle } from "./access";
 import {
   BENEFIT_LABELS,
@@ -28,6 +29,7 @@ import {
   redeemLink,
   shareLink,
   unlimitedProWarning,
+  type CodeFormField,
   validityOptions,
   type BenefitChoice,
   type CodeFormState,
@@ -36,6 +38,7 @@ import RedemptionsDrawer from "./RedemptionsDrawer";
 import shell from "@/components/InvitationAdminPage.module.css";
 import styles from "./CodesAdmin.module.css";
 
+const FORM_ERROR_ID = "code-form-error";
 const statusLabels = { pending: "Pending", redeemed: "Signed up", expired: "Expired", revoked: "Revoked" };
 
 function formatDate(value: string | null) {
@@ -73,6 +76,10 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
   const [createdNotes, setCreatedNotes] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
+  /** The input `formError` is about; null for errors no single field caused. */
+  const [formErrorField, setFormErrorField] = useState<CodeFormField | null>(null);
+  const invalid = (field: CodeFormField, ...help: string[]) =>
+    fieldErrorProps(Boolean(formError) && formErrorField === field, FORM_ERROR_ID, ...help);
   const [copyFeedback, setCopyFeedback] = useState("");
   const [revoking, setRevoking] = useState("");
   const [drawer, setDrawer] = useState<AdminCodeInvitation | null>(null);
@@ -129,10 +136,15 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
     if (creating.current) return;
     const state: CodeFormState = benefitsOn ? form : { ...form, benefit: "signup" };
     const result = codeRequestFrom(state);
-    if (!result.ok) { setFormError(result.error); return; }
+    if (!result.ok) {
+      setFormError(result.error);
+      setFormErrorField(result.field);
+      document.getElementById(result.field)?.focus();
+      return;
+    }
     if (unlimitedProWarning(state) && !window.confirm("This code gives Toone Pro to anyone who has it, with no limit on uses. Create it anyway?")) return;
     creating.current = true;
-    setBusy(true); setFormError(""); setCopyFeedback("");
+    setBusy(true); setFormError(""); setFormErrorField(null); setCopyFeedback("");
     try {
       const response = await createCodeInvitation(session.token, result.input);
       if (!active.current) return;
@@ -148,7 +160,7 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
       if (!active.current || handleAccessError(caught)) return;
       const failure = billingFailure(caught);
       const status = failure.kind === "unknown" ? failure.status : 0;
-      if (status === 409) setFormError("That code is already in use. Choose another code.");
+      if (status === 409) { setFormError("That code is already in use. Choose another code."); setFormErrorField("custom-code"); }
       else if (status === 400) setFormError(failure.kind === "unknown" && failure.message ? `The server refused the code: ${failure.message}` : "Check the fields, then try again.");
       else if (failure.kind === "rate_limited") setFormError("Too many requests. Wait a minute, then try again.");
       else setFormError("Could not confirm creation. Refresh the list before trying again; a code may have been created.");
@@ -241,7 +253,8 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
             {(benefit === "pro_days" || benefit === "free_creations") && <>
               <label htmlFor="code-benefit-value">{benefit === "pro_days" ? "Days of Toone Pro" : "Extra free routine creations"}</label>
               <input id="code-benefit-value" type="number" inputMode="numeric" min={1} max={benefit === "pro_days" ? 365 : 50} step={1}
-                value={Number.isFinite(form.benefitValue) ? form.benefitValue : ""} onChange={(event) => update("benefitValue", event.target.valueAsNumber)} disabled={busy} />
+                value={Number.isFinite(form.benefitValue) ? form.benefitValue : ""} onChange={(event) => update("benefitValue", event.target.valueAsNumber)} disabled={busy}
+                {...invalid("code-benefit-value")} />
             </>}
             {benefit !== "signup" && (
               <label className={styles.toggle} htmlFor="code-admits">
@@ -258,40 +271,41 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
             {shared && <>
               <label htmlFor="code-max-uses">Max uses <span className={shell.muted}>(0 = unlimited)</span></label>
               <input id="code-max-uses" type="number" inputMode="numeric" min={0} step={1}
-                value={Number.isFinite(form.maxUses) ? form.maxUses : ""} onChange={(event) => update("maxUses", event.target.valueAsNumber)} disabled={busy} />
+                value={Number.isFinite(form.maxUses) ? form.maxUses : ""} onChange={(event) => update("maxUses", event.target.valueAsNumber)} disabled={busy}
+                {...invalid("code-max-uses")} />
             </>}
             {warn && <p className={styles.warning} role="note">Unlimited + Pro: anyone who gets this code can have Toone Pro. Prefer a cap on uses and a short expiry.</p>}
 
             <div className={styles.row2}>
               <div>
                 <label htmlFor="recipient-name">{shared ? "Name" : "Person’s name"}</label>
-                <input id="recipient-name" value={form.name} onChange={(event) => update("name", event.target.value)} placeholder={shared ? "e.g. Product Hunt" : "e.g. Jane Doe"} maxLength={160} required disabled={busy} autoComplete="off" />
+                <input id="recipient-name" value={form.name} onChange={(event) => update("name", event.target.value)} placeholder={shared ? "e.g. Product Hunt" : "e.g. Jane Doe"} maxLength={160} required disabled={busy} autoComplete="off" {...invalid("recipient-name")} />
               </div>
               <div>
                 <label htmlFor="code-campaign">Campaign <span className={shell.muted}>(optional)</span></label>
-                <input id="code-campaign" value={form.campaign} onChange={(event) => update("campaign", event.target.value)} placeholder="e.g. launch-2026" maxLength={80} disabled={busy} autoComplete="off" />
+                <input id="code-campaign" value={form.campaign} onChange={(event) => update("campaign", event.target.value)} placeholder="e.g. launch-2026" maxLength={80} disabled={busy} autoComplete="off" {...invalid("code-campaign")} />
               </div>
             </div>
             <label htmlFor="code-email">Email it to <span className={shell.muted}>(optional)</span></label>
-            <input id="code-email" type="email" value={form.email} onChange={(event) => update("email", event.target.value)} placeholder="Leave blank to share it yourself" maxLength={254} autoComplete="off" disabled={busy} aria-describedby="email-help" />
+            <input id="code-email" type="email" value={form.email} onChange={(event) => update("email", event.target.value)} placeholder="Leave blank to share it yourself" maxLength={254} autoComplete="off" disabled={busy} {...invalid("code-email", "email-help")} />
             <small id="email-help">Toone emails the link and code from invites@trytoone.com.</small>
             <label htmlFor="custom-code">Custom code <span className={shell.muted}>(optional)</span></label>
-            <input id="custom-code" value={form.customCode} onChange={(event) => update("customCode", event.target.value)} placeholder="Generate automatically" maxLength={80} autoComplete="off" spellCheck={false} disabled={busy} aria-describedby="code-help" />
+            <input id="custom-code" value={form.customCode} onChange={(event) => update("customCode", event.target.value)} placeholder="Generate automatically" maxLength={80} autoComplete="off" spellCheck={false} disabled={busy} {...invalid("custom-code", "code-help")} />
             <small id="code-help">Leave blank for a generated code. Custom codes need at least {minimum} letters or digits.</small>
             <div className={styles.row2}>
               <div>
                 <label htmlFor="code-expiry">Code expires in</label>
-                <select id="code-expiry" value={form.days} onChange={(event) => update("days", Number(event.target.value))} disabled={busy || Boolean(form.expiresAt)}>
+                <select id="code-expiry" value={form.days} onChange={(event) => update("days", Number(event.target.value))} disabled={busy || Boolean(form.expiresAt)} {...invalid("code-expiry")}>
                   {validityOptions(benefit).map((days) => <option key={days} value={days}>{days} day{days === 1 ? "" : "s"}</option>)}
                 </select>
               </div>
               <div>
                 <label htmlFor="code-expires-at">Exact expiry <span className={shell.muted}>(optional)</span></label>
-                <input id="code-expires-at" type="datetime-local" value={form.expiresAt} onChange={(event) => update("expiresAt", event.target.value)} disabled={busy} />
+                <input id="code-expires-at" type="datetime-local" value={form.expiresAt} onChange={(event) => update("expiresAt", event.target.value)} disabled={busy} {...invalid("code-expires-at")} />
               </div>
             </div>
             <small>At most {maxValidityDays(benefit)} days{grantsPro(benefit) ? "; the Pro days start when the code is redeemed" : ""}.</small>
-            {formError && <p className={shell.formError} role="alert">{formError}</p>}
+            {formError && <p id={FORM_ERROR_ID} className={shell.formError} role="alert">{formError}</p>}
             <button className={shell.primary} type="submit" disabled={busy || !form.name.trim()}>{busy ? "Creating…" : "Create code"}</button>
           </form>
           <div className={`${shell.panel} ${shell.share}`} aria-live="polite">
