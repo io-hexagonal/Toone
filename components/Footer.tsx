@@ -116,6 +116,8 @@ export default async function Footer({
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
+              {/* English-only page; its label stays English in every locale. */}
+              <Link href="/legal-notice">Legal notice</Link>
 
             </div>
           </div>

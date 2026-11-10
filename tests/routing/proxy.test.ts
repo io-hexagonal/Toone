@@ -65,6 +65,8 @@ test("English-only routes are one 308 to /en, query kept, from any language or p
     ["/privacy?utm_source=x", "https://trytoone.com/en/privacy?utm_source=x"],
     ["/pt/terms", "https://trytoone.com/en/terms"],
     ["/pt/terms?utm_source=x", "https://trytoone.com/en/terms?utm_source=x"],
+    ["/legal-notice", "https://trytoone.com/en/legal-notice"],
+    ["/de/legal-notice", "https://trytoone.com/en/legal-notice"],
     ["/de/about", "https://trytoone.com/en/about"],
     ["/governance", "https://trytoone.com/en/governance"],
     ["/ru/editorial-policy", "https://trytoone.com/en/editorial-policy"],

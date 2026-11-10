@@ -4,11 +4,33 @@ import type { Metadata } from "next";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
+import { PRIVACY_CANONICAL, PRIVACY_UPDATED_DATE } from "@/lib/legal/privacy";
+import { LEGAL_NOTICE_PATH, LINK_PRIVACY_URL, STRIPE_PRIVACY_URL } from "@/lib/legal/terms";
+import { SITE_SESSION_COOKIE } from "@/lib/site-session";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: PageSearchParams;
 };
+
+const H2 = {
+  fontSize: 16,
+  fontWeight: 600,
+  color: "rgba(255,255,255,0.9)",
+  marginTop: 36,
+  marginBottom: 12,
+} as const;
+const H3 = {
+  fontSize: 14,
+  fontWeight: 600,
+  color: "rgba(255,255,255,0.82)",
+  marginTop: 22,
+  marginBottom: 8,
+} as const;
+const P = { fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 } as const;
+const UL = { paddingLeft: 20, marginBottom: 12, fontSize: 14, color: "rgba(255,255,255,0.6)" } as const;
+const LI = { marginBottom: 6 } as const;
+const A = { color: "rgba(100,180,255,0.8)", textDecoration: "none" } as const;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -17,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: "Privacy Policy",
     description:
       "How Toone handles website, account, product, and analytics data, which data stays local on your Mac, and how to reach the team about a privacy request.",
-    alternates: { canonical: "https://trytoone.com/en/privacy" },
+    alternates: { canonical: PRIVACY_CANONICAL },
     robots: localeRobots(locale),
     other: localeVersions("/privacy", ["en"]),
     // R7: og:url must equal the canonical. Without a route-level `openGraph`
@@ -25,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // home, so the shared URL and the canonical disagreed.
     openGraph: {
       type: "website",
-      url: "https://trytoone.com/en/privacy",
+      url: PRIVACY_CANONICAL,
       title: "Privacy Policy",
       description: "How Toone handles website, account, product, and analytics data, and what stays on your Mac.",
       siteName: "Toone",
@@ -99,7 +121,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
             letterSpacing: "0.02em",
           }}
         >
-          Updated: October 14, 2026
+          Updated: {PRIVACY_UPDATED_DATE}
         </p>
 
         <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
@@ -263,8 +285,13 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           stores toone.locale.dismissed in your browser&apos;s local storage,
           which is not sent to Toone. The site stores your analytics choice in
           your browser for up to six months.
-          Sign-in stores an account session in your browser for authenticated
-          features, until you sign out or the session expires. If you decline
+          Signing in stores your account session in your browser&apos;s local
+          storage (toone.session) and in a cookie named {SITE_SESSION_COOKIE}, so
+          that pages for signed-in accounts can check that you are signed in. The
+          cookie is httpOnly (scripts on the page cannot read it), is sent only to
+          trytoone.com, and lasts until you sign out or the session expires, at
+          most 30 days. Both are needed for signing in and are not used for
+          analytics or advertising. If you decline
           analytics, its script is not loaded; allowing it adds no analytics cookie.
           When a sign-in page shows the Sign in with Apple button, it loads
           Apple&apos;s sign-in script and button image from Apple&apos;s servers,
@@ -294,7 +321,10 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           text; depending on your language and system settings, Apple may process
           that audio on its servers. Account data, waitlist requests, contact
           requests, and Toone Pro purchases are handled separately as described in
-          this policy.
+          this policy. When you buy Toone Pro on trytoone.com, the payment page
+          is Stripe&apos;s checkout on checkout.stripe.com, which sets its own
+          cookies under Stripe&apos;s policy; trytoone.com itself loads no Stripe
+          script.
         </p>
 
         <h2
@@ -464,20 +494,78 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           the contributor.
         </p>
 
-        <h2
-          style={{
-            fontSize: 16,
-            fontWeight: 600,
-            color: "rgba(255,255,255,0.9)",
-            marginTop: 36,
-            marginBottom: 12,
-          }}
-        >
-          Toone Pro (Mac App Store)
+        <h2 id="toone-pro" style={H2}>
+          Toone Pro
         </h2>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
-          In Toone (Mac App Store), Toone Pro is an in-app purchase. Apple
-          processes the payment under its own terms and privacy policy; Toone does
+        <p style={P}>
+          Toone Pro is the optional upgrade for your Toone account. Toone uses the
+          information below only to give Pro to the right account, to apply the
+          free plan, codes, and guest months, to handle refunds, cancellations,
+          and withdrawals, to keep the records tax law requires, and to prevent
+          abuse. The terms of Toone Pro are on the{" "}
+          <a href="/en/terms#toone-pro" style={A}>
+            Terms page
+          </a>
+          .
+        </p>
+
+        <h3 id="toone-pro-web" style={H3}>
+          Buying on trytoone.com (Stripe and Link)
+        </h3>
+        <p style={P}>
+          Toone Pro is sold on trytoone.com through Stripe&apos;s Managed
+          Payments service. The payment page runs on Stripe&apos;s servers, and
+          the seller of the transaction is Sold through Link, LLC
+          (&quot;Link&quot;), a Stripe company. Toone never receives your full
+          card number or other payment-method details.
+        </p>
+        <p style={P}>
+          When you start checkout, Toone&apos;s server tells Stripe which plan you
+          chose and which Toone account is buying, and can give Stripe your
+          account email address so checkout is filled in for you. Stripe and Link collect what they need to take the
+          payment: your name, email address, billing country and address, and
+          payment method, plus your IP address and country as evidence of where
+          VAT or sales tax is due. Stripe then sends Toone&apos;s server what it
+          needs to give you Pro and keep records: the Stripe customer,
+          subscription, checkout and invoice identifiers, the plan, price,
+          currency, tax and any discount, the payment status, the current period
+          and its end date, whether the subscription renews, and any refund or
+          payment dispute. Toone also records when you agreed to Toone Pro
+          starting straight away and which version of that text you saw. Link
+          sends your receipts and invoices.
+        </p>
+        <p style={P}>
+          Stripe processes this data for Toone as a service provider, to run
+          Toone&apos;s payments. Stripe and Link are also independent controllers
+          for their own purposes, as the seller of the transaction and to meet
+          their legal, tax, fraud-prevention, and compliance obligations, under
+          the{" "}
+          <a href={STRIPE_PRIVACY_URL} target="_blank" rel="noopener" style={A}>
+            Stripe Privacy Policy
+          </a>{" "}
+          and the{" "}
+          <a href={LINK_PRIVACY_URL} target="_blank" rel="noopener" style={A}>
+            Link Privacy Policy
+          </a>
+          . Stripe is based in Ireland and the United States and may process the
+          data in the United States and other countries, relying on the EU-U.S.
+          Data Privacy Framework and the European Commission&apos;s Standard
+          Contractual Clauses.
+        </p>
+        <p style={P}>
+          If you use Cancel contract here or Withdraw from contract here on
+          trytoone.com, Toone receives the email address and order reference you
+          enter and which of the two you chose, uses them to find and end your
+          purchase, and emails you a confirmation. The request is kept with the
+          purchase records.
+        </p>
+
+        <h3 id="toone-pro-app-store" style={H3}>
+          Toone (Mac App Store) and Apple
+        </h3>
+        <p style={P}>
+          Toone Pro is not sold in Toone (Mac App Store) yet. When it is sold
+          there as an in-app purchase, Apple processes the payment under its own terms and privacy policy; Toone does
           not receive your payment card details. The app attaches a random
           identifier for your Toone account to the purchase, then sends Toone&apos;s
           server the signed transaction record Apple provides and, for
@@ -490,14 +578,32 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           automatically, the App Store environment, and when Apple signed the
           latest update.
         </p>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+
+        <h3 id="free-plan" style={H3}>
+          The free plan and codes
+        </h3>
+        <p style={P}>
           Without Pro, an account can create a limited number of routines. To
           count them, Toone&apos;s server records each routine creation with a
-          random ID, the time, and whether it counted. The app also sends
-          Apple&apos;s signed app-transaction record when it can, and Toone stores
-          its app-transaction ID so the free limit applies once per Apple Account.
+          random ID, the time, and whether it counted. In Toone (Mac App Store),
+          the app also sends Apple&apos;s signed app-transaction record when it
+          can, and Toone stores its app-transaction ID so the free limit applies
+          once per Apple Account.
         </p>
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>
+        <p style={P}>
+          When you check or redeem a code, Toone records which code was used, when,
+          by which account, where it was redeemed, and what it gave (days of Pro,
+          Pro for life, or extra routine creations). So that the same person
+          cannot redeem a code again with a new account, Toone also keeps a keyed
+          hash of the email address that redeemed it, without the address itself.
+          Discount codes entered at checkout are handled by Stripe, and Toone
+          receives which discount was applied.
+        </p>
+
+        <h3 style={H3}>
+          Guest months and complimentary Pro
+        </h3>
+        <p style={P}>
           If you have Pro, you can give someone a guest month by entering their
           email address. Toone&apos;s server stores that address with the guest
           pass and emails the person an invitation that shows your account name,
@@ -528,11 +634,22 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           withdrawn. Reports you sent stay with the listing they are about, but
           lose your account ID and your note. Blocks you made, and blocks others
           placed on you, are deleted. Pending Silk Network changes are withdrawn,
-          and published ones stay, credited to a former contributor. App Store
-          purchase records for Toone Pro are kept as records of the purchase but
-          are no longer linked to you; if you later sign in to a new account and
-          restore the purchase, it can be linked to that account. Apple keeps its
-          own records of your purchases.
+          and published ones stay, credited to a former contributor.
+        </p>
+        <p style={P}>
+          If you have a Toone Pro subscription bought on trytoone.com, deleting
+          your account cancels it at Stripe straight away, so you are not charged
+          again. Invoices and the records of your purchases, refunds, and codes are
+          kept for as long as tax and accounting law requires, but are no longer
+          linked to your Toone account. Link keeps its own records of the
+          transaction and lets you ask it to delete your Link data separately.
+        </p>
+        <p style={P}>
+          App Store purchase records for Toone Pro are kept as records of the
+          purchase but are no longer linked to you; if you later sign in to a new
+          account and restore the purchase, it can be linked to that account.
+          Deleting your account does not cancel an Apple subscription. Apple keeps
+          its own records of your purchases.
         </p>
 
         <h2
@@ -586,6 +703,154 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
           </a>
           . GitHub receives ordinary connection information such as your IP address during an update check. Toone does not send your account credentials to GitHub for that check.
           Apple delivers Toone (Mac App Store) and its updates under Apple&apos;s own terms and privacy policy.
+        </p>
+
+        <h2 id="third-parties" style={H2}>
+          Service Providers and Other Third Parties
+        </h2>
+        <p style={P}>
+          Toone does not sell your personal data or share it for advertising.
+          It shares personal data only with the service providers it needs to run
+          the features described in this policy, and only for those features:
+        </p>
+        <ul style={UL}>
+          <li style={LI}>
+            <strong>Toone&apos;s hosting providers</strong> run the
+            trytoone.com website (Vercel) and Toone&apos;s server, which provides the
+            account service, the cloud relay, Explore, the Silk Network, and Toone Pro.
+          </li>
+          <li style={LI}>
+            <strong>Stripe</strong> runs checkout and payments for Toone Pro bought on
+            trytoone.com, as described under Toone Pro.
+          </li>
+          <li style={LI}>
+            <strong>Resend</strong> delivers the emails Toone sends, such as
+            Business and guest-month invitations, Toone Pro notices, cancellation and
+            withdrawal confirmations, and account deletion notices.
+          </li>
+          <li style={LI}>
+            <strong>OpenAI</strong> processes Explore submissions for the AI
+            reviewer, and App Review requests during a review campaign, under
+            Toone&apos;s own API account, as described above.
+          </li>
+          <li style={LI}>
+            <strong>Discord</strong> receives the messages you send through
+            the website&apos;s contact form, so the team can read and answer them.
+          </li>
+        </ul>
+        <p style={P}>
+          These providers may use personal data only to provide their service
+          to Toone. Toone requires each of them, through its contract and
+          data-processing terms, to protect personal data with the same or equal
+          protection as this policy. Some of them are based in the United States or
+          process data there; those transfers rely on safeguards recognised under
+          European law, such as the EU-U.S. Data Privacy Framework or the European
+          Commission&apos;s Standard Contractual Clauses.
+        </p>
+        <p style={P}>
+          Apple (for App Store distribution, in-app purchases, and Sign in with
+          Apple), Stripe and Link (for their own purposes as the seller of web
+          purchases, as described under Toone Pro), GitHub (for Toone (Direct)
+          update feeds and any issue you report there), and the AI provider you
+          connect with your own account handle your data as independent companies,
+          under their own terms and privacy policies. Toone may also disclose
+          information when the law requires it.
+        </p>
+
+        <h2 id="retention" style={H2}>
+          How Long We Keep Data
+        </h2>
+        <ul style={UL}>
+          <li style={LI}>
+            <strong>Account data</strong> (your name, email address, sign-in
+            details, and sessions) is kept while your account exists and erased when
+            you delete it, as described in Deleting Your Account.
+          </li>
+          <li style={LI}>
+            <strong>Content you publish</strong> on Explore stays published
+            until you withdraw it or delete your account. Silk Network changes stay as
+            described in Deleting Your Account. Reports are kept as long as Toone needs
+            them for moderation and safety.
+          </li>
+          <li style={LI}>
+            <strong>Toone Pro purchase records</strong>, from Stripe or from Apple,
+            and the invoices for web purchases, are kept while your account exists.
+            After you delete your account, Toone keeps them only as records of the
+            purchase, for as long as accounting, tax, and other legal obligations
+            require (in Portugal, usually ten years) and to handle refunds and
+            prevent fraud. They are no longer linked to you. The record of free
+            routine creations is kept without your Toone identity, together with
+            Apple&apos;s app-transaction ID where there is one, so the free limit
+            still applies once per Apple Account.
+          </li>
+          <li style={LI}>
+            <strong>Codes</strong>: the record of each redemption is kept with the
+            purchase records. The keyed hash of the email address that redeemed a code
+            is kept, without the address itself, for as long as the code exists.
+          </li>
+          <li style={LI}>
+            <strong>Guest months</strong>: a pending invitation is deleted
+            when the person who sent it deletes their account. Toone keeps a keyed hash
+            of each address that activated a guest month, without the address itself,
+            so that each person receives at most one.
+          </li>
+          <li style={LI}>
+            <strong>Waitlist and contact requests</strong> are kept as long as
+            needed to answer you and administer early access.
+          </li>
+        </ul>
+        <p style={P}>
+          Toone may keep a specific record longer when the law requires it, or
+          when it is needed to resolve a dispute or a security incident.
+        </p>
+
+        <h2 id="controller" style={H2}>
+          Who Is Responsible for Your Data
+        </h2>
+        <p style={P}>
+          Toone is published by Matheus Paranhos, an individual developer
+          based in Portugal, under the Hexagonal.io name. He is the controller of the
+          personal data described in this policy and can be reached at
+          hello@trytoone.com. His full contact details are in the{" "}
+          <a href={`/en${LEGAL_NOTICE_PATH}`} style={A}>
+            Legal notice
+          </a>
+          .
+        </p>
+        <p style={P}>
+          Toone processes personal data to provide the services you ask for,
+          such as your account, Toone Pro, codes, guest months, Explore, the Silk
+          Network, Business, and Live Share, which includes taking and refunding
+          payments for Toone Pro; to meet legal obligations, such as keeping
+          invoices and purchase records for tax purposes; and for its legitimate
+          interests in keeping the service secure, preventing abuse of the free
+          plan, codes, and guest months, preventing payment fraud, moderating
+          Explore, and understanding how Toone (Direct) is used. Website analytics
+          loads only with your consent.
+        </p>
+
+        <h2 id="your-rights" style={H2}>
+          Your Rights
+        </h2>
+        <p style={P}>
+          You can ask to access, correct, delete, or receive a copy of your
+          personal data, to restrict or object to how it is used, and to withdraw
+          any consent you gave. To make a request, email hello@trytoone.com from
+          the address on your account; Toone answers within one month. You can also
+          act directly: delete your account in Toone (Mac App Store) under Settings
+          &rarr; Account, turn usage analytics off in Toone (Direct) Settings, stop
+          sharing site maps with the Silk Network, and change your website
+          analytics choice at any time. For data that Stripe and Link hold as
+          independent controllers, you can also contact them directly.
+        </p>
+        <p style={P}>
+          If you think your data has been handled unlawfully, you can complain
+          to a data protection authority. In Portugal, that is the Comiss&atilde;o
+          Nacional de Prote&ccedil;&atilde;o de Dados (
+          <a href="https://www.cnpd.pt" target="_blank" rel="noopener" style={A}>
+            cnpd.pt
+          </a>
+          ); you can also contact the authority where you live or work.
         </p>
 
         <h2
@@ -643,7 +908,10 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
             marginTop: 48,
           }}
         >
-          Toone is published by Hexagonal.io.
+          Toone is published by Matheus Paranhos (Hexagonal.io), Portugal.{" "}
+          <a href={`/en${LEGAL_NOTICE_PATH}`} style={{ color: "inherit" }}>
+            Legal notice
+          </a>
         </p>
       </div>
     </main>
