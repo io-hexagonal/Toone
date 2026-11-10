@@ -191,6 +191,7 @@ test("views: no checkout and Pro reads 'you have Pro'; no checkout and free read
   assert.equal(returnView(free, false), "none");
   assert.equal(calls, 1, "one answer is enough without a checkout");
   assert.equal(returnView({ kind: "signed_out" }, true), "signed_out");
+  assert.equal(returnView({ kind: "wrong_account" }, true), "wrong_account");
   assert.equal(returnView({ kind: "error", reason: "expired", failure: null }, true), "expired");
   assert.equal(returnView({ kind: "error", reason: "unreachable", failure: null }, true), "unreachable");
 });
@@ -202,6 +203,31 @@ test("the already-Pro view is neutral and links to the account page", () => {
   const page = read("components/billing/CheckoutReturn.tsx");
   assert.match(page, /view === "already_pro" && \(\s*<>\s*<h1>\{t\("alreadyProTitle"\)\}<\/h1>/);
   assert.match(page, /<Link className="pro-return-button" href="\/account">\{t\("seeAccount"\)\}<\/Link>/);
+});
+
+test("wrong account: names only the signed-in account, never the payer, and offers a switch", async () => {
+  const t = createTranslator({ locale: "en", messages, namespace: "billing.success" });
+  assert.equal(t("wrongAccountTitle"), "This purchase belongs to a different Toone account");
+  assert.equal(t("wrongAccountSub"), "Sign in with the account you paid with to see it.");
+  assert.equal(t("wrongAccountCurrent", { email: "me@example.com" }), "You're signed in as me@example.com.");
+  const page = read("components/billing/CheckoutReturn.tsx");
+  const block = page.slice(page.indexOf('view === "wrong_account"'), page.indexOf('view === "none"'));
+  assert.ok(block.length > 0, "the view exists");
+  // No receipt, order or invoice: the server returns nothing about another account's checkout.
+  assert.doesNotMatch(block, /receiptBlock|orderRef|invoice/);
+  // The only email shown is the signed-in session's.
+  assert.deepEqual([...block.matchAll(/email: ([\w.?]+)/g)].map(match => match[1]), ["session.user.email"]);
+  // Switching signs out (the sign-in form follows); the checkout id stays for the right account.
+  assert.match(block, /onClick=\{endSession\}>\{t\("switchAccount"\)\}/);
+  assert.match(page, /next\.kind === "active" \|\| \(next\.kind === "error" && next\.reason === "expired"\)/, "wrong_account keeps the checkout remembered");
+  // Every locale has the copy (ru shows the English billing strings by design).
+  for (const locale of locales) {
+    const local = (await import(`../../messages/${locale}.json`, { with: { type: "json" } })).default.billing.success;
+    for (const key of ["wrongAccountTitle", "wrongAccountSub", "wrongAccountCurrent", "switchAccount"]) {
+      assert.ok(local[key]?.trim(), `${locale}.${key}`);
+    }
+    if (locale !== "en" && locale !== "ru") assert.notEqual(local.wrongAccountTitle, t("wrongAccountTitle"), `${locale} translated`);
+  }
 });
 
 test("the server HTML of the success page only says 'confirming'", () => {

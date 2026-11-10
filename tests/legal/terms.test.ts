@@ -143,10 +143,20 @@ test("Direct: the trader sells, Stripe processes, Stripe Tax, a Portuguese invoi
     /credit note \(nota de crédito\)/,
     /Prices in euros include VAT for consumers/,
     /Countries where we can't sell yet are named at checkout, judged by the billing address you give there/,
-    /A payment from one of them is refunded in full and doesn't start Toone Pro/,
+    /Each accepted payment then gets two documents/,
+    /If an accepted payment is refunded, in full or in part, you also receive a credit note/,
+    // A refused payment: the server refunds it and issues no legal document.
+    /A payment from one of them is refused: it is refunded in full, doesn't start Toone Pro, and gets no legal invoice and no credit note/,
+    /Stripe emails you the confirmation of the refund/,
   ]) {
     assert.match(text, phrase);
   }
+  assert.doesNotMatch(text, /you receive the credit note for the refund|Each payment then gets two documents/);
+  // Generic: the blocked countries are server configuration, named only at checkout.
+  const start = text.indexOf("can't be sold yet to some countries");
+  const notSoldIn = text.slice(start, text.indexOf("confirmation of the refund", start));
+  assert.ok(start >= 0 && notSoldIn.length > 0);
+  assert.doesNotMatch(notSoldIn, /United Kingdom|United States|Russia|Belarus|Iran|\b[A-Z]{2}\b/);
   assert.doesNotMatch(text, /Sold through Link|Link account|Link support|Managed Payments/);
 });
 
