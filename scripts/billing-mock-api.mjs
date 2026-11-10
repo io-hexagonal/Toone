@@ -65,9 +65,9 @@ const CODE_ERRORS = {
 const DAY = 24 * 60 * 60 * 1000;
 
 const PRICES = [
-  { plan: "pro_monthly", interval: "month", amount: 900, currency: "eur", display_price: "€9", tax_inclusive: true },
-  { plan: "pro_yearly", interval: "year", amount: 7900, currency: "eur", display_price: "€79", tax_inclusive: true },
-  { plan: "pro_lifetime", interval: null, amount: 19900, currency: "eur", display_price: "€199", tax_inclusive: true },
+  { plan: "pro_monthly", interval: "month", amount: 999, currency: "eur", display_price: "€9.99", tax_inclusive: true },
+  { plan: "pro_yearly", interval: "year", amount: 7999, currency: "eur", display_price: "€79.99", tax_inclusive: true },
+  { plan: "pro_lifetime", interval: "lifetime", amount: 19999, currency: "eur", display_price: "€199.99", tax_inclusive: true },
 ];
 
 function iso(ms) {

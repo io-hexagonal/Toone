@@ -61,9 +61,18 @@ test("the page goes through pricingMetadata and never reads the query on the ser
   assert.match(page, /export const revalidate = \d+;/);
 });
 
-test("header and footer link to pricing", () => {
-  assert.match(read("components/Footer.tsx"), /<Link href="\/pricing">\{billing\("nav"\)\}<\/Link>/);
-  assert.match(read("components/SiteHeader.tsx"), /<Link href="\/pricing" data-optional>\{billing\("nav"\)\}<\/Link>/);
+test("header and footer link to pricing only once checkout is available", () => {
+  assert.match(read("components/Footer.tsx"), /<PricingLink href="\/pricing">\{billing\("nav"\)\}<\/PricingLink>/);
+  assert.match(read("components/SiteHeader.tsx"), /<PricingLink href="\/pricing" data-optional>\{billing\("nav"\)\}<\/PricingLink>/);
+  const link = read("components/billing/PricingLink.tsx");
+  assert.match(link, /stripe_pro_checkout/);
+  assert.match(link, /if \(!visible\) return null;/);
+});
+
+test("account-like pages send no Referer, by header", () => {
+  const config = read("next.config.ts");
+  assert.match(config, /:page\(success\|cancel\|account\|redeem\|cancel-contract\|admin\)/);
+  assert.match(config, /key: "Referrer-Policy", value: "no-referrer"/);
 });
 
 /* ---- server HTML */

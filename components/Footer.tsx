@@ -3,6 +3,7 @@ import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
 import SignedInLink from "@/components/SignedInLink";
+import PricingLink from "@/components/billing/PricingLink";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -91,7 +92,7 @@ export default async function Footer({
               <p className="ftr-heading">{t("product")}</p>
               <Link href={`${landingPath}#how`}>{t("how")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
-              <Link href="/pricing">{billing("nav")}</Link>
+              <PricingLink href="/pricing">{billing("nav")}</PricingLink>
               <Link
                 className="ftr-download"
                 href="/request-access"

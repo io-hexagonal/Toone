@@ -6,6 +6,7 @@ import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
 import SignedInLink from "@/components/SignedInLink";
+import PricingLink from "@/components/billing/PricingLink";
 
 /**
  * Morphing landing header — one element, two states.
@@ -136,7 +137,7 @@ export default function SiteHeader({
           </SignedInLink>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
-          <Link href="/pricing" data-optional>{billing("nav")}</Link>
+          <PricingLink href="/pricing" data-optional>{billing("nav")}</PricingLink>
           <LocalePicker />
           <Link href="/signin">{t("signin")}</Link>
           <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>

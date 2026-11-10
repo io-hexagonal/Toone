@@ -30,6 +30,18 @@ const nextConfig: NextConfig = {
         source: "/:locale(pt|es|fr|de|it|nl|ru)/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
       },
+      // Account-like pages carry checkout session IDs, codes or account
+      // state; no request from them (same-origin assets included) sends the
+      // page URL as Referer. The pages' own `referrer` metadata arrives after
+      // the stylesheet links, so the header is what actually holds.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:page(success|cancel|account|redeem|cancel-contract|admin)/:rest*",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+      },
+      {
+        source: "/:page(success|cancel)",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+      },
     ];
   },
   async redirects() {
