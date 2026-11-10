@@ -1,0 +1,248 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { ApiError } from "../../lib/api";
+import { BillingError, normalizeEntitlement, type CheckoutStatus, type Entitlement } from "../../lib/billing/api";
+import {
+  CHECKOUT_RETURN_DEFAULTS,
+  initialCheckoutReturn,
+  isFinalCheckoutReturn,
+  pollCheckoutReturn,
+  splitSessionId,
+  stepCheckoutReturn,
+  stripSessionId,
+  type CheckoutReturnConfig,
+  type CheckoutReturnState,
+} from "../../lib/billing/checkout-return";
+
+const FREE = normalizeEntitlement({ plan: "free", free_routine_creations: { used: 2, limit: 2 } });
+const PRO = normalizeEntitlement({ plan: "pro", source: "subscription", status: "active", billing_provider: "stripe" });
+const CONFIG: CheckoutReturnConfig = { timeoutMs: 10_000, delaysMs: [1_000, 2_000, 4_000] };
+
+/* ---- pure transitions */
+
+test("pending → active as soon as the entitlement says Pro", () => {
+  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: PRO }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "active", entitlement: PRO });
+  assert.equal(delayMs, null);
+  assert.equal(isFinalCheckoutReturn(state), true);
+});
+
+test("a complete, entitled checkout alone never turns Pro on", () => {
+  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: { status: "complete", entitled: true } }, 0, CONFIG);
+  assert.equal(state.kind, "pending");
+});
+
+test("pending keeps polling with the backoff, the last delay repeating", () => {
+  let state = initialCheckoutReturn();
+  const delays: (number | null)[] = [];
+  for (const elapsed of [0, 1_000, 3_000]) {
+    const step = stepCheckoutReturn(state, { entitlement: FREE }, elapsed, { timeoutMs: 60_000, delaysMs: CONFIG.delaysMs });
+    state = step.state;
+    delays.push(step.delayMs);
+  }
+  const step = stepCheckoutReturn(state, { entitlement: FREE }, 7_000, { timeoutMs: 60_000, delaysMs: CONFIG.delaysMs });
+  delays.push(step.delayMs);
+  assert.deepEqual(delays, [1_000, 2_000, 4_000, 4_000]);
+  assert.deepEqual(step.state, { kind: "pending", attempts: 4, reached: true, lastFailure: null });
+});
+
+test("the last wait is shortened so a final poll lands on the deadline", () => {
+  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 9_500, CONFIG);
+  assert.equal(step.delayMs, 500);
+});
+
+test("pending → timeout at the deadline once the API has answered", () => {
+  const step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 10_000, CONFIG);
+  assert.deepEqual(step.state, { kind: "timeout" });
+  assert.equal(step.delayMs, null);
+});
+
+test("pending → signed_out on a 401, immediately", () => {
+  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { failure: { kind: "unauthenticated" } }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "signed_out" });
+  assert.equal(delayMs, null);
+});
+
+test("pending → error(expired) when the checkout session expired unpaid", () => {
+  const { state } = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE, checkout: { status: "expired", entitled: false } }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "error", reason: "expired", failure: null });
+});
+
+test("transient failures keep polling; never reaching the API ends in error(unreachable)", () => {
+  const unavailable = { kind: "payments_unavailable" } as const;
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { failure: { kind: "rate_limited" } }, 0, CONFIG);
+  assert.equal(step.state.kind, "pending");
+  step = stepCheckoutReturn(step.state, { failure: unavailable }, 5_000, CONFIG);
+  assert.equal(step.state.kind, "pending");
+  step = stepCheckoutReturn(step.state, { failure: unavailable }, 10_000, CONFIG);
+  assert.deepEqual(step.state, { kind: "error", reason: "unreachable", failure: unavailable });
+});
+
+test("a failure at the deadline after an earlier answer is a timeout, not an error", () => {
+  let step = stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 0, CONFIG);
+  step = stepCheckoutReturn(step.state, { failure: { kind: "rate_limited" } }, 10_000, CONFIG);
+  assert.deepEqual(step.state, { kind: "timeout" });
+});
+
+test("final states do not move", () => {
+  for (const state of [{ kind: "timeout" }, { kind: "signed_out" }, { kind: "active", entitlement: PRO }] as CheckoutReturnState[]) {
+    assert.deepEqual(stepCheckoutReturn(state, { entitlement: PRO }, 0, CONFIG), { state, delayMs: null });
+  }
+});
+
+test("defaults: about a minute, starting at one second", () => {
+  assert.equal(CHECKOUT_RETURN_DEFAULTS.timeoutMs, 60_000);
+  assert.equal(CHECKOUT_RETURN_DEFAULTS.delaysMs[0], 1_000);
+  assert.equal(stepCheckoutReturn(initialCheckoutReturn(), { entitlement: FREE }, 0).delayMs, 1_000);
+});
+
+/* ---- driver with a fake clock */
+
+function fakeClock() {
+  let now = 1_000_000;
+  const sleeps: number[] = [];
+  return {
+    now: () => now,
+    sleep: async (ms: number) => { sleeps.push(ms); now += ms; },
+    sleeps,
+  };
+}
+
+test("driver: polls entitlement and checkout status until Pro, reporting every state", async () => {
+  const clock = fakeClock();
+  const answers: Entitlement[] = [FREE, FREE, PRO];
+  const statusCalls: string[] = [];
+  const states: string[] = [];
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+    fetchEntitlement: async token => { assert.equal(token, "tok"); return answers.shift()!; },
+    fetchCheckoutStatus: async (_token, id): Promise<CheckoutStatus> => { statusCalls.push(id); return { status: "open", entitled: false }; },
+    onState: state => states.push(state.kind),
+  });
+  assert.deepEqual(final, { kind: "active", entitlement: PRO });
+  assert.deepEqual(states, ["pending", "pending", "pending", "active"]);
+  assert.deepEqual(clock.sleeps, [1_000, 2_000]);
+  assert.deepEqual(statusCalls, ["cs_test_1", "cs_test_1", "cs_test_1"]);
+});
+
+test("driver: no token means signed_out without any request", async () => {
+  let requests = 0;
+  const final = await pollCheckoutReturn({
+    token: null, sessionId: "cs_test_1",
+    fetchEntitlement: async () => { requests++; return PRO; },
+  });
+  assert.deepEqual(final, { kind: "signed_out" });
+  assert.equal(requests, 0);
+});
+
+test("driver: times out after the configured time when Pro never arrives", async () => {
+  const clock = fakeClock();
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: null, config: CONFIG, now: clock.now, sleep: clock.sleep,
+    fetchEntitlement: async () => FREE,
+  });
+  assert.deepEqual(final, { kind: "timeout" });
+  assert.deepEqual(clock.sleeps, [1_000, 2_000, 4_000, 3_000]);
+});
+
+test("driver: a 401 from the API ends the session state", async () => {
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: null,
+    fetchEntitlement: async () => { throw new BillingError({ kind: "unauthenticated" }); },
+  });
+  assert.deepEqual(final, { kind: "signed_out" });
+
+  const raw = await pollCheckoutReturn({
+    token: "tok", sessionId: null,
+    fetchEntitlement: async () => { throw new ApiError("token_expired", "token expired", 401); },
+  });
+  assert.deepEqual(raw, { kind: "signed_out" });
+});
+
+test("driver: a failing checkout status request never decides the outcome", async () => {
+  const clock = fakeClock();
+  const answers = [FREE, PRO];
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+    fetchEntitlement: async () => answers.shift()!,
+    fetchCheckoutStatus: async () => { throw new BillingError({ kind: "forbidden" }); },
+  });
+  assert.equal(final.kind, "active");
+});
+
+test("driver: an expired session stops polling", async () => {
+  const clock = fakeClock();
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+    fetchEntitlement: async () => FREE,
+    fetchCheckoutStatus: async () => ({ status: "expired", entitled: false }),
+  });
+  assert.deepEqual(final, { kind: "error", reason: "expired", failure: null });
+  assert.deepEqual(clock.sleeps, []);
+});
+
+test("driver: network errors all the way are an unreachable error", async () => {
+  const clock = fakeClock();
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: null, config: CONFIG, now: clock.now, sleep: clock.sleep, fetchCheckoutStatus: null,
+    fetchEntitlement: async () => { throw new TypeError("fetch failed"); },
+  });
+  assert.equal(final.kind, "error");
+  assert.equal(final.kind === "error" && final.reason, "unreachable");
+  assert.equal(final.kind === "error" && final.failure?.kind, "unknown");
+});
+
+test("driver: abort stops polling and silences further states", async () => {
+  const controller = new AbortController();
+  const clock = fakeClock();
+  const states: string[] = [];
+  let polls = 0;
+  const final = await pollCheckoutReturn({
+    token: "tok", sessionId: null, config: CONFIG, now: clock.now, signal: controller.signal,
+    sleep: async ms => { await clock.sleep(ms); controller.abort(); },
+    fetchEntitlement: async () => { polls++; return FREE; },
+    onState: state => states.push(state.kind),
+  });
+  assert.equal(final.kind, "pending");
+  assert.equal(polls, 1);
+  assert.deepEqual(states, ["pending", "pending"]);
+});
+
+/* ---- session_id stripping */
+
+test("splitSessionId removes only session_id and keeps the rest of the URL", () => {
+  assert.deepEqual(splitSessionId("https://trytoone.com/en/success?session_id=cs_test_a1B2c3&from=app#done"), {
+    sessionId: "cs_test_a1B2c3",
+    cleaned: "/en/success?from=app#done",
+  });
+  assert.deepEqual(splitSessionId("/pt/success?session_id=cs_live_X9"), { sessionId: "cs_live_X9", cleaned: "/pt/success" });
+  assert.deepEqual(splitSessionId("/en/success?from=app"), { sessionId: null, cleaned: null });
+});
+
+test("a malformed session_id is still stripped but not returned", () => {
+  for (const bad of ["", "abc", "cs_", "cs_test_1/../../me", "cs_test_<script>", `cs_${"a".repeat(300)}`]) {
+    const { sessionId, cleaned } = splitSessionId(`/en/success?session_id=${encodeURIComponent(bad)}`);
+    assert.equal(sessionId, null, bad);
+    assert.equal(cleaned, "/en/success");
+  }
+});
+
+test("stripSessionId rewrites the address bar before anything else reads it", () => {
+  const replaced: [unknown, string, string | URL | null | undefined][] = [];
+  const win = {
+    location: { href: "https://trytoone.com/en/success?session_id=cs_test_1&x=1" },
+    history: { state: { keep: true }, replaceState: (data: unknown, unused: string, url?: string | URL | null) => { replaced.push([data, unused, url]); } },
+  };
+  assert.equal(stripSessionId(win), "cs_test_1");
+  assert.deepEqual(replaced, [[{ keep: true }, "", "/en/success?x=1"]]);
+
+  replaced.length = 0;
+  win.location.href = "https://trytoone.com/en/success";
+  assert.equal(stripSessionId(win), null);
+  assert.deepEqual(replaced, []);
+});
+
+test("stripSessionId outside a browser is a no-op", () => {
+  assert.equal(stripSessionId(undefined), null);
+  assert.equal(stripSessionId(), null);
+});
