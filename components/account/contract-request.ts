@@ -22,6 +22,13 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type ContractInputError = "errEmail" | "errOrderRef" | "errName";
 
+/** The input each validation error is about (its element id). */
+export const CONTRACT_ERROR_FIELD: Readonly<Record<ContractInputError, string>> = Object.freeze({
+  errEmail: "contract-email",
+  errOrderRef: "contract-order",
+  errName: "contract-name",
+});
+
 /**
  * The request to send, or which field to fix. The order reference must look
  * like `TOONE-…` (the server refuses anything else with a 400); the name is

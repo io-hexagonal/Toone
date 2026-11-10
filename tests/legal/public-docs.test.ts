@@ -33,3 +33,12 @@ test("legal pages carry no draft markers", () => {
     assert.doesNotMatch(fs.readFileSync(file, "utf8"), /\bDRAFT\b|\bVERIFY\b|lorem ipsum/i, file);
   }
 });
+
+test("docs/legal names no branches, commits or unreleased work", () => {
+  const INTERNALS = /\bbranch(?:es)?\b|\bunpushed\b|\bunmerged\b|\bpro-terms-|apple-sign-in-release|site\/pro-|\b(?=[0-9a-f]*\d)(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b/i;
+  for (const name of fs.readdirSync("docs/legal")) {
+    const file = path.join("docs/legal", name);
+    const match = fs.readFileSync(file, "utf8").match(INTERNALS);
+    assert.equal(match, null, `${file} mentions ${match?.[0]}`);
+  }
+});

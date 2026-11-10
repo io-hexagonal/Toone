@@ -27,19 +27,5 @@ export const STRIPE_EU_ENTITY = "Stripe Payments Europe, Limited";
 /** The merchant of record under Stripe Managed Payments. */
 export const LINK_SELLER_ENTITY = "Sold through Link, LLC";
 
-/**
- * Direct model only: countries Toone Pro is not sold to until the trader is
- * registered for their consumption tax (the UK charges VAT from the first sale
- * to a consumer). A purchase from one of them is refunded in full and Pro is
- * not activated. Empty the list, in the same release, once registered.
- */
-export const DIRECT_BLOCKED_COUNTRIES: readonly string[] = ["the United Kingdom"];
-
 /** Direct model only: the legal invoice is issued within this many working days of a payment. */
 export const DIRECT_INVOICE_WORKING_DAYS = 5;
-
-/** "a, b and c" */
-export function joinList(items: readonly string[]): string {
-  if (items.length <= 1) return items.join("");
-  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
-}

@@ -1,6 +1,7 @@
 import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
 import { gitLastCommitDate } from "@/lib/source-date";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 export const dynamic = "force-static";
 
@@ -22,10 +23,13 @@ const LOCALIZED_ROUTES = [
   { path: "/pricing", source: "app/[locale]/pricing/page.tsx" },
 ] as const;
 
+/** Listed only once the trader details are complete; until then the page is a 404. */
+const LEGAL_NOTICE_ROUTE = { path: "/legal-notice", source: "app/[locale]/legal-notice/page.tsx" } as const;
+
 const ENGLISH_ONLY_ROUTES = [
   { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
   { path: "/terms", source: "app/[locale]/terms/page.tsx" },
-  { path: "/legal-notice", source: "app/[locale]/legal-notice/page.tsx" },
+  ...(TRADER_DETAILS_COMPLETE ? [LEGAL_NOTICE_ROUTE] : []),
   { path: "/about", source: "app/[locale]/about/page.tsx" },
   { path: "/contact", source: "app/[locale]/contact/page.tsx" },
   { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
-import { LEGAL_TRADER, type TraderField, type TraderKey } from "@/lib/legal/trader";
+import { LEGAL_TRADER, TRADER_DETAILS_COMPLETE, type TraderField, type TraderKey } from "@/lib/legal/trader";
 import { TOONE_PRO_SELLER } from "@/lib/legal/seller";
 import WebSales from "./WebSales";
 
@@ -60,6 +61,8 @@ function FieldList({ keys }: { keys: TraderKey[] }) {
 }
 
 export default async function LegalNoticePage({ params, searchParams }: Props) {
+  // Never published with owner placeholders: a 404 until lib/legal/trader.ts is filled in.
+  if (!TRADER_DETAILS_COMPLETE) notFound();
   const { locale } = await params;
   if (locale !== "en") await redirectToEnglish("/en/legal-notice", searchParams);
   setRequestLocale(locale);

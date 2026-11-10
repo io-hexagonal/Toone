@@ -6,7 +6,7 @@ import WebSales from "../../app/[locale]/legal-notice/WebSales";
 import fs from "node:fs";
 import test from "node:test";
 import { ENGLISH_ONLY_PATHS } from "../../i18n/routing";
-import { LEGAL_TRADER, TODO_OWNER, isOwnerPlaceholder, unresolvedTraderFields } from "../../lib/legal/trader";
+import { LEGAL_TRADER, TODO_OWNER, TRADER_DETAILS_COMPLETE, isOwnerPlaceholder, unresolvedTraderFields } from "../../lib/legal/trader";
 import { GET as siteSitemap } from "../../app/sitemap.xml/route";
 
 const read = (path: string) => fs.readFileSync(path, "utf8");
@@ -23,11 +23,20 @@ test("the legal notice page exists, is English only and indexable in English", (
   assert.ok(englishOnly.includes("/legal-notice"));
 });
 
-test("the legal notice is in the footer and the sitemap", async () => {
-  assert.match(read("components/Footer.tsx"), /<Link href="\/legal-notice">/);
-  assert.match(read("app/sitemap.xml/route.ts"), /\{ path: "\/legal-notice", source: "app\/\[locale\]\/legal-notice\/page\.tsx" \}/);
+test("the legal notice is in the footer and the sitemap only once the trader details are complete", async () => {
+  assert.match(read("components/Footer.tsx"), /\{TRADER_DETAILS_COMPLETE && <Link href="\/legal-notice">Legal notice<\/Link>\}/);
+  const sitemap = read("app/sitemap.xml/route.ts");
+  assert.match(sitemap, /LEGAL_NOTICE_ROUTE = \{ path: "\/legal-notice", source: "app\/\[locale\]\/legal-notice\/page\.tsx" \}/);
+  assert.match(sitemap, /\.\.\.\(TRADER_DETAILS_COMPLETE \? \[LEGAL_NOTICE_ROUTE\] : \[\]\)/);
   const xml = await (await siteSitemap()).text();
-  assert.match(xml, /<loc>https:\/\/trytoone\.com\/en\/legal-notice<\/loc>/);
+  assert.equal(xml.includes("<loc>https://trytoone.com/en/legal-notice</loc>"), TRADER_DETAILS_COMPLETE);
+});
+
+test("the legal notice page is a 404 while any trader field still waits for the owner", () => {
+  assert.equal(TRADER_DETAILS_COMPLETE, unresolvedTraderFields().length === 0);
+  const page = read(PAGE);
+  const body = page.slice(page.indexOf("export default async function LegalNoticePage"));
+  assert.match(body, /^export default async function LegalNoticePage\([^)]*\) \{\s*\/\/[^\n]*\n\s*if \(!TRADER_DETAILS_COMPLETE\) notFound\(\);/);
 });
 
 test("the legal notice renders every trader field from lib/legal/trader.ts", () => {

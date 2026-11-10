@@ -9,13 +9,15 @@ import {
 } from "../../lib/legal/terms";
 import { TOONE_PRO_SELLERS, type TooneProSeller } from "../../lib/legal/seller";
 import { ENGLISH_ONLY_PATHS, locales } from "../../i18n/routing";
+import { TRADER_DETAILS_COMPLETE } from "../../lib/legal/trader";
 import TermsContent from "../../app/[locale]/terms/TermsContent";
 
 const read = (path: string) => fs.readFileSync(path, "utf8");
 const page = read("app/[locale]/terms/page.tsx");
 const content = read("app/[locale]/terms/TermsContent.tsx");
-const terms = (seller: TooneProSeller) => renderText(createElement(TermsContent, { seller }));
-const termsHtml = (seller: TooneProSeller) => renderHtml(createElement(TermsContent, { seller }));
+/** Renders as published (Legal notice live) unless `traderDetails` is false. */
+const terms = (seller: TooneProSeller, traderDetails = true) => renderText(createElement(TermsContent, { seller, traderDetails }));
+const termsHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml(createElement(TermsContent, { seller, traderDetails }));
 
 test("Terms page renders the seller model from lib/legal/seller.ts", () => {
   assert.match(page, /<TermsContent seller=\{TOONE_PRO_SELLER\} \/>/);
@@ -140,8 +142,8 @@ test("Direct: the trader sells, Stripe processes, Stripe Tax, a Portuguese invoi
     /reverse charge applies/,
     /credit note \(nota de crédito\)/,
     /Prices in euros include VAT for consumers/,
-    /not sold to customers in the United Kingdom for now/,
-    /refunded in full, Toone Pro is not activated/,
+    /Countries where we can't sell yet are named at checkout, judged by the billing address you give there/,
+    /A payment from one of them is refunded in full and doesn't start Toone Pro/,
   ]) {
     assert.match(text, phrase);
   }
@@ -238,4 +240,48 @@ test("Toone Pro numbers match the server's limits (free plan = 2)", async () => 
   assert.equal(legal.TOONE_PRO_CONTRACT_LINK_HOURS, 24);
   assert.equal(legal.APPLE_REPORT_A_PROBLEM_URL, "https://reportaproblem.apple.com");
   assert.notEqual(legal.TERMS_UPDATED_DATE, "September 28, 2026", "Terms date bumped with the Pro section");
+});
+
+test("Terms follow TRADER_DETAILS_COMPLETE unless told otherwise", () => {
+  for (const seller of TOONE_PRO_SELLERS) {
+    assert.equal(
+      renderHtml(createElement(TermsContent, { seller })),
+      termsHtml(seller, TRADER_DETAILS_COMPLETE),
+      seller,
+    );
+  }
+});
+
+test("while the trader details are incomplete the Terms never link or point to the Legal notice", () => {
+  for (const seller of TOONE_PRO_SELLERS) {
+    const html = termsHtml(seller, false);
+    const text = terms(seller, false);
+    assert.ok(!html.includes("/legal-notice"), `${seller}: links the Legal notice`);
+    assert.doesNotMatch(text, /Legal notice/, seller);
+    for (const phrase of [
+      /published by Matheus Paranhos under the Hexagonal\.io name in Portugal\. For the full trader details, address and tax number, write to hello@trytoone\.com\./,
+      /alternative dispute resolution entity\. Write to hello@trytoone\.com and we send you the details of both\./,
+      /To Toone \(hello@trytoone\.com\): I hereby give notice that I withdraw/,
+      // The Pro purchase sections still read in full.
+      /Withdraw from contract here/,
+      /Cancel contract here/,
+      /Checkout is refused while your account already has a paid Toone Pro plan/,
+    ]) {
+      assert.match(text, phrase, `${seller}: ${phrase}`);
+    }
+    assert.ok(html.includes('href="mailto:hello@trytoone.com"'));
+  }
+  assert.match(
+    terms("direct", false),
+    /sold on trytoone\.com by Toone: the seller is Toone's publisher, Matheus Paranhos \(Hexagonal\.io\), an individual trader in Portugal, who is responsible for the sale, for delivering Toone Pro, and for support\./,
+  );
+  assert.match(terms("managed_payments", false), /merchant of record is Sold through Link, LLC/);
+});
+
+test("the Terms name no blocked country: the server's list is shown at checkout", () => {
+  assert.doesNotMatch(content, /United Kingdom|DIRECT_BLOCKED_COUNTRIES/);
+  for (const seller of TOONE_PRO_SELLERS) {
+    assert.doesNotMatch(terms(seller), /not sold to customers in/, seller);
+  }
+  assert.doesNotMatch(terms("managed_payments"), /named at checkout/);
 });

@@ -18,6 +18,7 @@ import {
   isManagedPayments,
   type TooneProSeller,
 } from "@/lib/legal/seller";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 import {
   APPLE_STANDARD_EULA_URL,
   CANCEL_CONTRACT_PATH,
@@ -29,13 +30,21 @@ import {
 } from "@/lib/legal/terms";
 
 type Props = { seller: TooneProSeller };
+type ContentProps = Props & {
+  /**
+   * Whether the Legal notice is published (lib/legal/trader.ts complete).
+   * While it is not, the policy points to the contact email instead of
+   * linking to it.
+   */
+  traderDetails?: boolean;
+};
 
 const CONTACT = PRIVACY_CONTACT;
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const ext = { target: "_blank", rel: "noopener" } as const;
 
 /** Who sells Toone Pro on the web, and who controls the payment data. */
-function WebPurchase({ seller }: Props) {
+function WebPurchase({ seller, traderDetails }: Props & { traderDetails: boolean }) {
   if (isManagedPayments(seller)) {
     return (
       <>
@@ -77,9 +86,13 @@ function WebPurchase({ seller }: Props) {
   return (
     <>
       <p>
-        Toone Pro is sold on trytoone.com by Toone: the seller is the trader named in the{" "}
-        <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>, who is also the controller of the
-        purchase data. Payments are processed by {STRIPE_EU_ENTITY} (&quot;Stripe&quot;), in
+        Toone Pro is sold on trytoone.com by Toone: the seller is{" "}
+        {traderDetails ? (
+          <>the trader named in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a></>
+        ) : (
+          <>Toone&apos;s publisher, named under <a href="#controller">Who is responsible for your data</a></>
+        )}
+        , who is also the controller of the purchase data. Payments are processed by {STRIPE_EU_ENTITY} (&quot;Stripe&quot;), in
         Ireland, on Stripe&apos;s checkout page. Toone never receives your full card number or
         other payment-method details.
       </p>
@@ -141,7 +154,7 @@ function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
   );
 }
 
-export default function PrivacyContent({ seller }: Props) {
+export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
   const managed = isManagedPayments(seller);
   const recipients = privacyRecipients(seller);
   const retention = privacyRetention(seller);
@@ -153,10 +166,17 @@ export default function PrivacyContent({ seller }: Props) {
         <p>
           Toone is published by Matheus Paranhos, an individual trader based in Portugal, under the
           Hexagonal.io name. He is the controller of the personal data described in this policy and
-          can be reached at <a href={`mailto:${CONTACT}`}>{CONTACT}</a>. His full name, address and
-          tax number are in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>. Toone has not
-          appointed a data protection officer, because the law does not require one for its
-          activity.
+          can be reached at <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
+          {traderDetails ? (
+            <>
+              {" "}His full name, address and tax number are in the{" "}
+              <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+            </>
+          ) : (
+            <> His address and tax number are available on request at the same email address.</>
+          )}{" "}
+          Toone has not appointed a data protection officer, because the law does not require one
+          for its activity.
         </p>
         <p>
           {managed
@@ -420,7 +440,7 @@ export default function PrivacyContent({ seller }: Props) {
         </p>
 
         <h3 id="toone-pro-web">Buying on trytoone.com</h3>
-        <WebPurchase seller={seller} />
+        <WebPurchase seller={seller} traderDetails={traderDetails} />
 
         <h3 id="withdrawal-records">Your consent, withdrawals and cancellations</h3>
         <p>
@@ -679,8 +699,14 @@ export default function PrivacyContent({ seller }: Props) {
         <h2>Contact</h2>
         <p>
           Questions about this policy can be sent to <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
-          Toone is published by Matheus Paranhos (Hexagonal.io), Portugal; see the{" "}
-          <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+          Toone is published by Matheus Paranhos (Hexagonal.io), Portugal
+          {traderDetails ? (
+            <>
+              ; see the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+            </>
+          ) : (
+            "."
+          )}
         </p>
       </section>
     </>

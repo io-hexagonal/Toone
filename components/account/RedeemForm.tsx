@@ -10,6 +10,8 @@ import {
   type CodeBenefit,
   type Entitlement,
 } from "@/lib/billing/api";
+import { forgetPendingCode } from "@/lib/billing/pending-code";
+import { fieldErrorProps } from "@/lib/field-error";
 import { benefitCopy, normalizeCode, redeemDoneCopy, redeemErrorKey } from "./redeem-code";
 import styles from "./account.module.css";
 
@@ -46,6 +48,8 @@ export default function RedeemForm({
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  /** True when the error is about the code itself (not a rate limit or an outage). */
+  const [codeInvalid, setCodeInvalid] = useState(false);
   const busyRef = useRef(false);
   const autoChecked = useRef(false);
 
@@ -55,19 +59,23 @@ export default function RedeemForm({
       onSessionEnded();
       return;
     }
-    setError(t(redeemErrorKey(failure)));
+    const key = redeemErrorKey(failure);
+    setCodeInvalid(key === "errInvalid" || key === "errUsed");
+    setError(t(key));
   }
 
   async function check(value: string) {
     if (busyRef.current) return;
     const canonical = normalizeCode(value);
     if (!canonical) {
+      setCodeInvalid(true);
       setError(t("errInvalid"));
       return;
     }
     busyRef.current = true;
     setBusy(true);
     setError("");
+    setCodeInvalid(false);
     try {
       const result = await checkCode(token, canonical);
       setStep({ name: "preview", code: canonical, benefit: result.benefit });
@@ -86,6 +94,7 @@ export default function RedeemForm({
     setError("");
     try {
       const result = await redeemCode(token, canonical);
+      forgetPendingCode();
       setStep({ name: "done", benefit: result.benefit, entitlement: result.entitlement });
       onRedeemed?.(result.entitlement);
     } catch (caught) {
@@ -111,6 +120,7 @@ export default function RedeemForm({
   function reset() {
     setStep({ name: "enter" });
     setError("");
+    setCodeInvalid(false);
     setCode("");
   }
 
@@ -171,13 +181,14 @@ export default function RedeemForm({
           maxLength={80}
           disabled={busy}
           required
+          {...fieldErrorProps(codeInvalid && Boolean(error), "redeem-code-error", "redeem-code-help")}
         />
         <button className={styles.primary} type="submit" disabled={busy || !code.trim()}>
           {busy ? t("checking") : t("check")}
         </button>
       </div>
-      <small>{t("help")}</small>
-      {error && <p className={styles.error} role="alert">{error}</p>}
+      <small id="redeem-code-help">{t("help")}</small>
+      {error && <p id="redeem-code-error" className={styles.error} role="alert">{error}</p>}
     </form>
   );
 }

@@ -4,10 +4,14 @@
  *
  * Nothing here trusts the URL: the `session_id` only lets the page ask the
  * API about that checkout. Pro is shown as on only when the account's
- * entitlement says so.
+ * entitlement says so and, when the page confirms a checkout, only once that
+ * checkout is `complete`: an account can already have Pro (a code, a guest
+ * month, another subscription) while this payment is still open or was
+ * refused, so the entitlement alone says nothing about this purchase.
  *
- *   pending ──entitlement is Pro──────────────▶ active
- *      │  ──session expired unpaid─────────────▶ error (expired)
+ *   pending ──session expired (unpaid or refused)──▶ error (expired)
+ *      │  ──session complete and entitlement is Pro▶ active
+ *      │  ──no session and entitlement is Pro──────▶ active (nothing to confirm)
  *      │  ──401───────────────────────────────▶ signed_out
  *      │  ──session still open after processingAfterMs▶ processing (a delayed
  *      │      payment method is clearing; Pro turns on later, by email)
@@ -48,7 +52,7 @@ export type CheckoutReturnState =
     /** True once the API answered the entitlement request at least once. */
     reached: boolean;
     lastFailure: BillingFailure | null;
-    /** The last checkout status the API returned (a hint), null before any. */
+    /** The last checkout status the API returned, null before any. */
     checkout: CheckoutStatus | null;
   }
   | ({ kind: "active"; entitlement: Entitlement } & CheckoutReceipt)
@@ -80,7 +84,13 @@ export const CHECKOUT_RETURN_DEFAULTS: Readonly<CheckoutReturnConfig> = Object.f
 
 /** One poll's result: the entitlement (plus the checkout status, when asked), or why it failed. */
 export type CheckoutReturnObservation =
-  | { entitlement: Entitlement; checkout?: CheckoutStatus | null }
+  | {
+    entitlement: Entitlement;
+    /** True when the page confirms a checkout (it has a `session_id`). */
+    hasSession: boolean;
+    /** The checkout status; null when it was not asked for or the request failed. */
+    checkout?: CheckoutStatus | null;
+  }
   | { failure: BillingFailure };
 
 export function initialCheckoutReturn(): CheckoutReturnState {
@@ -115,15 +125,21 @@ export function stepCheckoutReturn(
   } else {
     // A failed status request (null) keeps the last answer.
     if (observation.checkout) checkout = observation.checkout;
-    if (isPro(observation.entitlement)) {
-      return { state: { kind: "active", entitlement: observation.entitlement, ...receiptOf(checkout) }, delayMs: null };
-    }
-    if (observation.checkout?.status === "expired") {
-      return { state: { kind: "error", reason: "expired", failure: null }, delayMs: null };
+    const pro = isPro(observation.entitlement);
+    if (observation.hasSession) {
+      // This checkout decides, whatever Pro the account already has.
+      if (checkout?.status === "expired") {
+        return { state: { kind: "error", reason: "expired", failure: null }, delayMs: null };
+      }
+      if (checkout?.status === "complete" && pro) {
+        return { state: { kind: "active", entitlement: observation.entitlement, ...receiptOf(checkout) }, delayMs: null };
+      }
+    } else if (pro) {
+      return { state: { kind: "active", entitlement: observation.entitlement, ...receiptOf(null) }, delayMs: null };
     }
     reached = true;
     lastFailure = null;
-    if (observation.checkout?.status === "open" && elapsedMs >= config.processingAfterMs) {
+    if (observation.hasSession && checkout?.status === "open" && elapsedMs >= config.processingAfterMs) {
       return { state: { kind: "processing", ...receiptOf(checkout) }, delayMs: null };
     }
   }
@@ -216,14 +232,15 @@ async function observe(
   fetchStatus: CheckoutReturnDeps["fetchCheckoutStatus"],
   signal?: AbortSignal,
 ): Promise<CheckoutReturnObservation> {
-  // The checkout status is a hint (it spots an expired, unpaid session early);
-  // its failures never decide the outcome.
+  // With a session, the checkout status must read `complete` before Pro is
+  // shown as on; a failed status request keeps the last answer and polling
+  // goes on.
   const status = sessionId && fetchStatus
     ? fetchStatus(token, sessionId, signal).catch(() => null)
     : Promise.resolve(null);
   try {
     const [entitlement, checkout] = await Promise.all([fetchEntitlement(token, signal), status]);
-    return { entitlement, checkout };
+    return { entitlement, checkout, hasSession: sessionId !== null };
   } catch (error) {
     await status;
     return { failure: billingFailure(error) };

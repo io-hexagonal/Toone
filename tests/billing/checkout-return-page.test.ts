@@ -177,10 +177,12 @@ test("a session the server calls complete and entitled is not Pro while the enti
   assert.equal(returnView(state, true), "timeout");
 });
 
-test("views: Pro from the entitlement is active; no checkout and free reads 'nothing to confirm'", async () => {
+test("views: no checkout and Pro reads 'you have Pro'; no checkout and free reads 'nothing to confirm'", async () => {
   const time = clock();
   const pro = await pollCheckoutReturn({ token: "tok", sessionId: null, fetchEntitlement: async () => PRO, now: time.now, sleep: time.sleep, config: returnPollConfig(false) });
-  assert.equal(returnView(pro, false), "active");
+  assert.equal(pro.kind, "active");
+  assert.equal(returnView(pro, false), "already_pro", "a direct visit never shows the purchase message");
+  assert.equal(returnView(pro, true), "active");
   let calls = 0;
   const free = await pollCheckoutReturn({
     token: "tok", sessionId: null, fetchEntitlement: async () => { calls += 1; return FREE; },
@@ -191,6 +193,15 @@ test("views: Pro from the entitlement is active; no checkout and free reads 'not
   assert.equal(returnView({ kind: "signed_out" }, true), "signed_out");
   assert.equal(returnView({ kind: "error", reason: "expired", failure: null }, true), "expired");
   assert.equal(returnView({ kind: "error", reason: "unreachable", failure: null }, true), "unreachable");
+});
+
+test("the already-Pro view is neutral and links to the account page", () => {
+  const success = messages.billing.success;
+  assert.equal(success.alreadyProTitle, "You have Toone Pro");
+  assert.doesNotMatch(`${success.alreadyProTitle} ${success.alreadyProSub}`, /receipt|payment|is on/i);
+  const page = read("components/billing/CheckoutReturn.tsx");
+  assert.match(page, /view === "already_pro" && \(\s*<>\s*<h1>\{t\("alreadyProTitle"\)\}<\/h1>/);
+  assert.match(page, /<Link className="pro-return-button" href="\/account">\{t\("seeAccount"\)\}<\/Link>/);
 });
 
 test("the server HTML of the success page only says 'confirming'", () => {

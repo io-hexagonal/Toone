@@ -18,22 +18,37 @@ import {
   TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS,
 } from "@/lib/legal/terms";
 import {
-  DIRECT_BLOCKED_COUNTRIES,
   DIRECT_INVOICE_WORKING_DAYS,
   LINK_SELLER_ENTITY,
   STRIPE_EU_ENTITY,
   isManagedPayments,
-  joinList,
   type TooneProSeller,
 } from "@/lib/legal/seller";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const CONTACT = "hello@trytoone.com";
 
 type Props = { seller: TooneProSeller };
+type ContentProps = Props & {
+  /**
+   * Whether the Legal notice is published (lib/legal/trader.ts complete).
+   * While it is not, the Terms name the trader and point to the contact email
+   * instead of linking to it.
+   */
+  traderDetails?: boolean;
+};
+
+/** The trader who sells Toone Pro in the Direct model. */
+function TraderName({ traderDetails }: { traderDetails: boolean }) {
+  if (traderDetails) {
+    return <>the trader named in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a></>;
+  }
+  return <>Toone&apos;s publisher, Matheus Paranhos (Hexagonal.io), an individual trader in Portugal</>;
+}
 
 /** Who sells Toone Pro on the web; the one part of the Terms that differs by seller model. */
-function WebSeller({ seller }: Props) {
+function WebSeller({ seller, traderDetails }: Props & { traderDetails: boolean }) {
   if (isManagedPayments(seller)) {
     return (
       <p>
@@ -50,8 +65,8 @@ function WebSeller({ seller }: Props) {
   }
   return (
     <p>
-      Toone Pro is sold on trytoone.com by Toone: the seller is the trader named in the{" "}
-      <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>, who is responsible for the sale, for
+      Toone Pro is sold on trytoone.com by Toone: the seller is{" "}
+      <TraderName traderDetails={traderDetails} />, who is responsible for the sale, for
       delivering Toone Pro, and for support. Payments are processed by {STRIPE_EU_ENTITY}{" "}
       (&quot;Stripe&quot;), in Ireland, on Stripe&apos;s secure checkout page, and your statement
       shows Toone&apos;s name. Toone never sees your full card number. Stripe sends a receipt
@@ -123,19 +138,18 @@ function Invoices({ seller }: Props) {
         need a copy of an invoice, or one is missing, write to{" "}
         <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
       </p>
-      {DIRECT_BLOCKED_COUNTRIES.length > 0 ? (
-        <p id="not-sold-in">
-          Toone Pro is not sold to customers in {joinList(DIRECT_BLOCKED_COUNTRIES)} for now. If a
-          purchase is made from there anyway, judged by the billing address given at checkout, it
-          is refunded in full, Toone Pro is not activated, and you receive the credit note for the
-          refund.
-        </p>
-      ) : null}
+      {/* The blocked countries are server configuration: checkout names them, these terms don't. */}
+      <p id="not-sold-in">
+        Toone Pro can&apos;t be sold yet to some countries. Countries where we can&apos;t sell yet
+        are named at checkout, judged by the billing address you give there. A payment from one of
+        them is refunded in full and doesn&apos;t start Toone Pro, and you receive the credit note
+        for the refund.
+      </p>
     </>
   );
 }
 
-export default function TermsContent({ seller }: Props) {
+export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
   const managed = isManagedPayments(seller);
 
   return (
@@ -165,8 +179,17 @@ export default function TermsContent({ seller }: Props) {
           Toone Pro is an optional upgrade for your Toone account. It removes the limit on how many
           routines your account can create. Everything else in Toone works without it. Toone Pro is
           provided by Toone, published by Matheus Paranhos under the Hexagonal.io name in Portugal.
-          The full trader details, address and tax number are in the{" "}
-          <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+          {traderDetails ? (
+            <>
+              {" "}The full trader details, address and tax number are in the{" "}
+              <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+            </>
+          ) : (
+            <>
+              {" "}For the full trader details, address and tax number, write to{" "}
+              <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
+            </>
+          )}
         </p>
         <p>
           Toone Pro bought on trytoone.com applies to your Toone account in Toone (Direct), the
@@ -191,7 +214,7 @@ export default function TermsContent({ seller }: Props) {
         </p>
 
         <h3 id="web-purchases">Who sells Toone Pro on trytoone.com</h3>
-        <WebSeller seller={seller} />
+        <WebSeller seller={seller} traderDetails={traderDetails} />
 
         <h3>Plans and prices</h3>
         <ul>
@@ -300,7 +323,8 @@ export default function TermsContent({ seller }: Props) {
           . You can use these words, though you don&apos;t have to:
         </p>
         <blockquote>
-          To Toone (contact details in the Legal notice): I hereby give notice that I withdraw from
+          To Toone ({traderDetails ? "contact details in the Legal notice" : CONTACT}): I hereby give
+          notice that I withdraw from
           my contract for the supply of the following digital service: Toone Pro (plan: ___),
           ordered on ___. Name: ___. Email address of the Toone account: ___. Order reference: ___.
           Date: ___.
@@ -446,8 +470,17 @@ export default function TermsContent({ seller }: Props) {
             </>
           ) : null}{" "}
           You can file a complaint in the Livro de Reclamações Eletrónico, and as a consumer you can
-          take a dispute to an alternative dispute resolution entity. Both are listed in the{" "}
-          <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+          take a dispute to an alternative dispute resolution entity.
+          {traderDetails ? (
+            <>
+              {" "}Both are listed in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
+            </>
+          ) : (
+            <>
+              {" "}Write to <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and we send you the details
+              of both.
+            </>
+          )}
         </p>
         <p>
           These terms are governed by Portuguese law. If you are a consumer, you keep the protection

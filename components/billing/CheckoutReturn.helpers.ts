@@ -4,7 +4,8 @@
  * remembering it for a reload of the same tab, and choosing what to show.
  *
  * The session id only lets the page ask the API about that checkout. Pro is
- * shown as on only when the account's entitlement says so.
+ * shown as on only when the account's entitlement says so and that checkout
+ * is complete.
  */
 
 import { splitSessionId, stripSessionId, type CheckoutReceipt, type CheckoutReturnState } from "@/lib/billing/checkout-return";
@@ -106,13 +107,16 @@ export type ReturnView =
   | "expired"
   | "unreachable"
   /** Opened without a checkout to confirm, and the account is not Pro. */
-  | "none";
+  | "none"
+  /** Opened without a checkout to confirm, and the account already has Pro. */
+  | "already_pro";
 
 /** What the page shows for a polling state. */
 export function returnView(state: CheckoutReturnState, hasCheckout: boolean): ReturnView {
   switch (state.kind) {
     case "pending": return "pending";
-    case "active": return "active";
+    // Without a checkout there is no purchase to celebrate, only a plan to show.
+    case "active": return hasCheckout ? "active" : "already_pro";
     case "processing": return "processing";
     case "signed_out": return "signed_out";
     case "timeout": return hasCheckout ? "timeout" : "none";

@@ -7,13 +7,16 @@ import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { AccountHeader } from "./AccountPage";
 import RedeemForm from "./RedeemForm";
+import { pendingCode, rememberPendingCode } from "@/lib/billing/pending-code";
 import { codeFromFragment, locationWithoutCode } from "./redeem-code";
 import styles from "./account.module.css";
 
 /**
  * /redeem: the code arrives in the fragment (`#code=`), is read once and
- * removed from the address bar, survives the sign-in step in memory, then is
- * checked and redeemed for the signed-in account.
+ * removed from the address bar, then is checked and redeemed for the
+ * signed-in account. It survives the sign-in step in memory and, for a
+ * redirect sign-in that reloads the page, in this tab's sessionStorage
+ * (lib/billing/pending-code.ts), never in the address.
  */
 export default function RedeemPage() {
   const t = useTranslations("account");
@@ -27,7 +30,9 @@ export default function RedeemPage() {
     // effects may run twice in development).
     if (consumed.current) return;
     consumed.current = true;
-    const code = codeFromFragment(window.location.hash);
+    let code = codeFromFragment(window.location.hash);
+    if (code) rememberPendingCode(code);
+    else code = pendingCode();
     if (window.location.hash || new URLSearchParams(window.location.search).has("code")) {
       window.history.replaceState(null, "", locationWithoutCode(window.location.pathname, window.location.search));
     }

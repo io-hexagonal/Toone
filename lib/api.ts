@@ -1,5 +1,7 @@
 /** Typed client for account authentication and private desktop downloads. */
 
+import { forgetPendingCode } from "./billing/pending-code";
+
 const DEFAULT_API_BASE = "https://api.trytoone.com/v1";
 
 const SESSION_KEY = "toone.session";
@@ -197,6 +199,8 @@ export function clearSession(): void {
   if (typeof window === "undefined") return;
   clearCapabilityCache();
   clearSiteSession();
+  // A /redeem link's code is for whoever signs in next in this tab only while the session lasts.
+  forgetPendingCode();
   try {
     localStorage.removeItem(SESSION_KEY);
   } catch {

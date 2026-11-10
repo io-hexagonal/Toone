@@ -3,8 +3,14 @@
  * and the Privacy Policy. The owner fills in every TODO_OWNER value before
  * release; it must match the EU trader details on the App Store listing.
  *
- * Release gate: `LEGAL_RELEASE_CHECK=1 npm run test:legal` fails while any
- * value still starts with TODO_OWNER (tests/legal/release-owner-data.test.ts).
+ * Until every value is filled in, `TRADER_DETAILS_COMPLETE` is false and the
+ * site hides the Legal notice: the page is a 404, it is left out of the
+ * sitemap and the footer, and the Terms and the Privacy Policy point to the
+ * contact email instead of linking to it.
+ *
+ * Release gate: tests/legal/release-owner-data.test.ts fails while any value
+ * still starts with TODO_OWNER, when run with `LEGAL_RELEASE_CHECK=1` or with
+ * `VERCEL_ENV=production`.
  */
 export const TODO_OWNER = "TODO_OWNER";
 
@@ -67,3 +73,6 @@ export function unresolvedTraderFields(): TraderKey[] {
     return isOwnerPlaceholder(field.value) || isOwnerPlaceholder(field.href) || !field.value.trim();
   });
 }
+
+/** True once the owner has filled in every trader field: the Legal notice can be published. */
+export const TRADER_DETAILS_COMPLETE: boolean = unresolvedTraderFields().length === 0;
