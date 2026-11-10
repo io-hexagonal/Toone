@@ -104,6 +104,8 @@ export type ReturnView =
   | "processing"
   | "timeout"
   | "signed_out"
+  /** The checkout belongs to another account than the signed-in one. */
+  | "wrong_account"
   | "expired"
   | "unreachable"
   /** Opened without a checkout to confirm, and the account is not Pro. */
@@ -119,6 +121,7 @@ export function returnView(state: CheckoutReturnState, hasCheckout: boolean): Re
     case "active": return hasCheckout ? "active" : "already_pro";
     case "processing": return "processing";
     case "signed_out": return "signed_out";
+    case "wrong_account": return "wrong_account";
     case "timeout": return hasCheckout ? "timeout" : "none";
     case "error": return state.reason === "expired" ? "expired" : "unreachable";
   }

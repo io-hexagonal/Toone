@@ -210,6 +210,17 @@ export default function CheckoutReturn() {
           </>
         )}
 
+        {view === "wrong_account" && (
+          <>
+            <h1>{t("wrongAccountTitle")}</h1>
+            <p>{t("wrongAccountSub")}</p>
+            {/* Only the signed-in account is named; the server never says who paid. */}
+            {session?.user.email && <p className="pro-return-muted">{t("wrongAccountCurrent", { email: session.user.email })}</p>}
+            {/* Signing out shows the sign-in form; the checkout id stays, so the right account sees the purchase. */}
+            <button type="button" className="pro-return-button" onClick={endSession}>{t("switchAccount")}</button>
+          </>
+        )}
+
         {view === "none" && (
           <>
             <h1>{t("noneTitle")}</h1>

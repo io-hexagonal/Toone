@@ -263,6 +263,60 @@ test("driver: an account already Pro sees its open purchase as not confirmed, ne
   assert.ok(!states.includes("active"));
 });
 
+test("pending → wrong_account when the checkout status says 404, whatever the entitlement", () => {
+  const { state, delayMs } = stepCheckoutReturn(initialCheckoutReturn(), { checkoutNotFound: true }, 0, CONFIG);
+  assert.deepEqual(state, { kind: "wrong_account" });
+  assert.equal(delayMs, null);
+  assert.ok(isFinalCheckoutReturn(state));
+});
+
+test("driver: another account's checkout (404 not_found) is wrong_account at once, even when this account is Pro", async () => {
+  const clock = fakeClock();
+  for (const entitlement of [FREE, PRO]) {
+    let polls = 0;
+    const final = await pollCheckoutReturn({
+      token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+      fetchEntitlement: async () => { polls++; return entitlement; },
+      fetchCheckoutStatus: async () => { throw new ApiError("not_found", "resource not found", 404); },
+    });
+    assert.deepEqual(final, { kind: "wrong_account" }, "never active, and nothing about the other account");
+    assert.equal(polls, 1);
+  }
+  assert.deepEqual(clock.sleeps, []);
+});
+
+test("driver: a 404 status with a failing entitlement is still wrong_account; a 401 is still signed_out", async () => {
+  const notFound = async (): Promise<CheckoutStatus> => { throw new ApiError("not_found", "resource not found", 404); };
+  const flaky = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG,
+    fetchEntitlement: async () => { throw new BillingError({ kind: "rate_limited" }); },
+    fetchCheckoutStatus: notFound,
+  });
+  assert.deepEqual(flaky, { kind: "wrong_account" });
+  const expired = await pollCheckoutReturn({
+    token: "tok", sessionId: "cs_test_1", config: CONFIG,
+    fetchEntitlement: async () => { throw new ApiError("token_expired", "token expired", 401); },
+    fetchCheckoutStatus: notFound,
+  });
+  assert.deepEqual(expired, { kind: "signed_out" });
+});
+
+test("driver: other status failures (403, 404 without not_found, 5xx) are transient, not wrong_account", async () => {
+  for (const error of [
+    new ApiError("forbidden", "forbidden", 403),
+    new ApiError("http_404", "Not Found", 404),
+    new ApiError("internal", "boom", 500),
+  ]) {
+    const clock = fakeClock();
+    const final = await pollCheckoutReturn({
+      token: "tok", sessionId: "cs_test_1", config: CONFIG, now: clock.now, sleep: clock.sleep,
+      fetchEntitlement: async () => FREE,
+      fetchCheckoutStatus: async () => { throw error; },
+    });
+    assert.deepEqual(final, { kind: "timeout" }, `${error.status} ${error.code}`);
+  }
+});
+
 test("driver: an expired session stops polling", async () => {
   const clock = fakeClock();
   const final = await pollCheckoutReturn({

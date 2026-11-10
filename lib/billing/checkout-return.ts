@@ -12,11 +12,17 @@
  *   pending ──session expired (unpaid or refused)──▶ error (expired)
  *      │  ──session complete and entitlement is Pro▶ active
  *      │  ──no session and entitlement is Pro──────▶ active (nothing to confirm)
+ *      │  ──session status 404 `not_found`─────────▶ wrong_account (the
+ *      │      checkout belongs to another account than the signed-in one)
  *      │  ──401───────────────────────────────▶ signed_out
  *      │  ──session still open after processingAfterMs▶ processing (a delayed
  *      │      payment method is clearing; Pro turns on later, by email)
  *      │  ──deadline, API answered at least once▶ timeout ("still confirming")
  *      └  ──deadline, API never answered────────▶ error (unreachable)
+ *
+ * `wrong_account` comes only from the checkout status endpoint, which is
+ * owner-checked: another account's session answers 404 `not_found`, the
+ * same as an unknown one, so the page never learns (or shows) who paid.
  *
  * `active` and `processing` carry the checkout's order reference (`TOONE-…`)
  * and, in Direct mode, its legal invoice, when the status request returned them.
@@ -58,6 +64,8 @@ export type CheckoutReturnState =
   | ({ kind: "active"; entitlement: Entitlement } & CheckoutReceipt)
   /** Paid with a method that clears later: the session stays `open` until it does. */
   | ({ kind: "processing" } & CheckoutReceipt)
+  /** The checkout status answered 404: this checkout is not the signed-in account's. */
+  | { kind: "wrong_account" }
   | { kind: "timeout" }
   | { kind: "signed_out" }
   | { kind: "error"; reason: "expired" | "unreachable"; failure: BillingFailure | null };
@@ -82,7 +90,11 @@ export const CHECKOUT_RETURN_DEFAULTS: Readonly<CheckoutReturnConfig> = Object.f
   processingAfterMs: 20_000,
 });
 
-/** One poll's result: the entitlement (plus the checkout status, when asked), or why it failed. */
+/**
+ * One poll's result: the entitlement (plus the checkout status, when asked),
+ * why it failed, or that the checkout status answered 404 (another
+ * account's checkout).
+ */
 export type CheckoutReturnObservation =
   | {
     entitlement: Entitlement;
@@ -91,7 +103,8 @@ export type CheckoutReturnObservation =
     /** The checkout status; null when it was not asked for or the request failed. */
     checkout?: CheckoutStatus | null;
   }
-  | { failure: BillingFailure };
+  | { failure: BillingFailure }
+  | { checkoutNotFound: true };
 
 export function initialCheckoutReturn(): CheckoutReturnState {
   return { kind: "pending", attempts: 0, reached: false, lastFailure: null, checkout: null };
@@ -118,7 +131,10 @@ export function stepCheckoutReturn(
   let lastFailure = state.lastFailure;
   let checkout = state.checkout;
 
-  if ("failure" in observation) {
+  if ("checkoutNotFound" in observation) {
+    // Owner-checked: the signed-in account did not make this checkout.
+    return { state: { kind: "wrong_account" }, delayMs: null };
+  } else if ("failure" in observation) {
     if (observation.failure.kind === "unauthenticated") return { state: { kind: "signed_out" }, delayMs: null };
     // Everything else (network, rate limit, 5xx) may pass: keep polling until the deadline.
     lastFailure = observation.failure;
@@ -234,17 +250,28 @@ async function observe(
 ): Promise<CheckoutReturnObservation> {
   // With a session, the checkout status must read `complete` before Pro is
   // shown as on; a failed status request keeps the last answer and polling
-  // goes on.
-  const status = sessionId && fetchStatus
-    ? fetchStatus(token, sessionId, signal).catch(() => null)
+  // goes on, except a 404: the server only shows a checkout to its owner.
+  const status: Promise<CheckoutStatus | null | "not_found"> = sessionId && fetchStatus
+    ? fetchStatus(token, sessionId, signal).catch(error => (isNotFound(billingFailure(error)) ? "not_found" as const : null))
     : Promise.resolve(null);
   try {
     const [entitlement, checkout] = await Promise.all([fetchEntitlement(token, signal), status]);
+    if (checkout === "not_found") return { checkoutNotFound: true };
     return { entitlement, checkout, hasSession: sessionId !== null };
   } catch (error) {
-    await status;
-    return { failure: billingFailure(error) };
+    const failure = billingFailure(error);
+    // A 401 means no account at all; otherwise the 404 alone settles it.
+    if ((await status) === "not_found" && failure.kind !== "unauthenticated") return { checkoutNotFound: true };
+    return { failure };
   }
+}
+
+/**
+ * `GET /v1/billing/checkout/{id}` answers 404 `not_found` for another
+ * account's session (and an unknown one). Other failures are transient.
+ */
+function isNotFound(failure: BillingFailure): boolean {
+  return failure.kind === "unknown" && failure.status === 404 && failure.code === "not_found";
 }
 
 /* ---- session_id in the return URL */
