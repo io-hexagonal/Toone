@@ -4,7 +4,8 @@
       "accountTitle": "Je account",
       "redeemTitle": "Code inwisselen",
       "contractTitle": "Contract herroepen of opzeggen",
-      "contractDescription": "Herroep of zeg een op trytoone.com gekocht Toone Pro-contract op, zonder in te loggen."
+      "contractDescription": "Herroep of zeg een op trytoone.com gekocht Toone Pro-contract op, zonder in te loggen.",
+      "contractConfirmTitle": "Bevestig je verzoek"
     },
     "common": {
       "checking": "Je account wordt gecontroleerd…",
@@ -67,7 +68,13 @@
       "contractSub": "Herroep een aankoop of zeg je contract op. Dat kan ook zonder in te loggen.",
       "withdrawLink": "Contract hier herroepen",
       "cancelLink": "Contract hier opzeggen",
-      "moreLinks": "Meer"
+      "moreLinks": "Meer",
+      "orderRef": "Bestelreferentie (laatste aankoop in deze browser)",
+      "orderRefNote": "Het contractformulier vraagt erom, samen met het e-mailadres waarmee je kocht.",
+      "invoicePending": "Factuur: wordt opgemaakt (per e-mail naar je).",
+      "invoiceIssued": "Factuur: opgemaakt (per e-mail naar je).",
+      "invoiceNumber": "Factuur: {number}",
+      "invoiceNumberAtcud": "Factuur: {number} · ATCUD {atcud}"
     },
     "redeem": {
       "eyebrow": "Codes",
@@ -116,7 +123,7 @@
       "cancelBody": "Zeg je abonnement op wanneer je wilt. Het wordt niet verlengd en je betaalt niets meer.",
       "email": "E-mailadres waarmee je kocht",
       "orderRef": "Bestelreferentie",
-      "orderRefHelp": "Die staat op het ontvangstbewijs dat je na de aankoop per e-mail kreeg.",
+      "orderRefHelp": "Hij begint met TOONE- en staat na de aankoop en op je accountpagina.",
       "continue": "Doorgaan",
       "back": "Terug",
       "edit": "Gegevens wijzigen",
@@ -131,16 +138,49 @@
       "sentTitle": "Kijk in je e-mail",
       "sent": "Als we een passende aankoop vinden, hebben we een bevestigingslink naar {email} gestuurd. Open hem om af te ronden.",
       "sentAt": "Verzoek ontvangen op {at}.",
-      "sentNote": "Na een paar minuten niets? Kijk in je spammap en gebruik het e-mailadres en de bestelreferentie van je ontvangstbewijs.",
+      "sentNote": "Na een paar minuten niets? Kijk in je spammap en gebruik het e-mailadres van je aankoop en je bestelreferentie (TOONE-…).",
       "another": "Nog een verzoek sturen",
       "errEmail": "Vul het e-mailadres in waarmee je kocht.",
-      "errOrderRef": "Vul de bestelreferentie van je ontvangstbewijs in.",
+      "errOrderRef": "Vul de bestelreferentie in: TOONE- gevolgd door letters en cijfers.",
       "errInput": "Controleer het e-mailadres en de bestelreferentie en probeer het opnieuw.",
       "errRate": "Te veel verzoeken. Wacht een paar minuten en probeer het opnieuw.",
       "errUnavailable": "Dit formulier is nu niet beschikbaar. Mail {email}, dan handelen we je verzoek af.",
       "errGeneric": "Je verzoek kon niet worden verstuurd. Probeer het opnieuw.",
       "appStore": "Toone Pro in de App Store gekocht? Dat regelt Apple: gebruik <link>Een probleem melden</link> of de abonnementen in je Apple Account.",
       "signedIn": "Ingelogd? Je kunt je abonnement ook beheren via <link>je account</link>.",
+      "terms": "Je rechten staan in de <link>Voorwaarden</link>.",
+      "name": "Je naam (optioneel)",
+      "nameHelp": "Wordt bij je verzoek bewaard.",
+      "nameShort": "Naam",
+      "errName": "Gebruik maximaal {max} tekens voor je naam."
+    },
+    "contractConfirm": {
+      "eyebrow": "Toone Pro",
+      "title": "Bevestig je verzoek",
+      "reading": "Link wordt gelezen…",
+      "body": "Je hebt gevraagd je Toone Pro-contract te herroepen of op te zeggen. Bevestig om je verzoek uit te voeren.",
+      "safety": "Deze link openen verandert niets. Alleen de knop hieronder doet dat.",
+      "confirm": "Bevestigen",
+      "confirming": "Bevestigen…",
+      "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
+      "errUnavailable": "Dit kan nu niet. Probeer het later opnieuw of mail {email}.",
+      "errGeneric": "Je verzoek kon niet worden bevestigd. Probeer het opnieuw; de link werkt nog.",
+      "cancelledTitle": "Je abonnement is opgezegd",
+      "cancelledBody": "Het wordt niet verlengd en je betaalt niets meer. Toone Pro blijft actief tot het einde van de betaalde periode.",
+      "withdrawnTitle": "Je hebt het contract herroepen",
+      "withdrawnBody": "Je betaling wordt terugbetaald en Toone Pro is beëindigd.",
+      "nothingTitle": "Er was niets op te zeggen",
+      "nothingBody": "Bij deze aankoop hoort geen abonnement om op te zeggen, dus er is niets veranderd. We hebben je de details gemaild.",
+      "doneTitle": "Je verzoek is afgehandeld",
+      "doneBody": "Je verzoek is uitgevoerd.",
+      "doneAt": "Bevestigd op {at}.",
+      "doneEmail": "We hebben je een bevestiging gemaild om te bewaren.",
+      "nothingWithdraw": "Binnen 14 dagen na je eerste betaling kun je het <link>contract nog herroepen</link>.",
+      "missingTitle": "Deze link is onvolledig",
+      "missingBody": "Open de link uit de e-mail precies zoals die is verstuurd, of doe een nieuw verzoek.",
+      "expiredTitle": "Deze link is verlopen",
+      "expiredBody": "Bevestigingslinks zijn 24 uur geldig. Doe een nieuw verzoek voor een nieuwe link.",
+      "startAgain": "Nieuw verzoek doen",
       "terms": "Je rechten staan in de <link>Voorwaarden</link>."
     }
   },
@@ -522,7 +562,8 @@
       "refund": "Bedacht? Je kunt binnen {days} dagen je eerste betaling volledig terugkrijgen.",
       "edition": "Hier gekochte Toone Pro geldt voor je Toone-account in Toone voor Mac, gedownload van trytoone.com.",
       "termsLine": "Door te kopen ga je akkoord met de <terms>voorwaarden van Toone Pro</terms>.",
-      "stripeLine": "Veilig betalen via Stripe."
+      "stripeLine": "Veilig betalen via Stripe.",
+      "errConflict": "Er wordt al een betaling voorbereid — probeer het zo opnieuw."
     },
     "success": {
       "metaTitle": "Betalingsbevestiging",
@@ -547,7 +588,15 @@
       "noneSub": "Dit account heeft nog geen Toone Pro.",
       "seePricing": "Prijzen bekijken",
       "signedOutTitle": "Log in om je abonnement te zien.",
-      "signedOutSub": "Gebruik het account waarvoor je Toone Pro hebt gekocht."
+      "signedOutSub": "Gebruik het account waarvoor je Toone Pro hebt gekocht.",
+      "orderRef": "Bestelreferentie: <code>{ref}</code>",
+      "orderRefNote": "Bewaar hem: het <link>contractformulier</link> om zonder inloggen te herroepen of op te zeggen vraagt erom.",
+      "processingTitle": "Bijna klaar",
+      "processingSub": "Je betaling wordt verwerkt; Pro wordt actief zodra die binnen is. We sturen je een e-mail.",
+      "invoicePending": "Factuur: wordt opgemaakt (per e-mail naar je).",
+      "invoiceIssued": "Factuur: opgemaakt (per e-mail naar je).",
+      "invoiceNumber": "Factuur: {number}",
+      "invoiceNumberAtcud": "Factuur: {number} · ATCUD {atcud}"
     },
     "cancel": {
       "metaTitle": "Betaling geannuleerd",

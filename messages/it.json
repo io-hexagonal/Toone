@@ -4,7 +4,8 @@
       "accountTitle": "Il tuo account",
       "redeemTitle": "Riscatta un codice",
       "contractTitle": "Recedi o disdici un contratto",
-      "contractDescription": "Recedi da un contratto Toone Pro acquistato su trytoone.com o disdicilo, senza accedere."
+      "contractDescription": "Recedi da un contratto Toone Pro acquistato su trytoone.com o disdicilo, senza accedere.",
+      "contractConfirmTitle": "Conferma la tua richiesta"
     },
     "common": {
       "checking": "Verifica del tuo account…",
@@ -67,7 +68,13 @@
       "contractSub": "Recedi da un acquisto o disdici il contratto. Funziona anche senza accedere.",
       "withdrawLink": "Recedi dal contratto qui",
       "cancelLink": "Disdici il contratto qui",
-      "moreLinks": "Altro"
+      "moreLinks": "Altro",
+      "orderRef": "Riferimento ordine (ultimo acquisto in questo browser)",
+      "orderRefNote": "Il modulo del contratto te lo chiede, insieme all'email con cui hai acquistato.",
+      "invoicePending": "Fattura: in emissione (ti arriva via email).",
+      "invoiceIssued": "Fattura: emessa (ti arriva via email).",
+      "invoiceNumber": "Fattura: {number}",
+      "invoiceNumberAtcud": "Fattura: {number} · ATCUD {atcud}"
     },
     "redeem": {
       "eyebrow": "Codici",
@@ -116,7 +123,7 @@
       "cancelBody": "Disdici l'abbonamento in qualsiasi momento. Non si rinnoverà e non ti verrà addebitato altro.",
       "email": "Email usata per l'acquisto",
       "orderRef": "Riferimento ordine",
-      "orderRefHelp": "Si trova nella ricevuta che hai ricevuto via email dopo l'acquisto.",
+      "orderRefHelp": "Inizia con TOONE- ed è mostrato dopo l'acquisto e nella pagina del tuo account.",
       "continue": "Continua",
       "back": "Indietro",
       "edit": "Modifica dati",
@@ -131,16 +138,49 @@
       "sentTitle": "Controlla la tua email",
       "sent": "Se troviamo un acquisto corrispondente, abbiamo inviato un link di conferma a {email}. Aprilo per concludere.",
       "sentAt": "Richiesta ricevuta il {at}.",
-      "sentNote": "Niente dopo qualche minuto? Controlla lo spam e usa l'email e il riferimento ordine della ricevuta.",
+      "sentNote": "Niente dopo qualche minuto? Controlla lo spam e usa l'email dell'acquisto e il tuo riferimento ordine (TOONE-…).",
       "another": "Invia un'altra richiesta",
       "errEmail": "Inserisci l'email usata per l'acquisto.",
-      "errOrderRef": "Inserisci il riferimento ordine della ricevuta.",
+      "errOrderRef": "Inserisci il riferimento ordine: TOONE- seguito da lettere e cifre.",
       "errInput": "Controlla l'email e il riferimento ordine, poi riprova.",
       "errRate": "Troppe richieste. Attendi qualche minuto e riprova.",
       "errUnavailable": "Questo modulo non è disponibile al momento. Scrivi a {email} e gestiremo la tua richiesta.",
       "errGeneric": "Impossibile inviare la richiesta. Riprova.",
       "appStore": "Hai acquistato Toone Pro sull'App Store? Se ne occupa Apple: usa <link>Segnala un problema</link> o gli abbonamenti del tuo Account Apple.",
       "signedIn": "Hai già effettuato l'accesso? Puoi gestire l'abbonamento anche dal <link>tuo account</link>.",
+      "terms": "I tuoi diritti sono descritti nei <link>Termini</link>.",
+      "name": "Il tuo nome (facoltativo)",
+      "nameHelp": "Viene conservato con la tua richiesta.",
+      "nameShort": "Nome",
+      "errName": "Usa al massimo {max} caratteri per il nome."
+    },
+    "contractConfirm": {
+      "eyebrow": "Toone Pro",
+      "title": "Conferma la tua richiesta",
+      "reading": "Lettura del link…",
+      "body": "Hai chiesto di recedere dal contratto Toone Pro o di disdirlo. Conferma per eseguire la richiesta.",
+      "safety": "Aprire questo link non cambia nulla. Lo fa solo il pulsante qui sotto.",
+      "confirm": "Conferma",
+      "confirming": "Conferma in corso…",
+      "errRate": "Troppi tentativi. Attendi un minuto e riprova.",
+      "errUnavailable": "Al momento non è possibile. Riprova più tardi o scrivi a {email}.",
+      "errGeneric": "Non è stato possibile confermare la richiesta. Riprova; il link funziona ancora.",
+      "cancelledTitle": "Il tuo abbonamento è disdetto",
+      "cancelledBody": "Non si rinnoverà e non ti verrà addebitato altro. Toone Pro resta attivo fino alla fine del periodo pagato.",
+      "withdrawnTitle": "Hai receduto dal contratto",
+      "withdrawnBody": "Il pagamento è in fase di rimborso e Toone Pro è terminato.",
+      "nothingTitle": "Non c'era nulla da disdire",
+      "nothingBody": "Questo acquisto non ha un abbonamento da disdire, quindi non è cambiato nulla. Ti abbiamo inviato i dettagli via email.",
+      "doneTitle": "La tua richiesta è completata",
+      "doneBody": "La tua richiesta è stata eseguita.",
+      "doneAt": "Confermato il {at}.",
+      "doneEmail": "Ti abbiamo inviato via email una conferma da conservare.",
+      "nothingWithdraw": "Entro 14 giorni dal primo pagamento puoi ancora <link>recedere dal contratto</link>.",
+      "missingTitle": "Questo link è incompleto",
+      "missingBody": "Apri il link dell'email esattamente com'è stato inviato, oppure fai una nuova richiesta.",
+      "expiredTitle": "Questo link è scaduto",
+      "expiredBody": "I link di conferma valgono 24 ore. Fai una nuova richiesta per riceverne uno nuovo.",
+      "startAgain": "Fai una nuova richiesta",
       "terms": "I tuoi diritti sono descritti nei <link>Termini</link>."
     }
   },
@@ -522,7 +562,8 @@
       "refund": "Hai cambiato idea? Puoi ottenere il rimborso completo del primo pagamento entro {days} giorni.",
       "edition": "Toone Pro acquistato qui vale per il tuo account Toone in Toone per Mac scaricato da trytoone.com.",
       "termsLine": "Con l'acquisto accetti i <terms>termini di Toone Pro</terms>.",
-      "stripeLine": "Pagamento sicuro con Stripe."
+      "stripeLine": "Pagamento sicuro con Stripe.",
+      "errConflict": "Un pagamento è già in preparazione: riprova tra un momento."
     },
     "success": {
       "metaTitle": "Conferma del pagamento",
@@ -547,7 +588,15 @@
       "noneSub": "Questo account non ha ancora Toone Pro.",
       "seePricing": "Vedi i prezzi",
       "signedOutTitle": "Accedi per vedere il tuo piano.",
-      "signedOutSub": "Usa l'account per cui hai acquistato Toone Pro."
+      "signedOutSub": "Usa l'account per cui hai acquistato Toone Pro.",
+      "orderRef": "Riferimento ordine: <code>{ref}</code>",
+      "orderRefNote": "Conservalo: il <link>modulo del contratto</link> per recedere o disdire senza accedere te lo chiede.",
+      "processingTitle": "Ci siamo quasi",
+      "processingSub": "Il tuo pagamento è in elaborazione; Pro si attiva quando viene accreditato. Ti invieremo un'email.",
+      "invoicePending": "Fattura: in emissione (ti arriva via email).",
+      "invoiceIssued": "Fattura: emessa (ti arriva via email).",
+      "invoiceNumber": "Fattura: {number}",
+      "invoiceNumberAtcud": "Fattura: {number} · ATCUD {atcud}"
     },
     "cancel": {
       "metaTitle": "Pagamento annullato",
