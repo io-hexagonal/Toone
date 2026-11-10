@@ -25,6 +25,7 @@ export default function SiteHeader({
   scrollThreshold,
 }: Props) {
   const t = useTranslations("nav");
+  const links = useTranslations("account.links");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -136,6 +137,7 @@ export default function SiteHeader({
           <Link href="/journal" data-optional>{t("journal")}</Link>
           <LocalePicker />
           <Link href="/signin">{t("signin")}</Link>
+          <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
           <Link
             className="dl"
