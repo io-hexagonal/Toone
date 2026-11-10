@@ -4,27 +4,44 @@
  * purchase exists, so the page never tells anyone whether an account exists.
  */
 
-import { billingFailure, type ContractRequest } from "@/lib/billing/api";
+import {
+  CONTRACT_NAME_MAX,
+  billingFailure,
+  normalizeOrderRef,
+  type ContractKind,
+  type ContractRequest,
+} from "@/lib/billing/api";
 
-export type ContractKind = ContractRequest["kind"];
+export type { ContractKind };
 
-export const ORDER_REF_MAX = 120;
+/** Longest order reference the field accepts (`TOONE-` + 64). */
+export const ORDER_REF_MAX = 70;
+export { CONTRACT_NAME_MAX };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export type ContractInputError = "errEmail" | "errOrderRef";
+export type ContractInputError = "errEmail" | "errOrderRef" | "errName";
 
-/** The request to send, or which field to fix. */
+/**
+ * The request to send, or which field to fix. The order reference must look
+ * like `TOONE-…` (the server refuses anything else with a 400); the name is
+ * optional.
+ */
 export function contractRequestFrom(
   kind: ContractKind,
   email: string,
   orderRef: string,
+  name = "",
 ): { ok: true; request: ContractRequest } | { ok: false; error: ContractInputError } {
   const cleanEmail = email.trim();
-  const cleanRef = orderRef.trim();
+  const cleanRef = normalizeOrderRef(orderRef);
+  const cleanName = name.trim();
   if (!EMAIL.test(cleanEmail) || cleanEmail.length > 254) return { ok: false, error: "errEmail" };
-  if (!cleanRef || cleanRef.length > ORDER_REF_MAX || /[\u0000-\u001f]/.test(cleanRef)) return { ok: false, error: "errOrderRef" };
-  return { ok: true, request: { kind, email: cleanEmail, order_ref: cleanRef } };
+  if (!cleanRef) return { ok: false, error: "errOrderRef" };
+  if ([...cleanName].length > CONTRACT_NAME_MAX || /[\u0000-\u001f\u007f]/.test(cleanName)) return { ok: false, error: "errName" };
+  const request: ContractRequest = { kind, email: cleanEmail, order_ref: cleanRef };
+  if (cleanName) request.name = cleanName;
+  return { ok: true, request };
 }
 
 export type ContractOutcome =
