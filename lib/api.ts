@@ -1,6 +1,7 @@
 /** Typed client for account authentication and private desktop downloads. */
 
 import { forgetPendingCode } from "./billing/pending-code";
+import { forgetPurchaseRecords } from "./billing/purchase-storage";
 
 const DEFAULT_API_BASE = "https://api.trytoone.com/v1";
 
@@ -206,6 +207,8 @@ export function clearSession(): void {
   clearSiteSession();
   // A /redeem link's code is for whoever signs in next in this tab only while the session lasts.
   forgetPendingCode();
+  // The order reference and checkout of a purchase stay only while the session lasts.
+  forgetPurchaseRecords();
   try {
     localStorage.removeItem(SESSION_KEY);
   } catch {

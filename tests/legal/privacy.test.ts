@@ -44,7 +44,10 @@ test("cookie and storage names match the code that sets them", () => {
   assert.ok(read("lib/api.ts").includes(`const SESSION_KEY = "${SESSION_STORAGE_KEY}"`));
   for (const seller of TOONE_PRO_SELLERS) {
     const text = privacy(seller);
-    for (const name of ["toone_site_session", "toone_locale", "toone.session", "toone-web-analytics-choice-v1", "toone.locale.dismissed"]) {
+    for (const name of [
+      "toone_site_session", "toone_locale", "toone.session", "toone-web-analytics-choice-v1", "toone.locale.dismissed",
+      "toone.pro.order:", "toone.pro.checkout:", "toone.pro.checkout", "toone.pro.from", "toone.redeem.pending",
+    ]) {
       assert.ok(text.includes(name), `${seller}: ${name}`);
     }
     assert.match(text, /Cookie, httpOnly/);
@@ -52,7 +55,26 @@ test("cookie and storage names match the code that sets them", () => {
     assert.match(text, /trytoone\.com sets no Stripe cookies and loads no Stripe script/);
     assert.match(text, /checkout\.stripe\.com/);
     assert.match(text, /allowing it adds no cookie/);
+    assert.match(text, /up to five items in your browser's local storage and up to three in its session storage/);
   }
+});
+
+test("purchase records in local storage are forgotten on sign-out", async () => {
+  const { forgetPurchaseRecords, ORDER_REF_KEY_PREFIX, CHECKOUT_KEY_PREFIX } = await import("../../lib/billing/purchase-storage");
+  assert.equal(ORDER_REF_KEY_PREFIX, "toone.pro.order:");
+  assert.equal(CHECKOUT_KEY_PREFIX, "toone.pro.checkout:");
+  const items = new Map([
+    ["toone.pro.order:usr_1", "TOONE-ABCDEFGH"], ["toone.pro.checkout:usr_1", "cs_test_1"],
+    ["toone.pro.order:usr_2", "TOONE-IJKLMNOP"], ["toone.session", "{}"], ["toone.locale.dismissed", "1"],
+  ]);
+  const store = {
+    get length() { return items.size; },
+    key: (i: number) => [...items.keys()][i] ?? null,
+    removeItem: (key: string) => void items.delete(key),
+  };
+  forgetPurchaseRecords(store);
+  assert.deepEqual([...items.keys()], ["toone.session", "toone.locale.dismissed"]);
+  assert.match(read("lib/api.ts"), /export function clearSession\(\): void \{[\s\S]*?forgetPurchaseRecords\(\);[\s\S]*?\n\}/);
 });
 
 test("Managed Payments: Stripe and Link, Link as seller and independent controller", () => {

@@ -3,12 +3,14 @@
  * browser saw it on the success page. The server only returns it from
  * `GET /billing/checkout/{session_id}`, so the account page can show it only
  * where the purchase was confirmed. It is a reference, not a credential: the
- * contract form also needs the purchase email, and the emailed link decides.
+ * contract form also needs the purchase email. Both records are removed
+ * when the session ends (`forgetPurchaseRecords`).
  */
 
 import { normalizeOrderRef } from "./api";
+import { CHECKOUT_KEY_PREFIX, ORDER_REF_KEY_PREFIX } from "./purchase-storage";
 
-const KEY_PREFIX = "toone.pro.order:";
+const KEY_PREFIX = ORDER_REF_KEY_PREFIX;
 
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
 
@@ -41,7 +43,7 @@ export function recallOrderRef(userId: string, storage: StorageLike | null = def
   }
 }
 
-const SESSION_PREFIX = "toone.pro.checkout:";
+const SESSION_PREFIX = CHECKOUT_KEY_PREFIX;
 const SESSION_ID = /^cs_[A-Za-z0-9_]{1,250}$/;
 
 /**

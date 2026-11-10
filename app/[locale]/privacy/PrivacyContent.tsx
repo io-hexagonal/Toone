@@ -3,6 +3,10 @@ import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import { LOCALE_CHOICE_COOKIE } from "@/i18n/routing";
 import { LOCALE_DISMISSED_KEY } from "@/lib/locale-preference";
 import { SITE_SESSION_COOKIE } from "@/lib/site-session";
+import { CHECKOUT_KEY_PREFIX, ORDER_REF_KEY_PREFIX } from "@/lib/billing/purchase-storage";
+import { PENDING_CODE_STORAGE_KEY } from "@/lib/billing/pending-code";
+import { CHECKOUT_SESSION_STORAGE_KEY } from "@/components/billing/CheckoutReturn.helpers";
+import { FROM_APP_STORAGE_KEY } from "@/components/billing/PricingPlans.helpers";
 import {
   ANALYTICS_CHOICE_STORAGE_KEY,
   PRIVACY_CONTACT,
@@ -281,9 +285,9 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
       <section id="cookies">
         <h2>Cookies and browser storage</h2>
         <p>
-          trytoone.com sets two cookies and keeps three items in your browser&apos;s local storage.
-          All of them are needed for what you asked for, and none is used for analytics or
-          advertising:
+          trytoone.com sets two cookies, keeps up to five items in your browser&apos;s local storage
+          and up to three in its session storage. All of them are needed for what you asked for,
+          and none is used for analytics or advertising:
         </p>
         <Table
           head={["Name", "Kind", "What it does", "How long"]}
@@ -317,6 +321,36 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
               "Local storage",
               "Remembers that you dismissed the language suggestion. It is not sent to Toone.",
               "Until you clear it",
+            ],
+            [
+              <code key="c">{ORDER_REF_KEY_PREFIX}…</code>,
+              "Local storage",
+              "Remembers, for your account, the order reference of your last Toone Pro purchase in this browser, so your account page can show it.",
+              "Until you sign out",
+            ],
+            [
+              <code key="c">{CHECKOUT_KEY_PREFIX}…</code>,
+              "Local storage",
+              "Remembers, for your account, the checkout of that purchase, so your account page can show the status of its invoice.",
+              "Until you sign out",
+            ],
+            [
+              <code key="c">{CHECKOUT_SESSION_STORAGE_KEY}</code>,
+              "Session storage",
+              "Keeps the checkout being confirmed, so reloading the payment confirmation page still works.",
+              "Until you close the tab",
+            ],
+            [
+              <code key="c">{FROM_APP_STORAGE_KEY}</code>,
+              "Session storage",
+              "Remembers that the Toone app opened the pricing page, so the confirmation page can offer a way back to the app.",
+              "Until you close the tab",
+            ],
+            [
+              <code key="c">{PENDING_CODE_STORAGE_KEY}</code>,
+              "Session storage",
+              "Keeps the code from a redeem link while you sign in.",
+              "Until the code is redeemed, you sign out or you close the tab",
             ],
           ]}
         />
