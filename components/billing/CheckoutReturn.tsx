@@ -1,15 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import AuthPage from "@/components/AuthPage";
 import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
-import { createOpenAttempt } from "@/lib/explore/presentation";
 import { initialCheckoutReturn, pollCheckoutReturn, type CheckoutReturnState } from "@/lib/billing/checkout-return";
 import { rememberCheckoutSession, rememberOrderRef } from "@/lib/billing/order-ref";
 import {
-  TOONE_PRO_SUCCESS_URL,
   cameFromApp,
   forgetCheckoutSession,
   offersAppReturn,
@@ -19,9 +17,7 @@ import {
   takeCheckoutSessionId,
 } from "./CheckoutReturn.helpers";
 import { legalInvoiceCopy } from "./legal-invoice";
-
-/** Sentinel the open attempt "navigates" to when the app did not take over. */
-const NO_FALLBACK = "about:blank#toone-not-opened";
+import ReturnToToone from "./ReturnToToone";
 
 /**
  * The page Stripe returns to. It confirms the purchase by polling the
@@ -36,17 +32,13 @@ export default function CheckoutReturn() {
   const [checkout, setCheckout] = useState<{ id: string | null; fromApp: boolean } | null>(null);
   const [state, setState] = useState<CheckoutReturnState>(initialCheckoutReturn);
   const [round, setRound] = useState(0);
-  const [notOpened, setNotOpened] = useState(false);
   /** App purchases: the sign-in form is optional and shown only on request. */
   const [signInRequested, setSignInRequested] = useState(false);
-  const cancelOpen = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     const id = takeCheckoutSessionId(window);
     setCheckout({ id, fromApp: cameFromApp(window.location.search, window) });
   }, []);
-
-  useEffect(() => () => cancelOpen.current?.(), []);
 
   const token = session?.token ?? null;
   const userId = session?.user.id ?? "";
@@ -81,32 +73,6 @@ export default function CheckoutReturn() {
     setRound(value => value + 1);
   }, []);
 
-  function openToone() {
-    setNotOpened(false);
-    cancelOpen.current?.();
-    cancelOpen.current = createOpenAttempt(
-      {
-        listen: (name, fn) => {
-          const target = name === "visibilitychange" ? document : window;
-          target.addEventListener(name, fn);
-          return () => target.removeEventListener(name, fn);
-        },
-        later: (fn, ms) => {
-          const timer = window.setTimeout(fn, ms);
-          return () => window.clearTimeout(timer);
-        },
-        visible: () => document.visibilityState === "visible",
-        // The page never leaves on its own: if Toone did not open, say so.
-        navigate: destination => {
-          if (destination === TOONE_PRO_SUCCESS_URL) window.location.assign(destination);
-          else setNotOpened(true);
-        },
-      },
-      TOONE_PRO_SUCCESS_URL,
-      NO_FALLBACK,
-    );
-  }
-
   const hasCheckout = checkout?.id != null;
   const view = !ready || !checkout ? "pending" : returnView(state, hasCheckout);
   const receipt = returnReceipt(state);
@@ -125,12 +91,8 @@ export default function CheckoutReturn() {
 
   const fromApp = checkout?.fromApp === true;
   const appReturn = offersAppReturn(view, fromApp) && (
-    <>
-      <button type="button" className="pro-return-button" onClick={openToone} data-umami-event="pro-return-to-app">
-        {t("returnToApp")}
-      </button>
-      <p className="pro-return-muted">{notOpened ? t("returnHint") : t("returnNote")}</p>
-    </>
+    <ReturnToToone label={t("returnToApp")} note={t("returnNote")} hint={t("returnHint")}
+      buttonClassName="pro-return-button" noteClassName="pro-return-muted" />
   );
 
   if (view === "signed_out" && (!fromApp || signInRequested)) {

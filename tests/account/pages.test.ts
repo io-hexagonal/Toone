@@ -64,3 +64,27 @@ test("after sign-in, /account and /redeem are return targets; nothing else new i
     assert.equal(signInReturnPath(search), null, search);
   }
 });
+
+test("/account?return=app (the app's billing page) offers Return to Toone before any sign-in", async () => {
+  const { takeAppReturn } = await import("../../components/account/app-return");
+  const replaced: string[] = [];
+  const win = (search: string) => ({
+    location: { pathname: "/en/account", search, hash: "" },
+    history: { state: null, replaceState: (_d: unknown, _u: string, url?: string | URL | null) => void replaced.push(String(url)) },
+  });
+  assert.equal(takeAppReturn(win("?return=app")), true);
+  assert.equal(replaced.pop(), "/en/account", "the parameter leaves the address");
+  assert.equal(takeAppReturn(win("?return=web&x=1")), false);
+  assert.equal(replaced.pop(), "/en/account?x=1");
+  assert.equal(takeAppReturn(win("")), false);
+  assert.equal(replaced.length, 0, "nothing to tidy");
+  assert.equal(takeAppReturn(undefined), false);
+
+  const page = read("components/account/AccountPage.tsx");
+  // Signed out from the app: the return panel, the sign-in form only on request.
+  assert.match(page, /if \(fromApp && !signInRequested\) return <AppReturnPage onSignIn=\{\(\) => setSignInRequested\(true\)\} \/>;/);
+  // Signed in from the app: the same panel above the plan.
+  assert.match(page, /\{fromApp && <AppReturnPanel \/>\}/);
+  assert.match(page, /<ReturnToToone label=\{t\("returnToApp"\)\}/);
+  assert.match(read("components/billing/ReturnToToone.tsx"), /TOONE_PRO_SUCCESS_URL/);
+});
