@@ -72,6 +72,23 @@ export default function TrustPage({
             }
             .trust-page ul { padding-left: 20px; margin-top: 14px; }
             .trust-page li + li { margin-top: 8px; }
+            .trust-table { margin-top: 14px; overflow-x: auto; }
+            .trust-table + p { margin-top: 13px; }
+            .trust-page table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6; }
+            .trust-page th {
+              color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+              text-transform: uppercase; text-align: left; padding: 8px 12px 8px 0;
+              border-bottom: 1px solid rgba(255,255,255,0.14);
+            }
+            .trust-page td {
+              color: rgba(255,255,255,0.72); vertical-align: top; padding: 10px 12px 10px 0;
+              border-bottom: 1px solid rgba(255,255,255,0.07); min-width: 120px;
+            }
+            .trust-page td strong { color: rgba(255,255,255,0.86); font-weight: 600; }
+            .trust-page code {
+              font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+              color: rgba(255,255,255,0.86); word-break: break-all;
+            }
             .trust-page a { color: #b9d9ff; text-underline-offset: 3px; }
             .trust-page a:hover { color: #e0efff; }
             @media (max-width: 640px) {
