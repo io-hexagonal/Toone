@@ -109,8 +109,9 @@ function WebPurchase({ seller, traderDetails }: Props & { traderDetails: boolean
         refund or payment dispute.
       </p>
       <p>
-        For every payment, Toone issues a Portuguese legal invoice, and a credit note for every
-        refund, and emails each to you as a PDF. Each invoice carries the name, country and tax
+        For every accepted payment, Toone issues a Portuguese legal invoice, and a credit note for
+        every refund of one, and emails each to you as a PDF. A payment refused because Toone Pro
+        can&apos;t be sold yet to its billing country is refunded in full and gets neither. Each invoice carries the name, country and tax
         number you gave at checkout and the amount and VAT, and its details are communicated to
         the Portuguese tax authority, as Portuguese law requires. Stripe also sends you its own
         receipt for each payment.

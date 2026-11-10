@@ -114,8 +114,8 @@ function Invoices({ seller }: Props) {
       <p>
         Stripe Tax, Stripe&apos;s tax service, calculates the VAT from where you are, based on
         your billing address.
-        Each payment then gets two documents, both sent by email to the address you gave at
-        checkout:
+        Each accepted payment then gets two documents, both sent by email to the address you gave
+        at checkout:
       </p>
       <ul>
         <li>
@@ -133,8 +133,8 @@ function Invoices({ seller }: Props) {
         If you buy for a business established in another EU country and give a VAT number that is
         valid in VIES, the EU&apos;s VAT register, no VAT is charged: the invoice says that the
         reverse charge applies, and your business accounts for the VAT. Without a valid VAT number,
-        or with a billing address in Portugal, VAT is charged. If a payment is refunded, in full or
-        in part, you also receive a credit note (nota de crédito) for that amount by email. If you
+        or with a billing address in Portugal, VAT is charged. If an accepted payment is refunded, in
+        full or in part, you also receive a credit note (nota de crédito) for that amount by email. If you
         need a copy of an invoice, or one is missing, write to{" "}
         <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
       </p>
@@ -142,8 +142,9 @@ function Invoices({ seller }: Props) {
       <p id="not-sold-in">
         Toone Pro can&apos;t be sold yet to some countries. Countries where we can&apos;t sell yet
         are named at checkout, judged by the billing address you give there. A payment from one of
-        them is refunded in full and doesn&apos;t start Toone Pro, and you receive the credit note
-        for the refund.
+        them is refused: it is refunded in full, doesn&apos;t start Toone Pro, and gets no legal
+        invoice and no credit note, because no sale took place. Stripe emails you the confirmation
+        of the refund.
       </p>
     </>
   );

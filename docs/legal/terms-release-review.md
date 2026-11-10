@@ -57,11 +57,12 @@ Policy and the Legal notice describe:
   invoices.
 - `"direct"`: the trader in `lib/legal/trader.ts` is the seller. Stripe
   Payments Europe processes the payments, Stripe Tax calculates VAT, a
-  Portuguese legal invoice (with ATCUD) is emailed as a PDF for every payment,
+  Portuguese legal invoice (with ATCUD) is emailed as a PDF for every accepted payment,
   separate from Stripe's receipt, EU businesses with a VIES-checked VAT number
   get the reverse charge, and refunds get credit notes. Countries where Toone
   Pro can't be sold yet are named at checkout, not in the Terms; a payment from
-  one is refunded in full and doesn't start Pro.
+  one is refused: refunded in full, no Pro, and no legal invoice or credit note
+  (Stripe's refund confirmation is the only record).
 
 Withdrawal, cancellation, the 14-day first-payment refund, codes, account
 deletion and the Mac App Store edition read the same in both. Change the
