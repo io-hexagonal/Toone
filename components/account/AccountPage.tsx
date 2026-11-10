@@ -14,7 +14,9 @@ import {
   type BillingFeatures,
   type Entitlement,
 } from "@/lib/billing/api";
+import { recallOrderRef } from "@/lib/billing/order-ref";
 import { APPLE_MANAGE_SUBSCRIPTIONS_URL } from "@/lib/legal/terms";
+import { legalInvoiceCopy } from "@/components/billing/legal-invoice";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { describePlan, type PlanView } from "./plan-view";
 import RedeemForm from "./RedeemForm";
@@ -65,7 +67,11 @@ function AccountWorkspace({ session, onSessionEnded }: { session: ToneSession; o
   const [features, setFeatures] = useState<BillingFeatures | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  // Only this browser knows it (the success page saw it); read after mount.
+  const [orderRef, setOrderRef] = useState<string | null>(null);
   const active = useRef(true);
+
+  useEffect(() => { setOrderRef(recallOrderRef(session.user.id)); }, [session.user.id]);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -122,6 +128,12 @@ function AccountWorkspace({ session, onSessionEnded }: { session: ToneSession; o
           <section className={styles.panel} aria-labelledby="account-contract">
             <h2 id="account-contract">{t("contractTitle")}</h2>
             <p>{t("contractSub")}</p>
+            {orderRef && <>
+              <dl className={styles.summary}>
+                <dt>{t("orderRef")}</dt><dd><code className={styles.orderRef}>{orderRef}</code></dd>
+              </dl>
+              <p className={styles.notice}>{t("orderRefNote")}</p>
+            </>}
             <div className={styles.actions}>
               <Link className={styles.button} href="/cancel-contract?kind=withdraw">{t("withdrawLink")}</Link>
               <Link className={styles.button} href="/cancel-contract?kind=cancel">{t("cancelLink")}</Link>
@@ -147,6 +159,7 @@ function PlanPanel({ entitlement, session, features, onSessionEnded }: {
   const t = useTranslations("account.page");
   const locale = useLocale();
   const view: PlanView = describePlan(entitlement);
+  const invoice = legalInvoiceCopy(entitlement.legal_invoice);
   const [opening, setOpening] = useState(false);
   const [manageError, setManageError] = useState("");
   const busy = useRef(false);
@@ -188,6 +201,9 @@ function PlanPanel({ entitlement, session, features, onSessionEnded }: {
       <h2 id="account-plan" className={styles.planName}>{view.tier === "pro" ? t("planPro") : t("planFree")}</h2>
       {facts.length > 0 && <ul className={styles.facts}>{facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}
       {dateText && <p className={line?.key === "grace" ? styles.error : undefined}>{dateText}</p>}
+      {invoice && <p className={styles.notice} data-invoice={entitlement.legal_invoice?.status}>
+        {"values" in invoice ? t(invoice.key, invoice.values) : t(invoice.key)}
+      </p>}
 
       {view.creations && <>
         <p>{t("creations", { used: view.creations.used, limit: view.creations.limit })}</p>

@@ -7,7 +7,7 @@
  * shown as on only when the account's entitlement says so.
  */
 
-import { splitSessionId, stripSessionId, type CheckoutReturnState } from "@/lib/billing/checkout-return";
+import { splitSessionId, stripSessionId, type CheckoutReceipt, type CheckoutReturnState } from "@/lib/billing/checkout-return";
 import { FROM_APP_STORAGE_KEY } from "./PricingPlans.helpers";
 
 /** Where the inline head script parks the id it removed from the address. */
@@ -99,6 +99,8 @@ export function cameFromApp(search: string, win: ReturnWindow | undefined): bool
 export type ReturnView =
   | "pending"
   | "active"
+  /** Paid with a method that clears later; Pro turns on then, by email. */
+  | "processing"
   | "timeout"
   | "signed_out"
   | "expired"
@@ -111,10 +113,18 @@ export function returnView(state: CheckoutReturnState, hasCheckout: boolean): Re
   switch (state.kind) {
     case "pending": return "pending";
     case "active": return "active";
+    case "processing": return "processing";
     case "signed_out": return "signed_out";
     case "timeout": return hasCheckout ? "timeout" : "none";
     case "error": return state.reason === "expired" ? "expired" : "unreachable";
   }
+}
+
+/** The order reference and legal invoice a final state shows, or null. */
+export function returnReceipt(state: CheckoutReturnState): CheckoutReceipt | null {
+  return state.kind === "active" || state.kind === "processing"
+    ? { orderRef: state.orderRef, legalInvoice: state.legalInvoice }
+    : null;
 }
 
 /**

@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import test from "node:test";
+import { createTranslator } from "next-intl";
 import { describePlan } from "../../components/account/plan-view";
+import { legalInvoiceCopy } from "../../components/billing/legal-invoice";
+import en from "../../messages/en.json";
 import { normalizeEntitlement } from "../../lib/billing/api";
 
 /* The account page's reading of GET /me/entitlement (contract fields billing_provider, manage, plan_interval). */
@@ -79,4 +83,19 @@ test("values this site does not know yet never crash and never offer a manage bu
   assert.equal(future.provider, "unknown");
   assert.equal(future.manage, "none");
   assert.equal(future.interval, null);
+});
+
+test("the account page shows the remembered order reference and, in Direct mode, the legal invoice", () => {
+  const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
+  assert.match(page, /recallOrderRef\(session\.user\.id\)/);
+  assert.match(page, /legalInvoiceCopy\(entitlement\.legal_invoice\)/);
+  const t = createTranslator({ locale: "en", messages: en, namespace: "account.page" });
+  const say = (invoice: Parameters<typeof legalInvoiceCopy>[0]) => {
+    const copy = legalInvoiceCopy(invoice);
+    return copy && ("values" in copy ? t(copy.key, copy.values) : t(copy.key));
+  };
+  assert.equal(say(normalizeEntitlement({ plan: "pro" }).legal_invoice), null, "absent: nothing shown");
+  assert.equal(say({ status: "pending", number: null, atcud: null }), "Legal invoice: being issued (emailed to you).");
+  assert.equal(say({ status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" }), "Legal invoice: FR 2026/7 · ATCUD JJ7K2M4P-7");
+  assert.match(t("orderRefNote"), /contract form/);
 });

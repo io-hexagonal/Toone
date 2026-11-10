@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PricingPlans from "@/components/billing/PricingPlans";
+import { checkoutAvailable } from "@/components/billing/PricingPlans.helpers";
 import { getBillingFeaturesOrOff, getPrices, type Price } from "@/lib/billing/api";
 import { TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 import { pricingMetadata } from "./pricing-metadata";
@@ -32,7 +33,7 @@ export default async function PricingPage({ params }: Props) {
     getPrices(CACHE).catch((): Price[] => []),
     getBillingFeaturesOrOff(CACHE),
   ]);
-  const checkoutEnabled = features.stripe_pro_checkout && prices.length > 0;
+  const checkoutEnabled = checkoutAvailable(features.stripe_pro_checkout, prices);
 
   return (
     <>

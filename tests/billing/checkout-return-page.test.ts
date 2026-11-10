@@ -18,11 +18,15 @@ import {
   cameFromApp,
   forgetCheckoutSession,
   returnPollConfig,
+  returnReceipt,
   returnView,
   takeCheckoutSessionId,
 } from "../../components/billing/CheckoutReturn.helpers";
 import { FROM_APP_STORAGE_KEY } from "../../components/billing/PricingPlans.helpers";
+import { legalInvoiceCopy } from "../../components/billing/legal-invoice";
 import { pollCheckoutReturn } from "../../lib/billing/checkout-return";
+import { recallOrderRef, rememberOrderRef } from "../../lib/billing/order-ref";
+import { createTranslator } from "next-intl";
 import { normalizeEntitlement } from "../../lib/billing/api";
 import messages from "../../messages/en.json" with { type: "json" };
 
@@ -166,7 +170,7 @@ test("a session the server calls complete and entitled is not Pro while the enti
     token: "tok",
     sessionId: "cs_test_a1B2",
     fetchEntitlement: async () => FREE,
-    fetchCheckoutStatus: async () => ({ status: "complete", entitled: true }),
+    fetchCheckoutStatus: async () => ({ status: "complete", entitled: true, order_ref: "TOONE-ABCDEFGH12", legal_invoice: null }),
     now: time.now,
     sleep: time.sleep,
   });
@@ -201,4 +205,55 @@ test("the server HTML of the success page only says 'confirming'", () => {
 test("the cancel page says no charge was made and links back to pricing", () => {
   assert.match(messages.billing.cancel.sub, /No charge was made/);
   assert.match(read("app/[locale]/cancel/page.tsx"), /<Link className="pro-return-button" href="\/pricing">/);
+});
+
+/* ---- slow payments, order reference, legal invoice */
+
+test("processing: a delayed payment shows its own view with the order reference", () => {
+  const state = { kind: "processing", orderRef: "TOONE-SLOWPAY0001", legalInvoice: null } as const;
+  assert.equal(returnView(state, true), "processing");
+  assert.deepEqual(returnReceipt(state), { orderRef: "TOONE-SLOWPAY0001", legalInvoice: null });
+  assert.equal(returnReceipt({ kind: "timeout" }), null);
+  assert.equal(
+    messages.billing.success.processingSub,
+    "Your payment is processing; Pro turns on when it clears. We'll email you.",
+  );
+  // A processing checkout is not forgotten, so a reload checks it again.
+  assert.match(read("components/billing/CheckoutReturn.tsx"), /if \(next\.kind === "active" \|\| \(next\.kind === "error" && next\.reason === "expired"\)\)/);
+});
+
+test("the success page names the order reference and the contract form", () => {
+  const t = createTranslator({ locale: "en", messages, namespace: "billing.success" });
+  const html = renderToStaticMarkup(createElement("p", null,
+    t.rich("orderRef", { ref: "TOONE-ABCDEFGH12", code: (chunks) => createElement("code", null, chunks) })));
+  assert.equal(html, "<p>Order reference: <code>TOONE-ABCDEFGH12</code></p>");
+  assert.match(t("orderRefNote", { link: (c: string) => c } as never), /contract form/);
+});
+
+test("legal invoice copy: pending, issued with number and ATCUD, tolerated when absent", () => {
+  const t = createTranslator({ locale: "en", messages, namespace: "billing.success" });
+  const say = (invoice: Parameters<typeof legalInvoiceCopy>[0]) => {
+    const copy = legalInvoiceCopy(invoice);
+    return copy && ("values" in copy ? t(copy.key, copy.values) : t(copy.key));
+  };
+  assert.equal(say(null), null);
+  assert.equal(say(undefined), null);
+  assert.equal(say({ status: "pending", number: null, atcud: null }), "Legal invoice: being issued (emailed to you).");
+  assert.equal(say({ status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" }), "Legal invoice: FR 2026/7 · ATCUD JJ7K2M4P-7");
+  assert.equal(say({ status: "issued", number: "FR 2026/7", atcud: null }), "Legal invoice: FR 2026/7");
+  assert.equal(say({ status: "issued", number: null, atcud: null }), "Legal invoice: issued (emailed to you).");
+});
+
+test("the order reference is remembered per account for the account page, canonical and validated", () => {
+  const storage = memoryStorage();
+  rememberOrderRef("usr_1", "toone-abcdefgh12", storage);
+  assert.equal(recallOrderRef("usr_1", storage), "TOONE-ABCDEFGH12");
+  assert.equal(recallOrderRef("usr_2", storage), null);
+  rememberOrderRef("usr_2", "not-a-ref", storage);
+  rememberOrderRef("", "TOONE-ABCDEFGH12", storage);
+  assert.equal(recallOrderRef("usr_2", storage), null);
+  assert.equal(storage.items.size, 1);
+  storage.setItem("toone.pro.order:usr_3", "<script>");
+  assert.equal(recallOrderRef("usr_3", storage), null);
+  assert.equal(recallOrderRef("usr_1", null), null);
 });
