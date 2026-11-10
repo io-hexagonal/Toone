@@ -16,7 +16,16 @@
  *   pro_lifetime    Stripe lifetime purchase
  *   pro_app_store   monthly App Store subscription, managed by Apple
  *   pro_code        Pro for 30 days from a redeemed code
- *   payments_off    checkout and portal flags off, those routes answer 503
+ *   payments_off    checkout and portal flags off: prices answer 200 with an
+ *                   empty list, checkout, portal and contract requests 503
+ *   checkout_busy   checkout answers 409 conflict (another Pro checkout of the
+ *                   account is still being created)
+ *   slow_payment    a paid checkout stays `open` (a delayed payment method):
+ *                   /__mock/complete returns to the site without turning Pro
+ *                   on; /__mock/clear?session_id=… clears the payment
+ *   direct          Direct mode: the checkout status and the entitlement carry
+ *                   `legal_invoice`, pending for BILLING_MOCK_INVOICE_MS
+ *                   (default 6000) after payment, then issued
  *   codes_off       code flag off, code routes answer 503
  *   signed_out      every signed-in route answers 401
  *   future_enums    entitlement and prices carry values this site does not know yet
@@ -26,6 +35,15 @@
  *   INVALID → invalid_invitation · USED → code_already_redeemed
  *   VERIFY → email_verification_required · LIMIT → rate_limit_exceeded
  *   A code redeemed once answers code_already_redeemed afterwards.
+ *
+ * Contract requests (POST /v1/billing/contract-requests, no sign-in): any
+ * order_ref of the form TOONE-[A-Z0-9]{8,64} matches; the "email" with the
+ * confirmation link is logged and listed in GET /__test/state
+ * (`contract_links`). POST /v1/billing/contract-requests/confirm {token}
+ * answers {kind, outcome} once and the same outcome again; an unknown token
+ * is 404 (the expired case). Outcomes follow the account: cancel → cancelled
+ * (subscription) or nothing_to_cancel (lifetime or no purchase); withdraw →
+ * withdrawn (Pro ends).
  *
  * Checkout: POST /v1/billing/checkout returns a checkout.stripe.com URL that
  * does not exist. Instead, open /__mock/complete?session_id=… on this server:
@@ -38,7 +56,7 @@
  * GET /__test/state.
  *
  * Env: PORT (default 8788), BILLING_MOCK_SITE (default http://localhost:3000),
- * BILLING_MOCK_SCENARIO, BILLING_MOCK_COMPLETE_MS.
+ * BILLING_MOCK_SCENARIO, BILLING_MOCK_COMPLETE_MS, BILLING_MOCK_INVOICE_MS.
  */
 import http from "node:http";
 import { randomBytes } from "node:crypto";
@@ -46,8 +64,11 @@ import { fileURLToPath } from "node:url";
 
 export const SCENARIOS = [
   "free", "pro_stripe", "pro_lifetime", "pro_app_store", "pro_code",
-  "payments_off", "codes_off", "signed_out", "future_enums",
+  "payments_off", "checkout_busy", "slow_payment", "direct", "codes_off", "signed_out", "future_enums",
 ];
+
+const LOCALES = ["en", "pt", "es", "fr", "de", "it", "nl", "ru"];
+const ORDER_REF = /^TOONE-[A-Z0-9]{8,64}$/;
 
 const CODES = {
   PRO30: { kind: "pro_days", value: 30 },
@@ -105,6 +126,7 @@ function freshAccount(scenario, now = Date.now()) {
 export function createBillingMock(options = {}) {
   const site = (options.site ?? process.env.BILLING_MOCK_SITE ?? "http://localhost:3000").replace(/\/$/, "");
   const completeMs = Number(options.completeMs ?? process.env.BILLING_MOCK_COMPLETE_MS ?? 4000);
+  const invoiceMs = Number(options.invoiceMs ?? process.env.BILLING_MOCK_INVOICE_MS ?? 6000);
   const quiet = options.quiet ?? false;
   let state;
 
@@ -119,17 +141,23 @@ export function createBillingMock(options = {}) {
       invitations: [
         { id: "inv_mock_1", recipient_name: "Launch campaign", code_hint: "PRO3…", status: "pending", email: "",
           user_id: "", account_name: "", created_at: iso(Date.now() - 7 * DAY), expires_at: iso(Date.now() + 23 * DAY),
-          used_at: null, max_uses: 100, use_count: 2, benefit: { kind: "pro_days", value: 30 }, admits_signup: false,
+          used_at: null, max_uses: 100, use_count: 62, benefit: { kind: "pro_days", value: 30 }, admits_signup: false,
           campaign: "launch", created_by: "usr_admin" },
       ],
+      // Newest first, as the server pages them; more than one page (50), so "Load more" can be tried.
       redemptions: {
-        inv_mock_1: [
-          { id: "red_mock_2", user_id: "usr_b", email: "b@example.com", account_name: "B", channel: "website",
-            benefit: { kind: "pro_days", value: 30 }, redeemed_at: iso(Date.now() - DAY) },
-          { id: "red_mock_1", user_id: "usr_a", email: "a@example.com", account_name: "A", channel: "desktop",
-            benefit: { kind: "pro_days", value: 30 }, redeemed_at: iso(Date.now() - 2 * DAY) },
-        ],
+        inv_mock_1: Array.from({ length: 62 }, (_, i) => ({
+          redeemed_at: iso(Date.now() - (i + 1) * DAY / 4),
+          account_id: i % 7 === 1 ? null : `usr_${i}`,
+          channel: i % 3 === 1 ? "signup" : "account",
+          benefit_kind: "pro_days",
+          benefit_value: 30,
+        })),
       },
+      // The last web purchase (order reference and, in Direct mode, its legal invoice).
+      purchase: null,
+      contracts: new Map(),
+      contractLinks: [],
       counter: 0,
     };
   }
@@ -141,6 +169,14 @@ export function createBillingMock(options = {}) {
     codes: () => state.scenario !== "codes_off",
   };
 
+  /** `legal_invoice` of a paid session in Direct mode: pending, then issued. */
+  function legalInvoice(session) {
+    if (state.scenario !== "direct" || !session?.paidAt) return undefined;
+    if (Date.now() - session.paidAt < invoiceMs) return { status: "pending" };
+    const n = session.ref.slice(-4);
+    return { status: "issued", number: `FR TOONE2026/${n}`, atcud: `JJ7K2M4P-${n}` };
+  }
+
   function entitlement() {
     const a = state.account;
     const body = {
@@ -151,12 +187,23 @@ export function createBillingMock(options = {}) {
     };
     // Optional fields are omitted (not null) when unset, as an older server would.
     for (const key of ["billing_provider", "manage", "plan_interval"]) if (a[key] !== null) body[key] = a[key];
+    const invoice = a.billing_provider === "stripe" ? legalInvoice(state.purchase) : undefined;
+    if (invoice) body.legal_invoice = invoice;
     return body;
+  }
+
+  /** The buyer paid; a delayed method (slow_payment) leaves the session open until cleared. */
+  function pay(session) {
+    if (session.status !== "open") return;
+    session.paid = true;
+    if (state.scenario !== "slow_payment") activate(session);
   }
 
   function activate(session) {
     if (session.status !== "open") return;
     session.status = "complete";
+    session.paidAt = Date.now();
+    state.purchase = session;
     const lifetime = session.plan === "pro_lifetime";
     Object.assign(state.account, {
       plan: "pro", source: lifetime ? "lifetime" : "subscription", status: "active", product_id: session.plan,
@@ -164,6 +211,21 @@ export function createBillingMock(options = {}) {
       will_renew: lifetime ? null : true, billing_provider: "stripe", manage: "stripe_portal",
       plan_interval: lifetime ? "lifetime" : session.plan === "pro_yearly" ? "year" : "month",
     });
+  }
+
+  /** What confirming a contract request does to the mock account (see billing.md). */
+  function carryOut(kind) {
+    const a = state.account;
+    const stripe = a.plan === "pro" && a.billing_provider === "stripe";
+    if (kind === "withdraw" && stripe) {
+      Object.assign(state.account, freshAccount("free"));
+      return "withdrawn";
+    }
+    if (stripe && a.source === "subscription") {
+      a.will_renew = false;
+      return "cancelled";
+    }
+    return "nothing_to_cancel";
   }
 
   function send(res, status, body) {
@@ -248,15 +310,24 @@ export function createBillingMock(options = {}) {
       return ok(res, { scenario: state.scenario });
     }
     if (p === "/__test/state" && method === "GET") {
-      return ok(res, { scenario: state.scenario, entitlement: entitlement(), sessions: [...state.sessions.values()] });
+      return ok(res, {
+        scenario: state.scenario, entitlement: entitlement(), sessions: [...state.sessions.values()],
+        contract_links: state.contractLinks,
+      });
+    }
+    if (p === "/__mock/clear" && method === "GET") {
+      const session = state.sessions.get(url.searchParams.get("session_id") ?? "");
+      if (!session) return fail(res, 404, "not_found", "unknown checkout session");
+      activate(session);
+      return ok(res, { status: session.status });
     }
     if ((p === "/__mock/complete" || p === "/__mock/expire") && method === "GET") {
       const session = state.sessions.get(url.searchParams.get("session_id") ?? "");
       if (!session) return fail(res, 404, "not_found", "unknown checkout session");
-      if (p === "/__mock/complete") activate(session);
+      if (p === "/__mock/complete") pay(session);
       else if (session.status === "open") session.status = "expired";
       const target = p === "/__mock/complete"
-        ? `${site}/${session.locale}/success?session_id=${encodeURIComponent(session.id)}`
+        ? `${site}/${session.locale}/success?session_id=${encodeURIComponent(session.id)}${session.return === "app" ? "&return=app" : ""}`
         : `${site}/${session.locale}/cancel`;
       res.writeHead(302, { Location: target });
       return res.end();
@@ -277,17 +348,40 @@ export function createBillingMock(options = {}) {
       });
     }
     if (p === "/v1/billing/prices" && method === "GET") {
+      const currency = url.searchParams.get("currency");
+      if (currency !== null && !["eur", "usd", "gbp"].includes(currency)) return fail(res, 400, "invalid_input", "invalid currency");
+      // Payments off: 200 with an empty list (never 503).
+      if (!flag.checkout()) return ok(res, []);
       const prices = state.scenario === "future_enums"
         ? [...PRICES, { plan: "pro_team", interval: "month", amount: 2900, currency: "eur", display_price: "€29", tax_inclusive: true }]
         : PRICES;
       return ok(res, prices);
     }
     if (p === "/v1/billing/contract-requests" && method === "POST") {
+      if (!flag.portal()) return fail(res, 503, "service_unavailable", "service temporarily unavailable");
       const body = await readJSON(req);
-      if (!body || !["withdraw", "cancel"].includes(body.kind) || typeof body.email !== "string" || !body.email.includes("@")) {
+      const locale = body?.locale ?? "en";
+      if (!body || !["withdraw", "cancel"].includes(body.kind) || typeof body.email !== "string" || !body.email.includes("@")
+        || typeof body.order_ref !== "string" || !ORDER_REF.test(body.order_ref.trim().toUpperCase())
+        || !LOCALES.includes(locale)
+        || (body.name !== undefined && (typeof body.name !== "string" || [...body.name].length > 200))) {
         return fail(res, 400, "invalid_input", "invalid request");
       }
-      return ok(res, { status: "sent" }, 202);
+      const token = randomBytes(32).toString("base64url");
+      state.contracts.set(token, { kind: body.kind, outcome: null });
+      const link = `${site}/${locale}/cancel-contract/confirm#token=${token}`;
+      state.contractLinks.push(link);
+      if (!quiet) console.log(`[billing-mock] contract ${body.kind} for ${body.order_ref}${body.name ? ` (${body.name})` : ""}: ${link}`);
+      return ok(res, { accepted: true }, 202);
+    }
+    if (p === "/v1/billing/contract-requests/confirm" && method === "POST") {
+      if (!flag.portal()) return fail(res, 503, "service_unavailable", "service temporarily unavailable");
+      const body = await readJSON(req);
+      if (!body || typeof body.token !== "string" || !body.token) return fail(res, 400, "invalid_input", "invalid request");
+      const request = state.contracts.get(body.token);
+      if (!request) return fail(res, 404, "not_found", "resource not found");
+      if (!request.outcome) request.outcome = carryOut(request.kind);
+      return ok(res, { kind: request.kind, outcome: request.outcome });
     }
     if (p === "/v1/auth/invite/check" && method === "POST") {
       const body = (await readJSON(req)) ?? {};
@@ -324,23 +418,40 @@ export function createBillingMock(options = {}) {
     if (p === "/v1/billing/checkout" && method === "POST") {
       if (!flag.checkout()) return fail(res, 503, "service_unavailable", "service temporarily unavailable");
       const body = await readJSON(req);
-      if (!body || !PRICES.some((price) => price.plan === body.plan) || typeof body.locale !== "string") {
+      // Clients never send redirects or prices.
+      if (!body || ["success_url", "cancel_url", "price_id"].some((key) => key in body)
+        || !PRICES.some((price) => price.plan === body.plan) || !LOCALES.includes(body.locale)
+        || !["web", "app"].includes(body.return)) {
         return fail(res, 400, "invalid_input", "invalid request");
       }
-      if (state.account.plan === "pro" && state.account.source !== "guest") {
-        return fail(res, 409, "already_pro", "this person already has Toone Pro", { source: state.account.source });
+      if (state.scenario === "checkout_busy") {
+        return fail(res, 409, "conflict", "another checkout is being created; retry");
+      }
+      const a = state.account;
+      const paid = a.plan === "pro" && (a.source === "subscription" || a.source === "lifetime");
+      // Monthly/yearly: refused by any paid Pro. Lifetime: only by lifetime Pro or an App Store subscription.
+      const blocks = body.plan === "pro_lifetime"
+        ? paid && (a.source === "lifetime" || a.billing_provider === "app_store")
+        : paid;
+      if (blocks) {
+        return fail(res, 409, "already_pro", "this account already has Toone Pro",
+          { source: a.source, billing_provider: a.billing_provider });
       }
       const id = `cs_test_mock_${++state.counter}`;
-      const session = { id, plan: body.plan, locale: body.locale || "en", return: body.return, status: "open" };
+      const ref = `TOONE-${randomBytes(8).toString("hex").toUpperCase()}`;
+      const session = { id, ref, plan: body.plan, locale: body.locale, return: body.return, status: "open", paid: false };
       state.sessions.set(id, session);
-      if (completeMs > 0) setTimeout(() => activate(session), completeMs).unref();
+      if (completeMs > 0) setTimeout(() => pay(session), completeMs).unref();
       return ok(res, { checkout_url: `https://checkout.stripe.com/c/pay/${id}`, session_id: id });
     }
     const status = p.match(/^\/v1\/billing\/checkout\/([^/]+)$/);
     if (status && method === "GET") {
       const session = state.sessions.get(decodeURIComponent(status[1]));
       if (!session) return fail(res, 404, "not_found", "resource not found");
-      return ok(res, { status: session.status, entitled: session.status === "complete" && state.account.plan === "pro" });
+      const data = { status: session.status, entitled: state.account.plan === "pro", order_ref: session.ref };
+      const invoice = legalInvoice(session);
+      if (invoice) data.legal_invoice = invoice;
+      return ok(res, data);
     }
     if (p === "/v1/billing/portal" && method === "POST") {
       if (!flag.portal()) return fail(res, 503, "service_unavailable", "service temporarily unavailable");
@@ -357,7 +468,8 @@ export function createBillingMock(options = {}) {
       if (!outcome) return;
       const grantsPro = outcome.benefit.kind !== "free_creations";
       if (grantsPro && state.account.plan === "pro") {
-        return fail(res, 409, "already_pro", "this person already has Toone Pro", { source: state.account.source });
+        return fail(res, 409, "already_pro", "this account already has Toone Pro",
+          { source: state.account.source, billing_provider: state.account.billing_provider });
       }
       if (redeem) {
         state.redeemed.add(outcome.code);
@@ -370,7 +482,8 @@ export function createBillingMock(options = {}) {
           });
         }
       }
-      return ok(res, { benefit: outcome.benefit, entitlement: entitlement() });
+      if (!redeem) return ok(res, { benefit: { value: null, ...outcome.benefit }, redeemable: true });
+      return ok(res, { benefit: { value: null, ...outcome.benefit }, entitlement: entitlement() });
     }
 
     /* ---- admin */
@@ -394,6 +507,7 @@ export function createBillingMock(options = {}) {
         id, recipient_name: body.recipient_name ?? "", code: body.code, expires_at: expires, max_uses: body.max_uses ?? 1,
         signup_url: `${site}/invite#code=${encodeURIComponent(body.code)}`, email_queued: false,
         benefit, admits_signup: body.admits_signup !== false, campaign: body.campaign ?? "",
+        warnings: body.max_uses === 0 && ["pro_days", "pro_lifetime"].includes(benefit.kind) ? ["unlimited_pro_code"] : [],
       }, 201);
     }
     const admin = p.match(/^\/v1\/admin\/invitations\/([^/]+)(\/redemptions)?$/);
@@ -402,10 +516,20 @@ export function createBillingMock(options = {}) {
       const invitation = state.invitations.find((item) => item.id === id);
       if (!invitation) return fail(res, 404, "not_found", "resource not found");
       if (admin[2] && method === "GET") {
-        const offset = Math.max(0, Number(url.searchParams.get("offset")) || 0);
-        const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit")) || 50));
+        const rawLimit = url.searchParams.get("limit");
+        const limit = rawLimit === null ? 50 : Number(rawLimit);
+        if (!Number.isInteger(limit) || limit < 1) return fail(res, 400, "invalid_input", "invalid limit");
+        const cursor = url.searchParams.get("cursor");
+        // Opaque to clients: here the index of the next entry, base64url.
+        const start = cursor === null ? 0 : Number(Buffer.from(cursor, "base64url").toString());
+        if (!Number.isInteger(start) || start < 0) return fail(res, 400, "invalid_input", "invalid cursor");
         const all = state.redemptions[id] ?? [];
-        return ok(res, { entries: all.slice(offset, offset + limit), has_more: offset + limit < all.length, limit });
+        const end = start + Math.min(limit, 200);
+        const hasMore = end < all.length;
+        return ok(res, {
+          entries: all.slice(start, end), has_more: hasMore,
+          next_cursor: hasMore ? Buffer.from(String(end)).toString("base64url") : null,
+        });
       }
       if (!admin[2] && method === "DELETE") {
         invitation.status = "revoked";
