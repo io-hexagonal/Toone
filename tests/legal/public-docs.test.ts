@@ -6,14 +6,20 @@ import test from "node:test";
 /** This repository is public: legal notes must not point into the private app sources. */
 const MONOREPO_PATH = /apps\/toone-(?:server|desktop|mobile)|packages\/mcp-server|internal\/(?:domain|handlers|adapters)|\.go\b|\.swift\b|toone-payments-plan|store-build-\d+/;
 
+const LEGAL_PAGES = [
+  "app/[locale]/terms/page.tsx",
+  "app/[locale]/terms/TermsContent.tsx",
+  "app/[locale]/privacy/page.tsx",
+  "app/[locale]/privacy/PrivacyContent.tsx",
+  "app/[locale]/legal-notice/page.tsx",
+  "app/[locale]/legal-notice/WebSales.tsx",
+];
+const LEGAL_SOURCES = [...LEGAL_PAGES, ...fs.readdirSync("lib/legal").map((name) => path.join("lib/legal", name))];
+
 test("docs/legal and the legal pages cite no monorepo source paths", () => {
   const files = [
     ...fs.readdirSync("docs/legal").map((name) => path.join("docs/legal", name)),
-    "app/[locale]/terms/page.tsx",
-    "app/[locale]/privacy/page.tsx",
-    "app/[locale]/legal-notice/page.tsx",
-    "lib/legal/terms.ts",
-    "lib/legal/trader.ts",
+    ...LEGAL_SOURCES,
   ];
   for (const file of files) {
     const source = fs.readFileSync(file, "utf8");
@@ -23,7 +29,7 @@ test("docs/legal and the legal pages cite no monorepo source paths", () => {
 });
 
 test("legal pages carry no draft markers", () => {
-  for (const file of ["app/[locale]/terms/page.tsx", "app/[locale]/privacy/page.tsx", "app/[locale]/legal-notice/page.tsx"]) {
+  for (const file of LEGAL_PAGES) {
     assert.doesNotMatch(fs.readFileSync(file, "utf8"), /\bDRAFT\b|\bVERIFY\b|lorem ipsum/i, file);
   }
 });

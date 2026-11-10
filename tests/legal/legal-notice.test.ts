@@ -1,4 +1,8 @@
+import { renderText } from "./render";
 import assert from "node:assert/strict";
+import { createElement } from "react";
+import { TOONE_PRO_SELLERS } from "../../lib/legal/seller";
+import WebSales from "../../app/[locale]/legal-notice/WebSales";
 import fs from "node:fs";
 import test from "node:test";
 import { ENGLISH_ONLY_PATHS } from "../../i18n/routing";
@@ -33,12 +37,33 @@ test("the legal notice renders every trader field from lib/legal/trader.ts", () 
   for (const key of ["fullName", "tradingName", "address", "email", "phone", "taxId", "activityCode", "complaintsBook", "adrEntity"]) {
     assert.ok(key in LEGAL_TRADER, key);
   }
-  assert.match(page, /Sold through Link, LLC/);
+  assert.match(page, /<WebSales seller=\{TOONE_PRO_SELLER\} \/>/);
+});
+
+test("the legal notice names the web seller for each seller model", () => {
+  assert.deepEqual([...TOONE_PRO_SELLERS], ["managed_payments", "direct"]);
+  const managed = renderText(createElement(WebSales, { seller: "managed_payments" }));
+  assert.match(managed, /merchant of record is Sold through Link, LLC/);
+  assert.match(managed, /Link support/);
+  const direct = renderText(createElement(WebSales, { seller: "direct" }));
+  assert.match(direct, /sold by the trader above, who issues a Portuguese legal invoice for every payment/);
+  assert.match(direct, /Stripe Payments Europe, Limited, in Ireland/);
+  assert.doesNotMatch(direct, /Link/);
 });
 
 test("owner placeholders live only in lib/legal/trader.ts", () => {
   assert.equal(TODO_OWNER, "TODO_OWNER");
-  for (const file of [PAGE, "app/[locale]/terms/page.tsx", "app/[locale]/privacy/page.tsx", "lib/legal/terms.ts", "lib/legal/privacy.ts"]) {
+  for (const file of [
+    PAGE,
+    "app/[locale]/legal-notice/WebSales.tsx",
+    "app/[locale]/terms/page.tsx",
+    "app/[locale]/terms/TermsContent.tsx",
+    "app/[locale]/privacy/page.tsx",
+    "app/[locale]/privacy/PrivacyContent.tsx",
+    "lib/legal/terms.ts",
+    "lib/legal/privacy.ts",
+    "lib/legal/seller.ts",
+  ]) {
     assert.doesNotMatch(read(file), /TODO_OWNER/, file);
   }
   assert.ok(isOwnerPlaceholder(`${TODO_OWNER}: x`));

@@ -79,3 +79,32 @@ The values must match the EU trader details on the App Store listing.
 
 The checklist for counsel and the accountant is kept with the payments plan,
 outside this repository. Until it is cleared, do not deploy this branch.
+
+## Seller model switch (2026-11-10, branch `site/pro-legal-followup`)
+
+Toone Pro can be sold on trytoone.com in one of two ways. `TOONE_PRO_SELLER`
+in `lib/legal/seller.ts` picks the one the Terms, the Privacy Policy and the
+Legal notice describe:
+
+- `"managed_payments"` (default): Stripe Managed Payments. Sold through Link,
+  LLC is the seller and merchant of record; it handles VAT, receipts and
+  invoices.
+- `"direct"`: the trader in `lib/legal/trader.ts` is the seller. Stripe
+  Payments Europe processes the payments, Stripe Tax calculates VAT, a
+  Portuguese legal invoice (with ATCUD) is emailed as a PDF for every payment,
+  separate from Stripe's receipt, EU businesses with a VIES-checked VAT number
+  get the reverse charge, refunds get credit notes, and purchases from a
+  country in `DIRECT_BLOCKED_COUNTRIES` (the United Kingdom for now) are
+  refunded and not activated.
+
+Withdrawal, cancellation, the 14-day first-payment refund, codes, account
+deletion and the Mac App Store edition read the same in both. Change the
+constant only in the release that switches checkout, never ahead of it. The
+tests render both variants.
+
+The Privacy Policy now uses the same page layout as the Terms and carries a
+recipients table (role and country), a purposes and legal-bases table, a
+retention table, transfers, automated decisions, security, children, cookies
+and browser storage by name, the Mac App Store edition and how changes are
+announced. Retention periods still waiting for counsel or the accountant are
+flagged `confirm: true` in `lib/legal/privacy.ts`; the flag is never rendered.

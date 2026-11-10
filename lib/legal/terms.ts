@@ -34,3 +34,5 @@ export const TOONE_PRO_GUEST_MONTH_DAYS = 30;
 export const TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS = 14;
 /** Redeemable codes that grant days of Pro last at most this long. */
 export const TOONE_PRO_CODE_MAX_DAYS = 365;
+/** The emailed link that confirms a login-free withdraw or cancel request works this long. */
+export const TOONE_PRO_CONTRACT_LINK_HOURS = 24;
