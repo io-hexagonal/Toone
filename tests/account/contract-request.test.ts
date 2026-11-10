@@ -6,7 +6,14 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import ContractRequestPage from "../../components/account/ContractRequestPage";
-import { CONTRACT_NAME_MAX, ORDER_REF_MAX, contractOutcome, contractRequestFrom } from "../../components/account/contract-request";
+import {
+  CONTRACT_NAME_MAX,
+  CONTRACT_REASON_MAX,
+  ORDER_REF_MAX,
+  contractOutcome,
+  contractRequestFrom,
+  receivedAt,
+} from "../../components/account/contract-request";
 import { ApiError } from "../../lib/api";
 import { submitContractRequest } from "../../lib/billing/api";
 import en from "../../messages/en.json";
@@ -18,7 +25,7 @@ test("step 1 needs the purchase email and a TOONE- order reference; the name is 
     ok: true, request: { kind: "withdraw", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12" },
   });
   assert.deepEqual(contractRequestFrom("cancel", "buyer@example.com", "TOONE-ABCDEFGH12", "  Ana Buyer "), {
-    ok: true, request: { kind: "cancel", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12", name: "Ana Buyer" },
+    ok: true, request: { kind: "cancel", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12", name: "Ana Buyer", termination: "ordinary" },
   });
   assert.deepEqual(contractRequestFrom("cancel", "buyer@example", "TOONE-ABCDEFGH12"), { ok: false, error: "errEmail" });
   for (const ref of ["   ", "TOONE-1", "1234", `TOONE-${"A".repeat(65)}`, "TOONE\u0000-ABCDEFGH12", "ORDER-ABCDEFGH12"]) {
@@ -40,12 +47,67 @@ test("every accepted request gets the same outcome; errors never say whether a p
   assert.deepEqual(contractOutcome(new TypeError("Failed to fetch")), { state: "error", key: "errGeneric" });
 });
 
-test("the success copy is conditional and names only the address the visitor typed", () => {
-  const sent = en.account.contract.sent;
-  assert.match(sent, /^If we find a matching purchase, we've emailed a confirmation link to \{email\}/);
-  for (const [key, value] of Object.entries(en.account.contract)) {
-    assert.doesNotMatch(value, /no (account|purchase) (was )?found|doesn't exist|not registered/i, key);
+test("a cancellation states its type (§ 312k BGB): extraordinary needs a reason; the end date is optional and after today", () => {
+  const base = ["cancel", "buyer@example.com", "TOONE-ABCDEFGH12", ""] as const;
+  const TODAY = "2026-11-10";
+  assert.deepEqual(contractRequestFrom(...base, { termination: "ordinary", reason: "ignored", endDate: "" }, TODAY), {
+    ok: true, request: { kind: "cancel", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12", termination: "ordinary" },
+  });
+  assert.deepEqual(contractRequestFrom(...base, { termination: "extraordinary", reason: "  Moved abroad  ", endDate: "2026-12-01" }, TODAY), {
+    ok: true,
+    request: {
+      kind: "cancel", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12",
+      termination: "extraordinary", termination_reason: "Moved abroad", end_date: "2026-12-01",
+    },
+  });
+  assert.deepEqual(contractRequestFrom(...base, { termination: "extraordinary", reason: "  ", endDate: "" }, TODAY), { ok: false, error: "errReason" });
+  assert.deepEqual(contractRequestFrom(...base, { termination: "extraordinary", reason: "x".repeat(CONTRACT_REASON_MAX + 1), endDate: "" }, TODAY), { ok: false, error: "errReason" });
+  assert.equal(contractRequestFrom(...base, { termination: "extraordinary", reason: "Line one\nline two", endDate: "" }, TODAY).ok, true);
+  for (const endDate of ["2026-11-10", "2026-11-09", "2026-02-30", "11/12/2026", "2026-1-5"]) {
+    assert.deepEqual(contractRequestFrom(...base, { termination: "ordinary", reason: "", endDate }, TODAY), { ok: false, error: "errEndDate" }, endDate);
   }
+  // A withdrawal carries none of it.
+  assert.deepEqual(contractRequestFrom("withdraw", "buyer@example.com", "TOONE-ABCDEFGH12", "", { termination: "extraordinary", reason: "x", endDate: "2027-01-01" }, TODAY), {
+    ok: true, request: { kind: "withdraw", email: "buyer@example.com", order_ref: "TOONE-ABCDEFGH12" },
+  });
+});
+
+test("pressing the button is the declaration: no emailed link, effect on receipt, conditional on a match", () => {
+  const c = en.account.contract;
+  assert.match(c.confirmNote, /^Pressing the button below is your declaration/);
+  assert.match(c.confirmNote, /takes effect at that moment/);
+  assert.match(c.confirmNote, /you don't need to confirm anything/);
+  assert.match(c.sent, /^If these details match a Toone Pro purchase, your request took effect when we received it/);
+  assert.match(c.sent, /\{email\} an acknowledgement with its content, date and time/);
+  assert.equal(c.sentTitle, "Request received");
+  for (const [key, value] of Object.entries(c)) {
+    assert.doesNotMatch(value, /no (account|purchase) (was )?found|doesn't exist|not registered/i, key);
+    assert.doesNotMatch(value, /confirmation link|Open it to finish|nothing changes before/i, `${key} still describes the emailed link`);
+  }
+  // The email field takes the account's address or the checkout one.
+  assert.match(c.email, /Toone account, or the one you entered at checkout/);
+  assert.match(c.orderRefHelp, /purchase confirmation email from Toone/);
+  // The receipt time is the server's when it sends one.
+  assert.equal(receivedAt("2026-11-10T12:00:00Z").toISOString(), "2026-11-10T12:00:00.000Z");
+  const now = new Date("2026-11-10T13:00:00Z");
+  assert.equal(receivedAt(null, now), now);
+  assert.equal(receivedAt("garbage", now), now);
+});
+
+test("the confirm and acknowledgement steps show the termination type and end date", () => {
+  const page = fs.readFileSync("components/account/ContractRequestPage.tsx", "utf8");
+  const summary = page.slice(page.indexOf("function summary("), page.indexOf("return (\n    <main"));
+  for (const key of ["kindShort", "emailShort", "orderRef", "terminationShort", "terminationExtraordinary", "terminationOrdinary", "reasonShort", "endShort", "endNext"]) {
+    assert.match(summary, new RegExp(`t\\("${key}"\\)`), key);
+  }
+  assert.match(page, /\{step\.name === "confirm" && \([\s\S]*?\{summary\(step\.request\)\}/);
+  assert.match(page, /\{step\.name === "sent" && \([\s\S]*?\{summary\(step\.request\)\}/);
+  // Date and time with the time zone on the acknowledgement.
+  assert.match(page, /t\("sentAt", \{ at: step\.at\.toLocaleString\(locale, \{ dateStyle: "long", timeStyle: "long" \}\) \}\)/);
+  assert.match(page, /type="radio" name="contract-termination"/);
+  assert.match(page, /id="contract-reason"/);
+  assert.match(page, /type="radio" name="contract-end"/);
+  assert.match(page, /id="contract-end-date" type="date"/);
 });
 
 const env = process.env as Record<string, string | undefined>;
@@ -57,7 +119,7 @@ test("a 202 for an unknown email and for a real one resolve the same way, withou
   const seen: { auth: string | null; body: unknown }[] = [];
   globalThis.fetch = (async (_url: string | URL, init?: RequestInit) => {
     seen.push({ auth: new Headers(init?.headers).get("Authorization"), body: JSON.parse(String(init?.body)) });
-    return new Response(JSON.stringify({ data: { accepted: true } }), { status: 202, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ data: { accepted: true, received_at: "2026-11-10T12:00:00Z" } }), { status: 202, headers: { "Content-Type": "application/json" } });
   }) as typeof fetch;
   const outcomes = [];
   for (const email of ["known@example.com", "nobody@example.com"]) {
@@ -68,6 +130,30 @@ test("a 202 for an unknown email and for a real one resolve the same way, withou
   assert.deepEqual(outcomes, [{ state: "sent" }, { state: "sent" }]);
   assert.deepEqual(seen.map((call) => call.auth), [null, null]);
   assert.deepEqual(seen[1].body, { kind: "withdraw", email: "nobody@example.com", order_ref: "TOONE-ABCDEFGH12", locale: "pt" });
+});
+
+test("a cancellation sends its type, reason and end date; a withdrawal never does", async () => {
+  env.NEXT_PUBLIC_API_BASE_URL = "https://api.test/v1";
+  const bodies: unknown[] = [];
+  let reply: unknown = { data: { accepted: true, received_at: "2026-11-10T12:00:00Z" } };
+  globalThis.fetch = (async (_url: string | URL, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body)));
+    return new Response(JSON.stringify(reply), { status: 202, headers: { "Content-Type": "application/json" } });
+  }) as typeof fetch;
+  const receipt = await submitContractRequest({
+    kind: "cancel", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12", locale: "de",
+    termination: "extraordinary", termination_reason: " Umzug ", end_date: "2026-12-31",
+  });
+  assert.deepEqual(receipt, { received_at: "2026-11-10T12:00:00Z" });
+  assert.deepEqual(bodies[0], {
+    kind: "cancel", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12", locale: "de",
+    termination: "extraordinary", termination_reason: "Umzug", end_date: "2026-12-31",
+  });
+  reply = { data: { accepted: true } };
+  assert.deepEqual(await submitContractRequest({
+    kind: "withdraw", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12", termination: "ordinary", end_date: "2026-12-31",
+  }), { received_at: null }, "an older server without received_at still works");
+  assert.deepEqual(bodies[1], { kind: "withdraw", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12" });
 });
 
 test("the page opens on the two labelled functions, with no sign-in form", () => {
@@ -81,9 +167,9 @@ test("the page opens on the two labelled functions, with no sign-in form", () =>
   assert.doesNotMatch(html, /type="password"/);
 });
 
-test("the request sends the page's locale (the emailed link uses it) and the optional name", () => {
+test("the request sends the page's locale (the acknowledgement uses it) and the optional name", () => {
   const page = fs.readFileSync("components/account/ContractRequestPage.tsx", "utf8");
-  assert.match(page, /submitContractRequest\(\{ kind, email: confirmedEmail, order_ref: confirmedRef, name: confirmedName, locale \}\)/);
+  assert.match(page, /submitContractRequest\(\{ \.\.\.request, locale \}\)/);
   assert.match(page, /id="contract-name"/);
   assert.match(page, /autoComplete="name" maxLength=\{CONTRACT_NAME_MAX\}/);
   assert.equal(en.account.contract.name, "Your name (optional)");

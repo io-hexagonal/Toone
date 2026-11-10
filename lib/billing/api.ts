@@ -355,32 +355,58 @@ export function startPortal(token: string, input: { locale: string; return: Bill
 /* ---- login-free contract requests (withdrawal / cancellation) */
 
 export type ContractKind = "withdraw" | "cancel";
+/** For a cancellation: ordinary, or extraordinary (for good cause, with a reason). */
+export type ContractTermination = "ordinary" | "extraordinary";
 
 export type ContractRequest = {
   kind: ContractKind;
+  /** The Toone account's address or the one entered at checkout; the server matches either. */
   email: string;
   order_ref: string;
-  /** Site locale; the emailed link and the emails use it. The server defaults to `en`. */
+  /** Site locale; the acknowledgement email uses it. The server defaults to `en`. */
   locale?: string;
   /** Optional, at most 200 characters; stored with the request. */
   name?: string;
+  /** Cancellations only; absent means ordinary. */
+  termination?: ContractTermination;
+  /** Cancellations only, required for an extraordinary one; at most 1000 characters. */
+  termination_reason?: string;
+  /** Cancellations only: the date (YYYY-MM-DD) the contract should end; absent means the next possible date. */
+  end_date?: string;
 };
 
 /** The server's limit for `name` (characters). */
 export const CONTRACT_NAME_MAX = 200;
+/** The server's limit for `termination_reason` (characters). */
+export const CONTRACT_REASON_MAX = 1000;
+
+export type ContractReceipt = {
+  /** When the server received the declaration (RFC 3339), or null when it did not say. */
+  received_at: string | null;
+};
 
 /**
- * `POST /billing/contract-requests`. The server emails a confirmation link;
- * resolving only means the request was accepted, not that anything changed.
- * An empty name is left out.
+ * `POST /billing/contract-requests`. Sending it is the declaration: when the
+ * email and order reference match a purchase, the withdrawal or cancellation
+ * takes effect at the moment it is received, and the server emails an
+ * acknowledgement. The answer is the same whether or not anything matched.
+ * Empty optional fields are left out.
  */
-export function submitContractRequest(input: ContractRequest): Promise<void> {
+export function submitContractRequest(input: ContractRequest): Promise<ContractReceipt> {
   return call(async () => {
     const body: Record<string, string> = { kind: input.kind, email: input.email.trim(), order_ref: input.order_ref.trim() };
     if (input.locale) body.locale = input.locale;
     const name = input.name?.trim();
     if (name) body.name = name;
-    await publicRequest<unknown>("/billing/contract-requests", { ...jsonBody(body), cache: "no-store" });
+    if (input.kind === "cancel") {
+      if (input.termination) body.termination = input.termination;
+      const reason = input.termination_reason?.trim();
+      if (input.termination === "extraordinary" && reason) body.termination_reason = reason;
+      if (input.end_date) body.end_date = input.end_date;
+    }
+    const raw = record(await publicRequest<unknown>("/billing/contract-requests", { ...jsonBody(body), cache: "no-store" }));
+    const at = str(raw?.received_at);
+    return { received_at: at && !Number.isNaN(Date.parse(at)) ? at : null };
   });
 }
 

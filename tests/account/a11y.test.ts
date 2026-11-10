@@ -19,7 +19,7 @@ test("fieldErrorProps marks the field invalid and appends the error to its descr
 
 test("contract form: each validation error names the input it is about, and that input exists", () => {
   const page = read("components/account/ContractRequestPage.tsx");
-  for (const id of Object.values(CONTRACT_ERROR_FIELD)) assert.match(page, new RegExp(`<input id="${id}"`), id);
+  for (const id of Object.values(CONTRACT_ERROR_FIELD)) assert.match(page, new RegExp(`<(input|textarea) id="${id}"`), id);
   const cases = [
     contractRequestFrom("cancel", "nope", "TOONE-ABCDEFGH12"),
     contractRequestFrom("cancel", "a@b.co", "nope"),
@@ -30,6 +30,8 @@ test("contract form: each validation error names the input it is about, and that
   assert.match(page, /fieldErrorProps\(errorField === "contract-email", DETAILS_ERROR_ID\)/);
   assert.match(page, /fieldErrorProps\(errorField === "contract-order", DETAILS_ERROR_ID, "contract-order-help"\)/);
   assert.match(page, /fieldErrorProps\(errorField === "contract-name", DETAILS_ERROR_ID, "contract-name-help"\)/);
+  assert.match(page, /fieldErrorProps\(errorField === "contract-reason", DETAILS_ERROR_ID\)/);
+  assert.match(page, /fieldErrorProps\(errorField === "contract-end-date", DETAILS_ERROR_ID, "contract-end-help"\)/);
   assert.match(page, /<p id=\{DETAILS_ERROR_ID\} className=\{styles\.error\} role="alert">/);
   assert.match(page, /document\.getElementById\(field\)\?\.focus\(\)/);
 });

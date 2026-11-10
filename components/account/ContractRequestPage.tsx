@@ -6,12 +6,18 @@ import { Link } from "@/lib/navigation";
 import { submitContractRequest } from "@/lib/billing/api";
 import { APPLE_REPORT_A_PROBLEM_URL } from "@/lib/legal/terms";
 import { fieldErrorProps } from "@/lib/field-error";
+import type { ContractRequest } from "@/lib/billing/api";
 import {
   CONTRACT_ERROR_FIELD,
   CONTRACT_NAME_MAX,
+  CONTRACT_REASON_MAX,
+  DEFAULT_CANCEL_TERMS,
   ORDER_REF_MAX,
   contractOutcome,
   contractRequestFrom,
+  localToday,
+  receivedAt,
+  type CancelTerms,
   type ContractKind,
 } from "./contract-request";
 import styles from "./account.module.css";
@@ -19,17 +25,19 @@ import styles from "./account.module.css";
 type Step =
   | { name: "choose" }
   | { name: "details"; kind: ContractKind }
-  | { name: "confirm"; kind: ContractKind; email: string; orderRef: string; person: string }
-  | { name: "sent"; kind: ContractKind; email: string; at: Date };
+  | { name: "confirm"; request: ContractRequest }
+  | { name: "sent"; request: ContractRequest; at: Date };
 
 const SUPPORT_EMAIL = "hello@trytoone.com";
 const DETAILS_ERROR_ID = "contract-details-error";
 
 /**
  * "Withdraw from contract here" and "Cancel contract here", without signing
- * in: (1) the purchase email, the order reference and an optional name,
- * (2) an explicit confirm button, then the same acknowledgement for every
- * request. The emailed link (in this page's locale) is what changes anything.
+ * in: (1) the purchase email, the order reference and an optional name, and
+ * for a cancellation its type and end date, (2) an explicit confirm button,
+ * whose press is the declaration itself, then the same acknowledgement for
+ * every request. A matching request takes effect when it is received; the
+ * server emails the acknowledgement (in this page's locale).
  */
 export default function ContractRequestPage() {
   const t = useTranslations("account.contract");
@@ -38,6 +46,9 @@ export default function ContractRequestPage() {
   const [email, setEmail] = useState("");
   const [orderRef, setOrderRef] = useState("");
   const [person, setPerson] = useState("");
+  const [cancelTerms, setCancelTerms] = useState<CancelTerms>({ ...DEFAULT_CANCEL_TERMS });
+  /** "next": the next possible date; "date": the date in `cancelTerms.endDate`. */
+  const [endChoice, setEndChoice] = useState<"next" | "date">("next");
   const [error, setError] = useState("");
   /** Id of the input the details error is about; null for errors no field caused. */
   const [errorField, setErrorField] = useState<string | null>(null);
@@ -63,36 +74,40 @@ export default function ContractRequestPage() {
 
   function review(event: FormEvent, kind: ContractKind) {
     event.preventDefault();
-    const checked = contractRequestFrom(kind, email, orderRef, person);
+    const terms = { ...cancelTerms, endDate: endChoice === "date" ? cancelTerms.endDate : "" };
+    const checked = contractRequestFrom(kind, email, orderRef, person, terms);
     if (!checked.ok) {
       const field = CONTRACT_ERROR_FIELD[checked.error];
-      setError(checked.error === "errName" ? t("errName", { max: CONTRACT_NAME_MAX }) : t(checked.error));
+      setError(checked.error === "errName" ? t("errName", { max: CONTRACT_NAME_MAX })
+        : checked.error === "errReason" ? t("errReason", { max: CONTRACT_REASON_MAX })
+          : t(checked.error));
       setErrorField(field);
       document.getElementById(field)?.focus();
       return;
     }
     setError("");
     setErrorField(null);
-    setStep({
-      name: "confirm", kind, email: checked.request.email, orderRef: checked.request.order_ref, person: checked.request.name ?? "",
-    });
+    setStep({ name: "confirm", request: checked.request });
   }
 
-  async function confirm(kind: ContractKind, confirmedEmail: string, confirmedRef: string, confirmedName: string) {
+  async function confirm(request: ContractRequest) {
     if (busyRef.current) return;
     busyRef.current = true;
     setBusy(true);
     setError("");
     let caught: unknown;
+    let serverTime: string | null = null;
     try {
-      await submitContractRequest({ kind, email: confirmedEmail, order_ref: confirmedRef, name: confirmedName, locale });
+      serverTime = (await submitContractRequest({ ...request, locale })).received_at;
     } catch (failure) {
       caught = failure ?? new Error("failed");
     }
     const outcome = contractOutcome(caught);
     if (outcome.state === "sent") {
-      setStep({ name: "sent", kind, email: confirmedEmail, at: new Date() });
+      setStep({ name: "sent", request, at: receivedAt(serverTime) });
       setOrderRef("");
+      setCancelTerms({ ...DEFAULT_CANCEL_TERMS });
+      setEndChoice("next");
     } else {
       setError(outcome.key === "errUnavailable" ? t("errUnavailable", { email: SUPPORT_EMAIL }) : t(outcome.key));
     }
@@ -111,8 +126,28 @@ export default function ContractRequestPage() {
     : step.name === "sent"
       ? t("sentTitle")
       : step.name === "confirm"
-        ? step.kind === "withdraw" ? t("confirmWithdrawTitle") : t("confirmCancelTitle")
+        ? step.request.kind === "withdraw" ? t("confirmWithdrawTitle") : t("confirmCancelTitle")
         : step.kind === "withdraw" ? t("withdrawTitle") : t("cancelTitle");
+
+  const formatDay = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString(locale, { dateStyle: "long", timeZone: "UTC" });
+
+  /** What was (or will be) declared: shown before the button and again once it was received. */
+  function summary(request: ContractRequest) {
+    return (
+      <dl className={styles.summary}>
+        <dt>{t("kindShort")}</dt><dd>{request.kind === "withdraw" ? t("kindWithdraw") : t("kindCancel")}</dd>
+        <dt>{t("emailShort")}</dt><dd>{request.email}</dd>
+        <dt>{t("orderRef")}</dt><dd>{request.order_ref}</dd>
+        {request.name && <><dt>{t("nameShort")}</dt><dd>{request.name}</dd></>}
+        {request.kind === "cancel" && <>
+          <dt>{t("terminationShort")}</dt>
+          <dd>{request.termination === "extraordinary" ? t("terminationExtraordinary") : t("terminationOrdinary")}</dd>
+          {request.termination_reason && <><dt>{t("reasonShort")}</dt><dd>{request.termination_reason}</dd></>}
+          <dt>{t("endShort")}</dt><dd>{request.end_date ? formatDay(request.end_date) : t("endNext")}</dd>
+        </>}
+      </dl>
+    );
+  }
 
   return (
     <main className={styles.page}>
@@ -162,6 +197,45 @@ export default function ContractRequestPage() {
                 autoComplete="name" maxLength={CONTRACT_NAME_MAX}
                 {...fieldErrorProps(errorField === "contract-name", DETAILS_ERROR_ID, "contract-name-help")} />
               <small id="contract-name-help">{t("nameHelp")}</small>
+              {step.kind === "cancel" && <>
+                <fieldset className={styles.choiceGroup}>
+                  <legend>{t("terminationLabel")}</legend>
+                  <label>
+                    <input type="radio" name="contract-termination" checked={cancelTerms.termination === "ordinary"}
+                      onChange={() => setCancelTerms({ ...cancelTerms, termination: "ordinary" })} />
+                    {t("terminationOrdinary")}
+                  </label>
+                  <label>
+                    <input type="radio" name="contract-termination" checked={cancelTerms.termination === "extraordinary"}
+                      onChange={() => setCancelTerms({ ...cancelTerms, termination: "extraordinary" })} />
+                    {t("terminationExtraordinary")}
+                  </label>
+                </fieldset>
+                {cancelTerms.termination === "extraordinary" && <>
+                  <label htmlFor="contract-reason">{t("reasonLabel")}</label>
+                  <textarea id="contract-reason" value={cancelTerms.reason} rows={3} maxLength={CONTRACT_REASON_MAX} required
+                    onChange={(event) => setCancelTerms({ ...cancelTerms, reason: event.target.value })}
+                    {...fieldErrorProps(errorField === "contract-reason", DETAILS_ERROR_ID)} />
+                </>}
+                <fieldset className={styles.choiceGroup}>
+                  <legend>{t("endLabel")}</legend>
+                  <label>
+                    <input type="radio" name="contract-end" checked={endChoice === "next"} onChange={() => setEndChoice("next")} />
+                    {t("endNext")}
+                  </label>
+                  <label>
+                    <input type="radio" name="contract-end" checked={endChoice === "date"} onChange={() => setEndChoice("date")} />
+                    {t("endOnDate")}
+                  </label>
+                </fieldset>
+                {endChoice === "date" && <>
+                  <label htmlFor="contract-end-date">{t("endDateLabel")}</label>
+                  <input id="contract-end-date" type="date" value={cancelTerms.endDate} min={localToday()} required
+                    onChange={(event) => setCancelTerms({ ...cancelTerms, endDate: event.target.value })}
+                    {...fieldErrorProps(errorField === "contract-end-date", DETAILS_ERROR_ID, "contract-end-help")} />
+                  <small id="contract-end-help">{t("endDateHelp")}</small>
+                </>}
+              </>}
               {error && <p id={DETAILS_ERROR_ID} className={styles.error} role="alert">{error}</p>}
               <div className={styles.actions} style={{ marginTop: 18 }}>
                 <button className={styles.primary} type="submit">{t("continue")}</button>
@@ -173,28 +247,27 @@ export default function ContractRequestPage() {
 
         {step.name === "confirm" && (
           <section className={styles.panel}>
-            <p>{step.kind === "withdraw" ? t("confirmWithdrawBody") : t("confirmCancelBody")}</p>
-            <dl className={styles.summary}>
-              <dt>{t("email")}</dt><dd>{step.email}</dd>
-              <dt>{t("orderRef")}</dt><dd>{step.orderRef}</dd>
-              {step.person && <><dt>{t("nameShort")}</dt><dd>{step.person}</dd></>}
-            </dl>
+            <p>{step.request.kind === "withdraw" ? t("confirmWithdrawBody") : t("confirmCancelBody")}</p>
+            {summary(step.request)}
             <p className={styles.notice}>{t("confirmNote")}</p>
             {error && <p className={styles.error} role="alert">{error}</p>}
             <div className={styles.actions}>
-              <button className={styles.primary} type="button" disabled={busy}
-                onClick={() => void confirm(step.kind, step.email, step.orderRef, step.person)}>
-                {busy ? t("sending") : step.kind === "withdraw" ? t("confirmWithdraw") : t("confirmCancel")}
+              <button className={styles.primary} type="button" disabled={busy} onClick={() => void confirm(step.request)}>
+                {busy ? t("sending") : step.request.kind === "withdraw" ? t("confirmWithdraw") : t("confirmCancel")}
               </button>
-              <button type="button" disabled={busy} onClick={() => setStep({ name: "details", kind: step.kind })}>{t("edit")}</button>
+              <button type="button" disabled={busy} onClick={() => setStep({ name: "details", kind: step.request.kind })}>{t("edit")}</button>
             </div>
           </section>
         )}
 
         {step.name === "sent" && (
           <section className={styles.panel} aria-live="polite">
-            <p className={styles.ok} role="status">{t("sent", { email: step.email })}</p>
-            <p>{t("sentAt", { at: step.at.toLocaleString(locale, { dateStyle: "long", timeStyle: "short" }) })}</p>
+            <p className={styles.ok} role="status">
+              {t("sentAt", { at: step.at.toLocaleString(locale, { dateStyle: "long", timeStyle: "long" }) })}
+            </p>
+            <p>{t("sent", { email: step.request.email })}</p>
+            {summary(step.request)}
+            <p className={styles.notice}>{step.request.kind === "withdraw" ? t("sentWithdrawEffect") : t("sentCancelEffect")}</p>
             <p className={styles.notice}>{t("sentNote")}</p>
             <div className={styles.actions}>
               <button type="button" onClick={restart}>{t("another")}</button>
