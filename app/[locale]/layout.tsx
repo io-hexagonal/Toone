@@ -239,6 +239,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   const clientMessages = {
     announcement: messages.announcement,
     auth: messages.auth,
+    // Pricing link in the header, plan cards, checkout return pages.
+    billing: messages.billing,
     contact: messages.contact,
     footer: messages.footer,
     landing: messages.landing,
