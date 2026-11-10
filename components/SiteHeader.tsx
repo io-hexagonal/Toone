@@ -26,6 +26,7 @@ export default function SiteHeader({
 }: Props) {
   const t = useTranslations("nav");
   const billing = useTranslations("billing");
+  const links = useTranslations("account.links");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -138,6 +139,7 @@ export default function SiteHeader({
           <Link href="/pricing" data-optional>{billing("nav")}</Link>
           <LocalePicker />
           <Link href="/signin">{t("signin")}</Link>
+          <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
           <Link
             className="dl"

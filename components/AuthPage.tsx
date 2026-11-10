@@ -21,6 +21,8 @@ import {
   type ToneSession,
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
+import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
+import { benefitCopy } from "@/components/account/redeem-code";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
@@ -78,13 +80,16 @@ type Via = "google" | "apple";
 /**
  * Where to go after signing in, from `?next=`: only a listed page of this
  * site, never an arbitrary URL. Each pattern is anchored and allows no other
- * query than the one it names.
+ * query than the one it names; a code never rides in `next`.
  */
 const SIGN_IN_RETURN_PATHS: readonly RegExp[] = [
   // /how-to and its guides (signed-in only)
   /^\/how-to(\/[a-z0-9-]+)*\/?$/,
   // /pricing, optionally with the plan the visitor chose
   /^\/pricing(\?plan=(monthly|yearly|lifetime))?$/,
+  // signed-in account pages
+  /^\/account\/?$/,
+  /^\/redeem\/?$/,
 ];
 
 export function signInReturnPath(search: string): string | null {
@@ -94,6 +99,7 @@ export function signInReturnPath(search: string): string | null {
 
 export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
   const t = useTranslations("auth");
+  const accountCopy = useTranslations("account");
   const locale = useLocale();
   const router = useRouter();
   // Hidden entirely until the deployment configures a Services ID + return URL.
@@ -103,6 +109,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   // the server confirms it is still redeemable.
   const [step, setStep] = useState<"code" | "account" | "handle">(mode === "invite" ? "code" : "account");
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
+  // What a code with a benefit adds to the new account (Pro days, Pro for good, extra creations).
+  const [benefit, setBenefit] = useState<CodeBenefit | null>(null);
   const [handle, setHandle] = useState("");
   const codeRef = useRef("");
   codeRef.current = code;
@@ -168,6 +176,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       // The code can expire or run out between the check and the signup.
       if (mode === "invite" && e instanceof ApiError && e.code === "invalid_invitation") {
         setPreview(null);
+        setBenefit(null);
         setStep("code");
       }
     } finally {
@@ -186,6 +195,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       // Pin the verified code so a later state reset (or a double-run effect) cannot drop it.
       setCode(value.trim());
       setPreview(result);
+      const offered = normalizeBenefit(result);
+      setBenefit(offered.kind === "none" ? null : offered);
       setStep("account");
       track("auth-invitation-checked");
     } catch (e) {
@@ -198,6 +209,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
 
   function changeCode() {
     setPreview(null);
+    setBenefit(null);
     setError(null);
     setStep("code");
   }
@@ -408,6 +420,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               color: rgba(255,255,255,0.55); font-size: 15px;
               margin-bottom: 26px; text-align: center; max-width: 34ch;
             }
+            .auth-benefit {
+              margin: -12px 0 22px; padding: 8px 14px; border-radius: 999px;
+              border: 1px solid rgba(201,193,238,0.28); background: rgba(201,193,238,0.08);
+              color: rgba(226,221,250,0.92); font-size: 13.5px; text-align: center; max-width: 40ch;
+            }
             .auth-card {
               width: 100%; max-width: 400px;
               border: 1px solid rgba(255,255,255,0.11); border-radius: 16px;
@@ -561,6 +578,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                     : t("inviteAccountSub")
             : t("signinSub")}
         </p>
+        {mode === "invite" && step === "account" && benefit && (() => {
+          const copy = benefitCopy(benefit);
+          const name = "values" in copy ? accountCopy(`redeem.${copy.key}`, copy.values) : accountCopy(`redeem.${copy.key}`);
+          return <p className="auth-benefit" data-benefit={benefit.kind}>{accountCopy("invite.benefit", { benefit: name })}</p>;
+        })()}
 
         <div className="auth-card">
           {mode === "invite" && step === "handle" && session ? (
@@ -610,6 +632,9 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                 </svg>
                 {t("downloadMac")}
               </Link>
+              <div>
+                <Link className="auth-signout" href="/account">{accountCopy("links.account")}</Link>
+              </div>
               <div>
                 <InvitationAdminLink token={session.token} className="auth-signout" />
               </div>
