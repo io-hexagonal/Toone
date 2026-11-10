@@ -33,13 +33,13 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
 
-  const load = useCallback(async (reset: boolean, after: string | null, loaded: number) => {
+  const load = useCallback(async (reset: boolean, after: string | null) => {
     controller.current?.abort();
     const current = new AbortController();
     controller.current = current;
     setLoading(true); setError("");
     try {
-      const page = await listCodeLedger(token, invitation.id, { cursor: after, loaded, signal: current.signal });
+      const page = await listCodeLedger(token, invitation.id, { cursor: after, signal: current.signal });
       if (current.signal.aborted) return;
       setEntries((previous) => (reset ? page.entries : [...previous, ...page.entries]));
       setCursor(page.next_cursor);
@@ -53,7 +53,7 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
   }, [token, invitation.id, onAccessError]);
 
   useEffect(() => {
-    void load(true, null, 0);
+    void load(true, null);
     closeButton.current?.focus();
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") closeRef.current(); };
     window.addEventListener("keydown", onKey);
@@ -71,7 +71,7 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
           </div>
           <button ref={closeButton} type="button" onClick={onClose}>Close</button>
         </div>
-        {error && <p className={shell.error} role="alert">{error} <button type="button" onClick={() => void load(entries.length === 0, cursor, entries.length)}>Try again</button></p>}
+        {error && <p className={shell.error} role="alert">{error} <button type="button" onClick={() => void load(entries.length === 0, entries.length === 0 ? null : cursor)}>Try again</button></p>}
         {entries.length === 0 && !loading && !error ? (
           <div className={shell.emptyHistory}><h3>No redemptions yet</h3><p>Every signup or redemption with this code appears here.</p></div>
         ) : (
@@ -86,7 +86,7 @@ export default function RedemptionsDrawer({ token, invitation, onClose, onAccess
         )}
         <div className={styles.drawerFooter}>
           <span className={shell.muted} role="status">{loading ? "Loading…" : `${entries.length} shown`}</span>
-          {hasMore && <button type="button" disabled={loading} onClick={() => void load(false, cursor, entries.length)}>Load more</button>}
+          {hasMore && <button type="button" disabled={loading} onClick={() => void load(false, cursor)}>Load more</button>}
         </div>
       </aside>
     </div>

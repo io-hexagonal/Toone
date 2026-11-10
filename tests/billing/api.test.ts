@@ -14,10 +14,13 @@ import {
   getPrices,
   isPro,
   listCodeInvitations,
-  listInvitationRedemptions,
+  confirmContractRequest,
   mapApiError,
   normalizeBenefit,
+  normalizeCheckoutStatus,
   normalizeEntitlement,
+  normalizeLegalInvoice,
+  normalizeOrderRef,
   planFromParam,
   planParam,
   redeemCode,
@@ -107,6 +110,22 @@ test("checkout only sends the contract fields", async () => {
   assert.deepEqual(calls[0].body, { plan: "pro_monthly", locale: "en", return: "web" });
 });
 
+test("checkout never forwards redirects or a price id, even if a caller passes them", async () => {
+  replies.push(data({ checkout_url: "https://checkout.stripe.com/c/pay/cs_1", session_id: "cs_1" }));
+  const input = {
+    plan: "pro_lifetime", locale: "de", return: "web",
+    success_url: "https://evil.example/ok", cancel_url: "https://evil.example/no", price_id: "price_123",
+  } as never;
+  await startCheckout(TOKEN, input);
+  assert.deepEqual(calls[0].body, { plan: "pro_lifetime", locale: "de", return: "web" });
+});
+
+test("409 conflict (another checkout still being created) is its own failure", async () => {
+  replies.push(reply(409, { code: "conflict", message: "another checkout is being created; retry" }));
+  assert.deepEqual(await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" })), { kind: "conflict" });
+  assert.equal(calls.length, 1, "no entitlement lookup for a conflict");
+});
+
 test("a checkout URL off the Stripe allow-list is refused, never returned", async () => {
   replies.push(data({ checkout_url: "https://checkout.stripe.com.evil.com/pay", session_id: "cs_1" }));
   const failure = await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" }));
@@ -118,8 +137,10 @@ test("a checkout URL off the Stripe allow-list is refused, never returned", asyn
 });
 
 test("checkout status and entitlement are signed-in GETs; the session id is path-encoded", async () => {
-  replies.push(data({ status: "complete", entitled: true }));
-  assert.deepEqual(await getCheckoutStatus(TOKEN, "cs_test/../x"), { status: "complete", entitled: true });
+  replies.push(data({ status: "complete", entitled: true, order_ref: "TOONE-ABCDEFGHIJKLMNOP" }));
+  assert.deepEqual(await getCheckoutStatus(TOKEN, "cs_test/../x"), {
+    status: "complete", entitled: true, order_ref: "TOONE-ABCDEFGHIJKLMNOP", legal_invoice: null,
+  });
   assert.equal(calls[0].url, `${BASE}/billing/checkout/cs_test%2F..%2Fx`);
   assert.equal(calls[0].method, "GET");
   assert.equal(calls[0].headers.get("Authorization"), `Bearer ${TOKEN}`);
@@ -143,15 +164,63 @@ test("portal posts locale and return and only follows the Stripe billing host", 
   assert.equal((await failureOf(startPortal(TOKEN, { locale: "en", return: "web" }))).kind, "unknown");
 });
 
-test("contract requests are public, trimmed and uncached", async () => {
-  replies.push(reply(202, { data: { status: "sent" } }));
-  await submitContractRequest({ kind: "withdraw", email: " me@example.com ", order_ref: " TOONE-123 " });
+test("contract requests are public, trimmed and uncached, with the locale and an optional name", async () => {
+  replies.push(reply(202, { data: { accepted: true } }));
+  await submitContractRequest({ kind: "withdraw", email: " me@example.com ", order_ref: " TOONE-ABCDEFGH12 ", locale: "de", name: "  Ana Buyer " });
   const [call] = calls;
   assert.equal(call.url, `${BASE}/billing/contract-requests`);
   assert.equal(call.method, "POST");
   assert.equal(call.headers.get("Authorization"), null);
   assert.equal(call.cache, "no-store");
-  assert.deepEqual(call.body, { kind: "withdraw", email: "me@example.com", order_ref: "TOONE-123" });
+  assert.deepEqual(call.body, { kind: "withdraw", email: "me@example.com", order_ref: "TOONE-ABCDEFGH12", locale: "de", name: "Ana Buyer" });
+
+  replies.push(reply(202, { data: { accepted: true } }));
+  await submitContractRequest({ kind: "cancel", email: "me@example.com", order_ref: "TOONE-ABCDEFGH12", name: "   " });
+  assert.deepEqual(calls[1].body, { kind: "cancel", email: "me@example.com", order_ref: "TOONE-ABCDEFGH12" }, "an empty name and no locale are left out");
+});
+
+test("contract confirmation posts the token, uncached, and reads kind and outcome", async () => {
+  replies.push(data({ kind: "withdraw", outcome: "withdrawn" }));
+  assert.deepEqual(await confirmContractRequest("tok_abc"), { kind: "withdraw", outcome: "withdrawn" });
+  assert.equal(calls[0].url, `${BASE}/billing/contract-requests/confirm`);
+  assert.equal(calls[0].method, "POST");
+  assert.equal(calls[0].headers.get("Authorization"), null);
+  assert.equal(calls[0].cache, "no-store");
+  assert.deepEqual(calls[0].body, { token: "tok_abc" });
+
+  replies.push(data({ kind: "cancel", outcome: "paused" }));
+  assert.deepEqual(await confirmContractRequest("tok_abc"), { kind: "cancel", outcome: "unknown" });
+
+  replies.push(reply(404, { code: "not_found", message: "resource not found" }));
+  const failure = await failureOf(confirmContractRequest("tok_old"));
+  assert.equal(failure.kind === "unknown" && failure.status, 404);
+});
+
+test("order references: TOONE- plus 8–64 letters or digits, upper-cased", () => {
+  assert.equal(normalizeOrderRef(" toone-abcdefgh12 "), "TOONE-ABCDEFGH12");
+  assert.equal(normalizeOrderRef(`TOONE-${"A".repeat(64)}`), `TOONE-${"A".repeat(64)}`);
+  for (const bad of ["", "TOONE-", "TOONE-SHORT", `TOONE-${"A".repeat(65)}`, "ORDER-ABCDEFGH12", "TOONE-ABCD EFGH12", 42, null]) {
+    assert.equal(normalizeOrderRef(bad), null, String(bad));
+  }
+  assert.equal(normalizeCheckoutStatus({ status: "open", entitled: false, order_ref: "<b>" }).order_ref, null);
+});
+
+test("legal invoice: optional, tolerated when absent or malformed", () => {
+  assert.equal(normalizeLegalInvoice(undefined), null);
+  assert.equal(normalizeLegalInvoice({ status: "voided" }), null);
+  assert.equal(normalizeLegalInvoice("pending"), null);
+  assert.deepEqual(normalizeLegalInvoice({ status: "pending" }), { status: "pending", number: null, atcud: null });
+  assert.deepEqual(normalizeLegalInvoice({ status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" }),
+    { status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" });
+  assert.deepEqual(normalizeCheckoutStatus({ status: "complete", entitled: true, legal_invoice: { status: "pending" } }).legal_invoice,
+    { status: "pending", number: null, atcud: null });
+  assert.deepEqual(normalizeEntitlement({ ...PRO_STRIPE, legal_invoice: { status: "issued", number: "FR 1" } }).legal_invoice,
+    { status: "issued", number: "FR 1", atcud: null });
+});
+
+test("prices while payments are off: 200 with an empty list", async () => {
+  replies.push(data([]));
+  assert.deepEqual(await getPrices(), []);
 });
 
 test("prices are public and accept a caching init", async () => {
@@ -167,12 +236,11 @@ test("prices are public and accept a caching init", async () => {
 });
 
 test("code check and redeem post the trimmed code; an empty code never reaches the API", async () => {
-  replies.push(data({ benefit: { kind: "pro_days", value: 30 }, entitlement: { ...PRO_STRIPE, plan: "free", source: null } }));
+  replies.push(data({ benefit: { kind: "pro_days", value: 30 }, redeemable: true }));
   const checked = await checkCode(TOKEN, "  PRO30 ");
   assert.equal(calls[0].url, `${BASE}/me/codes/check`);
   assert.deepEqual(calls[0].body, { code: "PRO30" });
-  assert.deepEqual(checked.benefit, { kind: "pro_days", value: 30 });
-  assert.equal(checked.entitlement?.plan, "free");
+  assert.deepEqual(checked, { benefit: { kind: "pro_days", value: 30 }, redeemable: true });
 
   replies.push(data({ benefit: { kind: "pro_lifetime" }, entitlement: { ...PRO_STRIPE, source: "grant", billing_provider: "toone" } }));
   const redeemed = await redeemCode(TOKEN, "LIFETIME");
@@ -218,7 +286,8 @@ test("admin invitations carry benefit fields; create sends the benefit nested", 
   assert.equal(list[1].admits_signup, true);
 
   replies.push(reply(201, { data: { id: "inv_3", recipient_name: "C", code: "LIFE", expires_at: "2026-12-01T00:00:00Z", max_uses: 5,
-    signup_url: "https://trytoone.com/invite#code=LIFE", email_queued: false, benefit: { kind: "pro_lifetime" }, admits_signup: false, campaign: "" } }));
+    signup_url: "https://trytoone.com/invite#code=LIFE", email_queued: false, benefit: { kind: "pro_lifetime", value: null }, admits_signup: false, campaign: "",
+    warnings: ["unlimited_pro_code", 7, ""] } }));
   const created = await createCodeInvitation(TOKEN, {
     recipient_name: "C", code: "LIFE", days: 30, max_uses: 5,
     benefit: { kind: "pro_lifetime", value: 99 }, admits_signup: false,
@@ -229,34 +298,20 @@ test("admin invitations carry benefit fields; create sends the benefit nested", 
   });
   assert.deepEqual(created.benefit, { kind: "pro_lifetime", value: null });
   assert.equal(created.code, "LIFE");
+  assert.deepEqual(created.warnings, ["unlimited_pro_code"]);
 
   replies.push(reply(201, { data: { id: "inv_4" } }));
-  await createCodeInvitation(TOKEN, { recipient_name: "D", code: "PLUS", days: 7, benefit: { kind: "free_creations", value: 3 } });
+  const plain = await createCodeInvitation(TOKEN, { recipient_name: "D", code: "PLUS", days: 7, benefit: { kind: "free_creations", value: 3 } });
+  assert.deepEqual(plain.warnings, []);
   assert.deepEqual((calls[2].body as { benefit: unknown }).benefit, { kind: "free_creations", value: 3 });
 });
 
-test("admin revoke and the redemption ledger", async () => {
+test("admin revoke (the redemption ledger lives in lib/billing/redemptions)", async () => {
   replies.push(reply(204));
   await revokeCodeInvitation(TOKEN, "inv/1");
   assert.equal(calls[0].method, "DELETE");
   assert.equal(calls[0].url, `${BASE}/admin/invitations/inv%2F1`);
 
-  replies.push(data({ entries: [
-    { id: "red_1", user_id: "usr_a", email: "a@example.com", account_name: "A", channel: "website", benefit: { kind: "pro_days", value: 30 }, redeemed_at: "2026-11-09T00:00:00Z" },
-    { user_id: "no id" },
-  ], has_more: true, limit: 1 }));
-  const page = await listInvitationRedemptions(TOKEN, "inv_1", { offset: 50, limit: 1 });
-  assert.equal(calls[1].url, `${BASE}/admin/invitations/inv_1/redemptions?offset=50&limit=1`);
-  assert.equal(calls[1].headers.get("Authorization"), `Bearer ${TOKEN}`);
-  assert.deepEqual(page, {
-    entries: [{ id: "red_1", user_id: "usr_a", email: "a@example.com", account_name: "A", channel: "website",
-      benefit: { kind: "pro_days", value: 30 }, redeemed_at: "2026-11-09T00:00:00Z" }],
-    has_more: true, limit: 1,
-  });
-
-  replies.push(data({ entries: [], has_more: false, limit: 50 }));
-  await listInvitationRedemptions(TOKEN, "inv_1");
-  assert.equal(calls[2].url, `${BASE}/admin/invitations/inv_1/redemptions`);
 });
 
 test("billing feature flags come from public capabilities and fail closed", async () => {
@@ -288,6 +343,7 @@ const ERROR_CASES: [string, number, unknown, BillingFailure["kind"]][] = [
   ["email_verification_required", 403, { code: "email_verification_required", message: "x" }, "email_verification_required"],
   ["429", 429, { code: "rate_limit_exceeded", message: "slow down" }, "rate_limited"],
   ["nested error envelope", 429, { error: { code: "rate_limit_exceeded", message: "x" } }, "rate_limited"],
+  ["409 conflict", 409, { code: "conflict", message: "retry" }, "conflict"],
   ["admin forbidden", 403, { code: "forbidden", message: "forbidden" }, "forbidden"],
   ["anything else", 400, { code: "invalid_input", message: "invalid request" }, "unknown"],
   ["500", 500, { code: "internal_error", message: "internal error" }, "unknown"],
@@ -348,6 +404,7 @@ test("entitlement keeps known values and the optional billing fields", () => {
     plan: "pro", source: "subscription", status: "active", product_id: "pro_yearly",
     expires_at: "2027-11-10T00:00:00Z", will_renew: true, billing_provider: "stripe", manage: "stripe_portal",
     plan_interval: "year", free_routine_creations: { used: 2, limit: 2 }, email_verification_required: false, guest_of: null,
+    legal_invoice: null,
   });
   assert.equal(isPro(entitlement), true);
   assert.equal("app_account_token" in entitlement, false);
@@ -401,7 +458,7 @@ test("prices skip unknown plans and malformed rows; checkout status tolerates ne
   ]);
 
   replies.push(data({ status: "processing", entitled: "yes" }));
-  assert.deepEqual(await getCheckoutStatus(TOKEN, "cs_1"), { status: "unknown", entitled: false });
+  assert.deepEqual(await getCheckoutStatus(TOKEN, "cs_1"), { status: "unknown", entitled: false, order_ref: null, legal_invoice: null });
 });
 
 test("benefits: nested, flat, unknown and missing", () => {

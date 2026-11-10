@@ -5,6 +5,7 @@ import {
   EMPTY_CODE_FORM,
   benefitLabel,
   codeRequestFrom,
+  createdWarningNotes,
   minimumCodeLength,
   shareLink,
   unlimitedProWarning,
@@ -154,18 +155,24 @@ test("redemptions page by cursor and read the contract's entry shape", async () 
     entries: [{ redeemed_at: "2026-11-12T09:00:00Z", account_id: "usr_1", channel: "account", benefit: { kind: "pro_days", value: 30 } }],
     has_more: true, next_cursor: "c2",
   });
-  const second = await listCodeLedger("tok", "inv/1", { cursor: first.next_cursor, loaded: 1 });
+  const second = await listCodeLedger("tok", "inv/1", { cursor: first.next_cursor });
   assert.equal(calls[1].url, "https://api.test/v1/admin/invitations/inv%2F1/redemptions?limit=50&cursor=c2");
   assert.equal(second.entries[0].account_id, null, "an erased account reads as null");
   assert.deepEqual(second.entries[0].benefit, { kind: "free_creations", value: 3 });
 });
 
-test("a server that pages by offset still advances (no cursor sent)", async () => {
-  const calls = stub([{ entries: [], has_more: false }]);
-  await listCodeLedger("tok", "inv_1", { loaded: 50 });
-  assert.equal(calls[0].url, "https://api.test/v1/admin/invitations/inv_1/redemptions?limit=50&offset=50");
-  assert.deepEqual(normalizeCodeLedgerPage([{ user_id: "usr_a", created_at: "2026-11-01T00:00:00Z", benefit: { kind: "pro_lifetime" } }]), {
-    entries: [{ redeemed_at: "2026-11-01T00:00:00Z", account_id: "usr_a", channel: "", benefit: { kind: "pro_lifetime", value: null } }],
-    has_more: false, next_cursor: null,
-  });
+test("the last page has no cursor; has_more without a cursor cannot advance; offset paging is gone", async () => {
+  const calls = stub([{ entries: [], has_more: false, next_cursor: null }]);
+  await listCodeLedger("tok", "inv_1");
+  assert.doesNotMatch(calls[0].url, /offset=/);
+  assert.deepEqual(normalizeCodeLedgerPage({ entries: [], has_more: true, next_cursor: null }), { entries: [], has_more: false, next_cursor: null });
+  assert.deepEqual(normalizeCodeLedgerPage([{ redeemed_at: "2026-11-01T00:00:00Z" }]), { entries: [], has_more: false, next_cursor: null },
+    "a bare array is not the contract's page");
+});
+
+test("admin create warnings are shown; an unknown one by name", () => {
+  assert.deepEqual(createdWarningNotes([]), []);
+  const [unlimited, other] = createdWarningNotes(["unlimited_pro_code", "future_warning"]);
+  assert.match(unlimited, /unlimited Pro code/);
+  assert.equal(other, "The server returned a warning: future_warning.");
 });

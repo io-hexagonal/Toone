@@ -21,6 +21,7 @@ import {
   EMPTY_CODE_FORM,
   benefitLabel,
   codeRequestFrom,
+  createdWarningNotes,
   grantsPro,
   maxValidityDays,
   minimumCodeLength,
@@ -136,8 +137,7 @@ function CodesWorkspace({ session, onSessionEnded }: { session: ToneSession; onS
       const response = await createCodeInvitation(session.token, result.input);
       if (!active.current) return;
       const notes: string[] = [];
-      const warnings = (response as unknown as { warnings?: unknown }).warnings;
-      if (Array.isArray(warnings) && warnings.includes("unlimited_pro_code")) notes.push("The server flagged this as an unlimited Pro code. Share it carefully and revoke it when the campaign ends.");
+      notes.push(...createdWarningNotes(response.warnings));
       if (result.input.benefit && response.benefit.kind !== result.input.benefit.kind) {
         notes.push("The server did not record the benefit, so this code only admits signups. Revoke it if that is not what you wanted.");
       }
