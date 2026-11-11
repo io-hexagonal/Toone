@@ -20,7 +20,7 @@ const terms = (seller: TooneProSeller, traderDetails = true) => renderText(creat
 const termsHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml(createElement(TermsContent, { seller, traderDetails }));
 
 test("Terms page renders the seller model from lib/legal/seller.ts", () => {
-  assert.match(page, /<TermsContent seller=\{TOONE_PRO_SELLER\} \/>/);
+  assert.match(page, /<TermsContent seller=\{seller\} \/>/);
   assert.match(page, /updated=\{TERMS_UPDATED_DATE\}/);
 });
 

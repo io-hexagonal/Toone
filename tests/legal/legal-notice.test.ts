@@ -46,7 +46,7 @@ test("the legal notice renders every trader field from lib/legal/trader.ts", () 
   for (const key of ["fullName", "tradingName", "address", "email", "phone", "taxId", "activityCode", "complaintsBook", "adrEntity"]) {
     assert.ok(key in LEGAL_TRADER, key);
   }
-  assert.match(page, /<WebSales seller=\{TOONE_PRO_SELLER\} \/>/);
+  assert.match(page, /<WebSales seller=\{seller\} \/>/);
 });
 
 test("the legal notice names the web seller for each seller model", () => {

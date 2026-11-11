@@ -4,8 +4,11 @@ import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
 import { TERMS_CANONICAL, TERMS_UPDATED_DATE } from "@/lib/legal/terms";
-import { TOONE_PRO_SELLER } from "@/lib/legal/seller";
+import { loadSeller } from "@/lib/legal/current-seller";
 import TermsContent from "./TermsContent";
+
+/** The seller model comes from the API (cached like the pricing page), so a switch needs no redeploy. */
+export const revalidate = 300;
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -35,6 +38,7 @@ export default async function TermsPage({ params, searchParams }: Props) {
   const { locale } = await params;
   if (locale !== "en") await redirectToEnglish("/en/terms", searchParams);
   setRequestLocale(locale);
+  const seller = await loadSeller();
 
   return (
     <TrustPage
@@ -44,7 +48,7 @@ export default async function TermsPage({ params, searchParams }: Props) {
       updated={TERMS_UPDATED_DATE}
       updatedLabel="Updated"
     >
-      <TermsContent seller={TOONE_PRO_SELLER} />
+      <TermsContent seller={seller} />
     </TrustPage>
   );
 }

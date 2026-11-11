@@ -5,8 +5,11 @@ import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
 import { LEGAL_TRADER, TRADER_DETAILS_COMPLETE, type TraderField, type TraderKey } from "@/lib/legal/trader";
-import { TOONE_PRO_SELLER } from "@/lib/legal/seller";
+import { loadSeller } from "@/lib/legal/current-seller";
 import WebSales from "./WebSales";
+
+/** The seller model comes from the API (cached like the pricing page), so a switch needs no redeploy. */
+export const revalidate = 300;
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -66,6 +69,7 @@ export default async function LegalNoticePage({ params, searchParams }: Props) {
   const { locale } = await params;
   if (locale !== "en") await redirectToEnglish("/en/legal-notice", searchParams);
   setRequestLocale(locale);
+  const seller = await loadSeller();
 
   return (
     <TrustPage
@@ -82,7 +86,7 @@ export default async function LegalNoticePage({ params, searchParams }: Props) {
 
       <section id="web-sales">
         <h2>Toone Pro sold on trytoone.com</h2>
-        <WebSales seller={TOONE_PRO_SELLER} />
+        <WebSales seller={seller} />
       </section>
 
       <section id="complaints">

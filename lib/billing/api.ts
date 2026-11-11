@@ -29,6 +29,7 @@ import {
   type ProSource,
 } from "./errors";
 import { allowedStripeUrl } from "./stripe-url";
+import { sellerFromServer, type TooneProSeller } from "../legal/seller";
 
 export * from "./errors";
 export { allowedStripeUrl, isAllowedStripeUrl, STRIPE_REDIRECT_HOSTS, type StripeRedirectKind } from "./stripe-url";
@@ -594,6 +595,12 @@ export type BillingFeatures = {
   pro_codes: boolean;
   /** `contracts.payments`; 0 when payments are off. */
   payments_contract: number;
+  /**
+   * Who sells new Toone Pro purchases on the web, from `features.billing_seller`
+   * (`"managed_payments"` or `"direct"`); null when the API does not say.
+   * The legal pages render from it; see `lib/legal/seller.ts`.
+   */
+  billing_seller: TooneProSeller | null;
 };
 
 export const BILLING_FEATURES_OFF: Readonly<BillingFeatures> = Object.freeze({
@@ -601,6 +608,7 @@ export const BILLING_FEATURES_OFF: Readonly<BillingFeatures> = Object.freeze({
   billing_portal: false,
   pro_codes: false,
   payments_contract: 0,
+  billing_seller: null,
 });
 
 /** Reads the flags from `GET /capabilities`; anything missing or malformed is off. */
@@ -612,6 +620,7 @@ export function normalizeBillingFeatures(raw: unknown): BillingFeatures {
     billing_portal: features.billing_portal === true,
     pro_codes: features.pro_codes === true,
     payments_contract: num(contracts.payments) ?? 0,
+    billing_seller: sellerFromServer(features.billing_seller),
   };
 }
 

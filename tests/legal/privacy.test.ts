@@ -28,7 +28,7 @@ const privacy = (seller: TooneProSeller, traderDetails = true) => renderText(cre
 const privacyHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml(createElement(PrivacyContent, { seller, traderDetails }));
 
 test("Privacy page renders the seller model and the bumped date", () => {
-  assert.match(page, /<PrivacyContent seller=\{TOONE_PRO_SELLER\} \/>/);
+  assert.match(page, /<PrivacyContent seller=\{seller\} \/>/);
   assert.match(page, /updated=\{PRIVACY_UPDATED_DATE\}/);
   assert.equal(PRIVACY_UPDATED_DATE, "November 10, 2026");
   for (const seller of TOONE_PRO_SELLERS) {

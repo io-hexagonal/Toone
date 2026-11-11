@@ -4,8 +4,11 @@ import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import TrustPage from "@/components/TrustPage";
 import { PRIVACY_CANONICAL, PRIVACY_UPDATED_DATE } from "@/lib/legal/privacy";
-import { TOONE_PRO_SELLER } from "@/lib/legal/seller";
+import { loadSeller } from "@/lib/legal/current-seller";
 import PrivacyContent from "./PrivacyContent";
+
+/** The seller model comes from the API (cached like the pricing page), so a switch needs no redeploy. */
+export const revalidate = 300;
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -40,6 +43,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
   const { locale } = await params;
   if (locale !== "en") await redirectToEnglish("/en/privacy", searchParams);
   setRequestLocale(locale);
+  const seller = await loadSeller();
 
   return (
     <TrustPage
@@ -49,7 +53,7 @@ export default async function PrivacyPage({ params, searchParams }: Props) {
       updated={PRIVACY_UPDATED_DATE}
       updatedLabel="Updated"
     >
-      <PrivacyContent seller={TOONE_PRO_SELLER} />
+      <PrivacyContent seller={seller} />
     </TrustPage>
   );
 }
