@@ -23,6 +23,7 @@ import { legalInvoiceCopy } from "@/components/billing/legal-invoice";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { describePlan, type PlanView } from "./plan-view";
 import RedeemForm from "./RedeemForm";
+import EmailVerification from "./EmailVerification";
 import ReturnToToone from "@/components/billing/ReturnToToone";
 import { takeAppReturn } from "./app-return";
 import styles from "./account.module.css";
@@ -190,11 +191,20 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
             </section>
           )}
 
+          {entitlement?.email_verification_required && (
+            <section className={styles.panel} aria-labelledby="account-verify">
+              <h2 id="account-verify">{t("verifyTitle")}</h2>
+              <p>{t("verifySub")}</p>
+              <EmailVerification token={session.token} email={session.user.email} onSessionEnded={onSessionEnded}
+                onVerified={() => void refresh()} />
+            </section>
+          )}
+
           {features?.pro_codes && (
             <section className={styles.panel} aria-labelledby="account-redeem">
               <h2 id="account-redeem">{t("redeemTitle")}</h2>
               <p>{t("redeemSub")}</p>
-              <RedeemForm token={session.token} onSessionEnded={onSessionEnded} onRedeemed={setEntitlement} headingLevel={3} />
+              <RedeemForm token={session.token} email={session.user.email} onSessionEnded={onSessionEnded} onRedeemed={setEntitlement} headingLevel={3} />
             </section>
           )}
 

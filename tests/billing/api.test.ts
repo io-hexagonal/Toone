@@ -6,6 +6,8 @@ import {
   billingFailure,
   checkCode,
   checkInvitationBenefit,
+  confirmEmailVerification,
+  sendEmailVerification,
   createCodeInvitation,
   getBillingFeatures,
   getBillingFeaturesOrOff,
@@ -503,4 +505,27 @@ test("plan query values", () => {
   for (const bad of ["", "Yearly", "pro_team", "constructor", "__proto__", null, 1]) assert.equal(planFromParam(bad), null);
   assert.equal(planParam("pro_monthly"), "monthly");
   assert.equal(planParam("pro_lifetime"), "lifetime");
+});
+
+test("email verification: send posts nothing; confirm posts the trimmed code and returns the entitlement", async () => {
+  replies.push(reply(202, { data: { sent: true } }));
+  await sendEmailVerification(TOKEN);
+  assert.equal(calls[0].method, "POST");
+  assert.equal(calls[0].url, `${BASE}/me/email-verification`);
+  assert.equal(calls[0].headers.get("Authorization"), `Bearer ${TOKEN}`);
+
+  replies.push(data({ plan: "pro", status: "active", source: "grant", expires_at: "2026-12-11T00:00:00Z", email_verification_required: false }));
+  const entitlement = await confirmEmailVerification(TOKEN, " 123456 ");
+  assert.equal(calls[1].url, `${BASE}/me/email-verification/confirm`);
+  assert.deepEqual(calls[1].body, { code: "123456" });
+  assert.equal(entitlement.plan, "pro");
+  assert.equal(entitlement.email_verification_required, false);
+
+  replies.push(reply(400, { code: "invalid_code", message: "the code is wrong" }));
+  await assert.rejects(confirmEmailVerification(TOKEN, "000000"), (error) => billingFailure(error).kind === "invalid_code");
+  replies.push(reply(409, { code: "already_verified", message: "already verified" }));
+  await assert.rejects(confirmEmailVerification(TOKEN, "000000"), (error) => {
+    const failure = billingFailure(error);
+    return failure.kind === "unknown" && failure.status === 409 && failure.code === "already_verified";
+  });
 });

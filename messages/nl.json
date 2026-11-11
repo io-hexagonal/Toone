@@ -20,7 +20,8 @@
       "codesAdmin": "Codes"
     },
     "invite": {
-      "benefit": "Deze code geeft je ook {benefit}."
+      "benefit": "Deze code geeft je ook {benefit}.",
+      "benefitShared": "Deze code geeft je ook {benefit}. Meld je je aan met e-mailadres en wachtwoord, dan gaat het in zodra je dat adres bevestigt; met Google of Apple meteen."
     },
     "page": {
       "eyebrow": "Account",
@@ -70,6 +71,8 @@
       "nothingToManage": "Er is geen abonnement om te beheren of op te zeggen.",
       "redeemTitle": "Code inwisselen",
       "redeemSub": "Heb je een Toone-code? Vul hem hier in.",
+      "verifyTitle": "Bevestig je e-mailadres",
+      "verifySub": "Toone Pro uit een code, een cadeau of een gastmaand wacht op dit account. Het gaat in zodra je je e-mailadres bevestigt.",
       "contractTitle": "Herroepen of opzeggen",
       "contractSub": "Herroep een aankoop of zeg je contract op. Dat kan ook zonder in te loggen.",
       "withdrawLink": "Contract hier herroepen",
@@ -111,13 +114,29 @@
       "viewAccount": "Je account",
       "errInvalid": "Deze code is niet geldig. Controleer hem en probeer het opnieuw.",
       "errUsed": "Dit account heeft deze code al gebruikt.",
-      "errVerify": "Bevestig eerst je e-mailadres en probeer het dan opnieuw. Zoek onze e-mail in je inbox.",
+      "errVerify": "Bevestig eerst je e-mailadres en wissel de code daarna in. We mailen je een code om het te bevestigen.",
       "errAlreadyProAppStore": "Je hebt Toone Pro al via de App Store, dus deze code kan niet worden gebruikt zolang dat abonnement actief is.",
       "errAlreadyProPaid": "Je hebt al een betaald Toone Pro-abonnement, dus deze code kan niet worden gebruikt zolang het actief is.",
       "errAlreadyPro": "Je hebt Toone Pro al, dus deze code kan nu niet worden gebruikt.",
       "errUnavailable": "Codes kunnen nu niet worden ingewisseld. Probeer het later opnieuw.",
       "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
       "errGeneric": "Er ging iets mis. Probeer het opnieuw."
+    },
+    "verify": {
+      "body": "Om {email} te bevestigen, mailen we je een code.",
+      "send": "Mail me een code",
+      "sending": "Versturen…",
+      "sent": "We hebben een code van {digits} cijfers naar {email} gestuurd. Dat kan een minuut duren; kijk ook in je spammap.",
+      "codeLabel": "Code van {digits} cijfers",
+      "confirm": "Bevestigen",
+      "confirming": "Bevestigen…",
+      "resend": "Nieuwe code sturen",
+      "errFormat": "Vul de {digits} cijfers uit de e-mail in.",
+      "errCode": "Die code is onjuist, verlopen of opgebruikt. Controleer hem of vraag een nieuwe aan.",
+      "errRate": "Te veel pogingen. Wacht een paar minuten en probeer het opnieuw.",
+      "errUnavailable": "Bevestigen per e-mail kan nu niet. Probeer het later opnieuw.",
+      "errGeneric": "Er ging iets mis. Probeer het opnieuw.",
+      "done": "Je e-mailadres is bevestigd."
     },
     "contract": {
       "eyebrow": "Toone Pro",

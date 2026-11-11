@@ -89,7 +89,7 @@ test("the invite page still renders (the benefit line appears once a code is ver
 test("the root layout ships only the account keys used outside the account pages", () => {
   const shell = flatten(accountShellMessages(en.account) as Tree);
   assert.deepEqual(Object.keys(shell).sort(), [
-    "invite.benefit", "links.account", "links.codesAdmin",
+    "invite.benefit", "invite.benefitShared", "links.account", "links.codesAdmin",
     "redeem.benefitFreeCreations", "redeem.benefitProDays", "redeem.benefitProLifetime", "redeem.benefitUnknown",
   ]);
   assert.match(fs.readFileSync("app/[locale]/layout.tsx", "utf8"), /account: accountShellMessages\(messages\.account\)/);

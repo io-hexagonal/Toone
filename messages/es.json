@@ -20,7 +20,8 @@
       "codesAdmin": "Códigos"
     },
     "invite": {
-      "benefit": "Este código también te da {benefit}."
+      "benefit": "Este código también te da {benefit}.",
+      "benefitShared": "Este código también te da {benefit}. Si te registras con correo y contraseña, se aplica cuando confirmes esa dirección; con Google o Apple, al momento."
     },
     "page": {
       "eyebrow": "Cuenta",
@@ -70,6 +71,8 @@
       "nothingToManage": "No hay ninguna suscripción que gestionar o cancelar.",
       "redeemTitle": "Canjear un código",
       "redeemSub": "¿Tienes un código de Toone? Introdúcelo aquí.",
+      "verifyTitle": "Confirma tu dirección de correo",
+      "verifySub": "Toone Pro de un código, un regalo o un mes de invitado espera a esta cuenta. Se aplica en cuanto confirmes tu dirección de correo.",
       "contractTitle": "Desistir o cancelar",
       "contractSub": "Desiste de una compra o cancela tu contrato. También funciona sin iniciar sesión.",
       "withdrawLink": "Desistir del contrato aquí",
@@ -111,13 +114,29 @@
       "viewAccount": "Tu cuenta",
       "errInvalid": "Este código no es válido. Revísalo e inténtalo de nuevo.",
       "errUsed": "Esta cuenta ya usó este código.",
-      "errVerify": "Primero confirma tu dirección de correo y vuelve a intentarlo. Busca nuestro correo en tu bandeja de entrada.",
+      "errVerify": "Primero confirma tu dirección de correo y luego canjea el código. Te enviamos un código por correo para confirmarla.",
       "errAlreadyProAppStore": "Ya tienes Toone Pro desde la App Store, así que este código no se puede usar mientras ese plan esté activo.",
       "errAlreadyProPaid": "Ya tienes un plan de pago de Toone Pro, así que este código no se puede usar mientras esté activo.",
       "errAlreadyPro": "Ya tienes Toone Pro, así que este código no se puede usar ahora.",
       "errUnavailable": "Ahora no se pueden canjear códigos. Inténtalo más tarde.",
       "errRate": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
       "errGeneric": "Algo salió mal. Inténtalo de nuevo."
+    },
+    "verify": {
+      "body": "Para confirmar {email}, te enviamos un código por correo.",
+      "send": "Enviarme un código",
+      "sending": "Enviando…",
+      "sent": "Hemos enviado un código de {digits} dígitos a {email}. Puede tardar un minuto; revisa también la carpeta de spam.",
+      "codeLabel": "Código de {digits} dígitos",
+      "confirm": "Confirmar",
+      "confirming": "Confirmando…",
+      "resend": "Enviar un código nuevo",
+      "errFormat": "Introduce los {digits} dígitos del correo.",
+      "errCode": "Ese código es incorrecto, ha caducado o ya se usó. Revísalo o pide uno nuevo.",
+      "errRate": "Demasiados intentos. Espera unos minutos y vuelve a intentarlo.",
+      "errUnavailable": "La confirmación por correo no está disponible ahora. Inténtalo más tarde.",
+      "errGeneric": "Algo salió mal. Inténtalo de nuevo.",
+      "done": "Tu dirección de correo está confirmada."
     },
     "contract": {
       "eyebrow": "Toone Pro",

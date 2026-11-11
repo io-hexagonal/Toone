@@ -20,7 +20,8 @@
       "codesAdmin": "Codes"
     },
     "invite": {
-      "benefit": "This code also gives you {benefit}."
+      "benefit": "This code also gives you {benefit}.",
+      "benefitShared": "This code also gives you {benefit}. If you sign up with an email address and password, it applies once you confirm that address; with Google or Apple, straight away."
     },
     "page": {
       "eyebrow": "Account",
@@ -70,6 +71,8 @@
       "nothingToManage": "There's no subscription to manage or cancel.",
       "redeemTitle": "Redeem a code",
       "redeemSub": "Have a Toone code? Enter it here.",
+      "verifyTitle": "Confirm your email address",
+      "verifySub": "Toone Pro from a code, a gift or a guest month is waiting for this account. It applies as soon as you confirm your email address.",
       "contractTitle": "Withdraw or cancel",
       "contractSub": "Withdraw from a purchase or cancel your contract. These work without signing in too.",
       "withdrawLink": "Withdraw from contract here",
@@ -111,13 +114,29 @@
       "viewAccount": "Your account",
       "errInvalid": "This code isn't valid. Check it and try again.",
       "errUsed": "This account has already used this code.",
-      "errVerify": "Confirm your email address first, then try again. Look for our email in your inbox.",
+      "errVerify": "Confirm your email address first, then redeem the code. We'll email you a code to confirm it.",
       "errAlreadyProAppStore": "You already have Toone Pro from the App Store, so this code can't be used while that plan is active.",
       "errAlreadyProPaid": "You already have a paid Toone Pro plan, so this code can't be used while it's active.",
       "errAlreadyPro": "You already have Toone Pro, so this code can't be used right now.",
       "errUnavailable": "Codes can't be redeemed right now. Please try again later.",
       "errRate": "Too many attempts. Wait a minute, then try again.",
       "errGeneric": "Something went wrong. Please try again."
+    },
+    "verify": {
+      "body": "To confirm {email}, we'll email you a code.",
+      "send": "Email me a code",
+      "sending": "Sending…",
+      "sent": "We've emailed a {digits}-digit code to {email}. It can take a minute; check your spam folder too.",
+      "codeLabel": "{digits}-digit code",
+      "confirm": "Confirm",
+      "confirming": "Confirming…",
+      "resend": "Send a new code",
+      "errFormat": "Enter the {digits} digits from the email.",
+      "errCode": "That code is wrong, expired or used up. Check it, or send a new code.",
+      "errRate": "Too many attempts. Wait a few minutes, then try again.",
+      "errUnavailable": "Email confirmation isn't available right now. Please try again later.",
+      "errGeneric": "Something went wrong. Please try again.",
+      "done": "Your email address is confirmed."
     },
     "contract": {
       "eyebrow": "Toone Pro",

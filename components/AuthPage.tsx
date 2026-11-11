@@ -581,7 +581,9 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
         {mode === "invite" && step === "account" && benefit && (() => {
           const copy = benefitCopy(benefit);
           const name = "values" in copy ? accountCopy(`redeem.${copy.key}`, copy.values) : accountCopy(`redeem.${copy.key}`);
-          return <p className="auth-benefit" data-benefit={benefit.kind}>{accountCopy("invite.benefit", { benefit: name })}</p>;
+          // A shared code's benefit waits for a confirmed address after an email and password signup.
+          const key = preview?.shared ? "invite.benefitShared" : "invite.benefit";
+          return <p className="auth-benefit" data-benefit={benefit.kind}>{accountCopy(key, { benefit: name })}</p>;
         })()}
 
         <div className="auth-card">

@@ -494,6 +494,29 @@ export function redeemCode(token: string, code: string): Promise<CodeRedemption>
   });
 }
 
+/* ---- email verification (signed in) */
+
+/** Digits in the code the verification email carries. */
+export const EMAIL_CODE_DIGITS = 6;
+
+/** `POST /me/email-verification`: emails a code to the account's current address. */
+export function sendEmailVerification(token: string): Promise<void> {
+  return call(async () => {
+    await authedRequest<unknown>(token, "/me/email-verification", { method: "POST" });
+  });
+}
+
+/**
+ * `POST /me/email-verification/confirm`: confirms the address with the
+ * emailed code and returns the entitlement, which now includes any code
+ * benefit, grant or guest month that waited for the confirmed address.
+ */
+export function confirmEmailVerification(token: string, code: string): Promise<Entitlement> {
+  return call(async () => normalizeEntitlement(
+    await authedRequest<unknown>(token, "/me/email-verification/confirm", jsonBody({ code: code.trim() })),
+  ));
+}
+
 export type InvitationPreviewWithBenefit = InvitationPreview & {
   benefit: CodeBenefit;
   /** False for codes that only grant a benefit to existing accounts. */

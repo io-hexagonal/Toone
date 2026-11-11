@@ -37,6 +37,8 @@
 .page .primary:hover { background: #ded9cd; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .inline { display: flex; gap: 10px; align-items: stretch; }
+.verify { margin-top: 14px; }
+.verify .actions { margin-top: 12px; }
 .inline input { flex: 1; }
 .linkButton { background: none !important; border: none !important; padding: 0 !important; color: #b2b0aa !important; font-size: 13px !important; text-decoration: underline; text-underline-offset: 3px; }
 .page a:not(.button):not(.brand) { color: #f0ede6; text-underline-offset: 3px; }

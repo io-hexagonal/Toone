@@ -52,7 +52,7 @@ export default function RedeemPage() {
           <p className={styles.sub}>{t("redeem.sub", { email: session.user.email })}</p>
         </div>
         <section className={styles.panel}>
-          <RedeemForm key={session.token} token={session.token} initialCode={linkedCode ?? ""} onSessionEnded={endSession} />
+          <RedeemForm key={session.token} token={session.token} email={session.user.email} initialCode={linkedCode ?? ""} onSessionEnded={endSession} />
         </section>
         <nav className={styles.footerLinks} aria-label={t("page.moreLinks")}>
           <Link href="/account">{t("redeem.viewAccount")}</Link>

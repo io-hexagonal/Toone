@@ -13,6 +13,7 @@ import {
 import { forgetPendingCode } from "@/lib/billing/pending-code";
 import { fieldErrorProps } from "@/lib/field-error";
 import { benefitCopy, normalizeCode, redeemDoneCopy, redeemErrorKey } from "./redeem-code";
+import EmailVerification from "./EmailVerification";
 import styles from "./account.module.css";
 
 type Step =
@@ -27,16 +28,21 @@ function formatDate(value: string, locale: string): string {
 
 /**
  * Check a code (nothing is used up), show what it gives, then redeem it.
- * `initialCode` (from a link) is checked straight away.
+ * `initialCode` (from a link) is checked straight away. When the server asks
+ * for a confirmed email address first, the confirmation step appears here,
+ * and the code is checked or redeemed again once the address is confirmed.
  */
 export default function RedeemForm({
   token,
+  email,
   initialCode = "",
   onSessionEnded,
   onRedeemed,
   headingLevel = 2,
 }: {
   token: string;
+  /** The account's address, named by the email-confirmation step. */
+  email: string;
   initialCode?: string;
   onSessionEnded: () => void;
   onRedeemed?: (entitlement: Entitlement) => void;
@@ -50,6 +56,8 @@ export default function RedeemForm({
   const [error, setError] = useState("");
   /** True when the error is about the code itself (not a rate limit or an outage). */
   const [codeInvalid, setCodeInvalid] = useState(false);
+  /** The server refused with `email_verification_required`: offer the confirmation step. */
+  const [needsVerify, setNeedsVerify] = useState(false);
   const busyRef = useRef(false);
   const autoChecked = useRef(false);
 
@@ -61,8 +69,21 @@ export default function RedeemForm({
     }
     const key = redeemErrorKey(failure);
     setCodeInvalid(key === "errInvalid" || key === "errUsed");
+    setNeedsVerify(key === "errVerify");
     setError(t(key));
   }
+
+  /** The address is confirmed: try the step that asked for it again. */
+  function verified() {
+    setNeedsVerify(false);
+    setError("");
+    if (step.name === "preview") void redeem(step.code);
+    else if (code.trim()) void check(code);
+  }
+
+  const verification = needsVerify && (
+    <EmailVerification token={token} email={email} onVerified={verified} onSessionEnded={onSessionEnded} />
+  );
 
   async function check(value: string) {
     if (busyRef.current) return;
@@ -121,6 +142,7 @@ export default function RedeemForm({
     setStep({ name: "enter" });
     setError("");
     setCodeInvalid(false);
+    setNeedsVerify(false);
     setCode("");
   }
 
@@ -155,6 +177,7 @@ export default function RedeemForm({
         <p>{t("preview", { benefit })}</p>
         <p className={`${styles.summary} ${styles.code}`}>{step.code}</p>
         {error && <p className={styles.error} role="alert">{error}</p>}
+        {verification}
         <div className={styles.actions}>
           <button className={styles.primary} type="button" disabled={busy} onClick={() => void redeem(step.code)}>
             {busy ? t("redeeming") : t("redeem")}
@@ -165,7 +188,7 @@ export default function RedeemForm({
     );
   }
 
-  return (
+  const form = (
     <form onSubmit={submit} noValidate>
       <label htmlFor="redeem-code">{t("label")}</label>
       <div className={styles.inline}>
@@ -191,4 +214,6 @@ export default function RedeemForm({
       {error && <p id="redeem-code-error" className={styles.error} role="alert">{error}</p>}
     </form>
   );
+  // The confirmation step is its own form, so it sits next to the code form, not inside it.
+  return verification ? <>{form}{verification}</> : form;
 }
