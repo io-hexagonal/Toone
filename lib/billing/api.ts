@@ -299,7 +299,10 @@ export type CheckoutSession = { checkout_url: string; session_id: string };
  * exactly `{plan, locale, return}`: the server builds the redirects and picks
  * the price, and answers 400 if a client sends `success_url`, `cancel_url` or
  * `price_id`. A 409 `conflict` (another checkout of this account is still
- * being created) is the `conflict` failure.
+ * being created) is the `conflict` failure; with `reason: "payment_pending"`
+ * the account's checkout is already paid and being confirmed. A 409
+ * `already_pro` with `reason: "renewal_unpaid"` is an unpaid web
+ * subscription that blocks a new one.
  */
 export function startCheckout(token: string, input: CheckoutRequest): Promise<CheckoutSession> {
   return callNamingPro(token, async () => {
@@ -390,6 +393,9 @@ export const CONTRACT_NAME_MAX = 200;
 /** The server's limit for `termination_reason` (characters). */
 export const CONTRACT_REASON_MAX = 1000;
 
+/** The failure code when the server answered without saying it received the request (no `accepted: true`). */
+export const CONTRACT_NOT_RECEIVED = "not_received";
+
 export type ContractReceipt = {
   /** When the server received the declaration (RFC 3339), or null when it did not say. */
   received_at: string | null;
@@ -400,7 +406,9 @@ export type ContractReceipt = {
  * email and order reference match a purchase, the withdrawal or cancellation
  * takes effect at the moment it is received, and the server emails an
  * acknowledgement. The answer is the same whether or not anything matched.
- * Empty optional fields are left out.
+ * Empty optional fields are left out. Only the 202 answer
+ * (`{accepted: true, received_at}`) means the request was received; any
+ * other success answer throws `not_received`, as a 503 does.
  */
 export function submitContractRequest(input: ContractRequest): Promise<ContractReceipt> {
   return call(async () => {
@@ -415,6 +423,9 @@ export function submitContractRequest(input: ContractRequest): Promise<ContractR
       if (input.end_date) body.end_date = input.end_date;
     }
     const raw = record(await publicRequest<unknown>("/billing/contract-requests", { ...jsonBody(body), cache: "no-store" }));
+    if (raw?.accepted !== true) {
+      throw new BillingError({ kind: "unknown", status: 0, code: CONTRACT_NOT_RECEIVED, message: "The request was not received" });
+    }
     const at = str(raw?.received_at);
     return { received_at: at && !Number.isNaN(Date.parse(at)) ? at : null };
   });

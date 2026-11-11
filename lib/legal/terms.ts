@@ -1,3 +1,5 @@
+import { CURRENT_TERMS_VERSION } from "./terms-versions";
+
 /**
  * This informational page does not submit a custom EULA to App Store Connect.
  * Apple's standard EULA applies to the Store edition while no custom EULA is
@@ -5,7 +7,8 @@
  */
 export const TERMS_PATH = "/terms";
 export const TERMS_CANONICAL = `https://trytoone.com/en${TERMS_PATH}`;
-export const TERMS_UPDATED_DATE = "November 11, 2026";
+/** The current version's date as the page shows it (lib/legal/terms-versions.ts keeps every version). */
+export const TERMS_UPDATED_DATE = CURRENT_TERMS_VERSION.label;
 export const APPLE_STANDARD_EULA_URL =
   "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/";
 export const APPLE_MANAGE_SUBSCRIPTIONS_URL = "https://support.apple.com/en-us/118428";
@@ -30,6 +33,12 @@ export const TOONE_PRO_FREE_ROUTINE_CREATIONS = 2;
 export const TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS = 5;
 export const TOONE_PRO_GUEST_PASSES = 5;
 export const TOONE_PRO_GUEST_MONTH_DAYS = 30;
+/**
+ * Guest months from a web purchase become available this many days after
+ * its withdrawal period ends (14 + 1 = 15 days after the purchase), and never
+ * while a withdrawal of it is pending or once it is withdrawn.
+ */
+export const TOONE_PRO_GUEST_PASS_MARGIN_DAYS = 1;
 /** Withdrawal window: the first paid Pro purchase of an account is refunded in full within it; a later subscription pro rata. */
 export const TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS = 14;
 /** Redeemable codes that grant days of Pro last at most this long. */

@@ -109,7 +109,7 @@ export default function ContractRequestPage() {
       setCancelTerms({ ...DEFAULT_CANCEL_TERMS });
       setEndChoice("next");
     } else {
-      setError(outcome.key === "errUnavailable" ? t("errUnavailable", { email: SUPPORT_EMAIL }) : t(outcome.key));
+      setError(outcome.key === "errNotReceived" ? t("errNotReceived", { email: SUPPORT_EMAIL }) : t(outcome.key));
     }
     busyRef.current = false;
     setBusy(false);

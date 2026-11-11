@@ -13,6 +13,7 @@ import {
   TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
   TOONE_PRO_FREE_ROUTINE_CREATIONS,
   TOONE_PRO_GUEST_MONTH_DAYS,
+  TOONE_PRO_GUEST_PASS_MARGIN_DAYS,
   TOONE_PRO_GUEST_PASSES,
   TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS,
 } from "@/lib/legal/terms";
@@ -28,7 +29,7 @@ import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const CONTACT = "hello@trytoone.com";
 
-type ContentProps = {
+export type TermsContentProps = {
   /**
    * Who sells NEW purchases, as the API says (null when it does not say).
    * The Terms describe both sellers whatever it is; this only adds the
@@ -151,7 +152,7 @@ function Invoices() {
   );
 }
 
-export default function TermsContent({ seller = null, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
+export default function TermsContent({ seller = null, traderDetails = TRADER_DETAILS_COMPLETE }: TermsContentProps) {
   return (
     <>
       <section>
@@ -438,8 +439,12 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
         <p>
           If you have bought Toone Pro, on the web or from Apple, you can give up to{" "}
           {TOONE_PRO_GUEST_PASSES} people a free {TOONE_PRO_GUEST_MONTH_DAYS}-day month of Toone
-          Pro each, by entering their email address in the app. Toone Pro from a code or a guest
-          month does not include guest months to give. Guest months are free. They cannot be bought,
+          Pro each, by entering their email address in the app. For a purchase on the web, guest
+          months become available only once its {REFUND_DAYS}-day withdrawal period has passed,
+          plus one more day, so {REFUND_DAYS + TOONE_PRO_GUEST_PASS_MARGIN_DAYS} days after the
+          purchase. They are not available while a withdrawal from that purchase is being carried
+          out, nor after it has been withdrawn. Toone Pro from a code or a guest month does not
+          include guest months to give. Guest months are free. They cannot be bought,
           sold or exchanged for money or anything else. Each email address can receive only one
           guest month, ever, and a guest month ends after {TOONE_PRO_GUEST_MONTH_DAYS} days without
           renewing or charging anyone.

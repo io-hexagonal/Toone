@@ -42,7 +42,7 @@ test("every accepted request gets the same outcome; errors never say whether a p
   assert.deepEqual(contractOutcome(), { state: "sent" });
   assert.deepEqual(contractOutcome(new ApiError("invalid_input", "bad", 400)), { state: "error", key: "errInput" });
   assert.deepEqual(contractOutcome(new ApiError("rate_limit_exceeded", "slow", 429)), { state: "error", key: "errRate" });
-  assert.deepEqual(contractOutcome(new ApiError("service_unavailable", "off", 503)), { state: "error", key: "errUnavailable" });
+  assert.deepEqual(contractOutcome(new ApiError("service_unavailable", "off", 503)), { state: "error", key: "errNotReceived" });
   assert.deepEqual(contractOutcome(new ApiError("not_found", "no such order", 404)), { state: "error", key: "errGeneric" });
   assert.deepEqual(contractOutcome(new TypeError("Failed to fetch")), { state: "error", key: "errGeneric" });
 });
@@ -154,6 +154,35 @@ test("a cancellation sends its type, reason and end date; a withdrawal never doe
     kind: "withdraw", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12", termination: "ordinary", end_date: "2026-12-31",
   }), { received_at: null }, "an older server without received_at still works");
   assert.deepEqual(bodies[1], { kind: "withdraw", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12" });
+});
+
+test("a 503 means not received: the page says so and never shows the sent step", async () => {
+  env.NEXT_PUBLIC_API_BASE_URL = "https://api.test/v1";
+  let reply: { status: number; body: unknown } = { status: 503, body: { code: "service_unavailable", message: "try again" } };
+  globalThis.fetch = (async () => new Response(JSON.stringify(reply.body), {
+    status: reply.status, headers: { "Content-Type": "application/json" },
+  })) as typeof fetch;
+  const outcome = async () => {
+    try {
+      await submitContractRequest({ kind: "withdraw", email: "a@example.com", order_ref: "TOONE-ABCDEFGH12" });
+    } catch (error) {
+      return contractOutcome(error);
+    }
+    return contractOutcome();
+  };
+  assert.deepEqual(await outcome(), { state: "error", key: "errNotReceived" });
+  // Only the 202 answer counts as received; a success without `accepted: true` does not.
+  for (const body of [{ data: {} }, { data: { accepted: false } }, {}]) {
+    reply = { status: 200, body };
+    assert.deepEqual(await outcome(), { state: "error", key: "errNotReceived" }, JSON.stringify(body));
+  }
+  reply = { status: 202, body: { data: { accepted: true, received_at: "2026-11-10T12:00:00Z" } } };
+  assert.deepEqual(await outcome(), { state: "sent" });
+
+  assert.match(en.account.contract.errNotReceived, /^We couldn't receive your request — please try again\./);
+  assert.equal(Object.hasOwn(en.account.contract, "errUnavailable"), false);
+  const page = fs.readFileSync("components/account/ContractRequestPage.tsx", "utf8");
+  assert.match(page, /t\("errNotReceived", \{ email: SUPPORT_EMAIL \}\)/);
 });
 
 test("the page opens on the two labelled functions, with no sign-in form", () => {

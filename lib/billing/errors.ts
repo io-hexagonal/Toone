@@ -7,11 +7,20 @@ export type ProSource = "lifetime" | "subscription" | "grant" | "guest" | "unkno
 /** Who bills the account's Pro, when it is paid. */
 export type BillingProvider = "app_store" | "stripe" | "toone" | "unknown";
 
+/** The structured `reason` of a 409 `already_pro`. */
+export type AlreadyProReason = "renewal_unpaid";
+/** The structured `reason` of a 409 `conflict`. */
+export type ConflictReason = "payment_pending";
+
 export type BillingFailure =
   /** The session ended (expired or revoked): sign in again. */
   | { kind: "unauthenticated" }
-  /** The account already has Pro; `source`/`provider` say how, when known. */
-  | { kind: "already_pro"; source: ProSource | null; provider: BillingProvider | null }
+  /**
+   * The account already has Pro; `source`/`provider` say how, when known.
+   * `reason: "renewal_unpaid"`: instead, a web subscription whose renewal is
+   * unpaid still blocks a new one; the account has no Pro.
+   */
+  | { kind: "already_pro"; source: ProSource | null; provider: BillingProvider | null; reason?: AlreadyProReason }
   /** Payments (or this billing feature) are switched off right now. */
   | { kind: "payments_unavailable" }
   /** The code does not exist, expired, is used up or is not for this account. One case on purpose. */
@@ -20,8 +29,13 @@ export type BillingFailure =
   /** The account must confirm its email address before this works. */
   | { kind: "email_verification_required" }
   | { kind: "rate_limited" }
-  /** 409 `conflict`: another request of this account (a Pro checkout being created) is still running. Retry shortly. */
-  | { kind: "conflict" }
+  /**
+   * 409 `conflict`: another request of this account (a Pro checkout being
+   * created) is still running. Retry shortly. `reason: "payment_pending"`:
+   * the account's checkout is already paid and its payment is being
+   * confirmed; Pro starts in a moment.
+   */
+  | { kind: "conflict"; reason?: ConflictReason }
   /** The signed-in account may not do this (admin routes). */
   | { kind: "forbidden" }
   /** Anything else, including network failures (`status` 0) and refused redirect URLs. */
@@ -69,13 +83,19 @@ export function billingProvider(value: unknown): BillingProvider | null {
 export function mapApiError(error: ApiError, extra: { source?: unknown; provider?: unknown } = {}): BillingFailure {
   const { code, status } = error;
   if (status === 401 || SESSION_CODES.has(code)) return { kind: "unauthenticated" };
+  const reason = error.fields?.reason;
   if (code === "already_pro") {
-    return { kind: "already_pro", source: proSource(extra.source), provider: billingProvider(extra.provider) };
+    return {
+      kind: "already_pro",
+      source: proSource(extra.source),
+      provider: billingProvider(extra.provider),
+      ...(reason === "renewal_unpaid" ? { reason } : {}),
+    };
   }
   if (code === "code_already_redeemed") return { kind: "code_already_redeemed" };
   if (code === "email_verification_required") return { kind: "email_verification_required" };
   if (INVALID_CODE_CODES.has(code)) return { kind: "invalid_code" };
-  if (code === "conflict") return { kind: "conflict" };
+  if (code === "conflict") return reason === "payment_pending" ? { kind: "conflict", reason } : { kind: "conflict" };
   if (status === 429 || RATE_CODES.has(code)) return { kind: "rate_limited" };
   if (status === 503 || UNAVAILABLE_CODES.has(code)) return { kind: "payments_unavailable" };
   if (status === 403 && code === "forbidden") return { kind: "forbidden" };

@@ -12,7 +12,10 @@ import {
   checkoutAvailable,
   checkoutErrorKey,
   hasTemporaryPro,
+  isPaymentPending,
   isUnpaidWebSubscription,
+  PAYMENT_PENDING_RECHECKS,
+  PAYMENT_PENDING_RECHECK_MS,
   orderedPrices,
   ownedMessageKey,
   ownedReason,
@@ -174,6 +177,36 @@ test("a 409 conflict says a checkout is being prepared or a payment is being con
   assert.match(copy.errConflict, /still being prepared/);
   assert.match(copy.errConflict, /payment you just made that is still being confirmed/);
   assert.match(copy.errConflict, /check your account page before paying again/);
+});
+
+test("a 409 conflict with reason payment_pending says the payment is being confirmed and reads the plan again", () => {
+  const copy = messages.billing.pricing as Record<string, string>;
+  const pending = { kind: "conflict", reason: "payment_pending" } as const;
+  assert.equal(checkoutErrorKey(pending), "errPaymentPending");
+  assert.equal(isPaymentPending(pending), true);
+  assert.equal(isPaymentPending({ kind: "conflict" }), false);
+  assert.equal(checkoutErrorKey({ kind: "conflict" }), "errConflict", "no reason: the existing copy");
+  assert.match(copy.errPaymentPending, /Your payment is being confirmed, and Toone Pro starts in a moment/);
+  assert.match(copy.errPaymentPending, /don't pay again/);
+  assert.doesNotMatch(copy.errPaymentPending, /still being prepared/);
+
+  const source = read("components/billing/PricingPlans.tsx");
+  assert.match(source, /setPaymentPending\(isPaymentPending\(failure\)\)/);
+  assert.match(source, /if \(value\.plan === "pro"\) \{\s*setPaymentPending\(false\);\s*setErrorKey\(null\);/);
+  assert.ok(PAYMENT_PENDING_RECHECKS > 0 && PAYMENT_PENDING_RECHECK_MS >= 1000);
+});
+
+test("already_pro with reason renewal_unpaid is an unpaid web subscription whatever the plan reads", () => {
+  const pro = normalizeEntitlement({ plan: "pro", source: "lifetime", billing_provider: "app_store", manage: null });
+  const unpaid = { kind: "already_pro", source: "subscription", provider: "stripe", reason: "renewal_unpaid" } as const;
+  for (const plan of [null, pro]) {
+    assert.equal(isUnpaidWebSubscription(unpaid, plan), true);
+    assert.equal(checkoutErrorKey(unpaid, plan), "errPaymentDue");
+  }
+  const sparse = { kind: "already_pro", source: null, provider: null, reason: "renewal_unpaid" } as const;
+  assert.equal(checkoutErrorKey(sparse, null), "errPaymentDue", "the reason alone decides");
+  // No re-read of the plan when the server says why.
+  assert.match(read("components/billing/PricingPlans.tsx"), /failure\.kind === "already_pro" && !failure\.reason && token/);
 });
 
 test("already_pro from an unpaid web subscription points to the billing page, not 'you already have Pro'", () => {

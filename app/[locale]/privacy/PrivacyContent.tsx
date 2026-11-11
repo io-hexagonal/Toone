@@ -30,6 +30,7 @@ import {
   LINK_PRIVACY_URL,
   STRIPE_PRIVACY_URL,
   TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
+  TOONE_PRO_GUEST_PASS_MARGIN_DAYS,
 } from "@/lib/legal/terms";
 
 type ContentProps = {
@@ -558,8 +559,11 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
 
         <h3 id="guest-months">Guest months and complimentary Toone Pro</h3>
         <p>
-          If you have Toone Pro, you can give someone a guest month by entering their email
-          address. Toone&apos;s server stores that address with the guest pass and emails the person
+          If you have bought Toone Pro, you can give someone a guest month by entering their email
+          address. For a purchase on the web, this becomes possible{" "}
+          {TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS + TOONE_PRO_GUEST_PASS_MARGIN_DAYS} days after the
+          purchase, once its withdrawal period has passed, and not while a withdrawal from it is
+          pending or after it has been withdrawn. Toone&apos;s server stores that address with the guest pass and emails the person
           an invitation that shows your account name, or your email address if your account has no
           name. So that each person receives at most one guest month, Toone also keeps a keyed hash
           of every address that activates one. If Toone gives you complimentary Toone Pro, the grant

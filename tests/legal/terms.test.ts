@@ -15,6 +15,7 @@ import TermsContent from "../../app/[locale]/terms/TermsContent";
 const read = (path: string) => fs.readFileSync(path, "utf8");
 const page = read("app/[locale]/terms/page.tsx");
 const content = read("app/[locale]/terms/TermsContent.tsx");
+const document = read("app/[locale]/terms/TermsDocument.tsx");
 /** Renders as published (Legal notice live) unless `traderDetails` is false. */
 const terms = (seller: TooneProSeller | null, traderDetails = true) => renderText(createElement(TermsContent, { seller, traderDetails }));
 const termsHtml = (seller: TooneProSeller | null, traderDetails = true) => renderHtml(createElement(TermsContent, { seller, traderDetails }));
@@ -22,8 +23,9 @@ const termsHtml = (seller: TooneProSeller | null, traderDetails = true) => rende
 const RENDERINGS: readonly (TooneProSeller | null)[] = [...TOONE_PRO_SELLERS, null];
 
 test("Terms page renders the seller model from lib/legal/seller.ts", () => {
-  assert.match(page, /<TermsContent seller=\{seller\} \/>/);
-  assert.match(page, /updated=\{TERMS_UPDATED_DATE\}/);
+  assert.match(page, /<TermsDocument view=\{\{ kind: "current", version: CURRENT_TERMS_VERSION \}\} seller=\{seller\} \/>/);
+  assert.match(document, /<Content seller=\{seller\} \/>/);
+  assert.match(document, /updated=\{view\.version\.label\}/);
 });
 
 test("Terms page points Store users to Apple's standard EULA", () => {
@@ -271,6 +273,8 @@ test("Terms state the free plan and codes", () => {
     /Discount codes are different/,
     /obtained by fraud, by mistake/,
     /does not include guest months to give/,
+    /For a purchase on the web, guest months become available only once its 14-day withdrawal period has passed, plus one more day, so 15 days after the purchase/,
+    /not available while a withdrawal from that purchase is being carried out, nor after it has been withdrawn/,
   ]) {
     assert.match(text, phrase);
   }
@@ -282,6 +286,7 @@ test("Toone Pro numbers match the server's limits (free plan = 2)", async () => 
   assert.equal(legal.TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS, 5);
   assert.equal(legal.TOONE_PRO_GUEST_PASSES, 5);
   assert.equal(legal.TOONE_PRO_GUEST_MONTH_DAYS, 30);
+  assert.equal(legal.TOONE_PRO_GUEST_PASS_MARGIN_DAYS, 1, "guest passes from a web purchase: withdrawal window + 1 day");
   assert.equal(legal.TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, 14);
   assert.equal(legal.TOONE_PRO_CODE_MAX_DAYS, 365);
   assert.equal(legal.TOONE_PRO_CONTRACT_LINK_HOURS, 24);

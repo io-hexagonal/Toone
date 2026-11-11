@@ -73,19 +73,31 @@ export function ownedMessageKey(reason: OwnedReason): string {
 }
 
 /**
- * A 409 `already_pro` from a trytoone.com subscription while the account's
- * plan does not read Pro: that subscription's last payment failed and is
- * still being retried. It no longer gives Pro, but it still blocks a new one,
- * so the way out is the billing page (update the card), not another checkout.
- * False while the plan is unknown: then the refusal reads as `ownedWeb`.
+ * A 409 `already_pro` for a trytoone.com subscription whose last payment
+ * failed and is still being retried. It no longer gives Pro, but it still
+ * blocks a new one, so the way out is the billing page (update the card), not
+ * another checkout. The server says so with `reason: "renewal_unpaid"`;
+ * without a reason (an older server), it is inferred: a web subscription
+ * refusal while the account's plan does not read Pro. False while the plan is
+ * unknown: then the refusal reads as `ownedWeb`.
  */
 export function isUnpaidWebSubscription(failure: BillingFailure, entitlement: Entitlement | null): boolean {
-  return failure.kind === "already_pro"
-    && failure.source === "subscription"
+  if (failure.kind !== "already_pro") return false;
+  if (failure.reason === "renewal_unpaid") return true;
+  return failure.source === "subscription"
     && failure.provider === "stripe"
     && entitlement !== null
     && entitlement.plan !== "pro";
 }
+
+/** A 409 `conflict` whose checkout is already paid: Pro starts once the payment is confirmed. */
+export function isPaymentPending(failure: BillingFailure): boolean {
+  return failure.kind === "conflict" && failure.reason === "payment_pending";
+}
+
+/** How long the pricing page waits before reading the plan again after `payment_pending`, and how often it tries. */
+export const PAYMENT_PENDING_RECHECK_MS = 4000;
+export const PAYMENT_PENDING_RECHECKS = 4;
 
 /**
  * `billing.pricing.*` message key for a failed checkout start. `entitlement`
@@ -99,7 +111,7 @@ export function checkoutErrorKey(failure: BillingFailure, entitlement: Entitleme
       return ownedMessageKey(ownedReason(failure.source, failure.provider));
     case "payments_unavailable": return "errUnavailable";
     case "rate_limited": return "errRate";
-    case "conflict": return "errConflict";
+    case "conflict": return failure.reason === "payment_pending" ? "errPaymentPending" : "errConflict";
     default: return "errGeneric";
   }
 }

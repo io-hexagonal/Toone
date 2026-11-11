@@ -279,3 +279,11 @@ test("while the trader details are incomplete the Privacy Policy never links or 
     assert.match(privacy(seller, false), /the seller of the transaction is Sold through Link, LLC/, `${seller}`);
   }
 });
+
+test("Privacy: guest months from a web purchase wait out its withdrawal period plus a day", () => {
+  for (const seller of RENDERINGS) {
+    const text = privacy(seller);
+    assert.match(text, /If you have bought Toone Pro, you can give someone a guest month/);
+    assert.match(text, /For a purchase on the web, this becomes possible 15 days after the purchase, once its withdrawal period has passed, and not while a withdrawal from it is pending or after it has been withdrawn/);
+  }
+});

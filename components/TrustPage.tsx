@@ -44,6 +44,10 @@ export default function TrustPage({
             .trust-updated {
               color: rgba(255,255,255,0.55); font-size: 12px; margin-bottom: 58px;
             }
+            .trust-note {
+              margin: -34px 0 34px; padding: 12px 16px; border-left: 2px solid rgba(255,255,255,0.3);
+              background: rgba(255,255,255,0.04);
+            }
             .trust-page section {
               padding: 34px 0; border-top: 1px solid rgba(255,255,255,0.09);
             }

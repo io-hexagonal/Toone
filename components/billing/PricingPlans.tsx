@@ -18,8 +18,11 @@ import {
 import CheckoutButton from "./CheckoutButton";
 import {
   FROM_APP_STORAGE_KEY,
+  PAYMENT_PENDING_RECHECKS,
+  PAYMENT_PENDING_RECHECK_MS,
   checkoutErrorKey,
   hasTemporaryPro,
+  isPaymentPending,
   isUnpaidWebSubscription,
   orderedPrices,
   ownedMessageKey,
@@ -69,6 +72,8 @@ export default function PricingPlans({
   // A refused checkout whose way out is the billing page (an unpaid web subscription).
   const [fixPayment, setFixPayment] = useState(false);
   const [portalState, setPortalState] = useState<"idle" | "opening" | "failed">("idle");
+  // A checkout that is already paid and being confirmed: read the plan again shortly.
+  const [paymentPending, setPaymentPending] = useState(false);
 
   // One-shot parameters: `plan` preselects a card, `from=app` is kept for the
   // success page in this tab, `checkout=cancelled` shows a notice once.
@@ -114,10 +119,12 @@ export default function PricingPlans({
   async function onFailure(failure: BillingFailure) {
     if (failure.kind === "unauthenticated") endSession();
     let plan = entitlement.kind === "ready" ? entitlement.entitlement : null;
-    // Whether an already_pro from a web subscription means "unpaid" depends on
-    // the plan; read it once more when the page could not.
-    if (!plan && failure.kind === "already_pro" && token) plan = await getEntitlement(token).catch(() => null);
+    // Without the server's reason, whether an already_pro from a web
+    // subscription means "unpaid" depends on the plan; read it once more when
+    // the page could not.
+    if (!plan && failure.kind === "already_pro" && !failure.reason && token) plan = await getEntitlement(token).catch(() => null);
     setFixPayment(isUnpaidWebSubscription(failure, plan));
+    setPaymentPending(isPaymentPending(failure));
     setPortalState("idle");
     setErrorKey(checkoutErrorKey(failure, plan));
   }
@@ -125,8 +132,39 @@ export default function PricingPlans({
   function clearError() {
     setErrorKey(null);
     setFixPayment(false);
+    setPaymentPending(false);
     setPortalState("idle");
   }
+
+  // `payment_pending`: the payment is being confirmed. Read the plan again a
+  // few times; once it reads Pro, the cards show it and the notice goes.
+  useEffect(() => {
+    if (!paymentPending || !token) return;
+    const controller = new AbortController();
+    let tries = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const recheck = () => {
+      tries += 1;
+      getEntitlement(token, controller.signal)
+        .then(value => {
+          setEntitlement({ kind: "ready", entitlement: value });
+          if (value.plan === "pro") {
+            setPaymentPending(false);
+            setErrorKey(null);
+          } else if (tries < PAYMENT_PENDING_RECHECKS) {
+            timer = setTimeout(recheck, PAYMENT_PENDING_RECHECK_MS);
+          }
+        })
+        .catch(() => {
+          if (!controller.signal.aborted && tries < PAYMENT_PENDING_RECHECKS) timer = setTimeout(recheck, PAYMENT_PENDING_RECHECK_MS);
+        });
+    };
+    timer = setTimeout(recheck, PAYMENT_PENDING_RECHECK_MS);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [paymentPending, token]);
 
   /** The Stripe billing page, where an unpaid subscription's card is updated. */
   async function openBillingPage() {

@@ -128,6 +128,25 @@ test("409 conflict (another checkout still being created) is its own failure", a
   assert.equal(calls.length, 1, "no entitlement lookup for a conflict");
 });
 
+test("409 reasons: payment_pending on conflict, renewal_unpaid on already_pro", async () => {
+  replies.push(reply(409, { code: "conflict", message: "a payment for this checkout is being confirmed", reason: "payment_pending" }));
+  assert.deepEqual(await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" })), { kind: "conflict", reason: "payment_pending" });
+  replies.push(reply(409, {
+    code: "already_pro", message: "unpaid renewal", source: "subscription", billing_provider: "stripe", reason: "renewal_unpaid",
+  }));
+  assert.deepEqual(await failureOf(startCheckout(TOKEN, { plan: "pro_monthly", locale: "en", return: "web" })), {
+    kind: "already_pro", source: "subscription", provider: "stripe", reason: "renewal_unpaid",
+  });
+  assert.equal(calls.length, 2, "the body names the cause: no entitlement lookup");
+  // An unknown reason is ignored, so the existing reading applies.
+  replies.push(reply(409, { code: "conflict", message: "retry", reason: "something_new" }));
+  assert.deepEqual(await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" })), { kind: "conflict" });
+  replies.push(reply(409, { code: "already_pro", message: "has Pro", source: "lifetime", billing_provider: "stripe", reason: "payment_pending" }));
+  assert.deepEqual(await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" })), {
+    kind: "already_pro", source: "lifetime", provider: "stripe",
+  });
+});
+
 test("a checkout URL off the Stripe allow-list is refused, never returned", async () => {
   replies.push(data({ checkout_url: "https://checkout.stripe.com.evil.com/pay", session_id: "cs_1" }));
   const failure = await failureOf(startCheckout(TOKEN, { plan: "pro_yearly", locale: "en", return: "web" }));

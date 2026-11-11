@@ -6,6 +6,7 @@
  */
 
 import {
+  CONTRACT_NOT_RECEIVED,
   CONTRACT_NAME_MAX,
   CONTRACT_REASON_MAX,
   billingFailure,
@@ -101,16 +102,21 @@ export function contractRequestFrom(
 }
 
 export type ContractOutcome =
-  /** Accepted: show the one acknowledgement (it took effect if the details matched a purchase). */
+  /** Received (202): show the one acknowledgement (it took effect if the details matched a purchase). */
   | { state: "sent" }
-  | { state: "error"; key: "errInput" | "errRate" | "errUnavailable" | "errGeneric" };
+  | { state: "error"; key: "errInput" | "errRate" | "errNotReceived" | "errGeneric" };
 
-/** What to show after `submitContractRequest` resolved (`error` undefined) or threw. */
+/**
+ * What to show after `submitContractRequest` resolved (`error` undefined) or
+ * threw. Only a resolved call (the server's 202) shows the sent step. A 503
+ * means nothing was received: the page says so and the buyer sends it again.
+ */
 export function contractOutcome(error?: unknown): ContractOutcome {
   if (error === undefined) return { state: "sent" };
   const failure = billingFailure(error);
   if (failure.kind === "rate_limited") return { state: "error", key: "errRate" };
-  if (failure.kind === "payments_unavailable") return { state: "error", key: "errUnavailable" };
+  if (failure.kind === "payments_unavailable") return { state: "error", key: "errNotReceived" };
+  if (failure.kind === "unknown" && failure.code === CONTRACT_NOT_RECEIVED) return { state: "error", key: "errNotReceived" };
   if (failure.kind === "unknown" && failure.status === 400) return { state: "error", key: "errInput" };
   return { state: "error", key: "errGeneric" };
 }
