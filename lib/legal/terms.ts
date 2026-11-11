@@ -5,7 +5,7 @@
  */
 export const TERMS_PATH = "/terms";
 export const TERMS_CANONICAL = `https://trytoone.com/en${TERMS_PATH}`;
-export const TERMS_UPDATED_DATE = "November 10, 2026";
+export const TERMS_UPDATED_DATE = "November 11, 2026";
 export const APPLE_STANDARD_EULA_URL =
   "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/";
 export const APPLE_MANAGE_SUBSCRIPTIONS_URL = "https://support.apple.com/en-us/118428";
@@ -30,9 +30,9 @@ export const TOONE_PRO_FREE_ROUTINE_CREATIONS = 2;
 export const TOONE_PRO_PREVIOUS_FREE_ROUTINE_CREATIONS = 5;
 export const TOONE_PRO_GUEST_PASSES = 5;
 export const TOONE_PRO_GUEST_MONTH_DAYS = 30;
-/** Full refund of the first payment of any plan, on request, within this many days. */
+/** Withdrawal window: the first paid Pro purchase of an account is refunded in full within it; a later subscription pro rata. */
 export const TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS = 14;
 /** Redeemable codes that grant days of Pro last at most this long. */
 export const TOONE_PRO_CODE_MAX_DAYS = 365;
-/** The emailed link that confirms a login-free withdraw or cancel request works this long. */
+/** The emailed link that confirms a login-free request made before requests took effect on submission works this long. */
 export const TOONE_PRO_CONTRACT_LINK_HOURS = 24;

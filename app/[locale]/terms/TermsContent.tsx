@@ -10,7 +10,6 @@ import {
   LINK_TERMS_URL,
   PRICING_PATH,
   TOONE_PRO_CODE_MAX_DAYS,
-  TOONE_PRO_CONTRACT_LINK_HOURS,
   TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
   TOONE_PRO_FREE_ROUTINE_CREATIONS,
   TOONE_PRO_GUEST_MONTH_DAYS,
@@ -47,6 +46,17 @@ function TraderName({ traderDetails }: { traderDetails: boolean }) {
   return <>Toone&apos;s publisher, Matheus Paranhos (Hexagonal.io), an individual trader in Portugal</>;
 }
 
+/** A purchase keeps the seller it was made under, whatever the site says later. */
+function SellerKept() {
+  return (
+    <>
+      The seller shown at checkout and in your purchase confirmation email stays the seller of
+      that purchase, including its renewals, invoices and refunds, even if Toone later changes
+      how it sells Toone Pro.
+    </>
+  );
+}
+
 /** Who sells Toone Pro on the web; the one part of the Terms that differs by seller model. */
 function WebSeller({ seller, traderDetails }: Props & { traderDetails: boolean }) {
   if (isManagedPayments(seller)) {
@@ -59,7 +69,7 @@ function WebSeller({ seller, traderDetails }: Props & { traderDetails: boolean }
         calculates and collects VAT or sales tax, sends your receipts and invoices, and handles
         payment support. Link&apos;s <a href={LINK_TERMS_URL}>Sold through Link terms</a> also
         apply to your purchase. Toone provides Toone Pro, is responsible for delivering it and for
-        product support, and never sees your full card number.
+        product support, and never sees your full card number. <SellerKept />
       </p>
     );
   }
@@ -71,25 +81,27 @@ function WebSeller({ seller, traderDetails }: Props & { traderDetails: boolean }
       (&quot;Stripe&quot;), in Ireland, on Stripe&apos;s secure checkout page, and your statement
       shows Toone&apos;s name. Toone never sees your full card number. Stripe sends a receipt
       when a payment goes through, and Toone sends you a Portuguese legal invoice for every
-      payment, as described under <a href="#invoices">Invoices and VAT</a>.
+      payment, as described under <a href="#invoices">Invoices and VAT</a>. <SellerKept />
     </p>
   );
 }
 
 function PriceTax({ seller }: Props) {
+  const local = (
+    <>
+      Checkout may show and charge the price in your local currency instead, with any sales tax
+      that applies where you are; it shows the exact amount and currency before you pay, and that
+      is the amount you are charged.
+    </>
+  );
   if (isManagedPayments(seller)) {
-    return (
-      <>
-        Prices in euros include VAT. Prices in US dollars are shown before sales tax, which
-        checkout adds where it applies.
-      </>
-    );
+    return <>The pricing page shows prices in euros, including VAT. {local}</>;
   }
   return (
     <>
-      Prices in euros include VAT for consumers. Prices in US dollars are shown before any sales
-      tax, which checkout adds where it applies. If you buy for a business with a valid EU VAT
-      number, VAT may not be charged, as described under <a href="#invoices">Invoices and VAT</a>.
+      The pricing page shows prices in euros, including VAT for consumers. {local} If you buy for
+      a business with a valid EU VAT number, VAT may not be charged, as described under{" "}
+      <a href="#invoices">Invoices and VAT</a>.
     </>
   );
 }
@@ -229,8 +241,7 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
         </ul>
         <p>
           The <a href={`/en${PRICING_PATH}`}>pricing page</a> and checkout show the total price
-          before you pay. <PriceTax seller={seller} /> Checkout may offer to charge you in your
-          local currency and shows the converted amount before you pay. There is no free trial.
+          before you pay. <PriceTax seller={seller} /> There is no free trial.
           You must have a Toone account and be signed in to buy.
         </p>
 
@@ -256,10 +267,15 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           are told by email at least 30 days before the new price applies, and you can cancel
           before it does.
         </p>
-        <p>
-          If you are a consumer in Germany and your Yearly subscription has renewed at least once,
-          you can cancel it at any time with one month&apos;s notice, and the unused part of the
-          period you paid for is refunded.
+        <p id="germany">
+          If you are a consumer with a billing address in Germany and your Yearly subscription has
+          renewed at least once, you can cancel it at any time with one month&apos;s notice: the
+          subscription then ends one month after the day we receive your cancellation, and the part
+          of the period you paid for that falls after that date is refunded automatically, pro rata,
+          to the payment method you used. <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract
+          here</a> applies this by itself. If you cancel on the billing page instead, it stops the
+          renewal at the end of the period; write to <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and
+          we apply the one-month notice and the refund for you.
         </p>
         <p>
           Switching between Monthly and Yearly is not offered yet. To change, cancel your
@@ -270,43 +286,75 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
 
         <h3 id="withdrawal">{REFUND_DAYS}-day refund and your right of withdrawal</h3>
         <p>
-          Whatever the plan, you can ask for a full refund of your first payment within{" "}
-          {REFUND_DAYS} days of making it, even if you have already used Toone Pro. Toone Pro ends
-          when the refund is made. At checkout you ask for Toone Pro to start straight away and
-          confirm that you understand what that means for your withdrawal right; whatever the law
-          would otherwise allow, this refund still applies. It covers your right, if you are a
-          consumer in the EU, the EEA or the UK, to withdraw from the contract within{" "}
-          {REFUND_DAYS} days without giving a reason.
+          <strong>Your first paid Toone Pro purchase.</strong> If you withdraw from your Toone
+          account&apos;s first paid Toone Pro purchase within {REFUND_DAYS} days of paying, it is
+          refunded in full, whatever the plan and even if you have already used Toone Pro. At
+          checkout you ask for Toone Pro to start straight away and confirm that you understand what
+          that means for your withdrawal right; whatever the law would otherwise allow, this full
+          refund still applies. It applies once per Toone account.
+        </p>
+        <p>
+          <strong>Later purchases.</strong> If you are a consumer in the EU, the EEA or the UK, you
+          can withdraw from a later subscription within {REFUND_DAYS} days of paying for it,
+          without giving a reason. Because you asked for Toone Pro to start straight away, you pay
+          for the days you had it: the unused part of the period you paid for is refunded, pro
+          rata. A later Lifetime purchase is digital content: you asked for it to start straight
+          away and confirmed that your right of withdrawal ends when it does, so it is not refunded
+          on withdrawal.
+        </p>
+        <p>
+          A withdrawal counts as made within {REFUND_DAYS} days when you send it within{" "}
+          {REFUND_DAYS} days, even if the refund is made later. Toone Pro from the purchase you
+          withdraw from ends when your withdrawal takes effect.
         </p>
 
         <h3 id="withdraw-or-cancel">How to withdraw or cancel without signing in</h3>
         <p>
           Use <a href={`/en${CANCEL_CONTRACT_PATH}`}>Withdraw from contract here</a> to withdraw.
-          Cancelling works the same way, on the same page. Neither needs a sign-in: enter the
-          email address of the Toone account that bought Toone Pro and the order reference from
-          your receipt, add your name if you like, and confirm. We then email that address a
-          confirmation link, which works for {TOONE_PRO_CONTRACT_LINK_HOURS} hours. Nothing changes
-          until you open the link and confirm: your request is carried out only then, and a second
-          email confirms what was done, with the date and time. If the link has expired, send the
-          request again.
+          Cancelling works the same way, at{" "}
+          <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>. Both are linked at the
+          bottom of every page of trytoone.com, and neither needs a sign-in. Enter the email address
+          of your Toone account or the one you entered at checkout, and the order reference
+          (TOONE-…) from the purchase confirmation email Toone sends after every purchase. You can
+          add your name. To cancel, you also say whether it is an ordinary or an extraordinary
+          termination (with the reason), and when the contract should end: at the next possible
+          date, or on a later date you choose.
+        </p>
+        <p>
+          Then press the confirm button. Pressing it is your declaration: if the details match a
+          Toone Pro purchase, your withdrawal or cancellation takes effect at that moment, with no
+          further step and no link to open. We then email you an acknowledgement with what you
+          declared, the date and time we received it and, for a cancellation, the date the
+          contract ends. If the details match no purchase, nothing changes: check the order
+          reference in your purchase confirmation email and send the request again, or write to{" "}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
         </p>
         <ul>
           <li>
             <strong>Cancel a subscription</strong>: it stops renewing. Toone Pro stays on until the
-            end of the period you have paid for, and nothing is refunded.
+            end of the period you have paid for, and nothing is refunded, except as described{" "}
+            <a href="#germany">for Germany</a> above.
           </li>
           <li>
-            <strong>Withdraw from a subscription within {REFUND_DAYS} days of its first
-            payment</strong>: the subscription ends straight away, Toone Pro ends, and the first
-            payment is refunded in full.
+            <strong>Withdraw from a subscription within {REFUND_DAYS} days of paying for
+            it</strong>: the subscription ends straight away and Toone Pro ends. The payment is
+            refunded in full if it was your account&apos;s first paid Toone Pro purchase; otherwise
+            the unused part of the period is refunded.
           </li>
           <li>
             <strong>Withdraw from a subscription later</strong>: the request is treated as a
             cancellation, as above.
           </li>
           <li>
-            <strong>Withdraw from Lifetime within {REFUND_DAYS} days of the payment</strong>: the
-            payment is refunded in full and Toone Pro is removed from the account.
+            <strong>Withdraw from Lifetime within {REFUND_DAYS} days of the payment, when it was
+            your account&apos;s first paid Toone Pro purchase</strong>: the payment is refunded in
+            full and Toone Pro is removed from the account.
+          </li>
+          <li>
+            <strong>Withdraw from Lifetime bought while a web subscription was active</strong>:
+            buying Lifetime had set that subscription to stop renewing. If the subscription is still
+            running when you withdraw, it renews again as before. If it has already ended, it is not
+            restarted, and Toone Pro ends with the Lifetime purchase; you can buy a plan again.
           </li>
           <li>
             <strong>Cancel Lifetime, or withdraw from it later</strong>: there is nothing to cancel,
@@ -332,8 +380,8 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
         </blockquote>
         <p>
           The refund goes back to the payment method you used, within 14 days of your request.
-          Payments after the first one, such as renewals, are not refunded, except where the law
-          requires it or as stated for Germany above.
+          Renewals are not refunded, except where the law requires it or as stated{" "}
+          <a href="#germany">for Germany</a> above.
           {managed ? " Link may also refund a payment under its own policy." : null} If a payment is
           refunded or reversed by your bank, the Toone Pro it paid for ends.
         </p>
@@ -351,13 +399,14 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           cannot be moved to another account. Checkout is refused while your account already has a
           paid Toone Pro plan, from the web or from Apple, so you are not charged twice; the one
           exception is upgrading a web subscription to Lifetime, described above. If you bought on
-          the wrong account, ask for the {REFUND_DAYS}-day refund or contact us before buying again.
+          the wrong account, withdraw within {REFUND_DAYS} days as described above, or contact us
+          before buying again.
         </p>
         <p>
           Deleting your Toone account cancels a web subscription at once: Toone Pro ends straight
-          away and you are not charged again. If the subscription&apos;s first payment was made
-          less than {REFUND_DAYS} days before, it is refunded automatically; otherwise the rest of
-          the period is not refunded. Lifetime ends with the account.{" "}
+          away and you are not charged again. If you paid for it less than {REFUND_DAYS} days
+          before, it is refunded automatically, as for a withdrawal (see above); otherwise the rest
+          of the period is not refunded. Lifetime ends with the account.{" "}
           {managed
             ? "Link and Toone keep the invoices and purchase records the law requires"
             : "Toone keeps the invoices, credit notes and purchase records the law requires"}
@@ -487,6 +536,18 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           These terms are governed by Portuguese law. If you are a consumer, you keep the protection
           of the mandatory rules of the country where you live, and you can bring a claim in its
           courts.
+        </p>
+      </section>
+
+      <section id="language">
+        <h2>Language</h2>
+        <p>
+          These terms and the other legal pages of trytoone.com are published in English, and a
+          Toone Pro purchase is made under the English text. The pricing page and the Withdraw from
+          contract here and Cancel contract here pages are also available in Portuguese, Spanish,
+          French, German, Italian and Dutch, and the withdraw and cancel pages in Russian too.
+          Anything that is not available in your language, including these terms and some emails,
+          is shown in English.
         </p>
       </section>
 

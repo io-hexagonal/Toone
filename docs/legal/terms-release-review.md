@@ -29,13 +29,21 @@ the sitemap. Other locale routes redirect to the English page.
 
 ## What the pages cover
 
-- `/en/terms#toone-pro`: who sells Toone Pro on the web, plans, VAT-inclusive
-  euro prices and US prices before tax, renewal and cancellation, a German
-  annual-renewal clause, no plan switching, a full refund of the first payment
-  within 14 days with the withdrawal right and a model form, Lifetime, one
+- `/en/terms#toone-pro`: who sells Toone Pro on the web (the seller shown at
+  checkout stays the seller of that purchase), plans, VAT-inclusive euro prices
+  with checkout's local currency shown before paying, renewal and cancellation,
+  the German one-month notice for renewed Yearly plans (ends one month after
+  receipt, unused remainder refunded pro rata), no plan switching, a full
+  refund of an account's first paid Pro purchase within 14 days, a pro-rata
+  refund for a later subscription withdrawn within 14 days, the withdrawal
+  right and a model form, the login-free withdraw and cancel pages (pressing
+  confirm is the declaration; cancellations state their type and end date),
+  Lifetime, one
   account per purchase and no double billing, account deletion cancelling the
   web subscription, codes, guest months, the Apple section for when Pro is sold
-  in the Mac App Store edition, conformity, complaints and governing law. The
+  in the Mac App Store edition, conformity, complaints, governing law and the
+  language clause (legal pages in English; the withdraw and cancel pages in
+  every site locale; anything untranslated falls back to English). The
   free plan allowance comes from `lib/legal/terms.ts`, with a transition clause
   for accounts created under the former allowance.
 - `/en/privacy`: Stripe (and Link under Managed Payments) with their roles, data
@@ -49,8 +57,10 @@ the sitemap. Other locale routes redirect to the English page.
 
 ## Seller model switch
 
-`TOONE_PRO_SELLER` in `lib/legal/seller.ts` picks what the Terms, the Privacy
-Policy and the Legal notice describe:
+The API's `features.billing_seller` on `GET /capabilities` (`"managed_payments"`
+or `"direct"`) picks what the Terms, the Privacy Policy and the Legal notice
+describe; the pages re-read it every five minutes. `TOONE_PRO_SELLER` in
+`lib/legal/seller.ts` is only the fallback for when the API does not say:
 
 - `"managed_payments"` (default): Stripe Managed Payments. Sold through Link,
   LLC is the seller and merchant of record; it handles VAT, receipts and
@@ -64,10 +74,9 @@ Policy and the Legal notice describe:
   one is refused: refunded in full, no Pro, and no legal invoice or credit note
   (Stripe's refund confirmation is the only record).
 
-Withdrawal, cancellation, the 14-day first-payment refund, codes, account
-deletion and the Mac App Store edition read the same in both. Change the
-constant only in the release that switches checkout, never ahead of it. The
-tests render both variants.
+Withdrawal, cancellation, the 14-day refunds, codes, account deletion and the
+Mac App Store edition read the same in both. Keep the fallback constant equal
+to the live setting. The tests render both variants.
 
 ## Release gate: owner data
 
@@ -77,7 +86,12 @@ keeps the Legal notice unpublished: the page is a 404, it is not in the sitemap
 or the footer, and the Terms and the Privacy Policy point to the contact email
 instead of linking to it.
 
-The owner-data check is skipped in a plain `npm test`. It runs, and fails while
+A production build (`VERCEL_ENV=production`, or `LEGAL_RELEASE_CHECK=1`) never
+offers web checkout while any value is missing: the pricing buttons, the
+Pricing link and the account page's upgrade button stay hidden. The prebuild
+step also fails that build outright when the API already has web checkout on.
+
+The owner-data test is skipped in a plain `npm test`. It runs, and fails while
 any value is missing, with `LEGAL_RELEASE_CHECK=1` or `VERCEL_ENV=production`.
 It must pass before the first live checkout:
 

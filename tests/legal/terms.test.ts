@@ -77,21 +77,27 @@ const SHARED_TEXT = [
   /Toone Pro Yearly/,
   /Toone Pro Lifetime/,
   /renew automatically every month or every year until you cancel/,
-  /Prices in euros include VAT/,
-  /before (any )?sales tax/,
+  /The pricing page shows prices in euros, including VAT/,
+  /Checkout may show and charge the price in your local currency instead, with any sales tax that applies where you are; it shows the exact amount and currency before you pay/,
+  /The seller shown at checkout and in your purchase confirmation email stays the seller of that purchase, including its renewals, invoices and refunds/,
   /never sees your full card number/,
   /Manage subscription/,
   /Toone Pro stays on until the end of the period you have paid for/,
   /at least 30 days before the new price applies/,
-  /consumer in Germany/,
+  /consumer with a billing address in Germany and your Yearly subscription has renewed at least once, you can cancel it at any time with one month's notice: the subscription then ends one month after the day we receive your cancellation, and the part of the period you paid for that falls after that date is refunded automatically, pro rata/,
   /Switching between Monthly and Yearly is not offered yet/,
-  /full refund of your first payment within 14 days/,
-  /withdraw from the contract within 14 days/,
+  /If you withdraw from your Toone account's first paid Toone Pro purchase within 14 days of paying, it is refunded in full, whatever the plan/,
+  /It applies once per Toone account/,
+  /withdraw from a later subscription within 14 days of paying for it, without giving a reason\. Because you asked for Toone Pro to start straight away, you pay for the days you had it: the unused part of the period you paid for is refunded, pro rata/,
+  /A later Lifetime purchase is digital content: you asked for it to start straight away and confirmed that your right of withdrawal ends when it does, so it is not refunded on withdrawal/,
+  /A withdrawal counts as made within 14 days when you send it within 14 days, even if the refund is made later/,
+  /These terms and the other legal pages of trytoone\.com are published in English, and a Toone Pro purchase is made under the English text/,
+  /Anything that is not available in your language, including these terms and some emails, is shown in English/,
   /Withdraw from contract here/,
   /Cancel contract here/,
   /I hereby give notice that I withdraw/,
   /Deleting your Toone account cancels a web subscription at once/,
-  /first payment was made less than 14 days before, it is refunded automatically/,
+  /If you paid for it less than 14 days before, it is refunded automatically, as for a withdrawal/,
   /Checkout is refused while your account already has a paid Toone Pro plan/,
   /Decreto-Lei 84\/2021/,
   /governed by Portuguese law/,
@@ -141,7 +147,7 @@ test("Direct: the trader sells, Stripe processes, Stripe Tax, a Portuguese invoi
     /valid in VIES/,
     /reverse charge applies/,
     /credit note \(nota de crédito\)/,
-    /Prices in euros include VAT for consumers/,
+    /The pricing page shows prices in euros, including VAT for consumers/,
     /Countries where we can't sell yet are named at checkout, judged by the billing address you give there/,
     /Each accepted payment then gets two documents/,
     /If an accepted payment is refunded, in full or in part, you also receive a credit note/,
@@ -164,16 +170,23 @@ test("withdrawal and cancellation match what the server does", () => {
   for (const seller of TOONE_PRO_SELLERS) {
     const text = terms(seller);
     for (const phrase of [
-      /Cancel a subscription: it stops renewing\. Toone Pro stays on until the end of the period you have paid for, and nothing is refunded/,
-      /Withdraw from a subscription within 14 days of its first payment: the subscription ends straight away, Toone Pro ends, and the first payment is refunded in full/,
+      /Cancel a subscription: it stops renewing\. Toone Pro stays on until the end of the period you have paid for, and nothing is refunded, except as described for Germany above/,
+      /Withdraw from a subscription within 14 days of paying for it: the subscription ends straight away and Toone Pro ends\. The payment is refunded in full if it was your account's first paid Toone Pro purchase; otherwise the unused part of the period is refunded/,
       /Withdraw from a subscription later: the request is treated as a cancellation/,
-      /Withdraw from Lifetime within 14 days of the payment: the payment is refunded in full and Toone Pro is removed/,
+      /Withdraw from Lifetime within 14 days of the payment, when it was your account's first paid Toone Pro purchase: the payment is refunded in full and Toone Pro is removed/,
+      /Withdraw from Lifetime bought while a web subscription was active: buying Lifetime had set that subscription to stop renewing\. If the subscription is still running when you withdraw, it renews again as before\. If it has already ended, it is not restarted, and Toone Pro ends with the Lifetime purchase/,
       /Cancel Lifetime, or withdraw from it later: there is nothing to cancel/,
-      /Nothing changes until you open the link and confirm: your request is carried out only then/,
-      /works for 24 hours/,
+      // Pressing the button is the declaration (no emailed link to open).
+      /Pressing it is your declaration: if the details match a Toone Pro purchase, your withdrawal or cancellation takes effect at that moment, with no further step and no link to open/,
+      /the date and time we received it and, for a cancellation, the date the contract ends/,
+      /Enter the email address of your Toone account or the one you entered at checkout, and the order reference \(TOONE-…\) from the purchase confirmation email Toone sends after every purchase/,
+      /whether it is an ordinary or an extraordinary termination \(with the reason\), and when the contract should end: at the next possible date, or on a later date you choose/,
+      /Both are linked at the bottom of every page of trytoone\.com, and neither needs a sign-in/,
+      /Cancel contract here applies this by itself/,
     ]) {
       assert.match(text, phrase, `${seller}: ${phrase}`);
     }
+    assert.doesNotMatch(text, /Nothing changes until you open the link|works for 24 hours|order reference from your receipt|Whatever the plan, you can ask for a full refund of your first payment|Prices in US dollars/, seller);
   }
 });
 
@@ -187,7 +200,7 @@ test("Terms link the withdraw/cancel page, the legal notice, pricing and account
     assert.match(content, new RegExp(`href=\\{\`/en\\$\\{${constant}\\}\`\\}`), constant);
   }
   const labels = [...content.matchAll(/CANCEL_CONTRACT_PATH\}`\}>((?:Withdraw from|Cancel) contract here)</g)].map((m) => m[1]);
-  assert.deepEqual(labels.sort(), ["Cancel contract here", "Withdraw from contract here"]);
+  assert.deepEqual([...new Set(labels)].sort(), ["Cancel contract here", "Withdraw from contract here"]);
   for (const seller of TOONE_PRO_SELLERS) {
     const html = termsHtml(seller);
     for (const href of ["/en/cancel-contract", "/en/legal-notice", "/en/account", "/en/pricing"]) {
