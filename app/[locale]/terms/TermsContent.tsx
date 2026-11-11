@@ -20,7 +20,7 @@ import {
   DIRECT_INVOICE_WORKING_DAYS,
   LINK_SELLER_ENTITY,
   STRIPE_EU_ENTITY,
-  isManagedPayments,
+  newPurchasesSentence,
   type TooneProSeller,
 } from "@/lib/legal/seller";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
@@ -28,8 +28,13 @@ import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const CONTACT = "hello@trytoone.com";
 
-type Props = { seller: TooneProSeller };
-type ContentProps = Props & {
+type ContentProps = {
+  /**
+   * Who sells NEW purchases, as the API says (null when it does not say).
+   * The Terms describe both sellers whatever it is; this only adds the
+   * "new purchases are currently sold …" sentence.
+   */
+  seller?: TooneProSeller | null;
   /**
    * Whether the Legal notice is published (lib/legal/trader.ts complete).
    * While it is not, the Terms name the trader and point to the contact email
@@ -46,88 +51,72 @@ function TraderName({ traderDetails }: { traderDetails: boolean }) {
   return <>Toone&apos;s publisher, Matheus Paranhos (Hexagonal.io), an individual trader in Portugal</>;
 }
 
-/** A purchase keeps the seller it was made under, whatever the site says later. */
-function SellerKept() {
+/**
+ * Who sells Toone Pro on the web. Both ways are always described: a purchase
+ * keeps the seller it was made under, so after a switch the buyers of either
+ * still find their own terms here.
+ */
+function WebSeller({ seller, traderDetails }: { seller: TooneProSeller | null; traderDetails: boolean }) {
+  const current = newPurchasesSentence(seller);
   return (
     <>
-      The seller shown at checkout and in your purchase confirmation email stays the seller of
-      that purchase, including its renewals, invoices and refunds, even if Toone later changes
-      how it sells Toone Pro.
-    </>
-  );
-}
-
-/** Who sells Toone Pro on the web; the one part of the Terms that differs by seller model. */
-function WebSeller({ seller, traderDetails }: Props & { traderDetails: boolean }) {
-  if (isManagedPayments(seller)) {
-    return (
-      <p>
-        Toone Pro is sold on trytoone.com through Stripe&apos;s Managed Payments service. The
-        seller of the transaction and merchant of record is {LINK_SELLER_ENTITY}
-        {" "}(&quot;Link&quot;), a Stripe company: checkout shows &quot;Sold through Link&quot;, and
+      <p id="seller-of-your-purchase">
+        Toone Pro on trytoone.com is sold in one of two ways: sold through Link, or sold by Toone.
+        Checkout shows which one applies before you pay, and your purchase confirmation email names
+        it. A purchase keeps the seller it was made under, including its renewals, invoices and
+        refunds, even if Toone later changes how it sells Toone Pro. Where these terms say
+        &quot;sold through Link&quot; or &quot;sold by Toone&quot;, that part applies only to
+        purchases sold that way.{current ? <> {current}</> : null}
+      </p>
+      <p id="sold-through-link">
+        <strong>Sold through Link.</strong> If checkout shows &quot;Sold through Link&quot;, Toone
+        Pro is sold through Stripe&apos;s Managed Payments service. The seller of the transaction
+        and merchant of record is {LINK_SELLER_ENTITY} (&quot;Link&quot;), a Stripe company, and
         your statement shows LINK.COM followed by Toone&apos;s name. Link takes your payment,
         calculates and collects VAT or sales tax, sends your receipts and invoices, and handles
-        payment support. Link&apos;s <a href={LINK_TERMS_URL}>Sold through Link terms</a> also
-        apply to your purchase. Toone provides Toone Pro, is responsible for delivering it and for
-        product support, and never sees your full card number. <SellerKept />
+        payment support. Link&apos;s <a href={LINK_TERMS_URL}>Sold through Link terms</a> also apply
+        to your purchase. Toone provides Toone Pro, is responsible for delivering it and for product
+        support, and never sees your full card number.
       </p>
-    );
-  }
-  return (
-    <p>
-      Toone Pro is sold on trytoone.com by Toone: the seller is{" "}
-      <TraderName traderDetails={traderDetails} />, who is responsible for the sale, for
-      delivering Toone Pro, and for support. Payments are processed by {STRIPE_EU_ENTITY}{" "}
-      (&quot;Stripe&quot;), in Ireland, on Stripe&apos;s secure checkout page, and your statement
-      shows Toone&apos;s name. Toone never sees your full card number. Stripe sends a receipt
-      when a payment goes through, and Toone sends you a Portuguese legal invoice for every
-      payment, as described under <a href="#invoices">Invoices and VAT</a>. <SellerKept />
-    </p>
-  );
-}
-
-function PriceTax({ seller }: Props) {
-  const local = (
-    <>
-      Checkout may show and charge the price in your local currency instead, with any sales tax
-      that applies where you are; it shows the exact amount and currency before you pay, and that
-      is the amount you are charged.
-    </>
-  );
-  if (isManagedPayments(seller)) {
-    return <>The pricing page shows prices in euros, including VAT. {local}</>;
-  }
-  return (
-    <>
-      The pricing page shows prices in euros, including VAT for consumers. {local} If you buy for
-      a business with a valid EU VAT number, VAT may not be charged, as described under{" "}
-      <a href="#invoices">Invoices and VAT</a>.
+      <p id="sold-by-toone">
+        <strong>Sold by Toone.</strong> Any other purchase on trytoone.com is sold by Toone: the
+        seller is <TraderName traderDetails={traderDetails} />, who is responsible for the sale, for
+        delivering Toone Pro, and for support. Payments are processed by {STRIPE_EU_ENTITY}{" "}
+        (&quot;Stripe&quot;), in Ireland, on Stripe&apos;s secure checkout page, and your statement
+        shows Toone&apos;s name. Toone never sees your full card number. Stripe sends a receipt when
+        a payment goes through, and Toone sends you a Portuguese legal invoice for every payment, as
+        described under <a href="#invoices">Receipts, invoices and VAT</a>.
+      </p>
     </>
   );
 }
 
-function Invoices({ seller }: Props) {
-  if (isManagedPayments(seller)) {
-    return (
-      <>
-        <h3 id="invoices">Receipts, invoices and VAT</h3>
-        <p>
-          As the seller, Link works out the VAT or sales tax due in your country and sends you a
-          receipt and an invoice for every payment, by email. You can also find them in your{" "}
-          <a href={LINK_ACCOUNT_URL}>Link account</a>. Toone does not issue its own invoice for a
-          purchase sold through Link.
-        </p>
-      </>
-    );
-  }
+function PriceTax() {
   return (
     <>
-      <h3 id="invoices">Invoices and VAT</h3>
-      <p>
-        Stripe Tax, Stripe&apos;s tax service, calculates the VAT from where you are, based on
-        your billing address.
-        Each accepted payment then gets two documents, both sent by email to the address you gave
-        at checkout:
+      The pricing page shows prices in euros, including VAT for consumers. Checkout may show and
+      charge the price in your local currency instead, with any sales tax that applies where you
+      are; it shows the exact amount and currency before you pay, and that is the amount you are
+      charged. For a purchase sold by Toone, if you buy for a business with a valid EU VAT number,
+      VAT may not be charged, as described under <a href="#invoices">Receipts, invoices and VAT</a>.
+    </>
+  );
+}
+
+function Invoices() {
+  return (
+    <>
+      <h3 id="invoices">Receipts, invoices and VAT</h3>
+      <p id="invoices-link">
+        <strong>Sold through Link.</strong> As the seller, Link works out the VAT or sales tax due
+        in your country and sends you a receipt and an invoice for every payment, by email. You can
+        also find them in your <a href={LINK_ACCOUNT_URL}>Link account</a>. Toone does not issue its
+        own invoice for a purchase sold through Link.
+      </p>
+      <p id="invoices-toone">
+        <strong>Sold by Toone.</strong> Stripe Tax, Stripe&apos;s tax service, calculates the VAT
+        from where you are, based on your billing address. Each accepted payment then gets two
+        documents, both sent by email to the address you gave at checkout:
       </p>
       <ul>
         <li>
@@ -152,19 +141,17 @@ function Invoices({ seller }: Props) {
       </p>
       {/* The blocked countries are server configuration: checkout names them, these terms don't. */}
       <p id="not-sold-in">
-        Toone Pro can&apos;t be sold yet to some countries. Countries where we can&apos;t sell yet
-        are named at checkout, judged by the billing address you give there. A payment from one of
-        them is refused: it is refunded in full, doesn&apos;t start Toone Pro, and gets no legal
-        invoice and no credit note, because no sale took place. Stripe emails you the confirmation
-        of the refund.
+        Toone can&apos;t sell Toone Pro yet to some countries. When a purchase is sold by Toone,
+        the countries where we can&apos;t sell yet are named at checkout, judged by the billing
+        address you give there. A payment from one of them is refused: it is refunded in full,
+        doesn&apos;t start Toone Pro, and gets no legal invoice and no credit note, because no sale
+        took place. Stripe emails you the confirmation of the refund.
       </p>
     </>
   );
 }
 
-export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
-  const managed = isManagedPayments(seller);
-
+export default function TermsContent({ seller = null, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
   return (
     <>
       <section>
@@ -241,11 +228,11 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
         </ul>
         <p>
           The <a href={`/en${PRICING_PATH}`}>pricing page</a> and checkout show the total price
-          before you pay. <PriceTax seller={seller} /> There is no free trial.
+          before you pay. <PriceTax /> There is no free trial.
           You must have a Toone account and be signed in to buy.
         </p>
 
-        <Invoices seller={seller} />
+        <Invoices />
 
         <h3>Payment, renewal and cancellation</h3>
         <p>
@@ -255,13 +242,9 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
         </p>
         <p>
           You can cancel a subscription at any time: on your{" "}
-          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> (Manage subscription),
-          {managed ? (
-            <>
-              {" "}in your <a href={LINK_ACCOUNT_URL}>Link account</a>,
-            </>
-          ) : null}{" "}
-          or without signing in at <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>.
+          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> (Manage subscription), in your{" "}
+          <a href={LINK_ACCOUNT_URL}>Link account</a> for a purchase sold through Link, or without
+          signing in at <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>.
           Cancelling stops the next renewal. Toone Pro stays on until the end of the period you have
           paid for, and you are not charged again. If Toone changes the price of a subscription, you
           are told by email at least 30 days before the new price applies, and you can cancel
@@ -370,14 +353,10 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           </li>
         </ul>
         <p>
-          You can also withdraw by email to <a href={`mailto:${CONTACT}`}>{CONTACT}</a>
-          {managed ? (
-            <>
-              {" "}or ask <a href={LINK_SUPPORT_URL}>Link support</a> and give &quot;withdrawal
-              period&quot; as the reason
-            </>
-          ) : null}
-          . You can use these words, though you don&apos;t have to:
+          You can also withdraw by email to <a href={`mailto:${CONTACT}`}>{CONTACT}</a> or, for a
+          purchase sold through Link, ask <a href={LINK_SUPPORT_URL}>Link support</a> and give
+          &quot;withdrawal period&quot; as the reason. You can use these words, though you don&apos;t
+          have to:
         </p>
         <blockquote>
           To Toone ({traderDetails ? "contact details in the Legal notice" : CONTACT}): I hereby give
@@ -389,9 +368,9 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
         <p>
           The refund goes back to the payment method you used, within 14 days of your request.
           Renewals are not refunded, except where the law requires it or as stated{" "}
-          <a href="#germany">for Germany</a> above.
-          {managed ? " Link may also refund a payment under its own policy." : null} If a payment is
-          refunded or reversed by your bank, the Toone Pro it paid for ends.
+          <a href="#germany">for Germany</a> above. For a purchase sold through Link, Link may also
+          refund a payment under its own policy. If a payment is refunded or reversed by your bank,
+          the Toone Pro it paid for ends.
         </p>
 
         <h3>Lifetime</h3>
@@ -414,12 +393,11 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           Deleting your Toone account cancels a web subscription at once: Toone Pro ends straight
           away and you are not charged again. If you paid for it less than {REFUND_DAYS} days
           before, it is refunded automatically, as for a withdrawal (see above); otherwise the rest
-          of the period is not refunded. Lifetime ends with the account.{" "}
-          {managed
-            ? "Link and Toone keep the invoices and purchase records the law requires"
-            : "Toone keeps the invoices, credit notes and purchase records the law requires"}
-          , as described in the <a href="/en/privacy#retention">Privacy Policy</a>. Deleting your
-          account does not cancel a subscription bought from Apple.
+          of the period is not refunded. Lifetime ends with the account. Toone keeps the purchase
+          records the law requires, with the invoices and credit notes of purchases sold by Toone,
+          and Link keeps the invoices of purchases sold through Link, as described in the{" "}
+          <a href="/en/privacy#retention">Privacy Policy</a>. Deleting your account does not cancel
+          a subscription bought from Apple.
         </p>
 
         <h3 id="codes">Redeemable codes</h3>
@@ -521,13 +499,9 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
       <section id="complaints">
         <h2>Complaints, disputes and governing law</h2>
         <p>
-          If something goes wrong, email <a href={`mailto:${CONTACT}`}>{CONTACT}</a> first.
-          {managed ? (
-            <>
-              {" "}Payment questions can also go to <a href={LINK_SUPPORT_URL}>Link support</a>.
-            </>
-          ) : null}{" "}
-          You can file a complaint in the Livro de Reclamações Eletrónico, and as a consumer you can
+          If something goes wrong, email <a href={`mailto:${CONTACT}`}>{CONTACT}</a> first. Payment
+          questions about a purchase sold through Link can also go to{" "}
+          <a href={LINK_SUPPORT_URL}>Link support</a>. You can file a complaint in the Livro de Reclamações Eletrónico, and as a consumer you can
           take a dispute to an alternative dispute resolution entity.
           {traderDetails ? (
             <>

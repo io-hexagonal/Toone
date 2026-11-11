@@ -57,26 +57,32 @@ the sitemap. Other locale routes redirect to the English page.
 
 ## Seller model switch
 
-The API's top-level `billing_seller` on `GET /capabilities` (`"managed_payments"`
-or `"direct"`) picks what the Terms, the Privacy Policy and the Legal notice
-describe; the pages re-read it every five minutes. `TOONE_PRO_SELLER` in
-`lib/legal/seller.ts` is only the fallback for when the API does not say:
+Toone Pro on the web is sold in one of two ways, and a purchase keeps the
+seller it was made under (renewals, invoices and refunds included). The
+Terms, the Privacy Policy and the Legal notice therefore always describe both,
+and say which applies to a purchase: the one checkout showed and the purchase
+confirmation email names.
 
-- `"managed_payments"` (default): Stripe Managed Payments. Sold through Link,
-  LLC is the seller and merchant of record; it handles VAT, receipts and
-  invoices.
-- `"direct"`: the trader in `lib/legal/trader.ts` is the seller. Stripe
-  Payments Europe processes the payments, Stripe Tax calculates VAT, a
-  Portuguese legal invoice (with ATCUD) is emailed as a PDF for every accepted payment,
-  separate from Stripe's receipt, EU businesses with a VIES-checked VAT number
-  get the reverse charge, and refunds get credit notes. Countries where Toone
-  Pro can't be sold yet are named at checkout, not in the Terms; a payment from
-  one is refused: refunded in full, no Pro, and no legal invoice or credit note
-  (Stripe's refund confirmation is the only record).
+- Sold through Link (Stripe Managed Payments): Sold through Link, LLC is the
+  seller and merchant of record; it handles VAT, receipts and invoices.
+- Sold by Toone (direct): the trader in `lib/legal/trader.ts` is the seller.
+  Stripe Payments Europe processes the payments, Stripe Tax calculates VAT, a
+  Portuguese legal invoice (with ATCUD) is emailed as a PDF for every accepted
+  payment, separate from Stripe's receipt, EU businesses with a VIES-checked
+  VAT number get the reverse charge, and refunds get credit notes. Countries
+  where Toone Pro can't be sold yet are named at checkout, not in the Terms; a
+  payment from one is refused: refunded in full, no Pro, and no legal invoice
+  or credit note (Stripe's refund confirmation is the only record).
+
+The API's top-level `billing_seller` on `GET /capabilities` (`"managed_payments"`
+or `"direct"`) only adds one sentence, "New purchases are currently sold …";
+the pages re-read it every five minutes and leave the sentence out when the API
+does not say. There is no fallback constant, so a switch needs no website step
+and an unreachable API can never name the wrong seller.
 
 Withdrawal, cancellation, the 14-day refunds, codes, account deletion and the
-Mac App Store edition read the same in both. Keep the fallback constant equal
-to the live setting. The tests render both variants.
+Mac App Store edition read the same for both. The tests render the pages for
+either seller and for an unknown one.
 
 ## Release gate: owner data
 

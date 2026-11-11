@@ -19,7 +19,7 @@ import {
 import {
   LINK_SELLER_ENTITY,
   STRIPE_EU_ENTITY,
-  isManagedPayments,
+  newPurchasesSentence,
   type TooneProSeller,
 } from "@/lib/legal/seller";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
@@ -32,8 +32,13 @@ import {
   TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
 } from "@/lib/legal/terms";
 
-type Props = { seller: TooneProSeller };
-type ContentProps = Props & {
+type ContentProps = {
+  /**
+   * Who sells NEW purchases, as the API says (null when it does not say).
+   * The policy describes both sellers whatever it is; this only adds the
+   * "new purchases are currently sold …" sentence.
+   */
+  seller?: TooneProSeller | null;
   /**
    * Whether the Legal notice is published (lib/legal/trader.ts complete).
    * While it is not, the policy points to the contact email instead of
@@ -46,49 +51,59 @@ const CONTACT = PRIVACY_CONTACT;
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const ext = { target: "_blank", rel: "noopener" } as const;
 
-/** Who sells Toone Pro on the web, and who controls the payment data. */
-function WebPurchase({ seller, traderDetails }: Props & { traderDetails: boolean }) {
-  if (isManagedPayments(seller)) {
-    return (
-      <>
-        <p>
-          Toone Pro is sold on trytoone.com through Stripe&apos;s Managed Payments service. The
-          payment page runs on Stripe&apos;s servers, and the seller of the transaction is{" "}
-          {LINK_SELLER_ENTITY} (&quot;Link&quot;), a Stripe company. Toone never receives your full
-          card number or other payment-method details.
-        </p>
-        <p>
-          When you start checkout, Toone&apos;s server tells Stripe which plan you chose and which
-          Toone account is buying. Stripe and Link collect what they need to take the payment: your name,
-          email address, billing country and address, and payment method, plus your IP address and
-          country as evidence of where VAT or sales tax is due. Stripe then sends Toone&apos;s
-          server what it needs to give you Toone Pro and keep records: the Stripe customer,
-          subscription, checkout and invoice identifiers, the plan, price, currency, tax and any
-          discount, the payment status, the current period and its end date, whether the
-          subscription renews, and any refund or payment dispute. Link sends your receipts and
-          invoices.
-        </p>
-        <p>
-          Stripe processes this data for Toone as a service provider, to run Toone&apos;s payments.
-          Stripe and Link are also independent controllers for their own purposes, as the seller of
-          the transaction and to meet their legal, tax, fraud-prevention and compliance
-          obligations, under the{" "}
-          <a href={STRIPE_PRIVACY_URL} {...ext}>
-            Stripe Privacy Policy
-          </a>{" "}
-          and the{" "}
-          <a href={LINK_PRIVACY_URL} {...ext}>
-            Link Privacy Policy
-          </a>
-          . You can ask Link to delete the data it holds as the seller separately.
-        </p>
-      </>
-    );
-  }
+/**
+ * Who sells Toone Pro on the web, and who controls the payment data. Both
+ * ways are always described: a purchase keeps the seller it was made under,
+ * so after a switch the buyers of either still find their own text here.
+ */
+function WebPurchase({ seller, traderDetails }: { seller: TooneProSeller | null; traderDetails: boolean }) {
+  const current = newPurchasesSentence(seller);
   return (
     <>
+      <p id="seller-of-your-purchase">
+        Toone Pro on trytoone.com is sold in one of two ways: sold through Link, or sold by Toone.
+        Checkout shows which one applies before you pay, your purchase confirmation email names it,
+        and a purchase keeps it for its renewals and refunds, even if Toone later changes how it
+        sells Toone Pro. What follows under each heading applies only to purchases sold that way.
+        {current ? <> {current}</> : null}
+      </p>
+
+      <h4 id="sold-through-link">Purchases sold through Link</h4>
       <p>
-        Toone Pro is sold on trytoone.com by Toone: the seller is{" "}
+        These are sold through Stripe&apos;s Managed Payments service. The payment page runs on
+        Stripe&apos;s servers, and the seller of the transaction is {LINK_SELLER_ENTITY}{" "}
+        (&quot;Link&quot;), a Stripe company. Toone never receives your full card number or other
+        payment-method details.
+      </p>
+      <p>
+        When you start checkout, Toone&apos;s server tells Stripe which plan you chose and which
+        Toone account is buying. Stripe and Link collect what they need to take the payment: your name,
+        email address, billing country and address, and payment method, plus your IP address and
+        country as evidence of where VAT or sales tax is due. Stripe then sends Toone&apos;s
+        server what it needs to give you Toone Pro and keep records: the Stripe customer,
+        subscription, checkout and invoice identifiers, the plan, price, currency, tax and any
+        discount, the payment status, the current period and its end date, whether the
+        subscription renews, and any refund or payment dispute. Link sends your receipts and
+        invoices.
+      </p>
+      <p>
+        Stripe processes this data for Toone as a service provider, to run Toone&apos;s payments.
+        Stripe and Link are also independent controllers for their own purposes, as the seller of
+        the transaction and to meet their legal, tax, fraud-prevention and compliance
+        obligations, under the{" "}
+        <a href={STRIPE_PRIVACY_URL} {...ext}>
+          Stripe Privacy Policy
+        </a>{" "}
+        and the{" "}
+        <a href={LINK_PRIVACY_URL} {...ext}>
+          Link Privacy Policy
+        </a>
+        . You can ask Link to delete the data it holds as the seller separately.
+      </p>
+
+      <h4 id="sold-by-toone">Purchases sold by Toone</h4>
+      <p>
+        For these, the seller is{" "}
         {traderDetails ? (
           <>the trader named in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a></>
         ) : (
@@ -156,10 +171,9 @@ function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
   );
 }
 
-export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
-  const managed = isManagedPayments(seller);
-  const recipients = privacyRecipients(seller);
-  const retention = privacyRetention(seller);
+export default function PrivacyContent({ seller = null, traderDetails = TRADER_DETAILS_COMPLETE }: ContentProps) {
+  const recipients = privacyRecipients();
+  const retention = privacyRetention();
 
   return (
     <>
@@ -181,9 +195,11 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
           for its activity.
         </p>
         <p>
-          {managed
-            ? `When you buy Toone Pro on trytoone.com, ${LINK_SELLER_ENTITY} is the seller of the transaction and decides, for its own purposes, how it uses your payment data. See Toone Pro below.`
-            : "When you buy Toone Pro on trytoone.com, the same trader is the seller and the controller of your purchase data. See Toone Pro below."}
+          When you buy Toone Pro on trytoone.com, who controls your purchase data depends on how
+          your purchase is sold. For a purchase sold through Link, {LINK_SELLER_ENTITY} is the
+          seller of the transaction and decides, for its own purposes, how it uses your payment
+          data. For a purchase sold by Toone, the same trader is the seller and the controller of
+          your purchase data. See Toone Pro below.
         </p>
       </section>
 
@@ -356,8 +372,8 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
           trytoone.com sets no Stripe cookies and loads no Stripe script. When you buy Toone Pro or
           manage a subscription, you leave trytoone.com for Stripe&apos;s checkout on
           checkout.stripe.com or Stripe&apos;s billing portal on billing.stripe.com, which set their
-          own cookies under Stripe&apos;s policy
-          {managed ? " (and, for Link, under Link's policy)" : ""}. When a sign-in page shows the
+          own cookies under Stripe&apos;s policy (and, for a purchase sold through Link, under
+          Link&apos;s policy). When a sign-in page shows the
           Sign in with Apple or Sign in with Google button, it loads that company&apos;s sign-in
           script from its servers, so Apple or Google receives ordinary connection information such
           as your IP address, and Google may use its own cookies on its own domain.
@@ -572,10 +588,9 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
           requires. They stay under your former account&apos;s ID, but your name and email address
           are erased from the account itself. The Stripe customer record they point to, with the
           name, email address and billing address you gave at checkout, and its invoices stay at
-          Stripe. Code redemption records lose the link to your account.
-          {managed
-            ? " Link keeps its own records of the transaction and lets you ask it to delete your Link data separately."
-            : ""}
+          Stripe. Code redemption records lose the link to your account. For a purchase sold through
+          Link, Link keeps its own records of the transaction and lets you ask it to delete your
+          Link data separately.
         </p>
         <p>
           App Store purchase records for Toone Pro are kept as records of the purchase but are no
@@ -708,9 +723,8 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
           answers within one month. You can also act directly: delete your account in Toone (Mac App
           Store) under Settings &rarr; Account, turn usage analytics off in Toone (Direct) Settings,
           stop sharing site maps with the Silk Network, and change your website analytics choice at
-          any time. For data that Stripe{managed ? " and Link hold" : " holds"} as{" "}
-          {managed ? "independent controllers" : "an independent controller"}, you can also contact{" "}
-          {managed ? "them" : "it"} directly. Toone may keep records the law requires even after
+          any time. For data that Stripe holds as an independent controller, and Link for a
+          purchase sold through Link, you can also contact them directly. Toone may keep records the law requires even after
           you ask for erasure, as described in How long we keep data.
         </p>
         <p>

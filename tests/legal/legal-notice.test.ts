@@ -49,15 +49,19 @@ test("the legal notice renders every trader field from lib/legal/trader.ts", () 
   assert.match(page, /<WebSales seller=\{seller\} \/>/);
 });
 
-test("the legal notice names the web seller for each seller model", () => {
+test("the legal notice names both web sellers, whoever sells new purchases", () => {
   assert.deepEqual([...TOONE_PRO_SELLERS], ["managed_payments", "direct"]);
-  const managed = renderText(createElement(WebSales, { seller: "managed_payments" }));
-  assert.match(managed, /merchant of record is Sold through Link, LLC/);
-  assert.match(managed, /Link support/);
-  const direct = renderText(createElement(WebSales, { seller: "direct" }));
-  assert.match(direct, /sold by the trader above, who issues a Portuguese legal invoice for every payment/);
-  assert.match(direct, /Stripe Payments Europe, Limited, in Ireland/);
-  assert.doesNotMatch(direct, /Link/);
+  for (const seller of [...TOONE_PRO_SELLERS, null]) {
+    const text = renderText(createElement(WebSales, { seller }));
+    assert.match(text, /Web purchases of Toone Pro are sold in one of two ways\. Checkout shows which one applies before you pay, the purchase confirmation email names it, and a purchase keeps it for its renewals and refunds/, `${seller}`);
+    assert.match(text, /Sold through Link: .*merchant of record is Sold through Link, LLC/, `${seller}`);
+    assert.match(text, /Link support/, `${seller}`);
+    assert.match(text, /Sold by Toone: sold by the trader above, who issues a Portuguese legal invoice for every payment/, `${seller}`);
+    assert.match(text, /Stripe Payments Europe, Limited, in Ireland/, `${seller}`);
+  }
+  assert.match(renderText(createElement(WebSales, { seller: "managed_payments" })), /New purchases are currently sold through Link\./);
+  assert.match(renderText(createElement(WebSales, { seller: "direct" })), /New purchases are currently sold by Toone\./);
+  assert.doesNotMatch(renderText(createElement(WebSales, { seller: null })), /currently sold/);
 });
 
 test("owner placeholders live only in lib/legal/trader.ts", () => {

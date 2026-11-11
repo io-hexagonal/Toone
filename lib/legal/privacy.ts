@@ -1,4 +1,4 @@
-import type { TooneProSeller } from "@/lib/legal/seller";
+import { SOLD_BY, type TooneProSeller } from "@/lib/legal/seller";
 
 export const PRIVACY_PATH = "/privacy";
 export const PRIVACY_CANONICAL = `https://trytoone.com/en${PRIVACY_PATH}`;
@@ -20,7 +20,8 @@ export const SESSION_STORAGE_KEY = "toone.session";
 
 /**
  * Who receives personal data, in which role and where. Rendered as the
- * recipients table on /en/privacy. `sellers` limits a row to one seller model.
+ * recipients table on /en/privacy. `sellers` marks a row that concerns only
+ * the purchases of one seller model; the table names it in the purpose.
  */
 export type PrivacyRecipient = {
   id: string;
@@ -149,8 +150,20 @@ export const PRIVACY_RECIPIENTS: readonly PrivacyRecipient[] = [
   },
 ];
 
-export function privacyRecipients(seller: TooneProSeller): PrivacyRecipient[] {
-  return PRIVACY_RECIPIENTS.filter((row) => !row.sellers || row.sellers.includes(seller));
+/** "For purchases sold through Link: …" for a row that concerns only some purchases. */
+function forPurchases(sellers: readonly TooneProSeller[] | undefined, text: string): string {
+  if (!sellers) return text;
+  const which = sellers.map((seller) => SOLD_BY[seller]).join(" or ");
+  return `For purchases ${which}: ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
+}
+
+/**
+ * Every recipient, whatever sells new purchases: a purchase keeps its seller,
+ * so the recipients of both models stay listed, each saying which purchases
+ * it concerns.
+ */
+export function privacyRecipients(): PrivacyRecipient[] {
+  return PRIVACY_RECIPIENTS.map((row) => ({ ...row, purpose: forPurchases(row.sellers, row.purpose) }));
 }
 
 /** Why Toone uses personal data, and the GDPR art. 6(1) basis for each purpose. */
@@ -230,22 +243,21 @@ export type PrivacyRetention = {
 export const PRIVACY_PAYMENT_RECORD_YEARS = 10;
 export const PRIVACY_CONTRACT_REQUEST_YEARS = 3;
 
-export function privacyRetention(seller: TooneProSeller): PrivacyRetention[] {
-  const invoices: PrivacyRetention =
-    seller === "direct"
-      ? {
-          id: "invoices",
-          data: "Legal invoices and credit notes",
-          period: `${PRIVACY_PAYMENT_RECORD_YEARS} years after the end of the year they were issued in.`,
-          why: "Portuguese tax law requires it.",
-          confirm: true,
-        }
-      : {
-          id: "invoices",
-          data: "Receipts and invoices",
-          period:
-            "Link issues and keeps them under its own policy. Toone keeps the payment records described above.",
-        };
+export function privacyRetention(): PrivacyRetention[] {
+  // A purchase keeps its seller, so both models' invoice rows stay listed.
+  const invoices: PrivacyRetention = {
+    id: "invoices",
+    data: "Legal invoices and credit notes of purchases sold by Toone",
+    period: `${PRIVACY_PAYMENT_RECORD_YEARS} years after the end of the year they were issued in.`,
+    why: "Portuguese tax law requires it.",
+    confirm: true,
+  };
+  const linkInvoices: PrivacyRetention = {
+    id: "link-invoices",
+    data: "Receipts and invoices of purchases sold through Link",
+    period:
+      "Link issues and keeps them under its own policy. Toone keeps the payment records described above.",
+  };
   return [
     {
       id: "account",
@@ -262,6 +274,7 @@ export function privacyRetention(seller: TooneProSeller): PrivacyRetention[] {
       confirm: true,
     },
     invoices,
+    linkInvoices,
     {
       id: "consent",
       data:

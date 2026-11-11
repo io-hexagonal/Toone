@@ -24,14 +24,16 @@ import PrivacyContent from "../../app/[locale]/privacy/PrivacyContent";
 const read = (path: string) => fs.readFileSync(path, "utf8");
 const page = read("app/[locale]/privacy/page.tsx");
 /** Renders as published (Legal notice live) unless `traderDetails` is false. */
-const privacy = (seller: TooneProSeller, traderDetails = true) => renderText(createElement(PrivacyContent, { seller, traderDetails }));
-const privacyHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml(createElement(PrivacyContent, { seller, traderDetails }));
+const privacy = (seller: TooneProSeller | null, traderDetails = true) => renderText(createElement(PrivacyContent, { seller, traderDetails }));
+const privacyHtml = (seller: TooneProSeller | null, traderDetails = true) => renderHtml(createElement(PrivacyContent, { seller, traderDetails }));
+/** Who sells new purchases, as the API may say: either seller, or nothing (unreachable). */
+const RENDERINGS: readonly (TooneProSeller | null)[] = [...TOONE_PRO_SELLERS, null];
 
 test("Privacy page renders the seller model and the bumped date", () => {
   assert.match(page, /<PrivacyContent seller=\{seller\} \/>/);
   assert.match(page, /updated=\{PRIVACY_UPDATED_DATE\}/);
   assert.equal(PRIVACY_UPDATED_DATE, "November 11, 2026");
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     assert.doesNotMatch(privacy(seller), /Toone Pro \(Mac App Store\)\s*$/m, "Pro is no longer described as Store-only");
   }
 });
@@ -42,7 +44,7 @@ test("cookie and storage names match the code that sets them", () => {
   assert.equal(LOCALE_DISMISSED_KEY, "toone.locale.dismissed");
   assert.match(read("lib/privacy-choices.ts"), new RegExp(`STORAGE_KEY = "${ANALYTICS_CHOICE_STORAGE_KEY}"`));
   assert.ok(read("lib/api.ts").includes(`const SESSION_KEY = "${SESSION_STORAGE_KEY}"`));
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     const text = privacy(seller);
     for (const name of [
       "toone_site_session", "toone_locale", "toone.session", "toone-web-analytics-choice-v1", "toone.locale.dismissed",
@@ -77,82 +79,86 @@ test("purchase records in local storage are forgotten on sign-out", async () => 
   assert.match(read("lib/api.ts"), /export function clearSession\(\): void \{[\s\S]*?forgetPurchaseRecords\(\);[\s\S]*?\n\}/);
 });
 
-test("Managed Payments: Stripe and Link, Link as seller and independent controller", () => {
-  const text = privacy("managed_payments");
-  for (const phrase of [
-    /Stripe's Managed Payments service/,
-    /the seller of the transaction is Sold through Link, LLC/,
-    /never receives your full card number/,
-    /billing country and address/,
-    /IP address and country as evidence/,
-    /subscription, checkout and invoice identifiers/,
-    /Stripe processes this data for Toone as a service provider/,
-    /independent controllers for their own purposes/,
-    /Link sends your receipts and invoices/,
-    /Link Privacy Policy/,
-  ]) {
-    assert.match(text, phrase);
+const LINK_PRIVACY = [
+  /Purchases sold through Link These are sold through Stripe's Managed Payments service/,
+  /the seller of the transaction is Sold through Link, LLC/,
+  /never receives your full card number/,
+  /billing country and address/,
+  /IP address and country as evidence/,
+  /subscription, checkout and invoice identifiers/,
+  /Stripe processes this data for Toone as a service provider/,
+  /independent controllers for their own purposes/,
+  /Link sends your receipts and invoices/,
+  /Link Privacy Policy/,
+  /For a purchase sold through Link, Sold through Link, LLC is the seller of the transaction and decides, for its own purposes, how it uses your payment data/,
+  /\(and, for a purchase sold through Link, under Link's policy\)/,
+  /For a purchase sold through Link, Link keeps its own records of the transaction/,
+  /For data that Stripe holds as an independent controller, and Link for a purchase sold through Link, you can also contact them directly/,
+];
+const TOONE_PRIVACY = [
+  /Purchases sold by Toone For these, the seller is the trader named in the Legal notice, who is also the controller of the purchase data/,
+  /Payments are processed by Stripe Payments Europe, Limited/,
+  /Stripe Tax, Stripe's tax service/,
+  /checked in VIES/,
+  /For every accepted payment, Toone issues a Portuguese legal invoice, and a credit note for every refund of one/,
+  /A payment refused because Toone Pro can't be sold yet to its billing country is refunded in full and gets neither/,
+  /communicated to the Portuguese tax authority/,
+  /Stripe processes payment data for Toone as a processor/,
+  /For a purchase sold by Toone, the same trader is the seller and the controller of your purchase data/,
+];
+
+test("whoever sells new purchases, the policy describes both sellers and which purchases each concerns", () => {
+  // Review #15: after a switch, Link stays disclosed for the purchases it sold, and the reverse.
+  for (const seller of RENDERINGS) {
+    const text = privacy(seller);
+    for (const phrase of [...LINK_PRIVACY, ...TOONE_PRIVACY]) assert.match(text, phrase, `${seller}: ${phrase}`);
+    const html = privacyHtml(seller);
+    assert.ok(html.includes("https://stripe.com/privacy"), `${seller}`);
+    assert.ok(html.includes("https://link.com/privacy"), `${seller}`);
+    for (const id of ["seller-of-your-purchase", "sold-through-link", "sold-by-toone"]) assert.ok(html.includes(`id="${id}"`), `${seller}: #${id}`);
   }
-  const html = privacyHtml("managed_payments");
-  assert.ok(html.includes("https://stripe.com/privacy"));
-  assert.ok(html.includes("https://link.com/privacy"));
-  assert.doesNotMatch(text, /Autoridade Tributária|VIES|certified accountant/);
+  assert.match(privacy("managed_payments"), /What follows under each heading applies only to purchases sold that way\. New purchases are currently sold through Link\./);
+  assert.match(privacy("direct"), /New purchases are currently sold by Toone\./);
+  assert.doesNotMatch(privacy(null), /currently sold/);
+  const source = read("app/[locale]/privacy/PrivacyContent.tsx");
+  assert.doesNotMatch(source, /isManagedPayments|\bmanaged\b/, "no seller-dependent branch left in the policy");
 });
 
-test("Direct: Toone sells, Stripe processes, Stripe Tax, legal invoices to the tax authority", () => {
-  const text = privacy("direct");
-  for (const phrase of [
-    /the seller is the trader named in the Legal notice, who is also the controller of the purchase data/,
-    /Payments are processed by Stripe Payments Europe, Limited/,
-    /Stripe Tax, Stripe's tax service/,
-    /checked in VIES/,
-    /For every accepted payment, Toone issues a Portuguese legal invoice, and a credit note for every refund of one/,
-    /A payment refused because Toone Pro can't be sold yet to its billing country is refunded in full and gets neither/,
-    /communicated to the Portuguese tax authority/,
-    /Stripe processes payment data for Toone as a processor/,
-    /Autoridade Tributária e Aduaneira/,
-    /certified accountant/,
-  ]) {
-    assert.match(text, phrase);
+test("recipients: every processor with its role and country; seller-specific ones say which purchases", () => {
+  const rows = privacyRecipients();
+  const ids = rows.map((row) => row.id);
+  for (const id of ["vercel", "api-hosting", "stripe", "resend", "openai", "discord", "umami", "apple", "google", "github", "link", "tax-authority", "vies", "accountant"]) {
+    assert.ok(ids.includes(id), id);
   }
-  assert.doesNotMatch(text, /Sold through Link|Link Privacy Policy|Managed Payments/);
-});
-
-test("recipients: every processor with its role and country, per seller", () => {
-  const ids = (seller: TooneProSeller) => privacyRecipients(seller).map((row) => row.id);
-  const shared = ["vercel", "api-hosting", "stripe", "resend", "openai", "discord", "umami", "apple", "google", "github"];
-  for (const seller of TOONE_PRO_SELLERS) {
-    for (const id of shared) assert.ok(ids(seller).includes(id), `${seller}: ${id}`);
-  }
-  assert.ok(ids("managed_payments").includes("link"));
-  assert.ok(!ids("direct").includes("link"));
-  for (const id of ["tax-authority", "vies", "accountant"]) {
-    assert.ok(ids("direct").includes(id), id);
-    assert.ok(!ids("managed_payments").includes(id), id);
-  }
+  const purpose = (id: string) => rows.find((row) => row.id === id)?.purpose ?? "";
+  assert.match(purpose("link"), /^For purchases sold through Link: sells Toone Pro on trytoone\.com/);
+  for (const id of ["tax-authority", "vies", "accountant"]) assert.match(purpose(id), /^For purchases sold by Toone: [a-z]/, id);
+  assert.doesNotMatch(purpose("stripe"), /^For purchases/);
   for (const row of PRIVACY_RECIPIENTS) {
     assert.ok(row.role.trim() && row.where.trim() && row.purpose.trim(), row.id);
   }
-  const managed = privacy("managed_payments");
-  for (const phrase of [
-    /Vercel Inc\. Processor/,
-    /Stripe Payments Europe, Limited \(Stripe\) Processor for Toone's payments; independent controller/,
-    /Sold through Link, LLC \(Link\) Seller of the transaction \(merchant of record\) and independent controller/,
-    /Resend, Inc\. Processor/,
-    /Umami analytics, self-hosted/,
-    /Toone's server hosting provider Processor .* virtual private server[^|]*European Union/,
-    /Google Independent controller Sign in with Google/,
-    /Apple Independent controller Sign in with Apple/,
-  ]) {
-    assert.match(managed, phrase);
+  for (const seller of RENDERINGS) {
+    const text = privacy(seller);
+    for (const phrase of [
+      /Vercel Inc\. Processor/,
+      /Stripe Payments Europe, Limited \(Stripe\) Processor for Toone's payments; independent controller/,
+      /Sold through Link, LLC \(Link\) Seller of the transaction \(merchant of record\) and independent controller For purchases sold through Link/,
+      /Autoridade Tributária e Aduaneira \(AT\), the Portuguese tax authority Public authority \(independent controller\) For purchases sold by Toone/,
+      /Resend, Inc\. Processor/,
+      /Umami analytics, self-hosted/,
+      /Toone's server hosting provider Processor .* virtual private server[^|]*European Union/,
+      /Google Independent controller Sign in with Google/,
+      /Apple Independent controller Sign in with Apple/,
+    ]) {
+      assert.match(text, phrase, `${seller}: ${phrase}`);
+    }
   }
-  assert.match(privacy("direct"), /Autoridade Tributária e Aduaneira \(AT\), the Portuguese tax authority Public authority/);
 });
 
 test("purposes and legal bases table", () => {
   const bases = PRIVACY_PURPOSES.map((row) => row.basis).join(" ");
   for (const basis of ["6(1)(a)", "6(1)(b)", "6(1)(c)", "6(1)(f)"]) assert.ok(bases.includes(basis), basis);
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     const text = privacy(seller);
     assert.match(text, /Why we use your data, and on what legal basis/);
     assert.match(text, /Count visits and clicks on trytoone\.com Consent \(art\. 6\(1\)\(a\)\)/);
@@ -163,10 +169,10 @@ test("purposes and legal bases table", () => {
 test("retention table covers payments, invoices, consent, contract requests, codes and bonuses", () => {
   assert.equal(PRIVACY_PAYMENT_RECORD_YEARS, 10);
   assert.equal(PRIVACY_CONTRACT_REQUEST_YEARS, 3);
-  for (const seller of TOONE_PRO_SELLERS) {
-    const rows = privacyRetention(seller);
+  for (const seller of RENDERINGS) {
+    const rows = privacyRetention();
     const ids = rows.map((row) => row.id);
-    for (const id of ["account", "payments", "invoices", "consent", "contract-requests", "code-redemptions", "code-hash", "creation-bonuses"]) {
+    for (const id of ["account", "payments", "invoices", "link-invoices", "consent", "contract-requests", "code-redemptions", "code-hash", "creation-bonuses"]) {
       assert.ok(ids.includes(id), `${seller}: ${id}`);
     }
     assert.equal(new Set(ids).size, ids.length, "unique ids");
@@ -183,12 +189,14 @@ test("retention table covers payments, invoices, consent, contract requests, cod
     assert.match(text, /which version of the text you saw As long as the payment record it belongs to/);
     assert.doesNotMatch(text, /\bconfirm: |to confirm|\bTODO\b/i);
   }
-  assert.match(privacy("direct"), /Legal invoices and credit notes 10 years after the end of the year they were issued in/);
-  assert.match(privacy("managed_payments"), /Receipts and invoices Link issues and keeps them/);
+  for (const seller of RENDERINGS) {
+    assert.match(privacy(seller), /Legal invoices and credit notes of purchases sold by Toone 10 years after the end of the year they were issued in/, `${seller}`);
+    assert.match(privacy(seller), /Receipts and invoices of purchases sold through Link Link issues and keeps them/, `${seller}`);
+  }
 });
 
 test("withdrawal and cancellation requests, codes and account deletion", () => {
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     const text = privacy(seller);
     for (const phrase of [
       /which version of that text you saw/,
@@ -207,13 +215,13 @@ test("withdrawal and cancellation requests, codes and account deletion", () => {
       assert.match(text, phrase, `${seller}: ${phrase}`);
     }
     // Deletion keeps payment rows under the former account's ID; the checkout email is never prefilled.
-    assert.doesNotMatch(text, /no longer linked to your Toone account|confirmation link that works|filled in for you/, seller);
+    assert.doesNotMatch(text, /no longer linked to your Toone account|confirmation link that works|filled in for you/, String(seller));
     assert.match(text, /stay under your former account's ID, without your name or email address/, `${seller}: retention table`);
   }
 });
 
 test("controller, transfers, rights, automated decisions, security, children, Store edition, changes", () => {
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     const html = privacyHtml(seller);
     const text = privacy(seller);
     for (const id of ["controller", "third-parties", "purposes", "transfers", "retention", "automated-decisions", "security", "children", "your-rights", "changes", "cookies", "toone-pro", "toone-pro-app-store"]) {
@@ -243,28 +251,31 @@ test("controller, transfers, rights, automated decisions, security, children, St
 });
 
 test("Privacy follows TRADER_DETAILS_COMPLETE unless told otherwise", () => {
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     assert.equal(
       renderHtml(createElement(PrivacyContent, { seller })),
       privacyHtml(seller, TRADER_DETAILS_COMPLETE),
-      seller,
+      String(seller),
     );
   }
 });
 
 test("while the trader details are incomplete the Privacy Policy never links or points to the Legal notice", () => {
-  for (const seller of TOONE_PRO_SELLERS) {
+  for (const seller of RENDERINGS) {
     const html = privacyHtml(seller, false);
     const text = privacy(seller, false);
     assert.ok(!html.includes("/legal-notice"), `${seller}: links the Legal notice`);
-    assert.doesNotMatch(text, /Legal notice/, seller);
+    assert.doesNotMatch(text, /Legal notice/, String(seller));
     assert.match(text, /can be reached at hello@trytoone\.com\. His address and tax number are available on request at the same email address\. Toone has not appointed/);
     assert.match(text, /Toone is published by Matheus Paranhos \(Hexagonal\.io\), Portugal\./);
   }
-  assert.match(
-    privacy("direct", false),
-    /the seller is Toone's publisher, named under Who is responsible for your data, who is also the controller of the purchase data/,
-  );
-  assert.ok(privacyHtml("direct", false).includes('href="#controller"'));
-  assert.match(privacy("managed_payments", false), /the seller of the transaction is Sold through Link, LLC/);
+  for (const seller of RENDERINGS) {
+    assert.match(
+      privacy(seller, false),
+      /For these, the seller is Toone's publisher, named under Who is responsible for your data, who is also the controller of the purchase data/,
+      `${seller}`,
+    );
+    assert.ok(privacyHtml(seller, false).includes('href="#controller"'), `${seller}`);
+    assert.match(privacy(seller, false), /the seller of the transaction is Sold through Link, LLC/, `${seller}`);
+  }
 });

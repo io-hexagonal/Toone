@@ -1,6 +1,9 @@
 /**
- * Who sells Toone Pro on trytoone.com. The Terms, the Privacy Policy and the
- * Legal notice render the matching text from this one constant.
+ * The two ways Toone Pro is sold on trytoone.com. The Terms, the Privacy
+ * Policy and the Legal notice describe both, and say which applies to a
+ * purchase: the one checkout showed and the purchase confirmation email names.
+ * A purchase keeps the seller it was made under, so after a switch the
+ * purchases of both models keep their own text.
  *
  * - `"managed_payments"`: Stripe Managed Payments. Sold through Link, LLC (a
  *   Stripe company) is the seller and merchant of record. It collects VAT or
@@ -9,16 +12,13 @@
  *   Payments Europe processes the payments, Stripe Tax calculates VAT, and the
  *   trader issues a Portuguese legal invoice for every payment.
  *
- * Whichever model is ready first goes live. The API says which one sells new
- * purchases (top-level `billing_seller` on `GET /capabilities`), and the legal
- * pages render from that answer. `TOONE_PRO_SELLER` is only the fallback for
- * when the API does not say (unreachable, or a version without the field):
- * keep it equal to the live setting.
+ * Which one sells NEW purchases comes from the API (top-level `billing_seller`
+ * on `GET /capabilities`). The legal pages only use it for one sentence
+ * ("new purchases are currently sold …") and leave that sentence out when the
+ * API does not say; nothing else on them depends on it.
  */
 export const TOONE_PRO_SELLERS = ["managed_payments", "direct"] as const;
 export type TooneProSeller = (typeof TOONE_PRO_SELLERS)[number];
-
-export const TOONE_PRO_SELLER: TooneProSeller = "managed_payments";
 
 /** The seller model the API advertises, or null when the value is missing or unknown. */
 export function sellerFromServer(value: unknown): TooneProSeller | null {
@@ -27,13 +27,22 @@ export function sellerFromServer(value: unknown): TooneProSeller | null {
   return null;
 }
 
-/** The seller model the legal pages render: the API's answer, else the fallback constant. */
-export function currentSeller(fromServer: TooneProSeller | null | undefined, fallback: TooneProSeller = TOONE_PRO_SELLER): TooneProSeller {
-  return fromServer ?? fallback;
-}
-
 export function isManagedPayments(seller: TooneProSeller): boolean {
   return seller === "managed_payments";
+}
+
+/** How the legal pages name each way of selling, as in "a purchase sold through Link". */
+export const SOLD_BY: Record<TooneProSeller, string> = {
+  managed_payments: "sold through Link",
+  direct: "sold by Toone",
+};
+
+/**
+ * The one sentence that depends on the live setting: who sells new purchases.
+ * Null when the API did not say, so the pages never guess.
+ */
+export function newPurchasesSentence(seller: TooneProSeller | null | undefined): string | null {
+  return seller ? `New purchases are currently ${SOLD_BY[seller]}.` : null;
 }
 
 /** The Stripe entity that processes payments for an EEA Stripe account. */
