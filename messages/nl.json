@@ -80,6 +80,7 @@
       "moreLinks": "Meer",
       "orderRef": "Bestelreferentie (laatste aankoop in deze browser)",
       "orderRefNote": "Het contractformulier vraagt erom, samen met het e-mailadres van je account. Hij staat ook in de aankoopbevestiging van Toone.",
+      "orderRefMissing": "Als je Toone Pro op trytoone.com hebt gekocht, staat je bestelreferentie (TOONE-…) in de aankoopbevestiging van Toone. Deze pagina toont hem alleen voor een aankoop in deze browser. Zonder referentie kun je nog steeds opzeggen met Abonnement beheren, of herroepen of opzeggen per e-mail aan hello@trytoone.com vanaf het e-mailadres van je account.",
       "invoicePending": "Factuur: wordt opgemaakt (per e-mail naar je).",
       "invoiceIssued": "Factuur: opgemaakt (per e-mail naar je).",
       "invoiceNumber": "Factuur: {number}",

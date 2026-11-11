@@ -80,6 +80,7 @@
       "moreLinks": "Altro",
       "orderRef": "Riferimento ordine (ultimo acquisto in questo browser)",
       "orderRefNote": "Il modulo del contratto la chiede insieme all’email del tuo account. Si trova anche nell’email di conferma d’acquisto di Toone.",
+      "orderRefMissing": "Se hai acquistato Toone Pro su trytoone.com, il riferimento ordine (TOONE-…) è nell’email di conferma d’acquisto di Toone. Questa pagina lo mostra solo per un acquisto fatto in questo browser. Anche senza, puoi disdire con Gestisci abbonamento, oppure recedere o disdire via email a hello@trytoone.com dall’indirizzo email del tuo account.",
       "invoicePending": "Fattura: in emissione (ti arriva via email).",
       "invoiceIssued": "Fattura: emessa (ti arriva via email).",
       "invoiceNumber": "Fattura: {number}",

@@ -80,6 +80,7 @@
       "moreLinks": "Mehr",
       "orderRef": "Bestellnummer (letzter Kauf in diesem Browser)",
       "orderRefNote": "Das Vertragsformular fragt danach, zusammen mit der E-Mail-Adresse deines Kontos. Sie steht auch in der Kaufbestätigung von Toone.",
+      "orderRefMissing": "Wenn du Toone Pro auf trytoone.com gekauft hast, steht deine Bestellnummer (TOONE-…) in der Kaufbestätigung von Toone. Diese Seite zeigt sie nur für einen Kauf in diesem Browser. Auch ohne sie kannst du mit „Abo verwalten“ kündigen oder per E-Mail an hello@trytoone.com von der E-Mail-Adresse deines Kontos widerrufen oder kündigen.",
       "invoicePending": "Rechnung: wird ausgestellt (per E-Mail an dich).",
       "invoiceIssued": "Rechnung: ausgestellt (per E-Mail an dich).",
       "invoiceNumber": "Rechnung: {number}",

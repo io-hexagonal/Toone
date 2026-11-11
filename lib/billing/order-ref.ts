@@ -7,7 +7,7 @@
  * when the session ends (`forgetPurchaseRecords`).
  */
 
-import { normalizeOrderRef } from "./api";
+import { getCheckoutStatus, normalizeOrderRef, type CheckoutStatus, type LegalInvoice } from "./api";
 import { CHECKOUT_KEY_PREFIX, ORDER_REF_KEY_PREFIX } from "./purchase-storage";
 
 const KEY_PREFIX = ORDER_REF_KEY_PREFIX;
@@ -68,5 +68,38 @@ export function recallCheckoutSession(userId: string, storage: StorageLike | nul
     return value && SESSION_ID.test(value) ? value : null;
   } catch {
     return null;
+  }
+}
+
+/** What the account page shows about the account's last web purchase. */
+export type LastPurchase = {
+  /** `TOONE-…`, or null when this browser knows no purchase of the account. */
+  orderRef: string | null;
+  /** Direct sales only: the purchase's legal invoice, or null. */
+  legalInvoice: LegalInvoice | null;
+};
+
+/**
+ * The last web purchase of the account, read from the server where this
+ * browser remembers its Checkout Session: the checkout status carries the
+ * order reference and the legal invoice. A reference the server returns is
+ * remembered again; without an answer the remembered reference is used.
+ */
+export async function lastPurchase(
+  token: string,
+  userId: string,
+  fetchStatus: (token: string, sessionId: string) => Promise<CheckoutStatus> = getCheckoutStatus,
+  storage: StorageLike | null = defaultStorage(),
+): Promise<LastPurchase> {
+  const remembered = recallOrderRef(userId, storage);
+  const sessionId = recallCheckoutSession(userId, storage);
+  if (!sessionId) return { orderRef: remembered, legalInvoice: null };
+  try {
+    const status = await fetchStatus(token, sessionId);
+    const orderRef = normalizeOrderRef(status.order_ref);
+    if (orderRef) rememberOrderRef(userId, orderRef, storage);
+    return { orderRef: orderRef ?? remembered, legalInvoice: status.legal_invoice };
+  } catch {
+    return { orderRef: remembered, legalInvoice: null }; // the plan still shows; these lines are optional
   }
 }

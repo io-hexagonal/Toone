@@ -9,14 +9,12 @@ import { logout, type ToneSession } from "@/lib/api";
 import {
   billingFailure,
   getBillingFeaturesOrOff,
-  getCheckoutStatus,
   getEntitlement,
   startPortal,
   type BillingFeatures,
   type Entitlement,
-  type LegalInvoice,
 } from "@/lib/billing/api";
-import { recallCheckoutSession, recallOrderRef } from "@/lib/billing/order-ref";
+import { lastPurchase, recallOrderRef } from "@/lib/billing/order-ref";
 import { APPLE_MANAGE_SUBSCRIPTIONS_URL } from "@/lib/legal/terms";
 import { WEB_SALES_LEGALLY_READY } from "@/lib/legal/release";
 import { legalInvoiceCopy } from "@/components/billing/legal-invoice";
@@ -118,17 +116,6 @@ export function AccountHeader({ session, onSessionEnded }: { session: ToneSessio
   );
 }
 
-/** The legal invoice of the last web purchase made in this browser, if any. */
-async function lastPurchaseInvoice(session: ToneSession): Promise<LegalInvoice | null> {
-  const sessionId = recallCheckoutSession(session.user.id);
-  if (!sessionId) return null;
-  try {
-    return (await getCheckoutStatus(session.token, sessionId)).legal_invoice;
-  } catch {
-    return null; // the plan still shows; the line is optional
-  }
-}
-
 function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneSession; onSessionEnded: () => void; fromApp: boolean }) {
   const t = useTranslations("account.page");
   const common = useTranslations("account.common");
@@ -136,7 +123,7 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
   const [features, setFeatures] = useState<BillingFeatures | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  // Only this browser knows it (the success page saw it); read after mount.
+  // Only this browser knows the last purchase (the success page saw it); read after mount.
   const [orderRef, setOrderRef] = useState<string | null>(null);
   const active = useRef(true);
 
@@ -146,13 +133,14 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
     setLoading(true);
     setLoadError(false);
     try {
-      const [next, flags, invoice] = await Promise.all([
-        getEntitlement(session.token), getBillingFeaturesOrOff(), lastPurchaseInvoice(session),
+      const [next, flags, purchase] = await Promise.all([
+        getEntitlement(session.token), getBillingFeaturesOrOff(), lastPurchase(session.token, session.user.id),
       ]);
       if (!active.current) return;
-      // The entitlement carries no legal invoice (API contract); the last
-      // purchase's checkout status does.
-      setEntitlement({ ...next, legal_invoice: next.legal_invoice ?? invoice });
+      // The entitlement carries no order reference or legal invoice (API
+      // contract); the last purchase's checkout status does.
+      setEntitlement({ ...next, legal_invoice: next.legal_invoice ?? purchase.legalInvoice });
+      if (purchase.orderRef) setOrderRef(purchase.orderRef);
       setFeatures(flags);
     } catch (caught) {
       if (!active.current) return;
@@ -217,6 +205,7 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
               </dl>
               <p className={styles.notice}>{t("orderRefNote")}</p>
             </>}
+            {!orderRef && <p className={styles.notice} data-order-ref="missing">{t("orderRefMissing")}</p>}
             <div className={styles.actions}>
               <Link className={styles.button} href="/cancel-contract?kind=withdraw">{t("withdrawLink")}</Link>
               <Link className={styles.button} href="/cancel-contract?kind=cancel">{t("cancelLink")}</Link>

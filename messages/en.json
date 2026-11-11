@@ -80,6 +80,7 @@
       "moreLinks": "More",
       "orderRef": "Order reference (last purchase in this browser)",
       "orderRefNote": "The contract form asks for it, with your account's email address. It's also in the purchase confirmation email from Toone.",
+      "orderRefMissing": "If you bought Toone Pro on trytoone.com, your order reference (TOONE-…) is in the purchase confirmation email from Toone. This page shows it only for a purchase made in this browser. Without it, you can still cancel with Manage subscription, or withdraw or cancel by email to hello@trytoone.com from your account's email address.",
       "invoicePending": "Legal invoice: being issued (emailed to you).",
       "invoiceIssued": "Legal invoice: issued (emailed to you).",
       "invoiceNumber": "Legal invoice: {number}",

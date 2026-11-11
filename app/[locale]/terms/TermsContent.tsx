@@ -315,8 +315,9 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>. Both are linked at the
           bottom of every page of trytoone.com, and neither needs a sign-in. Enter the email address
           of your Toone account or the one you entered at checkout, and the order reference
-          (TOONE-…) from the purchase confirmation email Toone sends after every purchase. You can
-          add your name. To cancel, you also say whether it is an ordinary or an extraordinary
+          (TOONE-…) from the purchase confirmation email Toone sends after every purchase. Your{" "}
+          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> also shows it for a purchase made in
+          the browser you use there. You can add your name. To cancel, you also say whether it is an ordinary or an extraordinary
           termination (with the reason), and when the contract should end: at the next possible
           date, or on a later date you choose.
         </p>
@@ -328,6 +329,13 @@ export default function TermsContent({ seller, traderDetails = TRADER_DETAILS_CO
           contract ends. If the details match no purchase, nothing changes: check the order
           reference in your purchase confirmation email and send the request again, or write to{" "}
           <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
+        </p>
+        <p id="no-order-reference">
+          If you don&apos;t have the order reference, you can still cancel a subscription on your
+          Toone account page (Manage subscription), or withdraw or cancel by email to{" "}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a> from the email address of your Toone account
+          or the one you entered at checkout. The order reference helps us find your purchase, but
+          you don&apos;t need it there.
         </p>
         <ul>
           <li>

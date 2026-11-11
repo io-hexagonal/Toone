@@ -190,6 +190,15 @@ test("withdrawal and cancellation match what the server does", () => {
   }
 });
 
+test("the Terms say where the order reference is, and how to withdraw or cancel without it", () => {
+  for (const seller of TOONE_PRO_SELLERS) {
+    const text = terms(seller);
+    assert.match(text, /Your Toone account page also shows it for a purchase made in the browser you use there/, seller);
+    assert.match(text, /If you don't have the order reference, you can still cancel a subscription on your Toone account page \(Manage subscription\), or withdraw or cancel by email to hello@trytoone\.com from the email address of your Toone account or the one you entered at checkout\. The order reference helps us find your purchase, but you don't need it there\./, seller);
+    assert.ok(termsHtml(seller).includes('id="no-order-reference"'), seller);
+  }
+});
+
 test("Terms link the withdraw/cancel page, the legal notice, pricing and account pages", async () => {
   const legal = await import("../../lib/legal/terms");
   assert.equal(legal.CANCEL_CONTRACT_PATH, "/cancel-contract");

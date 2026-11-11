@@ -5,7 +5,9 @@ import { createTranslator } from "next-intl";
 import { describePlan } from "../../components/account/plan-view";
 import { legalInvoiceCopy } from "../../components/billing/legal-invoice";
 import en from "../../messages/en.json";
-import { normalizeEntitlement } from "../../lib/billing/api";
+import { normalizeEntitlement, type CheckoutStatus } from "../../lib/billing/api";
+import { lastPurchase, rememberCheckoutSession, rememberOrderRef } from "../../lib/billing/order-ref";
+import { locales } from "../../i18n/routing";
 
 /* The account page's reading of GET /me/entitlement (contract fields billing_provider, manage, plan_interval). */
 
@@ -89,10 +91,11 @@ test("the account page shows the remembered order reference and, in Direct mode,
   const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
   assert.match(page, /recallOrderRef\(session\.user\.id\)/);
   assert.match(page, /legalInvoiceCopy\(entitlement\.legal_invoice\)/);
-  // The API sends legal_invoice only on the checkout status:
-  // the page reads it from the last purchase's session, not the entitlement.
-  assert.match(page, /recallCheckoutSession\(session\.user\.id\)/);
-  assert.match(page, /getCheckoutStatus\(session\.token, sessionId\)\)\.legal_invoice/);
+  // The API sends order_ref and legal_invoice only on the checkout status:
+  // the page reads them from the last purchase's session, not the entitlement.
+  assert.match(page, /lastPurchase\(session\.token, session\.user\.id\)/);
+  assert.match(page, /legal_invoice: next\.legal_invoice \?\? purchase\.legalInvoice/);
+  assert.match(page, /if \(purchase\.orderRef\) setOrderRef\(purchase\.orderRef\)/);
   const t = createTranslator({ locale: "en", messages: en, namespace: "account.page" });
   const say = (invoice: Parameters<typeof legalInvoiceCopy>[0]) => {
     const copy = legalInvoiceCopy(invoice);
@@ -102,4 +105,56 @@ test("the account page shows the remembered order reference and, in Direct mode,
   assert.equal(say({ status: "pending", number: null, atcud: null }), "Legal invoice: being issued (emailed to you).");
   assert.equal(say({ status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" }), "Legal invoice: FR 2026/7 · ATCUD JJ7K2M4P-7");
   assert.match(t("orderRefNote"), /contract form/);
+});
+
+function memoryStorage() {
+  const map = new Map<string, string>();
+  return { getItem: (key: string) => map.get(key) ?? null, setItem: (key: string, value: string) => void map.set(key, value), map };
+}
+const status = (patch: Partial<CheckoutStatus>): CheckoutStatus => ({ status: "complete", entitled: true, order_ref: null, legal_invoice: null, ...patch });
+
+test("the last purchase's order reference comes from its checkout status, and is remembered again", async () => {
+  const storage = memoryStorage();
+  // Only the session is known (the reference was never stored, or was lost).
+  rememberCheckoutSession("usr_1", "cs_test_abc", storage);
+  const calls: string[] = [];
+  const fetchStatus = async (token: string, sessionId: string) => {
+    calls.push(`${token}:${sessionId}`);
+    return status({ order_ref: "toone-abcdefghijkl", legal_invoice: { status: "pending", number: null, atcud: null } });
+  };
+  const first = await lastPurchase("tok", "usr_1", fetchStatus, storage);
+  assert.deepEqual(calls, ["tok:cs_test_abc"]);
+  assert.equal(first.orderRef, "TOONE-ABCDEFGHIJKL");
+  assert.deepEqual(first.legalInvoice, { status: "pending", number: null, atcud: null });
+  assert.equal(storage.map.get("toone.pro.order:usr_1"), "TOONE-ABCDEFGHIJKL");
+
+  // The server cannot answer: the remembered reference still shows.
+  const offline = await lastPurchase("tok", "usr_1", async () => { throw new Error("down"); }, storage);
+  assert.deepEqual(offline, { orderRef: "TOONE-ABCDEFGHIJKL", legalInvoice: null });
+
+  // Nothing remembered for this account: nothing is fetched, nothing shown.
+  const none = await lastPurchase("tok", "usr_2", async () => { throw new Error("must not fetch"); }, storage);
+  assert.deepEqual(none, { orderRef: null, legalInvoice: null });
+
+  // A reference without a session (older records) still shows.
+  const legacy = memoryStorage();
+  rememberOrderRef("usr_3", "TOONE-QRSTUVWXYZ12", legacy);
+  assert.deepEqual(await lastPurchase("tok", "usr_3", async () => { throw new Error("must not fetch"); }, legacy),
+    { orderRef: "TOONE-QRSTUVWXYZ12", legalInvoice: null });
+});
+
+test("without a known order reference the account page says where to find it and the ways that don't need it", async () => {
+  const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
+  assert.match(page, /\{!orderRef && <p className=\{styles\.notice\} data-order-ref="missing">\{t\("orderRefMissing"\)\}<\/p>\}/);
+  const t = createTranslator({ locale: "en", messages: en, namespace: "account.page" });
+  const missing = t("orderRefMissing");
+  assert.match(missing, /order reference \(TOONE-…\) is in the purchase confirmation email from Toone/);
+  assert.match(missing, /only for a purchase made in this browser/);
+  assert.match(missing, /cancel with Manage subscription/);
+  assert.match(missing, /by email to hello@trytoone\.com from your account's email address/);
+  for (const locale of locales) {
+    const messages = (await import(`../../messages/${locale}.json`, { with: { type: "json" } })).default;
+    const text: string = messages.account.page.orderRefMissing;
+    assert.ok(text?.includes("TOONE-") && text.includes("hello@trytoone.com"), locale);
+  }
 });
