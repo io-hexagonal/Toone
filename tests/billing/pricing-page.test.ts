@@ -108,6 +108,8 @@ test("an empty price list (payments off answer 200 []) reads as 'coming soon', w
   assert.equal(checkoutAvailable(true, prices), true);
   assert.equal(checkoutAvailable(true, []), false);
   assert.equal(checkoutAvailable(false, prices), false);
+  // Release gate: a production build with the Legal notice unpublished offers no checkout.
+  assert.equal(checkoutAvailable(true, prices, false), false);
   assert.match(fs.readFileSync("app/[locale]/pricing/page.tsx", "utf8"), /checkoutAvailable\(features\.stripe_pro_checkout, prices\)/);
 });
 

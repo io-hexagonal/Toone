@@ -3,12 +3,13 @@
 import { useEffect, useState, type ComponentProps } from "react";
 import { Link } from "@/lib/navigation";
 import { getBillingFeaturesOrOff } from "@/lib/billing/api";
+import { WEB_SALES_LEGALLY_READY } from "@/lib/legal/release";
 
 let checkoutAvailable: Promise<boolean> | null = null;
 
 function loadCheckoutAvailable(): Promise<boolean> {
   checkoutAvailable ??= getBillingFeaturesOrOff().then(
-    (flags) => flags.stripe_pro_checkout,
+    (flags) => flags.stripe_pro_checkout && WEB_SALES_LEGALLY_READY,
     () => false,
   );
   return checkoutAvailable;

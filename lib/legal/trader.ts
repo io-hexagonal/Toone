@@ -8,9 +8,12 @@
  * sitemap and the footer, and the Terms and the Privacy Policy point to the
  * contact email instead of linking to it.
  *
- * Release gate: tests/legal/release-owner-data.test.ts fails while any value
- * still starts with TODO_OWNER, when run with `LEGAL_RELEASE_CHECK=1` or with
- * `VERCEL_ENV=production`.
+ * Release gate: a production build (`VERCEL_ENV=production`, or
+ * `LEGAL_RELEASE_CHECK=1`) never offers web checkout while any value still
+ * starts with TODO_OWNER (lib/legal/release.ts), and the prebuild step fails
+ * that build outright if the API already has web checkout on
+ * (scripts/legal/release-check.ts). tests/legal/release-owner-data.test.ts
+ * fails too, when run with either variable.
  */
 export const TODO_OWNER = "TODO_OWNER";
 

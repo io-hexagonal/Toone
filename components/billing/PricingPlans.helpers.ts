@@ -15,6 +15,7 @@ import {
   type ProPlanId,
   type ProSource,
 } from "@/lib/billing/api";
+import { WEB_SALES_LEGALLY_READY } from "@/lib/legal/release";
 
 /** sessionStorage key: this tab came from the desktop app (`?from=app`). */
 export const FROM_APP_STORAGE_KEY = "toone.pro.from";
@@ -126,12 +127,14 @@ export function tidyPricingSearch(search: string): string | null {
 }
 
 /**
- * Whether the page offers checkout: the capability flag says so and there is
- * at least one known plan to buy. While payments are off the server answers
- * prices with an empty list (200), which reads as "coming soon".
+ * Whether the page offers checkout: the capability flag says so, there is at
+ * least one known plan to buy, and the release gate allows web sales (a
+ * production build hides checkout until the trader details are published).
+ * While payments are off the server answers prices with an empty list (200),
+ * which reads as "coming soon".
  */
-export function checkoutAvailable(flag: boolean, prices: readonly Price[]): boolean {
-  return flag && orderedPrices(prices).length > 0;
+export function checkoutAvailable(flag: boolean, prices: readonly Price[], legallyReady: boolean = WEB_SALES_LEGALLY_READY): boolean {
+  return flag && legallyReady && orderedPrices(prices).length > 0;
 }
 
 /** Known plans in display order (monthly, yearly, lifetime); one price per plan. */

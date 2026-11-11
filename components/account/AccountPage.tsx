@@ -18,6 +18,7 @@ import {
 } from "@/lib/billing/api";
 import { recallCheckoutSession, recallOrderRef } from "@/lib/billing/order-ref";
 import { APPLE_MANAGE_SUBSCRIPTIONS_URL } from "@/lib/legal/terms";
+import { WEB_SALES_LEGALLY_READY } from "@/lib/legal/release";
 import { legalInvoiceCopy } from "@/components/billing/legal-invoice";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { describePlan, type PlanView } from "./plan-view";
@@ -283,7 +284,7 @@ function PlanPanel({ entitlement, session, features, onSessionEnded }: {
           <span style={{ width: `${view.creations.limit ? Math.min(100, (view.creations.used / view.creations.limit) * 100) : 100}%` }} />
         </div>
         <p className={styles.notice}>{view.creations.exhausted ? t("creationsExhausted") : t("creationsNote")}</p>
-        {features?.stripe_pro_checkout && <div className={styles.actions}>
+        {features?.stripe_pro_checkout && WEB_SALES_LEGALLY_READY && <div className={styles.actions}>
           <Link className={`${styles.button} ${styles.primary}`} href="/pricing">{t("seePro")}</Link>
         </div>}
       </>}
