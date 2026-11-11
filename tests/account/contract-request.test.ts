@@ -174,3 +174,11 @@ test("the request sends the page's locale (the acknowledgement uses it) and the 
   assert.match(page, /autoComplete="name" maxLength=\{CONTRACT_NAME_MAX\}/);
   assert.equal(en.account.contract.name, "Your name (optional)");
 });
+
+test("withdrawal copy follows the refund rules: first purchase in full, later subscription pro rata, later Lifetime not refunded", async () => {
+  const en = (await import("../../messages/en.json", { with: { type: "json" } })).default as { account: Record<string, Record<string, string>> };
+  assert.match(en.account.contract.withdrawBody, /Your first Toone Pro purchase is refunded in full; a later subscription is refunded for the unused part of the period, and a later Lifetime purchase is not refunded\./);
+  // A withdrawn Lifetime that had stopped a running web subscription: that subscription renews again.
+  assert.match(en.account.contractConfirm.withdrawnBody, /that subscription renews again/);
+  assert.doesNotMatch(en.account.contractConfirm.withdrawnBody, /Your payment is being refunded and Toone Pro has ended\./);
+});
