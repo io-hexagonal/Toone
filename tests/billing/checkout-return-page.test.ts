@@ -281,7 +281,7 @@ test("processing: a delayed payment shows its own view with the order reference"
   assert.equal(returnReceipt({ kind: "timeout" }), null);
   assert.equal(
     messages.billing.success.processingSub,
-    "Your payment is processing; Pro turns on when it clears. We'll email you.",
+    "Your payment is processing; Pro turns on when it clears, and we email you the purchase confirmation then. If the payment doesn't go through, you aren't charged.",
   );
   // A processing checkout is not forgotten, so a reload checks it again.
   assert.match(read("components/billing/CheckoutReturn.tsx"), /if \(next\.kind === "active" \|\| \(next\.kind === "error" && next\.reason === "expired"\)\)/);

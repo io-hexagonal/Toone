@@ -227,9 +227,11 @@ test("prices are public and accept a caching init", async () => {
   replies.push(data([
     { plan: "pro_monthly", interval: "month", amount: 900, currency: "eur", display_price: "€9", tax_inclusive: true },
     { plan: "pro_lifetime", interval: null, amount: 19900, currency: "eur", display_price: "€199", tax_inclusive: true },
+    // Never shown: a regional price the site did not ask for.
+    { plan: "pro_yearly", interval: "year", amount: 7999, currency: "usd", display_price: "$79.99", tax_inclusive: false },
   ]));
   const prices = await getPrices({ cache: "force-cache" });
-  assert.equal(calls[0].url, `${BASE}/billing/prices`);
+  assert.equal(calls[0].url, `${BASE}/billing/prices?currency=eur`);
   assert.equal(calls[0].headers.get("Authorization"), null);
   assert.equal(calls[0].cache, "force-cache");
   assert.deepEqual(prices.map(p => [p.plan, p.interval]), [["pro_monthly", "month"], ["pro_lifetime", "lifetime"]]);

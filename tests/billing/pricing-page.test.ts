@@ -84,9 +84,9 @@ test("with checkout on, the plans render in order with the disclosures", () => {
   const order = ["Monthly", "Yearly", "Lifetime"].map((name) => html.indexOf(`<h2>${name}</h2>`));
   assert.ok(order.every((at) => at >= 0) && order[0] < order[1] && order[1] < order[2], "monthly, yearly, lifetime");
   assert.match(html, /€9\.99/);
-  assert.match(html, /Prices include VAT where applicable\./);
+  assert.match(html, /Prices are in euros and include VAT where applicable\. Checkout may show the price in your local currency, with any tax that applies there; it shows the exact amount before you pay\./);
   assert.match(html, /renew automatically until you cancel/);
-  assert.match(html, /full refund of your first payment within 14 days/);
+  assert.match(html, /Your first Toone Pro purchase is refunded in full if you withdraw within 14 days/);
   assert.match(html, /href="\/en\/terms#toone-pro"/);
   // The session is only known in the browser: no buy button in the server HTML.
   assert.doesNotMatch(html, /Get (Monthly|Yearly|Lifetime)/);

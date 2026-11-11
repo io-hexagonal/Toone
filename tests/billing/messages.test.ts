@@ -52,3 +52,17 @@ test("the FAQ has a Pro entry in every locale that takes the free allowance from
   }
   assert.equal(TOONE_PRO_FREE_ROUTINE_CREATIONS, 2);
 });
+
+test("payment copy promises an email only for a confirmed purchase, and a failed payment reads as not charged", async () => {
+  for (const locale of locales) {
+    const success = ((await load(locale)).billing as Tree).success as Record<string, string>;
+    assert.ok(success.processingSub && success.expiredSub, locale);
+  }
+  const success = ((await load("en")).billing as Tree).success as Record<string, string>;
+  assert.doesNotMatch(success.processingSub, /We'll email you\.$/);
+  assert.match(success.processingSub, /we email you the purchase confirmation then\. If the payment doesn't go through, you aren't charged\./);
+  assert.match(success.expiredSub, /If the payment didn't go through, you weren't charged\./);
+  const pricing = ((await load("en")).billing as Tree).pricing as Record<string, string>;
+  assert.match(pricing.refund, /Your first Toone Pro purchase is refunded in full/);
+  assert.match(pricing.currencyNote, /local currency/);
+});

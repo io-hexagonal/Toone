@@ -195,9 +195,18 @@ export function normalizePrices(raw: unknown): Price[] {
   return prices;
 }
 
-/** `GET /billing/prices`. Pass `init` for caching (e.g. `{ next: { revalidate: 300 } }`). */
+/**
+ * The currency the site shows prices in. The site never shows a regional
+ * price the API did not send: it asks for euros and drops anything else.
+ * Checkout may still charge in the buyer's local currency, which the pricing
+ * page says next to the prices.
+ */
+export const DISPLAY_CURRENCY = "eur";
+
+/** `GET /billing/prices?currency=eur`. Pass `init` for caching (e.g. `{ next: { revalidate: 300 } }`). */
 export function getPrices(init: RequestInit = {}): Promise<Price[]> {
-  return call(async () => normalizePrices(await publicRequest<unknown>("/billing/prices", init)));
+  return call(async () => normalizePrices(await publicRequest<unknown>(`/billing/prices?currency=${DISPLAY_CURRENCY}`, init))
+    .filter((price) => price.currency.toLowerCase() === DISPLAY_CURRENCY));
 }
 
 /* ---- entitlement */

@@ -211,7 +211,7 @@ export default function PricingPlans({
 
       {plans.length > 0 && (
         <ul className="pricing-terms">
-          <li>{t(taxNoteKey(plans))}</li>
+          <li>{t(taxNoteKey(plans))} {t("currencyNote")}</li>
           <li>{t("renewal")}</li>
           <li>{t("refund", { days: refundDays })}</li>
           <li>{t("edition")}</li>
