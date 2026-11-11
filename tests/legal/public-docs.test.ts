@@ -42,3 +42,25 @@ test("docs/legal names no branches, commits or unreleased work", () => {
     assert.equal(match, null, `${file} mentions ${match?.[0]}`);
   }
 });
+
+/** Private server internals the public site code must not name: contract doc files, server source paths and helpers, private scripts. */
+const SERVER_INTERNALS = /\bbilling\.md\b|\binvitations\.md\b|scripts\/e2e\b|apps\/toone-|internal\/(?:domain|handlers|adapters|services|ports)\b|\.go\b|\bParseOrderRef\b|STRIPE_(?:SECRET|WEBHOOK|AUTOMATIC|BLOCKED|PORTAL|PRO|MANAGED)_[A-Z_]+|TOONE_PAYMENTS_ENABLED/;
+const CODE_ROOTS = ["app", "components", "lib", "scripts", "messages", "i18n", "tests"];
+const SELF = path.join("tests", "legal", "public-docs.test.ts");
+
+function sourceFiles(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(dir, entry.name);
+    if (entry.isDirectory()) return sourceFiles(file);
+    return /\.(?:[cm]?[jt]sx?|json|css|md)$/.test(entry.name) ? [file] : [];
+  });
+}
+
+test("public site code and comments name no private server internals", () => {
+  const files = [...CODE_ROOTS.flatMap(sourceFiles), "proxy.ts", "next.config.ts"].filter((file) => file !== SELF);
+  assert.ok(files.length > 100);
+  for (const file of files) {
+    const match = fs.readFileSync(file, "utf8").match(SERVER_INTERNALS);
+    assert.equal(match, null, `${file} mentions ${match?.[0]}`);
+  }
+});

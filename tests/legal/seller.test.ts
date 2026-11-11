@@ -31,7 +31,7 @@ test("Terms, Privacy and the Legal notice all render the one switch", () => {
   }
 });
 
-test("no blocked country is hard-coded: the server's STRIPE_BLOCKED_BILLING_COUNTRIES is the one list", async () => {
+test("no blocked country is hard-coded: the server's blocked-country list is the one list", async () => {
   const seller = await import("../../lib/legal/seller");
   assert.ok(!("DIRECT_BLOCKED_COUNTRIES" in seller));
   assert.doesNotMatch(fs.readFileSync("lib/legal/seller.ts", "utf8"), /United Kingdom/);

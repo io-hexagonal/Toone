@@ -19,7 +19,7 @@ export const STRIPE_REDIRECT_HOSTS: Readonly<Record<StripeRedirectKind, readonly
 
 /**
  * TEST-ONLY: extra `host` or `host:port` entries for the local fake Stripe of
- * the monorepo's end-to-end harness (`scripts/e2e/pro-e2e.sh`), from
+ * a local end-to-end test harness, from
  * `NEXT_PUBLIC_BILLING_TEST_REDIRECT_HOSTS` (comma-separated). Honoured only
  * when the variable is set AND `NODE_ENV !== "production"`. `next build`
  * inlines `NODE_ENV` as "production", so a production bundle drops this

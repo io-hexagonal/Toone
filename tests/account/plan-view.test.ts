@@ -89,7 +89,7 @@ test("the account page shows the remembered order reference and, in Direct mode,
   const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
   assert.match(page, /recallOrderRef\(session\.user\.id\)/);
   assert.match(page, /legalInvoiceCopy\(entitlement\.legal_invoice\)/);
-  // The server sends legal_invoice only on the checkout status (billing.md):
+  // The API sends legal_invoice only on the checkout status:
   // the page reads it from the last purchase's session, not the entitlement.
   assert.match(page, /recallCheckoutSession\(session\.user\.id\)/);
   assert.match(page, /getCheckoutStatus\(session\.token, sessionId\)\)\.legal_invoice/);

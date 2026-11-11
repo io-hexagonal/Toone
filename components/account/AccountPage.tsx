@@ -148,7 +148,7 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
         getEntitlement(session.token), getBillingFeaturesOrOff(), lastPurchaseInvoice(session),
       ]);
       if (!active.current) return;
-      // The entitlement carries no legal invoice (billing.md); the last
+      // The entitlement carries no legal invoice (API contract); the last
       // purchase's checkout status does.
       setEntitlement({ ...next, legal_invoice: next.legal_invoice ?? invoice });
       setFeatures(flags);

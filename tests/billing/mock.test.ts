@@ -146,7 +146,7 @@ test("mock: Direct mode adds the legal invoice to the checkout status, never the
   assert.equal(status.legal_invoice?.status, "issued", "invoiceMs 0 issues at once");
   assert.match(status.legal_invoice?.number ?? "", /^FR TOONE2026\//);
   assert.match(status.legal_invoice?.atcud ?? "", /-/);
-  assert.equal((await getEntitlement(TOKEN)).legal_invoice, null, "the entitlement key set is frozen (billing.md)");
+  assert.equal((await getEntitlement(TOKEN)).legal_invoice, null, "the entitlement key set is frozen");
 });
 
 test("mock: lifetime stays buyable over a Stripe subscription, not over App Store or lifetime Pro", async () => {

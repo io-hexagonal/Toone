@@ -212,7 +212,7 @@ export function createBillingMock(options = {}) {
     });
   }
 
-  /** What confirming a contract request does to the mock account (see billing.md). */
+  /** What a contract request does to the mock account (as the API describes it). */
   function carryOut(kind) {
     const a = state.account;
     const stripe = a.plan === "pro" && a.billing_provider === "stripe";

@@ -225,7 +225,7 @@ export type Entitlement = {
 /**
  * The legal (certified) invoice a Direct-mode purchase gets, sent as
  * `legal_invoice` on the checkout status (never on the entitlement, whose
- * key set is frozen for the desktop; billing.md change 30):
+ * key set is frozen for the desktop app):
  * `pending` while it is being issued (it is emailed), then `issued` with its
  * number and ATCUD. Servers without Direct mode never send it.
  */
@@ -313,7 +313,7 @@ export type CheckoutStatus = {
   legal_invoice: LegalInvoice | null;
 };
 
-/** `TOONE-` and 8–64 letters or digits (the server's `ParseOrderRef`, any case). */
+/** `TOONE-` and 8–64 letters or digits (the API's order-reference format, any case). */
 const ORDER_REF = /^TOONE-[A-Z0-9]{8,64}$/i;
 
 /** The order reference in its canonical (upper-case) form, or null when it cannot be one. */
