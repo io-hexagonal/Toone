@@ -2,7 +2,7 @@ import type { TooneProSeller } from "@/lib/legal/seller";
 
 export const PRIVACY_PATH = "/privacy";
 export const PRIVACY_CANONICAL = `https://trytoone.com/en${PRIVACY_PATH}`;
-export const PRIVACY_UPDATED_DATE = "November 10, 2026";
+export const PRIVACY_UPDATED_DATE = "November 11, 2026";
 
 /** The contact for privacy requests, named on the page. */
 export const PRIVACY_CONTACT = "hello@trytoone.com";
@@ -98,7 +98,7 @@ export const PRIVACY_RECIPIENTS: readonly PrivacyRecipient[] = [
     name: "Resend, Inc.",
     role: "Processor",
     purpose:
-      "Delivers the emails Toone sends, such as account emails, Business and guest-month invitations, Toone Pro notices, withdrawal and cancellation links and confirmations, and account deletion notices. Receives your email address, your name where the email uses it, and the message.",
+      "Delivers the emails Toone sends, such as account emails, Business and guest-month invitations, Toone Pro notices, withdrawal and cancellation acknowledgements, and account deletion notices. Receives your email address, your name where the email uses it, and the message.",
     where: `United States (${TRANSFER_DPF_SCC})`,
   },
   {
@@ -257,7 +257,7 @@ export function privacyRetention(seller: TooneProSeller): PrivacyRetention[] {
       id: "payments",
       data:
         "Toone Pro payment records: the Stripe customer, checkout, subscription and lifetime purchase records, amount, currency, discount, tax, refunds and disputes",
-      period: `${PRIVACY_PAYMENT_RECORD_YEARS} years after the end of the year of the payment. After you delete your account they are no longer linked to it.`,
+      period: `${PRIVACY_PAYMENT_RECORD_YEARS} years after the end of the year of the payment. After you delete your account they stay under your former account's ID, without your name or email address; the Stripe customer record they point to, and its invoices, stay at Stripe.`,
       why: "Tax and accounting law, and to handle refunds and disputes.",
       confirm: true,
     },
@@ -273,7 +273,7 @@ export function privacyRetention(seller: TooneProSeller): PrivacyRetention[] {
     {
       id: "contract-requests",
       data:
-        "Withdrawal and cancellation requests: the kind of request, the name you gave, a keyed hash of the email address, the order, when it was made and confirmed, and the outcome",
+        "Withdrawal and cancellation requests: the kind of request, the name you gave, a keyed hash of the email address, the order, the type of termination, its reason and the end date asked for, when it was made and carried out, any refund, and the outcome",
       period: `${PRIVACY_CONTRACT_REQUEST_YEARS} years after the request.`,
       why: "To show that a request was received and carried out.",
       confirm: true,

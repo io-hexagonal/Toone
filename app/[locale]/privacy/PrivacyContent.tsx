@@ -29,7 +29,6 @@ import {
   LEGAL_NOTICE_PATH,
   LINK_PRIVACY_URL,
   STRIPE_PRIVACY_URL,
-  TOONE_PRO_CONTRACT_LINK_HOURS,
   TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
 } from "@/lib/legal/terms";
 
@@ -60,8 +59,7 @@ function WebPurchase({ seller, traderDetails }: Props & { traderDetails: boolean
         </p>
         <p>
           When you start checkout, Toone&apos;s server tells Stripe which plan you chose and which
-          Toone account is buying, and can give Stripe your account email address so checkout is
-          filled in for you. Stripe and Link collect what they need to take the payment: your name,
+          Toone account is buying. Stripe and Link collect what they need to take the payment: your name,
           email address, billing country and address, and payment method, plus your IP address and
           country as evidence of where VAT or sales tax is due. Stripe then sends Toone&apos;s
           server what it needs to give you Toone Pro and keep records: the Stripe customer,
@@ -102,8 +100,7 @@ function WebPurchase({ seller, traderDetails }: Props & { traderDetails: boolean
       </p>
       <p>
         When you start checkout, Toone&apos;s server tells Stripe which plan you chose and which
-        Toone account is buying, and can give Stripe your account email address so checkout is
-        filled in for you. Checkout collects your name, email address, billing country and address,
+        Toone account is buying. Checkout collects your name, email address, billing country and address,
         payment method and, if you buy for a business, its name and VAT number. Stripe Tax,
         Stripe&apos;s tax service, uses your billing address, and your IP address and country as
         evidence, to work out the VAT due. A VAT number is checked in VIES, the EU&apos;s VAT
@@ -486,14 +483,18 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
         <p>
           If you use Cancel contract here or Withdraw from contract here on trytoone.com (
           <a href={`/en${CANCEL_CONTRACT_PATH}`}>trytoone.com/cancel-contract</a>), Toone receives
-          the email address and order reference you enter, your name if you add it, and which of
-          the two you chose. If they match a purchase, Toone emails that address a confirmation link
-          that works for {TOONE_PRO_CONTRACT_LINK_HOURS} hours, and carries out the request only
-          when you confirm it. A withdrawal within {REFUND_DAYS} days of the first payment ends
-          Toone Pro and refunds that payment through Stripe; a cancellation stops the next renewal.
-          Toone then emails you what was done, with the date and time. Toone stores the request
-          with a keyed hash of the email address, never the address itself, together with your
-          name if you gave it, the order, when the request was made and confirmed, and its outcome.
+          the email address and order reference you enter, your name if you add it, which of the
+          two you chose and, for a cancellation, the type of termination, the reason you give for
+          an extraordinary one and the end date you ask for. The email address is compared with
+          your Toone account&apos;s address and with the one entered at checkout for that order,
+          which Toone reads from Stripe. If they match a purchase, the request takes effect when it
+          is received: a withdrawal ends Toone Pro from that purchase and refunds the payment
+          through Stripe, as the <a href="/en/terms#withdrawal">Terms</a> describe; a cancellation
+          stops the renewal. Toone emails that address an acknowledgement with what you declared,
+          the date and time it was received and what was done. Toone stores the request with a
+          keyed hash of the email address, never the address itself, together with your name if
+          you gave it, the order, the termination details, when the request was made and carried
+          out, any refund, and its outcome.
         </p>
 
         <h3 id="toone-pro-app-store">Toone (Mac App Store) and Apple</h3>
@@ -564,11 +565,14 @@ export default function PrivacyContent({ seller, traderDetails = TRADER_DETAILS_
         </p>
         <p>
           If you have a Toone Pro subscription bought on trytoone.com, deleting your account
-          cancels it at Stripe straight away, so you are not charged again. If its first payment was
-          made less than {REFUND_DAYS} days before, that payment is refunded; otherwise nothing is
-          refunded. Invoices and the records of your purchases, refunds, and codes are kept for as
-          long as tax and accounting law requires, but are no longer linked to your Toone account.
-          The Stripe customer record and its invoices stay at Stripe.
+          cancels it at Stripe straight away, so you are not charged again. If you paid for it less
+          than {REFUND_DAYS} days before, it is refunded as for a withdrawal (see the{" "}
+          <a href="/en/terms#withdrawal">Terms</a>); otherwise nothing is refunded. Invoices and
+          the records of your purchases and refunds are kept for as long as tax and accounting law
+          requires. They stay under your former account&apos;s ID, but your name and email address
+          are erased from the account itself. The Stripe customer record they point to, with the
+          name, email address and billing address you gave at checkout, and its invoices stay at
+          Stripe. Code redemption records lose the link to your account.
           {managed
             ? " Link keeps its own records of the transaction and lets you ask it to delete your Link data separately."
             : ""}

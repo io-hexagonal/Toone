@@ -30,7 +30,7 @@ const privacyHtml = (seller: TooneProSeller, traderDetails = true) => renderHtml
 test("Privacy page renders the seller model and the bumped date", () => {
   assert.match(page, /<PrivacyContent seller=\{seller\} \/>/);
   assert.match(page, /updated=\{PRIVACY_UPDATED_DATE\}/);
-  assert.equal(PRIVACY_UPDATED_DATE, "November 10, 2026");
+  assert.equal(PRIVACY_UPDATED_DATE, "November 11, 2026");
   for (const seller of TOONE_PRO_SELLERS) {
     assert.doesNotMatch(privacy(seller), /Toone Pro \(Mac App Store\)\s*$/m, "Pro is no longer described as Store-only");
   }
@@ -193,17 +193,22 @@ test("withdrawal and cancellation requests, codes and account deletion", () => {
     for (const phrase of [
       /which version of that text you saw/,
       /Cancel contract here or Withdraw from contract here/,
-      /confirmation link that works for 24 hours, and carries out the request only when you confirm it/,
+      /for a cancellation, the type of termination, the reason you give for an extraordinary one and the end date you ask for/,
+      /compared with your Toone account's address and with the one entered at checkout for that order/,
+      /If they match a purchase, the request takes effect when it is received/,
       /keyed hash of the email address, never the address itself/,
       /When you check or redeem a code/,
       /keyed hash of the email address that redeemed it, without the address itself/,
       /deleting your account cancels it at Stripe straight away/,
-      /less than 14 days before, that payment is refunded/,
-      /Invoices and the records of your purchases, refunds, and codes are kept/,
+      /If you paid for it less than 14 days before, it is refunded as for a withdrawal/,
+      /Invoices and the records of your purchases and refunds are kept for as long as tax and accounting law requires\. They stay under your former account's ID, but your name and email address are erased from the account itself\. The Stripe customer record they point to, with the name, email address and billing address you gave at checkout, and its invoices stay at Stripe/,
       /Deleting your account does not cancel an Apple subscription/,
     ]) {
       assert.match(text, phrase, `${seller}: ${phrase}`);
     }
+    // Deletion keeps payment rows under the former account's ID; the checkout email is never prefilled.
+    assert.doesNotMatch(text, /no longer linked to your Toone account|confirmation link that works|filled in for you/, seller);
+    assert.match(text, /stay under your former account's ID, without your name or email address/, `${seller}: retention table`);
   }
 });
 
