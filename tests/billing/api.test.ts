@@ -332,14 +332,18 @@ test("billing feature flags come from public capabilities and fail closed", asyn
   assert.deepEqual(await getBillingFeaturesOrOff(), { stripe_pro_checkout: false, billing_portal: false, pro_codes: false, payments_contract: 0, billing_seller: null });
 });
 
-test("the seller model comes from features.billing_seller; unknown values read as unknown", async () => {
+test("the seller model comes from the top-level billing_seller; unknown values read as unknown", async () => {
   for (const [wire, expected] of [
     ["managed_payments", "managed_payments"], ["managed", "managed_payments"], ["direct", "direct"],
     ["Direct", null], ["link", null], [true, null], [undefined, null],
   ] as const) {
-    replies.push(data({ schema_version: 1, features: { stripe_pro_checkout: true, billing_seller: wire }, contracts: {} }));
+    replies.push(data({ schema_version: 1, features: { stripe_pro_checkout: true }, contracts: {}, billing_seller: wire }));
     assert.equal((await getBillingFeatures()).billing_seller, expected, String(wire));
   }
+  // features is a map of booleans (the desktop decodes it so); a string
+  // there is not the server's contract and is ignored.
+  replies.push(data({ schema_version: 1, features: { stripe_pro_checkout: true, billing_seller: "direct" }, contracts: {} }));
+  assert.equal((await getBillingFeatures()).billing_seller, null);
 });
 
 /* ---- error mapping */

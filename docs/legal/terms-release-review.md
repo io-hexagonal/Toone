@@ -57,7 +57,7 @@ the sitemap. Other locale routes redirect to the English page.
 
 ## Seller model switch
 
-The API's `features.billing_seller` on `GET /capabilities` (`"managed_payments"`
+The API's top-level `billing_seller` on `GET /capabilities` (`"managed_payments"`
 or `"direct"`) picks what the Terms, the Privacy Policy and the Legal notice
 describe; the pages re-read it every five minutes. `TOONE_PRO_SELLER` in
 `lib/legal/seller.ts` is only the fallback for when the API does not say:

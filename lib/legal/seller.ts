@@ -10,7 +10,7 @@
  *   trader issues a Portuguese legal invoice for every payment.
  *
  * Whichever model is ready first goes live. The API says which one sells new
- * purchases (`features.billing_seller` on `GET /capabilities`), and the legal
+ * purchases (top-level `billing_seller` on `GET /capabilities`), and the legal
  * pages render from that answer. `TOONE_PRO_SELLER` is only the fallback for
  * when the API does not say (unreachable, or a version without the field):
  * keep it equal to the live setting.

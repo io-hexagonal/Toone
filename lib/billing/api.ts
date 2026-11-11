@@ -628,8 +628,9 @@ export type BillingFeatures = {
   /** `contracts.payments`; 0 when payments are off. */
   payments_contract: number;
   /**
-   * Who sells new Toone Pro purchases on the web, from `features.billing_seller`
-   * (`"managed_payments"` or `"direct"`); null when the API does not say.
+   * Who sells new Toone Pro purchases on the web, from the top-level
+   * `billing_seller` (`"managed_payments"` or `"direct"`); null when the API
+   * does not say. It is not a feature flag: `features` holds booleans only.
    * The legal pages render from it; see `lib/legal/seller.ts`.
    */
   billing_seller: TooneProSeller | null;
@@ -652,7 +653,7 @@ export function normalizeBillingFeatures(raw: unknown): BillingFeatures {
     billing_portal: features.billing_portal === true,
     pro_codes: features.pro_codes === true,
     payments_contract: num(contracts.payments) ?? 0,
-    billing_seller: sellerFromServer(features.billing_seller),
+    billing_seller: sellerFromServer(record(raw)?.billing_seller),
   };
 }
 
