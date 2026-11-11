@@ -612,7 +612,11 @@
       "edition": "Toone Pro acquistato qui vale per il tuo account Toone in Toone per Mac scaricato da trytoone.com.",
       "termsLine": "Con l'acquisto accetti i <terms>termini di Toone Pro</terms>.",
       "stripeLine": "Pagamento sicuro con Stripe.",
-      "errConflict": "Un pagamento è già in preparazione: riprova tra un momento."
+      "errConflict": "Per il tuo account c’è un pagamento ancora in preparazione, oppure un pagamento appena effettuato è ancora in fase di conferma. Attendi un momento e riprova. Se hai appena pagato, controlla la pagina del tuo account prima di pagare di nuovo.",
+      "errPaymentDue": "L’ultimo pagamento del tuo abbonamento Toone Pro acquistato su trytoone.com non è andato a buon fine, quindi Toone Pro è disattivato finché non viene pagato. Finché quell’abbonamento è aperto non si può avviare un nuovo pagamento: aggiorna il metodo di pagamento nella pagina di fatturazione e Toone Pro tornerà appena il pagamento andrà a buon fine.",
+      "fixPayment": "Aggiorna il metodo di pagamento",
+      "fixPaymentBusy": "Apertura della pagina di fatturazione…",
+      "errPortal": "Non è stato possibile aprire la pagina di fatturazione. Riprova tra un momento o scrivi a hello@trytoone.com."
     },
     "success": {
       "metaTitle": "Conferma del pagamento",

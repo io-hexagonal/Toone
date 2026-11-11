@@ -612,7 +612,11 @@
       "edition": "Hier gekochte Toone Pro geldt voor je Toone-account in Toone voor Mac, gedownload van trytoone.com.",
       "termsLine": "Door te kopen ga je akkoord met de <terms>voorwaarden van Toone Pro</terms>.",
       "stripeLine": "Veilig betalen via Stripe.",
-      "errConflict": "Er wordt al een betaling voorbereid — probeer het zo opnieuw."
+      "errConflict": "Voor je account wordt nog een betaling voorbereid, of een betaling die je net hebt gedaan wordt nog bevestigd. Wacht even en probeer het dan opnieuw. Heb je net betaald? Kijk dan eerst op je accountpagina voordat je opnieuw betaalt.",
+      "errPaymentDue": "De laatste betaling voor je Toone Pro-abonnement van trytoone.com is niet gelukt, dus Toone Pro staat uit tot die betaald is. Zolang dat abonnement openstaat, kan er geen nieuwe betaling starten: werk je betaalmethode bij op de factuurpagina, dan komt Toone Pro terug zodra de betaling lukt.",
+      "fixPayment": "Betaalmethode bijwerken",
+      "fixPaymentBusy": "Factuurpagina wordt geopend…",
+      "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com."
     },
     "success": {
       "metaTitle": "Betalingsbevestiging",

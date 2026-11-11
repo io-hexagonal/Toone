@@ -72,11 +72,31 @@ export function ownedMessageKey(reason: OwnedReason): string {
   }
 }
 
-/** `billing.pricing.*` message key for a failed checkout start. */
-export function checkoutErrorKey(failure: BillingFailure): string {
+/**
+ * A 409 `already_pro` from a trytoone.com subscription while the account's
+ * plan does not read Pro: that subscription's last payment failed and is
+ * still being retried. It no longer gives Pro, but it still blocks a new one,
+ * so the way out is the billing page (update the card), not another checkout.
+ * False while the plan is unknown: then the refusal reads as `ownedWeb`.
+ */
+export function isUnpaidWebSubscription(failure: BillingFailure, entitlement: Entitlement | null): boolean {
+  return failure.kind === "already_pro"
+    && failure.source === "subscription"
+    && failure.provider === "stripe"
+    && entitlement !== null
+    && entitlement.plan !== "pro";
+}
+
+/**
+ * `billing.pricing.*` message key for a failed checkout start. `entitlement`
+ * is the account's plan as the page last read it (null when unknown).
+ */
+export function checkoutErrorKey(failure: BillingFailure, entitlement: Entitlement | null = null): string {
   switch (failure.kind) {
     case "unauthenticated": return "errSession";
-    case "already_pro": return ownedMessageKey(ownedReason(failure.source, failure.provider));
+    case "already_pro":
+      if (isUnpaidWebSubscription(failure, entitlement)) return "errPaymentDue";
+      return ownedMessageKey(ownedReason(failure.source, failure.provider));
     case "payments_unavailable": return "errUnavailable";
     case "rate_limited": return "errRate";
     case "conflict": return "errConflict";

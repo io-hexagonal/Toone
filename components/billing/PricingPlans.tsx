@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { logout } from "@/lib/api";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
@@ -9,6 +9,7 @@ import {
   billingFailure,
   getEntitlement,
   planParam,
+  startPortal,
   type BillingFailure,
   type Entitlement,
   type Price,
@@ -19,6 +20,7 @@ import {
   FROM_APP_STORAGE_KEY,
   checkoutErrorKey,
   hasTemporaryPro,
+  isUnpaidWebSubscription,
   orderedPrices,
   ownedMessageKey,
   planAvailability,
@@ -57,12 +59,16 @@ export default function PricingPlans({
   refundDays: number;
 }) {
   const t = useTranslations("billing.pricing");
+  const locale = useLocale();
   const { session, ready, endSession } = useStoredSession();
   const [selected, setSelected] = useState<ProPlanId | null>(null);
   const [fromApp, setFromApp] = useState(false);
   const [cancelled, setCancelled] = useState(false);
   const [entitlement, setEntitlement] = useState<EntitlementState>({ kind: "idle" });
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  // A refused checkout whose way out is the billing page (an unpaid web subscription).
+  const [fixPayment, setFixPayment] = useState(false);
+  const [portalState, setPortalState] = useState<"idle" | "opening" | "failed">("idle");
 
   // One-shot parameters: `plan` preselects a card, `from=app` is kept for the
   // success page in this tab, `checkout=cancelled` shows a notice once.
@@ -105,15 +111,44 @@ export default function PricingPlans({
     return () => controller.abort();
   }, [token, checkoutEnabled, endSession]);
 
-  function onFailure(failure: BillingFailure) {
+  async function onFailure(failure: BillingFailure) {
     if (failure.kind === "unauthenticated") endSession();
-    setErrorKey(checkoutErrorKey(failure));
+    let plan = entitlement.kind === "ready" ? entitlement.entitlement : null;
+    // Whether an already_pro from a web subscription means "unpaid" depends on
+    // the plan; read it once more when the page could not.
+    if (!plan && failure.kind === "already_pro" && token) plan = await getEntitlement(token).catch(() => null);
+    setFixPayment(isUnpaidWebSubscription(failure, plan));
+    setPortalState("idle");
+    setErrorKey(checkoutErrorKey(failure, plan));
+  }
+
+  function clearError() {
+    setErrorKey(null);
+    setFixPayment(false);
+    setPortalState("idle");
+  }
+
+  /** The Stripe billing page, where an unpaid subscription's card is updated. */
+  async function openBillingPage() {
+    if (!token || portalState === "opening") return;
+    setPortalState("opening");
+    try {
+      const { url } = await startPortal(token, { locale, return: fromApp ? "app" : "web" });
+      window.location.assign(url);
+    } catch (caught) {
+      if (billingFailure(caught).kind === "unauthenticated") {
+        endSession();
+        clearError();
+        return;
+      }
+      setPortalState("failed");
+    }
   }
 
   function signOut() {
     const current = session?.token;
     endSession();
-    setErrorKey(null);
+    clearError();
     if (current) void logout(current);
   }
 
@@ -145,8 +180,8 @@ export default function PricingPlans({
         returnTo={fromApp ? "app" : "web"}
         label={t("buy", { plan: t(NAME_KEY[plan]) })}
         busyLabel={t("buyBusy")}
-        onStart={() => setErrorKey(null)}
-        onFailure={onFailure}
+        onStart={clearError}
+        onFailure={failure => void onFailure(failure)}
       />
     );
   }
@@ -208,6 +243,14 @@ export default function PricingPlans({
       )}
 
       {errorKey && <p className="pricing-error" role="alert">{t(errorKey)}</p>}
+      {errorKey && fixPayment && session && (
+        <div className="pricing-account">
+          <button type="button" className="pricing-button" onClick={() => void openBillingPage()} disabled={portalState === "opening"}>
+            {portalState === "opening" ? t("fixPaymentBusy") : t("fixPayment")}
+          </button>
+          {portalState === "failed" && <p className="pricing-error" role="alert">{t("errPortal")}</p>}
+        </div>
+      )}
 
       {plans.length > 0 && (
         <ul className="pricing-terms">

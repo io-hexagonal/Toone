@@ -12,6 +12,7 @@ import {
   checkoutAvailable,
   checkoutErrorKey,
   hasTemporaryPro,
+  isUnpaidWebSubscription,
   orderedPrices,
   ownedMessageKey,
   ownedReason,
@@ -160,12 +161,51 @@ test("checkout failures map to copy, and already_pro names where Pro comes from"
   assert.equal(checkoutErrorKey({ kind: "already_pro", source: null, provider: null }), "ownedOther");
   assert.equal(ownedReason("unknown", "unknown"), "other");
   const copy = messages.billing.pricing as Record<string, string>;
-  assert.equal(copy.errConflict, "A checkout is already being prepared — try again in a moment.");
   for (const key of ["errSession", "errUnavailable", "errRate", "errGeneric", "ownedAppStore", "ownedWeb", "ownedLifetime", "ownedPermanent", "ownedOther"]) {
     assert.ok(copy[key], key);
   }
   assert.match(copy.ownedAppStore, /App Store/);
   assert.match(copy.ownedWeb, /trytoone\.com/);
+});
+
+test("a 409 conflict says a checkout is being prepared or a payment is being confirmed", () => {
+  const copy = messages.billing.pricing as Record<string, string>;
+  assert.equal(checkoutErrorKey({ kind: "conflict" }), "errConflict");
+  assert.match(copy.errConflict, /still being prepared/);
+  assert.match(copy.errConflict, /payment you just made that is still being confirmed/);
+  assert.match(copy.errConflict, /check your account page before paying again/);
+});
+
+test("already_pro from an unpaid web subscription points to the billing page, not 'you already have Pro'", () => {
+  const free = normalizeEntitlement({ plan: "free", source: null, billing_provider: null, manage: null, free_routine_creations: { used: 2, limit: 2 } });
+  const pro = normalizeEntitlement({ plan: "pro", source: "subscription", billing_provider: "stripe", manage: "stripe_portal", status: "grace" });
+  const refusal = { kind: "already_pro", source: "subscription", provider: "stripe" } as const;
+  // The account reads free, yet a Stripe subscription still blocks: its payment failed.
+  assert.equal(isUnpaidWebSubscription(refusal, free), true);
+  assert.equal(checkoutErrorKey(refusal, free), "errPaymentDue");
+  // Pro (grace included) or an unknown plan: the subscription is simply there.
+  assert.equal(isUnpaidWebSubscription(refusal, pro), false);
+  assert.equal(checkoutErrorKey(refusal, pro), "ownedWeb");
+  assert.equal(isUnpaidWebSubscription(refusal, null), false);
+  assert.equal(checkoutErrorKey(refusal, null), "ownedWeb");
+  // Other refusals never read as unpaid.
+  assert.equal(isUnpaidWebSubscription({ kind: "already_pro", source: "subscription", provider: "app_store" }, free), false);
+  assert.equal(isUnpaidWebSubscription({ kind: "already_pro", source: "lifetime", provider: "stripe" }, free), false);
+  assert.equal(isUnpaidWebSubscription({ kind: "conflict" }, free), false);
+
+  const copy = messages.billing.pricing as Record<string, string>;
+  assert.match(copy.errPaymentDue, /didn't go through, so Toone Pro is off until it is paid/);
+  assert.match(copy.errPaymentDue, /update your payment method on the billing page/);
+  assert.doesNotMatch(copy.errPaymentDue, /already has/);
+  assert.ok(copy.fixPayment && copy.fixPaymentBusy && copy.errPortal);
+
+  // The page offers the billing page (Stripe Portal) right under that error.
+  const source = read("components/billing/PricingPlans.tsx");
+  assert.match(source, /setFixPayment\(isUnpaidWebSubscription\(failure, plan\)\)/);
+  assert.match(source, /checkoutErrorKey\(failure, plan\)/);
+  assert.match(source, /startPortal\(token, \{ locale, return: fromApp \? "app" : "web" \}\)/);
+  assert.match(source, /errorKey && fixPayment && session &&/);
+  assert.match(source, /t\("errPortal"\)/);
 });
 
 /* ---- query parameters and prices */

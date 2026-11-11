@@ -612,7 +612,11 @@
       "edition": "Toone Pro bought here applies to your Toone account in Toone for Mac downloaded from trytoone.com.",
       "termsLine": "By buying, you agree to the <terms>Toone Pro terms</terms>.",
       "stripeLine": "Secure checkout by Stripe.",
-      "errConflict": "A checkout is already being prepared — try again in a moment."
+      "errConflict": "Your account has a checkout that is still being prepared, or a payment you just made that is still being confirmed. Wait a moment, then try again. If you just paid, check your account page before paying again.",
+      "errPaymentDue": "The last payment for your Toone Pro subscription from trytoone.com didn't go through, so Toone Pro is off until it is paid. A new checkout can't start while that subscription is open: update your payment method on the billing page, and Toone Pro comes back once the payment goes through.",
+      "fixPayment": "Update payment method",
+      "fixPaymentBusy": "Opening the billing page…",
+      "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com."
     },
     "success": {
       "metaTitle": "Payment confirmation",
