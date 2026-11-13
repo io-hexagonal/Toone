@@ -1,0 +1,160 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import test from "node:test";
+import { createTranslator } from "next-intl";
+import { describePlan } from "../../components/account/plan-view";
+import { legalInvoiceCopy } from "../../components/billing/legal-invoice";
+import en from "../../messages/en.json";
+import { normalizeEntitlement, type CheckoutStatus } from "../../lib/billing/api";
+import { lastPurchase, rememberCheckoutSession, rememberOrderRef } from "../../lib/billing/order-ref";
+import { locales } from "../../i18n/routing";
+
+/* The account page's reading of GET /me/entitlement (contract fields billing_provider, manage, plan_interval). */
+
+const base = {
+  plan: "free", source: null, product_id: null, status: null, expires_at: null, will_renew: null,
+  billing_provider: null, manage: null, plan_interval: null,
+  app_account_token: "11111111-1111-4111-8111-111111111111",
+  free_routine_creations: { used: 1, limit: 2 }, guest_passes: null, guest_of: null, email_verification_required: false,
+};
+const view = (patch: Record<string, unknown>) => describePlan(normalizeEntitlement({ ...base, ...patch }));
+const END = "2027-09-30T12:00:00Z";
+
+test("free plan: creations X of N, nothing to manage", () => {
+  assert.deepEqual(view({}), {
+    tier: "free", provider: null, interval: null, dateLine: null, manage: "none",
+    creations: { used: 1, limit: 2, exhausted: false }, guestOf: null,
+  });
+  // `used` is raw and can exceed the limit (old 5-creation allowance): shown clamped, flagged as used up.
+  assert.deepEqual(view({ free_routine_creations: { used: 4, limit: 2 } }).creations, { used: 2, limit: 2, exhausted: true });
+  assert.deepEqual(view({ free_routine_creations: { used: 1, limit: 5 } }).creations, { used: 1, limit: 5, exhausted: false });
+});
+
+test("Stripe yearly: portal, renews or ends by will_renew; past_due is grace", () => {
+  const stripe = { plan: "pro", source: "subscription", status: "active", product_id: "pro_yearly", expires_at: END,
+    billing_provider: "stripe", manage: "stripe_portal", plan_interval: "year" };
+  const renewing = view({ ...stripe, will_renew: true });
+  assert.equal(renewing.tier, "pro");
+  assert.equal(renewing.provider, "stripe");
+  assert.equal(renewing.manage, "portal");
+  assert.equal(renewing.interval, "year");
+  assert.deepEqual(renewing.dateLine, { key: "renews", date: END });
+  assert.equal(renewing.creations, null);
+  assert.deepEqual(view({ ...stripe, will_renew: false }).dateLine, { key: "ends", date: END });
+  assert.deepEqual(view({ ...stripe, status: "grace", will_renew: true }).dateLine, { key: "grace" });
+});
+
+test("Stripe lifetime keeps the portal (invoices); App Store lifetime has nothing to manage", () => {
+  const stripeLife = view({ plan: "pro", source: "lifetime", status: "active", product_id: "pro_lifetime",
+    billing_provider: "stripe", manage: "stripe_portal", plan_interval: "lifetime" });
+  assert.equal(stripeLife.manage, "portal");
+  assert.equal(stripeLife.interval, "lifetime");
+  assert.deepEqual(stripeLife.dateLine, { key: "lifetime" });
+  const appleLife = view({ plan: "pro", source: "lifetime", status: "active", product_id: "app.Toone.pro.lifetime",
+    billing_provider: "app_store", manage: null, plan_interval: "lifetime" });
+  assert.equal(appleLife.provider, "app_store");
+  assert.equal(appleLife.manage, "none");
+});
+
+test("App Store subscription is managed by Apple, also on a server that predates the new fields", () => {
+  const apple = view({ plan: "pro", source: "subscription", status: "active", expires_at: END, will_renew: true,
+    billing_provider: "app_store", manage: "app_store", plan_interval: "month" });
+  assert.equal(apple.manage, "app_store");
+  assert.equal(apple.provider, "app_store");
+  const old = describePlan(normalizeEntitlement({ plan: "pro", source: "subscription", status: "active", expires_at: END, will_renew: true }));
+  assert.equal(old.provider, "app_store");
+  assert.equal(old.manage, "app_store");
+});
+
+test("code grants and guest months: billed by nobody, nothing to manage", () => {
+  const code = view({ plan: "pro", source: "grant", status: "active", expires_at: END, billing_provider: "toone" });
+  assert.equal(code.provider, "toone");
+  assert.equal(code.manage, "none");
+  assert.deepEqual(code.dateLine, { key: "until", date: END });
+  assert.deepEqual(view({ plan: "pro", source: "grant", status: "active", billing_provider: "toone" }).dateLine, { key: "noEnd" });
+  const guest = view({ plan: "pro", source: "guest", status: "active", expires_at: END, billing_provider: "toone",
+    guest_of: { email: "owner@example.com", name: "Ana" } });
+  assert.equal(guest.provider, "guest");
+  assert.equal(guest.guestOf, "Ana");
+  assert.equal(guest.manage, "none");
+});
+
+test("values this site does not know yet never crash and never offer a manage button", () => {
+  const future = view({ plan: "pro", source: "partner", status: "paused", billing_provider: "paddle", manage: "paddle_portal", plan_interval: "quarter" });
+  assert.equal(future.tier, "pro");
+  assert.equal(future.provider, "unknown");
+  assert.equal(future.manage, "none");
+  assert.equal(future.interval, null);
+});
+
+test("the account page shows the remembered order reference and, in Direct mode, the legal invoice", () => {
+  const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
+  assert.match(page, /recallOrderRef\(session\.user\.id\)/);
+  assert.match(page, /legalInvoiceCopy\(entitlement\.legal_invoice\)/);
+  // The API sends order_ref and legal_invoice only on the checkout status:
+  // the page reads them from the last purchase's session, not the entitlement.
+  assert.match(page, /lastPurchase\(session\.token, session\.user\.id\)/);
+  assert.match(page, /legal_invoice: next\.legal_invoice \?\? purchase\.legalInvoice/);
+  assert.match(page, /if \(purchase\.orderRef\) setOrderRef\(purchase\.orderRef\)/);
+  const t = createTranslator({ locale: "en", messages: en, namespace: "account.page" });
+  const say = (invoice: Parameters<typeof legalInvoiceCopy>[0]) => {
+    const copy = legalInvoiceCopy(invoice);
+    return copy && ("values" in copy ? t(copy.key, copy.values) : t(copy.key));
+  };
+  assert.equal(say(normalizeEntitlement({ plan: "pro" }).legal_invoice), null, "absent: nothing shown");
+  assert.equal(say({ status: "pending", number: null, atcud: null }), "Legal invoice: being issued (emailed to you).");
+  assert.equal(say({ status: "issued", number: "FR 2026/7", atcud: "JJ7K2M4P-7" }), "Legal invoice: FR 2026/7 · ATCUD JJ7K2M4P-7");
+  assert.match(t("orderRefNote"), /contract form/);
+});
+
+function memoryStorage() {
+  const map = new Map<string, string>();
+  return { getItem: (key: string) => map.get(key) ?? null, setItem: (key: string, value: string) => void map.set(key, value), map };
+}
+const status = (patch: Partial<CheckoutStatus>): CheckoutStatus => ({ status: "complete", entitled: true, order_ref: null, legal_invoice: null, ...patch });
+
+test("the last purchase's order reference comes from its checkout status, and is remembered again", async () => {
+  const storage = memoryStorage();
+  // Only the session is known (the reference was never stored, or was lost).
+  rememberCheckoutSession("usr_1", "cs_test_abc", storage);
+  const calls: string[] = [];
+  const fetchStatus = async (token: string, sessionId: string) => {
+    calls.push(`${token}:${sessionId}`);
+    return status({ order_ref: "toone-abcdefghijkl", legal_invoice: { status: "pending", number: null, atcud: null } });
+  };
+  const first = await lastPurchase("tok", "usr_1", fetchStatus, storage);
+  assert.deepEqual(calls, ["tok:cs_test_abc"]);
+  assert.equal(first.orderRef, "TOONE-ABCDEFGHIJKL");
+  assert.deepEqual(first.legalInvoice, { status: "pending", number: null, atcud: null });
+  assert.equal(storage.map.get("toone.pro.order:usr_1"), "TOONE-ABCDEFGHIJKL");
+
+  // The server cannot answer: the remembered reference still shows.
+  const offline = await lastPurchase("tok", "usr_1", async () => { throw new Error("down"); }, storage);
+  assert.deepEqual(offline, { orderRef: "TOONE-ABCDEFGHIJKL", legalInvoice: null });
+
+  // Nothing remembered for this account: nothing is fetched, nothing shown.
+  const none = await lastPurchase("tok", "usr_2", async () => { throw new Error("must not fetch"); }, storage);
+  assert.deepEqual(none, { orderRef: null, legalInvoice: null });
+
+  // A reference without a session (older records) still shows.
+  const legacy = memoryStorage();
+  rememberOrderRef("usr_3", "TOONE-QRSTUVWXYZ12", legacy);
+  assert.deepEqual(await lastPurchase("tok", "usr_3", async () => { throw new Error("must not fetch"); }, legacy),
+    { orderRef: "TOONE-QRSTUVWXYZ12", legalInvoice: null });
+});
+
+test("without a known order reference the account page says where to find it and the ways that don't need it", async () => {
+  const page = fs.readFileSync("components/account/AccountPage.tsx", "utf8");
+  assert.match(page, /\{!orderRef && <p className=\{styles\.notice\} data-order-ref="missing">\{t\("orderRefMissing"\)\}<\/p>\}/);
+  const t = createTranslator({ locale: "en", messages: en, namespace: "account.page" });
+  const missing = t("orderRefMissing");
+  assert.match(missing, /order reference \(TOONE-…\) is in the purchase confirmation email from Toone/);
+  assert.match(missing, /only for a purchase made in this browser/);
+  assert.match(missing, /cancel with Manage subscription/);
+  assert.match(missing, /by email to hello@trytoone\.com from your account's email address/);
+  for (const locale of locales) {
+    const messages = (await import(`../../messages/${locale}.json`, { with: { type: "json" } })).default;
+    const text: string = messages.account.page.orderRefMissing;
+    assert.ok(text?.includes("TOONE-") && text.includes("hello@trytoone.com"), locale);
+  }
+});

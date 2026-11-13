@@ -4,6 +4,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // Release gate (lib/legal/release.ts): inlined so the server and browser
+  // bundles of a production build agree on whether checkout may be offered.
+  env: {
+    TOONE_RELEASE_BUILD: process.env.VERCEL_ENV === "production" || process.env.LEGAL_RELEASE_CHECK === "1" ? "1" : "0",
+  },
   ...(process.env.NEXT_BUILD_DIR ? { distDir: process.env.NEXT_BUILD_DIR } : {}),
   // `next dev` only serves its client bundles to the origin it was started on;
   // opening http://127.0.0.1:<port> instead of localhost renders server HTML
@@ -29,6 +34,18 @@ const nextConfig: NextConfig = {
       {
         source: "/:locale(pt|es|fr|de|it|nl|ru)/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
+      // Account-like pages carry checkout session IDs, codes or account
+      // state; no request from them (same-origin assets included) sends the
+      // page URL as Referer. The pages' own `referrer` metadata arrives after
+      // the stylesheet links, so the header is what actually holds.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:page(success|cancel|account|redeem|cancel-contract|admin)/:rest*",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+      },
+      {
+        source: "/:page(success|cancel)",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
       },
     ];
   },

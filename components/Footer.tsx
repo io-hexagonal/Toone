@@ -3,6 +3,8 @@ import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
 import SignedInLink from "@/components/SignedInLink";
+import PricingLink from "@/components/billing/PricingLink";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -18,6 +20,7 @@ export default async function Footer({
 }: Props) {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
+  const billing = await getTranslations("billing");
 
   return (
     <>
@@ -90,6 +93,7 @@ export default async function Footer({
               <p className="ftr-heading">{t("product")}</p>
               <Link href={`${landingPath}#how`}>{t("how")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
+              <PricingLink href="/pricing">{billing("nav")}</PricingLink>
               <Link
                 className="ftr-download"
                 href="/request-access"
@@ -116,6 +120,11 @@ export default async function Footer({
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
+              {/* Always shown, signed in or not, whatever the billing flags say: EU withdrawal function and German cancel button. */}
+              <Link href="/cancel-contract?kind=withdraw">{t("withdrawContract")}</Link>
+              <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>
+              {/* English-only page; its label stays English in every locale. Hidden until the trader details are complete. */}
+              {TRADER_DETAILS_COMPLETE && <Link href="/legal-notice">Legal notice</Link>}
 
             </div>
           </div>

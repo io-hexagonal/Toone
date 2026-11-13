@@ -1,6 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { ENGLISH_ONLY_PATHS, LOCALE_CHOICE_COOKIE, routing, type Locale } from "./i18n/routing";
+import { TERMS_VERSION_PARAM } from "./lib/legal/terms-versions";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -25,6 +26,8 @@ const ENGLISH_ONLY = new RegExp(`^(?:/([a-z]{2}))?(${ENGLISH_ONLY_PATHS.join("|"
 const AI_DIGEST_PATH = /^\/ai-digest(\/.*)?$/;
 const JOURNAL_PREVIEW = /^\/en\/journal\/preview\//;
 const CATALOG_PARAMS = ["type", "q", "tag", "category", "topic", "useful_for", "page"];
+/** The Terms page; `?version=` asks for one version of it. */
+const TERMS_PAGE = `/${routing.defaultLocale}/terms`;
 
 function isLocale(value: string | undefined): value is Locale {
   return value != null && (routing.locales as readonly string[]).includes(value);
@@ -149,6 +152,16 @@ export default function proxy(req: NextRequest) {
     response.headers.set("Cache-Control", "private, no-store, max-age=0");
     response.headers.set("Referrer-Policy", "no-referrer");
     return response;
+  }
+
+  // The Terms stay a static page. A purchase confirmation links to
+  // `/en/terms?version=<date>`, which needs the query, so those URLs are
+  // rewritten to the request-time view of that version; the address bar keeps
+  // the query and the canonical stays `/en/terms`.
+  if (pathname === TERMS_PAGE && req.nextUrl.searchParams.has(TERMS_VERSION_PARAM)) {
+    const target = req.nextUrl.clone();
+    target.pathname = `${TERMS_PAGE}/versioned`;
+    return NextResponse.rewrite(target);
   }
 
   // TE-01: the parameter-free hub is prerendered. Catalog parameters (type,

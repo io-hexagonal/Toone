@@ -21,6 +21,8 @@ import {
   type ToneSession,
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
+import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
+import { benefitCopy, codeCampaign } from "@/components/account/redeem-code";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
@@ -76,16 +78,59 @@ type Via = "google" | "apple";
  * is where the account is used.
  */
 /**
- * Where to go after signing in, from `?next=`: only a signed-in-only page of
- * this site (/how-to and its guides), never an arbitrary URL.
+ * Where to go after signing in, from `?next=`: only a listed page of this
+ * site, never an arbitrary URL. Each pattern is anchored and allows no other
+ * query than the one it names; a code never rides in `next`.
  */
+const SIGN_IN_RETURN_PATHS: readonly RegExp[] = [
+  // /how-to and its guides (signed-in only)
+  /^\/how-to(\/[a-z0-9-]+)*\/?$/,
+  // /pricing, optionally with the plan the visitor chose
+  /^\/pricing(\?plan=(monthly|yearly|lifetime))?$/,
+  // signed-in account pages
+  /^\/account\/?$/,
+  /^\/redeem\/?$/,
+];
+
 export function signInReturnPath(search: string): string | null {
   const next = new URLSearchParams(search).get("next");
-  return next && /^\/how-to(\/[a-z0-9-]+)*\/?$/.test(next) ? next : null;
+  return next && SIGN_IN_RETURN_PATHS.some((pattern) => pattern.test(next)) ? next : null;
 }
 
-export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
+/** How a sign-up with a code (invite mode) went, for a page that hosts it (the redeem page). */
+export type InvitationOutcome = {
+  session: ToneSession;
+  /** The verified code the sign-up carried. */
+  code: string;
+  /** What the code gives, from the check; null for an access code without a benefit. */
+  benefit: CodeBenefit | null;
+  /** A code many people can use: its benefit waits for a confirmed address after an email and password signup. */
+  shared: boolean;
+  /**
+   * "email": a new account (an existing address is refused). Google and Apple
+   * may sign in an existing account instead, which ignores the code.
+   */
+  via: "email" | Via;
+};
+
+type AuthPageProps = {
+  mode: Mode;
+  onAuthenticated?: (session: ToneSession) => void;
+  /** Invite mode: the code to check straight away, instead of one in the link's `#code=` fragment. */
+  initialCode?: string;
+  /** Invite mode: called once a sign-up (or a Google or Apple sign-in) with the verified code finishes. */
+  onInvitationAccepted?: (outcome: InvitationOutcome) => void;
+  /**
+   * Replaces the links under the card with a switch to the other mode on the
+   * same page (the redeem page keeps the code across it): "Create one with
+   * this code" when signing in, "Sign in" when signing up.
+   */
+  onSwitchMode?: () => void;
+};
+
+export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode }: AuthPageProps) {
   const t = useTranslations("auth");
+  const accountCopy = useTranslations("account");
   const locale = useLocale();
   const router = useRouter();
   // Hidden entirely until the deployment configures a Services ID + return URL.
@@ -95,6 +140,13 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   // the server confirms it is still redeemable.
   const [step, setStep] = useState<"code" | "account" | "handle">(mode === "invite" ? "code" : "account");
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
+  // What a code with a benefit adds to the new account (Pro days, Pro for good, extra creations).
+  const [benefit, setBenefit] = useState<CodeBenefit | null>(null);
+  // Read by the provider callbacks, which are registered once.
+  const benefitRef = useRef<CodeBenefit | null>(null);
+  benefitRef.current = benefit;
+  const sharedRef = useRef(false);
+  sharedRef.current = preview?.shared === true;
   const [handle, setHandle] = useState("");
   const codeRef = useRef("");
   codeRef.current = code;
@@ -146,6 +198,15 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     try {
       const s = await promise;
       setSession(s);
+      if (mode === "invite") {
+        onInvitationAccepted?.({
+          session: s,
+          code: codeRef.current.trim(),
+          benefit: benefitRef.current,
+          shared: sharedRef.current,
+          via: via ?? "email",
+        });
+      }
       onAuthenticated?.(s);
       track(event);
       if (mode === "invite") setStep("handle");
@@ -160,6 +221,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       // The code can expire or run out between the check and the signup.
       if (mode === "invite" && e instanceof ApiError && e.code === "invalid_invitation") {
         setPreview(null);
+        setBenefit(null);
         setStep("code");
       }
     } finally {
@@ -178,6 +240,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
       // Pin the verified code so a later state reset (or a double-run effect) cannot drop it.
       setCode(value.trim());
       setPreview(result);
+      const offered = normalizeBenefit(result);
+      setBenefit(offered.kind === "none" ? null : offered);
       setStep("account");
       track("auth-invitation-checked");
     } catch (e) {
@@ -190,6 +254,7 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
 
   function changeCode() {
     setPreview(null);
+    setBenefit(null);
     setError(null);
     setStep("code");
   }
@@ -228,6 +293,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   }
 
   const isLaunchCode = Boolean(preview?.shared && /product\s*hunt/i.test(preview.label));
+  // A code bought on AppSumo (`APPSUMO-…`): a text badge and a welcome, no logo.
+  const isAppSumoCode = mode === "invite" && step === "account" && preview !== null && codeCampaign(code) === "appsumo";
 
   async function handleSignOut() {
     const token = session?.token;
@@ -263,7 +330,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   useEffect(() => {
     if (mode !== "invite") return;
     const invitation = new URLSearchParams(window.location.hash.slice(1));
-    const linkedCode = invitation.get("code") || "";
+    // A code the hosting page already holds comes first; the fragment is the invite link's.
+    const linkedCode = initialCode?.trim() || invitation.get("code") || "";
     if (linkedCode) setCode(linkedCode);
     if (invitation.get("email")) setEmail(invitation.get("email") || "");
     if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
@@ -400,6 +468,18 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
               color: rgba(255,255,255,0.55); font-size: 15px;
               margin-bottom: 26px; text-align: center; max-width: 34ch;
             }
+            .auth-kitty { width: 84px; height: 84px; border-radius: 22px; margin-bottom: 18px; display: block; }
+            .auth-campaign {
+              margin: 0 0 12px; padding: 3px 10px; border-radius: 999px;
+              border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
+              color: rgba(255,255,255,0.86); font-size: 11px; font-weight: 600;
+              letter-spacing: 0.08em; text-transform: uppercase;
+            }
+            .auth-benefit {
+              margin: -12px 0 22px; padding: 8px 14px; border-radius: 999px;
+              border: 1px solid rgba(201,193,238,0.28); background: rgba(201,193,238,0.08);
+              color: rgba(226,221,250,0.92); font-size: 13.5px; text-align: center; max-width: 40ch;
+            }
             .auth-card {
               width: 100%; max-width: 400px;
               border: 1px solid rgba(255,255,255,0.11); border-radius: 16px;
@@ -474,6 +554,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
             }
             .auth-switch a { color: rgba(255,255,255,0.88); text-decoration: none; }
             .auth-switch a:hover { text-decoration: underline; }
+            .auth-switch button {
+              background: none; border: none; padding: 0; cursor: pointer;
+              font: inherit; color: rgba(255,255,255,0.88);
+            }
+            .auth-switch button:hover { text-decoration: underline; }
 
             .auth-success { text-align: center; padding: 10px 0 4px; }
             .auth-success .who {
@@ -528,7 +613,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
           <span className="wm">toone</span>
         </Link>
 
-        {mode === "invite" && !session && <AccessAvatar />}
+        {mode === "invite" && !session && (isLaunchCode ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="auth-kitty" src="/assets/launch/ph-kitty.png" alt="" width={84} height={84} />
+        ) : <AccessAvatar />)}
+        {isAppSumoCode && <p className="auth-campaign">{t("appsumoBadge")}</p>}
         <h1 className="auth-title">
           {mode === "invite"
             ? step === "code"
@@ -537,7 +626,9 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                 ? t("handleTitle")
                 : isLaunchCode
                   ? t("launchAccountTitle")
-                  : t("inviteAccountTitle")
+                  : isAppSumoCode
+                    ? t("appsumoAccountTitle")
+                    : t("inviteAccountTitle")
             : t("signinTitle")}
         </h1>
         <p className="auth-sub">
@@ -548,11 +639,20 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                 ? t("handleSub")
                 : isLaunchCode
                   ? t("launchAccountSub")
-                  : preview?.shared && preview.label
+                  : isAppSumoCode && benefit?.kind === "pro_lifetime"
+                    ? t("appsumoAccountSub")
+                    : preview?.shared && preview.label
                     ? t("inviteAccountSubLabel", { label: preview.label })
                     : t("inviteAccountSub")
             : t("signinSub")}
         </p>
+        {mode === "invite" && step === "account" && benefit && (() => {
+          const copy = benefitCopy(benefit);
+          const name = "values" in copy ? accountCopy(`redeem.${copy.key}`, copy.values) : accountCopy(`redeem.${copy.key}`);
+          // A shared code's benefit waits for a confirmed address after an email and password signup.
+          const key = preview?.shared ? "invite.benefitShared" : "invite.benefit";
+          return <p className="auth-benefit" data-benefit={benefit.kind}>{accountCopy(key, { benefit: name })}</p>;
+        })()}
 
         <div className="auth-card">
           {mode === "invite" && step === "handle" && session ? (
@@ -602,6 +702,9 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
                 </svg>
                 {t("downloadMac")}
               </Link>
+              <div>
+                <Link className="auth-signout" href="/account">{accountCopy("links.account")}</Link>
+              </div>
               <div>
                 <InvitationAdminLink token={session.token} className="auth-signout" />
               </div>
@@ -723,7 +826,19 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
 
         {!session && (
           <p className="auth-switch">
-            {mode === "invite" ? (
+            {onSwitchMode ? (
+              mode === "invite" ? (
+                <>
+                  {t("haveAccount")}{" "}
+                  <button type="button" onClick={onSwitchMode}>{t("signinLink")}</button>
+                </>
+              ) : (
+                <>
+                  {t("redeemNoAccount")}{" "}
+                  <button type="button" onClick={onSwitchMode}>{t("redeemCreateAccount")}</button>
+                </>
+              )
+            ) : mode === "invite" ? (
               <>
                 {step === "code" && (
                   <>

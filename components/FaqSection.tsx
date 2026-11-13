@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 
 /**
  * Landing FAQ — native <details> accordion, styled to sit with the pillars.
@@ -6,7 +7,7 @@ import { getTranslations } from "next-intl/server";
  */
 export default async function FaqSection() {
   const t = await getTranslations("faq");
-  const items = ["1", "2", "3", "4", "5", "6", "7", "8"] as const;
+  const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
 
   return (
     <>
@@ -46,7 +47,7 @@ export default async function FaqSection() {
           {items.map((i) => (
             <details key={i}>
               <summary>{t(`q${i}`)}</summary>
-              <p>{t(`a${i}`)}</p>
+              <p>{t(`a${i}`, { free: TOONE_PRO_FREE_ROUTINE_CREATIONS })}</p>
             </details>
           ))}
         </div>

@@ -3,6 +3,8 @@ import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
+import { LEGAL_NOTICE_PATH } from "@/lib/legal/terms";
+import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -13,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // the root `%s | Toone` template from adding a third (audit P2-5).
     title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
-      "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app by Hexagonal.io, founded by Matheus Paranhos, that turns repeat work into reliable routines you can watch, pause, edit, and resume, on your own Claude Code or Codex.",
+      "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app published by Matheus Paranhos, a sole trader in Portugal (Hexagonal.io), that turns repeat work into reliable routines you can watch, pause, edit, and resume, on your own Claude Code or Codex.",
     alternates: { canonical: "https://trytoone.com/en/about" },
     robots: localeRobots(locale),
     other: localeVersions("/about", ["en"]),
@@ -113,8 +115,14 @@ export default async function AboutPage({ params, searchParams }: Props) {
         <section>
           <h2>Publisher and accountability</h2>
           <p>
-            Toone is an independent product published by{` `}
-            <a href="https://www.hexagonal.io/">Hexagonal.io</a>. It is supported by the{` `}
+            Toone is an independent product published by Matheus Paranhos, a sole trader
+            (empresário em nome individual) in Portugal, trading as Toone, and published under his{` `}
+            <a href="https://www.hexagonal.io/">Hexagonal.io</a> brand. The trader&apos;s address and
+            tax number are in the{` `}
+            {TRADER_DETAILS_COMPLETE
+              ? <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>
+              : <a href="/en/terms#toone-pro">Terms</a>}
+            . It is supported by the{` `}
             <a href="https://claude.com/programs/startups">Claude Startups</a> and AWS Startups
             programmes, and is not otherwise affiliated with or endorsed by Anthropic, OpenAI, or
             AWS. Product, privacy, and release claims are checked against current product,

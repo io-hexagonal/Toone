@@ -1,5 +1,8 @@
 /** Typed client for account authentication and private desktop downloads. */
 
+import { forgetPendingCode } from "./billing/pending-code";
+import { forgetPurchaseRecords } from "./billing/purchase-storage";
+
 const DEFAULT_API_BASE = "https://api.trytoone.com/v1";
 
 const SESSION_KEY = "toone.session";
@@ -16,13 +19,16 @@ export class ApiError extends Error {
   code: string;
   status: number;
   details: ApiErrorDetail[];
+  /** Other top-level fields of the error body (e.g. `source` and `billing_provider` on 409 `already_pro`). */
+  fields: Record<string, unknown>;
 
-  constructor(code: string, message: string, status: number, details: ApiErrorDetail[] = []) {
+  constructor(code: string, message: string, status: number, details: ApiErrorDetail[] = [], fields: Record<string, unknown> = {}) {
     super(message);
     this.name = "ApiError";
     this.code = code;
     this.status = status;
     this.details = details;
+    this.fields = fields;
   }
 }
 
@@ -96,11 +102,13 @@ export function apiErrorFrom(body: unknown, status: number): ApiError {
   const details = Array.isArray(err.details)
     ? err.details.filter((d): d is ApiErrorDetail => !!d && typeof d === "object" && typeof (d as ApiErrorDetail).path === "string")
     : [];
+  const { code: _code, message: _message, details: _details, error: _error, ...fields } = err as Record<string, unknown>;
   return new ApiError(
     typeof err.code === "string" ? err.code : "unknown",
     typeof err.message === "string" && err.message ? err.message : `Request failed (${status})`,
     status,
     details,
+    fields,
   );
 }
 
@@ -197,6 +205,10 @@ export function clearSession(): void {
   if (typeof window === "undefined") return;
   clearCapabilityCache();
   clearSiteSession();
+  // A /redeem link's code is for whoever signs in next in this tab only while the session lasts.
+  forgetPendingCode();
+  // The order reference and checkout of a purchase stay only while the session lasts.
+  forgetPurchaseRecords();
   try {
     localStorage.removeItem(SESSION_KEY);
   } catch {

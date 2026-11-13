@@ -6,6 +6,7 @@ import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
 import SignedInLink from "@/components/SignedInLink";
+import PricingLink from "@/components/billing/PricingLink";
 
 /**
  * Morphing landing header — one element, two states.
@@ -25,6 +26,8 @@ export default function SiteHeader({
   scrollThreshold,
 }: Props) {
   const t = useTranslations("nav");
+  const billing = useTranslations("billing");
+  const links = useTranslations("account.links");
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -134,8 +137,10 @@ export default function SiteHeader({
           </SignedInLink>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
+          <PricingLink href="/pricing" data-optional>{billing("nav")}</PricingLink>
           <LocalePicker />
           <Link href="/signin">{t("signin")}</Link>
+          <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
           <Link
             className="dl"

@@ -44,6 +44,10 @@ export default function TrustPage({
             .trust-updated {
               color: rgba(255,255,255,0.55); font-size: 12px; margin-bottom: 58px;
             }
+            .trust-note {
+              margin: -34px 0 34px; padding: 12px 16px; border-left: 2px solid rgba(255,255,255,0.3);
+              background: rgba(255,255,255,0.04);
+            }
             .trust-page section {
               padding: 34px 0; border-top: 1px solid rgba(255,255,255,0.09);
             }
@@ -55,8 +59,40 @@ export default function TrustPage({
               color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.75;
             }
             .trust-page p + p { margin-top: 13px; }
+            .trust-page h3 {
+              color: rgba(255,255,255,0.88); font-size: 16px; font-weight: 600;
+              margin: 26px 0 8px;
+            }
+            .trust-page ul + p, .trust-page dl + p, .trust-page blockquote + p { margin-top: 13px; }
+            .trust-page dl { margin-top: 14px; }
+            .trust-page dt {
+              color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 600;
+              letter-spacing: 0.06em; text-transform: uppercase; margin-top: 16px;
+            }
+            .trust-page dd { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.7; margin: 2px 0 0; }
+            .trust-page blockquote {
+              margin: 14px 0 0; padding: 12px 16px; border-left: 2px solid rgba(255,255,255,0.18);
+              color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.7;
+            }
             .trust-page ul { padding-left: 20px; margin-top: 14px; }
             .trust-page li + li { margin-top: 8px; }
+            .trust-table { margin-top: 14px; overflow-x: auto; }
+            .trust-table + p { margin-top: 13px; }
+            .trust-page table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.6; }
+            .trust-page th {
+              color: rgba(255,255,255,0.55); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+              text-transform: uppercase; text-align: left; padding: 8px 12px 8px 0;
+              border-bottom: 1px solid rgba(255,255,255,0.14);
+            }
+            .trust-page td {
+              color: rgba(255,255,255,0.72); vertical-align: top; padding: 10px 12px 10px 0;
+              border-bottom: 1px solid rgba(255,255,255,0.07); min-width: 120px;
+            }
+            .trust-page td strong { color: rgba(255,255,255,0.86); font-weight: 600; }
+            .trust-page code {
+              font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+              color: rgba(255,255,255,0.86); word-break: break-all;
+            }
             .trust-page a { color: #b9d9ff; text-underline-offset: 3px; }
             .trust-page a:hover { color: #e0efff; }
             @media (max-width: 640px) {

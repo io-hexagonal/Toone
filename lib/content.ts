@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { locales, type Locale } from "@/i18n/routing";
+import reservedRootSlugs from "@/lib/reserved-root-slugs.json";
 
 export type PublicationAuthorType = "Organization" | "Person";
 
@@ -31,26 +32,11 @@ export type Publication = {
 const guidesDirectory = path.join(process.cwd(), "content/guides");
 const DEFAULT_IMAGE = "/assets/og/toone-og.png";
 const DEFAULT_IMAGE_ALT = "Toone";
-export const RESERVED_ROOT_EDITORIAL_SLUGS = [
-  "about",
-  "business",
-  "contact",
-  "download",
-  "downloads",
-  "early-access",
-  "explore",
-  "invite",
-  "editorial-policy",
-  "governance",
-  "guides",
-  "how-to",
-  "privacy",
-  "resources",
-  "showcases",
-  "signin",
-  "signup",
-  "terms",
-] as const;
+/**
+ * Root slugs no editorial publication may use, shared with the content
+ * validator (scripts/content/validate-publications.mjs) through one JSON file.
+ */
+export const RESERVED_ROOT_EDITORIAL_SLUGS: readonly string[] = reservedRootSlugs.slugs;
 
 const reservedRootEditorialSlugs = new Set<string>(RESERVED_ROOT_EDITORIAL_SLUGS);
 

@@ -65,6 +65,8 @@ test("English-only routes are one 308 to /en, query kept, from any language or p
     ["/privacy?utm_source=x", "https://trytoone.com/en/privacy?utm_source=x"],
     ["/pt/terms", "https://trytoone.com/en/terms"],
     ["/pt/terms?utm_source=x", "https://trytoone.com/en/terms?utm_source=x"],
+    ["/legal-notice", "https://trytoone.com/en/legal-notice"],
+    ["/de/legal-notice", "https://trytoone.com/en/legal-notice"],
     ["/de/about", "https://trytoone.com/en/about"],
     ["/governance", "https://trytoone.com/en/governance"],
     ["/ru/editorial-policy", "https://trytoone.com/en/editorial-policy"],
@@ -152,5 +154,16 @@ test("paths that only start like How-to or AI digest are left to next-intl", () 
     const response = run(path);
     assert.notEqual(response.status, 308, path);
     assert.equal(response.headers.get("x-middleware-rewrite"), null, path);
+  }
+});
+
+test("a versioned Terms link is rewritten to the request-time view; the plain Terms stay static", () => {
+  const versioned = run("/en/terms?version=2026-11-11");
+  assert.equal(versioned.headers.get("location"), null);
+  assert.equal(versioned.headers.get("x-middleware-rewrite"), "https://trytoone.com/en/terms/versioned?version=2026-11-11");
+  assert.equal(run("/en/terms").headers.get("x-middleware-rewrite"), null);
+  assert.equal(run("/en/terms?utm_source=x").headers.get("x-middleware-rewrite"), null);
+  for (const path of ["/terms?version=2026-11-11", "/pt/terms?version=2026-11-11"]) {
+    assertRedirect(run(path, { "accept-language": "pt-BR" }), 308, "https://trytoone.com/en/terms?version=2026-11-11", path);
   }
 });
