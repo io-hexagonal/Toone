@@ -113,7 +113,7 @@
       "doneCreations": "Je hebt nu in totaal {limit} gratis routinecreaties.",
       "doneGeneric": "De code staat op je account.",
       "doneNote": "Toone op je Mac neemt dit over zodra het je abonnement opnieuw controleert.",
-      "download": "Toone downloaden",
+      "download": "Toone voor Mac downloaden",
       "viewAccount": "Je account",
       "errInvalid": "Deze code is niet geldig. Controleer hem en probeer het opnieuw.",
       "errUsed": "Dit account heeft deze code al gebruikt.",
@@ -124,7 +124,24 @@
       "errAlreadyProRefund": "Heb je deze code bij AppSumo gekocht? Hij is niet gebruikt. Mail naar <link>hello@trytoone.com</link> en we helpen je hem via AppSumo terugbetaald te krijgen.",
       "errUnavailable": "Codes kunnen nu niet worden ingewisseld. Probeer het later opnieuw.",
       "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
-      "errGeneric": "Er ging iets mis. Probeer het opnieuw."
+      "errGeneric": "Er ging iets mis. Probeer het opnieuw.",
+      "gateTitle": "Wissel je code in",
+      "gateSub": "Vul eerst je code in. Maak daarna je Toone-account aan met de code, of log in op het account dat je al hebt.",
+      "gateContinue": "Doorgaan",
+      "gateValidTitle": "Je code is geldig",
+      "gateExistingOnly": "Deze code werkt met een bestaand Toone-account. Log in om hem in te wisselen.",
+      "gateCreateAccount": "Maak je account aan",
+      "gateSignInRedeem": "Ik heb al een account – inloggen",
+      "gateHaveAccount": "Op zoek naar je account?",
+      "gateSignIn": "Log in",
+      "appsumoBadge": "AppSumo",
+      "appsumoTitle": "Welkom, Sumo-ling.",
+      "appsumoSub": "Je levenslange Toone Pro is nog maar één stap verwijderd.",
+      "appsumoSubOther": "Nog één stap en je code is ingewisseld.",
+      "launchTitle": "Welkom vanaf Product Hunt",
+      "launchSub": "Bedankt dat je op de lanceringsdag naar Toone komt.",
+      "doneLifetimeTitle": "Toone Pro Lifetime is actief",
+      "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email})."
     },
     "verify": {
       "body": "Om {email} te bevestigen, mailen we je een code.",
@@ -742,7 +759,10 @@
     "errHandleTaken": "Die handle is al bezet. Probeer een andere.",
     "errHandleInvalid": "Gebruik 3–20 letters, cijfers of underscores.",
     "launchAccountTitle": "Welkom, legende 😸",
-    "launchAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden."
+    "launchAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden.",
+    "appsumoBadge": "AppSumo",
+    "appsumoAccountTitle": "Welkom, Sumo-ling",
+    "appsumoAccountSub": "Maak je account aan om je levenslange Toone Pro te activeren."
   },
   "resources": {
     "metaTitle": "Praktisch werken met Toone",

@@ -113,7 +113,7 @@
       "doneCreations": "Agora você tem {limit} criações de rotinas gratuitas no total.",
       "doneGeneric": "O código foi aplicado à sua conta.",
       "doneNote": "O Toone no seu Mac recebe a mudança na próxima vez que verificar seu plano.",
-      "download": "Baixar o Toone",
+      "download": "Baixar o Toone para Mac",
       "viewAccount": "Sua conta",
       "errInvalid": "Este código não é válido. Confira e tente novamente.",
       "errUsed": "Esta conta já usou este código.",
@@ -124,7 +124,24 @@
       "errAlreadyProRefund": "Comprou este código na AppSumo? Ele não foi usado. Escreva para <link>hello@trytoone.com</link> e ajudamos você a pedir o reembolso à AppSumo.",
       "errUnavailable": "Não é possível resgatar códigos agora. Tente mais tarde.",
       "errRate": "Tentativas demais. Aguarde um minuto e tente novamente.",
-      "errGeneric": "Algo deu errado. Tente novamente."
+      "errGeneric": "Algo deu errado. Tente novamente.",
+      "gateTitle": "Resgate o seu código",
+      "gateSub": "Primeiro, insira o seu código. Depois, crie a sua conta Toone com ele ou entre na conta que você já tem.",
+      "gateContinue": "Continuar",
+      "gateValidTitle": "O seu código é válido",
+      "gateExistingOnly": "Este código funciona com uma conta Toone existente. Entre para resgatá-lo.",
+      "gateCreateAccount": "Crie a sua conta",
+      "gateSignInRedeem": "Já tenho uma conta — entrar",
+      "gateHaveAccount": "Procurando a sua conta?",
+      "gateSignIn": "Entre",
+      "appsumoBadge": "AppSumo",
+      "appsumoTitle": "Bem-vindo, Sumo-ling.",
+      "appsumoSub": "O seu Toone Pro vitalício está a um passo.",
+      "appsumoSubOther": "Falta só um passo para resgatar o seu código.",
+      "launchTitle": "Bem-vindo, comunidade do Product Hunt",
+      "launchSub": "Obrigado por chegar ao Toone no dia do lançamento.",
+      "doneLifetimeTitle": "Toone Pro Lifetime está ativo",
+      "doneSameAccount": "Baixe o Toone para Mac e entre com a mesma conta ({email})."
     },
     "verify": {
       "body": "Para confirmar {email}, enviamos um código por e-mail.",
@@ -742,7 +759,10 @@
     "errHandleTaken": "Esse handle já está em uso. Tente outro.",
     "errHandleInvalid": "Use 3–20 letras, dígitos ou sublinhados.",
     "launchAccountTitle": "Bem-vindo, lenda 😸",
-    "launchAccountSub": "Registe-se com o Google ou o seu email para transferir o Toone."
+    "launchAccountSub": "Registe-se com o Google ou o seu email para transferir o Toone.",
+    "appsumoBadge": "AppSumo",
+    "appsumoAccountTitle": "Bem-vindo, Sumo-ling",
+    "appsumoAccountSub": "Crie a sua conta para ativar o seu Toone Pro vitalício."
   },
   "resources": {
     "metaTitle": "Formas práticas de trabalhar com o Toone",

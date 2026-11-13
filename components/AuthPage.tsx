@@ -22,7 +22,7 @@ import {
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
 import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
-import { benefitCopy } from "@/components/account/redeem-code";
+import { benefitCopy, codeCampaign } from "@/components/account/redeem-code";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
@@ -293,6 +293,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   }
 
   const isLaunchCode = Boolean(preview?.shared && /product\s*hunt/i.test(preview.label));
+  // A code bought on AppSumo (`APPSUMO-…`): a text badge and a welcome, no logo.
+  const isAppSumoCode = mode === "invite" && step === "account" && preview !== null && codeCampaign(code) === "appsumo";
 
   async function handleSignOut() {
     const token = session?.token;
@@ -466,6 +468,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
               color: rgba(255,255,255,0.55); font-size: 15px;
               margin-bottom: 26px; text-align: center; max-width: 34ch;
             }
+            .auth-kitty { width: 84px; height: 84px; border-radius: 22px; margin-bottom: 18px; display: block; }
+            .auth-campaign {
+              margin: 0 0 12px; padding: 3px 10px; border-radius: 999px;
+              border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
+              color: rgba(255,255,255,0.86); font-size: 11px; font-weight: 600;
+              letter-spacing: 0.08em; text-transform: uppercase;
+            }
             .auth-benefit {
               margin: -12px 0 22px; padding: 8px 14px; border-radius: 999px;
               border: 1px solid rgba(201,193,238,0.28); background: rgba(201,193,238,0.08);
@@ -604,7 +613,11 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           <span className="wm">toone</span>
         </Link>
 
-        {mode === "invite" && !session && <AccessAvatar />}
+        {mode === "invite" && !session && (isLaunchCode ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="auth-kitty" src="/assets/launch/ph-kitty.png" alt="" width={84} height={84} />
+        ) : <AccessAvatar />)}
+        {isAppSumoCode && <p className="auth-campaign">{t("appsumoBadge")}</p>}
         <h1 className="auth-title">
           {mode === "invite"
             ? step === "code"
@@ -613,7 +626,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 ? t("handleTitle")
                 : isLaunchCode
                   ? t("launchAccountTitle")
-                  : t("inviteAccountTitle")
+                  : isAppSumoCode
+                    ? t("appsumoAccountTitle")
+                    : t("inviteAccountTitle")
             : t("signinTitle")}
         </h1>
         <p className="auth-sub">
@@ -624,7 +639,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 ? t("handleSub")
                 : isLaunchCode
                   ? t("launchAccountSub")
-                  : preview?.shared && preview.label
+                  : isAppSumoCode && benefit?.kind === "pro_lifetime"
+                    ? t("appsumoAccountSub")
+                    : preview?.shared && preview.label
                     ? t("inviteAccountSubLabel", { label: preview.label })
                     : t("inviteAccountSub")
             : t("signinSub")}

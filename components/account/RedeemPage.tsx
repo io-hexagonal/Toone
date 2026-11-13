@@ -8,8 +8,9 @@ import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { AccountHeader } from "./AccountPage";
 import RedeemForm from "./RedeemForm";
 import RedeemSignupResult from "./RedeemSignupResult";
-import { pendingCode, rememberPendingCode } from "@/lib/billing/pending-code";
-import { codeFromFragment, locationWithoutCode } from "./redeem-code";
+import RedeemCodeGate, { type CheckedCode } from "./RedeemCodeGate";
+import { forgetPendingCode, pendingCode, rememberPendingCode } from "@/lib/billing/pending-code";
+import { campaignFromRef, codeFromFragment, locationWithoutCode, type CodeCampaign } from "./redeem-code";
 import styles from "./account.module.css";
 
 /**
@@ -19,10 +20,12 @@ import styles from "./account.module.css";
  * redirect sign-in that reloads the page, in this tab's sessionStorage
  * (lib/billing/pending-code.ts), never in the address.
  *
- * Signed out, the page offers sign-in and, for a buyer without an account
- * (a code bought from a reseller such as AppSumo), "Create one with this
- * code": the invite sign-up with the code in hand, which gives the new
- * account what the code gives, then shows it here.
+ * Signed out, the code comes first ("Redeem your code", RedeemCodeGate):
+ * once the public check accepts it, the visitor creates an account with it
+ * (the invite sign-up with the code in hand, which gives the new account what
+ * the code gives, then shows it here) or signs in to redeem it. An AppSumo
+ * code (`APPSUMO-…`) or a Product Hunt context (the code's label, or
+ * `?ref=producthunt`) gets its own welcome.
  */
 export default function RedeemPage() {
   const t = useTranslations("account");
@@ -30,12 +33,17 @@ export default function RedeemPage() {
   const [linkedCode, setLinkedCode] = useState<string | null>(null);
   const [read, setRead] = useState(false);
   const consumed = useRef(false);
-  /** Signed out: sign in (default) or create an account with the code. */
-  const [authMode, setAuthMode] = useState<"signin" | "invite">("signin");
+  /** Signed out: the code first, then sign in or create an account with it. */
+  const [authMode, setAuthMode] = useState<"code" | "signin" | "invite">("code");
+  /** The checked code can create an account (false: it only works on an existing one). */
+  const [admitsSignup, setAdmitsSignup] = useState(true);
+  /** `?ref=producthunt`: the launch welcome, before any code is checked. */
+  const [refCampaign, setRefCampaign] = useState<CodeCampaign | null>(null);
   /** Set when this page's sign-up with a code signed the visitor in. */
   const [signup, setSignup] = useState<InvitationOutcome | null>(null);
   const sessionEnded = useCallback(() => {
     setSignup(null);
+    setAuthMode("code");
     endSession();
   }, [endSession]);
 
@@ -51,11 +59,37 @@ export default function RedeemPage() {
       window.history.replaceState(null, "", locationWithoutCode(window.location.pathname, window.location.search));
     }
     setLinkedCode(code);
+    setRefCampaign(campaignFromRef(window.location.search));
     setRead(true);
   }, []);
 
   if (!ready || !read) return <main className={`${styles.page} ${styles.centered}`}><p role="status">{t("common.checking")}</p></main>;
   if (!session) {
+    if (authMode === "code") {
+      return (
+        <RedeemCodeGate
+          initialCode={linkedCode}
+          refCampaign={refCampaign}
+          onCreateAccount={(checked: CheckedCode) => {
+            setLinkedCode(checked.code);
+            setAdmitsSignup(true);
+            setAuthMode("invite");
+          }}
+          onSignIn={(checked: CheckedCode | null) => {
+            if (checked) {
+              setLinkedCode(checked.code);
+              setAdmitsSignup(checked.admitsSignup);
+            } else {
+              // "Have an account? Sign in" without a checked code: nothing to carry.
+              forgetPendingCode();
+              setLinkedCode(null);
+              setAdmitsSignup(false);
+            }
+            setAuthMode("signin");
+          }}
+        />
+      );
+    }
     return authMode === "invite" ? (
       <AuthPage
         key="invite"
@@ -66,7 +100,12 @@ export default function RedeemPage() {
         onSwitchMode={() => setAuthMode("signin")}
       />
     ) : (
-      <AuthPage key="signin" mode="signin" onAuthenticated={setSession} onSwitchMode={() => setAuthMode("invite")} />
+      <AuthPage
+        key="signin"
+        mode="signin"
+        onAuthenticated={setSession}
+        onSwitchMode={linkedCode && admitsSignup ? () => setAuthMode("invite") : undefined}
+      />
     );
   }
   const justSignedUp = signup !== null && signup.session.token === session.token;

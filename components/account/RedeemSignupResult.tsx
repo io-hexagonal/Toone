@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import type { InvitationOutcome } from "@/components/AuthPage";
 import { billingFailure, checkCode, getEntitlement, type Entitlement } from "@/lib/billing/api";
 import { forgetPendingCode } from "@/lib/billing/pending-code";
 import EmailVerification from "./EmailVerification";
+import RedeemDone from "./RedeemDone";
 import RedeemForm from "./RedeemForm";
-import { benefitCopy, formatRedeemDate, providerSignupState, redeemDoneCopy, signupCodeState } from "./redeem-code";
+import { benefitCopy, providerSignupState, signupCodeState } from "./redeem-code";
 import styles from "./account.module.css";
 
 type View =
@@ -26,7 +27,6 @@ type View =
  */
 export default function RedeemSignupResult({ outcome, onSessionEnded }: { outcome: InvitationOutcome; onSessionEnded: () => void }) {
   const t = useTranslations("account");
-  const locale = useLocale();
   const [view, setView] = useState<View>({ name: "checking" });
   const started = useRef(false);
   const { session, code, benefit } = outcome;
@@ -106,24 +106,9 @@ export default function RedeemSignupResult({ outcome, onSessionEnded }: { outcom
     );
   }
 
-  let line: string | null = null;
-  if (benefit) {
-    const done = view.entitlement ? redeemDoneCopy(benefit, view.entitlement) : { key: "doneGeneric" as const };
-    line = done.key === "doneProUntil"
-      ? t("redeem.doneProUntil", { date: formatRedeemDate(done.date, locale) })
-      : done.key === "doneCreations"
-        ? t("redeem.doneCreations", done.values)
-        : t(`redeem.${done.key}`);
-  }
   return (
-    <div aria-live="polite">
-      <h2>{t("redeem.signupDoneTitle")}</h2>
-      {line && <p className={styles.ok} role="status">{line}</p>}
-      <p className={styles.notice}>{t("redeem.doneNote")}</p>
-      <div className={styles.actions}>
-        <Link className={`${styles.button} ${styles.primary}`} href="/downloads">{t("redeem.download")}</Link>
-        <Link className={styles.button} href="/account">{t("redeem.viewAccount")}</Link>
-      </div>
-    </div>
+    <RedeemDone benefit={benefit} entitlement={view.entitlement} email={session.user.email} title={t("redeem.signupDoneTitle")}>
+      <Link className={styles.button} href="/account">{t("redeem.viewAccount")}</Link>
+    </RedeemDone>
   );
 }

@@ -59,9 +59,10 @@ test("signed out, /redeem offers sign-in and 'Create one with this code' on the 
 test("the redeem page carries its code into the invite sign-up in memory, never in the address", () => {
   const page = read("components/account/RedeemPage.tsx");
   assert.match(page, /mode="invite"\s+initialCode=\{linkedCode \?\? undefined\}\s+onInvitationAccepted=\{setSignup\}/);
-  assert.match(page, /onSwitchMode=\{\(\) => setAuthMode\("invite"\)\}/);
+  // Signing in offers "Create one with this code" only with a checked code that admits a sign-up.
+  assert.match(page, /onSwitchMode=\{linkedCode && admitsSignup \? \(\) => setAuthMode\("invite"\) : undefined\}/);
   assert.match(page, /justSignedUp \? \(\s*<RedeemSignupResult/);
-  for (const file of ["components/account/RedeemPage.tsx", "components/account/RedeemSignupResult.tsx", "components/AuthPage.tsx"]) {
+  for (const file of ["components/account/RedeemPage.tsx", "components/account/RedeemSignupResult.tsx", "components/account/RedeemCodeGate.tsx", "components/AuthPage.tsx"]) {
     assert.doesNotMatch(read(file), /[?&#]code=\$\{|searchParams\.set\("code"|console\.(log|info|warn)\([^)]*code/, file);
   }
   const auth = read("components/AuthPage.tsx");

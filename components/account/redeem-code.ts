@@ -161,3 +161,45 @@ export function providerSignupState(check: { ok: true } | { ok: false; failure: 
 export function isAlreadyProError(key: RedeemErrorKey | null): boolean {
   return key === "errAlreadyProAppStore" || key === "errAlreadyProPaid" || key === "errAlreadyPro";
 }
+
+/* ---- campaign context on /redeem */
+
+/**
+ * Where a code comes from, for a welcome that fits: `appsumo` for a code
+ * bought on AppSumo (minted as `APPSUMO-…`), `producthunt` for the Product
+ * Hunt launch (its code's label, or a `?ref=producthunt` link).
+ */
+export type CodeCampaign = "appsumo" | "producthunt";
+
+/** Prefix of the codes minted for AppSumo, in canonical form (`APPSUMO-XXXX-…` typed). */
+const APPSUMO_PREFIX = "APPSUMO";
+const PRODUCT_HUNT_LABEL = /product\s*hunt/i;
+const PRODUCT_HUNT_REF = /^product[\s_-]?hunt$/i;
+
+/**
+ * The campaign a code belongs to, from the code itself (case, spaces and
+ * hyphens don't matter) or the label the public check returned; null when
+ * neither says.
+ */
+export function codeCampaign(code: string | null | undefined, label?: string | null): CodeCampaign | null {
+  const canonical = code ? normalizeCode(code) : null;
+  if (canonical?.startsWith(APPSUMO_PREFIX)) return "appsumo";
+  if (label && PRODUCT_HUNT_LABEL.test(label)) return "producthunt";
+  return null;
+}
+
+/** The campaign a link names in `?ref=` (only `producthunt` is known), or null. */
+export function campaignFromRef(search: string): CodeCampaign | null {
+  let ref: string | null;
+  try {
+    ref = new URLSearchParams(search).get("ref");
+  } catch {
+    return null;
+  }
+  return ref !== null && PRODUCT_HUNT_REF.test(ref.trim()) ? "producthunt" : null;
+}
+
+/** True when a redeemed code gave Toone Pro for the life of the product: the success reads "Toone Pro Lifetime is active". */
+export function isLifetimeActive(benefit: CodeBenefit | null | undefined, entitlement: Entitlement | null | undefined): boolean {
+  return Boolean(benefit && entitlement && benefit.kind === "pro_lifetime" && entitlement.plan === "pro" && !entitlement.expires_at);
+}

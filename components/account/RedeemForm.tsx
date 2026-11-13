@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+import { useTranslations } from "next-intl";
 import {
   billingFailure,
   checkCode,
@@ -14,14 +13,13 @@ import { forgetPendingCode } from "@/lib/billing/pending-code";
 import { fieldErrorProps } from "@/lib/field-error";
 import {
   benefitCopy,
-  formatRedeemDate,
   isAlreadyProError,
   normalizeCode,
-  redeemDoneCopy,
   redeemErrorKey,
   type RedeemErrorKey,
 } from "./redeem-code";
 import EmailVerification from "./EmailVerification";
+import RedeemDone from "./RedeemDone";
 import styles from "./account.module.css";
 
 type Step =
@@ -55,7 +53,6 @@ export default function RedeemForm({
   headingLevel?: 2 | 3;
 }) {
   const t = useTranslations("account.redeem");
-  const locale = useLocale();
   const [code, setCode] = useState(initialCode);
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
@@ -166,22 +163,10 @@ export default function RedeemForm({
   const Heading = headingLevel === 2 ? "h2" : "h3";
 
   if (step.name === "done") {
-    const done = redeemDoneCopy(step.benefit, step.entitlement);
-    const line = done.key === "doneProUntil"
-      ? t("doneProUntil", { date: formatRedeemDate(done.date, locale) })
-      : done.key === "doneCreations"
-        ? t("doneCreations", done.values)
-        : t(done.key);
     return (
-      <div aria-live="polite">
-        <Heading>{t("doneTitle")}</Heading>
-        <p className={styles.ok} role="status">{line}</p>
-        <p className={styles.notice}>{t("doneNote")}</p>
-        <div className={styles.actions}>
-          <Link className={`${styles.button} ${styles.primary}`} href="/downloads">{t("download")}</Link>
-          <button type="button" onClick={reset}>{t("another")}</button>
-        </div>
-      </div>
+      <RedeemDone benefit={step.benefit} entitlement={step.entitlement} email={email} title={t("doneTitle")} headingLevel={headingLevel}>
+        <button type="button" onClick={reset}>{t("another")}</button>
+      </RedeemDone>
     );
   }
 

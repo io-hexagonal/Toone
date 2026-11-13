@@ -50,6 +50,13 @@
 .summary dd { margin: 0 0 8px; }
 .summary dd:last-child { margin-bottom: 0; }
 .orderRef { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; color: #f2efe8; letter-spacing: 0.02em; user-select: all; }
+.welcome { display: flex; align-items: center; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid #ffffff14; }
+.welcome h2 { margin-bottom: 4px; }
+.welcome + * { margin-top: 16px; }
+.kitty { width: 72px; height: 72px; flex: none; border-radius: 18px; object-fit: cover; }
+.panel .badge { display: inline-block; margin: 0 0 10px; padding: 3px 10px; border-radius: 999px; border: 1px solid #ffffff2e; background: #ffffff0a; color: #e6e2d8; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.validCode > * + * { margin-top: 12px; }
+.gateFoot { margin: 16px 0 0; }
 .footerLinks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 28px; font-size: 13px; }
 .footerLinks a, .footerLinks button { color: #b2b0aa !important; }
 @media (max-width: 640px) {
