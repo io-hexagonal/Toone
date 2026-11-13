@@ -121,3 +121,43 @@ export function redeemErrorKey(failure: BillingFailure): RedeemErrorKey {
       return "errGeneric";
   }
 }
+
+/** A date as the redeem page writes it ("December 1, 2026"); the raw value when it is not a date. */
+export function formatRedeemDate(value: string, locale: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
+}
+
+/* ---- creating an account with a code on /redeem */
+
+/**
+ * What a sign-up with a code did with it:
+ * - `applied`: the new account got what the code gives; show it.
+ * - `waits_for_email`: a shared code's benefit waits until the address is confirmed.
+ * - `ask_server`: a Google or Apple sign-in may have been an existing account,
+ *   which ignores the code; `providerSignupState` decides from a code check.
+ */
+export type SignupCodeState = "applied" | "waits_for_email" | "ask_server";
+
+export function signupCodeState(via: "email" | "google" | "apple", benefit: CodeBenefit | null, shared: boolean): SignupCodeState {
+  if (via !== "email") return "ask_server";
+  // An email sign-up always creates the account: an existing address is refused.
+  return benefit && shared ? "waits_for_email" : "applied";
+}
+
+/**
+ * After a Google or Apple sign-in with a code: if the code can still be
+ * redeemed on this account, the sign-in was an existing account and the code
+ * is unused (`redeem`: run the usual redeem flow). If it is used up or this
+ * account already used it, the sign-up used it (`applied`). Any other refusal
+ * is the redeem flow's to explain (already Pro, email to confirm, ...).
+ */
+export function providerSignupState(check: { ok: true } | { ok: false; failure: BillingFailure }): "applied" | "redeem" {
+  if (check.ok) return "redeem";
+  return check.failure.kind === "invalid_code" || check.failure.kind === "code_already_redeemed" ? "applied" : "redeem";
+}
+
+/** The redeem errors that mean "this account already has Toone Pro" (409): the code is not used up. */
+export function isAlreadyProError(key: RedeemErrorKey | null): boolean {
+  return key === "errAlreadyProAppStore" || key === "errAlreadyProPaid" || key === "errAlreadyPro";
+}

@@ -97,7 +97,38 @@ export function signInReturnPath(search: string): string | null {
   return next && SIGN_IN_RETURN_PATHS.some((pattern) => pattern.test(next)) ? next : null;
 }
 
-export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuthenticated?: (session: ToneSession) => void }) {
+/** How a sign-up with a code (invite mode) went, for a page that hosts it (the redeem page). */
+export type InvitationOutcome = {
+  session: ToneSession;
+  /** The verified code the sign-up carried. */
+  code: string;
+  /** What the code gives, from the check; null for an access code without a benefit. */
+  benefit: CodeBenefit | null;
+  /** A code many people can use: its benefit waits for a confirmed address after an email and password signup. */
+  shared: boolean;
+  /**
+   * "email": a new account (an existing address is refused). Google and Apple
+   * may sign in an existing account instead, which ignores the code.
+   */
+  via: "email" | Via;
+};
+
+type AuthPageProps = {
+  mode: Mode;
+  onAuthenticated?: (session: ToneSession) => void;
+  /** Invite mode: the code to check straight away, instead of one in the link's `#code=` fragment. */
+  initialCode?: string;
+  /** Invite mode: called once a sign-up (or a Google or Apple sign-in) with the verified code finishes. */
+  onInvitationAccepted?: (outcome: InvitationOutcome) => void;
+  /**
+   * Replaces the links under the card with a switch to the other mode on the
+   * same page (the redeem page keeps the code across it): "Create one with
+   * this code" when signing in, "Sign in" when signing up.
+   */
+  onSwitchMode?: () => void;
+};
+
+export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode }: AuthPageProps) {
   const t = useTranslations("auth");
   const accountCopy = useTranslations("account");
   const locale = useLocale();
@@ -111,6 +142,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
   // What a code with a benefit adds to the new account (Pro days, Pro for good, extra creations).
   const [benefit, setBenefit] = useState<CodeBenefit | null>(null);
+  // Read by the provider callbacks, which are registered once.
+  const benefitRef = useRef<CodeBenefit | null>(null);
+  benefitRef.current = benefit;
+  const sharedRef = useRef(false);
+  sharedRef.current = preview?.shared === true;
   const [handle, setHandle] = useState("");
   const codeRef = useRef("");
   codeRef.current = code;
@@ -162,6 +198,15 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
     try {
       const s = await promise;
       setSession(s);
+      if (mode === "invite") {
+        onInvitationAccepted?.({
+          session: s,
+          code: codeRef.current.trim(),
+          benefit: benefitRef.current,
+          shared: sharedRef.current,
+          via: via ?? "email",
+        });
+      }
       onAuthenticated?.(s);
       track(event);
       if (mode === "invite") setStep("handle");
@@ -283,7 +328,8 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
   useEffect(() => {
     if (mode !== "invite") return;
     const invitation = new URLSearchParams(window.location.hash.slice(1));
-    const linkedCode = invitation.get("code") || "";
+    // A code the hosting page already holds comes first; the fragment is the invite link's.
+    const linkedCode = initialCode?.trim() || invitation.get("code") || "";
     if (linkedCode) setCode(linkedCode);
     if (invitation.get("email")) setEmail(invitation.get("email") || "");
     if (window.location.hash) window.history.replaceState(null, "", window.location.pathname);
@@ -499,6 +545,11 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
             }
             .auth-switch a { color: rgba(255,255,255,0.88); text-decoration: none; }
             .auth-switch a:hover { text-decoration: underline; }
+            .auth-switch button {
+              background: none; border: none; padding: 0; cursor: pointer;
+              font: inherit; color: rgba(255,255,255,0.88);
+            }
+            .auth-switch button:hover { text-decoration: underline; }
 
             .auth-success { text-align: center; padding: 10px 0 4px; }
             .auth-success .who {
@@ -758,7 +809,19 @@ export default function AuthPage({ mode, onAuthenticated }: { mode: Mode; onAuth
 
         {!session && (
           <p className="auth-switch">
-            {mode === "invite" ? (
+            {onSwitchMode ? (
+              mode === "invite" ? (
+                <>
+                  {t("haveAccount")}{" "}
+                  <button type="button" onClick={onSwitchMode}>{t("signinLink")}</button>
+                </>
+              ) : (
+                <>
+                  {t("redeemNoAccount")}{" "}
+                  <button type="button" onClick={onSwitchMode}>{t("redeemCreateAccount")}</button>
+                </>
+              )
+            ) : mode === "invite" ? (
               <>
                 {step === "code" && (
                   <>

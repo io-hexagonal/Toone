@@ -12,7 +12,15 @@ import {
 } from "@/lib/billing/api";
 import { forgetPendingCode } from "@/lib/billing/pending-code";
 import { fieldErrorProps } from "@/lib/field-error";
-import { benefitCopy, normalizeCode, redeemDoneCopy, redeemErrorKey } from "./redeem-code";
+import {
+  benefitCopy,
+  formatRedeemDate,
+  isAlreadyProError,
+  normalizeCode,
+  redeemDoneCopy,
+  redeemErrorKey,
+  type RedeemErrorKey,
+} from "./redeem-code";
 import EmailVerification from "./EmailVerification";
 import styles from "./account.module.css";
 
@@ -21,10 +29,8 @@ type Step =
   | { name: "preview"; code: string; benefit: CodeBenefit }
   | { name: "done"; benefit: CodeBenefit; entitlement: Entitlement };
 
-function formatDate(value: string, locale: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
-}
+/** Where a buyer whose code cannot be used asks for help with a reseller refund. */
+const CONTACT = "hello@trytoone.com";
 
 /**
  * Check a code (nothing is used up), show what it gives, then redeem it.
@@ -54,6 +60,8 @@ export default function RedeemForm({
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  /** Which refusal `error` is, for the help that goes with it. */
+  const [errorKey, setErrorKey] = useState<RedeemErrorKey | null>(null);
   /** True when the error is about the code itself (not a rate limit or an outage). */
   const [codeInvalid, setCodeInvalid] = useState(false);
   /** The server refused with `email_verification_required`: offer the confirmation step. */
@@ -68,6 +76,7 @@ export default function RedeemForm({
       return;
     }
     const key = redeemErrorKey(failure);
+    setErrorKey(key);
     setCodeInvalid(key === "errInvalid" || key === "errUsed");
     setNeedsVerify(key === "errVerify");
     setError(t(key));
@@ -81,6 +90,13 @@ export default function RedeemForm({
     else if (code.trim()) void check(code);
   }
 
+  // Already Pro (409): the code is not used up, so a reseller can still refund it.
+  const refundHelp = error && isAlreadyProError(errorKey) && (
+    <p className={styles.notice}>
+      {t.rich("errAlreadyProRefund", { link: (chunks) => <a href={`mailto:${CONTACT}`}>{chunks}</a> })}
+    </p>
+  );
+
   const verification = needsVerify && (
     <EmailVerification token={token} email={email} onVerified={verified} onSessionEnded={onSessionEnded} />
   );
@@ -90,6 +106,7 @@ export default function RedeemForm({
     const canonical = normalizeCode(value);
     if (!canonical) {
       setCodeInvalid(true);
+      setErrorKey("errInvalid");
       setError(t("errInvalid"));
       return;
     }
@@ -151,7 +168,7 @@ export default function RedeemForm({
   if (step.name === "done") {
     const done = redeemDoneCopy(step.benefit, step.entitlement);
     const line = done.key === "doneProUntil"
-      ? t("doneProUntil", { date: formatDate(done.date, locale) })
+      ? t("doneProUntil", { date: formatRedeemDate(done.date, locale) })
       : done.key === "doneCreations"
         ? t("doneCreations", done.values)
         : t(done.key);
@@ -177,6 +194,7 @@ export default function RedeemForm({
         <p>{t("preview", { benefit })}</p>
         <p className={`${styles.summary} ${styles.code}`}>{step.code}</p>
         {error && <p className={styles.error} role="alert">{error}</p>}
+        {refundHelp}
         {verification}
         <div className={styles.actions}>
           <button className={styles.primary} type="button" disabled={busy} onClick={() => void redeem(step.code)}>
@@ -212,6 +230,7 @@ export default function RedeemForm({
       </div>
       <small id="redeem-code-help">{t("help")}</small>
       {error && <p id="redeem-code-error" className={styles.error} role="alert">{error}</p>}
+      {refundHelp}
     </form>
   );
   // The confirmation step is its own form, so it sits next to the code form, not inside it.

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import AuthPage from "@/components/AuthPage";
+import AuthPage, { type InvitationOutcome } from "@/components/AuthPage";
 import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { AccountHeader } from "./AccountPage";
 import RedeemForm from "./RedeemForm";
+import RedeemSignupResult from "./RedeemSignupResult";
 import { pendingCode, rememberPendingCode } from "@/lib/billing/pending-code";
 import { codeFromFragment, locationWithoutCode } from "./redeem-code";
 import styles from "./account.module.css";
@@ -17,6 +18,11 @@ import styles from "./account.module.css";
  * signed-in account. It survives the sign-in step in memory and, for a
  * redirect sign-in that reloads the page, in this tab's sessionStorage
  * (lib/billing/pending-code.ts), never in the address.
+ *
+ * Signed out, the page offers sign-in and, for a buyer without an account
+ * (a code bought from a reseller such as AppSumo), "Create one with this
+ * code": the invite sign-up with the code in hand, which gives the new
+ * account what the code gives, then shows it here.
  */
 export default function RedeemPage() {
   const t = useTranslations("account");
@@ -24,6 +30,14 @@ export default function RedeemPage() {
   const [linkedCode, setLinkedCode] = useState<string | null>(null);
   const [read, setRead] = useState(false);
   const consumed = useRef(false);
+  /** Signed out: sign in (default) or create an account with the code. */
+  const [authMode, setAuthMode] = useState<"signin" | "invite">("signin");
+  /** Set when this page's sign-up with a code signed the visitor in. */
+  const [signup, setSignup] = useState<InvitationOutcome | null>(null);
+  const sessionEnded = useCallback(() => {
+    setSignup(null);
+    endSession();
+  }, [endSession]);
 
   useEffect(() => {
     // Once per page load: the fragment is gone after the first read (and
@@ -41,18 +55,36 @@ export default function RedeemPage() {
   }, []);
 
   if (!ready || !read) return <main className={`${styles.page} ${styles.centered}`}><p role="status">{t("common.checking")}</p></main>;
-  if (!session) return <AuthPage mode="signin" onAuthenticated={setSession} />;
+  if (!session) {
+    return authMode === "invite" ? (
+      <AuthPage
+        key="invite"
+        mode="invite"
+        initialCode={linkedCode ?? undefined}
+        onInvitationAccepted={setSignup}
+        onAuthenticated={setSession}
+        onSwitchMode={() => setAuthMode("signin")}
+      />
+    ) : (
+      <AuthPage key="signin" mode="signin" onAuthenticated={setSession} onSwitchMode={() => setAuthMode("invite")} />
+    );
+  }
+  const justSignedUp = signup !== null && signup.session.token === session.token;
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <AccountHeader session={session} onSessionEnded={endSession} />
+        <AccountHeader session={session} onSessionEnded={sessionEnded} />
         <div className={styles.title}>
           <p className={styles.eyebrow}>{t("redeem.eyebrow")}</p>
           <h1>{t("redeem.title")}</h1>
           <p className={styles.sub}>{t("redeem.sub", { email: session.user.email })}</p>
         </div>
         <section className={styles.panel}>
-          <RedeemForm key={session.token} token={session.token} email={session.user.email} initialCode={linkedCode ?? ""} onSessionEnded={endSession} />
+          {justSignedUp ? (
+            <RedeemSignupResult key={session.token} outcome={signup} onSessionEnded={sessionEnded} />
+          ) : (
+            <RedeemForm key={session.token} token={session.token} email={session.user.email} initialCode={linkedCode ?? ""} onSessionEnded={sessionEnded} />
+          )}
         </section>
         <nav className={styles.footerLinks} aria-label={t("page.moreLinks")}>
           <Link href="/account">{t("redeem.viewAccount")}</Link>
