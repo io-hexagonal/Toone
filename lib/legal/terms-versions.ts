@@ -18,6 +18,7 @@ export type TermsVersion = {
 
 export const TERMS_VERSIONS: readonly TermsVersion[] = Object.freeze([
   { date: "2026-11-11", label: "November 11, 2026" },
+  { date: "2026-11-13", label: "November 13, 2026" },
 ]);
 
 export const CURRENT_TERMS_VERSION: TermsVersion = TERMS_VERSIONS[TERMS_VERSIONS.length - 1];

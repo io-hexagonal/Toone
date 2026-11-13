@@ -311,7 +311,7 @@ test("while the trader details are incomplete the Terms never link or point to t
     assert.ok(!html.includes("/legal-notice"), `${seller}: links the Legal notice`);
     assert.doesNotMatch(text, /Legal notice/, String(seller));
     for (const phrase of [
-      /published by Matheus Paranhos under the Hexagonal\.io name in Portugal\. For the full trader details, address and tax number, write to hello@trytoone\.com\./,
+      /For the other trader details, write to hello@trytoone\.com\./,
       /alternative dispute resolution entity\. Write to hello@trytoone\.com and we send you the details of both\./,
       /To Toone \(hello@trytoone\.com\): I hereby give notice that I withdraw/,
       // The Pro purchase sections still read in full.
@@ -327,11 +327,52 @@ test("while the trader details are incomplete the Terms never link or point to t
     const text = terms(seller, false);
     assert.match(
       text,
-      /Any other purchase on trytoone\.com is sold by Toone: the seller is Toone's publisher, Matheus Paranhos \(Hexagonal\.io\), an individual trader in Portugal, who is responsible for the sale, for delivering Toone Pro, and for support\./,
+      /Any other purchase on trytoone\.com is sold by Toone: the seller is Toone's publisher, Matheus Paranhos, the sole trader named above, who is responsible for the sale, for delivering Toone Pro, and for support\./,
       `${seller}`,
     );
     assert.match(text, /merchant of record is Sold through Link, LLC/, `${seller}`);
   }
+});
+
+test("the Terms name the trader: sole trader in Portugal, trading as Toone, tax number and address", () => {
+  for (const traderDetails of [true, false]) {
+    const text = terms(null, traderDetails);
+    assert.match(
+      text,
+      /Toone and Toone Pro are provided by Matheus Paranhos, a sole trader \(empresário em nome individual\) established in Portugal, trading as Toone \(Hexagonal\.io\), tax and VAT number PT308520050, tax address R\. António Manuel Frutuoso 54, 3700-042 São João da Madeira \(Porto Metropolitan Area\), Portugal\. Contact: hello@trytoone\.com\./,
+      String(traderDetails),
+    );
+  }
+  assert.match(terms(null, true), /The full trader details are in the Legal notice\./);
+  assert.doesNotMatch(content, /under the Hexagonal\.io name|individual trader in Portugal/);
+});
+
+test("codes sold by authorised resellers (AppSumo): lifetime for the redeeming account, reseller refunds, revocation, no stacking", () => {
+  for (const seller of RENDERINGS) {
+    for (const traderDetails of [true, false]) {
+      const text = terms(seller, traderDetails);
+      const html = termsHtml(seller, traderDetails);
+      for (const id of ["reseller-codes", "lifetime-codes"]) assert.ok(html.includes(`id="${id}"`), `#${id}`);
+      for (const phrase of [
+        // The existing lifetime definition, extended to codes.
+        /Toone Pro Lifetime gives the Toone account it is linked to Toone Pro for the life of the product, for as long as Toone \(Direct\) is available\./,
+        /Toone Pro for the life of the product from a code, including a code bought from an authorised reseller \(see Codes sold by authorised resellers\), lasts the same way: for as long as Toone \(Direct\) is available, on the Toone account that redeemed the code\. It does not expire and does not renew\. It ends if the code is refunded or revoked\./,
+        /Toone also sells codes for Toone Pro through authorised resellers, such as AppSumo\. A code bought from an authorised reseller gives the Toone account that redeems it Toone Pro for the life of the product/,
+        /You redeem it on trytoone\.com\/en\/redeem, with your Toone account or by creating a Toone account with the code there\./,
+        /The reseller is the seller of the code: you buy it under the reseller's terms, the reseller takes your payment, and the reseller handles refunds of the code within its own refund window \(AppSumo: 60 days\)\./,
+        /A refunded code is revoked: it can no longer be redeemed, and if it was already redeemed, the Toone Pro it gave ends\./,
+        /One code per Toone account: codes do not stack\./,
+        /cannot be redeemed on an account that already has Toone Pro for the life of the product, or while the account has a paid Toone Pro plan, and the code is not used up when it is refused/,
+        // The ban on reselling stays for everyone else; the exception is explicit.
+        /Codes have no cash value\. Codes that Toone gives out are free, and no code may be bought, sold or exchanged for money, except a code that Toone issued to an authorised reseller, sold by that reseller as described under Codes sold by authorised resellers\. Anyone else who sells or resells a code breaks these terms\./,
+        /A code used to create a Toone account applies when the account is created/,
+      ]) {
+        assert.match(text, phrase, `${seller} ${traderDetails}: ${phrase}`);
+      }
+      assert.ok(html.includes('href="/en/redeem"'));
+    }
+  }
+  assert.doesNotMatch(content, /Codes are free\. They have no cash value and cannot be bought, sold or exchanged for money\./);
 });
 
 test("the Terms name no blocked country: the server's list is shown at checkout", () => {

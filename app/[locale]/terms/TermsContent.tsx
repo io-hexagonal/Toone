@@ -24,10 +24,15 @@ import {
   newPurchasesSentence,
   type TooneProSeller,
 } from "@/lib/legal/seller";
-import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { LEGAL_TRADER, TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
 const CONTACT = "hello@trytoone.com";
+/** Where a code is redeemed, or used to create an account. */
+const REDEEM_PATH = "/redeem";
+/** The authorised reseller selling lifetime codes now, and its refund window. */
+const RESELLER = "AppSumo";
+const RESELLER_REFUND_DAYS = 60;
 
 export type TermsContentProps = {
   /**
@@ -49,7 +54,7 @@ function TraderName({ traderDetails }: { traderDetails: boolean }) {
   if (traderDetails) {
     return <>the trader named in the <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a></>;
   }
-  return <>Toone&apos;s publisher, Matheus Paranhos (Hexagonal.io), an individual trader in Portugal</>;
+  return <>Toone&apos;s publisher, Matheus Paranhos, the sole trader named above</>;
 }
 
 /**
@@ -178,16 +183,19 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
         <h2>Toone Pro</h2>
         <p>
           Toone Pro is an optional upgrade for your Toone account. It removes the limit on how many
-          routines your account can create. Everything else in Toone works without it. Toone Pro is
-          provided by Toone, published by Matheus Paranhos under the Hexagonal.io name in Portugal.
+          routines your account can create. Everything else in Toone works without it. Toone and
+          Toone Pro are provided by Matheus Paranhos, a sole trader (empresário em nome individual)
+          established in Portugal, trading as Toone (Hexagonal.io), tax and VAT number{" "}
+          {LEGAL_TRADER.taxId.value}, tax address {LEGAL_TRADER.address.value}. Contact:{" "}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
           {traderDetails ? (
             <>
-              {" "}The full trader details, address and tax number are in the{" "}
+              {" "}The full trader details are in the{" "}
               <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>.
             </>
           ) : (
             <>
-              {" "}For the full trader details, address and tax number, write to{" "}
+              {" "}For the other trader details, write to{" "}
               <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
             </>
           )}
@@ -380,6 +388,13 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           product, for as long as Toone (Direct) is available. It does not expire and does not
           renew. It ends if its payment is refunded or reversed.
         </p>
+        <p id="lifetime-codes">
+          Toone Pro for the life of the product from a code, including a code bought from an
+          authorised reseller (see <a href="#reseller-codes">Codes sold by authorised
+          resellers</a>), lasts the same way: for as long as Toone (Direct) is available, on the
+          Toone account that redeemed the code. It does not expire and does not renew. It ends if
+          the code is refunded or revoked.
+        </p>
 
         <h3 id="account">Your purchase belongs to one Toone account</h3>
         <p>
@@ -411,11 +426,20 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           for how many payments are shown there before you pay.
         </p>
         <ul>
-          <li>Codes are free. They have no cash value and cannot be bought, sold or exchanged for money.</li>
           <li>
-            Each code can be redeemed once per person and per Toone account, and only on an account
-            with a verified email address. A code may expire or be limited to a number of uses; the
-            redeem page tells you if it no longer works.
+            Codes have no cash value. Codes that Toone gives out are free, and no code may be
+            bought, sold or exchanged for money, except a code that Toone issued to an authorised
+            reseller, sold by that reseller as described under{" "}
+            <a href="#reseller-codes">Codes sold by authorised resellers</a>. Anyone else who sells
+            or resells a code breaks these terms.
+          </li>
+          <li>
+            Each code can be redeemed once per person and per Toone account. Redeeming a code on an
+            existing account needs a verified email address. A code used to create a Toone account
+            applies when the account is created; a code shared by many people that is used to sign
+            up with an email address and password applies once you confirm that address. A code may
+            expire or be limited to a number of uses; the redeem page tells you if it no longer
+            works.
           </li>
           <li>
             A code that gives days of Toone Pro or Toone Pro for life cannot be redeemed while your
@@ -432,6 +456,40 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           <li>
             Toone may withdraw what a code gave if the code was obtained by fraud, by mistake, or
             against these terms.
+          </li>
+        </ul>
+
+        <h3 id="reseller-codes">Codes sold by authorised resellers</h3>
+        <p>
+          Toone also sells codes for Toone Pro through authorised resellers, such as {RESELLER}. A
+          code bought from an authorised reseller gives the Toone account that redeems it Toone Pro
+          for the life of the product, as described under <a href="#lifetime-codes">Lifetime</a>.
+          You redeem it on <a href={`/en${REDEEM_PATH}`}>trytoone.com/en/redeem</a>, with your Toone
+          account or by creating a Toone account with the code there.
+        </p>
+        <ul>
+          <li>
+            The reseller is the seller of the code: you buy it under the reseller&apos;s terms, the
+            reseller takes your payment, and the reseller handles refunds of the code within its
+            own refund window ({RESELLER}: {RESELLER_REFUND_DAYS} days). Toone provides Toone Pro to
+            the account that redeems the code and gives product support. The refund and withdrawal
+            rules above are for purchases from Toone on trytoone.com; for a code, the
+            reseller&apos;s refund policy and your rights against the reseller apply.
+          </li>
+          <li>
+            A refunded code is revoked: it can no longer be redeemed, and if it was already
+            redeemed, the Toone Pro it gave ends.
+          </li>
+          <li>
+            One code per Toone account: codes do not stack. A code cannot be redeemed on an account
+            that already has Toone Pro for the life of the product, or while the account has a paid
+            Toone Pro plan, and the code is not used up when it is refused. If you cannot use a code
+            you bought, write to <a href={`mailto:${CONTACT}`}>{CONTACT}</a> within the
+            reseller&apos;s refund window and we help you get it refunded.
+          </li>
+          <li>
+            Toone Pro from a reseller&apos;s code belongs to the account that redeemed it and cannot
+            be moved to another account.
           </li>
         </ul>
 

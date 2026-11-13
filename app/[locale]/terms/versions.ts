@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { CURRENT_TERMS_VERSION, type TermsVersion } from "@/lib/legal/terms-versions";
 import TermsContent, { type TermsContentProps } from "./TermsContent";
+import TermsContent20261111 from "./versions/2026-11-11";
 
 /**
  * The text of each Terms version (lib/legal/terms-versions.ts), keyed by the
@@ -8,7 +9,8 @@ import TermsContent, { type TermsContentProps } from "./TermsContent";
  * keeps a frozen copy under ./versions/.
  */
 export const TERMS_VERSION_CONTENT: Readonly<Record<string, ComponentType<TermsContentProps>>> = Object.freeze({
-  "2026-11-11": TermsContent,
+  "2026-11-11": TermsContent20261111,
+  "2026-11-13": TermsContent,
 });
 
 /** The text of `version`; the current text for a version without its own (never expected: a test checks every version has one). */

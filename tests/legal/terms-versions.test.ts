@@ -44,6 +44,17 @@ test("the version list: oldest first, real dates, labels as the page writes them
   assert.ok(Object.isFrozen(TERMS_VERSIONS));
 });
 
+test("the reseller-codes Terms of 2026-11-13 are current; the 2026-11-11 text stays readable, frozen", () => {
+  assert.deepEqual(TERMS_VERSIONS.map((version) => version.date), ["2026-11-11", "2026-11-13"]);
+  assert.equal(CURRENT_TERMS_VERSION.date, "2026-11-13");
+  const frozen = renderText(createElement(TERMS_VERSION_CONTENT["2026-11-11"], { seller: null, traderDetails: false }));
+  assert.match(frozen, /Codes are free\. They have no cash value and cannot be bought, sold or exchanged for money\./);
+  assert.doesNotMatch(frozen, /authorised reseller/);
+  const current = renderText(createElement(TERMS_VERSION_CONTENT["2026-11-13"], { seller: null, traderDetails: false }));
+  assert.match(current, /Codes sold by authorised resellers/);
+  assert.match(read("app/[locale]/terms/versions/2026-11-11.tsx"), /^\/\*\*\n \* FROZEN:/);
+});
+
 test("every version has its own text; the current one is TermsContent", () => {
   assert.deepEqual(Object.keys(TERMS_VERSION_CONTENT).sort(), TERMS_VERSIONS.map((version) => version.date).sort());
   assert.equal(TERMS_VERSION_CONTENT[CURRENT_TERMS_VERSION.date], TermsContent);
@@ -76,8 +87,11 @@ test("an unknown date shows the current version, with a note", () => {
   assert.equal(termsVersionAt("2026-11-10", HISTORY, TODAY), null, "before the first version");
   assert.equal(termsVersionAt("2027-06-02", HISTORY, TODAY), null, "a day that has not come yet");
   assert.deepEqual(resolveTermsVersion("2026-11-11"), {
-    kind: "requested", version: CURRENT_TERMS_VERSION, requested: "2026-11-11", isCurrent: CURRENT_TERMS_VERSION.date === "2026-11-11",
+    kind: "requested", version: TERMS_VERSIONS[0], requested: "2026-11-11", isCurrent: CURRENT_TERMS_VERSION.date === "2026-11-11",
   }, "the published list serves the first version's link");
+  assert.deepEqual(resolveTermsVersion("2026-11-12"), {
+    kind: "requested", version: TERMS_VERSIONS[0], requested: "2026-11-12", isCurrent: false,
+  }, "the day before the reseller-codes version");
 });
 
 test("the note says which version this is, and links to the current Terms when it was replaced", () => {
