@@ -14,6 +14,10 @@
  * that build outright if the API already has web checkout on
  * (scripts/legal/release-check.ts). tests/legal/release-owner-data.test.ts
  * fails too, when run with either variable.
+ *
+ * The identity, address, tax number and email are the trader's registered
+ * details; the remaining TODO_OWNER values (telephone, CAE, Livro de
+ * Reclamações link, ADR entity) must still come from the owner.
  */
 export const TODO_OWNER = "TODO_OWNER";
 
@@ -27,19 +31,20 @@ export type TraderField = {
 export const LEGAL_TRADER = {
   fullName: {
     label: "Name",
-    value: `${TODO_OWNER}: full legal name of the individual trader`,
+    value: "Matheus Paranhos, sole trader (empresário em nome individual)",
   },
   tradingName: {
     label: "Trading name",
-    value: `${TODO_OWNER}: trading name (e.g. Hexagonal.io) and whether it is registered`,
+    value: "Toone (Hexagonal.io)",
   },
   address: {
     label: "Geographic address",
-    value: `${TODO_OWNER}: street, postcode, city, Portugal`,
+    value: "R. António Manuel Frutuoso 54, 3700-042 São João da Madeira (Porto Metropolitan Area), Portugal",
   },
   email: {
     label: "Email",
-    value: `${TODO_OWNER}: contact email (e.g. hello@trytoone.com)`,
+    value: "hello@trytoone.com",
+    href: "mailto:hello@trytoone.com",
   },
   phone: {
     label: "Telephone",
@@ -47,7 +52,7 @@ export const LEGAL_TRADER = {
   },
   taxId: {
     label: "NIF / VAT number",
-    value: `${TODO_OWNER}: NIF (and PT VAT number if different)`,
+    value: "PT308520050",
   },
   activityCode: {
     label: "Activity code (CAE)",

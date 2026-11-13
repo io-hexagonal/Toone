@@ -64,6 +64,16 @@ test("the legal notice names both web sellers, whoever sells new purchases", () 
   assert.doesNotMatch(renderText(createElement(WebSales, { seller: null })), /currently sold/);
 });
 
+test("the trader identity is filled in: name, trading name, address, email and tax number", () => {
+  const resolved = new Set(Object.keys(LEGAL_TRADER).filter((key) => !unresolvedTraderFields().includes(key as never)));
+  for (const key of ["fullName", "tradingName", "address", "email", "taxId"]) assert.ok(resolved.has(key), key);
+  assert.match(LEGAL_TRADER.fullName.value, /^Matheus Paranhos, sole trader \(empresário em nome individual\)$/);
+  assert.match(LEGAL_TRADER.tradingName.value, /^Toone\b/);
+  assert.equal(LEGAL_TRADER.address.value, "R. António Manuel Frutuoso 54, 3700-042 São João da Madeira (Porto Metropolitan Area), Portugal");
+  assert.equal(LEGAL_TRADER.taxId.value, "PT308520050");
+  assert.deepEqual([LEGAL_TRADER.email.value, LEGAL_TRADER.email.href], ["hello@trytoone.com", "mailto:hello@trytoone.com"]);
+});
+
 test("owner placeholders live only in lib/legal/trader.ts", () => {
   assert.equal(TODO_OWNER, "TODO_OWNER");
   for (const file of [
