@@ -74,6 +74,15 @@ test("the trader identity is filled in: name, trading name, address, email and t
   assert.deepEqual([LEGAL_TRADER.email.value, LEGAL_TRADER.email.href], ["hello@trytoone.com", "mailto:hello@trytoone.com"]);
 });
 
+test("the About page names the same publisher as the trader details", () => {
+  const about = read("app/[locale]/about/page.tsx");
+  const flat = about.replace(/\s+/g, " ");
+  assert.match(flat, /Toone is an independent product published by Matheus Paranhos, a sole trader \(empresário em nome individual\) in Portugal, trading as Toone under the\{` `\} <a href="https:\/\/www\.hexagonal\.io\/">Hexagonal\.io<\/a> name\./);
+  assert.match(flat, /a macOS app published by Matheus Paranhos, a sole trader in Portugal \(Hexagonal\.io\)/);
+  assert.match(flat, /TRADER_DETAILS_COMPLETE \? <a href=\{`\/en\$\{LEGAL_NOTICE_PATH\}`\}>Legal notice<\/a> : <a href="\/en\/terms#toone-pro">Terms<\/a>\}/);
+  assert.doesNotMatch(about, /macOS app by Hexagonal\.io, founded by/);
+});
+
 test("owner placeholders live only in lib/legal/trader.ts", () => {
   assert.equal(TODO_OWNER, "TODO_OWNER");
   for (const file of [

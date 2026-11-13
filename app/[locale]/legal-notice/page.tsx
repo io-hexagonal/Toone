@@ -14,7 +14,7 @@ export const revalidate = 300;
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
 const CANONICAL = "https://trytoone.com/en/legal-notice";
-const UPDATED = "November 10, 2026";
+const UPDATED = "November 13, 2026";
 
 const TRADER_ROWS: TraderKey[] = [
   "fullName",
