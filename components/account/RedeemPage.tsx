@@ -42,6 +42,9 @@ export default function RedeemPage() {
   /** Set when this page's sign-up with a code signed the visitor in. */
   const [signup, setSignup] = useState<InvitationOutcome | null>(null);
   const sessionEnded = useCallback(() => {
+    // A redeemed single-use code must not be re-checked by the code gate.
+    forgetPendingCode();
+    setLinkedCode(null);
     setSignup(null);
     setAuthMode("code");
     endSession();
@@ -104,7 +107,7 @@ export default function RedeemPage() {
         key="signin"
         mode="signin"
         onAuthenticated={setSession}
-        onSwitchMode={linkedCode && admitsSignup ? () => setAuthMode("invite") : undefined}
+        onSwitchMode={linkedCode && admitsSignup ? () => setAuthMode("invite") : () => setAuthMode("code")}
       />
     );
   }

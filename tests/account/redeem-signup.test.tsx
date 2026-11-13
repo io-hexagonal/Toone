@@ -60,7 +60,10 @@ test("the redeem page carries its code into the invite sign-up in memory, never 
   const page = read("components/account/RedeemPage.tsx");
   assert.match(page, /mode="invite"\s+initialCode=\{linkedCode \?\? undefined\}\s+onInvitationAccepted=\{setSignup\}/);
   // Signing in offers "Create one with this code" only with a checked code that admits a sign-up.
-  assert.match(page, /onSwitchMode=\{linkedCode && admitsSignup \? \(\) => setAuthMode\("invite"\) : undefined\}/);
+  // Sign-in on /redeem always leads back: to the invite sign-up with a usable code, else to the code step.
+  assert.match(page, /onSwitchMode=\{linkedCode && admitsSignup \? \(\) => setAuthMode\("invite"\) : \(\) => setAuthMode\("code"\)\}/);
+  // Signing out forgets the code, so a redeemed single-use code is never re-checked by the gate.
+  assert.match(page, /const sessionEnded = useCallback\(\(\) => \{[\s\S]*?forgetPendingCode\(\);[\s\S]*?setLinkedCode\(null\);[\s\S]*?setAuthMode\("code"\);/);
   assert.match(page, /justSignedUp \? \(\s*<RedeemSignupResult/);
   for (const file of ["components/account/RedeemPage.tsx", "components/account/RedeemSignupResult.tsx", "components/account/RedeemCodeGate.tsx", "components/AuthPage.tsx"]) {
     assert.doesNotMatch(read(file), /[?&#]code=\$\{|searchParams\.set\("code"|console\.(log|info|warn)\([^)]*code/, file);
