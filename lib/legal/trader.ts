@@ -35,7 +35,7 @@ export const LEGAL_TRADER = {
   },
   tradingName: {
     label: "Trading name",
-    value: "Toone (Hexagonal.io)",
+    value: "Toone",
   },
   address: {
     label: "Geographic address",

@@ -116,8 +116,8 @@ export default async function AboutPage({ params, searchParams }: Props) {
           <h2>Publisher and accountability</h2>
           <p>
             Toone is an independent product published by Matheus Paranhos, a sole trader
-            (empresário em nome individual) in Portugal, trading as Toone under the{` `}
-            <a href="https://www.hexagonal.io/">Hexagonal.io</a> name. The trader&apos;s address and
+            (empresário em nome individual) in Portugal, trading as Toone, and published under his{` `}
+            <a href="https://www.hexagonal.io/">Hexagonal.io</a> brand. The trader&apos;s address and
             tax number are in the{` `}
             {TRADER_DETAILS_COMPLETE
               ? <a href={`/en${LEGAL_NOTICE_PATH}`}>Legal notice</a>

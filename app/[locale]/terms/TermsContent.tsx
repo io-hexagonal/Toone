@@ -33,6 +33,8 @@ const REDEEM_PATH = "/redeem";
 /** The authorised reseller selling lifetime codes now, and its refund window. */
 const RESELLER = "AppSumo";
 const RESELLER_REFUND_DAYS = 60;
+/** The last day a reseller code can be redeemed (the AppSumo batch expires the next day, UTC). */
+const RESELLER_REDEEM_BY = "13 November 2027";
 
 export type TermsContentProps = {
   /**
@@ -185,7 +187,7 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           Toone Pro is an optional upgrade for your Toone account. It removes the limit on how many
           routines your account can create. Everything else in Toone works without it. Toone and
           Toone Pro are provided by Matheus Paranhos, a sole trader (empresário em nome individual)
-          established in Portugal, trading as Toone (Hexagonal.io), tax and VAT number{" "}
+          established in Portugal, trading as {LEGAL_TRADER.tradingName.value}, tax and VAT number{" "}
           {LEGAL_TRADER.taxId.value}, tax address {LEGAL_TRADER.address.value}. Contact:{" "}
           <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
           {traderDetails ? (
@@ -392,8 +394,9 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           Toone Pro for the life of the product from a code, including a code bought from an
           authorised reseller (see <a href="#reseller-codes">Codes sold by authorised
           resellers</a>), lasts the same way: for as long as Toone (Direct) is available, on the
-          Toone account that redeemed the code. It does not expire and does not renew. It ends if
-          the code is refunded or revoked.
+          Toone account that redeemed the code. It does not expire and does not renew. It ends only
+          if the code is refunded or its payment is charged back, or if the code is revoked for a
+          reason these terms give.
         </p>
 
         <h3 id="account">Your purchase belongs to one Toone account</h3>
@@ -455,7 +458,9 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           </li>
           <li>
             Toone may withdraw what a code gave if the code was obtained by fraud, by mistake, or
-            against these terms.
+            against these terms. A code bought from an authorised reseller is different: it can
+            only be revoked for the reasons listed under{" "}
+            <a href="#reseller-codes">Codes sold by authorised resellers</a>.
           </li>
         </ul>
 
@@ -477,8 +482,15 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
             reseller&apos;s refund policy and your rights against the reseller apply.
           </li>
           <li>
-            A refunded code is revoked: it can no longer be redeemed, and if it was already
-            redeemed, the Toone Pro it gave ends.
+            Redeem a code bought from {RESELLER} by {RESELLER_REDEEM_BY}. After that date the code
+            can no longer be redeemed; Toone Pro from a code redeemed by then is not affected.
+          </li>
+          <li>
+            Toone revokes a code bought from an authorised reseller only if the code is refunded or
+            its payment is charged back, if the code was obtained by fraud, or if it was resold
+            against these terms. A revoked code can no longer be redeemed, and if it was already
+            redeemed, the Toone Pro it gave ends. A mistake on Toone&apos;s side is not a reason to
+            revoke a code you paid for.
           </li>
           <li>
             One code per Toone account: codes do not stack. A code cannot be redeemed on an account

@@ -68,7 +68,7 @@ test("the trader identity is filled in: name, trading name, address, email and t
   const resolved = new Set(Object.keys(LEGAL_TRADER).filter((key) => !unresolvedTraderFields().includes(key as never)));
   for (const key of ["fullName", "tradingName", "address", "email", "taxId"]) assert.ok(resolved.has(key), key);
   assert.match(LEGAL_TRADER.fullName.value, /^Matheus Paranhos, sole trader \(empresário em nome individual\)$/);
-  assert.match(LEGAL_TRADER.tradingName.value, /^Toone\b/);
+  assert.equal(LEGAL_TRADER.tradingName.value, "Toone", "the trading name is Toone alone, as on the server's purchase confirmation");
   assert.equal(LEGAL_TRADER.address.value, "R. António Manuel Frutuoso 54, 3700-042 São João da Madeira (Porto Metropolitan Area), Portugal");
   assert.equal(LEGAL_TRADER.taxId.value, "PT308520050");
   assert.deepEqual([LEGAL_TRADER.email.value, LEGAL_TRADER.email.href], ["hello@trytoone.com", "mailto:hello@trytoone.com"]);
@@ -77,7 +77,7 @@ test("the trader identity is filled in: name, trading name, address, email and t
 test("the About page names the same publisher as the trader details", () => {
   const about = read("app/[locale]/about/page.tsx");
   const flat = about.replace(/\s+/g, " ");
-  assert.match(flat, /Toone is an independent product published by Matheus Paranhos, a sole trader \(empresário em nome individual\) in Portugal, trading as Toone under the\{` `\} <a href="https:\/\/www\.hexagonal\.io\/">Hexagonal\.io<\/a> name\./);
+  assert.match(flat, /Toone is an independent product published by Matheus Paranhos, a sole trader \(empresário em nome individual\) in Portugal, trading as Toone, and published under his\{` `\} <a href="https:\/\/www\.hexagonal\.io\/">Hexagonal\.io<\/a> brand\./);
   assert.match(flat, /a macOS app published by Matheus Paranhos, a sole trader in Portugal \(Hexagonal\.io\)/);
   assert.match(flat, /TRADER_DETAILS_COMPLETE \? <a href=\{`\/en\$\{LEGAL_NOTICE_PATH\}`\}>Legal notice<\/a> : <a href="\/en\/terms#toone-pro">Terms<\/a>\}/);
   assert.doesNotMatch(about, /macOS app by Hexagonal\.io, founded by/);

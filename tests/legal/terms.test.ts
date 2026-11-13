@@ -339,12 +339,13 @@ test("the Terms name the trader: sole trader in Portugal, trading as Toone, tax 
     const text = terms(null, traderDetails);
     assert.match(
       text,
-      /Toone and Toone Pro are provided by Matheus Paranhos, a sole trader \(empresário em nome individual\) established in Portugal, trading as Toone \(Hexagonal\.io\), tax and VAT number PT308520050, tax address R\. António Manuel Frutuoso 54, 3700-042 São João da Madeira \(Porto Metropolitan Area\), Portugal\. Contact: hello@trytoone\.com\./,
+      /Toone and Toone Pro are provided by Matheus Paranhos, a sole trader \(empresário em nome individual\) established in Portugal, trading as Toone, tax and VAT number PT308520050, tax address R\. António Manuel Frutuoso 54, 3700-042 São João da Madeira \(Porto Metropolitan Area\), Portugal\. Contact: hello@trytoone\.com\./,
       String(traderDetails),
     );
   }
   assert.match(terms(null, true), /The full trader details are in the Legal notice\./);
   assert.doesNotMatch(content, /under the Hexagonal\.io name|individual trader in Portugal/);
+  assert.doesNotMatch(content, /Hexagonal\.io/, "the trading name is Toone alone; Hexagonal.io is only a brand, on About and Privacy");
 });
 
 test("codes sold by authorised resellers (AppSumo): lifetime for the redeeming account, reseller refunds, revocation, no stacking", () => {
@@ -356,11 +357,15 @@ test("codes sold by authorised resellers (AppSumo): lifetime for the redeeming a
       for (const phrase of [
         // The existing lifetime definition, extended to codes.
         /Toone Pro Lifetime gives the Toone account it is linked to Toone Pro for the life of the product, for as long as Toone \(Direct\) is available\./,
-        /Toone Pro for the life of the product from a code, including a code bought from an authorised reseller \(see Codes sold by authorised resellers\), lasts the same way: for as long as Toone \(Direct\) is available, on the Toone account that redeemed the code\. It does not expire and does not renew\. It ends if the code is refunded or revoked\./,
+        /Toone Pro for the life of the product from a code, including a code bought from an authorised reseller \(see Codes sold by authorised resellers\), lasts the same way: for as long as Toone \(Direct\) is available, on the Toone account that redeemed the code\. It does not expire and does not renew\. It ends only if the code is refunded or its payment is charged back, or if the code is revoked for a reason these terms give\./,
         /Toone also sells codes for Toone Pro through authorised resellers, such as AppSumo\. A code bought from an authorised reseller gives the Toone account that redeems it Toone Pro for the life of the product/,
         /You redeem it on trytoone\.com\/en\/redeem, with your Toone account or by creating a Toone account with the code there\./,
         /The reseller is the seller of the code: you buy it under the reseller's terms, the reseller takes your payment, and the reseller handles refunds of the code within its own refund window \(AppSumo: 60 days\)\./,
-        /A refunded code is revoked: it can no longer be redeemed, and if it was already redeemed, the Toone Pro it gave ends\./,
+        // Revoking a paid code: refund or chargeback, fraud, or resale against the terms only; never Toone's mistake.
+        /Toone revokes a code bought from an authorised reseller only if the code is refunded or its payment is charged back, if the code was obtained by fraud, or if it was resold against these terms\. A revoked code can no longer be redeemed, and if it was already redeemed, the Toone Pro it gave ends\. A mistake on Toone's side is not a reason to revoke a code you paid for\./,
+        /A code bought from an authorised reseller is different: it can only be revoked for the reasons listed under Codes sold by authorised resellers\./,
+        // The redemption deadline of the AppSumo batch.
+        /Redeem a code bought from AppSumo by 13 November 2027\. After that date the code can no longer be redeemed; Toone Pro from a code redeemed by then is not affected\./,
         /One code per Toone account: codes do not stack\./,
         /cannot be redeemed on an account that already has Toone Pro for the life of the product, or while the account has a paid Toone Pro plan, and the code is not used up when it is refused/,
         // The ban on reselling stays for everyone else; the exception is explicit.
