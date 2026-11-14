@@ -7,6 +7,7 @@ import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
 import SignedInLink from "@/components/SignedInLink";
 import PricingLink from "@/components/billing/PricingLink";
+import { LaunchSwitch } from "@/components/launch/LaunchState";
 
 /**
  * Morphing landing header — one element, two states.
@@ -142,14 +143,29 @@ export default function SiteHeader({
           <Link href="/signin">{t("signin")}</Link>
           <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
-          <Link
-            className="dl"
-            href="/request-access"
-            data-umami-event="request-early-access"
-            data-umami-event-placement="header"
-          >
-            {t("download")}
-          </Link>
+          {/* Launch gate (lib/launch.ts): the access request, then the download. */}
+          <LaunchSwitch
+            before={
+              <Link
+                className="dl"
+                href="/request-access"
+                data-umami-event="request-early-access"
+                data-umami-event-placement="header"
+              >
+                {t("download")}
+              </Link>
+            }
+            after={
+              <Link
+                className="dl"
+                href="/download"
+                data-umami-event="download-cta"
+                data-umami-event-placement="header"
+              >
+                {t("downloadLaunched")}
+              </Link>
+            }
+          />
         </nav>
       </header>
     </>

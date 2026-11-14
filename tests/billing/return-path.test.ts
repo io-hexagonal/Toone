@@ -20,6 +20,10 @@ test("the how-to return paths still work", () => {
   assert.equal(signInReturnPath(next("/how-to/features/explore")), "/how-to/features/explore");
 });
 
+test("the downloads grid is a return path from the launch (/download sends sign-up back to it)", () => {
+  assert.equal(signInReturnPath(next("/downloads")), "/downloads");
+});
+
 test("anything else is refused (open-redirect cases)", () => {
   for (const value of [
     "",
@@ -45,7 +49,8 @@ test("anything else is refused (open-redirect cases)", () => {
     "/en/pricing",
     "/success",
     "/cancel",
-    "/downloads",
+    "/downloads/x",
+    "/downloads?next=https://evil.example",
     "javascript:alert(1)//pricing",
   ]) {
     assert.equal(signInReturnPath(next(value)), null, JSON.stringify(value));

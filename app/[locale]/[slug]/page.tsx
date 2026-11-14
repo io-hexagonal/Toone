@@ -39,6 +39,7 @@ async function articleUi(locale: Locale): Promise<ArticleUi> {
     continueTitle: t("continueTitle"),
     continueDescription: t("continueDescription"),
     continueAction: t("continueAction"),
+    continueActionLaunched: t("continueActionLaunched"),
   };
 }
 

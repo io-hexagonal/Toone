@@ -2,6 +2,9 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { ENGLISH_ONLY_PATHS, LOCALE_CHOICE_COOKIE, routing, type Locale } from "./i18n/routing";
 import { TERMS_VERSION_PARAM } from "./lib/legal/terms-versions";
+import { isLaunched } from "./lib/launch";
+import { launchRedirect } from "./lib/launch-routes";
+import { SITE_SESSION_COOKIE } from "./lib/site-session-cookie";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -57,8 +60,43 @@ function perVisitor(response: NextResponse, vary: string) {
   return response;
 }
 
+/** The sitemap listed after the launch (app/sitemap.xml/launched/route.ts). */
+export const LAUNCHED_SITEMAP_PATH = "/sitemap.xml/launched";
+
+/**
+ * Launch gate (lib/launch.ts), evaluated on every request so the switch needs
+ * no deploy: the funnel redirects (lib/launch-routes.ts) and, from the launch
+ * on, the launched sitemap. Each redirect is a temporary 307 that is never
+ * stored, so no browser or shared cache replays a pre-launch answer.
+ * Returns null when the request is not a launch route (or a funnel page
+ * that is served as is).
+ */
+export function launchResponse(req: NextRequest, now: number = Date.now()): NextResponse | null {
+  const { pathname } = req.nextUrl;
+  if (pathname === "/sitemap.xml") {
+    // Served as is before the launch: it is not a page, so it must not reach
+    // the locale handling below.
+    if (!isLaunched(now)) return NextResponse.next();
+    const target = req.nextUrl.clone();
+    target.pathname = LAUNCHED_SITEMAP_PATH;
+    return NextResponse.rewrite(target);
+  }
+  const answer = launchRedirect(pathname, req.nextUrl.searchParams, {
+    now,
+    signedIn: Boolean(req.cookies.get(SITE_SESSION_COOKIE)?.value),
+  });
+  if (!answer) return null;
+  const response = NextResponse.redirect(new URL(answer.location, req.url), 307);
+  response.headers.set("Cache-Control", "private, no-store");
+  if (answer.varyOnCookie) response.headers.set("Vary", "Cookie");
+  return response;
+}
+
 export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const launch = launchResponse(req);
+  if (launch) return launch;
 
   if (pathname === "/" && PREVIEW_BOTS.test(req.headers.get("user-agent") ?? "")) {
     return NextResponse.rewrite(new URL("/en", req.url));
@@ -179,5 +217,7 @@ export default function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|assets|.*\\..*).*)"],
+  // `/sitemap.xml` has a dot, so the general rule skips it; the launch gate
+  // above needs it.
+  matcher: ["/((?!api|_next|assets|.*\\..*).*)", "/sitemap.xml"],
 };

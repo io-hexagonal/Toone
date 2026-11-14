@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { syncSiteSession } from "@/lib/api";
+import { useLaunched } from "@/components/launch/LaunchState";
 import styles from "./HowToSignInGate.module.css";
 
 /**
@@ -18,6 +19,7 @@ export default function HowToSessionGate({ path }: { path: string }) {
   const router = useRouter();
   const { session, ready, endSession } = useStoredSession();
   const [syncFailed, setSyncFailed] = useState(false);
+  const launched = useLaunched();
 
   useEffect(() => {
     if (!ready || !session || syncFailed) return;
@@ -56,9 +58,16 @@ export default function HowToSessionGate({ path }: { path: string }) {
         <Link className={styles.primary} href={`/signin?next=${encodeURIComponent(path)}`}>
           Sign in
         </Link>
-        <Link className={styles.secondary} href="/request-access">
-          Request access
-        </Link>
+        {/* Launch gate (lib/launch.ts): the access request, then open sign-up back to this guide. */}
+        {launched ? (
+          <Link className={styles.secondary} href={`/signup?next=${encodeURIComponent(path)}`} data-umami-event="signup-cta" data-umami-event-placement="how-to">
+            Create a free account
+          </Link>
+        ) : (
+          <Link className={styles.secondary} href="/request-access">
+            Request access
+          </Link>
+        )}
       </div>
     </div>
   );

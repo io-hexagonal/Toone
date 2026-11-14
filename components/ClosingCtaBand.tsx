@@ -1,10 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 
 /**
- * Closing ask before the FAQ: one sentence and the early-access pill. Same
- * destination and analytics event as the header's "Request Early Access"
- * (/request-access), so there is still only one request form.
+ * Closing ask before the FAQ: one sentence and one pill, with the same
+ * destination and analytics event as the header's call to action: the access
+ * request before the launch (/request-access), the download after it
+ * (/download, lib/launch.ts).
  */
 export default async function ClosingCtaBand() {
   const t = await getTranslations("landing.closing");
@@ -42,14 +44,28 @@ export default async function ClosingCtaBand() {
       />
       <div className="cta-band-inner">
         <h2 id="cta-band-title">{t("title")}</h2>
-        <Link
-          className="pill"
-          href="/request-access"
-          data-umami-event="request-early-access"
-          data-umami-event-placement="closing-band"
-        >
-          {nav("download")}
-        </Link>
+        <LaunchGate
+          before={
+            <Link
+              className="pill"
+              href="/request-access"
+              data-umami-event="request-early-access"
+              data-umami-event-placement="closing-band"
+            >
+              {nav("download")}
+            </Link>
+          }
+          after={
+            <Link
+              className="pill"
+              href="/download"
+              data-umami-event="download-cta"
+              data-umami-event-placement="closing-band"
+            >
+              {nav("downloadLaunched")}
+            </Link>
+          }
+        />
       </div>
     </section>
   );

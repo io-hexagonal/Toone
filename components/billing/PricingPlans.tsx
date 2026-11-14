@@ -16,6 +16,7 @@ import {
   type ProPlanId,
 } from "@/lib/billing/api";
 import CheckoutButton from "./CheckoutButton";
+import { useLaunched } from "@/components/launch/LaunchState";
 import {
   FROM_APP_STORAGE_KEY,
   PAYMENT_PENDING_RECHECKS,
@@ -64,6 +65,7 @@ export default function PricingPlans({
   const t = useTranslations("billing.pricing");
   const locale = useLocale();
   const { session, ready, endSession } = useStoredSession();
+  const launched = useLaunched();
   const [selected, setSelected] = useState<ProPlanId | null>(null);
   const [fromApp, setFromApp] = useState(false);
   const [cancelled, setCancelled] = useState(false);
@@ -269,6 +271,14 @@ export default function PricingPlans({
               {owned === "web_subscription" && <p className="pricing-muted">{t("upgradeLifetime")}</p>}
               {!owned && hasTemporaryPro(current) && <p className="pricing-muted">{t("temporaryPro")}</p>}
             </>
+          ) : launched ? (
+            // Launch gate (lib/launch.ts): open sign-up, back here to buy.
+            <p>
+              {t("signupLine", { free: freeCreations })}{" "}
+              <Link className="pricing-link" href="/signup?next=/pricing" data-umami-event="signup-cta" data-umami-event-placement="pricing">
+                {t("signupLink")}
+              </Link>
+            </p>
           ) : (
             <p>
               {t("inviteOnly")}{" "}

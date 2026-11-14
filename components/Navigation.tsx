@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import LocalePicker from "@/components/LocalePicker";
 import SignedInLink from "@/components/SignedInLink";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 
 type Props = {
   homePath?: "/" | "/business";
@@ -85,7 +86,11 @@ export default async function Navigation({
         <SignedInLink href="/how-to" className="minimal-link">
           {t("howTo")}
         </SignedInLink>
-        <Link href="/request-access" className="minimal-link">{t("download")}</Link>
+        {/* Launch gate (lib/launch.ts): the access request, then the download. */}
+        <LaunchGate
+          before={<Link href="/request-access" className="minimal-link" data-umami-event="request-early-access" data-umami-event-placement="nav">{t("download")}</Link>}
+          after={<Link href="/download" className="minimal-link" data-umami-event="download-cta" data-umami-event-placement="nav">{t("downloadLaunched")}</Link>}
+        />
         <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
           <LocalePicker />
         </span>

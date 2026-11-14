@@ -28,6 +28,11 @@ export function activeAnnouncement(list: Announcement[], now: number, pathname: 
   }) ?? null;
 }
 
+/** A scheduled announcement by id, whatever its window, for `?preview-campaign=`. */
+export function previewAnnouncement(list: Announcement[], id: string): Announcement | null {
+  return list.find(item => item.id === id) ?? null;
+}
+
 function dismissalKey(item: Pick<Announcement, "id" | "version">) {
   return `${STORAGE_PREFIX}${item.id}.v${item.version}`;
 }

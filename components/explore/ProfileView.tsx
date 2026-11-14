@@ -13,6 +13,7 @@ import {
   categoryHref,
   deepLink,
   requestAccessHref,
+  downloadHref,
 } from "@/lib/explore/presentation";
 import type {
   BundlePublicDetail,
@@ -22,6 +23,7 @@ import type {
   ThirdPartyAction,
 } from "@/lib/explore/types";
 import OpenInToone from "./OpenInToone";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 import EditListingLink from "./EditListingLink";
 import {
   Author,
@@ -98,14 +100,29 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
                 locale={locale}
                 item={`${type}:${id}`}
               />
-              <a
-                className="explore-button explore-button-secondary"
-                href={requestAccessHref(locale, `${type}:${id}`)}
-                data-umami-event="explore-request-access"
-                data-umami-event-item={`${type}:${id}`}
-              >
-                {ui.getToone}
-              </a>
+              {/* Launch gate (lib/launch.ts): the access request, then the download. */}
+              <LaunchGate
+                before={
+                  <a
+                    className="explore-button explore-button-secondary"
+                    href={requestAccessHref(locale, `${type}:${id}`)}
+                    data-umami-event="explore-request-access"
+                    data-umami-event-item={`${type}:${id}`}
+                  >
+                    {ui.getToone}
+                  </a>
+                }
+                after={
+                  <a
+                    className="explore-button explore-button-secondary"
+                    href={downloadHref(locale, `${type}:${id}`)}
+                    data-umami-event="explore-download"
+                    data-umami-event-item={`${type}:${id}`}
+                  >
+                    {ui.getTooneLaunched}
+                  </a>
+                }
+              />
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
             <p className="explore-howto">

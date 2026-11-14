@@ -13,6 +13,8 @@ import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 import PrivacyChoices from "@/components/PrivacyChoices";
 import LocaleSuggestion from "@/components/LocaleSuggestion";
 import { accountShellMessages } from "@/components/account/AccountMessages";
+import { LaunchProvider } from "@/components/launch/LaunchState";
+import { LAUNCH_MARKER_SCRIPT, isLaunched } from "@/lib/launch";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
 export const viewport: Viewport = {
@@ -251,8 +253,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   };
 
   return (
-    <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable}`}>
+    // suppressHydrationWarning: the launch marker script may add
+    // `data-launched` to <html> before hydration (lib/launch.ts).
+    <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable}`} suppressHydrationWarning>
       <head>
+        {/* Launch gate: runs before first paint, see components/launch/LaunchState.tsx. */}
+        <script dangerouslySetInnerHTML={{ __html: LAUNCH_MARKER_SCRIPT }} />
         {/* No hreflang (TECH-021): English is the only indexed locale. The
             language links read each page's versions from the metadata API
             (`localeVersions`, i18n/indexing.ts) instead. */}
@@ -273,10 +279,14 @@ export default async function LocaleLayout({ children, params }: Props) {
         }}
       >
         <NextIntlClientProvider messages={clientMessages}>
-          {children}
-          <AnnouncementModal />
-          <PrivacyChoices />
-          <LocaleSuggestion />
+          {/* The launch state this HTML is rendered with; client components
+              hydrate with it, then follow the clock. */}
+          <LaunchProvider launched={isLaunched()}>
+            {children}
+            <AnnouncementModal />
+            <PrivacyChoices />
+            <LocaleSuggestion />
+          </LaunchProvider>
         </NextIntlClientProvider>
       </body>
     </html>
