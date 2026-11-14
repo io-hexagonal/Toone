@@ -232,6 +232,46 @@ export async function signupInvitation(email: string, password: string, name: st
  return session;
 }
 
+/* ---- open sign-up (from the launch, lib/launch.ts) */
+
+/**
+ * Whether the API offers verified email sign-up (`features.verified_email_signup`
+ * on the public `GET /capabilities`). Any failure reads as "no".
+ */
+export async function verifiedEmailSignupAvailable(): Promise<boolean> {
+  try {
+    const caps = await request<{ features?: Record<string, unknown> }>("/capabilities", { cache: "no-store" });
+    return caps?.features?.verified_email_signup === true;
+  } catch {
+    return false;
+  }
+}
+
+/** Step 1 of verified email sign-up: emails a 6-digit code (202 for every valid address). */
+export async function requestEmailSignupCode(email: string): Promise<void> {
+  await request<unknown>("/auth/email/signup/code", { ...jsonPost({ email }), cache: "no-store" });
+}
+
+/** Step 2: redeems the code and creates the account. */
+export async function verifyEmailSignup(email: string, code: string, password: string): Promise<ToneSession> {
+  const raw = await request<RawAuthPayload>("/auth/email/signup/verify", { ...jsonPost({ email, code, password }), cache: "no-store" });
+  const session = normalizeSession(raw);
+  saveSession(session);
+  return session;
+}
+
+/**
+ * One-step email sign-up (`POST /auth/email/signup`). The server keeps it
+ * closed (403 `forbidden`) unless its operator enables it; the page then
+ * offers Google and Apple instead.
+ */
+export async function signupEmail(email: string, password: string): Promise<ToneSession> {
+  const raw = await request<RawAuthPayload>("/auth/email/signup", jsonPost({ email, password }));
+  const session = normalizeSession(raw);
+  saveSession(session);
+  return session;
+}
+
 type RawDesktopDownload = { URL: string; ExpiresAt: string };
 
 /**

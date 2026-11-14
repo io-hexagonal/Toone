@@ -27,7 +27,7 @@ test("every new page is noindex, nofollow and sends no referrer", () => {
 });
 
 test("none of the new pages is in a sitemap", () => {
-  const sitemap = read("app/sitemap.xml/route.ts");
+  const sitemap = read("lib/site-sitemap.ts");
   for (const route of ["/account", "/redeem", "/cancel-contract", "/admin"]) assert.ok(!sitemap.includes(`"${route}"`), route);
 });
 

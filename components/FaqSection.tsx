@@ -1,13 +1,23 @@
 import { getTranslations } from "next-intl/server";
 import { TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
+import { isLaunched } from "@/lib/launch";
+
+/** Entries whose copy describes the invitation funnel get a launched variant. */
+const LAUNCHED_VARIANTS: ReadonlySet<string> = new Set(["6", "8"]);
 
 /**
  * Landing FAQ — native <details> accordion, styled to sit with the pillars.
  * Server-rendered; no client JS beyond the browser's own disclosure widget.
+ * Only the landing pages render it, and they render on request until a
+ * deployment is built after the launch (app/[locale]/page.tsx), so the
+ * render-time launch state (lib/launch.ts) is the visitor's.
  */
 export default async function FaqSection() {
   const t = await getTranslations("faq");
   const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
+  const launched = isLaunched();
+  const key = (kind: "q" | "a", i: string) =>
+    launched && LAUNCHED_VARIANTS.has(i) ? `${kind}${i}Launched` : `${kind}${i}`;
 
   return (
     <>
@@ -46,8 +56,8 @@ export default async function FaqSection() {
         <div className="faq-list">
           {items.map((i) => (
             <details key={i}>
-              <summary>{t(`q${i}`)}</summary>
-              <p>{t(`a${i}`, { free: TOONE_PRO_FREE_ROUTINE_CREATIONS })}</p>
+              <summary>{t(key("q", i))}</summary>
+              <p>{t(key("a", i), { free: TOONE_PRO_FREE_ROUTINE_CREATIONS })}</p>
             </details>
           ))}
         </div>

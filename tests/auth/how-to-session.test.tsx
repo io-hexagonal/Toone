@@ -69,8 +69,10 @@ test("sign-out clears the cookie", async () => {
 test("after sign-in, only a /how-to path is a return target", () => {
   assert.equal(signInReturnPath("?next=%2Fhow-to"), "/how-to");
   assert.equal(signInReturnPath("?next=%2Fhow-to%2Ffeatures%2Fexplore"), "/how-to/features/explore");
+  // From the launch, /download sends signed-out visitors through sign-up back to the grid.
+  assert.equal(signInReturnPath("?next=%2Fdownloads"), "/downloads");
   for (const search of ["", "?next=", "?next=https%3A%2F%2Fevil.example", "?next=%2F%2Fevil.example",
-    "?next=%2Fdownloads", "?next=%2Fhow-to%2F..%2Fadmin", "?next=%2Fhow-tox"]) {
+    "?next=%2Fdownloads%2Fx", "?next=%2Fdownloads%3Fv%3D1", "?next=%2Fhow-to%2F..%2Fadmin", "?next=%2Fhow-tox"]) {
     assert.equal(signInReturnPath(search), null, search);
   }
 });

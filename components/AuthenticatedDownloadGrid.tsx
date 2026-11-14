@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AppleLogo from "@/components/AppleLogo";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
+import { useLaunched } from "@/components/launch/LaunchState";
 import {
   ApiError,
   clearSession,
@@ -33,6 +34,7 @@ type Copy = {
 
 export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
   const auth = useTranslations("auth");
+  const launched = useLaunched();
   const [session, setSession] = useState<ToneSession | null>(null);
   const [downloading, setDownloading] = useState<Variant | null>(null);
   const [downloadError, setDownloadError] = useState(false);
@@ -114,6 +116,22 @@ export default function AuthenticatedDownloadGrid({ copy }: { copy: Copy }) {
     return (
       <div className="download-access">
         <p role="alert">{auth("errGeneric")}</p>
+      </div>
+    );
+  }
+
+  if (!session && launched) {
+    // Launch gate (lib/launch.ts): open sign-up, and back here afterwards.
+    return (
+      <div className="download-access">
+        <h2>{auth("downloadAccessTitle")}</h2>
+        <p>{auth("downloadAccessSub")}</p>
+        <Link className="download-button" href="/signup?next=/downloads" data-umami-event="signup-cta" data-umami-event-placement="downloads">
+          {auth("createAccount")}
+        </Link>
+        <Link className="download-waitlist-link" href="/signin?next=/downloads">
+          {auth("haveAccount")} {auth("signinLink")}
+        </Link>
       </div>
     );
   }

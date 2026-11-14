@@ -25,7 +25,7 @@ test("the legal notice page exists, is English only and indexable in English", (
 
 test("the legal notice is in the footer and the sitemap only once the trader details are complete", async () => {
   assert.match(read("components/Footer.tsx"), /\{TRADER_DETAILS_COMPLETE && <Link href="\/legal-notice">Legal notice<\/Link>\}/);
-  const sitemap = read("app/sitemap.xml/route.ts");
+  const sitemap = read("lib/site-sitemap.ts");
   assert.match(sitemap, /LEGAL_NOTICE_ROUTE = \{ path: "\/legal-notice", source: "app\/\[locale\]\/legal-notice\/page\.tsx" \}/);
   assert.match(sitemap, /\.\.\.\(TRADER_DETAILS_COMPLETE \? \[LEGAL_NOTICE_ROUTE\] : \[\]\)/);
   const xml = await (await siteSitemap()).text();

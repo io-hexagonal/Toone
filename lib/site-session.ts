@@ -13,7 +13,8 @@ import { apiBase } from "@/lib/api";
  * (`GET /me`) on every request, so a revoked or expired session stops working
  * at once and signed-out visitors and crawlers never receive the content.
  */
-export const SITE_SESSION_COOKIE = "toone_site_session";
+export { SITE_SESSION_COOKIE } from "./site-session-cookie";
+import { SITE_SESSION_COOKIE } from "./site-session-cookie";
 
 /** Whether `token` is a live session according to the Toone API. Fails closed. */
 export async function isLiveSessionToken(token: string): Promise<boolean> {

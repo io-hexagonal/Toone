@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 import {
   getTableOfContents,
   headingId,
@@ -23,6 +24,8 @@ export type ArticleUi = {
   continueTitle: string;
   continueDescription: string;
   continueAction: string;
+  /** From the launch (lib/launch.ts): the closing link goes to /download with this label. */
+  continueActionLaunched?: string;
 };
 
 function localizedHref(href: string, locale: Locale): string {
@@ -253,7 +256,18 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
             <aside className="article-close">
               <h2>{ui.continueTitle}</h2>
               <p>{ui.continueDescription}</p>
-              <Link href="/how-to">{ui.continueAction}</Link>
+              {ui.continueActionLaunched ? (
+                <LaunchGate
+                  before={<Link href="/how-to">{ui.continueAction}</Link>}
+                  after={
+                    <Link href="/download" data-umami-event="download-cta" data-umami-event-placement="article">
+                      {ui.continueActionLaunched}
+                    </Link>
+                  }
+                />
+              ) : (
+                <Link href="/how-to">{ui.continueAction}</Link>
+              )}
             </aside>
           </article>
           <aside className="article-toc" aria-label={ui.onThisPage}>

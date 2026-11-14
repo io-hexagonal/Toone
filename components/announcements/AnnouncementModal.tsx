@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { announcements, type AnnouncementContent } from "@/content/announcements";
 import { explorePrereleaseContent } from "@/content/announcements/explore-prerelease";
-import { activeAnnouncement, isMacDesktop, rememberDismissal, track, wasDismissed } from "@/lib/announcements";
+import { activeAnnouncement, isMacDesktop, previewAnnouncement, rememberDismissal, track, wasDismissed } from "@/lib/announcements";
 import { PRIVACY_CHOICE_SAVED_EVENT, savedPrivacyChoice } from "@/lib/privacy-choices";
 import AccessCodeCard from "./AccessCodeCard";
+import LaunchCard from "./LaunchCard";
 import ShowcaseCard from "./ShowcaseCard";
 
 export type Platform = "mac" | "other";
@@ -22,6 +23,7 @@ export type CardProps<A extends AnnouncementContent = AnnouncementContent> = {
 
 const cards: { [K in AnnouncementContent["kind"]]: ComponentType<CardProps<Extract<AnnouncementContent, { kind: K }>>> } = {
   "access-code": AccessCodeCard,
+  launch: LaunchCard,
 };
 
 type ShownAnnouncement = Omit<CardProps, "close"> & { preview: boolean };
@@ -29,7 +31,10 @@ type ShownAnnouncement = Omit<CardProps, "close"> & { preview: boolean };
 /**
  * Campaign scheduling and dismissal stay independent from panel navigation.
  * ?preview-announcement=mac (or other) previews the active campaign.
- * In development, add &preview-campaign=explore-prerelease to preview its
+ * Add &preview-campaign=<id> to preview a scheduled campaign outside its
+ * window (e.g. `public-launch-2026-11` before the launch); a preview is never
+ * tracked or remembered as dismissed.
+ * In development, &preview-campaign=explore-prerelease previews its
  * unscheduled content without inventing a deadline or enabling it publicly.
  */
 export default function AnnouncementModal() {
@@ -51,9 +56,11 @@ export default function AnnouncementModal() {
     const params = new URLSearchParams(window.location.search);
     const variant = params.get("preview-announcement");
     const preview = variant === "mac" || variant === "other";
-    const draft = process.env.NODE_ENV === "development" && preview && params.get("preview-campaign") === "explore-prerelease"
+    const campaign = preview ? params.get("preview-campaign") : null;
+    const draft = process.env.NODE_ENV === "development" && campaign === "explore-prerelease"
       ? explorePrereleaseContent : null;
-    const active = draft ?? activeAnnouncement(announcements, Date.now(), pathname);
+    const scheduled = campaign ? previewAnnouncement(announcements, campaign) : null;
+    const active = draft ?? scheduled ?? activeAnnouncement(announcements, Date.now(), pathname);
     if (!active || (wasDismissed(active) && !preview)) return;
     const platform: Platform = preview ? variant : isMacDesktop() ? "mac" : "other";
     const timer = window.setTimeout(() => {
@@ -99,7 +106,8 @@ export function AnnouncementDialog({ announcement, platform, close, endsAt }: Ca
   const introduction = platform === "mac" ? announcement.mac : announcement.otherPlatforms;
   const labels = [introduction.title, ...panels.map(item => item.title)];
   const rotating = multiple && playing && !hovered && visible && !reducedMotion;
-  const Card = cards[announcement.kind];
+  // Each kind's card only ever receives its own kind (the map is keyed by it).
+  const Card = cards[announcement.kind] as ComponentType<CardProps>;
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -395,6 +403,7 @@ const styles = `
   .an-secondary {
     border: none; background: transparent; cursor: pointer; padding: 8px 4px;
     color: rgba(255,255,255,0.55); font-size: 13.5px; font-family: inherit;
+    text-decoration: none;
   }
   .an-secondary:hover { color: rgba(255,255,255,0.9); }
   @media (max-width: 720px) {

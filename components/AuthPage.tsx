@@ -15,14 +15,19 @@ import {
   loginApple,
   loginGoogle,
   logout,
+  requestEmailSignupCode,
+  signupEmail,
   signupInvitation,
   syncSiteSession,
+  verifiedEmailSignupAvailable,
+  verifyEmailSignup,
   type InvitationPreview,
   type ToneSession,
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
 import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
 import { benefitCopy, codeCampaign } from "@/components/account/redeem-code";
+import { LaunchSwitch } from "@/components/launch/LaunchState";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
 const GSI_SCRIPT_ID = "google-gsi-client";
@@ -63,7 +68,11 @@ function track(event: string) {
   );
 }
 
-type Mode = "signin" | "invite";
+/**
+ * "signup" is open sign-up (no code), served at /signup from the launch
+ * (lib/launch.ts). Code holders keep using "invite" (/early-access).
+ */
+type Mode = "signin" | "invite" | "signup";
 
 /** Which identity provider a submission came from, for provider-specific errors. */
 type Via = "google" | "apple";
@@ -90,11 +99,21 @@ const SIGN_IN_RETURN_PATHS: readonly RegExp[] = [
   // signed-in account pages
   /^\/account\/?$/,
   /^\/redeem\/?$/,
+  // the downloads grid (/download sends signed-out visitors through sign-up to it)
+  /^\/downloads\/?$/,
 ];
+
+/** Where open sign-up leads when the link names no other listed page. */
+const SIGNUP_DEFAULT_RETURN = "/downloads";
 
 export function signInReturnPath(search: string): string | null {
   const next = new URLSearchParams(search).get("next");
   return next && SIGN_IN_RETURN_PATHS.some((pattern) => pattern.test(next)) ? next : null;
+}
+
+/** `path` carrying a listed `?next=` return path along, when there is one. */
+function withNext(path: string, next: string | null): string {
+  return next ? `${path}?next=${encodeURIComponent(next)}` : path;
 }
 
 /** How a sign-up with a code (invite mode) went, for a page that hosts it (the redeem page). */
@@ -138,7 +157,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   const [code, setCode] = useState("");
   // Invite mode asks for the code first and only reveals the account form once
   // the server confirms it is still redeemable.
-  const [step, setStep] = useState<"code" | "account" | "handle">(mode === "invite" ? "code" : "account");
+  // Open sign-up with a verified address adds a "verify" step for the emailed code.
+  const [step, setStep] = useState<"code" | "account" | "handle" | "verify">(mode === "invite" ? "code" : "account");
+  // Open sign-up: whether the API proves the address with an emailed code first.
+  const verifiedSignupRef = useRef(false);
+  const [signupCode, setSignupCode] = useState("");
+  // `?next=` of this page, kept for the links to the other auth page (read after mount).
+  const [returnPath, setReturnPath] = useState<string | null>(null);
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
   // What a code with a benefit adds to the new account (Pro days, Pro for good, extra creations).
   const [benefit, setBenefit] = useState<CodeBenefit | null>(null);
@@ -172,6 +197,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           if (via === "apple") return t("errExistsApple");
           return t("errExists");
         case "unauthorized":
+          // Open sign-up's second step: the emailed code did not match.
+          if (mode === "signup" && step === "verify" && !via) return t("signupCodeWrong");
           return t("errInvalid");
         case "invalid_input":
           return t("errInvalidInput");
@@ -181,7 +208,12 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           // A personal invitation is bound to one address; Hide My Email never matches it.
           return via === "apple" ? t("errInvitationApple") : t("errInvitation");
         case "registration_closed":
+          // Unreachable from the launch (the API registers openly), kept as the fallback.
           return t("errRegistrationClosed");
+        case "forbidden":
+        case "service_unavailable":
+          if (mode === "signup" && !via) return t("errEmailSignupUnavailable");
+          break;
       }
     }
     return t("errGeneric");
@@ -210,11 +242,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       onAuthenticated?.(s);
       track(event);
       if (mode === "invite") setStep("handle");
-      const returnPath = mode === "signin" ? signInReturnPath(window.location.search) : null;
-      if (returnPath) {
+      const next = mode === "signin" ? signInReturnPath(window.location.search)
+        : mode === "signup" ? signInReturnPath(window.location.search) ?? SIGNUP_DEFAULT_RETURN
+        : null;
+      if (next) {
         // The guide checks the server-side cookie: set it before going back.
         await syncSiteSession(s);
-        router.replace(returnPath);
+        router.replace(next);
       }
     } catch (e) {
       setError(friendlyError(e, via));
@@ -287,7 +321,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
     const invitationCode = mode === "invite" ? codeRef.current.trim() : undefined;
     void finish(
       loginApple(credential.idToken, credential.name, invitationCode),
-      mode === "invite" ? "auth-invitation-apple" : "auth-apple",
+      mode === "invite" ? "auth-invitation-apple" : mode === "signup" ? "auth-signup-apple" : "auth-apple",
       "apple",
     );
   }
@@ -303,6 +337,36 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
     if (token) await logout(token); // clears localStorage even if the POST fails
   }
 
+  /**
+   * Open sign-up by email. With verified sign-up on the API, the first submit
+   * emails a code and the second creates the account; otherwise one call
+   * creates it (or the API answers that email sign-up is closed).
+   */
+  async function submitSignup() {
+    if (step === "verify") {
+      await finish(verifyEmailSignup(email, signupCode.trim(), password), "auth-signup-email");
+      return;
+    }
+    if (!verifiedSignupRef.current) {
+      await finish(signupEmail(email, password), "auth-signup-email");
+      return;
+    }
+    busyRef.current = true;
+    setLoading(true);
+    setError(null);
+    try {
+      await requestEmailSignupCode(email);
+      setSignupCode("");
+      setStep("verify");
+      track("auth-signup-code-sent");
+    } catch (e) {
+      setError(friendlyError(e));
+    } finally {
+      busyRef.current = false;
+      setLoading(false);
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (busyRef.current) return;
@@ -313,8 +377,12 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
     // The server enforces password bounds in BYTES (bcrypt's 72-byte limit),
     // so measure UTF-8 bytes, not UTF-16 units. maxLength stays as a soft cap.
     const passwordBytes = new TextEncoder().encode(password).length;
-    if (mode === "invite" && (passwordBytes < 8 || passwordBytes > 72)) {
+    if (mode !== "signin" && (passwordBytes < 8 || passwordBytes > 72)) {
       setError(t("errPasswordLength"));
+      return;
+    }
+    if (mode === "signup") {
+      await submitSignup();
       return;
     }
     if (mode === "invite") {
@@ -343,7 +411,19 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   // Consume a persisted session: a returning signed-in visitor sees the
   // success panel instead of a blank form. loadSession() drops expired ones.
   useEffect(() => {
+    setReturnPath(signInReturnPath(window.location.search));
+    if (mode === "signup") void verifiedEmailSignupAvailable().then((on) => { verifiedSignupRef.current = on; });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
+
+  useEffect(() => {
     const s = loadSession();
+    if (s && mode === "signup") {
+      // Already signed in (for example /download without the site cookie):
+      // straight on to where sign-up would have led.
+      router.replace(signInReturnPath(window.location.search) ?? SIGNUP_DEFAULT_RETURN);
+      return;
+    }
     if (s) {
       setSession(s);
       onAuthenticated?.(s);
@@ -384,7 +464,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
             const invitationCode = mode === "invite" ? codeRef.current.trim() : undefined;
             void finish(
               loginGoogle(response.credential, invitationCode),
-              mode === "invite" ? "auth-invitation-google" : "auth-google",
+              mode === "invite" ? "auth-invitation-google" : mode === "signup" ? "auth-signup-google" : "auth-google",
               "google",
             );
           },
@@ -394,7 +474,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           theme: "filled_black",
           size: "large",
           shape: "rectangular",
-          text: "signin_with",
+          text: mode === "signup" ? "signup_with" : "signin_with",
           logo_alignment: "left",
           width: Math.min(356, Math.max(200, parent.clientWidth || 356)),
         });
@@ -629,7 +709,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   : isAppSumoCode
                     ? t("appsumoAccountTitle")
                     : t("inviteAccountTitle")
-            : t("signinTitle")}
+            : mode === "signup"
+              ? t("signupTitle")
+              : t("signinTitle")}
         </h1>
         <p className="auth-sub">
           {mode === "invite"
@@ -644,7 +726,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : preview?.shared && preview.label
                     ? t("inviteAccountSubLabel", { label: preview.label })
                     : t("inviteAccountSub")
-            : t("signinSub")}
+            : mode === "signup"
+              ? step === "verify" ? t("signupCodeSent", { email }) : t("signupSub")
+              : t("signinSub")}
         </p>
         {mode === "invite" && step === "account" && benefit && (() => {
           const copy = benefitCopy(benefit);
@@ -760,8 +844,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
               <AppleSignInButton
                 config={appleConfig}
                 locale={locale}
-                label={mode === "invite" ? t("appleContinue") : t("appleSignIn")}
-                buttonType={mode === "invite" ? "continue" : "sign-in"}
+                label={mode === "signin" ? t("appleSignIn") : t("appleContinue")}
+                buttonType={mode === "signin" ? "sign-in" : "continue"}
                 unavailableLabel={t("appleUnavailable")}
                 disabled={loading}
                 onCredential={signInWithApple}
@@ -779,6 +863,10 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   aria-label={t("inviteCode")} placeholder={t("inviteCode")}
                   value={code} onChange={(event) => setCode(event.target.value)}
                   autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required autoFocus />}
+                {mode === "signup" && step === "verify" && <input className="auth-input" type="text"
+                  aria-label={t("signupCodePh")} placeholder={t("signupCodePh")}
+                  value={signupCode} onChange={(event) => setSignupCode(event.target.value)}
+                  inputMode="numeric" autoComplete="one-time-code" maxLength={6} required autoFocus />}
                 {step === "account" && <input
                   className="auth-input"
                   type="email"
@@ -794,13 +882,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   type="password"
                   aria-label={t("passwordPh")}
                   autoComplete={
-                    mode === "invite" ? "new-password" : "current-password"
+                    mode === "signin" ? "current-password" : "new-password"
                   }
                   placeholder={t("passwordPh")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={mode === "invite" ? 8 : undefined}
+                  minLength={mode === "signin" ? undefined : 8}
                   maxLength={72}
                 />}
                 <button className="auth-submit" type="submit" disabled={loading}>
@@ -808,7 +896,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     ? "…"
                     : mode === "invite"
                       ? step === "code" ? t("inviteCodeContinue") : t("signupBtn")
-                      : t("signinBtn")}
+                      : mode === "signup"
+                        ? step === "verify" ? t("signupCodeBtn") : t("signupBtn")
+                        : t("signinBtn")}
                 </button>
               </form>
 
@@ -817,6 +907,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 <div style={{ textAlign: "center" }}>
                   <button className="auth-signout" type="button" onClick={changeCode} style={{ marginTop: 4 }}>
                     {t("inviteChangeCode")}
+                  </button>
+                </div>
+              )}
+              {mode === "signup" && step === "verify" && (
+                <div style={{ textAlign: "center" }}>
+                  <button className="auth-signout" type="button" onClick={() => { setError(null); setStep("account"); }} style={{ marginTop: 4 }}>
+                    {t("signupChangeEmail")}
                   </button>
                 </div>
               )}
@@ -838,18 +935,34 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   <button type="button" onClick={onSwitchMode}>{t("redeemCreateAccount")}</button>
                 </>
               )
+            ) : mode === "signup" ? (
+              <>
+                {t("haveAccount")} <Link href={withNext("/signin", returnPath)}>{t("signinLink")}</Link>
+                <br />
+                {t("signupHaveCode")} <Link href="/early-access">{t("signupUseCode")}</Link>
+              </>
             ) : mode === "invite" ? (
               <>
                 {step === "code" && (
                   <>
                     {t("noCode")}{" "}
-                    <Link
-                      href="/request-access"
-                      data-umami-event="request-early-access"
-                      data-umami-event-placement="invite"
-                    >
-                      {t("requestAccess")}
-                    </Link>
+                    {/* Launch gate (lib/launch.ts): the access request, then open sign-up. */}
+                    <LaunchSwitch
+                      before={
+                        <Link
+                          href="/request-access"
+                          data-umami-event="request-early-access"
+                          data-umami-event-placement="invite"
+                        >
+                          {t("requestAccess")}
+                        </Link>
+                      }
+                      after={
+                        <Link href="/signup" data-umami-event="signup-cta" data-umami-event-placement="invite">
+                          {t("createAccount")}
+                        </Link>
+                      }
+                    />
                     <br />
                   </>
                 )}
@@ -857,7 +970,15 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
               </>
             ) : (
               <>
-                {t("newHere")} <Link href="/request-access">{t("requestAccess")}</Link>
+                {t("newHere")}{" "}
+                <LaunchSwitch
+                  before={<Link href="/request-access">{t("requestAccess")}</Link>}
+                  after={
+                    <Link href={withNext("/signup", returnPath)} data-umami-event="signup-cta" data-umami-event-placement="signin">
+                      {t("createAccount")}
+                    </Link>
+                  }
+                />
               </>
             )}
           </p>

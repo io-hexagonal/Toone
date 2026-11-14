@@ -81,8 +81,37 @@ export type AccessCodeAnnouncement = AnnouncementBase & {
   otherPlatforms: Copy & { ctaLabel: string; dismissLabel?: string };
 };
 
+/** A link out of the card; `external` opens in a new tab. */
+type CardLink = { label: string; /** Locale-relative path, or an absolute URL when `external`. */ href: string; external?: boolean };
+
+/**
+ * A public launch. Mac visitors get the download button, a shareable offer
+ * code with its terms in plain words, and a secondary link (e.g. Product
+ * Hunt). Everyone else is told the app is for Mac and gets the same link,
+ * since there is no build of theirs to download.
+ *
+ * Its own kind because the access-code card cannot express it: that card's
+ * button redeems the code through the invite flow and its non-Mac action is
+ * the early-access waitlist, which no longer exists after the launch.
+ */
+export type LaunchAnnouncement = AnnouncementBase & {
+  kind: "launch";
+  mac: Copy & {
+    cta: CardLink;
+    offer?: { label: string; code: string; terms: string };
+    link?: CardLink;
+    dismissLabel?: string;
+  };
+  otherPlatforms: Copy & {
+    link: CardLink;
+    dismissLabel?: string;
+  };
+};
+
 /** Add new card kinds here as a union member, with a component in components/announcements. */
-export type Announcement = AccessCodeAnnouncement;
+export type Announcement = AccessCodeAnnouncement | LaunchAnnouncement;
+
+type Unscheduled<T> = T extends unknown ? Omit<T, "startsAt" | "endsAt"> : never;
 
 /** Allows a development preview before an invitation's dates are confirmed. */
-export type AnnouncementContent = Omit<AccessCodeAnnouncement, "startsAt" | "endsAt">;
+export type AnnouncementContent = Unscheduled<Announcement>;

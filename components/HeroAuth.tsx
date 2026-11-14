@@ -8,6 +8,7 @@ import HeroGraphBackground from "@/components/HeroGraphBackground";
 import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
+import { LaunchSwitch } from "@/components/launch/LaunchState";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 
@@ -43,6 +44,10 @@ function isWaitlistOutcome(value: unknown): value is WaitlistOutcome {
  * Full-screen hero. Centred column (claude.ai-style): headline, one short
  * line, auth card, one download button, over the treated light loop in
  * HeroGlitter.tsx.
+ *
+ * Launch gate (lib/launch.ts): before the launch the card is the early-access
+ * email form (/api/waitlist); from the launch on it is the download call to
+ * action (/download: sign-up, then the downloads grid).
  */
 
 type Props = {
@@ -252,7 +257,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-email::placeholder { color: rgba(255,255,255,0.62); }
             .ha-email:focus { background: rgba(255,255,255,0.10); }
             .ha-continue {
-              width: 100%; padding: 12px; border-radius: 10px; border: none;
+              width: 100%; text-decoration: none; padding: 12px; border-radius: 10px; border: none;
               display: inline-flex; align-items: center; justify-content: center; gap: 9px;
               background: #f0ede6; color: #1d1c19; cursor: pointer;
               font-family: var(--font-wordmark), system-ui, sans-serif;
@@ -341,7 +346,21 @@ export default function HeroAuth({ audience = "business" }: Props) {
 
           <div className="ha-glass">
           <div className="ha-card">
-            {status === "success" ? (
+            <LaunchSwitch
+              after={
+                <>
+                  <Link
+                    className="ha-continue"
+                    href="/download"
+                    data-umami-event="download-cta"
+                    data-umami-event-placement="hero"
+                  >
+                    <AppleLogo />{t("heroDownload")}
+                  </Link>
+                  <p className="ha-note">{t("heroLaunchedNote")}</p>
+                </>
+              }
+              before={status === "success" ? (
               <p className="ha-joined">{t("authJoined")}</p>
             ) : (
               <>
@@ -378,6 +397,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                 </p>
               </>
             )}
+            />
           </div>
           </div>
 

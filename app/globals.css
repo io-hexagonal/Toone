@@ -16,3 +16,11 @@
     --site-hero-top: 135px;
   }
 }
+
+/* Launch gate (components/launch/LaunchState.tsx, lib/launch.ts). HTML rendered
+   before the launch carries both variants of a call to action; the inline head
+   script marks <html data-launched> once the launch has passed, before first
+   paint. The wrappers add no box of their own. */
+[data-launch] { display: contents; }
+html:not([data-launched]) [data-launch="after"],
+html[data-launched] [data-launch="before"] { display: none; }

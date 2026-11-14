@@ -142,5 +142,5 @@ test("the confirm page is noindex, sends no referrer and loads the account messa
   assert.match(page, /referrer: "no-referrer"/);
   assert.match(page, /canonical: `https:\/\/trytoone\.com\/\$\{locale\}\/cancel-contract\/confirm`/);
   assert.match(page, /<AccountMessages>/);
-  assert.ok(!fs.readFileSync("app/sitemap.xml/route.ts", "utf8").includes("/cancel-contract/confirm"));
+  assert.ok(!fs.readFileSync("lib/site-sitemap.ts", "utf8").includes("/cancel-contract/confirm"));
 });

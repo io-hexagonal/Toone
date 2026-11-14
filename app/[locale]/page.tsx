@@ -15,6 +15,8 @@ import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
 import CollaborationPresence from "@/components/CollaborationPresence";
+import { connection } from "next/server";
+import { isLaunched } from "@/lib/launch";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -56,6 +58,12 @@ export async function TooneLandingPage({
   audience,
 }: TooneLandingPageProps) {
   const { locale } = await params;
+  // Launch gate (lib/launch.ts): a deployment built before the launch renders
+  // the landing pages on each request, so the hero, header, closing band and
+  // FAQ switch to the public funnel at the launch instant with no deploy. The
+  // first deployment built after the launch skips this and they are static
+  // again.
+  if (!isLaunched()) await connection();
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "landing" });
   const landingPath = audience === "business" ? "/business" : "/";

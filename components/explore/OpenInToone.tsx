@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { createOpenAttempt, requestAccessHref } from "@/lib/explore/presentation";
+import { createOpenAttempt, downloadHref, requestAccessHref } from "@/lib/explore/presentation";
+import { useLaunched } from "@/components/launch/LaunchState";
 
 /**
  * "Open in Toone" CTA (contract §2 deep links, plan §4.3).
@@ -26,7 +27,10 @@ export default function OpenInToone({
 }) {
   const cancel = useRef<(() => void) | null>(null);
   useEffect(() => () => cancel.current?.(), []);
-  const fallback = requestAccessHref(locale, item);
+  // Launch gate (lib/launch.ts): the access request, then the download. The
+  // label does not change, so swapping the href after hydration shows nothing.
+  const launched = useLaunched();
+  const fallback = launched ? downloadHref(locale, item) : requestAccessHref(locale, item);
   return (
     <a
       className="explore-button"

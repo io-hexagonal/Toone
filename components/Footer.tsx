@@ -4,6 +4,7 @@ import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
 import SignedInLink from "@/components/SignedInLink";
 import PricingLink from "@/components/billing/PricingLink";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
 /**
@@ -94,14 +95,29 @@ export default async function Footer({
               <Link href={`${landingPath}#how`}>{t("how")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
               <PricingLink href="/pricing">{billing("nav")}</PricingLink>
-              <Link
-                className="ftr-download"
-                href="/request-access"
-                data-umami-event="request-early-access"
-                data-umami-event-placement="footer"
-              >
-                {nav("download")}
-              </Link>
+              {/* Launch gate (lib/launch.ts): the access request, then the download. */}
+              <LaunchGate
+                before={
+                  <Link
+                    className="ftr-download"
+                    href="/request-access"
+                    data-umami-event="request-early-access"
+                    data-umami-event-placement="footer"
+                  >
+                    {nav("download")}
+                  </Link>
+                }
+                after={
+                  <Link
+                    className="ftr-download"
+                    href="/download"
+                    data-umami-event="download-cta"
+                    data-umami-event-placement="footer"
+                  >
+                    {nav("downloadLaunched")}
+                  </Link>
+                }
+              />
             </div>
             <div>
               <p className="ftr-heading">{t("proof")}</p>

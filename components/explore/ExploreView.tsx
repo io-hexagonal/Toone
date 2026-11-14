@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import OpenInToone from "./OpenInToone";
+import { LaunchGate } from "@/components/launch/LaunchGate";
 import EditListingLink from "./EditListingLink";
 import CoverImage from "./CoverImage";
 import {
@@ -22,6 +23,7 @@ import {
   catalogHref,
   deepLink,
   requestAccessHref,
+  downloadHref,
   safeMarkdownUrl,
   type CatalogItem,
 } from "@/lib/explore/presentation";
@@ -131,6 +133,7 @@ export const COPY_KEYS = [
   "approved",
   "open",
   "getToone",
+  "getTooneLaunched",
   "steps",
   "agents",
   "subRoutines",
@@ -562,14 +565,29 @@ export async function DetailHero({
                 locale={locale}
                 item={`${type}:${id}`}
               />
-              <a
-                className="explore-button explore-button-secondary"
-                href={requestAccessHref(locale, `${type}:${id}`)}
-                data-umami-event="explore-request-access"
-                data-umami-event-item={`${type}:${id}`}
-              >
-                {ui.getToone}
-              </a>
+              {/* Launch gate (lib/launch.ts): the access request, then the download. */}
+              <LaunchGate
+                before={
+                  <a
+                    className="explore-button explore-button-secondary"
+                    href={requestAccessHref(locale, `${type}:${id}`)}
+                    data-umami-event="explore-request-access"
+                    data-umami-event-item={`${type}:${id}`}
+                  >
+                    {ui.getToone}
+                  </a>
+                }
+                after={
+                  <a
+                    className="explore-button explore-button-secondary"
+                    href={downloadHref(locale, `${type}:${id}`)}
+                    data-umami-event="explore-download"
+                    data-umami-event-item={`${type}:${id}`}
+                  >
+                    {ui.getTooneLaunched}
+                  </a>
+                }
+              />
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
             <p className="explore-howto">

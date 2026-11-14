@@ -5,13 +5,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/lib/navigation";
 import { daysLeft, focusEarlyAccessInput, track } from "@/lib/announcements";
 import type { CardProps } from "./AnnouncementModal";
+import type { AnnouncementContent } from "@/content/announcements";
 
 /**
  * Body of an invitation-code campaign. Mac visitors get the code and an install
  * button that carries it into the invite flow; everyone else is offered a
  * notification for the Windows and Linux builds through the early-access form.
  */
-export default function AccessCodeCard({ announcement, platform, close, endsAt }: CardProps) {
+export default function AccessCodeCard({ announcement, platform, close, endsAt }: CardProps<Extract<AnnouncementContent, { kind: "access-code" }>>) {
   const router = useRouter();
   const t = useTranslations("announcement");
   const locale = useLocale();
