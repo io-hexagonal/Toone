@@ -419,34 +419,120 @@
           }
         }
       },
-      "prompt": "<k>Every Monday at 9:00</k>, research our niche with <k>4 parallel agents on Haiku</k> and merge what they find. Have <k>an Opus agent</k> check the summary. Find <k>at least 20 new leads</k> on LinkedIn — <k>skip anyone we’ve contacted</k>. Design 3 post visuals in Figma, animate the best one in Higgsfield, and publish to Threads, Facebook and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+      "personaLabel": "A routine for",
+      "more": "More on Explore",
+      "tabs": {
+        "marketer": "Marketer",
+        "seo": "SEO agency",
+        "film": "Filmmaker"
+      },
       "promptLabel": "New routine",
       "promptSend": "Send",
-      "graph": {
-        "schedule": "Mon 9:00",
-        "fallback": "retry ×1 → ask me",
-        "research": "Research",
-        "merge": "Merge",
-        "review": "Review",
-        "findLeads": "Find leads",
-        "design": "Design",
-        "publish": "Publish",
-        "min": "≥ 20",
-        "unique": "no duplicates"
-      },
-      "run": {
-        "research": "4 Haiku agents research in parallel",
-        "merge": "Merge the 4 reports",
-        "review": "Opus checks the summary",
-        "leads": "Find leads on LinkedIn",
-        "contract": "Contract met: ≥ 20, no duplicates",
-        "design": "Design in Figma, animate in Higgsfield",
-        "publish": "Publish to Threads, Facebook, Instagram"
-      },
-      "pause": {
-        "reason": "12 / 20 leads: below the contract",
-        "edit": "Widen to EU + UK",
-        "note": "Finished steps keep their results."
+      "fallback": "retry ×1 → ask me",
+      "pauseNote": "Finished steps keep their results.",
+      "scenarios": {
+        "marketer": {
+          "routineName": "Weekly outreach",
+          "prompt": "<k>Every Monday at 9:00</k>, research our niche with <k>4 parallel agents on Haiku</k> and merge what they find. Have <k>an Opus agent</k> check the summary. Find <k>at least 20 new leads</k> on LinkedIn — <k>skip anyone we’ve contacted</k>. Design 3 post visuals in Figma, animate the best one in Higgsfield, and publish to Threads, Facebook and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+          "graph": {
+            "schedule": "Mon 9:00",
+            "agents": {
+              "a": "Research",
+              "b": "Research",
+              "c": "Research",
+              "d": "Research"
+            },
+            "agentsShort": "Research",
+            "merge": "Merge",
+            "review": "Review",
+            "find": "Find leads",
+            "a": "Design",
+            "b": "Publish",
+            "min": "≥ 20",
+            "unique": "no duplicates"
+          },
+          "run": {
+            "research": "4 Haiku agents research in parallel",
+            "merge": "Merge the 4 reports",
+            "review": "Opus checks the summary",
+            "find": "Find leads on LinkedIn",
+            "contract": "Contract met: ≥ 20, no duplicates",
+            "a": "Design in Figma, animate in Higgsfield",
+            "b": "Publish to Threads, Facebook, Instagram"
+          },
+          "pause": {
+            "reason": "12 / 20 leads: below the contract",
+            "edit": "Widen to EU + UK"
+          }
+        },
+        "seo": {
+          "routineName": "Weekly client SEO",
+          "prompt": "<k>Every Monday at 7:00</k>, audit our client’s site with <k>4 parallel agents on Haiku</k>: rankings, competitors, backlinks and site health. Merge what they find and have <k>an Opus agent</k> check the summary. Find <k>at least 10 keyword gaps</k> in Semrush — <k>skip keywords we already target</k>. Have <k>a GPT agent</k> write the briefs in Google Docs, then email the report to the client. <k>If a step fails, retry once, then ask me.</k>",
+          "graph": {
+            "schedule": "Mon 7:00",
+            "agents": {
+              "a": "Rankings",
+              "b": "Competitors",
+              "c": "Backlinks",
+              "d": "Site health"
+            },
+            "agentsShort": "Audit",
+            "merge": "Merge",
+            "review": "Review",
+            "find": "Find gaps",
+            "a": "Write briefs",
+            "b": "Send report",
+            "min": "≥ 10",
+            "unique": "not yet targeted"
+          },
+          "run": {
+            "research": "4 Haiku agents audit the site in parallel",
+            "merge": "Merge the 4 audits",
+            "review": "Opus checks the summary",
+            "find": "Find keyword gaps in Semrush",
+            "contract": "Contract met: ≥ 10, not yet targeted",
+            "a": "GPT writes the briefs in Google Docs",
+            "b": "Email the report to the client"
+          },
+          "pause": {
+            "reason": "6 / 10 keyword gaps: below the contract",
+            "edit": "Include positions 11–30"
+          }
+        },
+        "film": {
+          "routineName": "Weekly episode prep",
+          "prompt": "<k>Every Friday at 8:00</k>, break down next week’s script with <k>4 parallel agents on Haiku</k>: scenes, shot list, voiceover and music. Merge it into one plan and have <k>an Opus agent</k> check continuity. Find <k>at least 12 B-roll clips</k> on Pexels — <k>free to use only</k>. Generate the missing shots in Higgsfield and the thumbnail with <k>GPT Image</k>, record the voiceover in ElevenLabs and upload the draft to YouTube. <k>If a step fails, retry once, then ask me.</k>",
+          "graph": {
+            "schedule": "Fri 8:00",
+            "agents": {
+              "a": "Scenes",
+              "b": "Shot list",
+              "c": "Voiceover",
+              "d": "Music"
+            },
+            "agentsShort": "Breakdown",
+            "merge": "Merge",
+            "review": "Review",
+            "find": "Find B-roll",
+            "a": "Generate",
+            "b": "Upload draft",
+            "min": "≥ 12",
+            "unique": "free to use"
+          },
+          "run": {
+            "research": "4 Haiku agents break down the script",
+            "merge": "Merge into one plan",
+            "review": "Opus checks continuity",
+            "find": "Find B-roll on Pexels",
+            "contract": "Contract met: ≥ 12, free to use",
+            "a": "Generate shots, thumbnail and voiceover",
+            "b": "Upload the draft to YouTube"
+          },
+          "pause": {
+            "reason": "7 / 12 clips: below the contract",
+            "edit": "Add aerial and night shots"
+          }
+        }
       }
     },
     "routineGraph": {
@@ -459,10 +545,30 @@
       "paused": "Paused",
       "resume": "Resume",
       "subs": {
-        "research": ["Gather sources", "Analyse with Claude", "Cross-check with ChatGPT", "Summarise findings"],
-        "findLeads": ["Search LinkedIn", "Filter by fit", "Enrich profiles", "Shortlist leads"],
-        "designFiles": ["Fetch brand voice", "Design in Figma", "Review spacing", "Animate in Higgsfield"],
-        "publishSocial": ["Adapt copy per platform", "Post to Threads", "Post to Facebook", "Post to Instagram"]
+        "research": [
+          "Gather sources",
+          "Analyse with Claude",
+          "Cross-check with ChatGPT",
+          "Summarise findings"
+        ],
+        "findLeads": [
+          "Search LinkedIn",
+          "Filter by fit",
+          "Enrich profiles",
+          "Shortlist leads"
+        ],
+        "designFiles": [
+          "Fetch brand voice",
+          "Design in Figma",
+          "Review spacing",
+          "Animate in Higgsfield"
+        ],
+        "publishSocial": [
+          "Adapt copy per platform",
+          "Post to Threads",
+          "Post to Facebook",
+          "Post to Instagram"
+        ]
       }
     },
     "whyToone": {
@@ -966,7 +1072,6 @@
     "goToSlide": "Show slide",
     "pauseSlides": "Pause slides",
     "playSlides": "Play slides",
-    "viewRoutine": "View routine",
     "viewBundle": "View bundle",
     "preparedDuringSetupNote": "When you add this routine, Toone's setup assistant prepares these with you. You only answer what it can't find.",
     "youPrepare": "You prepare",

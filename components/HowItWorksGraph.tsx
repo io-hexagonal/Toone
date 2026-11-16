@@ -5,9 +5,11 @@ import type { LogoKey } from "@/components/RoutineChain";
 
 /**
  * The routine graph inside "How it works": the request from step 1 as Toone
- * parsed it. A schedule trigger fans out to four parallel Haiku research
- * agents, a merge, an Opus review, then Find leads (with its contracts),
- * Design and Publish on the user's own accounts.
+ * parsed it. Every scenario shares one skeleton: a schedule trigger fans out
+ * to four parallel agents, a merge, a review, then the contracted step (a
+ * counter and two contracts) and two more steps on the user's own accounts.
+ * The caller supplies the words (`labels`) and the models and accounts
+ * (`spec`), so the panel keeps its size from one scenario to the next.
  *
  * Same visual language as RoutineChain (ink on cream, the app's 10px-radius
  * cards, dashed "consumes" links to dashed account capsules; running = the
@@ -41,21 +43,36 @@ export type NodeKey =
 export type GraphLabels = {
   schedule: string;
   fallback: string;
-  research: string;
+  /** One title per parallel agent. */
+  agents: readonly [string, string, string, string];
+  /** Title of the single "×4" card that replaces them on phones. */
+  agentsShort: string;
   merge: string;
   review: string;
-  findLeads: string;
-  design: string;
-  publish: string;
+  find: string;
+  a: string;
+  b: string;
   min: string;
   unique: string;
   running: string;
   paused: string;
 };
 
+/** What a scenario runs on: models, accounts and the contracted target. */
+export type GraphSpec = {
+  agentModel: string;
+  reviewModel: string;
+  /** The contracted step's target count. */
+  target: number;
+  findLogos: readonly LogoKey[];
+  a: { logos: readonly LogoKey[]; model?: string };
+  b: { logos: readonly LogoKey[]; model?: string };
+};
+
 type Props = {
   nodes: Record<NodeKey, NodeState>;
-  /** Leads found so far; null hides the counter. */
+  spec: GraphSpec;
+  /** Items found so far by the contracted step; null hides the counter. */
   leads: number | null;
   contracts: { min: ContractState; unique: ContractState };
   /** How long each research agent runs, for its progress bar (ms). */
@@ -76,7 +93,6 @@ const EDGES: readonly (readonly [string, string])[] = [
   ["leads", "design"],
   ["design", "publish"],
 ];
-const LEADS_TARGET = 20;
 
 const CSS = `
 .hg {
@@ -464,7 +480,7 @@ function offsetIn(el: HTMLElement, root: HTMLElement) {
   return n === root ? { x, y, w: el.offsetWidth, h: el.offsetHeight } : null;
 }
 
-export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, labels, motion }: Props) {
+export default function HowItWorksGraph({ nodes, spec, leads, contracts, researchMs, labels, motion }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [size, setSize] = useState({ w: 0, h: 0 });
@@ -512,7 +528,7 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
     key === "rx" ? research : nodes[key as NodeKey];
   const longest = Math.max(...researchMs);
 
-  const counter = leads === null ? null : `${leads} / ${LEADS_TARGET}`;
+  const counter = leads === null ? null : `${leads} / ${spec.target}`;
 
   return (
     <div className="hg" ref={rootRef} aria-hidden="true">
@@ -562,9 +578,9 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
               <Badges labels={labels} />
               <span className="hg-title">
                 <RoutineGlyph />
-                <span>{labels.research}</span>
+                <span>{labels.agents[i]}</span>
               </span>
-              <Model name="Haiku" />
+              <Model name={spec.agentModel} />
               <Check />
               <span className="hg-prog">
                 <i style={{ "--d": `${researchMs[i]}ms` } as CSSProperties} />
@@ -579,9 +595,9 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
             <Badges labels={labels} />
             <span className="hg-title">
               <RoutineGlyph />
-              <span>{labels.research} ×4</span>
+              <span>{labels.agentsShort} ×4</span>
             </span>
-            <Model name="Haiku" />
+            <Model name={spec.agentModel} />
             <Check />
             <span className="hg-prog">
               <i style={{ "--d": `${longest}ms` } as CSSProperties} />
@@ -606,7 +622,7 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
             <RoutineGlyph />
             <span>{labels.review}</span>
             <span className="hg-end">
-              <Model name="Opus" />
+              <Model name={spec.reviewModel} />
               <Check />
             </span>
           </div>
@@ -631,13 +647,13 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
           <div className="hg-card hg-card--leads" data-n="leads">
             <Badges labels={labels} />
             <RoutineGlyph />
-            <span>{labels.findLeads}</span>
+            <span>{labels.find}</span>
             <span className="hg-end">{counter}</span>
           </div>
         </div>
         <div className="hg-r">
           <span className="hg-conn" />
-          <Capsule logos={["linkedin"]} />
+          <Capsule logos={spec.findLogos} />
         </div>
       </div>
 
@@ -646,15 +662,16 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
           <div className="hg-card" data-n="design">
             <Badges labels={labels} />
             <RoutineGlyph />
-            <span>{labels.design}</span>
+            <span>{labels.a}</span>
             <span className="hg-end">
+              {spec.a.model && <Model name={spec.a.model} />}
               <Check />
             </span>
           </div>
         </div>
         <div className="hg-r">
           <span className="hg-conn" />
-          <Capsule logos={["figma", "higgsfield"]} />
+          <Capsule logos={spec.a.logos} />
         </div>
       </div>
 
@@ -663,15 +680,16 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
           <div className="hg-card" data-n="publish">
             <Badges labels={labels} />
             <RoutineGlyph />
-            <span>{labels.publish}</span>
+            <span>{labels.b}</span>
             <span className="hg-end">
+              {spec.b.model && <Model name={spec.b.model} />}
               <Check />
             </span>
           </div>
         </div>
         <div className="hg-r">
           <span className="hg-conn" />
-          <Capsule logos={["threads", "facebook", "instagram"]} />
+          <Capsule logos={spec.b.logos} />
         </div>
       </div>
     </div>

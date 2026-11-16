@@ -2,9 +2,11 @@
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/lib/navigation";
 import HowItWorksGraph, {
   Icon,
   type ContractState,
+  type GraphSpec,
   type IconName,
   type NodeKey,
   type NodeState,
@@ -22,6 +24,10 @@ import HowItWorksGraph, {
  * step's progress bar and advances the step when full. Each step's frame is a
  * pure function of the elapsed time (`frameAt`), so pausing the clock pauses
  * the whole scene. Reduced motion: no clock, one still frame per step.
+ *
+ * A persona picker above the stepper swaps the whole scene (request, graph,
+ * run log, pause) for another routine built on the same skeleton; picking one
+ * starts it from step 1, and the clock then loops inside that routine.
  *
  * The three cards share one grid cell, so the panel is always as tall as the
  * tallest card in the current language: no layout shift between steps.
@@ -45,7 +51,31 @@ const CHIPS: Record<(typeof STEPS)[number], readonly (readonly [string, IconName
     ["resume", "play"],
   ],
 };
-const LOG = ["research", "merge", "review", "leads", "contract", "design", "publish"] as const;
+const LOG = ["research", "merge", "review", "find", "contract", "a", "b"] as const;
+
+/** The routines the picker offers. `pausedAt`: where the contracted step stops short. */
+const PERSONAS = ["marketer", "seo", "film"] as const;
+type Persona = (typeof PERSONAS)[number];
+const SCENARIOS: Record<Persona, GraphSpec & { pausedAt: number }> = {
+  marketer: {
+    agentModel: "Haiku", reviewModel: "Opus", target: 20, pausedAt: 12,
+    findLogos: ["linkedin"],
+    a: { logos: ["figma", "higgsfield"] },
+    b: { logos: ["threads", "facebook", "instagram"] },
+  },
+  seo: {
+    agentModel: "Haiku", reviewModel: "Opus", target: 10, pausedAt: 6,
+    findLogos: ["search-console", "semrush"],
+    a: { logos: ["google-docs"], model: "GPT" },
+    b: { logos: ["gmail"] },
+  },
+  film: {
+    agentModel: "Haiku", reviewModel: "Opus", target: 12, pausedAt: 7,
+    findLogos: ["pexels"],
+    a: { logos: ["higgsfield", "openai", "elevenlabs"] },
+    b: { logos: ["youtube"] },
+  },
+};
 
 // --- the run, in ms from the start of each step ---
 const R_START = 300;
@@ -61,7 +91,6 @@ const COUNT_FROM = 4500;
 const COUNT_MS = 1600;
 const LOG_AT = [R_START, RUN.merge[0], RUN.review[0], RUN.leads[0], COUNT_FROM + COUNT_MS + 50, RUN.design[0], RUN.publish[0]];
 // --- the pause ---
-const PAUSED_AT = 12;
 const TYPE_FROM = 700;
 const TYPE_MS = 1500;
 const PRESS_AT = 5700;
@@ -93,13 +122,13 @@ function nodesAll(state: NodeState): Record<NodeKey, NodeState> {
   };
 }
 
-function frameAt(step: number, t: number): Frame {
+function frameAt(step: number, t: number, target: number, pausedAt: number): Frame {
   if (step === 0) {
     return { nodes: nodesAll("draft"), leads: null, min: "draft", unique: "draft", log: -1, logDone: false, typed: 0, pressed: false, resumed: false };
   }
   if (step === 1) {
-    const count = clamp(Math.floor(((t - COUNT_FROM) / COUNT_MS) * 20), 0, 20);
-    const met = count >= 20 ? "met" : "open";
+    const count = clamp(Math.floor(((t - COUNT_FROM) / COUNT_MS) * target), 0, target);
+    const met = count >= target ? "met" : "open";
     let log = -1;
     LOG_AT.forEach((at, i) => {
       if (t >= at) log = i;
@@ -129,9 +158,9 @@ function frameAt(step: number, t: number): Frame {
   }
   const resumed = t >= RESUME_AT;
   const count = resumed
-    ? clamp(PAUSED_AT + Math.floor(((t - RECOUNT_FROM) / RECOUNT_MS) * (20 - PAUSED_AT)), PAUSED_AT, 20)
-    : PAUSED_AT;
-  const leadsDone = count >= 20 && t >= RECOUNT_FROM + RECOUNT_MS + 300;
+    ? clamp(pausedAt + Math.floor(((t - RECOUNT_FROM) / RECOUNT_MS) * (target - pausedAt)), pausedAt, target)
+    : pausedAt;
+  const leadsDone = count >= target && t >= RECOUNT_FROM + RECOUNT_MS + 300;
   return {
     nodes: {
       ...nodesAll("done"),
@@ -140,7 +169,7 @@ function frameAt(step: number, t: number): Frame {
       publish: "idle",
     },
     leads: count,
-    min: count >= 20 ? "met" : resumed ? "open" : "unmet",
+    min: count >= target ? "met" : resumed ? "open" : "unmet",
     unique: "met",
     log: -1,
     logDone: false,
@@ -151,11 +180,10 @@ function frameAt(step: number, t: number): Frame {
 }
 
 /** Reduced motion: one still frame per step. */
-const STILL: Frame[] = [
-  frameAt(0, 0),
-  { ...frameAt(1, RUN.design[0] + 400), logDone: false },
-  { ...frameAt(2, TYPE_FROM + TYPE_MS + 100) },
-];
+function stillAt(step: number, target: number, pausedAt: number): Frame {
+  if (step === 1) return { ...frameAt(1, RUN.design[0] + 400, target, pausedAt), logDone: false };
+  return frameAt(step, step === 2 ? TYPE_FROM + TYPE_MS + 100 : 0, target, pausedAt);
+}
 
 export default function HowItWorksSection() {
   const t = useTranslations("landing.howItWorks");
@@ -166,8 +194,11 @@ export default function HowItWorksSection() {
   const barRef = useRef<HTMLSpanElement | null>(null);
   const elapsed = useRef(0);
   const hold = useRef({ live: false, hover: false, focus: false });
+  const [persona, setPersona] = useState<Persona>("marketer");
+  const scenario = SCENARIOS[persona];
+  const { target, pausedAt } = scenario;
   const [active, setActive] = useState(0);
-  const [frame, setFrame] = useState<Frame>(() => frameAt(0, 0));
+  const [frame, setFrame] = useState<Frame>(() => frameAt(0, 0, target, pausedAt));
   const [held, setHeld] = useState(true);
   const [reduced, setReduced] = useState(false);
   const [seen, setSeen] = useState(false);
@@ -218,7 +249,7 @@ export default function HowItWorksSection() {
           return;
         }
         barRef.current?.style.setProperty("transform", `scaleX(${elapsed.current / duration})`);
-        const next = frameAt(active, elapsed.current);
+        const next = frameAt(active, elapsed.current, target, pausedAt);
         const nextKey = JSON.stringify(next);
         if (nextKey !== key) {
           key = nextKey;
@@ -229,13 +260,23 @@ export default function HowItWorksSection() {
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [active, reduced]);
+  }, [active, reduced, target, pausedAt]);
 
   function select(index: number, focus = false) {
     elapsed.current = 0;
     setActive(index);
-    setFrame(frameAt(index, 0));
+    setFrame(frameAt(index, 0, target, pausedAt));
     if (focus) tabRefs.current[index]?.focus();
+  }
+
+  /** Another routine: same scene, from step 1. */
+  function pick(next: Persona) {
+    if (next === persona) return;
+    const to = SCENARIOS[next];
+    elapsed.current = 0;
+    setPersona(next);
+    setActive(0);
+    setFrame(frameAt(0, 0, to.target, to.pausedAt));
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -255,24 +296,31 @@ export default function HowItWorksSection() {
     select(next, true);
   }
 
-  const view = reduced ? STILL[active] : frame;
+  const view = reduced ? stillAt(active, target, pausedAt) : frame;
   const panelId = `${id}-panel`;
-  const edit = t("pause.edit");
+  const sc = `scenarios.${persona}` as const;
+  const edit = t(`${sc}.pause.edit`);
   const typed = edit.slice(0, Math.round(view.typed * edit.length));
   const pauseState: NodeState = view.resumed ? "running" : "paused";
   const firstLog = 0;
 
   const labels = {
-    schedule: t("graph.schedule"),
-    fallback: t("graph.fallback"),
-    research: t("graph.research"),
-    merge: t("graph.merge"),
-    review: t("graph.review"),
-    findLeads: t("graph.findLeads"),
-    design: t("graph.design"),
-    publish: t("graph.publish"),
-    min: t("graph.min"),
-    unique: t("graph.unique"),
+    schedule: t(`${sc}.graph.schedule`),
+    fallback: t("fallback"),
+    agents: [
+      t(`${sc}.graph.agents.a`),
+      t(`${sc}.graph.agents.b`),
+      t(`${sc}.graph.agents.c`),
+      t(`${sc}.graph.agents.d`),
+    ] as const,
+    agentsShort: t(`${sc}.graph.agentsShort`),
+    merge: t(`${sc}.graph.merge`),
+    review: t(`${sc}.graph.review`),
+    find: t(`${sc}.graph.find`),
+    a: t(`${sc}.graph.a`),
+    b: t(`${sc}.graph.b`),
+    min: t(`${sc}.graph.min`),
+    unique: t(`${sc}.graph.unique`),
     running: g("running"),
     paused: g("paused"),
   };
@@ -291,6 +339,25 @@ export default function HowItWorksSection() {
           __html: `
             /* The intro is centred over the two columns. */
             .hiw > :is(.eyebrow, h2, .sub) { text-align: center; margin-left: auto; margin-right: auto; }
+
+            /* The persona picker: which routine the scene shows. */
+            .hiw-personas {
+              display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+              margin: 26px auto 30px;
+            }
+            .hiw-persona {
+              display: inline-flex; align-items: center; height: 36px; padding: 0 16px;
+              border-radius: 999px; border: 1px solid rgba(29,28,25,0.14);
+              background: rgba(255,255,255,0.55); color: rgba(29,28,25,0.72);
+              font: inherit; font-size: 14px; font-weight: 550; letter-spacing: -0.005em;
+              gap: 6px; text-decoration: none; white-space: nowrap; cursor: pointer;
+              transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+            }
+            .hiw-persona:hover { border-color: rgba(29,28,25,0.3); color: rgba(29,28,25,0.95); }
+            .hiw-persona[aria-pressed="true"] { background: #141311; border-color: #141311; color: #f0ede6; }
+            .hiw-persona:focus-visible { outline: 2px solid #141311; outline-offset: 2px; }
+            .hiw-persona--more { border-color: transparent; background: none; padding: 0 8px; }
+            .hiw-persona--more:hover { border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
 
             /* Two columns: the steps run the full height of the panel (rules
                flush with its top and bottom edges) with room between them. */
@@ -393,6 +460,7 @@ export default function HowItWorksSection() {
             .hiw-card[data-on] .hiw-k:nth-of-type(4) { animation-delay: 1.1s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(5) { animation-delay: 1.35s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(6) { animation-delay: 1.6s; }
+            .hiw-card[data-on] .hiw-k:nth-of-type(7) { animation-delay: 1.85s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(1) { animation-delay: 0.35s; }
             @keyframes hiw-underline { to { background-size: 100% 1.25px; } }
             .hiw-caret {
@@ -529,6 +597,25 @@ export default function HowItWorksSection() {
       <h2>{t("title")}</h2>
       <p className="sub">{t("sub")}</p>
 
+      <div className="hiw-personas" role="group" aria-label={t("personaLabel")}>
+        {PERSONAS.map((p) => (
+          <button
+            type="button"
+            className="hiw-persona"
+            key={p}
+            aria-pressed={p === persona}
+            aria-controls={panelId}
+            onClick={() => pick(p)}
+          >
+            {t(`tabs.${p}`)}
+          </button>
+        ))}
+        <Link className="hiw-persona hiw-persona--more" href="/explore">
+          {t("more")}
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+
       <div
         className="hiw-grid"
         onPointerEnter={() => updateHold({ hover: true })}
@@ -591,7 +678,7 @@ export default function HowItWorksSection() {
                 {t("promptLabel")}
               </p>
               <p className="hiw-prompt">
-                {t.rich("prompt", { k: mark })}
+                {t.rich(`${sc}.prompt`, { k: mark })}
                 <span className="hiw-caret" aria-hidden="true" />
               </p>
               <button type="button" className="hiw-send" aria-label={t("promptSend")} aria-controls={panelId} onClick={() => select(1)}>
@@ -605,8 +692,8 @@ export default function HowItWorksSection() {
               <p className="hiw-card-head">
                 <Icon name="clock" />
                 <span>
-                  {g("routineName")}
-                  <span className="hiw-when"> · {t("graph.schedule")}</span>
+                  {t(`${sc}.routineName`)}
+                  <span className="hiw-when"> · {t(`${sc}.graph.schedule`)}</span>
                 </span>
                 <span className="hiw-right hiw-status">
                   <Icon name="pulse" />
@@ -624,9 +711,9 @@ export default function HowItWorksSection() {
                       ) : (
                         <Icon name={line === "contract" ? "shield" : "check"} />
                       )}
-                      <span className="hiw-log-t">{t(`run.${line}`)}</span>
-                      {line === "leads" && view.leads !== null && (
-                        <span className="hiw-log-n">{view.leads} / 20</span>
+                      <span className="hiw-log-t">{t(`${sc}.run.${line}`)}</span>
+                      {line === "find" && view.leads !== null && (
+                        <span className="hiw-log-n">{view.leads} / {target}</span>
                       )}
                     </li>
                   );
@@ -641,7 +728,7 @@ export default function HowItWorksSection() {
             >
               <p className="hiw-card-head">
                 <Icon name="pause" />
-                {t("graph.findLeads")}
+                {t(`${sc}.graph.find`)}
                 <span className="hiw-right hiw-status" data-s={pauseState}>
                   <Icon name={view.resumed ? "pulse" : "pause"} />
                   {view.resumed ? g("running") : g("paused")}
@@ -650,7 +737,7 @@ export default function HowItWorksSection() {
               <div className="hiw-pause-body">
               <p className="hiw-reason">
                 <Icon name="shield" />
-                {t("pause.reason")}
+                {t(`${sc}.pause.reason`)}
               </p>
               <div className="hiw-edit">
                 <span className="hiw-field">
@@ -669,7 +756,7 @@ export default function HowItWorksSection() {
               </div>
               <p className="hiw-note">
                 <Icon name="check" />
-                {t("pause.note")}
+                {t("pauseNote")}
               </p>
               </div>
             </div>
@@ -677,6 +764,8 @@ export default function HowItWorksSection() {
 
           <div className="hiw-stage" data-step={active}>
             <HowItWorksGraph
+              key={persona}
+              spec={scenario}
               nodes={view.nodes}
               leads={view.leads}
               contracts={{ min: view.min, unique: view.unique }}

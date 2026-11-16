@@ -419,34 +419,120 @@
           }
         }
       },
-      "prompt": "<k>Cada lunes a las 9:00</k>, investiga nuestro nicho con <k>4 agentes en paralelo con Haiku</k> y une lo que encuentren. Que <k>un agente con Opus</k> revise el resumen. Encuentra <k>al menos 20 leads nuevos</k> en LinkedIn y <k>omite a quien ya contactamos</k>. Diseña 3 visuales en Figma, anima el mejor en Higgsfield y publica en Threads, Facebook e Instagram. <k>Si un paso falla, reintenta una vez y luego pregúntame.</k>",
+      "personaLabel": "Rutina para",
+      "more": "Más en Explore",
+      "tabs": {
+        "marketer": "Marketing",
+        "seo": "Agencia SEO",
+        "film": "Cineasta"
+      },
       "promptLabel": "Nueva rutina",
       "promptSend": "Enviar",
-      "graph": {
-        "schedule": "lun. 9:00",
-        "fallback": "reintentar ×1 → preguntarme",
-        "research": "Investigar",
-        "merge": "Unir",
-        "review": "Revisión",
-        "findLeads": "Encontrar leads",
-        "design": "Diseñar",
-        "publish": "Publicar",
-        "min": "≥ 20",
-        "unique": "sin duplicados"
-      },
-      "run": {
-        "research": "4 agentes Haiku investigan en paralelo",
-        "merge": "Unir los 4 informes",
-        "review": "Opus revisa el resumen",
-        "leads": "Encontrar leads en LinkedIn",
-        "contract": "Contrato cumplido: ≥ 20, sin duplicados",
-        "design": "Diseñar en Figma, animar en Higgsfield",
-        "publish": "Publicar en Threads, Facebook, Instagram"
-      },
-      "pause": {
-        "reason": "12 / 20 leads: por debajo del contrato",
-        "edit": "Ampliar a UE + Reino Unido",
-        "note": "Los pasos terminados conservan sus resultados."
+      "fallback": "reintentar ×1 → preguntarme",
+      "pauseNote": "Los pasos terminados conservan sus resultados.",
+      "scenarios": {
+        "marketer": {
+          "routineName": "Prospección semanal",
+          "prompt": "<k>Cada lunes a las 9:00</k>, investiga nuestro nicho con <k>4 agentes en paralelo con Haiku</k> y une lo que encuentren. Que <k>un agente con Opus</k> revise el resumen. Encuentra <k>al menos 20 leads nuevos</k> en LinkedIn y <k>omite a quien ya contactamos</k>. Diseña 3 visuales en Figma, anima el mejor en Higgsfield y publica en Threads, Facebook e Instagram. <k>Si un paso falla, reintenta una vez y luego pregúntame.</k>",
+          "graph": {
+            "schedule": "lun. 9:00",
+            "agents": {
+              "a": "Investigar",
+              "b": "Investigar",
+              "c": "Investigar",
+              "d": "Investigar"
+            },
+            "agentsShort": "Investigar",
+            "merge": "Unir",
+            "review": "Revisión",
+            "find": "Encontrar leads",
+            "a": "Diseñar",
+            "b": "Publicar",
+            "min": "≥ 20",
+            "unique": "sin duplicados"
+          },
+          "run": {
+            "research": "4 agentes Haiku investigan en paralelo",
+            "merge": "Unir los 4 informes",
+            "review": "Opus revisa el resumen",
+            "find": "Encontrar leads en LinkedIn",
+            "contract": "Contrato cumplido: ≥ 20, sin duplicados",
+            "a": "Diseñar en Figma, animar en Higgsfield",
+            "b": "Publicar en Threads, Facebook, Instagram"
+          },
+          "pause": {
+            "reason": "12 / 20 leads: por debajo del contrato",
+            "edit": "Ampliar a UE + Reino Unido"
+          }
+        },
+        "seo": {
+          "routineName": "SEO semanal del cliente",
+          "prompt": "<k>Cada lunes a las 7:00</k>, audita el sitio de nuestro cliente con <k>4 agentes en paralelo con Haiku</k>: posiciones, competidores, backlinks y salud del sitio. Une lo que encuentren y que <k>un agente con Opus</k> revise el resumen. Encuentra <k>al menos 10 brechas de palabras clave</k> en Semrush y <k>omite las que ya trabajamos</k>. Que <k>un agente con GPT</k> escriba los briefs en Google Docs y envía el informe al cliente por correo. <k>Si un paso falla, reintenta una vez y luego pregúntame.</k>",
+          "graph": {
+            "schedule": "lun. 7:00",
+            "agents": {
+              "a": "Posiciones",
+              "b": "Competidores",
+              "c": "Backlinks",
+              "d": "Salud del sitio"
+            },
+            "agentsShort": "Auditoría",
+            "merge": "Unir",
+            "review": "Revisión",
+            "find": "Encontrar brechas",
+            "a": "Briefs",
+            "b": "Enviar informe",
+            "min": "≥ 10",
+            "unique": "aún sin trabajar"
+          },
+          "run": {
+            "research": "4 agentes Haiku auditan el sitio en paralelo",
+            "merge": "Unir las 4 auditorías",
+            "review": "Opus revisa el resumen",
+            "find": "Encontrar brechas en Semrush",
+            "contract": "Contrato cumplido: ≥ 10, aún sin trabajar",
+            "a": "GPT escribe los briefs en Google Docs",
+            "b": "Enviar el informe al cliente"
+          },
+          "pause": {
+            "reason": "6 / 10 brechas: por debajo del contrato",
+            "edit": "Incluir posiciones 11–30"
+          }
+        },
+        "film": {
+          "routineName": "Preparación semanal del episodio",
+          "prompt": "<k>Cada viernes a las 8:00</k>, desglosa el guion de la próxima semana con <k>4 agentes en paralelo con Haiku</k>: escenas, lista de planos, voz en off y música. Únelo en un solo plan y que <k>un agente con Opus</k> revise la continuidad. Encuentra <k>al menos 12 clips de B-roll</k> en Pexels, <k>solo de uso libre</k>. Genera los planos que falten en Higgsfield y la miniatura con <k>GPT Image</k>, graba la voz en off en ElevenLabs y sube el borrador a YouTube. <k>Si un paso falla, reintenta una vez y luego pregúntame.</k>",
+          "graph": {
+            "schedule": "vie. 8:00",
+            "agents": {
+              "a": "Escenas",
+              "b": "Planos",
+              "c": "Voz en off",
+              "d": "Música"
+            },
+            "agentsShort": "Desglose",
+            "merge": "Unir",
+            "review": "Revisión",
+            "find": "Encontrar B-roll",
+            "a": "Generar",
+            "b": "Subir borrador",
+            "min": "≥ 12",
+            "unique": "uso libre"
+          },
+          "run": {
+            "research": "4 agentes Haiku desglosan el guion",
+            "merge": "Unir en un solo plan",
+            "review": "Opus revisa la continuidad",
+            "find": "Encontrar B-roll en Pexels",
+            "contract": "Contrato cumplido: ≥ 12, uso libre",
+            "a": "Generar planos, miniatura y voz en off",
+            "b": "Subir el borrador a YouTube"
+          },
+          "pause": {
+            "reason": "7 / 12 clips: por debajo del contrato",
+            "edit": "Añadir tomas aéreas y nocturnas"
+          }
+        }
       }
     },
     "routineGraph": {
@@ -459,10 +545,30 @@
       "paused": "En pausa",
       "resume": "Reanudar",
       "subs": {
-        "research": ["Reunir fuentes", "Analizar con Claude", "Contrastar con ChatGPT", "Resumir conclusiones"],
-        "findLeads": ["Buscar en LinkedIn", "Filtrar por encaje", "Enriquecer perfiles", "Preseleccionar leads"],
-        "designFiles": ["Obtener la voz de marca", "Diseñar en Figma", "Revisar espaciados", "Animar en Higgsfield"],
-        "publishSocial": ["Adaptar el texto a cada red", "Publicar en Threads", "Publicar en Facebook", "Publicar en Instagram"]
+        "research": [
+          "Reunir fuentes",
+          "Analizar con Claude",
+          "Contrastar con ChatGPT",
+          "Resumir conclusiones"
+        ],
+        "findLeads": [
+          "Buscar en LinkedIn",
+          "Filtrar por encaje",
+          "Enriquecer perfiles",
+          "Preseleccionar leads"
+        ],
+        "designFiles": [
+          "Obtener la voz de marca",
+          "Diseñar en Figma",
+          "Revisar espaciados",
+          "Animar en Higgsfield"
+        ],
+        "publishSocial": [
+          "Adaptar el texto a cada red",
+          "Publicar en Threads",
+          "Publicar en Facebook",
+          "Publicar en Instagram"
+        ]
       }
     },
     "whyToone": {
@@ -923,7 +1029,7 @@
     "agentIds": "Agentes necesarios",
     "noRequirements": "No se han declarado requisitos adicionales.",
     "pinned": "Revisión fijada",
-    "viewRoutine": "Ver rutina",
+    "viewRoutine": "View routine",
     "stepsCount": "{count, plural, one {# paso} other {# pasos}}",
     "agentsCount": "{count, plural, one {# agente} other {# agentes}}",
     "subRoutinesCount": "{count, plural, one {# subrutina} other {# subrutinas}}",
@@ -966,7 +1072,6 @@
     "goToSlide": "Show slide",
     "pauseSlides": "Pause slides",
     "playSlides": "Play slides",
-    "viewRoutine": "View routine",
     "viewBundle": "View bundle",
     "preparedDuringSetupNote": "When you add this routine, Toone's setup assistant prepares these with you. You only answer what it can't find.",
     "youPrepare": "You prepare",

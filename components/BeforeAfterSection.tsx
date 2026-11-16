@@ -173,7 +173,7 @@ const CSS = `
 export default async function BeforeAfterSection() {
   const t = await getTranslations("landing.whyToone");
   const g = await getTranslations("landing.routineGraph");
-  const h = await getTranslations("landing.howItWorks.graph");
+  const h = await getTranslations("landing.howItWorks");
 
   return (
     <section className="section ba" id="why-toone">
@@ -239,7 +239,7 @@ export default async function BeforeAfterSection() {
             </span>
             <span className="ba-when" aria-hidden="true">
               <Icon name="clock" />
-              {h("schedule")}
+              {h("scenarios.marketer.graph.schedule")}
             </span>
           </figcaption>
           <AfterRoutineRun
@@ -252,7 +252,7 @@ export default async function BeforeAfterSection() {
             labels={{
               running: g("running"),
               paused: g("paused"),
-              min: h("min"),
+              min: h("scenarios.marketer.graph.min"),
               fallback: h("fallback"),
               ledger: t("routine.ledger"),
               known: t("routine.known"),
