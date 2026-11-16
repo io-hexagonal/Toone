@@ -432,101 +432,103 @@
       "pauseNote": "Finished steps keep their results.",
       "scenarios": {
         "marketer": {
-          "routineName": "Weekly outreach",
-          "prompt": "<k>Every Monday at 9:00</k>, research our niche with <k>4 parallel agents on Haiku</k> and merge what they find. Have <k>an Opus agent</k> check the summary. Find <k>at least 20 new leads</k> on LinkedIn — <k>skip anyone we’ve contacted</k>. Design 3 post visuals in Figma, animate the best one in Higgsfield, and publish to Threads, Facebook and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+          "routineName": "Weekly content engine",
+          "prompt": "<k>Every Monday at 9:00</k>, research what our audience is talking about with <k>2 parallel agents on Haiku</k>: trends and competitors. Have <k>a Sonnet agent</k> draft 3 LinkedIn posts and <k>a GPT agent</k> review them: <k>brand voice at least 8/10, every claim sourced</k>. <k>Send weak drafts back, twice at most.</k> Make the visuals in Figma, <k>ask me before publishing</k>, then post to LinkedIn, Threads and Instagram. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 9:00",
-            "agents": {
-              "a": "Research",
-              "b": "Research",
-              "c": "Research",
-              "d": "Research"
+            "parallelShort": "Research ×2",
+            "nodes": {
+              "trends": "Trends",
+              "competitors": "Competitors",
+              "draft": "Draft posts",
+              "review": "Review",
+              "visuals": "Visuals",
+              "publish": "Publish"
             },
-            "agentsShort": "Research",
-            "merge": "Merge",
-            "review": "Review",
-            "find": "Find leads",
-            "a": "Design",
-            "b": "Publish",
-            "min": "≥ 20",
-            "unique": "no duplicates"
+            "chips": {
+              "min": "voice ≥ 8/10",
+              "other": "claims sourced",
+              "loop": "revise ≤ 2×",
+              "gate": "asks me first"
+            }
           },
           "run": {
-            "research": "4 Haiku agents research in parallel",
-            "merge": "Merge the 4 reports",
-            "review": "Opus checks the summary",
-            "find": "Find leads on LinkedIn",
-            "contract": "Contract met: ≥ 20, no duplicates",
-            "a": "Design in Figma, animate in Higgsfield",
-            "b": "Publish to Threads, Facebook, Instagram"
+            "research": "2 Haiku agents research in parallel",
+            "draft": "Sonnet drafts 3 posts",
+            "review": "GPT reviews the brand voice",
+            "loop": "Below 8: sent back for a rewrite",
+            "contract": "Contract met: voice ≥ 8/10, claims sourced",
+            "visuals": "Visuals in Figma",
+            "publish": "You approve, it posts to 3 accounts"
           },
           "pause": {
-            "reason": "12 / 20 leads: below the contract",
-            "edit": "Widen to EU + UK"
+            "reason": "Brand voice 6 / 10: below the contract",
+            "edit": "Less hype, more numbers"
           }
         },
         "seo": {
-          "routineName": "Weekly client SEO",
-          "prompt": "<k>Every Monday at 7:00</k>, audit our client’s site with <k>4 parallel agents on Haiku</k>: rankings, competitors, backlinks and site health. Merge what they find and have <k>an Opus agent</k> check the summary. Find <k>at least 10 keyword gaps</k> in Semrush — <k>skip keywords we already target</k>. Have <k>a GPT agent</k> write the briefs in Google Docs, then email the report to the client. <k>If a step fails, retry once, then ask me.</k>",
+          "routineName": "Weekly content refresh",
+          "prompt": "<k>Every Monday at 7:00</k>, pull our client’s rankings from Search Console — <k>if it fails, use Semrush</k>. Pick <k>at least 8 pages that lost positions</k>, <k>one keyword per page</k>. Refresh them with <k>one Sonnet agent per page</k>, have <k>a GPT agent</k> fact-check every change, save the drafts in WordPress and email the report to the client. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 7:00",
-            "agents": {
-              "a": "Rankings",
-              "b": "Competitors",
-              "c": "Backlinks",
-              "d": "Site health"
+            "parallelShort": "",
+            "nodes": {
+              "pull": "Pull rankings",
+              "pick": "Pick pages",
+              "refresh": "Refresh pages",
+              "check": "Fact-check",
+              "save": "Save drafts",
+              "report": "Report"
             },
-            "agentsShort": "Audit",
-            "merge": "Merge",
-            "review": "Review",
-            "find": "Find gaps",
-            "a": "Write briefs",
-            "b": "Send report",
-            "min": "≥ 10",
-            "unique": "not yet targeted"
+            "chips": {
+              "fallback": "fallback → Semrush",
+              "min": "≥ 8 pages",
+              "other": "one keyword each"
+            }
           },
           "run": {
-            "research": "4 Haiku agents audit the site in parallel",
-            "merge": "Merge the 4 audits",
-            "review": "Opus checks the summary",
-            "find": "Find keyword gaps in Semrush",
-            "contract": "Contract met: ≥ 10, not yet targeted",
-            "a": "GPT writes the briefs in Google Docs",
-            "b": "Email the report to the client"
+            "pull": "Pull rankings from Search Console",
+            "fallback": "Search Console timed out: using Semrush",
+            "pick": "Pick the pages that lost positions",
+            "contract": "Contract met: ≥ 8 pages, one keyword each",
+            "refresh": "8 Sonnet agents refresh a page each",
+            "check": "GPT fact-checks every change",
+            "report": "Drafts in WordPress, report by email"
           },
           "pause": {
-            "reason": "6 / 10 keyword gaps: below the contract",
-            "edit": "Include positions 11–30"
+            "reason": "5 / 8 pages: below the contract",
+            "edit": "Include drops of 2+ positions"
           }
         },
         "film": {
-          "routineName": "Weekly episode prep",
-          "prompt": "<k>Every Friday at 8:00</k>, break down next week’s script with <k>4 parallel agents on Haiku</k>: scenes, shot list, voiceover and music. Merge it into one plan and have <k>an Opus agent</k> check continuity. Find <k>at least 12 B-roll clips</k> on Pexels — <k>free to use only</k>. Generate the missing shots in Higgsfield and the thumbnail with <k>GPT Image</k>, record the voiceover in ElevenLabs and upload the draft to YouTube. <k>If a step fails, retry once, then ask me.</k>",
+          "routineName": "Weekly episode pipeline",
+          "prompt": "<k>Every Friday at 8:00</k>, have <k>an Opus agent</k> break down next week’s script. Then run <k>3 tracks side by side</k>: find <k>at least 12 B-roll clips</k> on Pexels, <k>free to use only</k>; record the voiceover in ElevenLabs; and make 3 thumbnails in Higgsfield — <k>if it fails, use GPT Image</k>. Assemble a rough cut, check continuity against the script and upload it to YouTube as a draft. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Fri 8:00",
-            "agents": {
-              "a": "Scenes",
-              "b": "Shot list",
-              "c": "Voiceover",
-              "d": "Music"
+            "parallelShort": "3 tracks",
+            "nodes": {
+              "breakdown": "Script breakdown",
+              "broll": "B-roll",
+              "voice": "Voiceover",
+              "thumbs": "Thumbnails",
+              "cut": "Rough cut",
+              "review": "Continuity",
+              "upload": "Upload draft"
             },
-            "agentsShort": "Breakdown",
-            "merge": "Merge",
-            "review": "Review",
-            "find": "Find B-roll",
-            "a": "Generate",
-            "b": "Upload draft",
-            "min": "≥ 12",
-            "unique": "free to use"
+            "chips": {
+              "min": "≥ 12",
+              "other": "free to use",
+              "fallback": "fallback → GPT Image"
+            }
           },
           "run": {
-            "research": "4 Haiku agents break down the script",
-            "merge": "Merge into one plan",
-            "review": "Opus checks continuity",
-            "find": "Find B-roll on Pexels",
+            "breakdown": "Opus breaks down the script",
+            "tracks": "3 tracks run side by side",
+            "fallback": "Higgsfield failed: GPT Image takes over",
             "contract": "Contract met: ≥ 12, free to use",
-            "a": "Generate shots, thumbnail and voiceover",
-            "b": "Upload the draft to YouTube"
+            "cut": "Assemble the rough cut",
+            "review": "Opus checks continuity",
+            "upload": "Upload the draft to YouTube"
           },
           "pause": {
             "reason": "7 / 12 clips: below the contract",
