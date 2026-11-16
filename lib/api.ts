@@ -301,6 +301,24 @@ export async function getMe(token: string): Promise<ToneUser> {
   return { id: raw.ID, email: raw.Email, name: raw.Name, handle: raw.Handle || "" };
 }
 
+/** What a new account said it plans to do with Toone. All optional. */
+export type OnboardingAnswers = {
+  use_cases: string[];
+  audience: string | null;
+  ai_tools: string[];
+  source: string | null;
+};
+
+/** `PUT /me/onboarding`. Callers treat a failure as "not saved" and move on. */
+export async function saveOnboarding(token: string, answers: OnboardingAnswers): Promise<void> {
+  await request<unknown>("/me/onboarding", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(answers),
+    cache: "no-store",
+  });
+}
+
 /** Claims the public @handle for the signed-in account and refreshes the stored session. */
 export async function claimHandle(session: ToneSession, handle: string): Promise<ToneSession> {
   const raw = await request<RawUser>("/me/handle", {

@@ -4,6 +4,25 @@ import { openGraphLocale } from "@/i18n/open-graph";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import AuthenticatedDownloadGrid from "@/components/AuthenticatedDownloadGrid";
+import DownloadGate from "@/components/billing/DownloadGate";
+import { checkoutAvailable } from "@/components/billing/PricingPlans.helpers";
+import { PRICING_CSS } from "@/components/billing/pricing-styles";
+import { getBillingFeaturesOrOff, getPrices, type Price } from "@/lib/billing/api";
+import { TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
+
+const CACHE = { next: { revalidate: 300 } } as const;
+
+/** Development only: a local API without a Stripe catalog borrows the public price list, so the plan cards can be seen. */
+async function developmentPrices(): Promise<Price[]> {
+  if (process.env.NODE_ENV === "production") return [];
+  try {
+    const res = await fetch("https://api.trytoone.com/v1/billing/prices", CACHE);
+    const body = (await res.json()) as { data?: Price[] };
+    return Array.isArray(body.data) ? body.data : [];
+  } catch {
+    return [];
+  }
+}
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -31,12 +50,18 @@ export default async function DownloadPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "downloadPage" });
   const landing = await getTranslations({ locale, namespace: "landing" });
+  const [listed, features] = await Promise.all([
+    getPrices(CACHE).catch((): Price[] => []),
+    getBillingFeaturesOrOff(CACHE),
+  ]);
+  const prices = listed.length ? listed : await developmentPrices();
 
   return (
     <>
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .download-page:has([data-paid-entry]) { max-width: 1120px; }
             .download-page {
               min-height: 100vh; max-width: 980px; margin: 0 auto;
               padding: var(--site-hero-top) 24px 120px; color: rgba(255,255,255,0.94);
@@ -140,8 +165,16 @@ export default async function DownloadPage({ params }: Props) {
           `,
         }}
       />
+      <style dangerouslySetInnerHTML={{ __html: PRICING_CSS }} />
       <Navigation />
       <main className="download-page">
+        <DownloadGate
+          paidEntry={features.paid_entry}
+          prices={prices}
+          checkoutEnabled={checkoutAvailable(features.stripe_pro_checkout, prices)}
+          freeCreations={TOONE_PRO_FREE_ROUTINE_CREATIONS}
+          refundDays={TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS}
+        >
         <header className="download-head">
           <div className="download-eyebrow">{t("eyebrow")}</div>
           <h1>{t("title")}</h1>
@@ -174,6 +207,7 @@ export default async function DownloadPage({ params }: Props) {
           {/* How-to is English-only, so every locale links the /en page. */}
           <a href="/en/how-to/getting-started/install-and-connect">{t("setupLink")}</a>
         </p>
+        </DownloadGate>
 
       </main>
       <Footer />

@@ -339,16 +339,16 @@ test("admin revoke (the redemption ledger lives in lib/billing/redemptions)", as
 
 test("billing feature flags come from public capabilities and fail closed", async () => {
   replies.push(data({ schema_version: 1, features: { stripe_pro_checkout: true, billing_portal: false, pro_codes: true, payments: true }, contracts: { payments: 2 }, legacy_contracts: [] }));
-  assert.deepEqual(await getBillingFeatures(), { stripe_pro_checkout: true, billing_portal: false, pro_codes: true, payments_contract: 2, billing_seller: null });
+  assert.deepEqual(await getBillingFeatures(), { stripe_pro_checkout: true, billing_portal: false, pro_codes: true, payments_contract: 2, paid_entry: false, billing_seller: null });
   assert.equal(calls[0].url, `${BASE}/capabilities`);
   assert.equal(calls[0].headers.get("Authorization"), null);
 
   // A server that predates the flags: everything off.
   replies.push(data({ schema_version: 1, features: { payments: false, stripe_pro_checkout: "yes" }, contracts: {} }));
-  assert.deepEqual(await getBillingFeatures(), { stripe_pro_checkout: false, billing_portal: false, pro_codes: false, payments_contract: 0, billing_seller: null });
+  assert.deepEqual(await getBillingFeatures(), { stripe_pro_checkout: false, billing_portal: false, pro_codes: false, payments_contract: 0, paid_entry: false, billing_seller: null });
 
   replies.push(reply(502));
-  assert.deepEqual(await getBillingFeaturesOrOff(), { stripe_pro_checkout: false, billing_portal: false, pro_codes: false, payments_contract: 0, billing_seller: null });
+  assert.deepEqual(await getBillingFeaturesOrOff(), { stripe_pro_checkout: false, billing_portal: false, pro_codes: false, payments_contract: 0, paid_entry: false, billing_seller: null });
 });
 
 test("the seller model comes from the top-level billing_seller; unknown values read as unknown", async () => {

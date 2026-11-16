@@ -1,5 +1,6 @@
 "use client";
 
+import AccessAvatar from "@/components/AccessAvatar";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -42,7 +43,6 @@ export default function RedeemCodeGate({
   onSignIn: (checked: CheckedCode | null) => void;
 }) {
   const t = useTranslations("account.redeem");
-  const tAccount = useTranslations("account");
   const [code, setCode] = useState(initialCode ?? "");
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
@@ -113,15 +113,17 @@ export default function RedeemCodeGate({
 
   return (
     <main className={styles.page}>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.gate}`}>
         <header className={styles.header}>
           <Link href="/" className={styles.brand} aria-label="Toone">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brand/toone-mark.svg" alt="" width={26} height={26} />toone
           </Link>
         </header>
+        <div className={styles.gateAvatar}>
+          <AccessAvatar />
+        </div>
         <div className={styles.title}>
-          <p className={styles.eyebrow}>{t("eyebrow")}</p>
           <h1>{t("gateTitle")}</h1>
           <p className={styles.sub}>{t("gateSub")}</p>
         </div>
@@ -163,9 +165,10 @@ export default function RedeemCodeGate({
             <button type="button" className={styles.linkButton} onClick={() => onSignIn(null)}>{t("gateSignIn")}</button>
           </p>
         )}
-        <nav className={styles.footerLinks} aria-label={tAccount("page.moreLinks")}>
-          <Link href="/terms#codes">{tAccount("common.terms")}</Link>
-        </nav>
+        <p className={`${styles.notice} ${styles.gateTerms}`}>
+          {t.rich("gateTerms", { link: (chunks) => <Link href="/terms#codes">{chunks}</Link> })}{" "}
+          {t.rich("gatePrivacy", { link: (chunks) => <Link href="/privacy">{chunks}</Link> })}
+        </p>
       </div>
     </main>
   );

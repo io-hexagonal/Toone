@@ -55,12 +55,16 @@ export default function PricingPlans({
   checkoutEnabled,
   freeCreations,
   refundDays,
+  paidEntry = false,
 }: {
   prices: Price[];
   checkoutEnabled: boolean;
   freeCreations: number;
   refundDays: number;
+  /** Downloads need Pro for now: show the Free plan, closed, beside the paid ones. */
+  paidEntry?: boolean;
 }) {
+  const entry = useTranslations("billing.paidEntry");
   const t = useTranslations("billing.pricing");
   const locale = useLocale();
   const { session, ready, endSession } = useStoredSession();
@@ -228,7 +232,7 @@ export default function PricingPlans({
     <section className="pricing-plans" aria-label={t("plansLabel")}>
       {cancelled && <p className="pricing-notice" role="status">{t("cancelled")}</p>}
 
-      {!checkoutEnabled && (
+      {!checkoutEnabled && !paidEntry && (
         <div className="pricing-soon" role="status">
           <h2>{t("soonTitle")}</h2>
           <p>{t("soonSub", { free: freeCreations })}</p>
@@ -236,7 +240,15 @@ export default function PricingPlans({
       )}
 
       {plans.length > 0 && (
-        <div className="pricing-grid">
+        <div className={`pricing-grid${paidEntry ? " pricing-grid--entry" : ""}`}>
+          {paidEntry && (
+            <article className="pricing-card pricing-card--free">
+              <h2>{entry("freeName")}</h2>
+              <p className="pricing-desc">{entry("freeText")}</p>
+              <button type="button" className="pricing-button" disabled>{entry("freeButton")}</button>
+              <span className="pricing-free-tag">{entry("freeBadge")}</span>
+            </article>
+          )}
           {plans.map(price => (
             <article
               key={price.plan}
@@ -280,6 +292,12 @@ export default function PricingPlans({
         </div>
       )}
 
+      {paidEntry && (
+        <p className="pricing-redeem">
+          {entry.rich("redeem", { link: chunks => <Link href="/redeem">{chunks}</Link> })}
+        </p>
+      )}
+
       {errorKey && <p className="pricing-error" role="alert">{t(errorKey)}</p>}
       {errorKey && fixPayment && session && (
         <div className="pricing-account">
@@ -291,18 +309,34 @@ export default function PricingPlans({
       )}
 
       {plans.length > 0 && (
-        <ul className="pricing-terms">
-          <li>{t(taxNoteKey(plans))} {t("currencyNote")}</li>
-          <li>{t("renewal")}</li>
-          <li>{t("refund", { days: refundDays })}</li>
-          <li>{t("edition")}</li>
-          <li>
-            {t.rich("termsLine", {
-              terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
-            })}{" "}
+        <div className="pricing-fineprint">
+          <p className="pricing-stripe">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logos/stripe.svg" alt="" width={16} height={16} />
             {t("stripeLine")}
-          </li>
-        </ul>
+          </p>
+          <p>
+            {t.rich("termsShort", {
+              days: refundDays,
+              terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
+            })}
+          </p>
+          <details>
+            <summary>{t("termsMore")}</summary>
+            <ul className="pricing-terms">
+              <li>{t(taxNoteKey(plans))} {t("currencyNote")}</li>
+              <li>{t("renewal")}</li>
+              <li>{t("refund", { days: refundDays })}</li>
+              <li>{t("edition")}</li>
+              <li>
+                {t.rich("termsLine", {
+                  terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
+                })}{" "}
+                {t("stripeLine")}
+              </li>
+            </ul>
+          </details>
+        </div>
       )}
     </section>
   );

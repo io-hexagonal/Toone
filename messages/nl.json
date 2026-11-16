@@ -126,7 +126,7 @@
       "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
       "errGeneric": "Er ging iets mis. Probeer het opnieuw.",
       "gateTitle": "Wissel je code in",
-      "gateSub": "Vul eerst je code in. Maak daarna je Toone-account aan met de code, of log in op het account dat je al hebt.",
+      "gateSub": "Nog één code. Vul hem in om je Toone-account te maken, of voeg hem toe aan het account dat je al hebt.",
       "gateContinue": "Doorgaan",
       "gateValidTitle": "Je code is geldig",
       "gateExistingOnly": "Deze code werkt met een bestaand Toone-account. Log in om hem in te wisselen.",
@@ -141,7 +141,9 @@
       "launchTitle": "Welkom vanaf Product Hunt",
       "launchSub": "Bedankt dat je op de lanceringsdag naar Toone komt.",
       "doneLifetimeTitle": "Toone Pro Lifetime is actief",
-      "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email})."
+      "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email}).",
+      "gateTerms": "Door verder te gaan, ga je akkoord met onze <link>Voorwaarden</link>",
+      "gatePrivacy": "en ons <link>Privacybeleid</link>."
     },
     "verify": {
       "body": "Om {email} te bevestigen, mailen we je een code.",
@@ -730,7 +732,7 @@
       "buyBusy": "Betaling wordt geopend…",
       "checking": "Je account wordt gecontroleerd…",
       "signInToBuy": "Log in om te kopen",
-      "inviteOnly": "Je hebt een Toone-account nodig om te kopen. Toone werkt voorlopig alleen op uitnodiging. Nog geen account?",
+      "inviteOnly": "Je hebt een Toone-account nodig om te kopen.",
       "requestAccess": "Toegang aanvragen",
       "accountLine": "Toone Pro wordt toegevoegd aan {email}.",
       "notYou": "Ben jij dit niet?",
@@ -763,7 +765,9 @@
       "errPaymentDue": "De laatste betaling voor je Toone Pro-abonnement van trytoone.com is niet gelukt, dus Toone Pro staat uit tot die betaald is. Zolang dat abonnement openstaat, kan er geen nieuwe betaling starten: werk je betaalmethode bij op de factuurpagina, dan komt Toone Pro terug zodra de betaling lukt.",
       "fixPayment": "Betaalmethode bijwerken",
       "fixPaymentBusy": "Factuurpagina wordt geopend…",
-      "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com."
+      "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com.",
+      "termsShort": "Incl. btw waar van toepassing · Abonnementen lopen door tot je opzegt · {days} dagen geld terug bij je eerste aankoop. Door te kopen ga je akkoord met de <terms>Toone Pro-voorwaarden</terms>.",
+      "termsMore": "Factuurdetails"
     },
     "success": {
       "metaTitle": "Betalingsbevestiging",
@@ -815,6 +819,17 @@
       "backToPricing": "Terug naar prijzen",
       "questions": "Vragen?",
       "contact": "Neem contact op"
+    },
+    "paidEntry": {
+      "title": "Kies een abonnement om Toone te downloaden",
+      "ready": "Je account is klaar.",
+      "sub": "Kies een abonnement en je download is direct beschikbaar.",
+      "freeName": "Gratis",
+      "freeBadge": "Opent binnenkort",
+      "freeText": "We beginnen met betalende leden, zodat elke vroege gebruiker onze volle aandacht krijgt. Gratis accounts openen begin 2027.",
+      "freeButton": "Nog niet beschikbaar",
+      "redeem": "Heb je een code? <link>Wissel hem in</link>",
+      "checking": "Je abonnement wordt gecontroleerd…"
     }
   },
   "statement": {
@@ -887,7 +902,47 @@
     "launchAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Welkom, Sumo-ling",
-    "appsumoAccountSub": "Maak je account aan om je levenslange Toone Pro te activeren."
+    "appsumoAccountSub": "Maak je account aan om je levenslange Toone Pro te activeren.",
+    "onboarding": {
+      "metaTitle": "Welkom bij Toone",
+      "title": "Welkom bij Toone",
+      "sub": "Vier korte vragen zodat we Toone voor je kunnen instellen.",
+      "hintAny": "Kies alles wat past",
+      "continue": "Doorgaan",
+      "skip": "Nu overslaan",
+      "use": {
+        "q": "Waarvoor ga je Toone gebruiken?",
+        "marketing": "Marketing & content",
+        "seo": "SEO",
+        "video": "Video & film",
+        "research": "Onderzoek",
+        "sales": "Sales & outreach",
+        "engineering": "Engineering",
+        "other": "Iets anders"
+      },
+      "team": {
+        "q": "Voor wie is het?",
+        "me": "Alleen ik",
+        "team": "Mijn team",
+        "clients": "Mijn klanten"
+      },
+      "tools": {
+        "q": "Welke AI-tools gebruik je al?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Nog geen"
+      },
+      "source": {
+        "q": "Hoe heb je ons gevonden?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Een vriend",
+        "search": "Zoekmachine",
+        "other": "Anders"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Praktisch werken met Toone",

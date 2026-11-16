@@ -126,7 +126,7 @@
       "errRate": "Too many attempts. Wait a minute, then try again.",
       "errGeneric": "Something went wrong. Please try again.",
       "gateTitle": "Redeem your code",
-      "gateSub": "Enter your code first. Then create your Toone account with it, or sign in to the account you already have.",
+      "gateSub": "You’re one code away. Enter it to create your Toone account, or add it to the one you already have.",
       "gateContinue": "Continue",
       "gateValidTitle": "Your code is valid",
       "gateExistingOnly": "This code works with an existing Toone account. Sign in to redeem it.",
@@ -141,7 +141,9 @@
       "launchTitle": "Welcome from Product Hunt",
       "launchSub": "Thanks for joining Toone on launch day.",
       "doneLifetimeTitle": "Toone Pro Lifetime is active",
-      "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email})."
+      "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email}).",
+      "gateTerms": "By continuing, you agree to our <link>Terms</link>",
+      "gatePrivacy": "and <link>Privacy Policy</link>."
     },
     "verify": {
       "body": "To confirm {email}, we'll email you a code.",
@@ -730,7 +732,7 @@
       "buyBusy": "Opening checkout…",
       "checking": "Checking your account…",
       "signInToBuy": "Sign in to buy",
-      "inviteOnly": "You need a Toone account to buy. Toone is invitation-only for now. No account yet?",
+      "inviteOnly": "You need a Toone account to buy.",
       "requestAccess": "Request access",
       "accountLine": "Toone Pro will be added to {email}.",
       "notYou": "Not you?",
@@ -763,7 +765,9 @@
       "errPaymentDue": "The last payment for your Toone Pro subscription from trytoone.com didn't go through, so Toone Pro is off until it is paid. A new checkout can't start while that subscription is open: update your payment method on the billing page, and Toone Pro comes back once the payment goes through.",
       "fixPayment": "Update payment method",
       "fixPaymentBusy": "Opening the billing page…",
-      "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com."
+      "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com.",
+      "termsShort": "VAT included where it applies · Subscriptions renew until you cancel · {days}‑day refund on your first purchase. By buying, you agree to the <terms>Toone Pro terms</terms>.",
+      "termsMore": "Billing details"
     },
     "success": {
       "metaTitle": "Payment confirmation",
@@ -815,6 +819,17 @@
       "backToPricing": "Back to pricing",
       "questions": "Questions?",
       "contact": "Contact us"
+    },
+    "paidEntry": {
+      "title": "Choose a plan to download Toone",
+      "ready": "Your account is ready.",
+      "sub": "Pick a plan and your download unlocks right away.",
+      "freeName": "Free",
+      "freeBadge": "Opens soon",
+      "freeText": "We’re starting with paying members so every early user gets our full attention. Free accounts open in early 2027.",
+      "freeButton": "Not available yet",
+      "redeem": "Have a code? <link>Redeem it</link>",
+      "checking": "Checking your plan…"
     }
   },
   "statement": {
@@ -887,7 +902,47 @@
     "launchAccountSub": "Sign up with Google or your email to download Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Welcome, Sumo-ling",
-    "appsumoAccountSub": "Create your account to activate your lifetime Toone Pro."
+    "appsumoAccountSub": "Create your account to activate your lifetime Toone Pro.",
+    "onboarding": {
+      "metaTitle": "Welcome to Toone",
+      "title": "Welcome to Toone",
+      "sub": "Four quick questions so we can set Toone up for you.",
+      "hintAny": "Pick any that apply",
+      "continue": "Continue",
+      "skip": "Skip for now",
+      "use": {
+        "q": "What will you use Toone for?",
+        "marketing": "Marketing & content",
+        "seo": "SEO",
+        "video": "Video & film",
+        "research": "Research",
+        "sales": "Sales & outreach",
+        "engineering": "Engineering",
+        "other": "Something else"
+      },
+      "team": {
+        "q": "Who is it for?",
+        "me": "Just me",
+        "team": "My team",
+        "clients": "My clients"
+      },
+      "tools": {
+        "q": "Which AI tools do you already use?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "None yet"
+      },
+      "source": {
+        "q": "How did you hear about us?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "A friend",
+        "search": "Search",
+        "other": "Other"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Guides and resources for working with Toone",

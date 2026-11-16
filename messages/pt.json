@@ -126,7 +126,7 @@
       "errRate": "Tentativas demais. Aguarde um minuto e tente novamente.",
       "errGeneric": "Algo deu errado. Tente novamente.",
       "gateTitle": "Resgate o seu código",
-      "gateSub": "Primeiro, insira o seu código. Depois, crie a sua conta Toone com ele ou entre na conta que você já tem.",
+      "gateSub": "Estás a um código de entrar. Introduz o código para criar a tua conta Toone ou junta-o à que já tens.",
       "gateContinue": "Continuar",
       "gateValidTitle": "O seu código é válido",
       "gateExistingOnly": "Este código funciona com uma conta Toone existente. Entre para resgatá-lo.",
@@ -141,7 +141,9 @@
       "launchTitle": "Bem-vindo, comunidade do Product Hunt",
       "launchSub": "Obrigado por chegar ao Toone no dia do lançamento.",
       "doneLifetimeTitle": "Toone Pro Lifetime está ativo",
-      "doneSameAccount": "Baixe o Toone para Mac e entre com a mesma conta ({email})."
+      "doneSameAccount": "Baixe o Toone para Mac e entre com a mesma conta ({email}).",
+      "gateTerms": "Ao continuar, aceitas os nossos <link>Termos</link>",
+      "gatePrivacy": "e a <link>Política de Privacidade</link>."
     },
     "verify": {
       "body": "Para confirmar {email}, enviamos um código por e-mail.",
@@ -730,7 +732,7 @@
       "buyBusy": "A abrir o checkout…",
       "checking": "A verificar a sua conta…",
       "signInToBuy": "Entre para comprar",
-      "inviteOnly": "Precisa de uma conta Toone para comprar. Por agora, o Toone funciona apenas por convite. Ainda não tem conta?",
+      "inviteOnly": "Precisa de uma conta Toone para comprar.",
       "requestAccess": "Pedir acesso",
       "accountLine": "O Toone Pro será adicionado a {email}.",
       "notYou": "Não é você?",
@@ -763,7 +765,9 @@
       "errPaymentDue": "O último pagamento da sua assinatura do Toone Pro feita em trytoone.com não foi concluído, por isso o Toone Pro está desativado até ser pago. Enquanto essa assinatura estiver aberta, não é possível iniciar um novo checkout: atualize o seu método de pagamento na página de faturação e o Toone Pro volta assim que o pagamento for concluído.",
       "fixPayment": "Atualizar método de pagamento",
       "fixPaymentBusy": "A abrir a página de faturação…",
-      "errPortal": "Não foi possível abrir a página de faturação. Tente novamente daqui a pouco ou escreva para hello@trytoone.com."
+      "errPortal": "Não foi possível abrir a página de faturação. Tente novamente daqui a pouco ou escreva para hello@trytoone.com.",
+      "termsShort": "IVA incluído quando aplicável · As subscrições renovam até cancelares · Reembolso em {days} dias na primeira compra. Ao comprar, aceitas os <terms>termos do Toone Pro</terms>.",
+      "termsMore": "Detalhes de faturação"
     },
     "success": {
       "metaTitle": "Confirmação de pagamento",
@@ -815,6 +819,17 @@
       "backToPricing": "Voltar aos preços",
       "questions": "Dúvidas?",
       "contact": "Fale connosco"
+    },
+    "paidEntry": {
+      "title": "Escolhe um plano para descarregar o Toone",
+      "ready": "A tua conta está pronta.",
+      "sub": "Escolhe um plano e a transferência fica logo disponível.",
+      "freeName": "Grátis",
+      "freeBadge": "Abre em breve",
+      "freeText": "Começamos com membros pagantes para dar toda a atenção a cada um dos primeiros utilizadores. As contas gratuitas abrem no início de 2027.",
+      "freeButton": "Ainda não disponível",
+      "redeem": "Tens um código? <link>Resgata-o</link>",
+      "checking": "A verificar o teu plano…"
     }
   },
   "statement": {
@@ -887,7 +902,47 @@
     "launchAccountSub": "Registe-se com o Google ou o seu email para transferir o Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Bem-vindo, Sumo-ling",
-    "appsumoAccountSub": "Crie a sua conta para ativar o seu Toone Pro vitalício."
+    "appsumoAccountSub": "Crie a sua conta para ativar o seu Toone Pro vitalício.",
+    "onboarding": {
+      "metaTitle": "Bem-vindo ao Toone",
+      "title": "Bem-vindo ao Toone",
+      "sub": "Quatro perguntas rápidas para prepararmos o Toone para ti.",
+      "hintAny": "Escolhe as que se aplicam",
+      "continue": "Continuar",
+      "skip": "Saltar por agora",
+      "use": {
+        "q": "Para que vais usar o Toone?",
+        "marketing": "Marketing e conteúdo",
+        "seo": "SEO",
+        "video": "Vídeo e cinema",
+        "research": "Investigação",
+        "sales": "Vendas e prospeção",
+        "engineering": "Engenharia",
+        "other": "Outra coisa"
+      },
+      "team": {
+        "q": "Para quem é?",
+        "me": "Só para mim",
+        "team": "A minha equipa",
+        "clients": "Os meus clientes"
+      },
+      "tools": {
+        "q": "Que ferramentas de IA já usas?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Nenhuma ainda"
+      },
+      "source": {
+        "q": "Como soubeste de nós?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Um amigo",
+        "search": "Pesquisa",
+        "other": "Outro"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Formas práticas de trabalhar com o Toone",
