@@ -80,7 +80,8 @@ type Props = {
 
 const CSS = `
 .hg {
-  --ink: 29,28,25; --spine: 190px;
+  --ink: 29,28,25; --spine: min(190px, calc((100cqw - 20px) / 3));
+  container-type: inline-size;
   position: relative; display: flex; flex-direction: column; gap: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 }
@@ -145,8 +146,16 @@ const CSS = `
 .hg-when svg { width: 10px; height: 10px; }
 .hg-node[data-s="draft"] .hg-when { box-shadow: none; outline: 1px dashed rgba(var(--ink),0.3); outline-offset: -1px; color: rgba(var(--ink),0.5); }
 .hg-sub { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; }
-.hg-mini { display: inline-flex; align-items: center; gap: 4px; }
+.hg-mini { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; }
+.hg-n + .hg-mini { margin-left: 8px; }
+.hg-mini span {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #fff;
+  box-shadow: inset 0 0 0 .7px rgba(var(--ink),0.14), 0 1px 2px rgba(0,0,0,0.05);
+}
 .hg-mini img { width: 12px; height: 12px; display: block; object-fit: contain; }
+.hg-node[data-s="running"] .hg-mini span { box-shadow: inset 0 0 0 1px rgba(var(--ink),0.5), 0 1px 2px rgba(0,0,0,0.05); }
+.hg-card--agent { padding-bottom: 0; }
+.hg-sub { min-height: 20px; }
 .hg-node[data-s="draft"] .hg-mini { opacity: .5; }
 .hg-n { margin-left: auto; color: rgba(var(--ink),0.58); font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .hg-node[data-s="paused"] .hg-n { color: #b25a00; }
@@ -489,7 +498,7 @@ function Mini({ logos }: { logos: readonly LogoKey[] }) {
     <span className="hg-mini">
       {logos.map((logo) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={`/assets/logos/${logo}.svg`} alt="" width={12} height={12} key={logo} />
+        <span key={logo}><img src={`/assets/logos/${logo}.svg`} alt="" width={12} height={12} /></span>
       ))}
     </span>
   );
@@ -618,7 +627,6 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
     );
   };
   const order = rows.flat(2).map((n) => n.id);
-  const inLane = new Set(rows.filter((lanes) => lanes.length > 1).flat(2).map((n) => n.id));
   /** Every step is the same card: title, then its number, model and details. */
   const card = (n: NodeSpec, extra?: ReactNode) => (
     <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}`} data-n={n.id}>
@@ -631,10 +639,10 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
       <span className="hg-sub">
         <span className="hg-step">{order.indexOf(n.id) + 1}</span>
         {n.model && <Model name={n.model} />}
-        {inLane.has(n.id) && n.logos && <Mini logos={n.logos} />}
         {n.each && <span className="hg-times">×{n.each}</span>}
         {again.includes(n.id) && <span className="hg-times">×2</span>}
         {n.counter && counter !== null && <span className="hg-n">{counter}</span>}
+        {n.logos && <Mini logos={n.logos} />}
       </span>
       <span className="hg-prog">
         <i style={{ "--d": `${durations[n.id] ?? 1600}ms` } as CSSProperties} />
@@ -760,11 +768,10 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
                 ),
               )}
             </div>
-            {(n.logos || loops) && (
+            {loops && (
               <div className="hg-r">
                 <span className="hg-conn" />
-                {n.logos && <Capsule logos={n.logos} />}
-                {loops && (
+                {(
                   <span className="hg-chip hg-chip--loop" data-n="loop" data-s={chips[loops.chip] ?? "open"}>
                     <Icon name="retry" />
                     {labels.chips[loops.chip]}
