@@ -1,5 +1,6 @@
 "use client";
 
+import AccessAvatar from "@/components/AccessAvatar";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -113,15 +114,17 @@ export default function RedeemCodeGate({
 
   return (
     <main className={styles.page}>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.gate}`}>
         <header className={styles.header}>
           <Link href="/" className={styles.brand} aria-label="Toone">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brand/toone-mark.svg" alt="" width={26} height={26} />toone
           </Link>
         </header>
+        <div className={styles.gateAvatar}>
+          <AccessAvatar />
+        </div>
         <div className={styles.title}>
-          <p className={styles.eyebrow}>{t("eyebrow")}</p>
           <h1>{t("gateTitle")}</h1>
           <p className={styles.sub}>{t("gateSub")}</p>
         </div>

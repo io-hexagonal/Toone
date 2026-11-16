@@ -59,6 +59,26 @@
 .gateFoot { margin: 16px 0 0; }
 .footerLinks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 28px; font-size: 13px; }
 .footerLinks a, .footerLinks button { color: #b2b0aa !important; }
+/* /redeem, signed out: one centred column with the avatar, the code field and one button. */
+.gate { max-width: 460px; text-align: center; }
+.gate .header { justify-content: center; border-bottom: 0; padding-bottom: 0; }
+.gateAvatar { margin: clamp(28px, 7vh, 64px) 0 18px; }
+.gateAvatar video { width: 148px !important; height: 148px !important; margin: 0 auto !important; }
+.gate .title { margin: 6px 0 26px; }
+.page .gate h1 { font-size: clamp(32px, 6vw, 44px); line-height: 1.08; margin-bottom: 12px; text-wrap: balance; }
+.gate .sub { font-size: 15.5px; text-wrap: balance; }
+.gate .panel { padding: 24px; border-radius: 22px; text-align: left; }
+.gate form > label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.gate .inline { flex-direction: column; gap: 12px; }
+.page .gate .inline input { flex: none; height: 54px; border-radius: 13px; font-size: 16px; text-align: center; }
+.page .gate .inline .primary { height: 50px; border-radius: 13px; font-size: 15px; }
+.gate form small { text-align: center; margin-top: 12px; }
+.gate .error { text-align: center; }
+.gate .gateFoot { margin-top: 20px; font-size: 13.5px; }
+.gate .footerLinks { justify-content: center; margin-top: 22px; }
+.gate .actions { justify-content: center; }
+.gate .validCode { text-align: center; }
+.gate .welcome { text-align: left; }
 @media (max-width: 640px) {
   .page { padding: 22px 16px 56px; }
   .header { align-items: flex-start; }
