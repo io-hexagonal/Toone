@@ -12,6 +12,18 @@ import { TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS }
 
 const CACHE = { next: { revalidate: 300 } } as const;
 
+/** Development only: a local API without a Stripe catalog borrows the public price list, so the plan cards can be seen. */
+async function developmentPrices(): Promise<Price[]> {
+  if (process.env.NODE_ENV === "production") return [];
+  try {
+    const res = await fetch("https://api.trytoone.com/v1/billing/prices", CACHE);
+    const body = (await res.json()) as { data?: Price[] };
+    return Array.isArray(body.data) ? body.data : [];
+  } catch {
+    return [];
+  }
+}
+
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -38,10 +50,11 @@ export default async function DownloadPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "downloadPage" });
   const landing = await getTranslations({ locale, namespace: "landing" });
-  const [prices, features] = await Promise.all([
+  const [listed, features] = await Promise.all([
     getPrices(CACHE).catch((): Price[] => []),
     getBillingFeaturesOrOff(CACHE),
   ]);
+  const prices = listed.length ? listed : await developmentPrices();
 
   return (
     <>
