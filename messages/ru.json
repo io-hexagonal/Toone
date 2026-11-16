@@ -430,6 +430,18 @@
       "promptSend": "Отправить",
       "fallback": "повтор ×1 → спросить",
       "pauseNote": "Готовые шаги сохраняют результаты.",
+      "agents": {
+        "strategist": "Стратег",
+        "researcher": "Исследователь",
+        "writer": "Автор",
+        "reviewer": "Ревьюер",
+        "designer": "Дизайнер",
+        "publisher": "Публикатор",
+        "analyst": "Аналитик",
+        "producer": "Продюсер",
+        "editor": "Монтажёр",
+        "narrator": "Диктор"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Еженедельная контент-машина",

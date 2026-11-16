@@ -430,6 +430,18 @@
       "promptSend": "Send",
       "fallback": "retry ×1 → ask me",
       "pauseNote": "Finished steps keep their results.",
+      "agents": {
+        "strategist": "Strategist",
+        "researcher": "Researcher",
+        "writer": "Writer",
+        "reviewer": "Reviewer",
+        "designer": "Designer",
+        "publisher": "Publisher",
+        "analyst": "Analyst",
+        "producer": "Producer",
+        "editor": "Editor",
+        "narrator": "Narrator"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Weekly content engine",

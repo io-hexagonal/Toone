@@ -81,12 +81,12 @@ const SCENARIOS: Record<Persona, Scenario> = {
   marketer: {
     graph: {
       rows: [
-        { id: "topics", model: "Opus" },
-        [{ id: "trends", model: "Haiku" }, { id: "competitors", model: "Haiku" }],
-        { id: "draft", model: "Sonnet" },
-        { id: "review", model: "GPT", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
-        { id: "visuals", logos: ["figma"] },
-        { id: "publish", logos: ["linkedin", "threads", "instagram"], chips: [{ key: "gate", icon: "chat" }] },
+        { id: "topics", agent: "strategist", model: "Opus" },
+        [{ id: "trends", agent: "researcher", model: "Haiku" }, { id: "competitors", agent: "researcher", model: "Haiku" }],
+        { id: "draft", agent: "writer", model: "Sonnet" },
+        { id: "review", agent: "reviewer", model: "GPT", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        { id: "visuals", agent: "designer", logos: ["figma"] },
+        { id: "publish", agent: "publisher", logos: ["linkedin", "threads", "instagram"], chips: [{ key: "gate", icon: "chat" }] },
       ],
       loop: { from: "review", to: "draft", chip: "loop" },
     },
@@ -109,11 +109,11 @@ const SCENARIOS: Record<Persona, Scenario> = {
   seo: {
     graph: {
       rows: [
-        { id: "pull", logos: ["search-console", "semrush"], chips: [{ key: "fallback", icon: "retry" }] },
-        { id: "pick", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
-        { id: "refresh", model: "Sonnet", each: 8 },
-        { id: "check", model: "GPT" },
-        [{ id: "save", logos: ["wordpress"] }, { id: "report", logos: ["google-docs", "gmail"] }],
+        { id: "pull", agent: "analyst", logos: ["search-console", "semrush"], chips: [{ key: "fallback", icon: "retry" }] },
+        { id: "pick", agent: "analyst", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        { id: "refresh", agent: "writer", model: "Sonnet", each: 8 },
+        { id: "check", agent: "reviewer", model: "GPT" },
+        [{ id: "save", agent: "publisher", logos: ["wordpress"] }, { id: "report", agent: "analyst", logos: ["google-docs", "gmail"] }],
       ],
     },
     run: {
@@ -134,21 +134,21 @@ const SCENARIOS: Record<Persona, Scenario> = {
   film: {
     graph: {
       rows: [
-        { id: "breakdown", model: "Opus" },
+        { id: "breakdown", agent: "producer", model: "Opus" },
         [
           [
-            { id: "broll", logos: ["pexels"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
-            { id: "trim", model: "Haiku" },
+            { id: "broll", agent: "researcher", logos: ["pexels"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+            { id: "trim", agent: "editor", model: "Haiku" },
           ],
-          [{ id: "voice", logos: ["elevenlabs"] }, { id: "captions", model: "Haiku" }],
+          [{ id: "voice", agent: "narrator", logos: ["elevenlabs"] }, { id: "captions", agent: "editor", model: "Haiku" }],
           [
-            { id: "thumbs", logos: ["higgsfield", "openai"], chips: [{ key: "fallback", icon: "retry" }] },
-            { id: "pick", model: "Opus" },
+            { id: "thumbs", agent: "designer", logos: ["higgsfield", "openai"], chips: [{ key: "fallback", icon: "retry" }] },
+            { id: "pick", agent: "producer", model: "Opus" },
           ],
         ],
-        { id: "cut" },
-        { id: "review", model: "Opus" },
-        { id: "upload", logos: ["youtube"] },
+        { id: "cut", agent: "editor" },
+        { id: "review", agent: "reviewer", model: "Opus" },
+        { id: "upload", agent: "publisher", logos: ["youtube"] },
       ],
     },
     run: {
@@ -432,6 +432,7 @@ export default function HowItWorksSection() {
     fallback: t("fallback"),
     parallelShort: t(`${sc}.graph.parallelShort`),
     nodes: Object.fromEntries(ids.map((n) => [n.id, t(`${sc}.graph.nodes.${n.id}`)])),
+    agents: Object.fromEntries(ids.map((n) => [n.agent, t(`agents.${n.agent}`)])),
     chips: Object.fromEntries(chipKeys.map((key) => [key, t(`${sc}.graph.chips.${key}`)])),
     running: g("running"),
     paused: g("paused"),

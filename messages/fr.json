@@ -430,6 +430,18 @@
       "promptSend": "Envoyer",
       "fallback": "réessai ×1 → me demander",
       "pauseNote": "Les étapes terminées gardent leurs résultats.",
+      "agents": {
+        "strategist": "Stratège",
+        "researcher": "Chercheur",
+        "writer": "Rédacteur",
+        "reviewer": "Relecteur",
+        "designer": "Designer",
+        "publisher": "Diffuseur",
+        "analyst": "Analyste",
+        "producer": "Producteur",
+        "editor": "Monteur",
+        "narrator": "Narrateur"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Moteur de contenu hebdomadaire",

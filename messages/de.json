@@ -430,6 +430,18 @@
       "promptSend": "Senden",
       "fallback": "1× wiederholen → fragen",
       "pauseNote": "Fertige Schritte behalten ihre Ergebnisse.",
+      "agents": {
+        "strategist": "Stratege",
+        "researcher": "Rechercheur",
+        "writer": "Texter",
+        "reviewer": "Prüfer",
+        "designer": "Designer",
+        "publisher": "Publisher",
+        "analyst": "Analyst",
+        "producer": "Producer",
+        "editor": "Cutter",
+        "narrator": "Sprecher"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Wöchentliche Content-Maschine",
