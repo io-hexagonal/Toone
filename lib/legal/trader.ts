@@ -16,8 +16,11 @@
  * fails too, when run with either variable.
  *
  * The identity, address, tax number and email are the trader's registered
- * details; the remaining TODO_OWNER values (telephone, CAE, Livro de
- * Reclamações link, ADR entity) must still come from the owner.
+ * details. The complaints book is the official portal; the ADR entity is the
+ * consumer arbitration centre competent for the trader's municipality (São
+ * João da Madeira, Porto Metropolitan Area; Lei 144/2015). A telephone number
+ * and the CAE code are not published (owner decision 2026-11-16): contact is
+ * by the email above.
  */
 export const TODO_OWNER = "TODO_OWNER";
 
@@ -46,25 +49,20 @@ export const LEGAL_TRADER = {
     value: "hello@trytoone.com",
     href: "mailto:hello@trytoone.com",
   },
-  phone: {
-    label: "Telephone",
-    value: `${TODO_OWNER}: telephone number with country code`,
-  },
   taxId: {
     label: "NIF / VAT number",
     value: "PT308520050",
   },
-  activityCode: {
-    label: "Activity code (CAE)",
-    value: `${TODO_OWNER}: CAE code(s) of the open activity at Finanças`,
-  },
   complaintsBook: {
     label: "Livro de Reclamações Eletrónico",
-    value: `${TODO_OWNER}: Livro de Reclamações Eletrónico link for this trader`,
+    value: "www.livroreclamacoes.pt",
+    href: "https://www.livroreclamacoes.pt/",
   },
   adrEntity: {
     label: "Alternative dispute resolution entity",
-    value: `${TODO_OWNER}: ADR entity name, website and address (Lei 144/2015)`,
+    value:
+      "CICAP – Centro de Informação de Consumo e Arbitragem do Porto, Rua Damião de Góis 31, Loja 6, 4050-225 Porto, Portugal (www.cicap.pt). Consumers may also turn to any entity on the list at www.consumidor.gov.pt.",
+    href: "https://www.cicap.pt/",
   },
 } satisfies Record<string, TraderField>;
 

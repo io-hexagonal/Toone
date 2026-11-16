@@ -21,9 +21,7 @@ const TRADER_ROWS: TraderKey[] = [
   "tradingName",
   "address",
   "email",
-  "phone",
   "taxId",
-  "activityCode",
 ];
 const COMPLAINT_ROWS: TraderKey[] = ["complaintsBook", "adrEntity"];
 

@@ -43,7 +43,7 @@ test("the legal notice renders every trader field from lib/legal/trader.ts", () 
   const page = read(PAGE);
   const rendered = [...page.matchAll(/"([a-zA-Z]+)"/g)].map((match) => match[1]);
   for (const key of Object.keys(LEGAL_TRADER)) assert.ok(rendered.includes(key), `${key} is not rendered`);
-  for (const key of ["fullName", "tradingName", "address", "email", "phone", "taxId", "activityCode", "complaintsBook", "adrEntity"]) {
+  for (const key of ["fullName", "tradingName", "address", "email", "taxId", "complaintsBook", "adrEntity"]) {
     assert.ok(key in LEGAL_TRADER, key);
   }
   assert.match(page, /<WebSales seller=\{seller\} \/>/);
