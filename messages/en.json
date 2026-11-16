@@ -433,11 +433,12 @@
       "scenarios": {
         "marketer": {
           "routineName": "Weekly content engine",
-          "prompt": "<k>Every Monday at 9:00</k>, research what our audience is talking about with <k>2 parallel agents on Haiku</k>: trends and competitors. Have <k>a Sonnet agent</k> draft 3 LinkedIn posts and <k>a GPT agent</k> review them: <k>brand voice at least 8/10, every claim sourced</k>. <k>Send weak drafts back, twice at most.</k> Make the visuals in Figma, <k>ask me before publishing</k>, then post to LinkedIn, Threads and Instagram. <k>If a step fails, retry once, then ask me.</k>",
+          "prompt": "<k>Every Monday at 9:00</k>, pick this week’s topics from last week’s results and research them with <k>2 parallel agents on Haiku</k>: trends and competitors. Have <k>a Sonnet agent</k> draft 3 LinkedIn posts and <k>a GPT agent</k> review them: <k>brand voice at least 8/10, every claim sourced</k>. <k>Send weak drafts back, twice at most.</k> Make the visuals in Figma, <k>ask me before publishing</k>, then post to LinkedIn, Threads and Instagram. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 9:00",
             "parallelShort": "Research ×2",
             "nodes": {
+              "topics": "Pick topics",
               "trends": "Trends",
               "competitors": "Competitors",
               "draft": "Draft posts",
@@ -453,13 +454,13 @@
             }
           },
           "run": {
+            "topics": "Opus picks topics from last week’s results",
             "research": "2 Haiku agents research in parallel",
             "draft": "Sonnet drafts 3 posts",
             "review": "GPT reviews the brand voice",
             "loop": "Below 8: sent back for a rewrite",
             "contract": "Contract met: voice ≥ 8/10, claims sourced",
-            "visuals": "Visuals in Figma",
-            "publish": "You approve, it posts to 3 accounts"
+            "publish": "Visuals made, you approve, it posts"
           },
           "pause": {
             "reason": "Brand voice 6 / 10: below the contract",
