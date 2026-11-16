@@ -62,7 +62,7 @@
 /* /redeem, signed out: one centred column with the avatar, the code field and one button. */
 .gate { max-width: 460px; text-align: center; }
 .gate .header { justify-content: center; border-bottom: 0; padding-bottom: 0; }
-.gateAvatar { margin: clamp(28px, 7vh, 64px) 0 18px; }
+.gateAvatar { margin: clamp(28px, 13vh, 150px) 0 18px; }
 .gateAvatar video { width: 148px !important; height: 148px !important; margin: 0 auto !important; }
 .gate .title { margin: 6px 0 26px; }
 .page .gate h1 { font-size: clamp(32px, 6vw, 44px); line-height: 1.08; margin-bottom: 12px; text-wrap: balance; }
