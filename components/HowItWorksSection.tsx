@@ -405,7 +405,12 @@ export default function HowItWorksSection() {
               position: absolute; right: 13px; bottom: 13px;
               display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
               background: #141311; color: #f0ede6;
+              border: 0; padding: 0; cursor: pointer;
+              transition: transform 0.15s ease, background-color 0.15s ease;
             }
+            .hiw-send:hover { background: #2b2925; transform: translateY(-1px); }
+            .hiw-send:active { transform: scale(0.94); }
+            .hiw-send:focus-visible { outline: 2px solid #141311; outline-offset: 2px; }
             .hiw-card--prompt { position: relative; }
             .hiw-send svg { width: 12px; height: 12px; }
 
@@ -589,11 +594,11 @@ export default function HowItWorksSection() {
                 {t.rich("prompt", { k: mark })}
                 <span className="hiw-caret" aria-hidden="true" />
               </p>
-              <span className="hiw-send" aria-hidden="true">
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <button type="button" className="hiw-send" aria-label={t("promptSend")} aria-controls={panelId} onClick={() => select(1)}>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M8 12.5v-9M4.2 7.2 8 3.4l3.8 3.8" />
                 </svg>
-              </span>
+              </button>
             </div>
 
             <div className="hiw-card" data-on={active === 1 ? "" : undefined}>

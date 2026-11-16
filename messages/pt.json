@@ -421,6 +421,7 @@
       },
       "prompt": "<k>Todas as segundas às 9:00</k>, pesquisa o nosso nicho com <k>4 agentes em paralelo no Haiku</k> e junta o que encontrarem. Pede a <k>um agente Opus</k> que reveja o resumo. Encontra <k>pelo menos 20 leads novos</k> no LinkedIn e <k>ignora quem já contactámos</k>. Cria 3 visuais no Figma, anima o melhor no Higgsfield e publica no Threads, Facebook e Instagram. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
       "promptLabel": "Nova rotina",
+      "promptSend": "Enviar",
       "graph": {
         "schedule": "seg. 9:00",
         "fallback": "repetir ×1 → perguntar-me",
