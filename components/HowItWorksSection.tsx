@@ -383,6 +383,7 @@ export default function HowItWorksSection() {
             /* step 1: the request, with what Toone picked out of it underlined */
             .hiw-prompt { padding-right: 34px; text-wrap: pretty; }
             .hiw-k {
+              font-weight: 600;
               background: linear-gradient(rgba(29,28,25,0.38), rgba(29,28,25,0.38)) 0 100% / 0 1.25px no-repeat;
               padding-bottom: 1px;
             }
