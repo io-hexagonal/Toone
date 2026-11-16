@@ -75,7 +75,8 @@
 .gate form small { text-align: center; margin-top: 12px; }
 .gate .error { text-align: center; }
 .gate .gateFoot { margin-top: 20px; font-size: 13.5px; }
-.gate .footerLinks { justify-content: center; margin-top: 22px; }
+.gate .gateTerms { margin: 8px 0 0; font-size: 12px; color: #7f7c75; }
+.page .gate .gateTerms a { color: #a9a69e; }
 .gate .actions { justify-content: center; }
 .gate .validCode { text-align: center; }
 .gate .welcome { text-align: left; }

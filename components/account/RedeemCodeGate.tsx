@@ -43,7 +43,6 @@ export default function RedeemCodeGate({
   onSignIn: (checked: CheckedCode | null) => void;
 }) {
   const t = useTranslations("account.redeem");
-  const tAccount = useTranslations("account");
   const [code, setCode] = useState(initialCode ?? "");
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
@@ -166,9 +165,9 @@ export default function RedeemCodeGate({
             <button type="button" className={styles.linkButton} onClick={() => onSignIn(null)}>{t("gateSignIn")}</button>
           </p>
         )}
-        <nav className={styles.footerLinks} aria-label={tAccount("page.moreLinks")}>
-          <Link href="/terms#codes">{tAccount("common.terms")}</Link>
-        </nav>
+        <p className={`${styles.notice} ${styles.gateTerms}`}>
+          {t.rich("gateTerms", { terms: (chunks) => <Link href="/terms#codes">{chunks}</Link> })}
+        </p>
       </div>
     </main>
   );

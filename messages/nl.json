@@ -141,7 +141,8 @@
       "launchTitle": "Welkom vanaf Product Hunt",
       "launchSub": "Bedankt dat je op de lanceringsdag naar Toone komt.",
       "doneLifetimeTitle": "Toone Pro Lifetime is actief",
-      "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email})."
+      "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email}).",
+      "gateTerms": "Voor codes gelden de <terms>codevoorwaarden</terms>."
     },
     "verify": {
       "body": "Om {email} te bevestigen, mailen we je een code.",

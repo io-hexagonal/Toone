@@ -141,7 +141,8 @@
       "launchTitle": "Welcome from Product Hunt",
       "launchSub": "Thanks for joining Toone on launch day.",
       "doneLifetimeTitle": "Toone Pro Lifetime is active",
-      "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email})."
+      "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email}).",
+      "gateTerms": "Codes are covered by the <terms>code terms</terms>."
     },
     "verify": {
       "body": "To confirm {email}, we'll email you a code.",
