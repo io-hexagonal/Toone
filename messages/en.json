@@ -815,6 +815,16 @@
       "backToPricing": "Back to pricing",
       "questions": "Questions?",
       "contact": "Contact us"
+    },
+    "paidEntry": {
+      "title": "Choose a plan to download Toone",
+      "sub": "Your account is ready. During launch, Toone is open to paying members. Pick a plan and your download unlocks right away.",
+      "freeName": "Free",
+      "freeBadge": "Opens after launch",
+      "freeText": "We’re starting with paying members so every early user gets our full attention. Free accounts open in early 2027.",
+      "freeButton": "Not available yet",
+      "redeem": "Have a code from AppSumo or Product Hunt? <link>Redeem it</link>",
+      "checking": "Checking your plan…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Sign up with Google or your email to download Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Welcome, Sumo-ling",
-    "appsumoAccountSub": "Create your account to activate your lifetime Toone Pro."
+    "appsumoAccountSub": "Create your account to activate your lifetime Toone Pro.",
+    "onboarding": {
+      "metaTitle": "Welcome to Toone",
+      "title": "Welcome to Toone",
+      "sub": "Four quick questions so we can set Toone up for you.",
+      "hintAny": "Pick any that apply",
+      "continue": "Continue",
+      "skip": "Skip for now",
+      "use": {
+        "q": "What will you use Toone for?",
+        "marketing": "Marketing & content",
+        "seo": "SEO",
+        "video": "Video & film",
+        "research": "Research",
+        "sales": "Sales & outreach",
+        "engineering": "Engineering",
+        "other": "Something else"
+      },
+      "team": {
+        "q": "Who is it for?",
+        "me": "Just me",
+        "team": "My team",
+        "clients": "My clients"
+      },
+      "tools": {
+        "q": "Which AI tools do you already use?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "None yet"
+      },
+      "source": {
+        "q": "How did you hear about us?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "A friend",
+        "search": "Search",
+        "other": "Other"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Guides and resources for working with Toone",

@@ -815,6 +815,16 @@
       "backToPricing": "Terug naar prijzen",
       "questions": "Vragen?",
       "contact": "Neem contact op"
+    },
+    "paidEntry": {
+      "title": "Kies een abonnement om Toone te downloaden",
+      "sub": "Je account is klaar. Tijdens de lancering is Toone open voor betalende leden. Kies een abonnement en je download is direct beschikbaar.",
+      "freeName": "Gratis",
+      "freeBadge": "Opent na de lancering",
+      "freeText": "We beginnen met betalende leden, zodat elke vroege gebruiker onze volle aandacht krijgt. Gratis accounts openen begin 2027.",
+      "freeButton": "Nog niet beschikbaar",
+      "redeem": "Heb je een code van AppSumo of Product Hunt? <link>Wissel hem in</link>",
+      "checking": "Je abonnement wordt gecontroleerd…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Meld je aan met Google of je e-mailadres om Toone te downloaden.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Welkom, Sumo-ling",
-    "appsumoAccountSub": "Maak je account aan om je levenslange Toone Pro te activeren."
+    "appsumoAccountSub": "Maak je account aan om je levenslange Toone Pro te activeren.",
+    "onboarding": {
+      "metaTitle": "Welkom bij Toone",
+      "title": "Welkom bij Toone",
+      "sub": "Vier korte vragen zodat we Toone voor je kunnen instellen.",
+      "hintAny": "Kies alles wat past",
+      "continue": "Doorgaan",
+      "skip": "Nu overslaan",
+      "use": {
+        "q": "Waarvoor ga je Toone gebruiken?",
+        "marketing": "Marketing & content",
+        "seo": "SEO",
+        "video": "Video & film",
+        "research": "Onderzoek",
+        "sales": "Sales & outreach",
+        "engineering": "Engineering",
+        "other": "Iets anders"
+      },
+      "team": {
+        "q": "Voor wie is het?",
+        "me": "Alleen ik",
+        "team": "Mijn team",
+        "clients": "Mijn klanten"
+      },
+      "tools": {
+        "q": "Welke AI-tools gebruik je al?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Nog geen"
+      },
+      "source": {
+        "q": "Hoe heb je ons gevonden?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Een vriend",
+        "search": "Zoekmachine",
+        "other": "Anders"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Praktisch werken met Toone",

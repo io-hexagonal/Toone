@@ -269,7 +269,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       const updated = await claimHandle(session, handle);
       setSession(updated);
       track("auth-handle-claimed");
-      router.replace("/downloads");
+      router.replace("/welcome");
     } catch (err) {
       if (err instanceof ApiError && err.code === "already_exists") setError(t("errHandleTaken"));
       else if (err instanceof ApiError && err.code === "invalid_input") setError(t("errHandleInvalid"));

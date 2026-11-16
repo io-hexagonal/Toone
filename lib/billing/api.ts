@@ -638,6 +638,8 @@ export type BillingFeatures = {
   pro_codes: boolean;
   /** `contracts.payments`; 0 when payments are off. */
   payments_contract: number;
+  /** Downloads need Toone Pro for now: new accounts choose a plan first. */
+  paid_entry: boolean;
   /**
    * Who sells new Toone Pro purchases on the web, from the top-level
    * `billing_seller` (`"managed_payments"` or `"direct"`); null when the API
@@ -652,6 +654,7 @@ export const BILLING_FEATURES_OFF: Readonly<BillingFeatures> = Object.freeze({
   billing_portal: false,
   pro_codes: false,
   payments_contract: 0,
+  paid_entry: false,
   billing_seller: null,
 });
 
@@ -664,6 +667,7 @@ export function normalizeBillingFeatures(raw: unknown): BillingFeatures {
     billing_portal: features.billing_portal === true,
     pro_codes: features.pro_codes === true,
     payments_contract: num(contracts.payments) ?? 0,
+    paid_entry: features.paid_entry === true,
     billing_seller: sellerFromServer(record(raw)?.billing_seller),
   };
 }

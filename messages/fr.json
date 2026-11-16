@@ -815,6 +815,16 @@
       "backToPricing": "Retour aux tarifs",
       "questions": "Des questions ?",
       "contact": "Contactez-nous"
+    },
+    "paidEntry": {
+      "title": "Choisissez une offre pour télécharger Toone",
+      "sub": "Votre compte est prêt. Pendant le lancement, Toone est ouvert aux membres payants. Choisissez une offre et votre téléchargement se débloque aussitôt.",
+      "freeName": "Gratuit",
+      "freeBadge": "Ouvre après le lancement",
+      "freeText": "Nous commençons avec des membres payants pour accorder toute notre attention à chaque premier utilisateur. Les comptes gratuits ouvrent début 2027.",
+      "freeButton": "Pas encore disponible",
+      "redeem": "Vous avez un code AppSumo ou Product Hunt ? <link>Utilisez-le</link>",
+      "checking": "Vérification de votre offre…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Inscrivez-vous avec Google ou votre e-mail pour télécharger Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Bienvenue, Sumo-ling",
-    "appsumoAccountSub": "Créez votre compte pour activer votre Toone Pro à vie."
+    "appsumoAccountSub": "Créez votre compte pour activer votre Toone Pro à vie.",
+    "onboarding": {
+      "metaTitle": "Bienvenue sur Toone",
+      "title": "Bienvenue sur Toone",
+      "sub": "Quatre questions rapides pour préparer Toone pour vous.",
+      "hintAny": "Plusieurs choix possibles",
+      "continue": "Continuer",
+      "skip": "Passer pour l’instant",
+      "use": {
+        "q": "Pour quoi utiliserez-vous Toone ?",
+        "marketing": "Marketing et contenu",
+        "seo": "SEO",
+        "video": "Vidéo et film",
+        "research": "Recherche",
+        "sales": "Ventes et prospection",
+        "engineering": "Ingénierie",
+        "other": "Autre chose"
+      },
+      "team": {
+        "q": "Pour qui ?",
+        "me": "Juste moi",
+        "team": "Mon équipe",
+        "clients": "Mes clients"
+      },
+      "tools": {
+        "q": "Quels outils d’IA utilisez-vous déjà ?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Aucun pour l’instant"
+      },
+      "source": {
+        "q": "Comment nous avez-vous connus ?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Un ami",
+        "search": "Recherche",
+        "other": "Autre"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Travailler concrètement avec Toone",

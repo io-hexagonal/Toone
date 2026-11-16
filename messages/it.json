@@ -815,6 +815,16 @@
       "backToPricing": "Torna ai prezzi",
       "questions": "Domande?",
       "contact": "Contattaci"
+    },
+    "paidEntry": {
+      "title": "Scegli un piano per scaricare Toone",
+      "sub": "Il tuo account è pronto. Durante il lancio, Toone è aperto ai membri paganti. Scegli un piano e il download si sblocca subito.",
+      "freeName": "Gratis",
+      "freeBadge": "Apre dopo il lancio",
+      "freeText": "Partiamo con i membri paganti per dare tutta la nostra attenzione a ogni primo utente. Gli account gratuiti aprono a inizio 2027.",
+      "freeButton": "Non ancora disponibile",
+      "redeem": "Hai un codice AppSumo o Product Hunt? <link>Riscattalo</link>",
+      "checking": "Controllo del tuo piano…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Registrati con Google o con la tua email per scaricare Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Benvenuto, Sumo-ling",
-    "appsumoAccountSub": "Crea il tuo account per attivare il tuo Toone Pro a vita."
+    "appsumoAccountSub": "Crea il tuo account per attivare il tuo Toone Pro a vita.",
+    "onboarding": {
+      "metaTitle": "Benvenuto in Toone",
+      "title": "Benvenuto in Toone",
+      "sub": "Quattro domande rapide per preparare Toone per te.",
+      "hintAny": "Scegli tutte le opzioni adatte",
+      "continue": "Continua",
+      "skip": "Salta per ora",
+      "use": {
+        "q": "Per cosa userai Toone?",
+        "marketing": "Marketing e contenuti",
+        "seo": "SEO",
+        "video": "Video e film",
+        "research": "Ricerca",
+        "sales": "Vendite e outreach",
+        "engineering": "Ingegneria",
+        "other": "Altro"
+      },
+      "team": {
+        "q": "Per chi è?",
+        "me": "Solo per me",
+        "team": "Il mio team",
+        "clients": "I miei clienti"
+      },
+      "tools": {
+        "q": "Quali strumenti IA usi già?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Ancora nessuno"
+      },
+      "source": {
+        "q": "Come ci hai conosciuti?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Un amico",
+        "search": "Ricerca",
+        "other": "Altro"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Modi pratici di lavorare con Toone",

@@ -815,6 +815,16 @@
       "backToPricing": "Zurück zu den Preisen",
       "questions": "Fragen?",
       "contact": "Kontakt"
+    },
+    "paidEntry": {
+      "title": "Wählen Sie einen Plan, um Toone zu laden",
+      "sub": "Ihr Konto ist bereit. Zum Start ist Toone für zahlende Mitglieder geöffnet. Wählen Sie einen Plan, und Ihr Download wird sofort freigeschaltet.",
+      "freeName": "Kostenlos",
+      "freeBadge": "Öffnet nach dem Start",
+      "freeText": "Wir starten mit zahlenden Mitgliedern, damit jede frühe Nutzerin und jeder frühe Nutzer unsere volle Aufmerksamkeit bekommt. Kostenlose Konten öffnen Anfang 2027.",
+      "freeButton": "Noch nicht verfügbar",
+      "redeem": "Sie haben einen Code von AppSumo oder Product Hunt? <link>Einlösen</link>",
+      "checking": "Ihr Plan wird geprüft…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Registrieren Sie sich mit Google oder Ihrer E-Mail-Adresse, um Toone herunterzuladen.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Willkommen, Sumo-ling",
-    "appsumoAccountSub": "Erstelle dein Konto, um dein lebenslanges Toone Pro zu aktivieren."
+    "appsumoAccountSub": "Erstelle dein Konto, um dein lebenslanges Toone Pro zu aktivieren.",
+    "onboarding": {
+      "metaTitle": "Willkommen bei Toone",
+      "title": "Willkommen bei Toone",
+      "sub": "Vier kurze Fragen, damit wir Toone für Sie einrichten können.",
+      "hintAny": "Mehrfachauswahl möglich",
+      "continue": "Weiter",
+      "skip": "Vorerst überspringen",
+      "use": {
+        "q": "Wofür möchten Sie Toone nutzen?",
+        "marketing": "Marketing & Content",
+        "seo": "SEO",
+        "video": "Video & Film",
+        "research": "Recherche",
+        "sales": "Vertrieb & Akquise",
+        "engineering": "Engineering",
+        "other": "Etwas anderes"
+      },
+      "team": {
+        "q": "Für wen ist es?",
+        "me": "Nur für mich",
+        "team": "Mein Team",
+        "clients": "Meine Kunden"
+      },
+      "tools": {
+        "q": "Welche KI-Tools nutzen Sie bereits?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Noch keine"
+      },
+      "source": {
+        "q": "Wie haben Sie von uns erfahren?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Von Bekannten",
+        "search": "Suche",
+        "other": "Sonstiges"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Praktisch mit Toone arbeiten",

@@ -815,6 +815,16 @@
       "backToPricing": "Back to pricing",
       "questions": "Questions?",
       "contact": "Contact us"
+    },
+    "paidEntry": {
+      "title": "Выберите план, чтобы скачать Toone",
+      "sub": "Ваш аккаунт готов. На время запуска Toone открыт для платных участников. Выберите план, и загрузка откроется сразу.",
+      "freeName": "Бесплатно",
+      "freeBadge": "Откроется после запуска",
+      "freeText": "Мы начинаем с платных участников, чтобы уделить всё внимание каждому раннему пользователю. Бесплатные аккаунты откроются в начале 2027 года.",
+      "freeButton": "Пока недоступно",
+      "redeem": "Есть код от AppSumo или Product Hunt? <link>Активировать</link>",
+      "checking": "Проверяем ваш план…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Зарегистрируйтесь через Google или по email, чтобы скачать Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Добро пожаловать, Sumo-ling",
-    "appsumoAccountSub": "Создайте аккаунт, чтобы активировать пожизненный Toone Pro."
+    "appsumoAccountSub": "Создайте аккаунт, чтобы активировать пожизненный Toone Pro.",
+    "onboarding": {
+      "metaTitle": "Добро пожаловать в Toone",
+      "title": "Добро пожаловать в Toone",
+      "sub": "Четыре коротких вопроса, чтобы настроить Toone под вас.",
+      "hintAny": "Можно выбрать несколько",
+      "continue": "Продолжить",
+      "skip": "Пропустить",
+      "use": {
+        "q": "Для чего вам Toone?",
+        "marketing": "Маркетинг и контент",
+        "seo": "SEO",
+        "video": "Видео и кино",
+        "research": "Исследования",
+        "sales": "Продажи и аутрич",
+        "engineering": "Разработка",
+        "other": "Другое"
+      },
+      "team": {
+        "q": "Для кого?",
+        "me": "Только для меня",
+        "team": "Моя команда",
+        "clients": "Мои клиенты"
+      },
+      "tools": {
+        "q": "Какими ИИ-инструментами вы уже пользуетесь?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Пока никакими"
+      },
+      "source": {
+        "q": "Как вы о нас узнали?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "От знакомых",
+        "search": "Поиск",
+        "other": "Другое"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Практическая работа с Toone",

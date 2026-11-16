@@ -815,6 +815,16 @@
       "backToPricing": "Voltar aos preços",
       "questions": "Dúvidas?",
       "contact": "Fale connosco"
+    },
+    "paidEntry": {
+      "title": "Escolhe um plano para descarregar o Toone",
+      "sub": "A tua conta está pronta. Durante o lançamento, o Toone está aberto a membros pagantes. Escolhe um plano e a transferência fica logo disponível.",
+      "freeName": "Grátis",
+      "freeBadge": "Abre após o lançamento",
+      "freeText": "Começamos com membros pagantes para dar toda a atenção a cada um dos primeiros utilizadores. As contas gratuitas abrem no início de 2027.",
+      "freeButton": "Ainda não disponível",
+      "redeem": "Tens um código da AppSumo ou do Product Hunt? <link>Resgata-o</link>",
+      "checking": "A verificar o teu plano…"
     }
   },
   "statement": {
@@ -887,7 +897,47 @@
     "launchAccountSub": "Registe-se com o Google ou o seu email para transferir o Toone.",
     "appsumoBadge": "AppSumo",
     "appsumoAccountTitle": "Bem-vindo, Sumo-ling",
-    "appsumoAccountSub": "Crie a sua conta para ativar o seu Toone Pro vitalício."
+    "appsumoAccountSub": "Crie a sua conta para ativar o seu Toone Pro vitalício.",
+    "onboarding": {
+      "metaTitle": "Bem-vindo ao Toone",
+      "title": "Bem-vindo ao Toone",
+      "sub": "Quatro perguntas rápidas para prepararmos o Toone para ti.",
+      "hintAny": "Escolhe as que se aplicam",
+      "continue": "Continuar",
+      "skip": "Saltar por agora",
+      "use": {
+        "q": "Para que vais usar o Toone?",
+        "marketing": "Marketing e conteúdo",
+        "seo": "SEO",
+        "video": "Vídeo e cinema",
+        "research": "Investigação",
+        "sales": "Vendas e prospeção",
+        "engineering": "Engenharia",
+        "other": "Outra coisa"
+      },
+      "team": {
+        "q": "Para quem é?",
+        "me": "Só para mim",
+        "team": "A minha equipa",
+        "clients": "Os meus clientes"
+      },
+      "tools": {
+        "q": "Que ferramentas de IA já usas?",
+        "claude": "Claude Code",
+        "openai": "ChatGPT / Codex",
+        "cursor": "Cursor",
+        "none": "Nenhuma ainda"
+      },
+      "source": {
+        "q": "Como soubeste de nós?",
+        "producthunt": "Product Hunt",
+        "appsumo": "AppSumo",
+        "youtube": "YouTube",
+        "friend": "Um amigo",
+        "search": "Pesquisa",
+        "other": "Outro"
+      }
+    }
   },
   "resources": {
     "metaTitle": "Formas práticas de trabalhar com o Toone",
