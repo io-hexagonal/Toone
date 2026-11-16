@@ -85,7 +85,7 @@ const CSS = `
 .hg {
   --ink: 29,28,25; --spine: min(190px, calc((100cqw - 20px) / 3));
   container-type: inline-size;
-  position: relative; display: flex; flex-direction: column; gap: 16px;
+  position: relative; display: flex; flex-direction: column; gap: 16px; padding-top: 12px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 }
 .hg-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: 0; }
@@ -158,6 +158,8 @@ const CSS = `
 .hg-mini img { width: 12px; height: 12px; display: block; object-fit: contain; }
 .hg-node[data-s="running"] .hg-mini span { box-shadow: inset 0 0 0 1px rgba(var(--ink),0.5), 0 1px 2px rgba(0,0,0,0.05); }
 .hg-card--agent { padding-bottom: 0; }
+/* the first step carries the schedule tag on its top edge: its text sits a little lower */
+.hg-card--first { padding-top: 8px; }
 .hg-sub { min-height: 20px; }
 .hg-node[data-s="draft"] .hg-mini { opacity: .5; }
 .hg-n { margin-left: auto; color: rgba(var(--ink),0.58); font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -238,7 +240,7 @@ const CSS = `
 
 /* each parallel agent's own progress, with a shimmer */
 .hg-prog {
-  position: absolute; left: 10px; right: 10px; bottom: 6px; height: 2px;
+  position: absolute; left: 10px; right: 10px; bottom: 3px; height: 2px;
   border-radius: 2px; overflow: hidden; background: rgba(var(--ink),0.08); display: none;
 }
 .hg-node[data-s="running"] .hg-prog { display: block; }
@@ -336,7 +338,7 @@ const CSS = `
   .hg-row--chips .hg-l .hg-conn { display: none; }
   .hg-stack { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
   .hg-card { padding: 0 10px; font-size: 12px; gap: 6px; }
-  .hg-card--agent { width: var(--spine); height: 50px; }
+  .hg-card--agent { width: var(--spine); height: 54px; }
   .hg-conn { width: 11px; }
   .hg-l .hg-conn { width: 8px; }
   .hg-cap { gap: 5px; padding: 4px; }
@@ -631,7 +633,7 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
   };
   /** Every step is the same card: title, then its number, model and details. */
   const card = (n: NodeSpec, extra?: ReactNode) => (
-    <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}`} data-n={n.id}>
+    <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}${extra ? " hg-card--first" : ""}`} data-n={n.id}>
       {extra}
       <Badges labels={labels} />
       <span className="hg-title">
@@ -719,6 +721,7 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
                       <span>{labels.parallelShort}</span>
                     </span>
                     <span className="hg-sub">
+                      <span className="hg-step">{labels.agents[all[0].agent]}</span>
                       {all[0].model && <Model name={all[0].model} />}
                       {all.some((n) => n.counter) && counter !== null && <span className="hg-n">{counter}</span>}
                     </span>
