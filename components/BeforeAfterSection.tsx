@@ -252,7 +252,7 @@ export default async function BeforeAfterSection() {
             labels={{
               running: g("running"),
               paused: g("paused"),
-              min: h("scenarios.marketer.graph.min"),
+              min: "≥ 20",
               fallback: h("fallback"),
               ledger: t("routine.ledger"),
               known: t("routine.known"),

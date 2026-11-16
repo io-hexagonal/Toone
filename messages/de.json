@@ -432,105 +432,111 @@
       "pauseNote": "Fertige Schritte behalten ihre Ergebnisse.",
       "scenarios": {
         "marketer": {
-          "routineName": "Wöchentliche Akquise",
-          "prompt": "<k>Jeden Montag um 9:00</k> unsere Nische mit <k>4 parallelen Agenten auf Haiku</k> recherchieren und die Ergebnisse zusammenführen. <k>Ein Opus-Agent</k> prüft die Zusammenfassung. Auf LinkedIn <k>mindestens 20 neue Leads</k> finden – <k>niemanden, den wir schon kontaktiert haben</k>. 3 Post-Visuals in Figma gestalten, das beste in Higgsfield animieren und auf Threads, Facebook und Instagram veröffentlichen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "routineName": "Wöchentliche Content-Maschine",
+          "prompt": "<k>Jeden Montag um 9:00</k> die Themen der Woche aus den Ergebnissen der Vorwoche auswählen und mit <k>2 parallelen Agenten auf Haiku</k> recherchieren: Trends und Wettbewerber. <k>Ein Sonnet-Agent</k> entwirft 3 LinkedIn-Posts, <k>ein GPT-Agent</k> prüft sie: <k>Markenstimme mindestens 8/10, jede Aussage belegt</k>. <k>Schwache Entwürfe zurückschicken, höchstens zweimal.</k> Die Visuals in Figma gestalten, <k>vor dem Veröffentlichen mich fragen</k>, dann auf LinkedIn, Threads und Instagram posten. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Mo 9:00",
-            "agents": {
-              "a": "Recherche",
-              "b": "Recherche",
-              "c": "Recherche",
-              "d": "Recherche"
+            "parallelShort": "Recherche ×2",
+            "nodes": {
+              "topics": "Themen wählen",
+              "trends": "Trends",
+              "competitors": "Wettbewerber",
+              "draft": "Posts entwerfen",
+              "review": "Prüfung",
+              "visuals": "Visuals",
+              "publish": "Veröffentlichen"
             },
-            "agentsShort": "Recherche",
-            "merge": "Zusammenführen",
-            "review": "Prüfung",
-            "find": "Leads finden",
-            "a": "Gestaltung",
-            "b": "Veröffentlichen",
-            "min": "≥ 20",
-            "unique": "keine Duplikate"
+            "chips": {
+              "min": "Stimme ≥ 8/10",
+              "other": "Aussagen belegt",
+              "loop": "needs_fix",
+              "gate": "fragt mich zuerst"
+            }
           },
           "run": {
-            "research": "4 Haiku-Agenten recherchieren parallel",
-            "merge": "Die 4 Berichte zusammenführen",
-            "review": "Opus prüft die Zusammenfassung",
-            "find": "Leads auf LinkedIn finden",
-            "contract": "Vorgabe erfüllt: ≥ 20, keine Duplikate",
-            "a": "In Figma gestalten, in Higgsfield animieren",
-            "b": "Auf Threads, Facebook, Instagram posten"
+            "topics": "Opus wählt Themen anhand der Vorwoche",
+            "research": "2 Haiku-Agenten recherchieren parallel",
+            "draft": "Sonnet entwirft 3 Posts",
+            "review": "GPT prüft die Markenstimme",
+            "loop": "Unter 8: zurück zum Überarbeiten",
+            "contract": "Vorgabe erfüllt: Stimme ≥ 8/10, belegt",
+            "publish": "Visuals fertig, Sie geben frei, dann gepostet"
           },
           "pause": {
-            "reason": "12 / 20 Leads: unter der Vorgabe",
-            "edit": "Auf EU + UK ausweiten"
+            "reason": "Markenstimme 6 / 10: unter der Vorgabe",
+            "edit": "Weniger Hype, mehr Zahlen"
           }
         },
         "seo": {
-          "routineName": "Wöchentliches Kunden-SEO",
-          "prompt": "<k>Jeden Montag um 7:00</k> die Website unseres Kunden mit <k>4 parallelen Agenten auf Haiku</k> prüfen: Rankings, Wettbewerber, Backlinks und Site-Health. Die Ergebnisse zusammenführen, <k>ein Opus-Agent</k> prüft die Zusammenfassung. In Semrush <k>mindestens 10 Keyword-Lücken</k> finden – <k>keine Keywords, die wir schon abdecken</k>. <k>Ein GPT-Agent</k> schreibt die Briefings in Google Docs, dann den Bericht per E-Mail an den Kunden senden. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "routineName": "Wöchentliche Content-Auffrischung",
+          "prompt": "<k>Jeden Montag um 7:00</k> die Rankings unseres Kunden aus Search Console abrufen – <k>schlägt das fehl, Semrush nutzen</k>. <k>Mindestens 8 Seiten, die Positionen verloren haben</k>, auswählen, <k>ein Keyword pro Seite</k>. Sie mit <k>einem Sonnet-Agenten pro Seite</k> auffrischen, <k>ein GPT-Agent</k> prüft die Fakten jeder Änderung, die Entwürfe in WordPress speichern und den Bericht per E-Mail an den Kunden senden. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Mo 7:00",
-            "agents": {
-              "a": "Rankings",
-              "b": "Wettbewerber",
-              "c": "Backlinks",
-              "d": "Site-Health"
+            "parallelShort": "Liefern ×2",
+            "nodes": {
+              "pull": "Rankings abrufen",
+              "pick": "Seiten wählen",
+              "refresh": "Auffrischen",
+              "check": "Faktencheck",
+              "save": "Entwürfe sichern",
+              "report": "Bericht"
             },
-            "agentsShort": "Audit",
-            "merge": "Zusammenführen",
-            "review": "Prüfung",
-            "find": "Lücken finden",
-            "a": "Briefings",
-            "b": "Bericht senden",
-            "min": "≥ 10",
-            "unique": "noch nicht abgedeckt"
+            "chips": {
+              "fallback": "Fallback → Semrush",
+              "min": "≥ 8 Seiten",
+              "other": "je ein Keyword"
+            }
           },
           "run": {
-            "research": "4 Haiku-Agenten prüfen die Website parallel",
-            "merge": "Die 4 Audits zusammenführen",
-            "review": "Opus prüft die Zusammenfassung",
-            "find": "Keyword-Lücken in Semrush finden",
-            "contract": "Vorgabe erfüllt: ≥ 10, noch nicht abgedeckt",
-            "a": "GPT schreibt die Briefings in Google Docs",
-            "b": "Bericht per E-Mail an den Kunden"
+            "pull": "Rankings aus Search Console abrufen",
+            "fallback": "Search Console Timeout: weiter mit Semrush",
+            "pick": "Seiten mit Positionsverlust auswählen",
+            "contract": "Vorgabe erfüllt: ≥ 8 Seiten, je ein Keyword",
+            "refresh": "8 Sonnet-Agenten frischen je eine Seite auf",
+            "check": "GPT prüft die Fakten jeder Änderung",
+            "report": "Entwürfe in WordPress, Bericht per E-Mail"
           },
           "pause": {
-            "reason": "6 / 10 Keyword-Lücken: unter der Vorgabe",
-            "edit": "Positionen 11–30 einbeziehen"
+            "reason": "5 / 8 Seiten: unter der Vorgabe",
+            "edit": "Auch Verluste ab 2 Positionen"
           }
         },
         "film": {
-          "routineName": "Wöchentliche Folgenvorbereitung",
-          "prompt": "<k>Jeden Freitag um 8:00</k> das Skript der nächsten Woche mit <k>4 parallelen Agenten auf Haiku</k> aufschlüsseln: Szenen, Shotlist, Voiceover und Musik. Zu einem Plan zusammenführen, <k>ein Opus-Agent</k> prüft die Kontinuität. Auf Pexels <k>mindestens 12 B-Roll-Clips</k> finden – <k>nur frei nutzbare</k>. Fehlende Shots in Higgsfield und das Thumbnail mit <k>GPT Image</k> erzeugen, das Voiceover in ElevenLabs aufnehmen und den Entwurf auf YouTube hochladen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "routineName": "Wöchentliche Folgen-Pipeline",
+          "prompt": "<k>Jeden Freitag um 8:00</k> schlüsselt <k>ein Opus-Agent</k> das Skript der nächsten Woche auf. Dann <k>3 Spuren nebeneinander</k> laufen lassen: auf Pexels <k>mindestens 12 B-Roll-Clips</k> finden, <k>nur frei nutzbare</k>; das Voiceover in ElevenLabs aufnehmen; und 3 Thumbnails in Higgsfield erstellen – <k>schlägt das fehl, GPT Image nutzen</k>. Einen Rohschnitt zusammenstellen, die Kontinuität mit dem Skript abgleichen und ihn als Entwurf auf YouTube hochladen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Fr 8:00",
-            "agents": {
-              "a": "Szenen",
-              "b": "Shotlist",
-              "c": "Voiceover",
-              "d": "Musik"
+            "parallelShort": "3 Spuren",
+            "nodes": {
+              "breakdown": "Aufschlüsselung",
+              "broll": "B-Roll",
+              "trim": "Zuschneiden",
+              "voice": "Voiceover",
+              "captions": "Untertitel",
+              "thumbs": "Thumbnails",
+              "pick": "Bestes wählen",
+              "cut": "Rohschnitt",
+              "review": "Kontinuität",
+              "upload": "Entwurf hochladen"
             },
-            "agentsShort": "Aufschlüsselung",
-            "merge": "Zusammenführen",
-            "review": "Prüfung",
-            "find": "B-Roll finden",
-            "a": "Erzeugen",
-            "b": "Entwurf hochladen",
-            "min": "≥ 12",
-            "unique": "frei nutzbar"
+            "chips": {
+              "min": "≥ 12",
+              "other": "frei nutzbar",
+              "fallback": "Fallback → GPT Image"
+            }
           },
           "run": {
-            "research": "4 Haiku-Agenten schlüsseln das Skript auf",
-            "merge": "Zu einem Plan zusammenführen",
-            "review": "Opus prüft die Kontinuität",
-            "find": "B-Roll auf Pexels finden",
+            "breakdown": "Opus schlüsselt das Skript auf",
+            "tracks": "3 Spuren laufen nebeneinander",
+            "fallback": "Higgsfield scheitert: GPT Image übernimmt",
             "contract": "Vorgabe erfüllt: ≥ 12, frei nutzbar",
-            "a": "Shots, Thumbnail und Voiceover erzeugen",
-            "b": "Entwurf auf YouTube hochladen"
+            "cut": "Rohschnitt zusammenstellen",
+            "review": "Opus prüft die Kontinuität",
+            "upload": "Entwurf auf YouTube hochladen"
           },
           "pause": {
             "reason": "7 / 12 Clips: unter der Vorgabe",
-            "edit": "Luft- und Nachtaufnahmen ergänzen"
+            "edit": "Luft- und Nachtaufnahmen dazu"
           }
         }
       }

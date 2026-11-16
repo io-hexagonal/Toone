@@ -449,7 +449,7 @@
             "chips": {
               "min": "voice ≥ 8/10",
               "other": "claims sourced",
-              "loop": "revise ≤ 2×",
+              "loop": "needs_fix",
               "gate": "asks me first"
             }
           },
@@ -472,7 +472,7 @@
           "prompt": "<k>Every Monday at 7:00</k>, pull our client’s rankings from Search Console — <k>if it fails, use Semrush</k>. Pick <k>at least 8 pages that lost positions</k>, <k>one keyword per page</k>. Refresh them with <k>one Sonnet agent per page</k>, have <k>a GPT agent</k> fact-check every change, save the drafts in WordPress and email the report to the client. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 7:00",
-            "parallelShort": "",
+            "parallelShort": "Deliver ×2",
             "nodes": {
               "pull": "Pull rankings",
               "pick": "Pick pages",
@@ -509,9 +509,12 @@
             "parallelShort": "3 tracks",
             "nodes": {
               "breakdown": "Script breakdown",
-              "broll": "B-roll",
+              "broll": "Find B-roll",
+              "trim": "Trim to script",
               "voice": "Voiceover",
+              "captions": "Captions",
               "thumbs": "Thumbnails",
+              "pick": "Pick the best",
               "cut": "Rough cut",
               "review": "Continuity",
               "upload": "Upload draft"

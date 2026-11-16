@@ -432,105 +432,111 @@
       "pauseNote": "Os passos concluídos mantêm os resultados.",
       "scenarios": {
         "marketer": {
-          "routineName": "Prospeção semanal",
-          "prompt": "<k>Todas as segundas às 9:00</k>, pesquisa o nosso nicho com <k>4 agentes em paralelo no Haiku</k> e junta o que encontrarem. Pede a <k>um agente Opus</k> que reveja o resumo. Encontra <k>pelo menos 20 leads novos</k> no LinkedIn e <k>ignora quem já contactámos</k>. Cria 3 visuais no Figma, anima o melhor no Higgsfield e publica no Threads, Facebook e Instagram. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
+          "routineName": "Motor de conteúdo semanal",
+          "prompt": "<k>Todas as segundas às 9:00</k>, escolhe os temas da semana a partir dos resultados da anterior e pesquisa-os com <k>2 agentes em paralelo no Haiku</k>: tendências e concorrentes. Pede a <k>um agente Sonnet</k> que redija 3 publicações para o LinkedIn e a <k>um agente GPT</k> que as reveja: <k>voz da marca com pelo menos 8/10 e todas as afirmações com fonte</k>. <k>Devolve os rascunhos fracos, no máximo duas vezes.</k> Cria os visuais no Figma, <k>pergunta-me antes de publicar</k> e depois publica no LinkedIn, Threads e Instagram. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "seg. 9:00",
-            "agents": {
-              "a": "Pesquisar",
-              "b": "Pesquisar",
-              "c": "Pesquisar",
-              "d": "Pesquisar"
+            "parallelShort": "Pesquisar ×2",
+            "nodes": {
+              "topics": "Escolher temas",
+              "trends": "Tendências",
+              "competitors": "Concorrentes",
+              "draft": "Redigir posts",
+              "review": "Revisão",
+              "visuals": "Visuais",
+              "publish": "Publicar"
             },
-            "agentsShort": "Pesquisar",
-            "merge": "Juntar",
-            "review": "Revisão",
-            "find": "Encontrar leads",
-            "a": "Design",
-            "b": "Publicar",
-            "min": "≥ 20",
-            "unique": "sem duplicados"
+            "chips": {
+              "min": "voz ≥ 8/10",
+              "other": "com fontes",
+              "loop": "needs_fix",
+              "gate": "pergunta-me antes"
+            }
           },
           "run": {
-            "research": "4 agentes Haiku pesquisam em paralelo",
-            "merge": "Juntar os 4 relatórios",
-            "review": "O Opus revê o resumo",
-            "find": "Encontrar leads no LinkedIn",
-            "contract": "Contrato cumprido: ≥ 20, sem duplicados",
-            "a": "Design no Figma, animação no Higgsfield",
-            "b": "Publicar no Threads, Facebook, Instagram"
+            "topics": "O Opus escolhe temas com base nos resultados",
+            "research": "2 agentes Haiku pesquisam em paralelo",
+            "draft": "O Sonnet redige 3 publicações",
+            "review": "O GPT revê a voz da marca",
+            "loop": "Abaixo de 8: volta para ser reescrito",
+            "contract": "Contrato cumprido: voz ≥ 8/10, com fontes",
+            "publish": "Visuais criados, aprova e é publicado"
           },
           "pause": {
-            "reason": "12 / 20 leads: abaixo do contrato",
-            "edit": "Alargar a UE + Reino Unido"
+            "reason": "Voz da marca 6 / 10: abaixo do contrato",
+            "edit": "Menos exagero, mais números"
           }
         },
         "seo": {
-          "routineName": "SEO semanal do cliente",
-          "prompt": "<k>Todas as segundas às 7:00</k>, audita o site do nosso cliente com <k>4 agentes em paralelo no Haiku</k>: posições, concorrentes, backlinks e saúde do site. Junta o que encontrarem e pede a <k>um agente Opus</k> que reveja o resumo. Encontra <k>pelo menos 10 lacunas de palavras-chave</k> no Semrush e <k>ignora as que já trabalhamos</k>. Pede a <k>um agente GPT</k> que escreva os briefings no Google Docs e envia o relatório ao cliente por email. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
+          "routineName": "Atualização semanal de conteúdo",
+          "prompt": "<k>Todas as segundas às 7:00</k>, vai buscar as posições do nosso cliente à Search Console — <k>se falhar, usa o Semrush</k>. Escolhe <k>pelo menos 8 páginas que perderam posições</k>, <k>uma palavra-chave por página</k>. Atualiza-as com <k>um agente Sonnet por página</k>, pede a <k>um agente GPT</k> que verifique os factos de cada alteração, guarda os rascunhos no WordPress e envia o relatório ao cliente por email. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "seg. 7:00",
-            "agents": {
-              "a": "Posições",
-              "b": "Concorrentes",
-              "c": "Backlinks",
-              "d": "Saúde do site"
+            "parallelShort": "Entrega ×2",
+            "nodes": {
+              "pull": "Obter posições",
+              "pick": "Escolher páginas",
+              "refresh": "Atualizar",
+              "check": "Verificar factos",
+              "save": "Rascunhos",
+              "report": "Relatório"
             },
-            "agentsShort": "Auditoria",
-            "merge": "Juntar",
-            "review": "Revisão",
-            "find": "Encontrar lacunas",
-            "a": "Briefings",
-            "b": "Enviar relatório",
-            "min": "≥ 10",
-            "unique": "ainda por trabalhar"
+            "chips": {
+              "fallback": "se falhar → Semrush",
+              "min": "≥ 8 páginas",
+              "other": "1 palavra-chave cada"
+            }
           },
           "run": {
-            "research": "4 agentes Haiku auditam o site em paralelo",
-            "merge": "Juntar as 4 auditorias",
-            "review": "O Opus revê o resumo",
-            "find": "Encontrar lacunas no Semrush",
-            "contract": "Contrato cumprido: ≥ 10, ainda por trabalhar",
-            "a": "O GPT escreve os briefings no Google Docs",
-            "b": "Enviar o relatório ao cliente"
+            "pull": "Obter posições na Search Console",
+            "fallback": "Search Console sem resposta: usa-se o Semrush",
+            "pick": "Escolher as páginas que perderam posições",
+            "contract": "Contrato cumprido: ≥ 8 páginas, 1 keyword cada",
+            "refresh": "8 agentes Sonnet, uma página cada um",
+            "check": "O GPT verifica os factos de cada alteração",
+            "report": "Rascunhos no WordPress, relatório por email"
           },
           "pause": {
-            "reason": "6 / 10 lacunas: abaixo do contrato",
-            "edit": "Incluir posições 11–30"
+            "reason": "5 / 8 páginas: abaixo do contrato",
+            "edit": "Incluir quedas de 2+ posições"
           }
         },
         "film": {
-          "routineName": "Preparação semanal do episódio",
-          "prompt": "<k>Todas as sextas às 8:00</k>, decompõe o guião da próxima semana com <k>4 agentes em paralelo no Haiku</k>: cenas, lista de planos, locução e música. Junta tudo num só plano e pede a <k>um agente Opus</k> que reveja a continuidade. Encontra <k>pelo menos 12 clipes de B-roll</k> no Pexels, <k>só de uso livre</k>. Gera os planos em falta no Higgsfield e a miniatura com o <k>GPT Image</k>, grava a locução no ElevenLabs e carrega o rascunho no YouTube. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
+          "routineName": "Produção semanal do episódio",
+          "prompt": "<k>Todas as sextas às 8:00</k>, pede a <k>um agente Opus</k> que faça a decupagem do guião da próxima semana. Depois avança em <k>3 frentes em simultâneo</k>: encontra <k>pelo menos 12 clips de B-roll</k> no Pexels, <k>só de utilização livre</k>; grava a voz-off no ElevenLabs; e cria 3 miniaturas no Higgsfield — <k>se falhar, usa o GPT Image</k>. Monta um primeiro corte, verifica a continuidade com o guião e envia-o para o YouTube como rascunho. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "sex. 8:00",
-            "agents": {
-              "a": "Cenas",
-              "b": "Planos",
-              "c": "Locução",
-              "d": "Música"
+            "parallelShort": "3 frentes",
+            "nodes": {
+              "breakdown": "Decupagem",
+              "broll": "B-roll",
+              "trim": "Cortar",
+              "voice": "Voz-off",
+              "captions": "Legendas",
+              "thumbs": "Miniaturas",
+              "pick": "Escolher a melhor",
+              "cut": "Primeiro corte",
+              "review": "Continuidade",
+              "upload": "Enviar rascunho"
             },
-            "agentsShort": "Decomposição",
-            "merge": "Juntar",
-            "review": "Revisão",
-            "find": "Encontrar B-roll",
-            "a": "Gerar",
-            "b": "Carregar rascunho",
-            "min": "≥ 12",
-            "unique": "uso livre"
+            "chips": {
+              "min": "≥ 12",
+              "other": "uso livre",
+              "fallback": "se falhar → GPT Image"
+            }
           },
           "run": {
-            "research": "4 agentes Haiku decompõem o guião",
-            "merge": "Juntar num só plano",
-            "review": "O Opus revê a continuidade",
-            "find": "Encontrar B-roll no Pexels",
+            "breakdown": "O Opus faz a decupagem do guião",
+            "tracks": "3 frentes avançam em simultâneo",
+            "fallback": "O Higgsfield falhou: o GPT Image assume",
             "contract": "Contrato cumprido: ≥ 12, uso livre",
-            "a": "Gerar planos, miniatura e locução",
-            "b": "Carregar o rascunho no YouTube"
+            "cut": "Montar o primeiro corte",
+            "review": "O Opus verifica a continuidade",
+            "upload": "Enviar o rascunho para o YouTube"
           },
           "pause": {
-            "reason": "7 / 12 clipes: abaixo do contrato",
-            "edit": "Incluir planos aéreos e noturnos"
+            "reason": "7 / 12 clips: abaixo do contrato",
+            "edit": "Juntar planos aéreos e noturnos"
           }
         }
       }

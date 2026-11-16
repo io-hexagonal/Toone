@@ -432,101 +432,107 @@
       "pauseNote": "Afgeronde stappen houden hun resultaten.",
       "scenarios": {
         "marketer": {
-          "routineName": "Wekelijkse outreach",
-          "prompt": "<k>Elke maandag om 9:00</k>: onderzoek onze niche met <k>4 parallelle agents op Haiku</k> en voeg samen wat ze vinden. Laat <k>een Opus-agent</k> de samenvatting controleren. Vind <k>minstens 20 nieuwe leads</k> op LinkedIn en <k>sla iedereen over die we al benaderd hebben</k>. Ontwerp 3 postvisuals in Figma, animeer de beste in Higgsfield en publiceer op Threads, Facebook en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "routineName": "Wekelijkse contentmotor",
+          "prompt": "<k>Elke maandag om 9:00</k>: kies de thema’s van deze week uit de resultaten van vorige week en onderzoek ze met <k>2 parallelle agents op Haiku</k>: trends en concurrenten. Laat <k>een Sonnet-agent</k> 3 LinkedIn-posts schrijven en <k>een GPT-agent</k> ze beoordelen: <k>merkstem minstens 8/10, elke claim met bron</k>. <k>Stuur zwakke concepten terug, hooguit twee keer.</k> Maak de visuals in Figma, <k>vraag het me vóór het publiceren</k> en post dan op LinkedIn, Threads en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "ma 9:00",
-            "agents": {
-              "a": "Onderzoek",
-              "b": "Onderzoek",
-              "c": "Onderzoek",
-              "d": "Onderzoek"
+            "parallelShort": "Onderzoek ×2",
+            "nodes": {
+              "topics": "Thema’s kiezen",
+              "trends": "Trends",
+              "competitors": "Concurrenten",
+              "draft": "Posts schrijven",
+              "review": "Review",
+              "visuals": "Visuals",
+              "publish": "Publiceren"
             },
-            "agentsShort": "Onderzoek",
-            "merge": "Samenvoegen",
-            "review": "Review",
-            "find": "Leads vinden",
-            "a": "Ontwerpen",
-            "b": "Publiceren",
-            "min": "≥ 20",
-            "unique": "geen dubbele"
+            "chips": {
+              "min": "merkstem ≥ 8/10",
+              "other": "claims met bron",
+              "loop": "needs_fix",
+              "gate": "vraagt mij eerst"
+            }
           },
           "run": {
-            "research": "4 Haiku-agents onderzoeken parallel",
-            "merge": "De 4 rapporten samenvoegen",
-            "review": "Opus controleert de samenvatting",
-            "find": "Leads vinden op LinkedIn",
-            "contract": "Contract gehaald: ≥ 20, geen dubbele",
-            "a": "Ontwerpen in Figma, animeren in Higgsfield",
-            "b": "Publiceren op Threads, Facebook, Instagram"
+            "topics": "Opus kiest thema’s op basis van vorige week",
+            "research": "2 Haiku-agents onderzoeken parallel",
+            "draft": "Sonnet schrijft 3 posts",
+            "review": "GPT beoordeelt de merkstem",
+            "loop": "Onder de 8: terug voor een herschrijving",
+            "contract": "Contract gehaald: stem ≥ 8/10, met bron",
+            "publish": "Visuals klaar, jij keurt goed, hij post"
           },
           "pause": {
-            "reason": "12 / 20 leads: onder het contract",
-            "edit": "Uitbreiden naar EU + VK"
+            "reason": "Merkstem 6 / 10: onder het contract",
+            "edit": "Minder hype, meer cijfers"
           }
         },
         "seo": {
-          "routineName": "Wekelijkse klant-SEO",
-          "prompt": "<k>Elke maandag om 7:00</k>: audit de site van onze klant met <k>4 parallelle agents op Haiku</k>: rankings, concurrenten, backlinks en sitegezondheid. Voeg samen wat ze vinden en laat <k>een Opus-agent</k> de samenvatting controleren. Vind <k>minstens 10 keyword gaps</k> in Semrush en <k>sla keywords over waar we al op mikken</k>. Laat <k>een GPT-agent</k> de briefings schrijven in Google Docs en mail het rapport naar de klant. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "routineName": "Wekelijkse contentopfrisbeurt",
+          "prompt": "<k>Elke maandag om 7:00</k>: haal de rankings van onze klant op uit Search Console – <k>lukt dat niet, gebruik dan Semrush</k>. Kies <k>minstens 8 pagina’s die posities verloren</k>, <k>één keyword per pagina</k>. Fris ze op met <k>één Sonnet-agent per pagina</k>, laat <k>een GPT-agent</k> elke wijziging factchecken, sla de concepten op in WordPress en mail het rapport naar de klant. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "ma 7:00",
-            "agents": {
-              "a": "Rankings",
-              "b": "Concurrenten",
-              "c": "Backlinks",
-              "d": "Sitegezondheid"
+            "parallelShort": "Opleveren ×2",
+            "nodes": {
+              "pull": "Rankings ophalen",
+              "pick": "Pagina’s kiezen",
+              "refresh": "Opfrissen",
+              "check": "Factcheck",
+              "save": "Concepten opslaan",
+              "report": "Rapport"
             },
-            "agentsShort": "Audit",
-            "merge": "Samenvoegen",
-            "review": "Review",
-            "find": "Gaps vinden",
-            "a": "Briefings",
-            "b": "Rapport sturen",
-            "min": "≥ 10",
-            "unique": "nog niet benut"
+            "chips": {
+              "fallback": "fallback → Semrush",
+              "min": "≥ 8 pagina’s",
+              "other": "elk één keyword"
+            }
           },
           "run": {
-            "research": "4 Haiku-agents auditen de site parallel",
-            "merge": "De 4 audits samenvoegen",
-            "review": "Opus controleert de samenvatting",
-            "find": "Keyword gaps vinden in Semrush",
-            "contract": "Contract gehaald: ≥ 10, nog niet benut",
-            "a": "GPT schrijft de briefings in Google Docs",
-            "b": "Rapport naar de klant mailen"
+            "pull": "Rankings ophalen uit Search Console",
+            "fallback": "Search Console time-out: verder met Semrush",
+            "pick": "Pagina’s kiezen die posities verloren",
+            "contract": "Contract gehaald: ≥ 8 pagina’s, elk 1 keyword",
+            "refresh": "8 Sonnet-agents frissen elk een pagina op",
+            "check": "GPT factcheckt elke wijziging",
+            "report": "Concepten in WordPress, rapport per mail"
           },
           "pause": {
-            "reason": "6 / 10 keyword gaps: onder het contract",
-            "edit": "Ook posities 11–30 meenemen"
+            "reason": "5 / 8 pagina’s: onder het contract",
+            "edit": "Ook dalingen van 2+ posities"
           }
         },
         "film": {
-          "routineName": "Wekelijkse afleveringsprep",
-          "prompt": "<k>Elke vrijdag om 8:00</k>: ontleed het script van volgende week met <k>4 parallelle agents op Haiku</k>: scènes, shotlist, voice-over en muziek. Voeg alles samen tot één plan en laat <k>een Opus-agent</k> de continuïteit controleren. Vind <k>minstens 12 B-roll-clips</k> op Pexels, <k>alleen vrij te gebruiken</k>. Genereer de ontbrekende shots in Higgsfield en de thumbnail met <k>GPT Image</k>, neem de voice-over op in ElevenLabs en upload het concept naar YouTube. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "routineName": "Wekelijkse afleveringspipeline",
+          "prompt": "<k>Elke vrijdag om 8:00</k>: laat <k>een Opus-agent</k> het script van volgende week ontleden. Draai daarna <k>3 sporen naast elkaar</k>: vind <k>minstens 12 B-roll-clips</k> op Pexels, <k>alleen vrij te gebruiken</k>; neem de voice-over op in ElevenLabs; en maak 3 thumbnails in Higgsfield – <k>lukt dat niet, gebruik dan GPT Image</k>. Zet een ruwe montage in elkaar, controleer de continuïteit aan de hand van het script en upload hem als concept naar YouTube. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "vr 8:00",
-            "agents": {
-              "a": "Scènes",
-              "b": "Shotlist",
-              "c": "Voice-over",
-              "d": "Muziek"
+            "parallelShort": "3 sporen",
+            "nodes": {
+              "breakdown": "Script ontleden",
+              "broll": "B-roll",
+              "trim": "Inkorten",
+              "voice": "Voice-over",
+              "captions": "Ondertitels",
+              "thumbs": "Thumbnails",
+              "pick": "Beste kiezen",
+              "cut": "Ruwe montage",
+              "review": "Continuïteit",
+              "upload": "Concept uploaden"
             },
-            "agentsShort": "Breakdown",
-            "merge": "Samenvoegen",
-            "review": "Review",
-            "find": "B-roll vinden",
-            "a": "Genereren",
-            "b": "Concept uploaden",
-            "min": "≥ 12",
-            "unique": "vrij te gebruiken"
+            "chips": {
+              "min": "≥ 12",
+              "other": "vrij te gebruiken",
+              "fallback": "fallback → GPT Image"
+            }
           },
           "run": {
-            "research": "4 Haiku-agents ontleden het script",
-            "merge": "Samenvoegen tot één plan",
-            "review": "Opus controleert de continuïteit",
-            "find": "B-roll vinden op Pexels",
+            "breakdown": "Opus ontleedt het script",
+            "tracks": "3 sporen draaien naast elkaar",
+            "fallback": "Higgsfield mislukt: GPT Image neemt over",
             "contract": "Contract gehaald: ≥ 12, vrij te gebruiken",
-            "a": "Shots, thumbnail en voice-over genereren",
-            "b": "Concept uploaden naar YouTube"
+            "cut": "De ruwe montage in elkaar zetten",
+            "review": "Opus controleert de continuïteit",
+            "upload": "Concept uploaden naar YouTube"
           },
           "pause": {
             "reason": "7 / 12 clips: onder het contract",

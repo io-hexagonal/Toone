@@ -432,105 +432,111 @@
       "pauseNote": "I passi completati mantengono i risultati.",
       "scenarios": {
         "marketer": {
-          "routineName": "Outreach settimanale",
-          "prompt": "<k>Ogni lunedì alle 9:00</k>, fai ricerche sulla nostra nicchia con <k>4 agenti in parallelo su Haiku</k> e unisci i risultati. Fai controllare il riepilogo da <k>un agente Opus</k>. Trova <k>almeno 20 nuovi lead</k> su LinkedIn, <k>escludendo chi abbiamo già contattato</k>. Crea 3 visual in Figma, anima il migliore in Higgsfield e pubblica su Threads, Facebook e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "routineName": "Motore di contenuti settimanale",
+          "prompt": "<k>Ogni lunedì alle 9:00</k>, scegli i temi della settimana in base ai risultati della scorsa e approfondiscili con <k>2 agenti in parallelo su Haiku</k>: tendenze e concorrenti. Fai scrivere 3 post per LinkedIn a <k>un agente Sonnet</k> e falli rivedere da <k>un agente GPT</k>: <k>tono di voce del brand almeno 8/10, ogni affermazione con la sua fonte</k>. <k>Rimanda indietro le bozze deboli, al massimo due volte.</k> Crea i visual in Figma, <k>chiedimi prima di pubblicare</k>, poi pubblica su LinkedIn, Threads e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "lun 9:00",
-            "agents": {
-              "a": "Ricerca",
-              "b": "Ricerca",
-              "c": "Ricerca",
-              "d": "Ricerca"
+            "parallelShort": "Ricerca ×2",
+            "nodes": {
+              "topics": "Scegli temi",
+              "trends": "Tendenze",
+              "competitors": "Concorrenti",
+              "draft": "Scrivi post",
+              "review": "Revisione",
+              "visuals": "Visual",
+              "publish": "Pubblica"
             },
-            "agentsShort": "Ricerca",
-            "merge": "Unisci",
-            "review": "Revisione",
-            "find": "Trova lead",
-            "a": "Design",
-            "b": "Pubblica",
-            "min": "≥ 20",
-            "unique": "nessun duplicato"
+            "chips": {
+              "min": "tono ≥ 8/10",
+              "other": "con fonti",
+              "loop": "needs_fix",
+              "gate": "prima chiede a me"
+            }
           },
           "run": {
-            "research": "4 agenti Haiku cercano in parallelo",
-            "merge": "Unisci i 4 report",
-            "review": "Opus controlla il riepilogo",
-            "find": "Trova lead su LinkedIn",
-            "contract": "Contratto rispettato: ≥ 20, nessun duplicato",
-            "a": "Design in Figma, animazione in Higgsfield",
-            "b": "Pubblica su Threads, Facebook, Instagram"
+            "topics": "Opus sceglie i temi dai risultati scorsi",
+            "research": "2 agenti Haiku cercano in parallelo",
+            "draft": "Sonnet scrive 3 post",
+            "review": "GPT rivede il tono di voce",
+            "loop": "Sotto 8: torna indietro per la riscrittura",
+            "contract": "Contratto rispettato: tono ≥ 8/10, con fonti",
+            "publish": "Visual pronti, tu approvi, si pubblica"
           },
           "pause": {
-            "reason": "12 / 20 lead: sotto il contratto",
-            "edit": "Estendi a UE + UK"
+            "reason": "Tono di voce 6 / 10: sotto il contratto",
+            "edit": "Meno enfasi, più numeri"
           }
         },
         "seo": {
-          "routineName": "SEO settimanale del cliente",
-          "prompt": "<k>Ogni lunedì alle 7:00</k>, analizza il sito del nostro cliente con <k>4 agenti in parallelo su Haiku</k>: posizionamenti, concorrenti, backlink e salute del sito. Unisci i risultati e fai controllare il riepilogo da <k>un agente Opus</k>. Trova <k>almeno 10 keyword gap</k> in Semrush, <k>escludendo le keyword che già presidiamo</k>. Fai scrivere i brief in Google Docs da <k>un agente GPT</k>, poi invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "routineName": "Aggiornamento settimanale dei contenuti",
+          "prompt": "<k>Ogni lunedì alle 7:00</k>, recupera da Search Console le posizioni del nostro cliente — <k>se fallisce, usa Semrush</k>. Scegli <k>almeno 8 pagine che hanno perso posizioni</k>, <k>una keyword per pagina</k>. Aggiornale con <k>un agente Sonnet per pagina</k>, fai verificare i fatti di ogni modifica da <k>un agente GPT</k>, salva le bozze in WordPress e invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "lun 7:00",
-            "agents": {
-              "a": "Posizionamenti",
-              "b": "Concorrenti",
-              "c": "Backlink",
-              "d": "Salute del sito"
+            "parallelShort": "Consegna ×2",
+            "nodes": {
+              "pull": "Leggi posizioni",
+              "pick": "Scegli pagine",
+              "refresh": "Aggiorna pagine",
+              "check": "Verifica fatti",
+              "save": "Salva bozze",
+              "report": "Report"
             },
-            "agentsShort": "Audit",
-            "merge": "Unisci",
-            "review": "Revisione",
-            "find": "Trova gap",
-            "a": "Brief",
-            "b": "Invia report",
-            "min": "≥ 10",
-            "unique": "non ancora presidiate"
+            "chips": {
+              "fallback": "fallback → Semrush",
+              "min": "≥ 8 pagine",
+              "other": "1 keyword a pagina"
+            }
           },
           "run": {
-            "research": "4 agenti Haiku analizzano il sito in parallelo",
-            "merge": "Unisci i 4 audit",
-            "review": "Opus controlla il riepilogo",
-            "find": "Trova keyword gap in Semrush",
-            "contract": "Contratto rispettato: ≥ 10, non ancora presidiate",
-            "a": "GPT scrive i brief in Google Docs",
-            "b": "Invia il report al cliente"
+            "pull": "Leggi le posizioni da Search Console",
+            "fallback": "Search Console non risponde: si usa Semrush",
+            "pick": "Scegli le pagine che hanno perso posizioni",
+            "contract": "Contratto rispettato: ≥ 8 pagine, 1 keyword l’una",
+            "refresh": "8 agenti Sonnet, una pagina ciascuno",
+            "check": "GPT verifica i fatti di ogni modifica",
+            "report": "Bozze in WordPress, report via email"
           },
           "pause": {
-            "reason": "6 / 10 keyword gap: sotto il contratto",
-            "edit": "Includi le posizioni 11–30"
+            "reason": "5 / 8 pagine: sotto il contratto",
+            "edit": "Includi cali di 2+ posizioni"
           }
         },
         "film": {
-          "routineName": "Preparazione settimanale dell’episodio",
-          "prompt": "<k>Ogni venerdì alle 8:00</k>, scomponi il copione della prossima settimana con <k>4 agenti in parallelo su Haiku</k>: scene, lista inquadrature, voiceover e musica. Unisci tutto in un unico piano e fai controllare la continuità da <k>un agente Opus</k>. Trova <k>almeno 12 clip di B-roll</k> su Pexels, <k>solo a uso libero</k>. Genera le inquadrature mancanti in Higgsfield e la miniatura con <k>GPT Image</k>, registra il voiceover in ElevenLabs e carica la bozza su YouTube. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "routineName": "Produzione settimanale dell’episodio",
+          "prompt": "<k>Ogni venerdì alle 8:00</k>, fai fare a <k>un agente Opus</k> lo spoglio del copione della prossima settimana. Poi porta avanti <k>3 attività in parallelo</k>: trova <k>almeno 12 clip di B-roll</k> su Pexels, <k>solo a uso libero</k>; registra il voiceover in ElevenLabs; e crea 3 miniature in Higgsfield — <k>se fallisce, usa GPT Image</k>. Prepara un premontato, controlla la continuità rispetto al copione e caricalo su YouTube come bozza. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "ven 8:00",
-            "agents": {
-              "a": "Scene",
-              "b": "Inquadrature",
-              "c": "Voiceover",
-              "d": "Musica"
+            "parallelShort": "3 attività",
+            "nodes": {
+              "breakdown": "Spoglio copione",
+              "broll": "B-roll",
+              "trim": "Taglia",
+              "voice": "Voiceover",
+              "captions": "Sottotitoli",
+              "thumbs": "Miniature",
+              "pick": "Scegli la migliore",
+              "cut": "Premontato",
+              "review": "Continuità",
+              "upload": "Carica bozza"
             },
-            "agentsShort": "Spoglio",
-            "merge": "Unisci",
-            "review": "Revisione",
-            "find": "Trova B-roll",
-            "a": "Genera",
-            "b": "Carica bozza",
-            "min": "≥ 12",
-            "unique": "uso libero"
+            "chips": {
+              "min": "≥ 12",
+              "other": "uso libero",
+              "fallback": "fallback → GPT Image"
+            }
           },
           "run": {
-            "research": "4 agenti Haiku scompongono il copione",
-            "merge": "Unisci in un unico piano",
-            "review": "Opus controlla la continuità",
-            "find": "Trova B-roll su Pexels",
+            "breakdown": "Opus fa lo spoglio del copione",
+            "tracks": "3 attività procedono in parallelo",
+            "fallback": "Higgsfield è fallito: subentra GPT Image",
             "contract": "Contratto rispettato: ≥ 12, uso libero",
-            "a": "Genera inquadrature, miniatura e voiceover",
-            "b": "Carica la bozza su YouTube"
+            "cut": "Prepara il premontato",
+            "review": "Opus controlla la continuità",
+            "upload": "Carica la bozza su YouTube"
           },
           "pause": {
             "reason": "7 / 12 clip: sotto il contratto",
-            "edit": "Aggiungi riprese aeree e notturne"
+            "edit": "Più riprese aeree e notturne"
           }
         }
       }

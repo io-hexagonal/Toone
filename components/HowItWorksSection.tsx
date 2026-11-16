@@ -8,7 +8,7 @@ import HowItWorksGraph, {
   type ContractState,
   type GraphSpec,
   type IconName,
-  type NodeKey,
+  type NodeSpec,
   type NodeState,
 } from "@/components/HowItWorksGraph";
 
@@ -51,45 +51,123 @@ const CHIPS: Record<(typeof STEPS)[number], readonly (readonly [string, IconName
     ["resume", "play"],
   ],
 };
-const LOG = ["research", "merge", "review", "find", "contract", "a", "b"] as const;
-
-/** The routines the picker offers. `pausedAt`: where the contracted step stops short. */
+/** The routines the picker offers: each a different formation. */
 const PERSONAS = ["marketer", "seo", "film"] as const;
 type Persona = (typeof PERSONAS)[number];
-const SCENARIOS: Record<Persona, GraphSpec & { pausedAt: number }> = {
+type Span = readonly [number, number];
+type Scenario = {
+  graph: GraphSpec;
+  /** When each step runs, in ms from the start of "Watch it run". */
+  run: Record<string, readonly Span[]>;
+  /** The contracted step's counter: [time, value] keyframes. */
+  count: readonly Span[];
+  counterNode: string;
+  max: number;
+  /** The contract's minimum, where the step stops short, and where it ends. */
+  pass: number;
+  pausedAt: number;
+  final: number;
+  /** While the count sits under the contract mid-run (a review loop). */
+  unmet?: Span;
+  loop?: Span;
+  /** When a rule lights up: a fallback firing, the loop, "ask me first". */
+  fire?: Record<string, number>;
+  log: readonly { key: string; at: number; icon?: "shield" | "retry"; count?: boolean }[];
+  /** What starts once the paused step is through. */
+  next: readonly string[];
+};
+const SCENARIOS: Record<Persona, Scenario> = {
+  // A split, then a draft and its reviewer joined by a needs_fix loop.
   marketer: {
-    agentModel: "Haiku", reviewModel: "Opus", target: 20, pausedAt: 12,
-    findLogos: ["linkedin"],
-    a: { logos: ["figma", "higgsfield"] },
-    b: { logos: ["threads", "facebook", "instagram"] },
+    graph: {
+      rows: [
+        { id: "topics", model: "Opus" },
+        [{ id: "trends", model: "Haiku" }, { id: "competitors", model: "Haiku" }],
+        { id: "draft", model: "Sonnet" },
+        { id: "review", model: "GPT", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        { id: "visuals", logos: ["figma"] },
+        { id: "publish", logos: ["linkedin", "threads", "instagram"], chips: [{ key: "gate", icon: "chat" }] },
+      ],
+      loop: { from: "review", to: "draft", chip: "loop" },
+    },
+    run: {
+      topics: [[300, 1100]], trends: [[1100, 2300]], competitors: [[1100, 2700]],
+      draft: [[2700, 3700], [4700, 5400]], review: [[3700, 4700], [5400, 6300]],
+      visuals: [[6300, 7400]], publish: [[7400, 9000]],
+    },
+    count: [[3800, 0], [4600, 6], [5400, 6], [6200, 9]],
+    counterNode: "review", max: 10, pass: 8, pausedAt: 6, final: 9,
+    unmet: [4600, 5400], loop: [4700, 5400], fire: { loop: 4700, gate: 7400 },
+    log: [
+      { key: "topics", at: 300 }, { key: "research", at: 1100 }, { key: "draft", at: 2700 },
+      { key: "review", at: 3700, count: true }, { key: "loop", at: 4700, icon: "retry" },
+      { key: "contract", at: 6250, icon: "shield" }, { key: "publish", at: 6300 },
+    ],
+    next: ["visuals"],
   },
+  // A straight chain with a source fallback and one agent per page, ending in a fork.
   seo: {
-    agentModel: "Haiku", reviewModel: "Opus", target: 10, pausedAt: 6,
-    findLogos: ["search-console", "semrush"],
-    a: { logos: ["google-docs"], model: "GPT" },
-    b: { logos: ["gmail"] },
+    graph: {
+      rows: [
+        { id: "pull", logos: ["search-console", "semrush"], chips: [{ key: "fallback", icon: "retry" }] },
+        { id: "pick", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        { id: "refresh", model: "Sonnet", each: 8 },
+        { id: "check", model: "GPT" },
+        [{ id: "save", logos: ["wordpress"] }, { id: "report", logos: ["google-docs", "gmail"] }],
+      ],
+    },
+    run: {
+      pull: [[300, 2300]], pick: [[2300, 3900]], refresh: [[3900, 5900]], check: [[5900, 7000]],
+      save: [[7000, 8300]], report: [[7000, 9000]],
+    },
+    count: [[2400, 0], [3700, 8]],
+    counterNode: "pick", max: 8, pass: 8, pausedAt: 5, final: 8,
+    fire: { fallback: 1300 },
+    log: [
+      { key: "pull", at: 300 }, { key: "fallback", at: 1300, icon: "retry" },
+      { key: "pick", at: 2300, count: true }, { key: "contract", at: 3750, icon: "shield" },
+      { key: "refresh", at: 3900 }, { key: "check", at: 5900 }, { key: "report", at: 7000 },
+    ],
+    next: ["refresh"],
   },
+  // Three lanes of two steps that merge into the cut.
   film: {
-    agentModel: "Haiku", reviewModel: "Opus", target: 12, pausedAt: 7,
-    findLogos: ["pexels"],
-    a: { logos: ["higgsfield", "openai", "elevenlabs"] },
-    b: { logos: ["youtube"] },
+    graph: {
+      rows: [
+        { id: "breakdown", model: "Opus" },
+        [
+          [
+            { id: "broll", logos: ["pexels"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+            { id: "trim", model: "Haiku" },
+          ],
+          [{ id: "voice", logos: ["elevenlabs"] }, { id: "captions", model: "Haiku" }],
+          [
+            { id: "thumbs", logos: ["higgsfield", "openai"], chips: [{ key: "fallback", icon: "retry" }] },
+            { id: "pick", model: "Opus" },
+          ],
+        ],
+        { id: "cut" },
+        { id: "review", model: "Opus" },
+        { id: "upload", logos: ["youtube"] },
+      ],
+    },
+    run: {
+      breakdown: [[300, 1400]], broll: [[1400, 3600]], voice: [[1400, 2800]], thumbs: [[1400, 3900]],
+      trim: [[3600, 4700]], captions: [[2800, 4000]], pick: [[3900, 4800]],
+      cut: [[4800, 6200]], review: [[6200, 7500]], upload: [[7500, 9000]],
+    },
+    count: [[1600, 0], [3400, 12]],
+    counterNode: "broll", max: 12, pass: 12, pausedAt: 7, final: 12,
+    fire: { fallback: 2800 },
+    log: [
+      { key: "breakdown", at: 300 }, { key: "tracks", at: 1400, count: true },
+      { key: "fallback", at: 2800, icon: "retry" }, { key: "contract", at: 3600, icon: "shield" },
+      { key: "cut", at: 4800 }, { key: "review", at: 6200 }, { key: "upload", at: 7500 },
+    ],
+    next: ["trim"],
   },
 };
 
-// --- the run, in ms from the start of each step ---
-const R_START = 300;
-const R_END = [1900, 2500, 1700, 2250];
-const RUN = {
-  merge: [2600, 3300],
-  review: [3300, 4400],
-  leads: [4400, 6500],
-  design: [6500, 7800],
-  publish: [7800, 9100],
-} as const;
-const COUNT_FROM = 4500;
-const COUNT_MS = 1600;
-const LOG_AT = [R_START, RUN.merge[0], RUN.review[0], RUN.leads[0], COUNT_FROM + COUNT_MS + 50, RUN.design[0], RUN.publish[0]];
 // --- the pause ---
 const TYPE_FROM = 700;
 const TYPE_MS = 1500;
@@ -99,11 +177,13 @@ const RECOUNT_FROM = 6300;
 const RECOUNT_MS = 1900;
 
 type Frame = {
-  nodes: Record<NodeKey, NodeState>;
-  leads: number | null;
-  min: ContractState;
-  unique: ContractState;
-  /** Index into LOG of the newest line shown, -1 for none. */
+  nodes: Record<string, NodeState>;
+  chips: Record<string, ContractState>;
+  /** The counter's value; null hides it. */
+  count: number | null;
+  looping: boolean;
+  again: readonly string[];
+  /** Index into the log of the newest line shown, -1 for none. */
   log: number;
   logDone: boolean;
   /** Share of the edit typed so far, 0..1. */
@@ -113,66 +193,109 @@ type Frame = {
 };
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
-const span = (t: number, a: number, b: number): NodeState => (t < a ? "idle" : t < b ? "running" : "done");
 
-function nodesAll(state: NodeState): Record<NodeKey, NodeState> {
-  return {
-    trigger: state, r1: state, r2: state, r3: state, r4: state,
-    merge: state, review: state, leads: state, design: state, publish: state,
-  };
+/** Rows as lanes of steps, top to bottom. */
+function lanesOf(graph: GraphSpec): NodeSpec[][][] {
+  return graph.rows.map((row) =>
+    Array.isArray(row)
+      ? (row as readonly (NodeSpec | readonly NodeSpec[])[]).map((cell) => (Array.isArray(cell) ? [...(cell as readonly NodeSpec[])] : [cell as NodeSpec]))
+      : [[row as NodeSpec]],
+  );
 }
 
-function frameAt(step: number, t: number, target: number, pausedAt: number): Frame {
-  if (step === 0) {
-    return { nodes: nodesAll("draft"), leads: null, min: "draft", unique: "draft", log: -1, logDone: false, typed: 0, pressed: false, resumed: false };
+function countAt(frames: readonly Span[], t: number): number {
+  let value = frames[0][1];
+  for (let i = 0; i < frames.length; i++) {
+    const [at, v] = frames[i];
+    if (t < at) break;
+    const next = frames[i + 1];
+    value = next && t < next[0] ? Math.floor(v + ((t - at) / (next[0] - at)) * (next[1] - v)) : v;
   }
+  return value;
+}
+
+function frameAt(step: number, t: number, sc: Scenario): Frame {
+  const all = lanesOf(sc.graph).flat(2);
+  const nodes: Record<string, NodeState> = {};
+  const chips: Record<string, ContractState> = {};
+  const ownerOf: Record<string, string> = {};
+  for (const n of all) for (const c of n.chips ?? []) ownerOf[c.key] = n.id;
+  if (sc.graph.loop) ownerOf[sc.graph.loop.chip] = sc.graph.loop.from;
+  const base = { looping: false, again: [] as string[], log: -1, logDone: false, typed: 0, pressed: false, resumed: false };
+
+  if (step === 0) {
+    for (const n of all) nodes[n.id] = "draft";
+    for (const key of Object.keys(ownerOf)) chips[key] = "draft";
+    return { ...base, nodes, chips, count: null };
+  }
+
   if (step === 1) {
-    const count = clamp(Math.floor(((t - COUNT_FROM) / COUNT_MS) * target), 0, target);
-    const met = count >= target ? "met" : "open";
+    const again: string[] = [];
+    for (const n of all) {
+      const spans = sc.run[n.id] ?? [];
+      nodes[n.id] = spans.some(([a, b]) => t >= a && t < b)
+        ? "running"
+        : spans.length && t >= spans[spans.length - 1][1]
+          ? "done"
+          : spans.length && t >= spans[0][1]
+            ? "done"
+            : "idle";
+      if (spans.length > 1 && t >= spans[1][0]) again.push(n.id);
+    }
+    const count = countAt(sc.count, t);
+    const met = count >= sc.pass;
+    for (const [key, owner] of Object.entries(ownerOf)) {
+      const at = sc.fire?.[key];
+      chips[key] =
+        key === "min"
+          ? met ? "met" : sc.unmet && t >= sc.unmet[0] && t < sc.unmet[1] ? "unmet" : "open"
+          : key === "other"
+            ? met ? "met" : "open"
+            : at !== undefined
+              ? t >= at ? "met" : "open"
+              : nodes[owner] === "done" ? "met" : "open";
+    }
     let log = -1;
-    LOG_AT.forEach((at, i) => {
-      if (t >= at) log = i;
+    sc.log.forEach((line, i) => {
+      if (t >= line.at) log = i;
     });
+    const end = Math.max(...Object.values(sc.run).map((spans) => spans[spans.length - 1][1]));
     return {
-      nodes: {
-        trigger: t < R_START ? "running" : "done",
-        r1: span(t, R_START, R_END[0]),
-        r2: span(t, R_START, R_END[1]),
-        r3: span(t, R_START, R_END[2]),
-        r4: span(t, R_START, R_END[3]),
-        merge: span(t, ...RUN.merge),
-        review: span(t, ...RUN.review),
-        leads: span(t, ...RUN.leads),
-        design: span(t, ...RUN.design),
-        publish: span(t, ...RUN.publish),
-      },
-      leads: t < RUN.leads[0] ? null : count,
-      min: met,
-      unique: met,
-      log,
-      logDone: t >= RUN.publish[1],
-      typed: 0,
-      pressed: false,
-      resumed: false,
+      ...base, nodes, chips, again,
+      count: t < sc.count[0][0] ? null : count,
+      looping: !!sc.loop && t >= sc.loop[0] && t < sc.loop[1],
+      log, logDone: t >= end,
     };
   }
+
+  // The pause: everything upstream is done, the contracted step stopped short.
   const resumed = t >= RESUME_AT;
   const count = resumed
-    ? clamp(pausedAt + Math.floor(((t - RECOUNT_FROM) / RECOUNT_MS) * (target - pausedAt)), pausedAt, target)
-    : pausedAt;
-  const leadsDone = count >= target && t >= RECOUNT_FROM + RECOUNT_MS + 300;
+    ? clamp(sc.pausedAt + Math.floor(((t - RECOUNT_FROM) / RECOUNT_MS) * (sc.final - sc.pausedAt)), sc.pausedAt, sc.final)
+    : sc.pausedAt;
+  const through = count >= sc.final && t >= RECOUNT_FROM + RECOUNT_MS + 300;
+  let reached = false;
+  for (const row of lanesOf(sc.graph)) {
+    const here = row.some((lane) => lane.some((n) => n.id === sc.counterNode));
+    for (const lane of row) {
+      const at = lane.findIndex((n) => n.id === sc.counterNode);
+      lane.forEach((n, i) => {
+        nodes[n.id] = reached ? "idle" : here && at >= 0 && i > at ? "idle" : "done";
+      });
+    }
+    if (here) reached = true;
+  }
+  nodes[sc.counterNode] = !resumed ? "paused" : through ? "done" : "running";
+  if (through) for (const id of sc.next) nodes[id] = "running";
+  for (const [key, owner] of Object.entries(ownerOf)) {
+    chips[key] =
+      key === "min"
+        ? count >= sc.pass ? "met" : resumed ? "open" : "unmet"
+        : nodes[owner] === "idle" ? "open" : "met";
+  }
   return {
-    nodes: {
-      ...nodesAll("done"),
-      leads: !resumed ? "paused" : leadsDone ? "done" : "running",
-      design: leadsDone ? "running" : "idle",
-      publish: "idle",
-    },
-    leads: count,
-    min: count >= target ? "met" : resumed ? "open" : "unmet",
-    unique: "met",
-    log: -1,
-    logDone: false,
+    ...base, nodes, chips, count,
+    again: sc.loop ? [sc.graph.loop!.to] : [],
     typed: clamp((t - TYPE_FROM) / TYPE_MS, 0, 1),
     pressed: t >= PRESS_AT && t < RESUME_AT,
     resumed,
@@ -180,9 +303,9 @@ function frameAt(step: number, t: number, target: number, pausedAt: number): Fra
 }
 
 /** Reduced motion: one still frame per step. */
-function stillAt(step: number, target: number, pausedAt: number): Frame {
-  if (step === 1) return { ...frameAt(1, RUN.design[0] + 400, target, pausedAt), logDone: false };
-  return frameAt(step, step === 2 ? TYPE_FROM + TYPE_MS + 100 : 0, target, pausedAt);
+function stillAt(step: number, sc: Scenario): Frame {
+  if (step === 1) return { ...frameAt(1, sc.log[sc.log.length - 2].at + 400, sc), logDone: false };
+  return frameAt(step, step === 2 ? TYPE_FROM + TYPE_MS + 100 : 0, sc);
 }
 
 export default function HowItWorksSection() {
@@ -196,9 +319,8 @@ export default function HowItWorksSection() {
   const hold = useRef({ live: false, hover: false, focus: false });
   const [persona, setPersona] = useState<Persona>("marketer");
   const scenario = SCENARIOS[persona];
-  const { target, pausedAt } = scenario;
   const [active, setActive] = useState(0);
-  const [frame, setFrame] = useState<Frame>(() => frameAt(0, 0, target, pausedAt));
+  const [frame, setFrame] = useState<Frame>(() => frameAt(0, 0, scenario));
   const [held, setHeld] = useState(true);
   const [reduced, setReduced] = useState(false);
   const [seen, setSeen] = useState(false);
@@ -249,7 +371,7 @@ export default function HowItWorksSection() {
           return;
         }
         barRef.current?.style.setProperty("transform", `scaleX(${elapsed.current / duration})`);
-        const next = frameAt(active, elapsed.current, target, pausedAt);
+        const next = frameAt(active, elapsed.current, scenario);
         const nextKey = JSON.stringify(next);
         if (nextKey !== key) {
           key = nextKey;
@@ -260,23 +382,22 @@ export default function HowItWorksSection() {
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [active, reduced, target, pausedAt]);
+  }, [active, reduced, scenario]);
 
   function select(index: number, focus = false) {
     elapsed.current = 0;
     setActive(index);
-    setFrame(frameAt(index, 0, target, pausedAt));
+    setFrame(frameAt(index, 0, scenario));
     if (focus) tabRefs.current[index]?.focus();
   }
 
   /** Another routine: same scene, from step 1. */
   function pick(next: Persona) {
     if (next === persona) return;
-    const to = SCENARIOS[next];
     elapsed.current = 0;
     setPersona(next);
     setActive(0);
-    setFrame(frameAt(0, 0, to.target, to.pausedAt));
+    setFrame(frameAt(0, 0, SCENARIOS[next]));
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -296,7 +417,7 @@ export default function HowItWorksSection() {
     select(next, true);
   }
 
-  const view = reduced ? stillAt(active, target, pausedAt) : frame;
+  const view = reduced ? stillAt(active, scenario) : frame;
   const panelId = `${id}-panel`;
   const sc = `scenarios.${persona}` as const;
   const edit = t(`${sc}.pause.edit`);
@@ -304,26 +425,19 @@ export default function HowItWorksSection() {
   const pauseState: NodeState = view.resumed ? "running" : "paused";
   const firstLog = 0;
 
+  const ids = lanesOf(scenario.graph).flat(2);
+  const chipKeys = [...ids.flatMap((n) => (n.chips ?? []).map((c) => c.key)), ...(scenario.graph.loop ? [scenario.graph.loop.chip] : [])];
   const labels = {
     schedule: t(`${sc}.graph.schedule`),
     fallback: t("fallback"),
-    agents: [
-      t(`${sc}.graph.agents.a`),
-      t(`${sc}.graph.agents.b`),
-      t(`${sc}.graph.agents.c`),
-      t(`${sc}.graph.agents.d`),
-    ] as const,
-    agentsShort: t(`${sc}.graph.agentsShort`),
-    merge: t(`${sc}.graph.merge`),
-    review: t(`${sc}.graph.review`),
-    find: t(`${sc}.graph.find`),
-    a: t(`${sc}.graph.a`),
-    b: t(`${sc}.graph.b`),
-    min: t(`${sc}.graph.min`),
-    unique: t(`${sc}.graph.unique`),
+    parallelShort: t(`${sc}.graph.parallelShort`),
+    nodes: Object.fromEntries(ids.map((n) => [n.id, t(`${sc}.graph.nodes.${n.id}`)])),
+    chips: Object.fromEntries(chipKeys.map((key) => [key, t(`${sc}.graph.chips.${key}`)])),
     running: g("running"),
     paused: g("paused"),
   };
+  const counter = view.count === null ? null : `${view.count} / ${scenario.max}`;
+  const durations = Object.fromEntries(Object.entries(scenario.run).map(([id, spans]) => [id, spans[0][1] - spans[0][0]]));
 
   const mark = (chunks: ReactNode) => <span className="hiw-k">{chunks}</span>;
 
@@ -461,6 +575,7 @@ export default function HowItWorksSection() {
             .hiw-card[data-on] .hiw-k:nth-of-type(5) { animation-delay: 1.35s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(6) { animation-delay: 1.6s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(7) { animation-delay: 1.85s; }
+            .hiw-card[data-on] .hiw-k:nth-of-type(8) { animation-delay: 2.1s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(1) { animation-delay: 0.35s; }
             @keyframes hiw-underline { to { background-size: 100% 1.25px; } }
             .hiw-caret {
@@ -701,20 +816,18 @@ export default function HowItWorksSection() {
                 </span>
               </p>
               <ul className="hiw-log">
-                {LOG.slice(firstLog, view.log + 1).map((line, j) => {
+                {scenario.log.slice(firstLog, view.log + 1).map((line, j) => {
                   const index = firstLog + j;
-                  const running = index === view.log && !view.logDone && line !== "contract";
+                  const running = index === view.log && !view.logDone && !line.icon;
                   return (
-                    <li key={line} data-s={running ? "running" : "done"}>
+                    <li key={line.key} data-s={running ? "running" : "done"}>
                       {running ? (
                         <span className="hiw-log-dot" aria-hidden="true" />
                       ) : (
-                        <Icon name={line === "contract" ? "shield" : "check"} />
+                        <Icon name={line.icon ?? "check"} />
                       )}
-                      <span className="hiw-log-t">{t(`${sc}.run.${line}`)}</span>
-                      {line === "find" && view.leads !== null && (
-                        <span className="hiw-log-n">{view.leads} / {target}</span>
-                      )}
+                      <span className="hiw-log-t">{t(`${sc}.run.${line.key}`)}</span>
+                      {line.count && counter !== null && <span className="hiw-log-n">{counter}</span>}
                     </li>
                   );
                 })}
@@ -728,7 +841,7 @@ export default function HowItWorksSection() {
             >
               <p className="hiw-card-head">
                 <Icon name="pause" />
-                {t(`${sc}.graph.find`)}
+                {t(`${sc}.graph.nodes.${scenario.counterNode}`)}
                 <span className="hiw-right hiw-status" data-s={pauseState}>
                   <Icon name={view.resumed ? "pulse" : "pause"} />
                   {view.resumed ? g("running") : g("paused")}
@@ -765,11 +878,13 @@ export default function HowItWorksSection() {
           <div className="hiw-stage" data-step={active}>
             <HowItWorksGraph
               key={persona}
-              spec={scenario}
+              spec={scenario.graph}
               nodes={view.nodes}
-              leads={view.leads}
-              contracts={{ min: view.min, unique: view.unique }}
-              researchMs={R_END.map((end) => end - R_START)}
+              chips={view.chips}
+              counter={counter}
+              looping={view.looping}
+              again={view.again}
+              durations={durations}
               labels={labels}
               motion={!reduced}
             />
