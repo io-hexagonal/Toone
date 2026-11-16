@@ -818,7 +818,8 @@
     },
     "paidEntry": {
       "title": "Escolhe um plano para descarregar o Toone",
-      "sub": "A tua conta está pronta. Durante o lançamento, o Toone está aberto a membros pagantes. Escolhe um plano e a transferência fica logo disponível.",
+      "ready": "A tua conta está pronta.",
+      "sub": "Escolhe um plano e a transferência fica logo disponível.",
       "freeName": "Grátis",
       "freeBadge": "Abre após o lançamento",
       "freeText": "Começamos com membros pagantes para dar toda a atenção a cada um dos primeiros utilizadores. As contas gratuitas abrem no início de 2027.",

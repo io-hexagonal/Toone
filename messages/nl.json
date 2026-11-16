@@ -818,7 +818,8 @@
     },
     "paidEntry": {
       "title": "Kies een abonnement om Toone te downloaden",
-      "sub": "Je account is klaar. Tijdens de lancering is Toone open voor betalende leden. Kies een abonnement en je download is direct beschikbaar.",
+      "ready": "Je account is klaar.",
+      "sub": "Kies een abonnement en je download is direct beschikbaar.",
       "freeName": "Gratis",
       "freeBadge": "Opent na de lancering",
       "freeText": "We beginnen met betalende leden, zodat elke vroege gebruiker onze volle aandacht krijgt. Gratis accounts openen begin 2027.",

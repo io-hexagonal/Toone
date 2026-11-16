@@ -818,7 +818,8 @@
     },
     "paidEntry": {
       "title": "Choose a plan to download Toone",
-      "sub": "Your account is ready. During launch, Toone is open to paying members. Pick a plan and your download unlocks right away.",
+      "ready": "Your account is ready.",
+      "sub": "Pick a plan and your download unlocks right away.",
       "freeName": "Free",
       "freeBadge": "Opens after launch",
       "freeText": "We’re starting with paying members so every early user gets our full attention. Free accounts open in early 2027.",

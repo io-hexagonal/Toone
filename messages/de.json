@@ -818,7 +818,8 @@
     },
     "paidEntry": {
       "title": "Wählen Sie einen Plan, um Toone zu laden",
-      "sub": "Ihr Konto ist bereit. Zum Start ist Toone für zahlende Mitglieder geöffnet. Wählen Sie einen Plan, und Ihr Download wird sofort freigeschaltet.",
+      "ready": "Ihr Konto ist bereit.",
+      "sub": "Wählen Sie einen Plan, und Ihr Download wird sofort freigeschaltet.",
       "freeName": "Kostenlos",
       "freeBadge": "Öffnet nach dem Start",
       "freeText": "Wir starten mit zahlenden Mitgliedern, damit jede frühe Nutzerin und jeder frühe Nutzer unsere volle Aufmerksamkeit bekommt. Kostenlose Konten öffnen Anfang 2027.",

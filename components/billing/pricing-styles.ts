@@ -104,6 +104,9 @@ export const PRICING_CSS = `
             }
             .pricing-card--free h2, .pricing-card--free .pricing-desc { color: rgba(255,255,255,0.62); }
             .pricing-card--free .pricing-button { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+            .download-wall .download-head h1 { text-wrap: balance; }
+            .download-wall-sub { text-wrap: balance; }
+            .download-wall-sub strong { color: rgba(255,255,255,0.92); font-weight: 600; }
             .pricing-redeem { margin: 26px 0 0; text-align: center; color: rgba(255,255,255,0.62); font-size: 14px; }
             .pricing-redeem a { color: rgba(255,255,255,0.92); text-underline-offset: 3px; }
             @media (max-width: 1040px) { .pricing-grid--entry { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

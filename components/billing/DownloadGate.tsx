@@ -60,7 +60,9 @@ export default function DownloadGate({ paidEntry, prices, checkoutEnabled, freeC
     <div className="download-wall" data-paid-entry="">
       <header className="download-head">
         <h1>{t("title")}</h1>
-        <p>{t("sub")}</p>
+        <p className="download-wall-sub">
+          <strong>{t("ready")}</strong> {t("sub")}
+        </p>
       </header>
       <PricingPlans
         prices={prices}

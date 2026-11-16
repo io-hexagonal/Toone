@@ -818,7 +818,8 @@
     },
     "paidEntry": {
       "title": "Choisissez une offre pour télécharger Toone",
-      "sub": "Votre compte est prêt. Pendant le lancement, Toone est ouvert aux membres payants. Choisissez une offre et votre téléchargement se débloque aussitôt.",
+      "ready": "Votre compte est prêt.",
+      "sub": "Choisissez une offre et votre téléchargement se débloque aussitôt.",
       "freeName": "Gratuit",
       "freeBadge": "Ouvre après le lancement",
       "freeText": "Nous commençons avec des membres payants pour accorder toute notre attention à chaque premier utilisateur. Les comptes gratuits ouvrent début 2027.",
