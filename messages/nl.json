@@ -763,7 +763,9 @@
       "errPaymentDue": "De laatste betaling voor je Toone Pro-abonnement van trytoone.com is niet gelukt, dus Toone Pro staat uit tot die betaald is. Zolang dat abonnement openstaat, kan er geen nieuwe betaling starten: werk je betaalmethode bij op de factuurpagina, dan komt Toone Pro terug zodra de betaling lukt.",
       "fixPayment": "Betaalmethode bijwerken",
       "fixPaymentBusy": "Factuurpagina wordt geopend…",
-      "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com."
+      "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com.",
+      "termsShort": "Incl. btw waar van toepassing · Abonnementen lopen door tot je opzegt · {days} dagen geld terug bij je eerste aankoop. Door te kopen ga je akkoord met de <terms>Toone Pro-voorwaarden</terms>.",
+      "termsMore": "Factuurdetails"
     },
     "success": {
       "metaTitle": "Betalingsbevestiging",

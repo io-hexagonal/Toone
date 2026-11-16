@@ -763,7 +763,9 @@
       "errPaymentDue": "El último pago de tu suscripción a Toone Pro de trytoone.com no se completó, así que Toone Pro está desactivado hasta que se pague. Mientras esa suscripción siga abierta no se puede iniciar un nuevo pago: actualiza tu método de pago en la página de facturación y Toone Pro volverá en cuanto se complete el pago.",
       "fixPayment": "Actualizar método de pago",
       "fixPaymentBusy": "Abriendo la página de facturación…",
-      "errPortal": "No se pudo abrir la página de facturación. Inténtalo de nuevo en un momento o escribe a hello@trytoone.com."
+      "errPortal": "No se pudo abrir la página de facturación. Inténtalo de nuevo en un momento o escribe a hello@trytoone.com.",
+      "termsShort": "IVA incluido donde corresponda · Las suscripciones se renuevan hasta que canceles · Reembolso de {days} días en tu primera compra. Al comprar, aceptas los <terms>términos de Toone Pro</terms>.",
+      "termsMore": "Detalles de facturación"
     },
     "success": {
       "metaTitle": "Confirmación del pago",

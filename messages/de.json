@@ -763,7 +763,9 @@
       "errPaymentDue": "Die letzte Zahlung für Ihr Toone Pro Abo von trytoone.com ist nicht durchgegangen, daher ist Toone Pro aus, bis sie bezahlt ist. Solange dieses Abo offen ist, kann kein neuer Checkout starten: Aktualisieren Sie Ihre Zahlungsmethode auf der Abrechnungsseite. Sobald die Zahlung durchgeht, ist Toone Pro wieder da.",
       "fixPayment": "Zahlungsmethode aktualisieren",
       "fixPaymentBusy": "Abrechnungsseite wird geöffnet…",
-      "errPortal": "Die Abrechnungsseite konnte nicht geöffnet werden. Bitte versuchen Sie es gleich noch einmal oder schreiben Sie an hello@trytoone.com."
+      "errPortal": "Die Abrechnungsseite konnte nicht geöffnet werden. Bitte versuchen Sie es gleich noch einmal oder schreiben Sie an hello@trytoone.com.",
+      "termsShort": "Inkl. MwSt., wo sie anfällt · Abos verlängern sich bis zur Kündigung · {days} Tage Erstattung beim ersten Kauf. Mit dem Kauf stimmen Sie den <terms>Toone-Pro-Bedingungen</terms> zu.",
+      "termsMore": "Details zur Abrechnung"
     },
     "success": {
       "metaTitle": "Zahlungsbestätigung",

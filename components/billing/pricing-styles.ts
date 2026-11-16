@@ -107,6 +107,25 @@ export const PRICING_CSS = `
             .download-wall .download-head h1 { text-wrap: balance; }
             .download-wall-sub { text-wrap: balance; }
             .download-wall-sub strong { color: rgba(255,255,255,0.92); font-weight: 600; }
+            .pricing-fineprint {
+              margin: 36px auto 0; max-width: 760px; text-align: center;
+              color: rgba(255,255,255,0.5); font-size: 12.5px; line-height: 1.7;
+            }
+            .pricing-fineprint p { margin: 0; text-wrap: balance; }
+            .pricing-fineprint .pricing-stripe {
+              display: inline-flex; align-items: center; gap: 7px; margin: 0 0 12px; padding: 5px 12px 5px 8px;
+              border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+              color: rgba(255,255,255,0.78); font-size: 12.5px; font-weight: 550;
+            }
+            .pricing-stripe img { display: block; border-radius: 4px; background: #fff; padding: 2px; box-sizing: border-box; }
+            .pricing-fineprint a { color: rgba(255,255,255,0.82); text-underline-offset: 3px; }
+            .pricing-fineprint summary {
+              display: inline-block; margin-top: 8px; cursor: pointer; list-style: none;
+              color: rgba(255,255,255,0.72); text-decoration: underline; text-underline-offset: 3px;
+            }
+            .pricing-fineprint summary::-webkit-details-marker { display: none; }
+            .pricing-fineprint summary:hover { color: #fff; }
+            .pricing-fineprint .pricing-terms { margin-top: 14px; }
             .pricing-redeem { margin: 26px 0 0; text-align: center; color: rgba(255,255,255,0.62); font-size: 14px; }
             .pricing-redeem a { color: rgba(255,255,255,0.92); text-underline-offset: 3px; }
             @media (max-width: 1040px) { .pricing-grid--entry { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

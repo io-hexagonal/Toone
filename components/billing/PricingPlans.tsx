@@ -309,18 +309,34 @@ export default function PricingPlans({
       )}
 
       {plans.length > 0 && (
-        <ul className="pricing-terms">
-          <li>{t(taxNoteKey(plans))} {t("currencyNote")}</li>
-          <li>{t("renewal")}</li>
-          <li>{t("refund", { days: refundDays })}</li>
-          <li>{t("edition")}</li>
-          <li>
-            {t.rich("termsLine", {
-              terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
-            })}{" "}
+        <div className="pricing-fineprint">
+          <p className="pricing-stripe">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logos/stripe.svg" alt="" width={16} height={16} />
             {t("stripeLine")}
-          </li>
-        </ul>
+          </p>
+          <p>
+            {t.rich("termsShort", {
+              days: refundDays,
+              terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
+            })}
+          </p>
+          <details>
+            <summary>{t("termsMore")}</summary>
+            <ul className="pricing-terms">
+              <li>{t(taxNoteKey(plans))} {t("currencyNote")}</li>
+              <li>{t("renewal")}</li>
+              <li>{t("refund", { days: refundDays })}</li>
+              <li>{t("edition")}</li>
+              <li>
+                {t.rich("termsLine", {
+                  terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
+                })}{" "}
+                {t("stripeLine")}
+              </li>
+            </ul>
+          </details>
+        </div>
       )}
     </section>
   );

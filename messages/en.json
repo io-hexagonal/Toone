@@ -763,7 +763,9 @@
       "errPaymentDue": "The last payment for your Toone Pro subscription from trytoone.com didn't go through, so Toone Pro is off until it is paid. A new checkout can't start while that subscription is open: update your payment method on the billing page, and Toone Pro comes back once the payment goes through.",
       "fixPayment": "Update payment method",
       "fixPaymentBusy": "Opening the billing page…",
-      "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com."
+      "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com.",
+      "termsShort": "VAT included where it applies · Subscriptions renew until you cancel · {days}‑day refund on your first purchase. By buying, you agree to the <terms>Toone Pro terms</terms>.",
+      "termsMore": "Billing details"
     },
     "success": {
       "metaTitle": "Payment confirmation",
