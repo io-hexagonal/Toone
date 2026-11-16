@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import AuthPage, { type InvitationOutcome } from "@/components/AuthPage";
+import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { AccountHeader } from "./AccountPage";
@@ -114,10 +115,12 @@ export default function RedeemPage() {
   const justSignedUp = signup !== null && signup.session.token === session.token;
   return (
     <main className={styles.page}>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${styles.gate} ${styles.gateSignedIn}`}>
         <AccountHeader session={session} onSessionEnded={sessionEnded} />
+        <div className={styles.gateAvatar}>
+          <AccessAvatar />
+        </div>
         <div className={styles.title}>
-          <p className={styles.eyebrow}>{t("redeem.eyebrow")}</p>
           <h1>{t("redeem.title")}</h1>
           <p className={styles.sub}>{t("redeem.sub", { email: session.user.email })}</p>
         </div>
