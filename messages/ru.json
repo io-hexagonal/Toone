@@ -817,14 +817,14 @@
       "contact": "Contact us"
     },
     "paidEntry": {
-      "title": "Выберите план, чтобы скачать Toone",
-      "sub": "Ваш аккаунт готов. На время запуска Toone открыт для платных участников. Выберите план, и загрузка откроется сразу.",
-      "freeName": "Бесплатно",
-      "freeBadge": "Откроется после запуска",
-      "freeText": "Мы начинаем с платных участников, чтобы уделить всё внимание каждому раннему пользователю. Бесплатные аккаунты откроются в начале 2027 года.",
-      "freeButton": "Пока недоступно",
-      "redeem": "Есть код от AppSumo или Product Hunt? <link>Активировать</link>",
-      "checking": "Проверяем ваш план…"
+      "title": "Choose a plan to download Toone",
+      "sub": "Your account is ready. During launch, Toone is open to paying members. Pick a plan and your download unlocks right away.",
+      "freeName": "Free",
+      "freeBadge": "Opens after launch",
+      "freeText": "We’re starting with paying members so every early user gets our full attention. Free accounts open in early 2027.",
+      "freeButton": "Not available yet",
+      "redeem": "Have a code from AppSumo or Product Hunt? <link>Redeem it</link>",
+      "checking": "Checking your plan…"
     }
   },
   "statement": {
