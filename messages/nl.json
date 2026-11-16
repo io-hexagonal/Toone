@@ -126,7 +126,7 @@
       "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
       "errGeneric": "Er ging iets mis. Probeer het opnieuw.",
       "gateTitle": "Wissel je code in",
-      "gateSub": "Vul eerst je code in. Maak daarna je Toone-account aan met de code, of log in op het account dat je al hebt.",
+      "gateSub": "Nog één code. Vul hem in om je Toone-account te maken, of voeg hem toe aan het account dat je al hebt.",
       "gateContinue": "Doorgaan",
       "gateValidTitle": "Je code is geldig",
       "gateExistingOnly": "Deze code werkt met een bestaand Toone-account. Log in om hem in te wisselen.",
@@ -142,7 +142,8 @@
       "launchSub": "Bedankt dat je op de lanceringsdag naar Toone komt.",
       "doneLifetimeTitle": "Toone Pro Lifetime is actief",
       "doneSameAccount": "Download Toone voor Mac en log in met hetzelfde account ({email}).",
-      "gateTerms": "Door verder te gaan, ga je akkoord met onze <link>Voorwaarden</link>."
+      "gateTerms": "Door verder te gaan, ga je akkoord met onze <link>Voorwaarden</link>",
+      "gatePrivacy": "en ons <link>Privacybeleid</link>."
     },
     "verify": {
       "body": "Om {email} te bevestigen, mailen we je een code.",

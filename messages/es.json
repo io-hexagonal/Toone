@@ -126,7 +126,7 @@
       "errRate": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
       "errGeneric": "Algo salió mal. Inténtalo de nuevo.",
       "gateTitle": "Canjea tu código",
-      "gateSub": "Primero introduce tu código. Después crea tu cuenta de Toone con él o inicia sesión en la cuenta que ya tienes.",
+      "gateSub": "Estás a un código de entrar. Introdúcelo para crear tu cuenta de Toone o añádelo a la que ya tienes.",
       "gateContinue": "Continuar",
       "gateValidTitle": "Tu código es válido",
       "gateExistingOnly": "Este código funciona con una cuenta de Toone existente. Inicia sesión para canjearlo.",
@@ -142,7 +142,8 @@
       "launchSub": "Gracias por unirte a Toone el día del lanzamiento.",
       "doneLifetimeTitle": "Toone Pro Lifetime está activo",
       "doneSameAccount": "Descarga Toone para Mac e inicia sesión con la misma cuenta ({email}).",
-      "gateTerms": "Al continuar, aceptas nuestros <link>Términos</link>."
+      "gateTerms": "Al continuar, aceptas nuestros <link>Términos</link>",
+      "gatePrivacy": "y la <link>Política de privacidad</link>."
     },
     "verify": {
       "body": "Para confirmar {email}, te enviamos un código por correo.",

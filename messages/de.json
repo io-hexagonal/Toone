@@ -126,7 +126,7 @@
       "errRate": "Zu viele Versuche. Warte eine Minute und versuche es dann erneut.",
       "errGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "gateTitle": "Löse deinen Code ein",
-      "gateSub": "Gib zuerst deinen Code ein. Dann erstellst du damit dein Toone-Konto oder meldest dich bei deinem bestehenden Konto an.",
+      "gateSub": "Nur noch ein Code. Geben Sie ihn ein, um Ihr Toone-Konto zu erstellen oder ihn Ihrem bestehenden Konto hinzuzufügen.",
       "gateContinue": "Weiter",
       "gateValidTitle": "Dein Code ist gültig",
       "gateExistingOnly": "Dieser Code gilt für ein bestehendes Toone-Konto. Melde dich an, um ihn einzulösen.",
@@ -142,7 +142,8 @@
       "launchSub": "Danke, dass du am Launch-Tag zu Toone kommst.",
       "doneLifetimeTitle": "Toone Pro Lifetime ist aktiv",
       "doneSameAccount": "Lade Toone für den Mac herunter und melde dich mit demselben Konto an ({email}).",
-      "gateTerms": "Mit dem Fortfahren stimmen Sie unseren <link>Nutzungsbedingungen</link> zu."
+      "gateTerms": "Mit dem Fortfahren stimmen Sie unseren <link>Nutzungsbedingungen</link>",
+      "gatePrivacy": "und der <link>Datenschutzerklärung</link> zu."
     },
     "verify": {
       "body": "Um {email} zu bestätigen, schicken wir dir einen Code per E-Mail.",

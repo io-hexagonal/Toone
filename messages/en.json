@@ -126,7 +126,7 @@
       "errRate": "Too many attempts. Wait a minute, then try again.",
       "errGeneric": "Something went wrong. Please try again.",
       "gateTitle": "Redeem your code",
-      "gateSub": "Enter your code first. Then create your Toone account with it, or sign in to the account you already have.",
+      "gateSub": "You’re one code away. Enter it to create your Toone account, or add it to the one you already have.",
       "gateContinue": "Continue",
       "gateValidTitle": "Your code is valid",
       "gateExistingOnly": "This code works with an existing Toone account. Sign in to redeem it.",
@@ -142,7 +142,8 @@
       "launchSub": "Thanks for joining Toone on launch day.",
       "doneLifetimeTitle": "Toone Pro Lifetime is active",
       "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email}).",
-      "gateTerms": "By continuing, you agree to our <link>Terms</link>."
+      "gateTerms": "By continuing, you agree to our <link>Terms</link>",
+      "gatePrivacy": "and <link>Privacy Policy</link>."
     },
     "verify": {
       "body": "To confirm {email}, we'll email you a code.",
