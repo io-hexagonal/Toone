@@ -243,10 +243,10 @@ export default function PricingPlans({
         <div className={`pricing-grid${paidEntry ? " pricing-grid--entry" : ""}`}>
           {paidEntry && (
             <article className="pricing-card pricing-card--free">
-              <span className="pricing-badge">{entry("freeBadge")}</span>
               <h2>{entry("freeName")}</h2>
               <p className="pricing-desc">{entry("freeText")}</p>
               <button type="button" className="pricing-button" disabled>{entry("freeButton")}</button>
+              <span className="pricing-free-tag">{entry("freeBadge")}</span>
             </article>
           )}
           {plans.map(price => (

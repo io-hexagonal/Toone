@@ -93,7 +93,15 @@ export const PRICING_CSS = `
 
             /* Paid entry: the Free plan is shown, closed, beside the paid ones. */
             .pricing-grid--entry { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-            .pricing-card--free { border-style: dashed; background: rgba(255,255,255,0.015); }
+            .pricing-card--free { position: relative; border-style: dashed; background: rgba(255,255,255,0.015); }
+            /* sits on the dashed bottom edge, centred under the button */
+            .pricing-free-tag {
+              position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%);
+              padding: 5px 12px; border-radius: 999px; white-space: nowrap;
+              background: #1c1c1c; border: 1px dashed rgba(255,255,255,0.22);
+              color: rgba(255,255,255,0.66); font-size: 10.5px; font-weight: 650;
+              letter-spacing: 0.12em; text-transform: uppercase;
+            }
             .pricing-card--free h2, .pricing-card--free .pricing-desc { color: rgba(255,255,255,0.62); }
             .pricing-card--free .pricing-button { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
             .pricing-redeem { margin: 26px 0 0; text-align: center; color: rgba(255,255,255,0.62); font-size: 14px; }
