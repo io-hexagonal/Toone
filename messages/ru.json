@@ -730,7 +730,7 @@
       "buyBusy": "Opening checkout…",
       "checking": "Checking your account…",
       "signInToBuy": "Sign in to buy",
-      "inviteOnly": "You need a Toone account to buy. Toone is invitation-only for now. No account yet?",
+      "inviteOnly": "You need a Toone account to buy.",
       "requestAccess": "Request access",
       "accountLine": "Toone Pro will be added to {email}.",
       "notYou": "Not you?",

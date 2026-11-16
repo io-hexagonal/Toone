@@ -730,7 +730,7 @@
       "buyBusy": "Ouverture du paiement…",
       "checking": "Vérification de votre compte…",
       "signInToBuy": "Connectez-vous pour acheter",
-      "inviteOnly": "Un compte Toone est nécessaire pour acheter. Pour l'instant, Toone est accessible sur invitation. Pas encore de compte ?",
+      "inviteOnly": "Un compte Toone est nécessaire pour acheter.",
       "requestAccess": "Demander un accès",
       "accountLine": "Toone Pro sera ajouté à {email}.",
       "notYou": "Ce n'est pas vous ?",
