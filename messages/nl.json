@@ -419,34 +419,126 @@
           }
         }
       },
-      "prompt": "<k>Elke maandag om 9:00</k>: onderzoek onze niche met <k>4 parallelle agents op Haiku</k> en voeg samen wat ze vinden. Laat <k>een Opus-agent</k> de samenvatting controleren. Vind <k>minstens 20 nieuwe leads</k> op LinkedIn en <k>sla iedereen over die we al benaderd hebben</k>. Ontwerp 3 postvisuals in Figma, animeer de beste in Higgsfield en publiceer op Threads, Facebook en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+      "personaLabel": "Routine voor",
+      "more": "Meer in Explore",
+      "tabs": {
+        "marketer": "Marketeer",
+        "seo": "SEO-bureau",
+        "film": "Filmmaker"
+      },
       "promptLabel": "Nieuwe routine",
       "promptSend": "Versturen",
-      "graph": {
-        "schedule": "ma 9:00",
-        "fallback": "1× opnieuw → vraag mij",
-        "research": "Onderzoek",
-        "merge": "Samenvoegen",
-        "review": "Review",
-        "findLeads": "Leads vinden",
-        "design": "Ontwerpen",
-        "publish": "Publiceren",
-        "min": "≥ 20",
-        "unique": "geen dubbele"
-      },
-      "run": {
-        "research": "4 Haiku-agents onderzoeken parallel",
-        "merge": "De 4 rapporten samenvoegen",
-        "review": "Opus controleert de samenvatting",
-        "leads": "Leads vinden op LinkedIn",
-        "contract": "Contract gehaald: ≥ 20, geen dubbele",
-        "design": "Ontwerpen in Figma, animeren in Higgsfield",
-        "publish": "Publiceren op Threads, Facebook, Instagram"
-      },
-      "pause": {
-        "reason": "12 / 20 leads: onder het contract",
-        "edit": "Uitbreiden naar EU + VK",
-        "note": "Afgeronde stappen houden hun resultaten."
+      "fallback": "1× opnieuw → vraag mij",
+      "pauseNote": "Afgeronde stappen houden hun resultaten.",
+      "scenarios": {
+        "marketer": {
+          "routineName": "Wekelijkse contentmotor",
+          "prompt": "<k>Elke maandag om 9:00</k>: kies de thema’s van deze week uit de resultaten van vorige week en onderzoek ze met <k>2 parallelle agents op Haiku</k>: trends en concurrenten. Laat <k>een Sonnet-agent</k> 3 LinkedIn-posts schrijven en <k>een GPT-agent</k> ze beoordelen: <k>merkstem minstens 8/10, elke claim met bron</k>. <k>Stuur zwakke concepten terug, hooguit twee keer.</k> Maak de visuals in Figma, <k>vraag het me vóór het publiceren</k> en post dan op LinkedIn, Threads en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "graph": {
+            "schedule": "ma 9:00",
+            "parallelShort": "Onderzoek ×2",
+            "nodes": {
+              "topics": "Thema’s kiezen",
+              "trends": "Trends",
+              "competitors": "Concurrenten",
+              "draft": "Posts schrijven",
+              "review": "Review",
+              "visuals": "Visuals",
+              "publish": "Publiceren"
+            },
+            "chips": {
+              "min": "merkstem ≥ 8/10",
+              "other": "claims met bron",
+              "loop": "needs_fix",
+              "gate": "vraagt mij eerst"
+            }
+          },
+          "run": {
+            "topics": "Opus kiest thema’s op basis van vorige week",
+            "research": "2 Haiku-agents onderzoeken parallel",
+            "draft": "Sonnet schrijft 3 posts",
+            "review": "GPT beoordeelt de merkstem",
+            "loop": "Onder de 8: terug voor een herschrijving",
+            "contract": "Contract gehaald: stem ≥ 8/10, met bron",
+            "publish": "Visuals klaar, jij keurt goed, hij post"
+          },
+          "pause": {
+            "reason": "Merkstem 6 / 10: onder het contract",
+            "edit": "Minder hype, meer cijfers"
+          }
+        },
+        "seo": {
+          "routineName": "Wekelijkse contentopfrisbeurt",
+          "prompt": "<k>Elke maandag om 7:00</k>: haal de rankings van onze klant op uit Search Console – <k>lukt dat niet, gebruik dan Semrush</k>. Kies <k>minstens 8 pagina’s die posities verloren</k>, <k>één keyword per pagina</k>. Fris ze op met <k>één Sonnet-agent per pagina</k>, laat <k>een GPT-agent</k> elke wijziging factchecken, sla de concepten op in WordPress en mail het rapport naar de klant. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "graph": {
+            "schedule": "ma 7:00",
+            "parallelShort": "Opleveren ×2",
+            "nodes": {
+              "pull": "Rankings ophalen",
+              "pick": "Pagina’s kiezen",
+              "refresh": "Opfrissen",
+              "check": "Factcheck",
+              "save": "Concepten opslaan",
+              "report": "Rapport"
+            },
+            "chips": {
+              "fallback": "fallback → Semrush",
+              "min": "≥ 8 pagina’s",
+              "other": "elk één keyword"
+            }
+          },
+          "run": {
+            "pull": "Rankings ophalen uit Search Console",
+            "fallback": "Search Console time-out: verder met Semrush",
+            "pick": "Pagina’s kiezen die posities verloren",
+            "contract": "Contract gehaald: ≥ 8 pagina’s, elk 1 keyword",
+            "refresh": "8 Sonnet-agents frissen elk een pagina op",
+            "check": "GPT factcheckt elke wijziging",
+            "report": "Concepten in WordPress, rapport per mail"
+          },
+          "pause": {
+            "reason": "5 / 8 pagina’s: onder het contract",
+            "edit": "Ook dalingen van 2+ posities"
+          }
+        },
+        "film": {
+          "routineName": "Wekelijkse afleveringspipeline",
+          "prompt": "<k>Elke vrijdag om 8:00</k>: laat <k>een Opus-agent</k> het script van volgende week ontleden. Draai daarna <k>3 sporen naast elkaar</k>: vind <k>minstens 12 B-roll-clips</k> op Pexels, <k>alleen vrij te gebruiken</k>; neem de voice-over op in ElevenLabs; en maak 3 thumbnails in Higgsfield – <k>lukt dat niet, gebruik dan GPT Image</k>. Zet een ruwe montage in elkaar, controleer de continuïteit aan de hand van het script en upload hem als concept naar YouTube. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "graph": {
+            "schedule": "vr 8:00",
+            "parallelShort": "3 sporen",
+            "nodes": {
+              "breakdown": "Script ontleden",
+              "broll": "B-roll",
+              "trim": "Inkorten",
+              "voice": "Voice-over",
+              "captions": "Ondertitels",
+              "thumbs": "Thumbnails",
+              "pick": "Beste kiezen",
+              "cut": "Ruwe montage",
+              "review": "Continuïteit",
+              "upload": "Concept uploaden"
+            },
+            "chips": {
+              "min": "≥ 12",
+              "other": "vrij te gebruiken",
+              "fallback": "fallback → GPT Image"
+            }
+          },
+          "run": {
+            "breakdown": "Opus ontleedt het script",
+            "tracks": "3 sporen draaien naast elkaar",
+            "fallback": "Higgsfield mislukt: GPT Image neemt over",
+            "contract": "Contract gehaald: ≥ 12, vrij te gebruiken",
+            "cut": "De ruwe montage in elkaar zetten",
+            "review": "Opus controleert de continuïteit",
+            "upload": "Concept uploaden naar YouTube"
+          },
+          "pause": {
+            "reason": "7 / 12 clips: onder het contract",
+            "edit": "Lucht- en nachtbeelden toevoegen"
+          }
+        }
       }
     },
     "routineGraph": {
@@ -459,10 +551,30 @@
       "paused": "Gepauzeerd",
       "resume": "Hervatten",
       "subs": {
-        "research": ["Bronnen verzamelen", "Analyseren met Claude", "Controleren met ChatGPT", "Bevindingen samenvatten"],
-        "findLeads": ["Zoeken op LinkedIn", "Filteren op fit", "Profielen verrijken", "Leads selecteren"],
-        "designFiles": ["Merkstem ophalen", "Ontwerpen in Figma", "Witruimte controleren", "Animeren in Higgsfield"],
-        "publishSocial": ["Tekst per platform aanpassen", "Posten op Threads", "Posten op Facebook", "Posten op Instagram"]
+        "research": [
+          "Bronnen verzamelen",
+          "Analyseren met Claude",
+          "Controleren met ChatGPT",
+          "Bevindingen samenvatten"
+        ],
+        "findLeads": [
+          "Zoeken op LinkedIn",
+          "Filteren op fit",
+          "Profielen verrijken",
+          "Leads selecteren"
+        ],
+        "designFiles": [
+          "Merkstem ophalen",
+          "Ontwerpen in Figma",
+          "Witruimte controleren",
+          "Animeren in Higgsfield"
+        ],
+        "publishSocial": [
+          "Tekst per platform aanpassen",
+          "Posten op Threads",
+          "Posten op Facebook",
+          "Posten op Instagram"
+        ]
       }
     },
     "whyToone": {
@@ -923,7 +1035,7 @@
     "agentIds": "Vereiste agenten",
     "noRequirements": "Geen aanvullende vereisten opgegeven.",
     "pinned": "Vastgezette revisie",
-    "viewRoutine": "Routine bekijken",
+    "viewRoutine": "View routine",
     "stepsCount": "{count, plural, one {# stap} other {# stappen}}",
     "agentsCount": "{count, plural, one {# agent} other {# agenten}}",
     "subRoutinesCount": "{count, plural, one {# subroutine} other {# subroutines}}",
@@ -966,7 +1078,6 @@
     "goToSlide": "Show slide",
     "pauseSlides": "Pause slides",
     "playSlides": "Play slides",
-    "viewRoutine": "View routine",
     "viewBundle": "View bundle",
     "preparedDuringSetupNote": "When you add this routine, Toone's setup assistant prepares these with you. You only answer what it can't find.",
     "youPrepare": "You prepare",

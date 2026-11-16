@@ -5,20 +5,22 @@ import type { LogoKey } from "@/components/RoutineChain";
 
 /**
  * The routine graph inside "How it works": the request from step 1 as Toone
- * parsed it. A schedule trigger fans out to four parallel Haiku research
- * agents, a merge, an Opus review, then Find leads (with its contracts),
- * Design and Publish on the user's own accounts.
+ * parsed it. It draws whatever workflow the caller describes (`GraphSpec`):
+ * rows of steps top to bottom, a row of several steps being agents that run in
+ * parallel. Each step can carry its model, the accounts it uses, a counter,
+ * rules (contracts, a fallback, "ask me first") and a review loop back to an
+ * earlier step. The first step carries the schedule.
  *
  * Same visual language as RoutineChain (ink on cream, the app's 10px-radius
  * cards, dashed "consumes" links to dashed account capsules; running = the
  * app's white treatment, paused = the app's caution orange), laid out around
- * a centred spine: rules (fallback, contracts) on the left, accounts on the
- * right, the model inside each agent card.
+ * a centred spine: rules on the left, accounts on the right, the model inside
+ * each card. Rules on a parallel agent sit on its outgoing edge.
  *
  * The edges are drawn in one SVG measured from the laid-out cards (offset
  * geometry, so the pop-in transforms don't skew them), which keeps the curves
- * right in every language and at every width. Under 640px the four research
- * agents collapse into one "×4" card.
+ * right in every language and at every width. Under 640px a parallel row
+ * collapses into one card.
  *
  * Presentational: the caller owns every state. Decorative (aria-hidden); the
  * surrounding copy carries the meaning.
@@ -26,61 +28,60 @@ import type { LogoKey } from "@/components/RoutineChain";
 
 export type NodeState = "draft" | "idle" | "running" | "done" | "paused";
 export type ContractState = "draft" | "open" | "met" | "unmet";
-export type NodeKey =
-  | "trigger"
-  | "r1"
-  | "r2"
-  | "r3"
-  | "r4"
-  | "merge"
-  | "review"
-  | "leads"
-  | "design"
-  | "publish";
+
+export type ChipSpec = { key: string; icon: IconName };
+export type NodeSpec = {
+  id: string;
+  model?: string;
+  logos?: readonly LogoKey[];
+  /** Rules on this step: contracts, a fallback, "ask me first". */
+  chips?: readonly ChipSpec[];
+  /** Shows the scenario's counter. */
+  counter?: boolean;
+  /** One agent per item: drawn as a stack with "×N". */
+  each?: number;
+};
+export type GraphSpec = {
+  /**
+   * Top to bottom. An array is a row of parallel lanes; a lane is one step or
+   * a short chain of steps (an array again).
+   */
+  rows: readonly (NodeSpec | readonly (NodeSpec | readonly NodeSpec[])[])[];
+  /** A review loop: `from` sends work back to `to`. `chip` labels it. */
+  loop?: { from: string; to: string; chip: string };
+};
 
 export type GraphLabels = {
   schedule: string;
   fallback: string;
-  research: string;
-  merge: string;
-  review: string;
-  findLeads: string;
-  design: string;
-  publish: string;
-  min: string;
-  unique: string;
+  /** Title of the single card that replaces the parallel row on phones. */
+  parallelShort: string;
+  nodes: Record<string, string>;
+  chips: Record<string, string>;
   running: string;
   paused: string;
 };
 
 type Props = {
-  nodes: Record<NodeKey, NodeState>;
-  /** Leads found so far; null hides the counter. */
-  leads: number | null;
-  contracts: { min: ContractState; unique: ContractState };
-  /** How long each research agent runs, for its progress bar (ms). */
-  researchMs: readonly number[];
+  spec: GraphSpec;
+  nodes: Record<string, NodeState>;
+  chips: Record<string, ContractState>;
+  /** The counter's text; null hides it. */
+  counter: string | null;
+  /** The review loop is sending work back right now. */
+  looping: boolean;
+  /** How long each parallel agent runs, for its progress bar (ms). */
+  durations: Record<string, number>;
+  /** Steps on their second pass: shown as "×2". */
+  again: readonly string[];
   labels: GraphLabels;
   motion: boolean;
 };
 
-const RESEARCH = ["r1", "r2", "r3", "r4"] as const;
-/** Edges, top to bottom. "rx" is the collapsed research card on phones. */
-const EDGES: readonly (readonly [string, string])[] = [
-  ...RESEARCH.map((r) => ["trigger", r] as const),
-  ["trigger", "rx"],
-  ...RESEARCH.map((r) => [r, "merge"] as const),
-  ["rx", "merge"],
-  ["merge", "review"],
-  ["review", "leads"],
-  ["leads", "design"],
-  ["design", "publish"],
-];
-const LEADS_TARGET = 20;
-
 const CSS = `
 .hg {
-  --ink: 29,28,25; --spine: 182px;
+  --ink: 29,28,25; --spine: min(190px, calc((100cqw - 20px) / 3));
+  container-type: inline-size;
   position: relative; display: flex; flex-direction: column; gap: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 }
@@ -101,9 +102,17 @@ const CSS = `
 .hg-r { grid-column: 3; justify-self: start; display: flex; align-items: center; }
 .hg-fan {
   position: relative; z-index: 1; display: grid; gap: 10px; margin: 10px 0;
-  grid-template-columns: repeat(4, minmax(0,1fr));
+  grid-template-columns: repeat(var(--n, 4), minmax(0, var(--spine))); justify-content: center; align-items: stretch;
 }
 .hg-row--rx { display: none; }
+.hg-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.hg-col .hg-card--agent { width: 100%; }
+.hg-step { margin-right: 1px; color: rgba(var(--ink),0.5); font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* rules on a parallel agent's output sit on its outgoing edge */
+.hg-thread { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; margin: 10px 0; }
+.hg-thread:last-child { margin-bottom: 0; }
+.hg-thread .hg-chip { background: #fbfaf7; }
+.hg-thread .hg-chip[data-s="draft"] { background: #f4f2ed; }
 
 /* --- cards: the app's routine card, light-ground translation --- */
 .hg-card {
@@ -120,17 +129,56 @@ const CSS = `
   opacity: 0; transition: opacity .4s ease;
 }
 .hg-card--agent {
-  width: 100%; height: 54px; flex-direction: column; align-items: flex-start;
+  width: var(--spine); height: 54px; flex-direction: column; align-items: flex-start;
   justify-content: center; gap: 3px; padding: 0 10px 2px;
 }
-.hg-card--step {
-  width: auto; min-width: 104px; height: 32px; border-width: 1px; border-radius: 8px;
-  justify-content: center; font-size: 12px;
+.hg-card--each {
+  box-shadow: 0 4px 0 -2px #f8f7f3, 0 4px 0 -0.75px rgba(var(--ink),0.16),
+    0 8px 0 -4px #f8f7f3, 0 8px 0 -2.75px rgba(var(--ink),0.12);
 }
+/* when the routine runs: a tag on its first step */
+.hg-when {
+  position: absolute; top: -11px; left: 10px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 3px; height: 17px; white-space: nowrap; padding: 0 7px 0 5px;
+  border-radius: 999px; background: #f8f7f3; box-shadow: inset 0 0 0 .75px rgba(var(--ink),0.28);
+  color: rgba(var(--ink),0.72); font-size: 9.5px; font-weight: 700; letter-spacing: .01em;
+}
+.hg-when svg { width: 10px; height: 10px; }
+.hg-node[data-s="draft"] .hg-when { box-shadow: none; outline: 1px dashed rgba(var(--ink),0.3); outline-offset: -1px; color: rgba(var(--ink),0.5); }
+.hg-sub { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; }
+.hg-mini { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; }
+.hg-n + .hg-mini { margin-left: 8px; }
+.hg-mini span {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #fff;
+  box-shadow: inset 0 0 0 .7px rgba(var(--ink),0.14), 0 1px 2px rgba(0,0,0,0.05);
+}
+.hg-mini img { width: 12px; height: 12px; display: block; object-fit: contain; }
+.hg-node[data-s="running"] .hg-mini span { box-shadow: inset 0 0 0 1px rgba(var(--ink),0.5), 0 1px 2px rgba(0,0,0,0.05); }
+.hg-card--agent { padding-bottom: 0; }
+.hg-sub { min-height: 20px; }
+.hg-node[data-s="draft"] .hg-mini { opacity: .5; }
+.hg-n { margin-left: auto; color: rgba(var(--ink),0.58); font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hg-node[data-s="paused"] .hg-n { color: #b25a00; }
+.hg-loop { fill: none; stroke: rgba(var(--ink),0.3); stroke-width: 1.2; stroke-dasharray: 3 4; transition: stroke .3s ease; }
+.hg-loop[data-on] { stroke: rgba(var(--ink),0.7); }
+.hg-loop-head { fill: rgba(var(--ink),0.42); transition: fill .3s ease; }
+.hg-loop-head[data-on] { fill: rgba(var(--ink),0.8); }
 .hg-title { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .hg-title span { overflow: hidden; text-overflow: ellipsis; }
 .hg-card--agent .hg-title { max-width: calc(100% - 14px); }
-.hg-glyph { width: 12px; height: 12px; flex-shrink: 0; color: #9a8573; }
+.hg-ring { width: 13px; height: 13px; flex-shrink: 0; color: rgba(var(--ink),0.42); }
+.hg-ring .hg-ring-c { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-dasharray: 2.2 2.2; }
+.hg-ring .hg-ring-t { display: none; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.hg-node[data-s="running"] .hg-ring { color: rgba(var(--ink),0.85); animation: hg-spin 1.6s linear infinite; }
+.hg-node[data-s="running"] .hg-ring-c { stroke-dasharray: 20 14; }
+.hg-node[data-s="done"] .hg-ring { color: #4d8a63; }
+.hg-node[data-s="done"] .hg-ring-c { stroke-dasharray: none; }
+.hg-node[data-s="done"] .hg-ring-t { display: block; animation: hg-pop .35s cubic-bezier(0.34,1.56,0.64,1) both; transform-origin: center; }
+.hg-node[data-s="paused"] .hg-ring { color: #c46a00; }
+.hg-node[data-s="paused"] .hg-ring-c { stroke-dasharray: none; }
+.hg-times { color: rgba(var(--ink),0.6); font-size: 10.5px; font-weight: 600; }
+.hg-arrow { fill: rgba(var(--ink),0.38); }
+.hg-lane-gap { height: 18px; }
 .hg-end {
   margin-left: auto; display: flex; align-items: center; gap: 5px;
   color: rgba(var(--ink),0.58); font-size: 11px; font-weight: 600;
@@ -160,14 +208,14 @@ const CSS = `
   display: block; color: #b25a00;
   background: #fff7ec; box-shadow: inset 0 0 0 .75px rgba(255,149,0,0.7);
 }
-.hg-card--agent .hg-badge { right: auto; left: 9px; }
+.hg-card--agent .hg-badge { right: 9px; }
 
 /* draft: proposed, not yet real */
 .hg-node[data-s="draft"] .hg-card {
   border-style: dashed; border-color: rgba(var(--ink),0.3);
   background: rgba(255,255,255,0.22); color: rgba(var(--ink),0.5);
 }
-.hg-node[data-s="draft"] .hg-glyph,
+.hg-node[data-s="draft"] .hg-ring,
 .hg-node[data-s="draft"] .hg-model { opacity: .55; }
 /* running: white card, ink rim (top strong, bottom soft), breathing wash */
 .hg-node[data-s="running"] .hg-card {
@@ -269,18 +317,20 @@ const CSS = `
 @keyframes hg-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes hg-shim { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 @keyframes hg-pop { from { transform: scale(.4); opacity: 0; } }
+@keyframes hg-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 640px) {
   .hg { --spine: 156px; gap: 14px; }
   .hg-fan { display: none; }
+  .hg-when { left: 8px; }
   .hg-row { grid-template-columns: var(--spine) minmax(0,1fr); }
   .hg-row--rx { display: grid; }
   .hg-c { grid-column: 1; grid-row: 1; }
   .hg-r { grid-column: 2; grid-row: 1; }
   .hg-l { grid-column: 2; grid-row: 1; justify-self: start; flex-direction: row-reverse; }
   .hg-l .hg-conn::before { right: auto; left: -3px; }
-  .hg-row--leads .hg-l { grid-row: 2; margin: 7px 0 0 16px; }
-  .hg-row--leads .hg-l .hg-conn { display: none; }
+  .hg-row--chips .hg-l { grid-row: 2; margin: 7px 0 0 16px; }
+  .hg-row--chips .hg-l .hg-conn { display: none; }
   .hg-stack { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
   .hg-card { padding: 0 10px; font-size: 12px; gap: 6px; }
   .hg-card--agent { width: var(--spine); height: 50px; }
@@ -294,9 +344,9 @@ const CSS = `
   .hg-l { max-width: 100%; }
   .hg-l .hg-chip { white-space: normal; height: auto; min-height: 22px; padding: 4px 8px 4px 7px; line-height: 1.25; }
   /* the lead counter drops under the title, so long titles keep their room */
-  .hg-card--leads { height: 50px; flex-wrap: wrap; align-content: center; row-gap: 1px; }
-  .hg-card--leads .hg-end { margin-left: 18px; flex-basis: 100%; font-size: 10.5px; }
-  .hg-card--leads .hg-end:empty { display: none; }
+  .hg-card--count { height: 50px; flex-wrap: wrap; align-content: center; row-gap: 1px; }
+  .hg-card--count .hg-end { margin-left: 18px; flex-basis: 100%; font-size: 10.5px; }
+  .hg-card--count .hg-end:empty { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hg-card, .hg-card::after, .hg-conn, .hg-cap, .hg-tile, .hg-chip, .hg-edge { transition: none; }
@@ -305,7 +355,7 @@ const CSS = `
   .hg-node[data-s="running"] .hg-tile::after { display: none; }
   .hg-prog i { animation: none; transform: scaleX(.6); }
   .hg-prog::after { display: none; }
-  .hg-chip svg, .hg-check { animation: none !important; }
+  .hg-chip svg, .hg-check, .hg-ring, .hg-ring-t { animation: none !important; }
 }
 `;
 
@@ -395,14 +445,12 @@ const ICONS: Record<IconName, ReactNode> = {
   ),
 };
 
-/** list.bullet.rectangle, the app's routine-kind glyph. */
+/** The app's step status: dashed ring (waiting), turning (running), check (done). */
 function RoutineGlyph() {
   return (
-    <svg className="hg-glyph" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
-      <rect x=".6" y="1.4" width="8.8" height="7.2" rx="1.6" fill="none" stroke="currentColor" strokeWidth=".9" />
-      <circle cx="2.9" cy="3.9" r=".6" />
-      <circle cx="2.9" cy="6.1" r=".6" />
-      <path d="M4.4 3.9h3M4.4 6.1h3" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+    <svg className="hg-ring" viewBox="0 0 14 14" aria-hidden="true">
+      <circle className="hg-ring-c" cx="7" cy="7" r="5.6" />
+      <path className="hg-ring-t" d="m4.5 7.2 1.7 1.7 3.3-3.6" />
     </svg>
   );
 }
@@ -417,11 +465,7 @@ function Badges({ labels }: { labels: GraphLabels }) {
 }
 
 function Check() {
-  return (
-    <svg className="hg-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m3.4 8.4 2.9 2.9 6.3-6.6" />
-    </svg>
-  );
+  return null;
 }
 
 function Capsule({ logos }: { logos: readonly LogoKey[] }) {
@@ -449,7 +493,20 @@ function Model({ name }: { name: string }) {
   );
 }
 
-type Edge = { id: string; d: string; to: string; x0: number; y0: number; x1: number; y1: number };
+function Mini({ logos }: { logos: readonly LogoKey[] }) {
+  return (
+    <span className="hg-mini">
+      {logos.map((logo) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <span key={logo}><img src={`/assets/logos/${logo}.svg`} alt="" width={12} height={12} /></span>
+      ))}
+    </span>
+  );
+}
+
+type Edge = { id: string; d: string; to: string; ax: number; ay: number };
+type Port = { id: string; x: number; y: number };
+type Lane = readonly NodeSpec[];
 
 /** Sum offsets up to the graph root: layout geometry, untouched by transforms. */
 function offsetIn(el: HTMLElement, root: HTMLElement) {
@@ -464,36 +521,82 @@ function offsetIn(el: HTMLElement, root: HTMLElement) {
   return n === root ? { x, y, w: el.offsetWidth, h: el.offsetHeight } : null;
 }
 
-export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, labels, motion }: Props) {
+/** A row as lanes: a single step is one lane of one. */
+function lanesOf(row: GraphSpec["rows"][number]): Lane[] {
+  if (!Array.isArray(row)) return [[row as NodeSpec]];
+  return (row as readonly (NodeSpec | Lane)[]).map((cell) => (Array.isArray(cell) ? (cell as Lane) : [cell as NodeSpec]));
+}
+
+export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, durations, again, labels, motion }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState<Edge[]>([]);
+  const [ports, setPorts] = useState<Port[]>([]);
+  const [loop, setLoop] = useState<{ d: string; head: string } | null>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
+
+  // Row by row: every lane's last step links to every first step of the next
+  // row, and a lane's own steps link in order. "rx" stands for a parallel
+  // row's single card on phones.
+  const rows = spec.rows.map(lanesOf);
+  const pairs: string[] = [];
+  rows.forEach((lanes, i) => {
+    for (const lane of lanes) lane.slice(1).forEach((n, j) => pairs.push(`${lane[j].id}>${n.id}`));
+    const next = rows[i + 1];
+    if (!next) return;
+    const outs = lanes.map((lane) => lane[lane.length - 1].id);
+    const ins = next.map((lane) => lane[0].id);
+    for (const a of outs) for (const b of ins) pairs.push(`${a}>${b}`);
+    if (outs.length > 1) for (const b of ins) pairs.push(`rx>${b}`);
+    if (ins.length > 1) for (const a of outs) pairs.push(`${a}>rx`);
+  });
+  const pairKey = pairs.join("|");
+  const loopTo = spec.loop?.to ?? "";
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const measure = () => {
-      const box = (key: string) => {
-        const el = root.querySelector<HTMLElement>(`[data-n="${key}"]`);
+      const box = (selector: string) => {
+        const el = root.querySelector<HTMLElement>(selector);
         if (!el || !el.offsetParent || !el.offsetWidth) return null;
         return offsetIn(el, root);
       };
       const out: Edge[] = [];
-      for (const [a, b] of EDGES) {
-        const ra = box(a);
-        const rb = box(b);
-        if (!ra || !rb) continue;
+      const dots: Port[] = [];
+      for (const pair of pairKey.split("|")) {
+        const [a, b] = pair.split(">");
+        const card = box(`[data-n="${a}"]`);
+        // A lane's edge leaves from under its last rules, if it has any.
+        const ra = box(`[data-o="${a}"]`) ?? card;
+        const rb = box(`[data-n="${b}"]`);
+        if (!card || !ra || !rb) continue;
         const x0 = ra.x + ra.w / 2;
         const y0 = ra.y + ra.h;
         const x1 = rb.x + rb.w / 2;
-        const y1 = rb.y;
+        const y1 = rb.y - 4;
         const k = (y1 - y0) * 0.55;
+        const top = card.y + card.h;
         const d = Math.abs(x1 - x0) < 0.5
-          ? `M${x0} ${y0}V${y1}`
-          : `M${x0} ${y0}C${x0} ${y0 + k} ${x1} ${y1 - k} ${x1} ${y1}`;
-        out.push({ id: `${a}-${b}`, d, to: b, x0, y0, x1, y1 });
+          ? `M${x0} ${top}V${y1}`
+          : `${y0 - top > 1 ? `M${x0} ${top}V${y0}` : ""}M${x0} ${y0}C${x0} ${y0 + k} ${x1} ${y1 - k} ${x1} ${y1}`;
+        out.push({ id: `${a}-${b}`, d, to: b, ax: x1, ay: y1 + 4 });
+        dots.push({ id: `${a}-${b}`, x: x0, y: top });
       }
       setEdges(out);
+      setPorts(dots);
+      const chip = loopTo ? box('[data-n="loop"]') : null;
+      const back = loopTo ? box(`[data-n="${loopTo}"]`) : null;
+      if (chip && back) {
+        const x0 = chip.x + chip.w / 2;
+        const y0 = chip.y;
+        const x1 = back.x + back.w + 6;
+        const y1 = back.y + back.h / 2;
+        const r = Math.min(10, (y0 - y1) / 2);
+        setLoop({
+          d: `M${x0} ${y0}V${y1 + r}Q${x0} ${y1} ${x0 - r} ${y1}H${x1}`,
+          head: `M${x1 - 6} ${y1}l7 -3.6v7.2Z`,
+        });
+      } else setLoop(null);
       setSize({ w: root.offsetWidth, h: root.offsetHeight });
     };
     measure();
@@ -501,18 +604,51 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
     ro.observe(root);
     document.fonts?.ready.then(measure).catch(() => {});
     return () => ro.disconnect();
-  }, []);
+  }, [pairKey, loopTo]);
 
-  const research: NodeState = RESEARCH.some((r) => nodes[r] === "running")
-    ? "running"
-    : RESEARCH.every((r) => nodes[r] === "done")
-      ? "done"
-      : nodes.r1;
-  const stateOf = (key: string): NodeState =>
-    key === "rx" ? research : nodes[key as NodeKey];
-  const longest = Math.max(...researchMs);
+  const fan = (rows.find((lanes) => lanes.length > 1) ?? []).flat().map((n) => n.id);
+  const fanState: NodeState = fan.some((id) => nodes[id] === "paused")
+    ? "paused"
+    : fan.some((id) => nodes[id] === "running")
+      ? "running"
+      : fan.length && fan.every((id) => nodes[id] === "done")
+        ? "done"
+        : nodes[fan[0]] ?? "idle";
+  const stateOf = (key: string): NodeState => (key === "rx" ? fanState : nodes[key]);
+  const first = rows[0]?.[0]?.[0]?.id;
 
-  const counter = leads === null ? null : `${leads} / ${LEADS_TARGET}`;
+  const chip = (c: ChipSpec) => {
+    const state = chips[c.key] ?? "open";
+    return (
+      <span className="hg-chip" data-s={state} key={c.key}>
+        <Icon name={state === "met" && c.icon === "shield" ? "check" : c.icon} />
+        {labels.chips[c.key]}
+      </span>
+    );
+  };
+  const order = rows.flat(2).map((n) => n.id);
+  /** Every step is the same card: title, then its number, model and details. */
+  const card = (n: NodeSpec, extra?: ReactNode) => (
+    <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}`} data-n={n.id}>
+      {extra}
+      <Badges labels={labels} />
+      <span className="hg-title">
+        <RoutineGlyph />
+        <span>{labels.nodes[n.id]}</span>
+      </span>
+      <span className="hg-sub">
+        <span className="hg-step">{order.indexOf(n.id) + 1}</span>
+        {n.model && <Model name={n.model} />}
+        {n.each && <span className="hg-times">×{n.each}</span>}
+        {again.includes(n.id) && <span className="hg-times">×2</span>}
+        {n.counter && counter !== null && <span className="hg-n">{counter}</span>}
+        {n.logos && <Mini logos={n.logos} />}
+      </span>
+      <span className="hg-prog">
+        <i style={{ "--d": `${durations[n.id] ?? 1600}ms` } as CSSProperties} />
+      </span>
+    </div>
+  );
 
   return (
     <div className="hg" ref={rootRef} aria-hidden="true">
@@ -522,10 +658,16 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
           <path key={e.id} className="hg-edge" data-s={stateOf(e.to)} d={e.d} />
         ))}
         {edges.map((e) => (
-          <g key={`${e.id}-p`}>
-            <circle className="hg-port" cx={e.x0} cy={e.y0} r="2.6" />
-            <circle className="hg-port" cx={e.x1} cy={e.y1} r="2.6" />
-          </g>
+          <path key={`${e.id}-a`} className="hg-arrow" d={`M${e.ax} ${e.ay}l-3.4 -6.4h6.8Z`} />
+        ))}
+        {loop && (
+          <>
+            <path className="hg-loop" data-on={looping ? "" : undefined} d={loop.d} />
+            <path className="hg-loop-head" data-on={looping ? "" : undefined} d={loop.head} />
+          </>
+        )}
+        {ports.map((p) => (
+          <circle key={p.id} className="hg-port" cx={p.x} cy={p.y} r="2.6" />
         ))}
         {motion &&
           edges
@@ -535,145 +677,111 @@ export default function HowItWorksGraph({ nodes, leads, contracts, researchMs, l
                 <animateMotion dur="1.2s" repeatCount="indefinite" path={e.d} />
               </circle>
             ))}
+        {motion && looping && loop && (
+          <circle className="hg-dot" r="2.2">
+            <animateMotion dur="1s" repeatCount="indefinite" path={loop.d} />
+          </circle>
+        )}
       </svg>
 
-      {/* schedule trigger, with the routine's fallback rule on the left */}
-      <div className="hg-row hg-node" data-s={nodes.trigger} style={{ "--row": 0 } as CSSProperties}>
-        <div className="hg-l">
-          <span className="hg-chip" data-s={nodes.trigger === "draft" ? "draft" : "open"}>
-            <Icon name="retry" />
-            {labels.fallback}
-          </span>
-          <span className="hg-conn" />
-        </div>
-        <div className="hg-c">
-          <span className="hg-chip hg-trigger" data-n="trigger" data-s={nodes.trigger === "draft" ? "draft" : "open"}>
-            <Icon name="clock" />
-            {labels.schedule}
-          </span>
-        </div>
-      </div>
-
-      {/* four research agents in parallel (one "×4" card on phones) */}
-      <div className="hg-fan">
-        {RESEARCH.map((r, i) => (
-          <div className="hg-node" data-s={nodes[r]} key={r} style={{ "--i": i } as CSSProperties}>
-            <div className="hg-card hg-card--agent" data-n={r}>
-              <Badges labels={labels} />
-              <span className="hg-title">
-                <RoutineGlyph />
-                <span>{labels.research}</span>
-              </span>
-              <Model name="Haiku" />
-              <Check />
-              <span className="hg-prog">
-                <i style={{ "--d": `${researchMs[i]}ms` } as CSSProperties} />
-              </span>
+      {rows.map((lanes, r) => {
+        if (lanes.length > 1) {
+          const all = lanes.flat();
+          const longest = Math.max(...all.map((n) => durations[n.id] ?? 0));
+          const most = Math.max(0, ...lanes.flatMap((lane) => lane.slice(0, -1).map((n) => n.chips?.length ?? 0)));
+          const between = most ? most * 26 - 4 : 0;
+          return (
+            <div key={`fan-${r}`} style={{ display: "contents" }}>
+              <div className="hg-fan" style={{ "--n": lanes.length } as CSSProperties}>
+                {lanes.map((lane, i) => (
+                  <div className="hg-col" data-o={lane[lane.length - 1].id} key={lane[0].id} style={{ "--i": i } as CSSProperties}>
+                    {lane.map((n, j) => (
+                      <div className="hg-node" data-s={nodes[n.id]} key={n.id} style={{ display: "contents" }}>
+                        {card(n)}
+                        {j < lane.length - 1 ? (
+                          <div className="hg-thread" style={{ minHeight: between }}>{(n.chips ?? []).map(chip)}</div>
+                        ) : (
+                          n.chips && <div className="hg-thread">{n.chips.map(chip)}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div className="hg-row hg-row--rx hg-node" data-s={fanState} style={{ "--row": r } as CSSProperties}>
+                <div className="hg-c">
+                  <div className="hg-card hg-card--agent" data-n="rx">
+                    <Badges labels={labels} />
+                    <span className="hg-title">
+                      <RoutineGlyph />
+                      <span>{labels.parallelShort}</span>
+                    </span>
+                    <span className="hg-sub">
+                      {all[0].model && <Model name={all[0].model} />}
+                      {all.some((n) => n.counter) && counter !== null && <span className="hg-n">{counter}</span>}
+                    </span>
+                    <span className="hg-prog">
+                      <i style={{ "--d": `${longest || 1600}ms` } as CSSProperties} />
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
+          );
+        }
+        const n = lanes[0][0];
+        const isFirst = n.id === first;
+        const left = [...(isFirst ? [{ key: "__fallback", icon: "retry" as IconName }] : []), ...(n.chips ?? [])];
+        const loops = spec.loop?.from === n.id ? spec.loop : null;
+        return (
+          <div
+            className={`hg-row hg-node${left.length ? " hg-row--chips" : ""}`}
+            data-s={nodes[n.id]}
+            key={n.id}
+            style={{ "--row": r } as CSSProperties}
+          >
+            {left.length > 0 && (
+              <div className="hg-l">
+                <span className="hg-stack">
+                  {left.map((c) =>
+                    c.key === "__fallback" ? (
+                      <span className="hg-chip" data-s={nodes[n.id] === "draft" ? "draft" : "open"} key={c.key}>
+                        <Icon name="retry" />
+                        {labels.fallback}
+                      </span>
+                    ) : (
+                      chip(c)
+                    ),
+                  )}
+                </span>
+                <span className="hg-conn" />
+              </div>
+            )}
+            <div className="hg-c">
+              {card(
+                n,
+                isFirst && (
+                  <span className="hg-when">
+                    <Icon name="clock" />
+                    {labels.schedule}
+                  </span>
+                ),
+              )}
+            </div>
+            {loops && (
+              <div className="hg-r">
+                <span className="hg-conn" />
+                {(
+                  <span className="hg-chip hg-chip--loop" data-n="loop" data-s={chips[loops.chip] ?? "open"}>
+                    <Icon name="retry" />
+                    {labels.chips[loops.chip]}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-      <div className="hg-row hg-row--rx hg-node" data-s={research} style={{ "--row": 1 } as CSSProperties}>
-        <div className="hg-c">
-          <div className="hg-card hg-card--agent" data-n="rx">
-            <Badges labels={labels} />
-            <span className="hg-title">
-              <RoutineGlyph />
-              <span>{labels.research} ×4</span>
-            </span>
-            <Model name="Haiku" />
-            <Check />
-            <span className="hg-prog">
-              <i style={{ "--d": `${longest}ms` } as CSSProperties} />
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hg-row hg-node" data-s={nodes.merge} style={{ "--row": 2 } as CSSProperties}>
-        <div className="hg-c">
-          <div className="hg-card hg-card--step" data-n="merge">
-            <Badges labels={labels} />
-            <span>{labels.merge}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hg-row hg-node" data-s={nodes.review} style={{ "--row": 3 } as CSSProperties}>
-        <div className="hg-c">
-          <div className="hg-card" data-n="review">
-            <Badges labels={labels} />
-            <RoutineGlyph />
-            <span>{labels.review}</span>
-            <span className="hg-end">
-              <Model name="Opus" />
-              <Check />
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hg-row hg-row--leads hg-node" data-s={nodes.leads} style={{ "--row": 4 } as CSSProperties}>
-        <div className="hg-l">
-          <span className="hg-stack">
-            <span className="hg-chip" data-s={contracts.min}>
-              <Icon name={contracts.min === "met" ? "check" : "shield"} />
-              {labels.min}
-            </span>
-            <span className="hg-chip" data-s={contracts.unique}>
-              <Icon name={contracts.unique === "met" ? "check" : "shield"} />
-              {labels.unique}
-            </span>
-          </span>
-          <span className="hg-conn" />
-        </div>
-        <div className="hg-c">
-          <div className="hg-card hg-card--leads" data-n="leads">
-            <Badges labels={labels} />
-            <RoutineGlyph />
-            <span>{labels.findLeads}</span>
-            <span className="hg-end">{counter}</span>
-          </div>
-        </div>
-        <div className="hg-r">
-          <span className="hg-conn" />
-          <Capsule logos={["linkedin"]} />
-        </div>
-      </div>
-
-      <div className="hg-row hg-node" data-s={nodes.design} style={{ "--row": 5 } as CSSProperties}>
-        <div className="hg-c">
-          <div className="hg-card" data-n="design">
-            <Badges labels={labels} />
-            <RoutineGlyph />
-            <span>{labels.design}</span>
-            <span className="hg-end">
-              <Check />
-            </span>
-          </div>
-        </div>
-        <div className="hg-r">
-          <span className="hg-conn" />
-          <Capsule logos={["figma", "higgsfield"]} />
-        </div>
-      </div>
-
-      <div className="hg-row hg-node" data-s={nodes.publish} style={{ "--row": 6 } as CSSProperties}>
-        <div className="hg-c">
-          <div className="hg-card" data-n="publish">
-            <Badges labels={labels} />
-            <RoutineGlyph />
-            <span>{labels.publish}</span>
-            <span className="hg-end">
-              <Check />
-            </span>
-          </div>
-        </div>
-        <div className="hg-r">
-          <span className="hg-conn" />
-          <Capsule logos={["threads", "facebook", "instagram"]} />
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }

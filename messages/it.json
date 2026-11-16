@@ -419,34 +419,126 @@
           }
         }
       },
-      "prompt": "<k>Ogni lunedì alle 9:00</k>, fai ricerche sulla nostra nicchia con <k>4 agenti in parallelo su Haiku</k> e unisci i risultati. Fai controllare il riepilogo da <k>un agente Opus</k>. Trova <k>almeno 20 nuovi lead</k> su LinkedIn, <k>escludendo chi abbiamo già contattato</k>. Crea 3 visual in Figma, anima il migliore in Higgsfield e pubblica su Threads, Facebook e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+      "personaLabel": "Routine per",
+      "more": "Altro su Explore",
+      "tabs": {
+        "marketer": "Marketing",
+        "seo": "Agenzia SEO",
+        "film": "Filmmaker"
+      },
       "promptLabel": "Nuova routine",
       "promptSend": "Invia",
-      "graph": {
-        "schedule": "lun 9:00",
-        "fallback": "riprova ×1 → chiedimi",
-        "research": "Ricerca",
-        "merge": "Unisci",
-        "review": "Revisione",
-        "findLeads": "Trova lead",
-        "design": "Design",
-        "publish": "Pubblica",
-        "min": "≥ 20",
-        "unique": "nessun duplicato"
-      },
-      "run": {
-        "research": "4 agenti Haiku cercano in parallelo",
-        "merge": "Unisci i 4 report",
-        "review": "Opus controlla il riepilogo",
-        "leads": "Trova lead su LinkedIn",
-        "contract": "Contratto rispettato: ≥ 20, nessun duplicato",
-        "design": "Design in Figma, animazione in Higgsfield",
-        "publish": "Pubblica su Threads, Facebook, Instagram"
-      },
-      "pause": {
-        "reason": "12 / 20 lead: sotto il contratto",
-        "edit": "Estendi a UE + UK",
-        "note": "I passi completati mantengono i risultati."
+      "fallback": "riprova ×1 → chiedimi",
+      "pauseNote": "I passi completati mantengono i risultati.",
+      "scenarios": {
+        "marketer": {
+          "routineName": "Motore di contenuti settimanale",
+          "prompt": "<k>Ogni lunedì alle 9:00</k>, scegli i temi della settimana in base ai risultati della scorsa e approfondiscili con <k>2 agenti in parallelo su Haiku</k>: tendenze e concorrenti. Fai scrivere 3 post per LinkedIn a <k>un agente Sonnet</k> e falli rivedere da <k>un agente GPT</k>: <k>tono di voce del brand almeno 8/10, ogni affermazione con la sua fonte</k>. <k>Rimanda indietro le bozze deboli, al massimo due volte.</k> Crea i visual in Figma, <k>chiedimi prima di pubblicare</k>, poi pubblica su LinkedIn, Threads e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "graph": {
+            "schedule": "lun 9:00",
+            "parallelShort": "Ricerca ×2",
+            "nodes": {
+              "topics": "Scegli temi",
+              "trends": "Tendenze",
+              "competitors": "Concorrenti",
+              "draft": "Scrivi post",
+              "review": "Revisione",
+              "visuals": "Visual",
+              "publish": "Pubblica"
+            },
+            "chips": {
+              "min": "tono ≥ 8/10",
+              "other": "con fonti",
+              "loop": "needs_fix",
+              "gate": "prima chiede a me"
+            }
+          },
+          "run": {
+            "topics": "Opus sceglie i temi dai risultati scorsi",
+            "research": "2 agenti Haiku cercano in parallelo",
+            "draft": "Sonnet scrive 3 post",
+            "review": "GPT rivede il tono di voce",
+            "loop": "Sotto 8: torna indietro per la riscrittura",
+            "contract": "Contratto rispettato: tono ≥ 8/10, con fonti",
+            "publish": "Visual pronti, tu approvi, si pubblica"
+          },
+          "pause": {
+            "reason": "Tono di voce 6 / 10: sotto il contratto",
+            "edit": "Meno enfasi, più numeri"
+          }
+        },
+        "seo": {
+          "routineName": "Aggiornamento settimanale dei contenuti",
+          "prompt": "<k>Ogni lunedì alle 7:00</k>, recupera da Search Console le posizioni del nostro cliente — <k>se fallisce, usa Semrush</k>. Scegli <k>almeno 8 pagine che hanno perso posizioni</k>, <k>una keyword per pagina</k>. Aggiornale con <k>un agente Sonnet per pagina</k>, fai verificare i fatti di ogni modifica da <k>un agente GPT</k>, salva le bozze in WordPress e invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "graph": {
+            "schedule": "lun 7:00",
+            "parallelShort": "Consegna ×2",
+            "nodes": {
+              "pull": "Leggi posizioni",
+              "pick": "Scegli pagine",
+              "refresh": "Aggiorna pagine",
+              "check": "Verifica fatti",
+              "save": "Salva bozze",
+              "report": "Report"
+            },
+            "chips": {
+              "fallback": "fallback → Semrush",
+              "min": "≥ 8 pagine",
+              "other": "1 keyword a pagina"
+            }
+          },
+          "run": {
+            "pull": "Leggi le posizioni da Search Console",
+            "fallback": "Search Console non risponde: si usa Semrush",
+            "pick": "Scegli le pagine che hanno perso posizioni",
+            "contract": "Contratto rispettato: ≥ 8 pagine, 1 keyword l’una",
+            "refresh": "8 agenti Sonnet, una pagina ciascuno",
+            "check": "GPT verifica i fatti di ogni modifica",
+            "report": "Bozze in WordPress, report via email"
+          },
+          "pause": {
+            "reason": "5 / 8 pagine: sotto il contratto",
+            "edit": "Includi cali di 2+ posizioni"
+          }
+        },
+        "film": {
+          "routineName": "Produzione settimanale dell’episodio",
+          "prompt": "<k>Ogni venerdì alle 8:00</k>, fai fare a <k>un agente Opus</k> lo spoglio del copione della prossima settimana. Poi porta avanti <k>3 attività in parallelo</k>: trova <k>almeno 12 clip di B-roll</k> su Pexels, <k>solo a uso libero</k>; registra il voiceover in ElevenLabs; e crea 3 miniature in Higgsfield — <k>se fallisce, usa GPT Image</k>. Prepara un premontato, controlla la continuità rispetto al copione e caricalo su YouTube come bozza. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "graph": {
+            "schedule": "ven 8:00",
+            "parallelShort": "3 attività",
+            "nodes": {
+              "breakdown": "Spoglio copione",
+              "broll": "B-roll",
+              "trim": "Taglia",
+              "voice": "Voiceover",
+              "captions": "Sottotitoli",
+              "thumbs": "Miniature",
+              "pick": "Scegli la migliore",
+              "cut": "Premontato",
+              "review": "Continuità",
+              "upload": "Carica bozza"
+            },
+            "chips": {
+              "min": "≥ 12",
+              "other": "uso libero",
+              "fallback": "fallback → GPT Image"
+            }
+          },
+          "run": {
+            "breakdown": "Opus fa lo spoglio del copione",
+            "tracks": "3 attività procedono in parallelo",
+            "fallback": "Higgsfield è fallito: subentra GPT Image",
+            "contract": "Contratto rispettato: ≥ 12, uso libero",
+            "cut": "Prepara il premontato",
+            "review": "Opus controlla la continuità",
+            "upload": "Carica la bozza su YouTube"
+          },
+          "pause": {
+            "reason": "7 / 12 clip: sotto il contratto",
+            "edit": "Più riprese aeree e notturne"
+          }
+        }
       }
     },
     "routineGraph": {
@@ -459,10 +551,30 @@
       "paused": "In pausa",
       "resume": "Riprendi",
       "subs": {
-        "research": ["Raccogliere le fonti", "Analizzare con Claude", "Verificare con ChatGPT", "Riassumere i risultati"],
-        "findLeads": ["Cercare su LinkedIn", "Filtrare per affinità", "Arricchire i profili", "Selezionare i lead"],
-        "designFiles": ["Recuperare il tono del brand", "Progettare in Figma", "Controllare le spaziature", "Animare in Higgsfield"],
-        "publishSocial": ["Adattare il testo ai social", "Pubblicare su Threads", "Pubblicare su Facebook", "Pubblicare su Instagram"]
+        "research": [
+          "Raccogliere le fonti",
+          "Analizzare con Claude",
+          "Verificare con ChatGPT",
+          "Riassumere i risultati"
+        ],
+        "findLeads": [
+          "Cercare su LinkedIn",
+          "Filtrare per affinità",
+          "Arricchire i profili",
+          "Selezionare i lead"
+        ],
+        "designFiles": [
+          "Recuperare il tono del brand",
+          "Progettare in Figma",
+          "Controllare le spaziature",
+          "Animare in Higgsfield"
+        ],
+        "publishSocial": [
+          "Adattare il testo ai social",
+          "Pubblicare su Threads",
+          "Pubblicare su Facebook",
+          "Pubblicare su Instagram"
+        ]
       }
     },
     "whyToone": {
@@ -923,7 +1035,7 @@
     "agentIds": "Agenti richiesti",
     "noRequirements": "Nessun requisito aggiuntivo dichiarato.",
     "pinned": "Revisione fissata",
-    "viewRoutine": "Visualizza routine",
+    "viewRoutine": "View routine",
     "stepsCount": "{count, plural, one {# passaggio} other {# passaggi}}",
     "agentsCount": "{count, plural, one {# agente} other {# agenti}}",
     "subRoutinesCount": "{count, plural, one {# sottoroutine} other {# sottoroutine}}",
@@ -966,7 +1078,6 @@
     "goToSlide": "Show slide",
     "pauseSlides": "Pause slides",
     "playSlides": "Play slides",
-    "viewRoutine": "View routine",
     "viewBundle": "View bundle",
     "preparedDuringSetupNote": "When you add this routine, Toone's setup assistant prepares these with you. You only answer what it can't find.",
     "youPrepare": "You prepare",

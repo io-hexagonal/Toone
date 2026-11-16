@@ -27,7 +27,15 @@ export type LogoKey =
   | "higgsfield"
   | "threads"
   | "facebook"
-  | "instagram";
+  | "instagram"
+  | "search-console"
+  | "semrush"
+  | "google-docs"
+  | "gmail"
+  | "youtube"
+  | "elevenlabs"
+  | "pexels"
+  | "wordpress";
 
 /** draft: proposed, not yet real. idle: waiting. The rest are run states. */
 export type RowState = "draft" | "idle" | "running" | "done" | "paused";
