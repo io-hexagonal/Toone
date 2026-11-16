@@ -142,7 +142,7 @@
       "launchSub": "Thanks for joining Toone on launch day.",
       "doneLifetimeTitle": "Toone Pro Lifetime is active",
       "doneSameAccount": "Download Toone for Mac and sign in with the same account ({email}).",
-      "gateTerms": "Codes are covered by the <link>code terms</link>."
+      "gateTerms": "By continuing, you agree to our <link>Terms</link>."
     },
     "verify": {
       "body": "To confirm {email}, we'll email you a code.",
