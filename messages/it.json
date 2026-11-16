@@ -430,6 +430,18 @@
       "promptSend": "Invia",
       "fallback": "riprova ×1 → chiedimi",
       "pauseNote": "I passi completati mantengono i risultati.",
+      "agents": {
+        "strategist": "Stratega",
+        "researcher": "Ricercatore",
+        "writer": "Copywriter",
+        "reviewer": "Revisore",
+        "designer": "Designer",
+        "publisher": "Publisher",
+        "analyst": "Analista",
+        "producer": "Producer",
+        "editor": "Montatore",
+        "narrator": "Narratore"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Motore di contenuti settimanale",

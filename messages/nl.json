@@ -430,6 +430,18 @@
       "promptSend": "Versturen",
       "fallback": "1× opnieuw → vraag mij",
       "pauseNote": "Afgeronde stappen houden hun resultaten.",
+      "agents": {
+        "strategist": "Strateeg",
+        "researcher": "Onderzoeker",
+        "writer": "Schrijver",
+        "reviewer": "Reviewer",
+        "designer": "Designer",
+        "publisher": "Publisher",
+        "analyst": "Analist",
+        "producer": "Producer",
+        "editor": "Editor",
+        "narrator": "Verteller"
+      },
       "scenarios": {
         "marketer": {
           "routineName": "Wekelijkse contentmotor",

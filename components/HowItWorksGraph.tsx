@@ -32,6 +32,8 @@ export type ContractState = "draft" | "open" | "met" | "unmet";
 export type ChipSpec = { key: string; icon: IconName };
 export type NodeSpec = {
   id: string;
+  /** Who runs the step: a key into `labels.agents`. */
+  agent: string;
   model?: string;
   logos?: readonly LogoKey[];
   /** Rules on this step: contracts, a fallback, "ask me first". */
@@ -57,6 +59,7 @@ export type GraphLabels = {
   /** Title of the single card that replaces the parallel row on phones. */
   parallelShort: string;
   nodes: Record<string, string>;
+  agents: Record<string, string>;
   chips: Record<string, string>;
   running: string;
   paused: string;
@@ -107,7 +110,7 @@ const CSS = `
 .hg-row--rx { display: none; }
 .hg-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 .hg-col .hg-card--agent { width: 100%; }
-.hg-step { margin-right: 1px; color: rgba(var(--ink),0.5); font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hg-step { margin-right: 1px; color: rgba(var(--ink),0.66); font-size: 10.5px; font-weight: 600; white-space: nowrap; }
 /* rules on a parallel agent's output sit on its outgoing edge */
 .hg-thread { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; margin: 10px 0; }
 .hg-thread:last-child { margin-bottom: 0; }
@@ -626,7 +629,6 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
       </span>
     );
   };
-  const order = rows.flat(2).map((n) => n.id);
   /** Every step is the same card: title, then its number, model and details. */
   const card = (n: NodeSpec, extra?: ReactNode) => (
     <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}`} data-n={n.id}>
@@ -637,7 +639,7 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
         <span>{labels.nodes[n.id]}</span>
       </span>
       <span className="hg-sub">
-        <span className="hg-step">{order.indexOf(n.id) + 1}</span>
+        <span className="hg-step">{labels.agents[n.agent]}</span>
         {n.model && <Model name={n.model} />}
         {n.each && <span className="hg-times">×{n.each}</span>}
         {again.includes(n.id) && <span className="hg-times">×2</span>}
