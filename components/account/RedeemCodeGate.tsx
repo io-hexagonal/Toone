@@ -166,7 +166,7 @@ export default function RedeemCodeGate({
           </p>
         )}
         <p className={`${styles.notice} ${styles.gateTerms}`}>
-          {t.rich("gateTerms", { terms: (chunks) => <Link href="/terms#codes">{chunks}</Link> })}
+          {t.rich("gateTerms", { link: (chunks) => <Link href="/terms#codes">{chunks}</Link> })}
         </p>
       </div>
     </main>
