@@ -116,6 +116,7 @@
       "download": "Toone voor Mac downloaden",
       "viewAccount": "Je account",
       "errInvalid": "Deze code is niet geldig. Controleer hem en probeer het opnieuw.",
+      "errInvalidUsedHint": "Heb je dit account met deze code aangemaakt? Dan is de code al actief voor dit account en hoef je niets meer in te voeren.",
       "errUsed": "Dit account heeft deze code al gebruikt.",
       "errVerify": "Bevestig eerst je e-mailadres en wissel de code daarna in. We mailen je een code om het te bevestigen.",
       "errAlreadyProAppStore": "Je hebt Toone Pro al via de App Store, dus deze code kan niet worden gebruikt zolang dat abonnement actief is.",

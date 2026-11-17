@@ -116,6 +116,7 @@
       "download": "Download Toone for Mac",
       "viewAccount": "Your account",
       "errInvalid": "This code isn't valid. Check it and try again.",
+      "errInvalidUsedHint": "Did you create this account with this code? Then it is already active on this account and there is nothing more to enter.",
       "errUsed": "This account has already used this code.",
       "errVerify": "Confirm your email address first, then redeem the code. We'll email you a code to confirm it.",
       "errAlreadyProAppStore": "You already have Toone Pro from the App Store, so this code can't be used while that plan is active.",

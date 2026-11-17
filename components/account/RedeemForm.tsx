@@ -215,6 +215,8 @@ export default function RedeemForm({
       </div>
       <small id="redeem-code-help">{t("help")}</small>
       {error && <p id="redeem-code-error" className={styles.error} role="alert">{error}</p>}
+      {/* A code that created this account is used up, so checking it again answers "not valid". */}
+      {error && errorKey === "errInvalid" && <p className={styles.notice}>{t("errInvalidUsedHint")}</p>}
       {refundHelp}
     </form>
   );
