@@ -30,6 +30,15 @@ export function discountedLifetimePrice(code: string, amount: number, displayPri
 }
 const STORAGE_KEY = "toone.checkoutPromotion";
 
+/** When each code stops being accepted at the payment page (mirrors Stripe). */
+const PROMOTION_ENDS: Readonly<Record<string, string>> = { PRODUCTHUNT: "2026-11-25T23:59:00Z" };
+
+/** True once the code has ended: it is then neither shown nor sent to the checkout. */
+export function checkoutPromotionEnded(code: string, now: Date = new Date()): boolean {
+  const ends = PROMOTION_ENDS[code];
+  return Boolean(ends) && now.getTime() > Date.parse(ends);
+}
+
 /** The canonical code when `raw` is a checkout discount code; null otherwise. */
 export function checkoutPromotionCode(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
@@ -37,19 +46,32 @@ export function checkoutPromotionCode(raw: unknown): string | null {
   return CHECKOUT_PROMOTION_CODES.includes(canonical) ? canonical : null;
 }
 
-/** Keeps the offer for this tab, so the plans can remind the visitor of the code. */
+/**
+ * Keeps the offer in this browser until the code ends, so it is still there
+ * when the visitor continues in another tab or comes back later.
+ */
 export function rememberCheckoutPromotion(code: string): void {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, code);
+  } catch {
+    // No storage for the browser: fall back to this tab below.
+  }
   try {
     window.sessionStorage.setItem(STORAGE_KEY, code);
   } catch {
-    // Private mode without storage: the reminder is simply not shown later.
+    // Private mode without storage: the offer is simply not shown later.
   }
 }
 
-export function rememberedCheckoutPromotion(): string | null {
-  try {
-    return checkoutPromotionCode(window.sessionStorage.getItem(STORAGE_KEY));
-  } catch {
-    return null;
+/** The remembered code while it is still accepted; null once it has ended. */
+export function rememberedCheckoutPromotion(now: Date = new Date()): string | null {
+  for (const storage of ["localStorage", "sessionStorage"] as const) {
+    try {
+      const code = checkoutPromotionCode(window[storage].getItem(STORAGE_KEY));
+      if (code && !checkoutPromotionEnded(code, now)) return code;
+    } catch {
+      // Storage refused: try the other one.
+    }
   }
+  return null;
 }
