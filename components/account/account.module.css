@@ -59,6 +59,8 @@
 .kitty { width: 72px; height: 72px; flex: none; border-radius: 18px; object-fit: cover; }
 .panel .badge { display: inline-block; margin: 0 0 10px; padding: 3px 10px; border-radius: 999px; border: 1px solid #ffffff2e; background: #ffffff0a; color: #e6e2d8; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 .validCode > * + * { margin-top: 12px; }
+/* `.panel p` resets paragraph margins: keep air between the text, the code and the buttons. */
+.panel .validCode > * + * { margin-top: 16px; }
 .gateFoot { margin: 16px 0 0; }
 .footerLinks { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 28px; font-size: 13px; }
 .footerLinks a, .footerLinks button { color: #b2b0aa !important; }

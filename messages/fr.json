@@ -746,6 +746,7 @@
       "requestAccess": "Créez-en un",
       "promoTitle": "Launch offer",
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
+      "promoApplied": "{code} appliqué",
       "accountLine": "Toone Pro sera ajouté à {email}.",
       "notYou": "Ce n'est pas vous ?",
       "signOut": "Se déconnecter",

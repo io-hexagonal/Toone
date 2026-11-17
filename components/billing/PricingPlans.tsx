@@ -1,6 +1,6 @@
 "use client";
 
-import { rememberCheckoutPromotion, rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { discountedLifetimePrice, rememberCheckoutPromotion, rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -86,6 +86,9 @@ export default function PricingPlans({
   // effect (React's development double-invoke) must not read it again.
   /** A checkout discount code this tab knows about (a Product Hunt link, or typed into the code box). */
   const [promo, setPromo] = useState<string | null>(null);
+  /** The lifetime price with the launch code applied; null for other plans or without a code. */
+  const offerPrice = (price: { plan: string; amount: number; display_price: string }) =>
+    promo && price.plan === "pro_lifetime" ? discountedLifetimePrice(promo, price.amount, price.display_price) : null;
   const initialParams = useRef<PricingParams | null>(null);
   useEffect(() => {
     if (/[?&]ref=product[\s_-]?hunt\b/i.test(window.location.search)) rememberCheckoutPromotion("PRODUCTHUNT");
@@ -270,9 +273,14 @@ export default function PricingPlans({
               {selected === price.plan && <span className="pricing-badge">{t("selected")}</span>}
               <h2>{t(NAME_KEY[price.plan])}</h2>
               <p className="pricing-price">
-                <span className="pricing-amount">{price.display_price}</span>{" "}
+                <span className="pricing-amount">{offerPrice(price) ?? price.display_price}</span>{" "}
                 <span className="pricing-per">{t(PER_KEY[price.plan])}</span>
               </p>
+              {offerPrice(price) && (
+                <p className="pricing-was">
+                  <s>{price.display_price}</s> {t("promoApplied", { code: promo ?? "" })}
+                </p>
+              )}
               <p className="pricing-desc">{t(DESC_KEY[price.plan])}</p>
               {action(price.plan)}
             </article>
