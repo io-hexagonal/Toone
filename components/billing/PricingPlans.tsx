@@ -1,5 +1,6 @@
 "use client";
 
+import { rememberCheckoutPromotion, rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -83,8 +84,12 @@ export default function PricingPlans({
   // success page in this tab, `checkout=cancelled` shows a notice once.
   // Read once per mount: the address is tidied below, so a second run of this
   // effect (React's development double-invoke) must not read it again.
+  /** A checkout discount code this tab knows about (a Product Hunt link, or typed into the code box). */
+  const [promo, setPromo] = useState<string | null>(null);
   const initialParams = useRef<PricingParams | null>(null);
   useEffect(() => {
+    if (/[?&]ref=product[\s_-]?hunt\b/i.test(window.location.search)) rememberCheckoutPromotion("PRODUCTHUNT");
+    setPromo(rememberedCheckoutPromotion());
     const params = (initialParams.current ??= readPricingParams(window.location.search));
     setSelected(params.plan);
     setCancelled(params.cancelled);
@@ -236,6 +241,13 @@ export default function PricingPlans({
         <div className="pricing-soon" role="status">
           <h2>{t("soonTitle")}</h2>
           <p>{t("soonSub", { free: freeCreations })}</p>
+        </div>
+      )}
+
+      {promo && plans.length > 0 && (
+        <div className="pricing-soon" role="status">
+          <h2>{t("promoTitle")}</h2>
+          <p>{t("promoNote", { code: promo })}</p>
         </div>
       )}
 

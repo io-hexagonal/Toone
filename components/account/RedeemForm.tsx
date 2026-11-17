@@ -20,6 +20,8 @@ import {
 } from "./redeem-code";
 import EmailVerification from "./EmailVerification";
 import RedeemDone from "./RedeemDone";
+import { Link } from "@/lib/navigation";
+import { checkoutPromotionCode, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import styles from "./account.module.css";
 
 type Step =
@@ -63,6 +65,8 @@ export default function RedeemForm({
   const [codeInvalid, setCodeInvalid] = useState(false);
   /** The server refused with `email_verification_required`: offer the confirmation step. */
   const [needsVerify, setNeedsVerify] = useState(false);
+  /** A checkout discount code typed here: say where it goes. */
+  const [promo, setPromo] = useState<string | null>(null);
   const busyRef = useRef(false);
   const autoChecked = useRef(false);
 
@@ -100,6 +104,14 @@ export default function RedeemForm({
 
   async function check(value: string) {
     if (busyRef.current) return;
+    const discount = checkoutPromotionCode(value);
+    setPromo(discount);
+    if (discount) {
+      rememberCheckoutPromotion(discount);
+      setError("");
+      setCodeInvalid(false);
+      return;
+    }
     const canonical = normalizeCode(value);
     if (!canonical) {
       setCodeInvalid(true);
@@ -215,6 +227,12 @@ export default function RedeemForm({
       </div>
       <small id="redeem-code-help">{t("help")}</small>
       {error && <p id="redeem-code-error" className={styles.error} role="alert">{error}</p>}
+      {promo && (
+        <p className={styles.notice} role="status">
+          {t("checkoutCodeHint", { code: promo })}{" "}
+          <Link href="/pricing?plan=lifetime">{t("checkoutCodeCta")}</Link>
+        </p>
+      )}
       {/* A code that created this account is used up, so checking it again answers "not valid". */}
       {error && errorKey === "errInvalid" && <p className={styles.notice}>{t("errInvalidUsedHint")}</p>}
       {refundHelp}

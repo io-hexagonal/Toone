@@ -23,6 +23,7 @@ import {
   type ToneSession,
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
+import { rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
 import { benefitCopy, codeCampaign } from "@/components/account/redeem-code";
 
@@ -220,9 +221,14 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       track(event);
       if (mode === "invite") setStep("handle");
       if (mode === "signup") {
-        // Google or Apple may have signed in an existing account, which already has its handle.
-        if (s.user.handle) router.replace("/welcome");
-        else setStep("handle");
+        if (rememberedCheckoutPromotion()) {
+          // Arrived with the launch offer: the lifetime plan, with the discount applied at checkout.
+          await syncSiteSession(s);
+          router.replace("/pricing?plan=lifetime");
+        } else if (s.user.handle) {
+          // Google or Apple may have signed in an existing account, which already has its handle.
+          router.replace("/welcome");
+        } else setStep("handle");
       }
       const returnPath = mode === "signin" ? signInReturnPath(window.location.search) : null;
       if (returnPath) {
