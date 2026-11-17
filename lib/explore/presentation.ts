@@ -136,7 +136,7 @@ export function accessAttribution(from: unknown, item: unknown): { from?: string
 }
 export function requestAccessHref(locale: string, item?: string): string {
   const params = new URLSearchParams(accessAttribution("explore", item));
-  return `/${locale}/request-access?${params}`;
+  return `/${locale}/create-account?${params}`;
 }
 export function safeMarkdownUrl(value: string): string {
   if (/^(https?:\/\/|mailto:)/i.test(value)) return value;

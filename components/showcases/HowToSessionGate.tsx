@@ -56,8 +56,8 @@ export default function HowToSessionGate({ path }: { path: string }) {
         <Link className={styles.primary} href={`/signin?next=${encodeURIComponent(path)}`}>
           Sign in
         </Link>
-        <Link className={styles.secondary} href="/request-access">
-          Request access
+        <Link className={styles.secondary} href="/create-account">
+          Create account
         </Link>
       </div>
     </div>

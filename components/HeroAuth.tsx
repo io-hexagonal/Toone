@@ -2,7 +2,7 @@
 
 import { useRef, useState, FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 import HeroGlitter from "@/components/HeroGlitter";
 import HeroGraphBackground from "@/components/HeroGraphBackground";
 import AppleLogo from "@/components/AppleLogo";
@@ -11,6 +11,8 @@ import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 
+/** Public sign-up is open: the hero starts it. Set to false to bring the waitlist form back. */
+const OPEN_SIGNUP = true;
 const WAITLIST_SOURCE = "hero-auth";
 
 type WaitlistOutcome =
@@ -53,6 +55,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
   const t = useTranslations("landing");
   const locale = useLocale();
   const [email, setEmail] = useState("");
+  const router = useRouter();
   const submissionRef = useRef(false);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -61,6 +64,12 @@ export default function HeroAuth({ audience = "business" }: Props) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!email || submissionRef.current || !e.currentTarget.checkValidity()) {
+      return;
+    }
+    if (OPEN_SIGNUP) {
+      // Sign-up is open: carry the address to the sign-up page, which emails the code.
+      (window as unknown as { umami?: { track: (name: string) => void } }).umami?.track("hero-create-account");
+      router.push(`/create-account#email=${encodeURIComponent(email.trim())}`);
       return;
     }
     submissionRef.current = true;
@@ -366,11 +375,11 @@ export default function HeroAuth({ audience = "business" }: Props) {
                     type="submit"
                     disabled={status === "loading"}
                   >
-                    {status === "loading" ? "…" : <><AppleLogo />{t("authContinue")}</>}
+                    {status === "loading" ? "…" : <><AppleLogo />{t(OPEN_SIGNUP ? "heroCreate" : "authContinue")}</>}
                   </button>
                 </form>
                 <p className="ha-note">
-                  {status === "error" ? t("authError") : t("authNote")}
+                  {status === "error" ? t("authError") : t(OPEN_SIGNUP ? "heroCreateNote" : "authNote")}
                 </p>
                 <p className="ha-note ha-privacy">
                   <Link href="/privacy">{t("emailPrivacyLink")}</Link>{" · "}

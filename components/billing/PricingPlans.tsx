@@ -284,7 +284,7 @@ export default function PricingPlans({
           ) : (
             <p>
               {t("inviteOnly")}{" "}
-              <Link className="pricing-link" href="/request-access" data-umami-event="request-early-access" data-umami-event-placement="pricing">
+              <Link className="pricing-link" href="/create-account" data-umami-event="create-account" data-umami-event-placement="pricing">
                 {t("requestAccess")}
               </Link>
             </p>

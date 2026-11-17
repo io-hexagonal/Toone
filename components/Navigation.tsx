@@ -85,7 +85,7 @@ export default async function Navigation({
         <SignedInLink href="/how-to" className="minimal-link">
           {t("howTo")}
         </SignedInLink>
-        <Link href="/request-access" className="minimal-link">{t("download")}</Link>
+        <Link href="/create-account" className="minimal-link">{t("download")}</Link>
         <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
           <LocalePicker />
         </span>

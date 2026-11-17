@@ -125,7 +125,7 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
     routine.package.members.find((m) => m.key === routine.package.root_key)
       .payload.steps.length,
   );
-  assert.match(html, /href="\/en\/request-access\?from=explore&amp;item=routine%3Awfl_[a-z0-9]+"/);
+  assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_[a-z0-9]+"/);
 });
 test("bundle preserves pin metadata, renders member pages and distinguishes missing items", async () => {
   const { response, html } = await get("/en/explore/bundles/" + bundle.slug);
@@ -361,7 +361,7 @@ test("profile routine renders every section in page-spec order without the routi
   assert.match(html, /href="\/en\/explore\?category=cat_marketing-sales"/);
   assert.match(html, />Use this routine</);
   assert.match(html, /data-umami-event="explore-open-in-toone"/);
-  assert.match(html, /href="\/en\/request-access\?from=explore&amp;item=routine%3Awfl_lnchprepqk4m2x7a"/);
+  assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_lnchprepqk4m2x7a"/);
   assert.ok(text.includes("Routine name"));
   assert.ok(!text.includes("author_ran_it") && !html.includes("related_hints"));
 });

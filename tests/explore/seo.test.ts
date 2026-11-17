@@ -39,5 +39,5 @@ test("access attribution keeps only Explore and a valid record id", () => {
   assert.deepEqual(accessAttribution("explore", "routine:<script>"), { from: "explore" });
   assert.deepEqual(accessAttribution("ads", "routine:wfl_3ebf5rtmxzmzpbkf"), {});
   assert.deepEqual(accessAttribution(["explore"], undefined), {});
-  assert.equal(requestAccessHref("en", "bundle:wfb_ux67rregtrwv3k5g"), "/en/request-access?from=explore&item=bundle%3Awfb_ux67rregtrwv3k5g");
+  assert.equal(requestAccessHref("en", "bundle:wfb_ux67rregtrwv3k5g"), "/en/create-account?from=explore&item=bundle%3Awfb_ux67rregtrwv3k5g");
 });
