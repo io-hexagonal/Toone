@@ -48,6 +48,8 @@ export const PRICING_CSS = `
               font-size: 38px; font-weight: 600; letter-spacing: -0.03em;
             }
             .pricing-per { color: rgba(255,255,255,0.5); font-size: 14px; }
+            .pricing-was { margin: -4px 0 10px; color: rgba(255,255,255,0.6); font-size: 13px; }
+            .pricing-was s { color: rgba(255,255,255,0.45); margin-right: 6px; }
             .pricing-desc { color: rgba(255,255,255,0.56); font-size: 15px; line-height: 1.55; margin: 0 0 26px; }
             .pricing-button {
               margin-top: auto; display: flex; justify-content: center; align-items: center;
