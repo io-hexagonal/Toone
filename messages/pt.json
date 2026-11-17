@@ -116,6 +116,7 @@
       "download": "Baixar o Toone para Mac",
       "viewAccount": "Sua conta",
       "errInvalid": "Este código não é válido. Confira e tente novamente.",
+      "errInvalidUsedHint": "Criou esta conta com este código? Então já está ativo nesta conta e não há mais nada a introduzir.",
       "errUsed": "Esta conta já usou este código.",
       "errVerify": "Confirme seu e-mail primeiro e depois resgate o código. Enviamos um código por e-mail para confirmá-lo.",
       "errAlreadyProAppStore": "Você já tem o Toone Pro pela App Store, então este código não pode ser usado enquanto esse plano estiver ativo.",
