@@ -12,6 +12,7 @@ import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
 import PrivacyChoices from "@/components/PrivacyChoices";
 import LocaleSuggestion from "@/components/LocaleSuggestion";
+import LaunchOfferCapture from "@/components/billing/LaunchOfferCapture";
 import { accountShellMessages } from "@/components/account/AccountMessages";
 
 /** Tints Safari/Chrome UI chrome to the site's dark ground. */
@@ -277,6 +278,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <AnnouncementModal />
           <PrivacyChoices />
           <LocaleSuggestion />
+          <LaunchOfferCapture />
         </NextIntlClientProvider>
       </body>
     </html>
