@@ -188,7 +188,9 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
             </section>
           )}
 
-          {features?.pro_codes && (
+          {/* Toone Pro with no end date: every code is refused, so there is nothing to enter.
+              The box waits for the plan, so it does not appear and then vanish. */}
+          {features?.pro_codes && (entitlement ? !(entitlement.plan === "pro" && !entitlement.expires_at) : !loading) && (
             <section className={styles.panel} aria-labelledby="account-redeem">
               {/* With Toone Pro on, a code that created this account is used up: ask only for another one. */}
               <h2 id="account-redeem">{entitlement?.plan === "pro" ? t("redeemTitlePro") : t("redeemTitle")}</h2>
