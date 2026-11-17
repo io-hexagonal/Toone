@@ -47,7 +47,7 @@ export default function RedeemDone({
         : t(done.key);
   }
   return (
-    <div aria-live="polite">
+    <div className={styles.done} aria-live="polite">
       <Heading>{lifetime ? t("doneLifetimeTitle") : title}</Heading>
       {line && <p className={styles.ok} role="status">{line}</p>}
       <p>{t("doneSameAccount", { email })}</p>

@@ -36,6 +36,9 @@
 .page .primary { background: #f0ede6; color: #1b1b19; border-color: #f0ede6; font-weight: 600; }
 .page .primary:hover { background: #ded9cd; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+/* The result of a redeemed code: text, then the download button with room above it. */
+.done > * + * { margin-top: 12px; }
+.done > .actions { margin-top: 20px; }
 .inline { display: flex; gap: 10px; align-items: stretch; }
 .verify { margin-top: 14px; }
 .verify .actions { margin-top: 12px; }

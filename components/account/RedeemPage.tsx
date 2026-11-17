@@ -121,8 +121,9 @@ export default function RedeemPage() {
           <AccessAvatar />
         </div>
         <div className={styles.title}>
-          <h1>{t("redeem.title")}</h1>
-          <p className={styles.sub}>{t("redeem.sub", { email: session.user.email })}</p>
+          {/* After a sign-up with a code the code is already used: say so, don't ask for one. */}
+          <h1>{justSignedUp ? t("redeem.signupPageTitle") : t("redeem.title")}</h1>
+          <p className={styles.sub}>{justSignedUp ? t("redeem.signupPageSub", { email: session.user.email }) : t("redeem.sub", { email: session.user.email })}</p>
         </div>
         <section className={styles.panel}>
           {justSignedUp ? (

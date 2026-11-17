@@ -190,8 +190,9 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
 
           {features?.pro_codes && (
             <section className={styles.panel} aria-labelledby="account-redeem">
-              <h2 id="account-redeem">{t("redeemTitle")}</h2>
-              <p>{t("redeemSub")}</p>
+              {/* With Toone Pro on, a code that created this account is used up: ask only for another one. */}
+              <h2 id="account-redeem">{entitlement?.plan === "pro" ? t("redeemTitlePro") : t("redeemTitle")}</h2>
+              <p>{entitlement?.plan === "pro" ? t("redeemSubPro") : t("redeemSub")}</p>
               <RedeemForm token={session.token} email={session.user.email} onSessionEnded={onSessionEnded} onRedeemed={setEntitlement} headingLevel={3} />
             </section>
           )}
