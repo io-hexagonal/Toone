@@ -12,6 +12,7 @@ import RedeemSignupResult from "./RedeemSignupResult";
 import RedeemCodeGate, { type CheckedCode } from "./RedeemCodeGate";
 import { forgetPendingCode, pendingCode, rememberPendingCode } from "@/lib/billing/pending-code";
 import { campaignFromRef, codeFromFragment, locationWithoutCode, type CodeCampaign } from "./redeem-code";
+import { rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import styles from "./account.module.css";
 
 /**
@@ -63,6 +64,8 @@ export default function RedeemPage() {
       window.history.replaceState(null, "", locationWithoutCode(window.location.pathname, window.location.search));
     }
     setLinkedCode(code);
+    // A Product Hunt link carries the launch discount to the checkout.
+    if (campaignFromRef(window.location.search) === "producthunt") rememberCheckoutPromotion("PRODUCTHUNT");
     setRefCampaign(campaignFromRef(window.location.search));
     setRead(true);
   }, []);

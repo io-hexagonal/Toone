@@ -3,11 +3,12 @@
 import AccessAvatar from "@/components/AccessAvatar";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
+import { Link, useRouter } from "@/lib/navigation";
 import { billingFailure, checkInvitationBenefit, type CodeBenefit } from "@/lib/billing/api";
 import { rememberPendingCode } from "@/lib/billing/pending-code";
 import { fieldErrorProps } from "@/lib/field-error";
 import { benefitCopy, codeCampaign, normalizeCode, redeemErrorKey, type CodeCampaign } from "./redeem-code";
+import { checkoutPromotionCode, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import styles from "./account.module.css";
 
 /** A code the public check accepted, and what the visitor can do with it. */
@@ -43,16 +44,27 @@ export default function RedeemCodeGate({
   onSignIn: (checked: CheckedCode | null) => void;
 }) {
   const t = useTranslations("account.redeem");
+  const router = useRouter();
   const [code, setCode] = useState(initialCode ?? "");
   const [step, setStep] = useState<Step>({ name: "enter" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [codeInvalid, setCodeInvalid] = useState(false);
+  /** A checkout discount code typed here: say where it goes. */
+  const [promo, setPromo] = useState<string | null>(null);
   const busyRef = useRef(false);
   const autoChecked = useRef(false);
 
   async function check(value: string) {
     if (busyRef.current) return;
+    const discount = checkoutPromotionCode(value);
+    setPromo(discount);
+    if (discount) {
+      rememberCheckoutPromotion(discount);
+      setError("");
+      setCodeInvalid(false);
+      return;
+    }
     const typed = value.trim().toUpperCase();
     if (!normalizeCode(typed)) {
       setCodeInvalid(true);
@@ -109,7 +121,9 @@ export default function RedeemCodeGate({
     setCode("");
   }
 
-  const campaign = step.name === "valid" ? step.checked.campaign ?? refCampaign : refCampaign;
+  // The launch offer: a Product Hunt link, or the launch code typed into the box.
+  const offer = promo ?? (refCampaign === "producthunt" ? "PRODUCTHUNT" : null);
+  const campaign = offer ? "producthunt" : step.name === "valid" ? step.checked.campaign ?? refCampaign : refCampaign;
 
   return (
     <main className={styles.page}>
@@ -129,7 +143,16 @@ export default function RedeemCodeGate({
         </div>
         <section className={styles.panel} aria-live="polite">
           {campaign && <CampaignWelcome campaign={campaign} benefit={step.name === "valid" ? step.checked.benefit : null} />}
-          {step.name === "valid" ? (
+          {offer ? (
+            <div className={styles.validCode}>
+              <p>{t("offerSub")}</p>
+              <p className={`${styles.summary} ${styles.code}`}>{offer}</p>
+              <div className={styles.actions}>
+                <Link className={`${styles.button} ${styles.primary}`} href="/create-account">{t("gateCreateAccount")}</Link>
+                <button type="button" onClick={() => router.push(`/signin?next=${encodeURIComponent("/pricing?plan=lifetime")}`)}>{t("gateSignInRedeem")}</button>
+              </div>
+            </div>
+          ) : step.name === "valid" ? (
             <ValidCode checked={step.checked} onCreateAccount={onCreateAccount} onSignIn={onSignIn} onChange={reset} />
           ) : (
             <form onSubmit={submit} noValidate>
@@ -159,7 +182,7 @@ export default function RedeemCodeGate({
             </form>
           )}
         </section>
-        {step.name === "enter" && (
+        {step.name === "enter" && !offer && (
           <p className={`${styles.notice} ${styles.gateFoot}`}>
             {t("gateHaveAccount")}{" "}
             <button type="button" className={styles.linkButton} onClick={() => onSignIn(null)}>{t("gateSignIn")}</button>

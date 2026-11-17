@@ -290,7 +290,8 @@ export function getEntitlement(token: string, signal?: AbortSignal): Promise<Ent
 
 /* ---- checkout */
 
-export type CheckoutRequest = { plan: ProPlanId; locale: string; return: BillingReturn };
+/** `promotion_code`: an optional public discount code (a launch link) applied to the checkout. */
+export type CheckoutRequest = { plan: ProPlanId; locale: string; return: BillingReturn; promotion_code?: string };
 export type CheckoutSession = { checkout_url: string; session_id: string };
 
 /**
@@ -307,6 +308,7 @@ export type CheckoutSession = { checkout_url: string; session_id: string };
 export function startCheckout(token: string, input: CheckoutRequest): Promise<CheckoutSession> {
   return callNamingPro(token, async () => {
     const body: CheckoutRequest = { plan: input.plan, locale: input.locale, return: input.return };
+    if (input.promotion_code) body.promotion_code = input.promotion_code;
     const raw = record(await authedRequest<unknown>(token, "/billing/checkout", jsonBody(body)));
     const url = allowedStripeUrl(raw?.checkout_url, "checkout");
     const sessionId = str(raw?.session_id);
