@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/navigation";
 import type { InvitationOutcome } from "@/components/AuthPage";
 import { billingFailure, checkCode, getEntitlement, type Entitlement } from "@/lib/billing/api";
 import { forgetPendingCode } from "@/lib/billing/pending-code";
@@ -10,7 +9,6 @@ import EmailVerification from "./EmailVerification";
 import RedeemDone from "./RedeemDone";
 import RedeemForm from "./RedeemForm";
 import { benefitCopy, providerSignupState, signupCodeState } from "./redeem-code";
-import styles from "./account.module.css";
 
 type View =
   | { name: "checking" }
@@ -107,8 +105,6 @@ export default function RedeemSignupResult({ outcome, onSessionEnded }: { outcom
   }
 
   return (
-    <RedeemDone benefit={benefit} entitlement={view.entitlement} email={session.user.email} title={t("redeem.signupDoneTitle")}>
-      <Link className={styles.button} href="/account">{t("redeem.viewAccount")}</Link>
-    </RedeemDone>
+    <RedeemDone benefit={benefit} entitlement={view.entitlement} email={session.user.email} title={t("redeem.signupDoneTitle")} />
   );
 }
