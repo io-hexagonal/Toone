@@ -232,6 +232,22 @@ export async function signupInvitation(email: string, password: string, name: st
  return session;
 }
 
+/**
+ * Public sign-up, step 1: emails a code to the address. Always answers the
+ * same way for a valid address, whether or not an account already uses it.
+ */
+export async function requestEmailSignupCode(email: string): Promise<void> {
+  await request<unknown>("/auth/email/signup/code", { ...jsonPost({ email }), cache: "no-store" });
+}
+
+/** Public sign-up, step 2: the emailed code proves the mailbox and creates the account. */
+export async function verifyEmailSignup(email: string, code: string, password: string, name: string): Promise<ToneSession> {
+  const raw = await request<RawAuthPayload>("/auth/email/signup/verify", jsonPost({ email, code, password, name }));
+  const session = normalizeSession(raw);
+  saveSession(session);
+  return session;
+}
+
 type RawDesktopDownload = { URL: string; ExpiresAt: string };
 
 /**

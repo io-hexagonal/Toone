@@ -96,8 +96,8 @@ export default async function Footer({
               <PricingLink href="/pricing">{billing("nav")}</PricingLink>
               <Link
                 className="ftr-download"
-                href="/request-access"
-                data-umami-event="request-early-access"
+                href="/create-account"
+                data-umami-event="create-account"
                 data-umami-event-placement="footer"
               >
                 {nav("download")}

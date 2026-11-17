@@ -146,8 +146,8 @@ export default function SiteHeader({
           <InvitationAdminLink />
           <Link
             className="dl"
-            href="/request-access"
-            data-umami-event="request-early-access"
+            href="/create-account"
+            data-umami-event="create-account"
             data-umami-event-placement="header"
           >
             {t("download")}

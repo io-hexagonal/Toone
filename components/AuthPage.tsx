@@ -16,6 +16,8 @@ import {
   loginGoogle,
   logout,
   signupInvitation,
+  requestEmailSignupCode,
+  verifyEmailSignup,
   syncSiteSession,
   type InvitationPreview,
   type ToneSession,
@@ -63,7 +65,8 @@ function track(event: string) {
   );
 }
 
-type Mode = "signin" | "invite";
+/** "signup" is the public sign-up: an emailed code proves the address, no access code needed. */
+type Mode = "signin" | "invite" | "signup";
 
 /** Which identity provider a submission came from, for provider-specific errors. */
 type Via = "google" | "apple";
@@ -138,7 +141,12 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   const [code, setCode] = useState("");
   // Invite mode asks for the code first and only reveals the account form once
   // the server confirms it is still redeemable.
-  const [step, setStep] = useState<"code" | "account" | "handle">(mode === "invite" ? "code" : "account");
+  const [step, setStep] = useState<"code" | "account" | "verify" | "handle">(mode === "invite" ? "code" : "account");
+  // Both ways of creating an account (with a code, or the public sign-up) share the account form and the handle step.
+  const creating = mode === "invite" || mode === "signup";
+  // Public sign-up: the code emailed to the address.
+  const [emailCode, setEmailCode] = useState("");
+  const [resent, setResent] = useState(false);
   const [preview, setPreview] = useState<InvitationPreview | null>(null);
   // What a code with a benefit adds to the new account (Pro days, Pro for good, extra creations).
   const [benefit, setBenefit] = useState<CodeBenefit | null>(null);
@@ -172,7 +180,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           if (via === "apple") return t("errExistsApple");
           return t("errExists");
         case "unauthorized":
-          return t("errInvalid");
+          // Public sign-up answers a wrong or expired emailed code this way.
+          return mode === "signup" ? t("errSignupCode") : t("errInvalid");
         case "invalid_input":
           return t("errInvalidInput");
         case "rate_limit_exceeded":
@@ -210,6 +219,11 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       onAuthenticated?.(s);
       track(event);
       if (mode === "invite") setStep("handle");
+      if (mode === "signup") {
+        // Google or Apple may have signed in an existing account, which already has its handle.
+        if (s.user.handle) router.replace("/welcome");
+        else setStep("handle");
+      }
       const returnPath = mode === "signin" ? signInReturnPath(window.location.search) : null;
       if (returnPath) {
         // The guide checks the server-side cookie: set it before going back.
@@ -296,11 +310,41 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   // A code bought on AppSumo (`APPSUMO-…`): a text badge and a welcome, no logo.
   const isAppSumoCode = mode === "invite" && step === "account" && preview !== null && codeCampaign(code) === "appsumo";
 
+  // Public sign-up: an address typed on the home page arrives in the fragment (`#email=`).
+  useEffect(() => {
+    if (mode !== "signup") return;
+    const prefill = new URLSearchParams(window.location.hash.slice(1)).get("email");
+    if (!prefill) return;
+    setEmail(prefill.slice(0, 254));
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }, [mode]);
+
   async function handleSignOut() {
     const token = session?.token;
     setSession(null);
     setError(null);
     if (token) await logout(token); // clears localStorage even if the POST fails
+  }
+
+  /** Public sign-up, step 1: email the code, then ask for it. */
+  async function sendSignupCode(again = false) {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setLoading(true);
+    setError(null);
+    setResent(false);
+    try {
+      await requestEmailSignupCode(email.trim());
+      setEmailCode("");
+      setStep("verify");
+      setResent(again);
+      track(again ? "auth-signup-code-resent" : "auth-signup-code-requested");
+    } catch (e) {
+      setError(friendlyError(e));
+    } finally {
+      busyRef.current = false;
+      setLoading(false);
+    }
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -315,6 +359,18 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
     const passwordBytes = new TextEncoder().encode(password).length;
     if (mode === "invite" && (passwordBytes < 8 || passwordBytes > 72)) {
       setError(t("errPasswordLength"));
+      return;
+    }
+    if (mode === "signup" && (passwordBytes < 8 || passwordBytes > 72)) {
+      setError(t("errPasswordLength"));
+      return;
+    }
+    if (mode === "signup" && step === "account") {
+      await sendSignupCode();
+      return;
+    }
+    if (mode === "signup") {
+      await finish(verifyEmailSignup(email.trim(), emailCode.trim(), password, ""), "auth-signup-email");
       return;
     }
     if (mode === "invite") {
@@ -629,7 +685,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   : isAppSumoCode
                     ? t("appsumoAccountTitle")
                     : t("inviteAccountTitle")
-            : t("signinTitle")}
+            : mode === "signup"
+              ? step === "handle" ? t("handleTitle") : step === "verify" ? t("signupVerifyTitle") : t("signupTitle")
+              : t("signinTitle")}
         </h1>
         <p className="auth-sub">
           {mode === "invite"
@@ -644,7 +702,9 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : preview?.shared && preview.label
                     ? t("inviteAccountSubLabel", { label: preview.label })
                     : t("inviteAccountSub")
-            : t("signinSub")}
+            : mode === "signup"
+              ? step === "handle" ? t("handleSub") : step === "verify" ? t("signupVerifySub", { email: email.trim() }) : t("signupOpenSub")
+              : t("signinSub")}
         </p>
         {mode === "invite" && step === "account" && benefit && (() => {
           const copy = benefitCopy(benefit);
@@ -655,7 +715,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
         })()}
 
         <div className="auth-card">
-          {mode === "invite" && step === "handle" && session ? (
+          {creating && step === "handle" && session ? (
             <>
               <form onSubmit={submitHandle} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <label className="auth-handle">
@@ -760,8 +820,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
               <AppleSignInButton
                 config={appleConfig}
                 locale={locale}
-                label={mode === "invite" ? t("appleContinue") : t("appleSignIn")}
-                buttonType={mode === "invite" ? "continue" : "sign-in"}
+                label={creating ? t("appleContinue") : t("appleSignIn")}
+                buttonType={creating ? "continue" : "sign-in"}
                 unavailableLabel={t("appleUnavailable")}
                 disabled={loading}
                 onCredential={signInWithApple}
@@ -779,6 +839,11 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   aria-label={t("inviteCode")} placeholder={t("inviteCode")}
                   value={code} onChange={(event) => setCode(event.target.value)}
                   autoComplete="off" autoCapitalize="characters" spellCheck={false} maxLength={80} required autoFocus />}
+                {mode === "signup" && step === "verify" && <input className="auth-input" type="text"
+                  inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code"
+                  aria-label={t("signupCodeLabel")} placeholder={t("signupCodeLabel")}
+                  value={emailCode} onChange={(event) => setEmailCode(event.target.value)}
+                  maxLength={6} required autoFocus />}
                 {step === "account" && <input
                   className="auth-input"
                   type="email"
@@ -794,13 +859,13 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   type="password"
                   aria-label={t("passwordPh")}
                   autoComplete={
-                    mode === "invite" ? "new-password" : "current-password"
+                    creating ? "new-password" : "current-password"
                   }
                   placeholder={t("passwordPh")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={mode === "invite" ? 8 : undefined}
+                  minLength={creating ? 8 : undefined}
                   maxLength={72}
                 />}
                 <button className="auth-submit" type="submit" disabled={loading}>
@@ -808,11 +873,26 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     ? "…"
                     : mode === "invite"
                       ? step === "code" ? t("inviteCodeContinue") : t("signupBtn")
-                      : t("signinBtn")}
+                      : mode === "signup"
+                        ? step === "verify" ? t("signupCreateBtn") : t("inviteCodeContinue")
+                        : t("signinBtn")}
                 </button>
               </form>
 
               {error && <p className="auth-error">{error}</p>}
+              {mode === "signup" && step === "verify" && (
+                <div style={{ textAlign: "center" }}>
+                  {resent && <p className="auth-sub" role="status" style={{ margin: "4px 0" }}>{t("signupResent")}</p>}
+                  <button className="auth-signout" type="button" disabled={loading} onClick={() => void sendSignupCode(true)} style={{ marginTop: 4 }}>
+                    {t("signupResend")}
+                  </button>
+                  {" · "}
+                  <button className="auth-signout" type="button" disabled={loading}
+                    onClick={() => { setError(null); setResent(false); setStep("account"); }} style={{ marginTop: 4 }}>
+                    {t("signupChangeEmail")}
+                  </button>
+                </div>
+              )}
               {mode === "invite" && step === "account" && (
                 <div style={{ textAlign: "center" }}>
                   <button className="auth-signout" type="button" onClick={changeCode} style={{ marginTop: 4 }}>
@@ -844,20 +924,24 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   <>
                     {t("noCode")}{" "}
                     <Link
-                      href="/request-access"
-                      data-umami-event="request-early-access"
+                      href="/create-account"
+                      data-umami-event="create-account"
                       data-umami-event-placement="invite"
                     >
-                      {t("requestAccess")}
+                      {t("createAccountLink")}
                     </Link>
                     <br />
                   </>
                 )}
                 {t("haveAccount")} <Link href="/signin">{t("signinLink")}</Link>
               </>
+            ) : mode === "signup" ? (
+              <>
+                {t("haveAccount")} <Link href="/signin">{t("signinLink")}</Link>
+              </>
             ) : (
               <>
-                {t("newHere")} <Link href="/request-access">{t("requestAccess")}</Link>
+                {t("newHere")} <Link href="/create-account">{t("createAccountLink")}</Link>
               </>
             )}
           </p>

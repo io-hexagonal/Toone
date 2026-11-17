@@ -4,7 +4,7 @@ import { Link } from "@/lib/navigation";
 /**
  * Closing ask before the FAQ: one sentence and the early-access pill. Same
  * destination and analytics event as the header's "Request Early Access"
- * (/request-access), so there is still only one request form.
+ * (/create-account), so there is still only one sign-up form.
  */
 export default async function ClosingCtaBand() {
   const t = await getTranslations("landing.closing");
@@ -44,8 +44,8 @@ export default async function ClosingCtaBand() {
         <h2 id="cta-band-title">{t("title")}</h2>
         <Link
           className="pill"
-          href="/request-access"
-          data-umami-event="request-early-access"
+          href="/create-account"
+          data-umami-event="create-account"
           data-umami-event-placement="closing-band"
         >
           {nav("download")}
