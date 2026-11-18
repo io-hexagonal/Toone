@@ -7,6 +7,7 @@ import StatementSection from "@/components/StatementSection";
 import FaqSection from "@/components/FaqSection";
 import SupportBand from "@/components/SupportBand";
 import Footer from "@/components/Footer";
+import FeaturedOnStrip from "@/components/FeaturedOnStrip";
 import ResourcesSection from "@/components/ResourcesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import BeforeAfterSection from "@/components/BeforeAfterSection";
@@ -408,6 +409,7 @@ export async function TooneLandingPage({
         </div>
       </main>
 
+      <FeaturedOnStrip />
       <Footer
         landingPath={landingPath}
       />
