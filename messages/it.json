@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} è lo sconto di lancio per il piano Lifetime. Viene applicato automaticamente al pagamento.",
       "checkoutCodeCta": "Continua con Lifetime",
       "offerSub": "La tua offerta di lancio è pronta. Crea il tuo account e il prezzo di lancio di Toone Pro Lifetime viene applicato al pagamento.",
-      "errUsed": "Questo account ha già usato questo codice.",
+      "errUsed": "Questo codice è già attivo sul tuo account. Non devi fare altro.",
       "errVerify": "Conferma prima il tuo indirizzo email, poi riscatta il codice. Ti inviamo un codice via email per confermarlo.",
       "errAlreadyProAppStore": "Hai già Toone Pro dall'App Store, quindi questo codice non può essere usato finché quel piano è attivo.",
       "errAlreadyProPaid": "Hai già un piano Toone Pro a pagamento, quindi questo codice non può essere usato finché è attivo.",
-      "errAlreadyPro": "Hai già Toone Pro, quindi questo codice non può essere usato ora.",
+      "errAlreadyPro": "Il tuo account ha già Toone Pro per sempre, quindi questo codice non è stato usato. Funziona ancora su un altro account.",
       "errAlreadyProRefund": "Hai comprato questo codice su AppSumo? Non è stato usato. Scrivi a <link>hello@trytoone.com</link> e ti aiutiamo a ottenere il rimborso da AppSumo.",
       "errUnavailable": "Al momento non è possibile riscattare codici. Riprova più tardi.",
       "errRate": "Troppi tentativi. Attendi un minuto e riprova.",
@@ -965,6 +965,29 @@
         "search": "Ricerca",
         "other": "Altro"
       }
+    },
+    "forgotPassword": "Password dimenticata?",
+    "reset": {
+      "title": "Reimposta la password",
+      "sub": "Inserisci l'email che usi per Toone. Ti invieremo un codice di 6 cifre.",
+      "emailPh": "tu@email.com",
+      "sendBtn": "Inviami un codice",
+      "sentNote": "Se questa email ha un account Toone con password, le abbiamo inviato un codice di 6 cifre. Vale 15 minuti.",
+      "codeLabel": "Codice di 6 cifre",
+      "newPasswordPh": "Nuova password (8–72 caratteri)",
+      "show": "Mostra password",
+      "hide": "Nascondi password",
+      "submitBtn": "Imposta la nuova password",
+      "resend": "Invia un nuovo codice",
+      "resent": "Abbiamo inviato un nuovo codice.",
+      "changeEmail": "Usa un'altra email",
+      "doneTitle": "Password cambiata",
+      "doneSub": "Hai effettuato l'accesso. Usa la nuova password per accedere all'app Toone.",
+      "toAccount": "Vai al tuo account",
+      "errCode": "Il codice non è valido o è scaduto. Controllalo o richiedine uno nuovo.",
+      "errRate": "Troppi tentativi. Attendi un po' e riprova.",
+      "errPassword": "La nuova password deve avere 8–72 caratteri.",
+      "errUnavailable": "Il ripristino della password non è disponibile ora. Riprova tra qualche minuto."
     }
   },
   "resources": {

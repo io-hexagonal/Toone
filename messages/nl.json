@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} is de lanceringskorting voor het Lifetime-abonnement. De korting wordt automatisch toegepast bij het afrekenen.",
       "checkoutCodeCta": "Verder naar Lifetime",
       "offerSub": "Je lanceringsaanbieding staat klaar. Maak je account aan en de lanceringsprijs voor Toone Pro Lifetime wordt bij het afrekenen toegepast.",
-      "errUsed": "Dit account heeft deze code al gebruikt.",
+      "errUsed": "Deze code is al actief op je account. Je hoeft niets meer te doen.",
       "errVerify": "Bevestig eerst je e-mailadres en wissel de code daarna in. We mailen je een code om het te bevestigen.",
       "errAlreadyProAppStore": "Je hebt Toone Pro al via de App Store, dus deze code kan niet worden gebruikt zolang dat abonnement actief is.",
       "errAlreadyProPaid": "Je hebt al een betaald Toone Pro-abonnement, dus deze code kan niet worden gebruikt zolang het actief is.",
-      "errAlreadyPro": "Je hebt Toone Pro al, dus deze code kan nu niet worden gebruikt.",
+      "errAlreadyPro": "Je account heeft Toone Pro al voorgoed, dus deze code is niet gebruikt. Hij werkt nog voor een ander account.",
       "errAlreadyProRefund": "Heb je deze code bij AppSumo gekocht? Hij is niet gebruikt. Mail naar <link>hello@trytoone.com</link> en we helpen je hem via AppSumo terugbetaald te krijgen.",
       "errUnavailable": "Codes kunnen nu niet worden ingewisseld. Probeer het later opnieuw.",
       "errRate": "Te veel pogingen. Wacht een minuut en probeer het opnieuw.",
@@ -965,6 +965,29 @@
         "search": "Zoekmachine",
         "other": "Anders"
       }
+    },
+    "forgotPassword": "Wachtwoord vergeten?",
+    "reset": {
+      "title": "Wachtwoord opnieuw instellen",
+      "sub": "Vul het e-mailadres in dat je voor Toone gebruikt. We sturen je een code van 6 cijfers.",
+      "emailPh": "jij@email.com",
+      "sendBtn": "Stuur me een code",
+      "sentNote": "Als dit e-mailadres een Toone-account met wachtwoord heeft, hebben we een code van 6 cijfers gestuurd. Die is 15 minuten geldig.",
+      "codeLabel": "Code van 6 cijfers",
+      "newPasswordPh": "Nieuw wachtwoord (8–72 tekens)",
+      "show": "Wachtwoord tonen",
+      "hide": "Wachtwoord verbergen",
+      "submitBtn": "Nieuw wachtwoord instellen",
+      "resend": "Stuur een nieuwe code",
+      "resent": "We hebben een nieuwe code gestuurd.",
+      "changeEmail": "Ander e-mailadres gebruiken",
+      "doneTitle": "Wachtwoord gewijzigd",
+      "doneSub": "Je bent ingelogd. Gebruik je nieuwe wachtwoord om in te loggen in de Toone-app.",
+      "toAccount": "Naar je account",
+      "errCode": "Die code is ongeldig of verlopen. Controleer hem of vraag een nieuwe aan.",
+      "errRate": "Te veel pogingen. Wacht even en probeer het opnieuw.",
+      "errPassword": "Je nieuwe wachtwoord moet 8–72 tekens hebben.",
+      "errUnavailable": "Wachtwoord herstellen is nu niet beschikbaar. Probeer het over een paar minuten opnieuw."
     }
   },
   "resources": {

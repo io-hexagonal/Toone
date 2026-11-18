@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} é o desconto de lançamento para o plano Lifetime. É aplicado automaticamente no pagamento.",
       "checkoutCodeCta": "Continuar para Lifetime",
       "offerSub": "A sua oferta de lançamento está pronta. Crie a sua conta e o preço de lançamento do Toone Pro Lifetime é aplicado no pagamento.",
-      "errUsed": "Esta conta já usou este código.",
+      "errUsed": "Este código já está ativo na sua conta. Não há mais nada a fazer.",
       "errVerify": "Confirme seu e-mail primeiro e depois resgate o código. Enviamos um código por e-mail para confirmá-lo.",
       "errAlreadyProAppStore": "Você já tem o Toone Pro pela App Store, então este código não pode ser usado enquanto esse plano estiver ativo.",
       "errAlreadyProPaid": "Você já tem um plano pago do Toone Pro, então este código não pode ser usado enquanto ele estiver ativo.",
-      "errAlreadyPro": "Você já tem o Toone Pro, então este código não pode ser usado agora.",
+      "errAlreadyPro": "A sua conta já tem Toone Pro para sempre, por isso este código não foi usado. Ele ainda funciona em outra conta.",
       "errAlreadyProRefund": "Comprou este código na AppSumo? Ele não foi usado. Escreva para <link>hello@trytoone.com</link> e ajudamos você a pedir o reembolso à AppSumo.",
       "errUnavailable": "Não é possível resgatar códigos agora. Tente mais tarde.",
       "errRate": "Tentativas demais. Aguarde um minuto e tente novamente.",
@@ -965,6 +965,29 @@
         "search": "Pesquisa",
         "other": "Outro"
       }
+    },
+    "forgotPassword": "Esqueceu a senha?",
+    "reset": {
+      "title": "Redefinir a senha",
+      "sub": "Digite o e-mail que usa no Toone. Enviaremos um código de 6 dígitos.",
+      "emailPh": "seu@email.com",
+      "sendBtn": "Enviar código por e-mail",
+      "sentNote": "Se este e-mail tiver uma conta Toone com senha, enviamos um código de 6 dígitos. Vale por 15 minutos.",
+      "codeLabel": "Código de 6 dígitos",
+      "newPasswordPh": "Nova senha (8–72 caracteres)",
+      "show": "Mostrar senha",
+      "hide": "Ocultar senha",
+      "submitBtn": "Definir nova senha",
+      "resend": "Enviar novo código",
+      "resent": "Enviamos um novo código.",
+      "changeEmail": "Usar outro e-mail",
+      "doneTitle": "Senha alterada",
+      "doneSub": "Você já entrou. Use a nova senha para entrar no app Toone.",
+      "toAccount": "Ir para a sua conta",
+      "errCode": "Esse código não é válido ou expirou. Verifique-o ou peça um novo.",
+      "errRate": "Muitas tentativas. Aguarde um pouco e tente de novo.",
+      "errPassword": "A nova senha deve ter 8–72 caracteres.",
+      "errUnavailable": "A redefinição de senha não está disponível agora. Tente de novo em alguns minutos."
     }
   },
   "resources": {

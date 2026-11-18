@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} est la réduction de lancement pour la formule Lifetime. Elle est appliquée automatiquement au paiement.",
       "checkoutCodeCta": "Continuer vers Lifetime",
       "offerSub": "Votre offre de lancement est prête. Créez votre compte, le prix de lancement de Toone Pro Lifetime est appliqué au paiement.",
-      "errUsed": "Ce compte a déjà utilisé ce code.",
+      "errUsed": "Ce code est déjà actif sur votre compte. Vous n'avez rien d'autre à faire.",
       "errVerify": "Confirmez d’abord votre adresse e-mail, puis utilisez le code. Nous vous envoyons un code par e-mail pour la confirmer.",
       "errAlreadyProAppStore": "Vous avez déjà Toone Pro via l’App Store : ce code ne peut pas être utilisé tant que cette formule est active.",
       "errAlreadyProPaid": "Vous avez déjà une formule Toone Pro payante : ce code ne peut pas être utilisé tant qu’elle est active.",
-      "errAlreadyPro": "Vous avez déjà Toone Pro : ce code ne peut pas être utilisé pour le moment.",
+      "errAlreadyPro": "Votre compte a déjà Toone Pro à vie, ce code n'a donc pas été utilisé. Il reste valable pour un autre compte.",
       "errAlreadyProRefund": "Vous avez acheté ce code sur AppSumo ? Il n’a pas été utilisé. Écrivez à <link>hello@trytoone.com</link> et nous vous aidons à vous le faire rembourser par AppSumo.",
       "errUnavailable": "Les codes ne peuvent pas être utilisés pour le moment. Réessayez plus tard.",
       "errRate": "Trop de tentatives. Patientez une minute, puis réessayez.",
@@ -965,6 +965,29 @@
         "search": "Recherche",
         "other": "Autre"
       }
+    },
+    "forgotPassword": "Mot de passe oublié ?",
+    "reset": {
+      "title": "Réinitialiser votre mot de passe",
+      "sub": "Saisissez l'e-mail que vous utilisez pour Toone. Nous vous enverrons un code à 6 chiffres.",
+      "emailPh": "vous@email.com",
+      "sendBtn": "M'envoyer un code",
+      "sentNote": "Si cet e-mail a un compte Toone avec mot de passe, nous lui avons envoyé un code à 6 chiffres. Il est valable 15 minutes.",
+      "codeLabel": "Code à 6 chiffres",
+      "newPasswordPh": "Nouveau mot de passe (8 à 72 caractères)",
+      "show": "Afficher le mot de passe",
+      "hide": "Masquer le mot de passe",
+      "submitBtn": "Définir le nouveau mot de passe",
+      "resend": "Envoyer un nouveau code",
+      "resent": "Nous avons envoyé un nouveau code.",
+      "changeEmail": "Utiliser un autre e-mail",
+      "doneTitle": "Mot de passe modifié",
+      "doneSub": "Vous êtes connecté. Utilisez votre nouveau mot de passe pour vous connecter à l'app Toone.",
+      "toAccount": "Aller à votre compte",
+      "errCode": "Ce code n'est pas valide ou a expiré. Vérifiez-le ou demandez-en un nouveau.",
+      "errRate": "Trop de tentatives. Patientez un peu et réessayez.",
+      "errPassword": "Le nouveau mot de passe doit contenir 8 à 72 caractères.",
+      "errUnavailable": "La réinitialisation du mot de passe n'est pas disponible pour le moment. Réessayez dans quelques minutes."
     }
   },
   "resources": {
