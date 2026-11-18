@@ -70,7 +70,7 @@ See [Share a routine on Explore](/how-to/getting-started/share-a-routine-on-expl
 
 ## Access
 
-Toone is currently available by invitation. Anyone can browse Explore on the web, but adding a routine needs the Toone app and an account. If you don't have one yet, [request access](/en/request-access).
+Anyone can browse Explore on the web. Adding a routine needs the Toone app and an account: [create an account](/en/create-account) and [download Toone](/en/downloads).
 
 ```toone-ui
 settings-account-signed-in
