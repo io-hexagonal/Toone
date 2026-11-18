@@ -248,6 +248,19 @@ export async function verifyEmailSignup(email: string, code: string, password: s
   return session;
 }
 
+/** Password reset, step 1: emails a code to a password account. Same answer for every valid address. */
+export async function requestPasswordReset(email: string): Promise<void> {
+  await request<unknown>("/auth/password/reset/code", { ...jsonPost({ email }), cache: "no-store" });
+}
+
+/** Password reset, step 2: the emailed code sets the new password and signs in. */
+export async function resetPassword(email: string, code: string, password: string): Promise<ToneSession> {
+  const raw = await request<RawAuthPayload>("/auth/password/reset", { ...jsonPost({ email, code, password }), cache: "no-store" });
+  const session = normalizeSession(raw);
+  saveSession(session);
+  return session;
+}
+
 type RawDesktopDownload = { URL: string; ExpiresAt: string };
 
 /**

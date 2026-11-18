@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} is the launch discount for the Lifetime plan. It is applied automatically at checkout.",
       "checkoutCodeCta": "Continue to Lifetime",
       "offerSub": "Your launch offer is ready. Create your account, and the launch price for Toone Pro Lifetime is applied at checkout.",
-      "errUsed": "This account has already used this code.",
+      "errUsed": "This code is already active on your account. There's nothing more to do.",
       "errVerify": "Confirm your email address first, then redeem the code. We'll email you a code to confirm it.",
       "errAlreadyProAppStore": "You already have Toone Pro from the App Store, so this code can't be used while that plan is active.",
       "errAlreadyProPaid": "You already have a paid Toone Pro plan, so this code can't be used while it's active.",
-      "errAlreadyPro": "You already have Toone Pro, so this code can't be used right now.",
+      "errAlreadyPro": "Your account already has Toone Pro for good, so this code wasn't used. It still works on another account.",
       "errAlreadyProRefund": "Bought this code on AppSumo? It hasn't been used. Write to <link>hello@trytoone.com</link> and we'll help you get a refund from AppSumo.",
       "errUnavailable": "Codes can't be redeemed right now. Please try again later.",
       "errRate": "Too many attempts. Wait a minute, then try again.",
@@ -965,6 +965,29 @@
         "search": "Search",
         "other": "Other"
       }
+    },
+    "forgotPassword": "Forgot password?",
+    "reset": {
+      "title": "Reset your password",
+      "sub": "Enter the email you use for Toone. We'll send you a 6-digit code.",
+      "emailPh": "your@email.com",
+      "sendBtn": "Email me a code",
+      "sentNote": "If this email has a Toone account with a password, we sent it a 6-digit code. It works for 15 minutes.",
+      "codeLabel": "6-digit code",
+      "newPasswordPh": "New password (8–72 characters)",
+      "show": "Show password",
+      "hide": "Hide password",
+      "submitBtn": "Set new password",
+      "resend": "Send a new code",
+      "resent": "We sent a new code.",
+      "changeEmail": "Use a different email",
+      "doneTitle": "Password changed",
+      "doneSub": "You're signed in. Use your new password to sign in to the Toone app.",
+      "toAccount": "Go to your account",
+      "errCode": "That code isn't valid or has expired. Check it or send a new one.",
+      "errRate": "Too many attempts. Wait a little and try again.",
+      "errPassword": "Your new password must be 8–72 characters.",
+      "errUnavailable": "Password reset isn't available right now. Try again in a few minutes."
     }
   },
   "resources": {

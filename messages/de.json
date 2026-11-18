@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} ist der Launch-Rabatt für den Lifetime-Tarif. Er wird an der Kasse automatisch angewendet.",
       "checkoutCodeCta": "Weiter zu Lifetime",
       "offerSub": "Ihr Launch-Angebot ist bereit. Erstellen Sie Ihr Konto, der Launch-Preis für Toone Pro Lifetime wird an der Kasse angewendet.",
-      "errUsed": "Dieses Konto hat diesen Code bereits verwendet.",
+      "errUsed": "Dieser Code ist auf deinem Konto bereits aktiv. Du musst nichts weiter tun.",
       "errVerify": "Bestätige zuerst deine E-Mail-Adresse und löse den Code dann ein. Wir schicken dir dafür einen Code per E-Mail.",
       "errAlreadyProAppStore": "Du hast Toone Pro bereits über den App Store. Solange dieser Tarif aktiv ist, kann der Code nicht verwendet werden.",
       "errAlreadyProPaid": "Du hast bereits einen bezahlten Toone-Pro-Tarif. Solange er aktiv ist, kann der Code nicht verwendet werden.",
-      "errAlreadyPro": "Du hast bereits Toone Pro, daher kann der Code gerade nicht verwendet werden.",
+      "errAlreadyPro": "Dein Konto hat Toone Pro bereits dauerhaft, daher wurde dieser Code nicht verwendet. Er funktioniert weiterhin für ein anderes Konto.",
       "errAlreadyProRefund": "Du hast diesen Code bei AppSumo gekauft? Er wurde nicht verbraucht. Schreib an <link>hello@trytoone.com</link>, dann helfen wir dir, ihn bei AppSumo erstatten zu lassen.",
       "errUnavailable": "Codes können gerade nicht eingelöst werden. Bitte versuche es später.",
       "errRate": "Zu viele Versuche. Warte eine Minute und versuche es dann erneut.",
@@ -965,6 +965,29 @@
         "search": "Suche",
         "other": "Sonstiges"
       }
+    },
+    "forgotPassword": "Passwort vergessen?",
+    "reset": {
+      "title": "Passwort zurücksetzen",
+      "sub": "Gib die E-Mail-Adresse ein, die du für Toone nutzt. Wir senden dir einen 6-stelligen Code.",
+      "emailPh": "du@email.com",
+      "sendBtn": "Code per E-Mail senden",
+      "sentNote": "Wenn zu dieser E-Mail ein Toone-Konto mit Passwort gehört, haben wir einen 6-stelligen Code gesendet. Er gilt 15 Minuten.",
+      "codeLabel": "6-stelliger Code",
+      "newPasswordPh": "Neues Passwort (8–72 Zeichen)",
+      "show": "Passwort anzeigen",
+      "hide": "Passwort ausblenden",
+      "submitBtn": "Neues Passwort festlegen",
+      "resend": "Neuen Code senden",
+      "resent": "Wir haben einen neuen Code gesendet.",
+      "changeEmail": "Andere E-Mail verwenden",
+      "doneTitle": "Passwort geändert",
+      "doneSub": "Du bist angemeldet. Melde dich mit deinem neuen Passwort in der Toone-App an.",
+      "toAccount": "Zu deinem Konto",
+      "errCode": "Dieser Code ist ungültig oder abgelaufen. Prüfe ihn oder fordere einen neuen an.",
+      "errRate": "Zu viele Versuche. Warte kurz und versuche es erneut.",
+      "errPassword": "Das neue Passwort muss 8–72 Zeichen lang sein.",
+      "errUnavailable": "Das Zurücksetzen des Passworts ist gerade nicht verfügbar. Versuche es in ein paar Minuten erneut."
     }
   },
   "resources": {

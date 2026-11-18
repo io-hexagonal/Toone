@@ -124,11 +124,11 @@
       "checkoutCodeHint": "{code} es el descuento de lanzamiento para el plan Lifetime. Se aplica automáticamente al pagar.",
       "checkoutCodeCta": "Continuar a Lifetime",
       "offerSub": "Tu oferta de lanzamiento está lista. Crea tu cuenta y el precio de lanzamiento de Toone Pro Lifetime se aplica al pagar.",
-      "errUsed": "Esta cuenta ya usó este código.",
+      "errUsed": "Este código ya está activo en tu cuenta. No tienes que hacer nada más.",
       "errVerify": "Primero confirma tu dirección de correo y luego canjea el código. Te enviamos un código por correo para confirmarla.",
       "errAlreadyProAppStore": "Ya tienes Toone Pro desde la App Store, así que este código no se puede usar mientras ese plan esté activo.",
       "errAlreadyProPaid": "Ya tienes un plan de pago de Toone Pro, así que este código no se puede usar mientras esté activo.",
-      "errAlreadyPro": "Ya tienes Toone Pro, así que este código no se puede usar ahora.",
+      "errAlreadyPro": "Tu cuenta ya tiene Toone Pro para siempre, así que este código no se ha usado. Sigue sirviendo para otra cuenta.",
       "errAlreadyProRefund": "¿Compraste este código en AppSumo? No se ha usado. Escribe a <link>hello@trytoone.com</link> y te ayudamos a pedir el reembolso a AppSumo.",
       "errUnavailable": "Ahora no se pueden canjear códigos. Inténtalo más tarde.",
       "errRate": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
@@ -965,6 +965,29 @@
         "search": "Búsqueda",
         "other": "Otro"
       }
+    },
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "reset": {
+      "title": "Restablece tu contraseña",
+      "sub": "Introduce el correo que usas en Toone. Te enviaremos un código de 6 dígitos.",
+      "emailPh": "tu@correo.com",
+      "sendBtn": "Enviarme un código",
+      "sentNote": "Si este correo tiene una cuenta de Toone con contraseña, le enviamos un código de 6 dígitos. Vale 15 minutos.",
+      "codeLabel": "Código de 6 dígitos",
+      "newPasswordPh": "Nueva contraseña (8–72 caracteres)",
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña",
+      "submitBtn": "Guardar nueva contraseña",
+      "resend": "Enviar un código nuevo",
+      "resent": "Te enviamos un código nuevo.",
+      "changeEmail": "Usar otro correo",
+      "doneTitle": "Contraseña cambiada",
+      "doneSub": "Ya has iniciado sesión. Usa tu nueva contraseña para entrar en la app de Toone.",
+      "toAccount": "Ir a tu cuenta",
+      "errCode": "Ese código no es válido o ha caducado. Revísalo o pide uno nuevo.",
+      "errRate": "Demasiados intentos. Espera un poco y vuelve a intentarlo.",
+      "errPassword": "La nueva contraseña debe tener 8–72 caracteres.",
+      "errUnavailable": "El restablecimiento de contraseña no está disponible ahora. Inténtalo en unos minutos."
     }
   },
   "resources": {
