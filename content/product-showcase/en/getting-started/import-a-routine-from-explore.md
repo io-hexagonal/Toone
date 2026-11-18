@@ -9,7 +9,7 @@ estimatedTime: "5 minutes"
 
 ## Before you start
 
-You need the Toone app, signed in, with a project open. Routines from Explore are added to your organization in that project. If you don't have Toone yet, it is currently available by invitation: [request access](/en/request-access).
+You need the Toone app, signed in, with a project open. Routines from Explore are added to your organization in that project. If you don't have Toone yet, [create an account](/en/create-account) and [download the app](/en/downloads).
 
 ```toone-ui
 app-window-overview
