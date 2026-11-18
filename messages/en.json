@@ -685,7 +685,8 @@
     "proof": "Proof",
     "company": "Company",
     "contact": "Contact",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "featuredOn": "Featured on"
   },
   "meta": {
     "siteTitle": "Toone | The AI workspace for your agentic workflows on macOS",

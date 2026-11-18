@@ -685,7 +685,8 @@
     "proof": "Références",
     "company": "Entreprise",
     "contact": "Contact",
-    "rights": "Tous droits réservés."
+    "rights": "Tous droits réservés.",
+    "featuredOn": "Présenté sur"
   },
   "meta": {
     "siteTitle": "Toone | L’espace de travail IA pour vos workflows agentiques",
