@@ -33,4 +33,4 @@ featured: false
 
 [Посмотрите процедуры, которыми делятся в Explore](/explore).
 
-[Запросить ранний доступ](/request-access)
+[Создать учётную запись](/create-account)

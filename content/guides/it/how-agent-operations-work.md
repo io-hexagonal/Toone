@@ -33,4 +33,4 @@ Segui i progressi, verifica i risultati e decidi i prossimi passi.
 
 [Sfoglia le routine condivise su Explore](/explore).
 
-[Richiedi accesso anticipato](/request-access)
+[Crea account](/create-account)
