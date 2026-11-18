@@ -33,4 +33,4 @@ Sigue el progreso, revisa los resultados y decide los próximos pasos.
 
 [Explora las rutinas que otras personas comparten en Explore](/explore).
 
-[Solicitar acceso anticipado](/request-access)
+[Crear cuenta](/create-account)

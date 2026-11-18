@@ -33,4 +33,4 @@ Follow progress, review outputs, and decide what happens next.
 
 [Browse the routines people share on Explore](/explore).
 
-[Request Early Access](/request-access)
+[Create account](/create-account)

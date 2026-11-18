@@ -35,4 +35,4 @@ If you're new to this, [start with one workflow](/guides/ai-agent-adoption-roadm
 
 [Browse the routines people share on Explore](/explore).
 
-[Request Early Access](/request-access)
+[Create account](/create-account)

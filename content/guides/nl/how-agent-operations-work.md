@@ -33,4 +33,4 @@ Volg de voortgang, beoordeel resultaten en bepaal de volgende stappen.
 
 [Bekijk de routines die anderen delen op Explore](/explore).
 
-[Vroege toegang aanvragen](/request-access)
+[Account aanmaken](/create-account)

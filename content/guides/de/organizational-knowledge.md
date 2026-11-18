@@ -33,4 +33,4 @@ Verfolgen Sie den Fortschritt, prüfen Sie Ergebnisse und entscheiden Sie über 
 
 [Stöbern Sie in den Routinen, die andere auf Explore teilen](/explore).
 
-[Frühzugang anfragen](/request-access)
+[Konto erstellen](/create-account)
