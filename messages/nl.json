@@ -752,6 +752,7 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} toegepast",
       "promoBadge": "Product Hunt-week",
+      "promoDaysLeft": "{count, plural, one {Nog # dag} other {Nog # dagen}}",
       "accountLine": "Toone Pro wordt toegevoegd aan {email}.",
       "notYou": "Ben jij dit niet?",
       "signOut": "Uitloggen",

@@ -1,6 +1,6 @@
 "use client";
 
-import { activeCheckoutPromotion, discountedLifetimePrice, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { activeCheckoutPromotion, checkoutPromotionEnds, discountedLifetimePrice, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -33,6 +33,8 @@ import {
   taxNoteKey,
   tidyPricingSearch,
   type PricingParams,
+  roundedPrice,
+  withoutEmptyCents,
 } from "./PricingPlans.helpers";
 
 type EntitlementState =
@@ -89,6 +91,10 @@ export default function PricingPlans({
   /** The lifetime price with the launch code applied; null for other plans or without a code. */
   const offerPrice = (price: { plan: string; amount: number; display_price: string }) =>
     promo && price.plan === "pro_lifetime" ? discountedLifetimePrice(promo, price.amount, price.display_price) : null;
+  /** "6 days left": whole days until the running offer ends, counting the last partial day as one. */
+  const promoEnds = promo ? checkoutPromotionEnds(promo) : null;
+  const promoDaysLeft = promoEnds ? Math.max(1, Math.ceil((promoEnds.getTime() - Date.now()) / 86_400_000)) : null;
+  const promoUntil = promoDaysLeft ? t("promoDaysLeft", { count: promoDaysLeft }) : null;
   const initialParams = useRef<PricingParams | null>(null);
   useEffect(() => {
     if (/[?&]ref=product[\s_-]?hunt\b/i.test(window.location.search)) rememberCheckoutPromotion("PRODUCTHUNT");
@@ -272,18 +278,30 @@ export default function PricingPlans({
               className={`pricing-card${selected === price.plan ? " selected" : ""}`}
             >
               {offerPrice(price) ? (
-                <span className="pricing-badge pricing-badge--offer">{t("promoBadge")}</span>
+                <span className="pricing-badge pricing-badge--offer">
+                  <svg viewBox="0 0 40 40" width="13" height="13" aria-hidden="true" focusable="false">
+                    <circle cx="20" cy="20" r="20" fill="#FF6154" />
+                    <path fill="#fff" d="M22.6 20H17v-6h5.6a3 3 0 0 1 0 6zm0-10H13v20h4v-6h5.6a7 7 0 0 0 0-14z" />
+                  </svg>
+                  {t("promoBadge")}
+                </span>
               ) : (
                 selected === price.plan && <span className="pricing-badge">{t("selected")}</span>
               )}
               <h2>{t(NAME_KEY[price.plan])}</h2>
               <p className="pricing-price">
-                <span className="pricing-amount">{offerPrice(price) ?? price.display_price}</span>{" "}
-                <span className="pricing-per">{t(PER_KEY[price.plan])}</span>
+                {offerPrice(price) && (
+                  <>
+                    <s className="pricing-before">{roundedPrice(price.amount, price.display_price)}</s>{" "}
+                  </>
+                )}
+                <span className="pricing-amount">{withoutEmptyCents(offerPrice(price) ?? price.display_price)}</span>{" "}
+                {/* Lifetime's description already opens with "Pay once", so its price carries no unit. */}
+                {price.plan !== "pro_lifetime" && <span className="pricing-per">{t(PER_KEY[price.plan])}</span>}
               </p>
-              {offerPrice(price) && (
+              {offerPrice(price) && promoUntil && (
                 <p className="pricing-was">
-                  <s>{price.display_price}</s> {t("promoApplied", { code: promo ?? "" })}
+                  {promoUntil}
                 </p>
               )}
               <p className="pricing-desc">{t(DESC_KEY[price.plan])}</p>

@@ -28,10 +28,17 @@ export function discountedLifetimePrice(code: string, amount: number, displayPri
   const text = (discounted / 100).toFixed(2);
   return displayPrice.replace(number[0], decimalComma ? text.replace(".", ",") : text);
 }
+
 const STORAGE_KEY = "toone.checkoutPromotion";
 
 /** When each code stops being accepted at the payment page (mirrors Stripe). */
 const PROMOTION_ENDS: Readonly<Record<string, string>> = { PRODUCTHUNT: "2026-11-25T23:59:00Z" };
+
+/** When the code stops being accepted; null for a code with no end date. */
+export function checkoutPromotionEnds(code: string): Date | null {
+  const ends = PROMOTION_ENDS[code];
+  return ends ? new Date(ends) : null;
+}
 
 /** True once the code has ended: it is then neither shown nor sent to the checkout. */
 export function checkoutPromotionEnded(code: string, now: Date = new Date()): boolean {

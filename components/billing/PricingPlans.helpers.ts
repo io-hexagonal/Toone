@@ -181,3 +181,20 @@ export function orderedPrices(prices: readonly Price[]): Price[] {
 export function taxNoteKey(prices: readonly Price[]): "vatIncluded" | "taxExcluded" {
   return prices.length > 0 && prices.every(price => price.tax_inclusive) ? "vatIncluded" : "taxExcluded";
 }
+
+const PRICE_NUMBER = /\d[\d.,\u00a0\u202f ]*\d|\d/;
+
+/** A display price without empty cents: "€37.00" reads "€37"; "€9.99" is unchanged. */
+export function withoutEmptyCents(displayPrice: string): string {
+  return displayPrice.replace(/[.,]00(?!\d)/, "");
+}
+
+/**
+ * The price before an offer, as a whole number in the same currency format
+ * ("€199.99" reads "€200"). `amount` is in the currency's minor unit.
+ */
+export function roundedPrice(amount: number, displayPrice: string): string {
+  const number = displayPrice.match(PRICE_NUMBER);
+  if (!number || !Number.isFinite(amount) || amount <= 0) return displayPrice;
+  return displayPrice.replace(number[0], String(Math.round(amount / 100)));
+}

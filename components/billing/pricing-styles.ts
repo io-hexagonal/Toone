@@ -41,20 +41,30 @@ export const PRICING_CSS = `
               background: rgba(206,232,255,0.14); color: rgba(206,232,255,0.92);
               font-size: 10px; font-weight: 650; letter-spacing: 0.11em; text-transform: uppercase;
             }
-            /* The running offer, in Product Hunt's own orange; it sits on the card's top edge so it never covers the plan name. */
+            /* The running offer: a cream pill in the site's own palette, with Product Hunt's mark as
+               the only colour. It sits centred on the card's top edge so it never covers the plan name. */
             .pricing-badge--offer {
-              top: 0; right: auto; left: 50%; transform: translate(-50%, -50%); background: #3b211e; color: #ff9388;
-              border: 1px solid rgba(255,97,84,0.35); white-space: nowrap;
+              top: 0; right: auto; left: 50%; transform: translate(-50%, -50%);
+              display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+              background: #f0ede6; color: #1d1c19;
             }
+            .pricing-badge--offer svg { flex: none; display: block; }
             .pricing-card h2 { font-size: 22px; letter-spacing: -0.02em; margin: 0 0 14px; }
             .pricing-price { margin: 0 0 10px; }
             .pricing-amount {
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-size: 38px; font-weight: 600; letter-spacing: -0.03em;
             }
-            .pricing-per { color: rgba(255,255,255,0.5); font-size: 14px; }
-            .pricing-was { margin: -4px 0 10px; color: rgba(255,255,255,0.6); font-size: 13px; }
-            .pricing-was s { color: rgba(255,255,255,0.45); margin-right: 6px; }
+            /* Always on its own line under the price, so no card wraps differently from its neighbour. */
+            .pricing-per { display: block; margin-top: 4px; color: rgba(255,255,255,0.5); font-size: 14px; white-space: nowrap; }
+            /* The price before the offer sits right beside the new one, on its baseline. */
+            .pricing-before {
+              color: rgba(255,255,255,0.5); margin-right: 4px;
+              font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+              text-decoration-thickness: 2px;
+            }
+            /* When the offer ends: quiet, on the line the other cards use for "per month". */
+            .pricing-was { margin: -4px 0 10px; color: rgba(255,255,255,0.5); font-size: 14px; }
             .pricing-desc { color: rgba(255,255,255,0.56); font-size: 15px; line-height: 1.55; margin: 0 0 26px; }
             .pricing-button {
               margin-top: auto; display: flex; justify-content: center; align-items: center;
