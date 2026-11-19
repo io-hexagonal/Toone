@@ -246,9 +246,9 @@ export function routineSchema(detail: RoutinePublicDetail) {
       "@type": "HowToStep",
       position: index + 1,
       name: step.title,
-      text: [step.description, ...(step.completionCriteria ?? [])]
-        .filter(Boolean)
-        .join("\n"),
+      // Step instructions stay out of the public page and its markup; the
+      // title is the public description of a step.
+      text: step.title,
       url: `${SITE}/en/explore/routines/${detail.slug || detail.workflow_id}#step-${index + 1}`,
     })),
   };
