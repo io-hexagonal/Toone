@@ -190,11 +190,17 @@
   opacity: .8; margin-right: 2px;
 }
 .jr-disclosure a { color: rgba(255,255,255,0.75); text-underline-offset: 3px; }
-.jr-hero-cover {
-  position: relative; margin: 52px 0 0; border-radius: 22px; overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+/* The cover fills the hero as its background. The wash keeps the text side
+   dark enough to read on any cover and lets the artwork show on the right. */
+.jr-hero-cover { position: absolute; inset: 0; margin: 0; }
+.jr-hero-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.jr-hero-cover::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(20,20,19,0.94) 0%, rgba(20,20,19,0.82) 42%, rgba(20,20,19,0.38) 100%),
+    linear-gradient(180deg, rgba(20,20,19,0.55) 0%, rgba(20,20,19,0) 28%);
 }
-.jr-hero-cover img { display: block; width: 100%; height: auto; }
+.jr-has-cover { padding-bottom: 96px; }
 
 .jr-article-layout {
   display: grid; grid-template-columns: minmax(0, 760px) 200px;
@@ -253,6 +259,12 @@
 .jr-image {
   display: block; width: 100%; height: auto; margin: 32px 0 10px; border-radius: 18px;
   box-shadow: 0 18px 60px rgba(20,19,17,0.1); background: rgba(29,28,25,0.06);
+}
+/* A linked image is a badge (a directory or launch badge that links out):
+   shown at badge size, without the screenshot frame. */
+.jr-body a > .jr-image {
+  display: inline-block; width: auto; height: 54px; max-width: 100%; margin: 8px 0;
+  border-radius: 0; box-shadow: none; background: none; vertical-align: middle;
 }
 .jr-toc { position: sticky; top: 96px; }
 .jr-toc-title {
@@ -339,6 +351,10 @@
 @media (max-width: 720px) {
   .jr-shell { --jr-gutter: 20px; }
   .jr-hero { padding-bottom: 56px; }
+  .jr-has-cover { padding-bottom: 64px; }
+  .jr-hero-cover::after {
+    background: linear-gradient(180deg, rgba(20,20,19,0.9) 0%, rgba(20,20,19,0.8) 100%);
+  }
   .jr-hero-intro { font-size: 17px; }
   .jr-list { padding-block: 48px 80px; }
   .jr-grid { grid-template-columns: 1fr; gap: 18px; }

@@ -2,9 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { FEATURED_BADGES, type FeaturedBadge } from "@/lib/featured-badges";
 
 /**
- * "Featured on" strip above the footer, on the cream ground so both light and
- * transparent badges read: a slow, endless row of directory
- * badges. Directories verify their badge by loading the page, so the first
+ * "Featured on" strip under the landing's "Supported by" band, on the same
+ * cream ground: a slow, endless row of directory badges. Directories verify their badge by loading the page, so the first
  * set is plain server-rendered <a><img></a>. The repeated sets only exist to
  * make the loop seamless; they are hidden from assistive tech and from the
  * tab order, and dropped entirely when the visitor prefers reduced motion.
@@ -44,6 +43,7 @@ function BadgeSet({
               alt={copy ? "" : b.alt}
               width={b.width}
               height={b.height}
+              className={b.framed ? "fo-framed" : undefined}
               style={b.style}
               loading="lazy"
               decoding="async"
@@ -71,14 +71,20 @@ export default async function FeaturedOnStrip() {
           __html: `
             .fo {
               position: relative; z-index: 5;
-              background: #f0ede6;
-              padding: 0 0 56px;
+              /* Sits in the landing's padded .sections column, right under the
+                 "Supported by" band; the negative margin lets the row run edge to edge. */
+              margin: 0 -24px;
+              padding: clamp(40px, 4.5vw, 56px) 0 0;
               text-align: center;
             }
+            /* Same label as the "Supported by" band above it. */
             .fo-label {
-              font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em;
-              text-transform: uppercase; color: rgba(29,28,25,0.5);
+              font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+              text-transform: uppercase; color: rgba(29,28,25,0.42);
               margin: 0 0 22px;
+            }
+            @media (max-width: 640px) {
+              .fo-label { font-size: 10px; letter-spacing: 0.14em; }
             }
             .fo-viewport {
               overflow: hidden;
@@ -98,9 +104,10 @@ export default async function FeaturedOnStrip() {
             .fo-set li { flex: none; display: flex; }
             .fo-set a { display: block; line-height: 0; border-radius: 10px; }
             .fo-set a:focus-visible { outline: 2px solid rgba(29,28,25,0.6); outline-offset: 4px; }
-            /* Monotone: every badge in the same quiet gray, whatever its brand colour. */
-            .fo-set img { display: block; max-width: none; filter: grayscale(1); opacity: 0.72; transition: opacity 0.2s ease; }
-            .fo-set a:hover img, .fo-set a:focus-visible img { opacity: 1; }
+            /* Monotone: every badge in the same quiet gray; its own colour returns on hover or focus. */
+            .fo-set img { display: block; max-width: none; filter: grayscale(1); opacity: 0.72; transition: opacity 0.2s ease, filter 0.2s ease; }
+            .fo-set img.fo-framed { clip-path: inset(2.5px round 10px); }
+            .fo-set a:hover img, .fo-set a:focus-visible img { opacity: 1; filter: grayscale(0); }
             @keyframes fo-scroll {
               from { transform: translateX(0); }
               to { transform: translateX(-50%); }

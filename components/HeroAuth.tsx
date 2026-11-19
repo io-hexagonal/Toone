@@ -289,39 +289,8 @@ export default function HeroAuth({ audience = "business" }: Props) {
             .ha-dl:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); }
             .ha-dl svg { width: 18px; height: 18px; fill: currentColor; }
 
-            .ha-product-hunt {
-              position: fixed; z-index: 35; left: 24px; bottom: 24px;
-              display: inline-flex; align-items: center; gap: 12px;
-              min-height: 62px; padding: 12px 16px; border-radius: 12px; overflow: hidden;
-              border: 1px solid #ff6154; background: #fff8f6;
-              color: #201e1d; text-decoration: none;
-              box-shadow: 0 10px 30px rgba(0,0,0,0.28);
-              transition: transform 0.2s, box-shadow 0.2s;
-            }
-            .ha-product-hunt:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 14px 36px rgba(0,0,0,0.32);
-            }
-            .ha-product-hunt:focus-visible {
-              outline: 2px solid #ff6154;
-              outline-offset: 4px;
-            }
-            .ha-product-hunt-mark {
-              display: grid; place-items: center; width: 36px; height: 36px; flex: none;
-              border-radius: 50%; background: #ff6154; color: #fff;
-              font-size: 22px; font-weight: 750;
-            }
-            .ha-product-hunt-copy { display: flex; flex-direction: column; text-align: left; }
-            .ha-product-hunt-copy small { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: #794038; }
-            .ha-product-hunt-copy strong { font-size: 16px; line-height: 1.3; }
-
             @media (max-width: 720px) {
               .ha-dl { display: none; }
-              .ha-product-hunt {
-                position: static; margin-top: 20px;
-                transform: none;
-              }
-              .ha-product-hunt:hover { transform: translateY(-2px); }
             }
           `,
         }}
@@ -394,20 +363,6 @@ export default function HeroAuth({ audience = "business" }: Props) {
           <p className="ha-note ha-existing">
             {t("waitlistExisting")} <Link href="/signin">{t("waitlistSignIn")}</Link>
           </p>
-
-          <a
-            className="ha-product-hunt"
-            href="https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View Toone on Product Hunt"
-          >
-            <span className="ha-product-hunt-mark" aria-hidden="true">P</span>
-            <span className="ha-product-hunt-copy">
-              <small>FEATURED ON</small>
-              <strong>Product Hunt</strong>
-            </span>
-          </a>
         </div>
       </section>
     </>

@@ -155,7 +155,20 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
 
   return (
     <JournalShell banner={banner}>
-      <header className="jr-hero jr-article-hero">
+      <header className={`jr-hero jr-article-hero${cover ? " jr-has-cover" : ""}`}>
+        {/* The cover is the hero's background: a real <img> (alt, high priority) under a dark wash. */}
+        {cover && post.cover && (
+          <figure className="jr-hero-cover">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={cover}
+              alt={post.cover.alt}
+              width={post.cover.width}
+              height={post.cover.height}
+              fetchPriority="high"
+            />
+          </figure>
+        )}
         <div className="jr-hero-inner">
           <nav className="jr-breadcrumb" aria-label="Breadcrumb">
             <a href="/en">Home</a>
@@ -204,18 +217,6 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
             </p>
           )}
         </div>
-        {cover && post.cover && (
-          <figure className="jr-hero-cover">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={cover}
-              alt={post.cover.alt}
-              width={post.cover.width}
-              height={post.cover.height}
-              fetchPriority="high"
-            />
-          </figure>
-        )}
       </header>
       <main className={`jr-article-layout${toc.length < 2 ? " jr-no-toc" : ""}`}>
         <article className="jr-body">

@@ -20,6 +20,12 @@ export type FeaturedBadge = {
   height: number;
   /** The rel the directory issued; omitted when its snippet had none. */
   rel?: string;
+  /**
+   * The image is a bordered rounded rectangle. The strip trims its outer
+   * 2.5px so the directory's own border (each a different weight and colour)
+   * is not shown; the image itself is untouched.
+   */
+  framed?: boolean;
   /** Inline image style from the issued snippet, kept as given. */
   style?: { height: string; width: "auto" };
 };
@@ -27,15 +33,18 @@ export type FeaturedBadge = {
 export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   {
     name: "Product Hunt",
-    href: "https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone",
-    img: "https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=light",
-    alt: "Toone - Featured on Product Hunt",
+    framed: true,
+    // The 18 Nov 2026 launch (post 1259097), with its day rank.
+    href: "https://www.producthunt.com/products/toone?embed=true&utm_source=badge-top-post-badge&utm_medium=badge&utm_campaign=badge-toone-4",
+    img: "https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=1259097&theme=light&period=daily",
+    alt: "Toone - #3 Product of the Day on Product Hunt",
     width: 250,
     height: 54,
     rel: "noopener noreferrer",
   },
   {
     name: "MacIgniter",
+    framed: true,
     href: "https://macigniter.com/apps/toone",
     img: "https://macigniter.com/badge/cc33b1c2-3157-463b-a10d-da740ba24906.svg",
     alt: "Listed on MacIgniter",
@@ -45,10 +54,12 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   },
   {
     name: "DodoLaunch",
+    framed: true,
     href: "https://dodolaunch.com/p/toone?ref=badge",
     img: "https://dodolaunch.com/badge/toone?theme=light",
     alt: "Toone on DodoLaunch",
-    width: 200,
+    // Source SVG is 250×54; shown at its own size so it matches the other rectangles' height.
+    width: 250,
     height: 54,
   },
   {
@@ -64,13 +75,14 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   },
   {
     name: "StartupBase",
+    framed: true,
     href: "https://startupbase.io/products/toone?utm_source=startupbase&utm_medium=badge&utm_campaign=launch-badge-light",
     img: "https://statics.startupbase.io/site/badges/launched-on-sb.svg",
     alt: "Launched on StartupBase",
-    // Source SVG is 300×80; 55px high → 206px wide.
-    width: 206,
-    height: 55,
+    // Source SVG is 300×80; 54px high (the height of every rectangular badge) → 203px wide.
+    width: 203,
+    height: 54,
     rel: "noopener noreferrer",
-    style: { height: "55px", width: "auto" },
+    style: { height: "54px", width: "auto" },
   },
 ];
