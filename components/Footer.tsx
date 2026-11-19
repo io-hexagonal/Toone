@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
@@ -21,6 +21,7 @@ export default async function Footer({
   landingPath = "/",
 }: Props) {
   const t = await getTranslations("footer");
+  const locale = await getLocale();
   const nav = await getTranslations("nav");
   const billing = await getTranslations("billing");
 
@@ -120,10 +121,12 @@ export default async function Footer({
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
-              {/* Always shown, signed in or not, whatever the billing flags say: EU withdrawal function
-                  (2023/2673) and German cancel button (§312k BGB). */}
+              {/* EU withdrawal function (2023/2673): always shown, in every locale, signed in or not,
+                  whatever the billing flags say. */}
               <Link href="/cancel-contract?kind=withdraw">{t("withdrawContract")}</Link>
-              <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>
+              {/* German cancel button (§312k BGB): on German pages. The same page serves every locale's
+                  cancellations (its first step offers both). */}
+              {locale === "de" && <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>}
               {/* English-only page; its label stays English in every locale. Hidden until the trader details are complete. */}
               {TRADER_DETAILS_COMPLETE && <Link href="/legal-notice">Legal notice</Link>}
             </div>
