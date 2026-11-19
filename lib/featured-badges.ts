@@ -45,7 +45,11 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   {
     name: "MacIgniter",
     framed: true,
-    href: "https://macigniter.com/apps/toone",
+    // The issued link is https://macigniter.com/apps/toone, which is a 404
+    // until MacIgniter publishes the listing (checked 19 Nov 2026: not in
+    // their catalogue yet). Point at their site meanwhile; switch back once
+    // the listing page answers.
+    href: "https://macigniter.com/",
     img: "https://macigniter.com/badge/cc33b1c2-3157-463b-a10d-da740ba24906.svg",
     alt: "Listed on MacIgniter",
     width: 200,
