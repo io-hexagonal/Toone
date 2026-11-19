@@ -41,6 +41,11 @@ export const PRICING_CSS = `
               background: rgba(206,232,255,0.14); color: rgba(206,232,255,0.92);
               font-size: 10px; font-weight: 650; letter-spacing: 0.11em; text-transform: uppercase;
             }
+            /* The running offer, in Product Hunt's own orange; it sits on the card's top edge so it never covers the plan name. */
+            .pricing-badge--offer {
+              top: 0; right: auto; left: 50%; transform: translate(-50%, -50%); background: #3b211e; color: #ff9388;
+              border: 1px solid rgba(255,97,84,0.35); white-space: nowrap;
+            }
             .pricing-card h2 { font-size: 22px; letter-spacing: -0.02em; margin: 0 0 14px; }
             .pricing-price { margin: 0 0 10px; }
             .pricing-amount {

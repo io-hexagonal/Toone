@@ -751,6 +751,7 @@
       "promoTitle": "Launch offer",
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} applied",
+      "promoBadge": "Product Hunt week",
       "accountLine": "Toone Pro will be added to {email}.",
       "notYou": "Not you?",
       "signOut": "Sign out",
