@@ -125,6 +125,8 @@
       "checkoutCodeCta": "Continue to Lifetime",
       "offerSub": "Your launch offer is ready. Create your account, and the launch price for Toone Pro Lifetime is applied at checkout.",
       "errUsed": "This code is already active on your account. There's nothing more to do.",
+      "errUsedElsewhere": "This code has already been redeemed. If that was you, <link>sign in</link> to the account you created with it.",
+      "errUsedElsewhereReset": "Forgot the password? <link>Reset it</link>.",
       "errVerify": "Confirm your email address first, then redeem the code. We'll email you a code to confirm it.",
       "errAlreadyProAppStore": "You already have Toone Pro from the App Store, so this code can't be used while that plan is active.",
       "errAlreadyProPaid": "You already have a paid Toone Pro plan, so this code can't be used while it's active.",

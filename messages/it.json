@@ -125,6 +125,8 @@
       "checkoutCodeCta": "Continua con Lifetime",
       "offerSub": "La tua offerta di lancio è pronta. Crea il tuo account e il prezzo di lancio di Toone Pro Lifetime viene applicato al pagamento.",
       "errUsed": "Questo codice è già attivo sul tuo account. Non devi fare altro.",
+      "errUsedElsewhere": "Questo codice è già stato riscattato. Se sei stato tu, <link>accedi</link> all'account creato con questo codice.",
+      "errUsedElsewhereReset": "Password dimenticata? <link>Reimpostala</link>.",
       "errVerify": "Conferma prima il tuo indirizzo email, poi riscatta il codice. Ti inviamo un codice via email per confermarlo.",
       "errAlreadyProAppStore": "Hai già Toone Pro dall'App Store, quindi questo codice non può essere usato finché quel piano è attivo.",
       "errAlreadyProPaid": "Hai già un piano Toone Pro a pagamento, quindi questo codice non può essere usato finché è attivo.",

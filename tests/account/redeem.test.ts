@@ -45,6 +45,7 @@ const failure = (f: BillingFailure) => redeemErrorKey(f);
 test("each redeem failure has its own copy; every invalid case reads the same", () => {
   assert.equal(failure({ kind: "invalid_code" }), "errInvalid");
   assert.equal(failure({ kind: "code_already_redeemed" }), "errUsed");
+  assert.equal(failure({ kind: "code_used" }), "errUsedElsewhere");
   assert.equal(failure({ kind: "email_verification_required" }), "errVerify");
   assert.equal(failure({ kind: "already_pro", source: "subscription", provider: "app_store" }), "errAlreadyProAppStore");
   assert.equal(failure({ kind: "already_pro", source: "subscription", provider: "stripe" }), "errAlreadyProPaid");

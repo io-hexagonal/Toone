@@ -50,6 +50,8 @@ export default function RedeemCodeGate({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [codeInvalid, setCodeInvalid] = useState(false);
+  /** The code is a redeemed single-use one: point its owner to sign in or reset the password. */
+  const [usedElsewhere, setUsedElsewhere] = useState(false);
   /** A checkout discount code typed here: say where it goes. */
   const [promo, setPromo] = useState<string | null>(null);
   const busyRef = useRef(false);
@@ -59,6 +61,7 @@ export default function RedeemCodeGate({
     if (busyRef.current) return;
     const discount = checkoutPromotionCode(value);
     setPromo(discount);
+    setUsedElsewhere(false);
     if (discount) {
       rememberCheckoutPromotion(discount);
       setError("");
@@ -94,7 +97,11 @@ export default function RedeemCodeGate({
       });
     } catch (caught) {
       const key = redeemErrorKey(billingFailure(caught));
-      setCodeInvalid(key === "errInvalid" || key === "errUsed");
+      setCodeInvalid(key === "errInvalid" || key === "errUsed" || key === "errUsedElsewhere");
+      if (key === "errUsedElsewhere") {
+        setUsedElsewhere(true);
+        return;
+      }
       setError(t(key === "errInvalid" || key === "errRate" ? key : "errGeneric"));
     } finally {
       busyRef.current = false;
@@ -171,7 +178,7 @@ export default function RedeemCodeGate({
                   disabled={busy}
                   required
                   autoFocus
-                  {...fieldErrorProps(codeInvalid && Boolean(error), "redeem-gate-code-error", "redeem-gate-code-help")}
+                  {...fieldErrorProps(codeInvalid && (Boolean(error) || usedElsewhere), "redeem-gate-code-error", "redeem-gate-code-help")}
                 />
                 <button className={styles.primary} type="submit" disabled={busy || !code.trim()}>
                   {busy ? t("checking") : t("gateContinue")}
@@ -179,6 +186,12 @@ export default function RedeemCodeGate({
               </div>
               <small id="redeem-gate-code-help">{t("help")}</small>
               {error && <p id="redeem-gate-code-error" className={styles.error} role="alert">{error}</p>}
+              {usedElsewhere && (
+                <p id="redeem-gate-code-error" className={styles.error} role="alert">
+                  {t.rich("errUsedElsewhere", { link: (chunks) => <Link href="/signin">{chunks}</Link> })}{" "}
+                  {t.rich("errUsedElsewhereReset", { link: (chunks) => <Link href="/reset-password">{chunks}</Link> })}
+                </p>
+              )}
             </form>
           )}
         </section>
