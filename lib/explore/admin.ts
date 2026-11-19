@@ -455,7 +455,7 @@ export const LIMITS = {
   forWhom: { min: 1, max: 5, why: 200 },
   results: { min: 1, max: 12, name: 80, description: 300, formatLabel: 60 },
   youProvide: { min: 0, max: 12, label: 80, description: 300, example: 200 },
-  faq: { min: 0, max: 5, question: 160, answer: 500 },
+  faq: { min: 0, max: 8, question: 160, answer: 500 }, // up to 3 searcher + 5 trust questions
   customization: { label: 80, text: 200 },
   thirdParties: { name: 80, note: 200 },
   topics: [1, 3],
