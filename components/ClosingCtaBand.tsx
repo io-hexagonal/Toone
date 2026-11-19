@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/navigation";
+import CreateAccountLink from "@/components/CreateAccountLink";
 
 /**
  * Closing ask before the FAQ: one sentence and the early-access pill. Same
@@ -42,14 +42,7 @@ export default async function ClosingCtaBand() {
       />
       <div className="cta-band-inner">
         <h2 id="cta-band-title">{t("title")}</h2>
-        <Link
-          className="pill"
-          href="/create-account"
-          data-umami-event="create-account"
-          data-umami-event-placement="closing-band"
-        >
-          {nav("download")}
-        </Link>
+        <CreateAccountLink className="pill" placement="closing-band">{nav("download")}</CreateAccountLink>
       </div>
     </section>
   );

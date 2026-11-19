@@ -2,7 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import LocaleLinks from "@/components/LocaleLinks";
+import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
+import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
@@ -94,14 +96,7 @@ export default async function Footer({
               <Link href={`${landingPath}#how`}>{t("how")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
               <PricingLink href="/pricing">{billing("nav")}</PricingLink>
-              <Link
-                className="ftr-download"
-                href="/create-account"
-                data-umami-event="create-account"
-                data-umami-event-placement="footer"
-              >
-                {nav("download")}
-              </Link>
+              <CreateAccountLink className="ftr-download" placement="footer">{nav("download")}</CreateAccountLink>
             </div>
             <div>
               <p className="ftr-heading">{t("proof")}</p>
@@ -115,7 +110,7 @@ export default async function Footer({
               <p className="ftr-heading">{t("company")}</p>
               <Link href="/about">{t("about")}</Link>
               <Link href="/editorial-policy">{t("editorialPolicy")}</Link>
-              <Link href="/signin">{nav("signin")}</Link>
+              <SignedOutLink href="/signin">{nav("signin")}</SignedOutLink>
               <Link href="/contact">{t("contact")}</Link>
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />

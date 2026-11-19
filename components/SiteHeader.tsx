@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
+import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
+import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
 
 /**
@@ -141,17 +143,10 @@ export default function SiteHeader({
           <Link href="/journal" data-optional>{t("journal")}</Link>
           <PricingLink href="/pricing" data-optional>{billing("nav")}</PricingLink>
           <LocalePicker />
-          <Link href="/signin">{t("signin")}</Link>
+          <SignedOutLink href="/signin">{t("signin")}</SignedOutLink>
           <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
-          <Link
-            className="dl"
-            href="/create-account"
-            data-umami-event="create-account"
-            data-umami-event-placement="header"
-          >
-            {t("download")}
-          </Link>
+          <CreateAccountLink className="dl" placement="header">{t("download")}</CreateAccountLink>
         </nav>
       </header>
     </>
