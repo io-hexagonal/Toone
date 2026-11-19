@@ -377,6 +377,7 @@ const ERROR_CASES: [string, number, unknown, BillingFailure["kind"]][] = [
   ["invalid_invitation", 403, { code: "invalid_invitation", message: "invitation is invalid" }, "invalid_code"],
   ["invalid_code", 400, { code: "invalid_code", message: "wrong" }, "invalid_code"],
   ["code_already_redeemed", 409, { code: "code_already_redeemed", message: "x" }, "code_already_redeemed"],
+  ["code_used", 409, { code: "code_used", message: "x" }, "code_used"],
   ["email_verification_required", 403, { code: "email_verification_required", message: "x" }, "email_verification_required"],
   ["429", 429, { code: "rate_limit_exceeded", message: "slow down" }, "rate_limited"],
   ["nested error envelope", 429, { error: { code: "rate_limit_exceeded", message: "x" } }, "rate_limited"],

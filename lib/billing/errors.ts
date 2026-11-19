@@ -26,6 +26,8 @@ export type BillingFailure =
   /** The code does not exist, expired, is used up or is not for this account. One case on purpose. */
   | { kind: "invalid_code" }
   | { kind: "code_already_redeemed" }
+  /** A signed-out visitor checked a single-use code someone already redeemed: its owner should sign in. */
+  | { kind: "code_used" }
   /** The account must confirm its email address before this works. */
   | { kind: "email_verification_required" }
   | { kind: "rate_limited" }
@@ -93,6 +95,7 @@ export function mapApiError(error: ApiError, extra: { source?: unknown; provider
     };
   }
   if (code === "code_already_redeemed") return { kind: "code_already_redeemed" };
+  if (code === "code_used") return { kind: "code_used" };
   if (code === "email_verification_required") return { kind: "email_verification_required" };
   if (INVALID_CODE_CODES.has(code)) return { kind: "invalid_code" };
   if (code === "conflict") return reason === "payment_pending" ? { kind: "conflict", reason } : { kind: "conflict" };

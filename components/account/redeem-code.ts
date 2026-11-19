@@ -88,6 +88,7 @@ export function redeemDoneCopy(benefit: CodeBenefit, entitlement: Entitlement): 
 export type RedeemErrorKey =
   | "errInvalid"
   | "errUsed"
+  | "errUsedElsewhere"
   | "errVerify"
   | "errAlreadyProAppStore"
   | "errAlreadyProPaid"
@@ -98,7 +99,8 @@ export type RedeemErrorKey =
 
 /**
  * The `account.redeem.*` key for a failed check or redeem. Every invalid case
- * (unknown, expired, revoked, used up, signup-only) reads the same on purpose.
+ * (unknown, expired, revoked, signup-only) reads the same on purpose; a
+ * redeemed single-use code checked while signed out sends its owner to sign in.
  * `unauthenticated` is handled by the caller (the session ends).
  */
 export function redeemErrorKey(failure: BillingFailure): RedeemErrorKey {
@@ -107,6 +109,8 @@ export function redeemErrorKey(failure: BillingFailure): RedeemErrorKey {
       return "errInvalid";
     case "code_already_redeemed":
       return "errUsed";
+    case "code_used":
+      return "errUsedElsewhere";
     case "email_verification_required":
       return "errVerify";
     case "already_pro":
@@ -154,7 +158,7 @@ export function signupCodeState(via: "email" | "google" | "apple", benefit: Code
  */
 export function providerSignupState(check: { ok: true } | { ok: false; failure: BillingFailure }): "applied" | "redeem" {
   if (check.ok) return "redeem";
-  return check.failure.kind === "invalid_code" || check.failure.kind === "code_already_redeemed" ? "applied" : "redeem";
+  return check.failure.kind === "invalid_code" || check.failure.kind === "code_already_redeemed" || check.failure.kind === "code_used" ? "applied" : "redeem";
 }
 
 /** The redeem errors that mean "this account already has Toone Pro" (409): the code is not used up. */
