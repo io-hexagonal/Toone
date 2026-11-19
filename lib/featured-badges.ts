@@ -26,6 +26,15 @@ export type FeaturedBadge = {
 
 export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   {
+    name: "Product Hunt",
+    href: "https://www.producthunt.com/products/toone?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-toone",
+    img: "https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1106020&theme=light",
+    alt: "Toone - Featured on Product Hunt",
+    width: 250,
+    height: 54,
+    rel: "noopener noreferrer",
+  },
+  {
     name: "MacIgniter",
     href: "https://macigniter.com/apps/toone",
     img: "https://macigniter.com/badge/cc33b1c2-3157-463b-a10d-da740ba24906.svg",

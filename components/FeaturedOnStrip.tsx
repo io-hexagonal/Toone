@@ -10,7 +10,7 @@ import { FEATURED_BADGES, type FeaturedBadge } from "@/lib/featured-badges";
  * tab order, and dropped entirely when the visitor prefers reduced motion.
  */
 
-// One set of the four current badges is ~1,000px wide. Each half of the
+// One set of the five current badges is ~1,300px wide. Each half of the
 // track repeats the set until it is wider than a large desktop viewport,
 // so the loop never shows a gap; the track then holds two identical halves.
 const MIN_HALF_WIDTH = 2000;
@@ -98,7 +98,9 @@ export default async function FeaturedOnStrip() {
             .fo-set li { flex: none; display: flex; }
             .fo-set a { display: block; line-height: 0; border-radius: 10px; }
             .fo-set a:focus-visible { outline: 2px solid rgba(29,28,25,0.6); outline-offset: 4px; }
-            .fo-set img { display: block; max-width: none; }
+            /* Monotone: every badge in the same quiet gray, whatever its brand colour. */
+            .fo-set img { display: block; max-width: none; filter: grayscale(1); opacity: 0.72; transition: opacity 0.2s ease; }
+            .fo-set a:hover img, .fo-set a:focus-visible img { opacity: 1; }
             @keyframes fo-scroll {
               from { transform: translateX(0); }
               to { transform: translateX(-50%); }
