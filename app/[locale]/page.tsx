@@ -327,6 +327,7 @@ export async function TooneLandingPage({
 
         <div className="sections">
           <SupportBand />
+          <FeaturedOnStrip />
 
           <HowItWorksSection />
 
@@ -409,7 +410,6 @@ export async function TooneLandingPage({
         </div>
       </main>
 
-      <FeaturedOnStrip />
       <Footer
         landingPath={landingPath}
       />
