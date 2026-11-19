@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import LocalePicker from "@/components/LocalePicker";
+import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
 
 type Props = {
@@ -85,7 +86,7 @@ export default async function Navigation({
         <SignedInLink href="/how-to" className="minimal-link">
           {t("howTo")}
         </SignedInLink>
-        <Link href="/create-account" className="minimal-link">{t("download")}</Link>
+        <CreateAccountLink className="minimal-link" placement="minimal-nav">{t("download")}</CreateAccountLink>
         <span style={{ color: "rgba(255,255,255,0.68)", fontSize: 12 }}>
           <LocalePicker />
         </span>

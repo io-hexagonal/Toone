@@ -161,6 +161,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
   codeRef.current = code;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<ToneSession | null>(null);
@@ -702,7 +703,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 />}
                 {step === "account" && <input
                   className="auth-input"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   aria-label={t("passwordPh")}
                   autoComplete={
                     creating ? "new-password" : "current-password"
@@ -714,6 +715,11 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                   minLength={creating ? 8 : undefined}
                   maxLength={72}
                 />}
+                {step === "account" && (
+                  <button className="auth-signout" type="button" onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? t("reset.hide") : t("reset.show")}
+                  </button>
+                )}
                 <button className="auth-submit" type="submit" disabled={loading}>
                   {loading
                     ? "…"
