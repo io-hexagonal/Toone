@@ -4,6 +4,7 @@ import {
   checkoutPromotionCode,
   checkoutPromotionEnded,
   discountedLifetimePrice,
+  checkoutPromotionEnds,
   rememberCheckoutPromotion,
   activeCheckoutPromotion,
   rememberedCheckoutPromotion,
@@ -79,4 +80,9 @@ test("every visitor gets the launch code on the lifetime plan while it runs, wit
   } finally {
     delete globals.window;
   }
+});
+
+test("the lifetime card can say when the launch code ends", () => {
+  assert.equal(checkoutPromotionEnds("PRODUCTHUNT")?.toISOString(), "2026-11-25T23:59:00.000Z");
+  assert.equal(checkoutPromotionEnds("UNKNOWN"), null);
 });
