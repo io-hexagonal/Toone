@@ -1,6 +1,6 @@
 "use client";
 
-import { rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { activeCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import {
@@ -61,8 +61,8 @@ export default function CheckoutButton({
     setBusy(true);
     onStart?.();
     try {
-      // A launch link (or the code typed into the code box) discounts the lifetime plan.
-      const promotion = plan === "pro_lifetime" ? rememberedCheckoutPromotion() : null;
+      // The running offer (site-wide, a launch link, or the code typed into the code box) discounts the lifetime plan.
+      const promotion = plan === "pro_lifetime" ? activeCheckoutPromotion() : null;
       const session = await startCheckout(token, { plan, locale, return: returnTo, ...(promotion ? { promotion_code: promotion } : {}) });
       // Stay busy while the browser leaves for Stripe.
       window.location.assign(session.checkout_url);

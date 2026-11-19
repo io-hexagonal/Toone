@@ -1,6 +1,6 @@
 "use client";
 
-import { discountedLifetimePrice, rememberCheckoutPromotion, rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { activeCheckoutPromotion, discountedLifetimePrice, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -84,7 +84,7 @@ export default function PricingPlans({
   // success page in this tab, `checkout=cancelled` shows a notice once.
   // Read once per mount: the address is tidied below, so a second run of this
   // effect (React's development double-invoke) must not read it again.
-  /** A checkout discount code this tab knows about (a Product Hunt link, or typed into the code box). */
+  /** The checkout discount code in effect: the running site-wide offer, a Product Hunt link, or one typed into the code box. */
   const [promo, setPromo] = useState<string | null>(null);
   /** The lifetime price with the launch code applied; null for other plans or without a code. */
   const offerPrice = (price: { plan: string; amount: number; display_price: string }) =>
@@ -92,7 +92,8 @@ export default function PricingPlans({
   const initialParams = useRef<PricingParams | null>(null);
   useEffect(() => {
     if (/[?&]ref=product[\s_-]?hunt\b/i.test(window.location.search)) rememberCheckoutPromotion("PRODUCTHUNT");
-    setPromo(rememberedCheckoutPromotion());
+    // Applied for every visitor while the offer runs, not only those who came through a launch link.
+    setPromo(activeCheckoutPromotion());
     const params = (initialParams.current ??= readPricingParams(window.location.search));
     setSelected(params.plan);
     setCancelled(params.cancelled);
@@ -270,7 +271,11 @@ export default function PricingPlans({
               id={`plan-${planParam(price.plan)}`}
               className={`pricing-card${selected === price.plan ? " selected" : ""}`}
             >
-              {selected === price.plan && <span className="pricing-badge">{t("selected")}</span>}
+              {offerPrice(price) ? (
+                <span className="pricing-badge pricing-badge--offer">{t("promoBadge")}</span>
+              ) : (
+                selected === price.plan && <span className="pricing-badge">{t("selected")}</span>
+              )}
               <h2>{t(NAME_KEY[price.plan])}</h2>
               <p className="pricing-price">
                 <span className="pricing-amount">{offerPrice(price) ?? price.display_price}</span>{" "}

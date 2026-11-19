@@ -5,7 +5,9 @@ import {
   checkoutPromotionEnded,
   discountedLifetimePrice,
   rememberCheckoutPromotion,
+  activeCheckoutPromotion,
   rememberedCheckoutPromotion,
+  siteWideCheckoutPromotion,
 } from "../../lib/billing/checkout-promo";
 
 test("the launch code is recognised however it is typed, and nothing else is", () => {
@@ -60,4 +62,21 @@ test("the launch code ends with the last minute of 25 November UTC", () => {
   assert.equal(checkoutPromotionEnded("PRODUCTHUNT", new Date("2026-11-25T23:59:00Z")), false);
   assert.equal(checkoutPromotionEnded("PRODUCTHUNT", new Date("2026-11-25T23:59:01Z")), true);
   assert.equal(checkoutPromotionEnded("OTHER", new Date("2030-01-01T00:00:00Z")), false);
+});
+
+test("every visitor gets the launch code on the lifetime plan while it runs, with no link or typing", () => {
+  const globals = globalThis as unknown as { window?: unknown };
+  const during = new Date("2026-11-20T08:00:00Z");
+  const after = new Date("2026-11-26T00:00:00Z");
+  const empty = () => ({ getItem: () => null, setItem: () => undefined });
+  try {
+    globals.window = { localStorage: empty(), sessionStorage: empty() };
+    assert.equal(rememberedCheckoutPromotion(during), null);
+    assert.equal(siteWideCheckoutPromotion(during), "PRODUCTHUNT");
+    assert.equal(activeCheckoutPromotion(during), "PRODUCTHUNT");
+    assert.equal(siteWideCheckoutPromotion(after), null);
+    assert.equal(activeCheckoutPromotion(after), null);
+  } finally {
+    delete globals.window;
+  }
 });

@@ -75,3 +75,20 @@ export function rememberedCheckoutPromotion(now: Date = new Date()): string | nu
   }
   return null;
 }
+
+/**
+ * A code every visitor gets without a link or typing it, while it runs: the
+ * pricing page shows it and the lifetime checkout sends it. Null when no
+ * such offer is on.
+ */
+const SITE_WIDE_PROMOTION: string | null = "PRODUCTHUNT";
+
+/** The site-wide code while it is still accepted; null otherwise. */
+export function siteWideCheckoutPromotion(now: Date = new Date()): string | null {
+  return SITE_WIDE_PROMOTION && !checkoutPromotionEnded(SITE_WIDE_PROMOTION, now) ? SITE_WIDE_PROMOTION : null;
+}
+
+/** The code to show and send: the visitor's own remembered one, else the site-wide one. */
+export function activeCheckoutPromotion(now: Date = new Date()): string | null {
+  return rememberedCheckoutPromotion(now) ?? siteWideCheckoutPromotion(now);
+}
