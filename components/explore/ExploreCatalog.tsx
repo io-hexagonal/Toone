@@ -44,8 +44,15 @@ export async function exploreCatalogMetadata(locale: string, query: CatalogQuery
  * (`/[locale]/explore`) and the request-time filter/search view
  * (`/[locale]/explore/search`, reached through the proxy rewrite).
  */
-export default async function ExploreCatalog({ locale, query }: { locale: string; query: CatalogQuery }) {
+export default async function ExploreCatalog({ locale, query, topic }: {
+  locale: string;
+  query: CatalogQuery;
+  /** A topic page: its own heading, intro and URL over the same catalog body. */
+  topic?: { heading: string; intro: string; path: string };
+}) {
   const ui = await getExploreCopy(locale);
+  const heading = topic?.heading ?? ui.heading;
+  const intro = topic?.intro ?? ui.intro;
   let catalog;
   let tags;
   try {
@@ -98,17 +105,17 @@ export default async function ExploreCatalog({ locale, query }: { locale: string
         value={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: ui.heading,
-          description: ui.intro,
+          name: heading,
+          description: intro,
           isPartOf: { "@id": `${SITE}/#website` },
-          url: `${SITE}/en/explore`,
+          url: `${SITE}/en${topic?.path ?? "/explore"}`,
           mainEntity: itemList,
         }}
       />
       <header className="explore-hero explore-hero-index">
         <div className="explore-width">
-          <h1>{ui.heading}</h1>
-          <p className="explore-intro">{ui.intro}</p>
+          <h1>{heading}</h1>
+          <p className="explore-intro">{intro}</p>
           <p className="explore-howto">
             <a href={EXPLORE_GUIDES.explore}>{ui.exploreGuide} →</a>
           </p>
