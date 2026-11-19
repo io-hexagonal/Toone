@@ -1,5 +1,6 @@
-import { getExploreFeed } from "@/lib/explore/api";
+import { getExploreFacets, getExploreFeed, getExploreTaxonomy } from "@/lib/explore/api";
 import { isExploreIndexable } from "@/lib/explore/presentation";
+import { facetListings, isTopicPageIndexable, topicPagePath } from "@/lib/explore/topicPages";
 
 /**
  * Sitemap of the public Explore items (contract §5.8, §11).
@@ -16,6 +17,8 @@ import { isExploreIndexable } from "@/lib/explore/presentation";
  * hreflang alternates.
  * CONTENT-022 (v1.7.0): every approved record is listed unless a reviewer set
  * `noindex`; the feed's `indexable` flag carries that server-side rule.
+ * Topic pages (one per taxonomy term) are listed only while they are
+ * indexable, that is with enough approved records; they carry no lastmod.
  * A feed outage yields an empty urlset (200) rather than an error: Google
  * keeps previously discovered URLs, while a 5xx would make it retry the
  * fetch and, repeated, distrust the file.
@@ -67,6 +70,23 @@ export async function GET() {
     ok = false;
     console.error(
       "[sitemap-explore] feed fetch failed; omitting Explore items",
+      error instanceof Error ? error.message : error,
+    );
+  }
+  // Topic pages fail on their own: an outage here must not drop the records.
+  try {
+    const taxonomy = await getExploreTaxonomy();
+    if (taxonomy) {
+      const facets = await getExploreFacets({ type: "all", query: "", tag: "", page: 1 });
+      for (const term of taxonomy.terms) {
+        const path = term.active ? topicPagePath(term) : null;
+        if (path && isTopicPageIndexable(facetListings(facets, term.id)))
+          lines.push(`<url><loc>${BASE_URL}/en${path}</loc></url>`);
+      }
+    }
+  } catch (error) {
+    console.error(
+      "[sitemap-explore] taxonomy fetch failed; omitting topic pages",
       error instanceof Error ? error.message : error,
     );
   }

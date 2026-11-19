@@ -8,6 +8,7 @@ import type {
 import { openGraphLocale } from "@/i18n/open-graph";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 
+import { topicPagePath } from "./topicPages";
 export type CatalogQuery = {
   type: "all" | "routines" | "bundles";
   query: string;
@@ -275,8 +276,10 @@ export function breadcrumbSchema(
     })),
   };
 }
-/** The hub filtered to one category (the breadcrumb's middle level). */
+/** The category's topic page (the breadcrumb's middle level); the filtered hub for an unexpected id. */
 export function categoryHref(locale: string, categoryId: string): string {
+  const path = topicPagePath({ id: categoryId, kind: "category" });
+  if (path) return `/${locale}${path}`;
   return catalogHref(locale, { type: "all", query: "", tag: "", page: 1, category: categoryId });
 }
 

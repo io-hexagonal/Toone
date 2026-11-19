@@ -188,7 +188,7 @@ test("profile JSON-LD is a HowTo from the plain steps with tools, supplies and a
   assert.equal(schema.author?.name, detail.author_name);
   const crumbs = breadcrumbSchema("Title", "/explore/routines/x", { id: "cat_marketing-sales", label: "Marketing & sales" });
   assert.deepEqual(crumbs.itemListElement.map((c) => c.name), ["Toone", "Explore", "Marketing & sales", "Title"]);
-  assert.equal(crumbs.itemListElement[2].item, `${SITE}/en/explore?category=cat_marketing-sales`);
+  assert.equal(crumbs.itemListElement[2].item, `${SITE}/en/explore/category/marketing-sales`);
   assert.equal(breadcrumbSchema("Title", "/x").itemListElement.length, 3);
   // The legacy HowTo is untouched.
   assert.equal(routineSchema(fixture("routine-detail")).name, fixture("routine-detail").title);
