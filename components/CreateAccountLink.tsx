@@ -17,7 +17,7 @@ export default function CreateAccountLink({ className, placement, children }: {
   /** The signed-out label. */
   children: ReactNode;
 }) {
-  const t = useTranslations("account.common");
+  const t = useTranslations("account.links");
   const { session, ready } = useStoredSession();
   if (ready && session) {
     return (
