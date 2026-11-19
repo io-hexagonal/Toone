@@ -700,19 +700,6 @@ function MemberContent({
           <div className="explore-lede">
             <Markdown text={payload.purpose} />
           </div>
-          <Markdown text={payload.preamble} />
-        </section>
-      )}
-      {!payload.purpose && payload.preamble && (
-        <section className="explore-section">
-          <h2>{ui.overview}</h2>
-          <Markdown text={payload.preamble} />
-        </section>
-      )}
-      {payload.prerequisites && (
-        <section className="explore-section">
-          <h2>{ui.prerequisites}</h2>
-          <Markdown text={payload.prerequisites} />
         </section>
       )}
       {!!payload.steps?.length && (
@@ -742,32 +729,6 @@ function MemberContent({
                     )}
                   </div>
                   <div className="explore-step-body">
-                    <Markdown text={step.description} />
-                    {!!step.completionCriteria?.length && (
-                      <div className="explore-criteria">
-                        <h4>{ui.completion}</h4>
-                        <ul>
-                          {step.completionCriteria.map((criterion, i) => (
-                            <li key={i}>
-                              <Markdown text={criterion} />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {!!step.outcomes?.length && (
-                      <div className="explore-outcomes">
-                        <h4>{ui.outcomes}</h4>
-                        <ul>
-                          {step.outcomes.map((outcome) => (
-                            <li key={outcome.id}>
-                              <code>{outcome.id}</code>
-                              <Markdown text={outcome.description} />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                     {(step.subRoutineId || !!step.skillIds?.length) && (
                       <ul className="explore-step-meta">
                         {step.subRoutineId && (
@@ -788,12 +749,6 @@ function MemberContent({
               );
             })}
           </ol>
-        </section>
-      )}
-      {payload.escalation && (
-        <section className="explore-section">
-          <h2>{ui.escalation}</h2>
-          <Markdown text={payload.escalation} />
         </section>
       )}
     </div>
@@ -854,9 +809,6 @@ export function RoutineDefinition({
                     <Markdown text={agent.description} />
                   </div>
                 </div>
-                {!!agent.capabilities?.length && (
-                  <Chips items={agent.capabilities} mono={false} />
-                )}
                 {(!!agent.skill_ids?.length || !!agent.mcp_ids?.length) && (
                   <ul className="explore-step-meta">
                     {!!agent.skill_ids?.length && (
