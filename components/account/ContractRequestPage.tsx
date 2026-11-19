@@ -20,6 +20,7 @@ import {
   type CancelTerms,
   type ContractKind,
 } from "./contract-request";
+import GoodwillRefundForm from "./GoodwillRefundForm";
 import styles from "./account.module.css";
 
 type Step =
@@ -37,7 +38,9 @@ const DETAILS_ERROR_ID = "contract-details-error";
  * for a cancellation its type and end date, (2) an explicit confirm button,
  * whose press is the declaration itself, then the same acknowledgement for
  * every request. A matching request takes effect when it is received; the
- * server emails the acknowledgement (in this page's locale).
+ * server emails the acknowledgement (in this page's locale). Below the two
+ * functions, a separate form asks for a goodwill refund of Lifetime
+ * (GoodwillRefundForm); it never changes the withdraw or cancel steps.
  */
 export default function ContractRequestPage() {
   const t = useTranslations("account.contract");
@@ -178,6 +181,9 @@ export default function ContractRequestPage() {
             </section>
           </div>
         )}
+
+        {/* A voluntary request, kept apart from the statutory withdrawal above (which never asks for a reason). */}
+        {step.name === "choose" && <GoodwillRefundForm />}
 
         {step.name === "details" && (
           <section className={styles.panel}>

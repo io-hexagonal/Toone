@@ -63,6 +63,12 @@ test("payment copy promises an email only for a confirmed purchase, and a failed
   assert.match(success.processingSub, /we email you the purchase confirmation then\. If the payment doesn't go through, you aren't charged\./);
   assert.match(success.expiredSub, /If the payment didn't go through, you weren't charged\./);
   const pricing = ((await load("en")).billing as Tree).pricing as Record<string, string>;
-  assert.match(pricing.refund, /Your first Toone Pro purchase is refunded in full/);
+  // From the 2026-11-20 Terms: no automatic full refund; subscriptions pro rata, Lifetime goodwill on request.
+  assert.match(pricing.refund, /Withdraw from a subscription within \{days\} days and the unused part of the period is refunded/);
+  assert.match(pricing.refund, /ask for a goodwill refund within \{days\} days/);
+  for (const locale of locales) {
+    const local = ((await load(locale)).billing as Tree).pricing as Record<string, string>;
+    assert.doesNotMatch(`${local.refund} ${local.termsShort}`, /first (Toone Pro )?purchase|in full/i, `${locale} promises a full refund`);
+  }
   assert.match(pricing.currencyNote, /local currency/);
 });
