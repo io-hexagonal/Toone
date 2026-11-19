@@ -47,6 +47,7 @@ export default async function Footer({
               color: rgba(255,255,255,0.92); font-size: 19px;
             }
             .ftr-legal { margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.64); }
+
             .ftr-lang { margin-top: 16px; }
             .ftr-cols { display: flex; gap: 64px; flex-wrap: wrap; }
             .ftr-heading {
@@ -62,7 +63,7 @@ export default async function Footer({
             .ftr-privacy-choice {
               display: block; padding: 0; border: 0; background: none;
               color: rgba(255,255,255,0.62); font: inherit;
-              font-size: 13.5px; cursor: pointer;
+              font-size: 13.5px; cursor: pointer; margin-bottom: 9px; text-align: left;
             }
             .ftr-privacy-choice:hover, .ftr-privacy-choice:focus-visible {
               color: rgba(255,255,255,0.95); text-decoration: underline;
@@ -86,6 +87,7 @@ export default async function Footer({
             <div className="ftr-legal">
               © {new Date().getFullYear()} Toone — {t("rights")}
             </div>
+
             <div className="ftr-lang">
               <LocaleLinks />
             </div>
@@ -112,15 +114,18 @@ export default async function Footer({
               <Link href="/editorial-policy">{t("editorialPolicy")}</Link>
               <SignedOutLink href="/signin">{nav("signin")}</SignedOutLink>
               <Link href="/contact">{t("contact")}</Link>
+            </div>
+            <div>
+              <p className="ftr-heading">{t("legal")}</p>
               <Link href="/privacy">{t("privacy")}</Link>
               <PrivacyChoicesButton className="ftr-privacy-choice" />
               <Link href="/terms">{t("terms")}</Link>
-              {/* Always shown, signed in or not, whatever the billing flags say: EU withdrawal function and German cancel button. */}
-              <Link href="/cancel-contract?kind=withdraw">{t("withdrawContract")}</Link>
-              <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>
               {/* English-only page; its label stays English in every locale. Hidden until the trader details are complete. */}
               {TRADER_DETAILS_COMPLETE && <Link href="/legal-notice">Legal notice</Link>}
-
+              {/* Always shown, signed in or not, whatever the billing flags say: EU withdrawal function
+                  (2023/2673) and German cancel button (§312k BGB). */}
+              <Link href="/cancel-contract?kind=withdraw">{t("withdrawContract")}</Link>
+              <Link href="/cancel-contract?kind=cancel">{t("cancelContract")}</Link>
             </div>
           </div>
         </div>
