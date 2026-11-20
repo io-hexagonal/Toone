@@ -90,7 +90,6 @@ export default function GoodwillRefundForm() {
     <section id="goodwill-refund" className={styles.panel} aria-labelledby="goodwill-refund-title" style={{ marginTop: 16 }}>
       <h2 id="goodwill-refund-title">{t("goodwillTitle")}</h2>
       <p>{t("goodwillBody", { days: TOONE_PRO_WITHDRAWAL_DAYS })}</p>
-      <p className={styles.notice}>{t("goodwillEarlier")}</p>
       <p className={styles.notice}>
         {t.rich("goodwillDiscounted", {
           email: SUPPORT_EMAIL,
