@@ -29,7 +29,7 @@ import {
   LEGAL_NOTICE_PATH,
   LINK_PRIVACY_URL,
   STRIPE_PRIVACY_URL,
-  TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
+  TOONE_PRO_WITHDRAWAL_DAYS,
   TOONE_PRO_GUEST_PASS_MARGIN_DAYS,
 } from "@/lib/legal/terms";
 
@@ -49,7 +49,7 @@ type ContentProps = {
 };
 
 const CONTACT = PRIVACY_CONTACT;
-const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
+const REFUND_DAYS = TOONE_PRO_WITHDRAWAL_DAYS;
 const ext = { target: "_blank", rel: "noopener" } as const;
 
 /**
@@ -561,7 +561,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
         <p>
           If you have bought Toone Pro, you can give someone a guest month by entering their email
           address. For a purchase on the web, this becomes possible{" "}
-          {TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS + TOONE_PRO_GUEST_PASS_MARGIN_DAYS} days after the
+          {TOONE_PRO_WITHDRAWAL_DAYS + TOONE_PRO_GUEST_PASS_MARGIN_DAYS} days after the
           purchase, once its withdrawal period has passed, and not while a withdrawal from it is
           pending or after it has been withdrawn. Toone&apos;s server stores that address with the guest pass and emails the person
           an invitation that shows your account name, or your email address if your account has no

@@ -136,6 +136,7 @@ export const PRICING_CSS = `
             }
             .pricing-stripe img { display: block; border-radius: 4px; background: #fff; padding: 2px; box-sizing: border-box; }
             .pricing-fineprint a { color: rgba(255,255,255,0.82); text-underline-offset: 3px; }
+            .pricing-fineprint .pricing-contract { margin-top: 6px; }
             .pricing-fineprint summary {
               display: inline-block; margin-top: 8px; cursor: pointer; list-style: none;
               color: rgba(255,255,255,0.72); text-decoration: underline; text-underline-offset: 3px;

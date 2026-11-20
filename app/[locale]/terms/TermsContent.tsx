@@ -10,7 +10,7 @@ import {
   LINK_TERMS_URL,
   PRICING_PATH,
   TOONE_PRO_CODE_MAX_DAYS,
-  TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS,
+  TOONE_PRO_WITHDRAWAL_DAYS,
   TOONE_PRO_FREE_ROUTINE_CREATIONS,
   TOONE_PRO_GUEST_MONTH_DAYS,
   TOONE_PRO_GUEST_PASS_MARGIN_DAYS,
@@ -25,8 +25,13 @@ import {
   type TooneProSeller,
 } from "@/lib/legal/seller";
 import { LEGAL_TRADER, TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { termsVersionPath } from "@/lib/legal/terms-versions";
 
-const REFUND_DAYS = TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS;
+const REFUND_DAYS = TOONE_PRO_WITHDRAWAL_DAYS;
+/** The day the goodwill-refund rules took effect, and the Terms in force before it. */
+const REVIEWED_REFUNDS_FROM = "November 20, 2026";
+const EARLIER_TERMS_VERSION = "2026-11-13";
+const EARLIER_TERMS_LABEL = "November 13, 2026";
 const CONTACT = "hello@trytoone.com";
 /** Where a code is redeemed, or used to create an account. */
 const REDEEM_PATH = "/redeem";
@@ -278,36 +283,60 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           period you have paid for.
         </p>
 
-        <h3 id="withdrawal">{REFUND_DAYS}-day refund and your right of withdrawal</h3>
-        <p>
-          <strong>Your first paid Toone Pro purchase.</strong> If you withdraw from your Toone
-          account&apos;s first paid Toone Pro purchase within {REFUND_DAYS} days of paying, it is
-          refunded in full, whatever the plan and even if you have already used Toone Pro. At
-          checkout you ask for Toone Pro to start straight away and confirm that you understand what
-          that means for your withdrawal right; whatever the law would otherwise allow, this full
-          refund still applies. It applies once per Toone account.
+        <h3 id="withdrawal">Withdrawal, refunds and goodwill refunds</h3>
+        <p id="withdraw-subscription">
+          <strong>Subscriptions.</strong> You can withdraw from a Monthly or Yearly subscription
+          within {REFUND_DAYS} days of paying for it, without giving a reason; for a consumer in the
+          EU, the EEA or the UK this is the legal right of withdrawal. It applies to your first
+          subscription as well as to later ones. Because you asked for Toone Pro to start straight
+          away, you pay for the days you had it: the subscription ends at once and the unused part of
+          the period you paid for is refunded, pro rata. You can also cancel a subscription at any
+          time, as described above.
         </p>
-        <p>
-          <strong>Later purchases.</strong> If you are a consumer in the EU, the EEA or the UK, you
-          can withdraw from a later subscription within {REFUND_DAYS} days of paying for it,
-          without giving a reason. Because you asked for Toone Pro to start straight away, you pay
-          for the days you had it: the unused part of the period you paid for is refunded, pro
-          rata. A later Lifetime purchase is digital content: you asked for it to start straight
-          away and confirmed that your right of withdrawal ends when it does, so it is not refunded
-          on withdrawal.
+        <p id="withdraw-lifetime">
+          <strong>Lifetime.</strong> Toone Pro Lifetime is digital content. At checkout you ask for
+          it to start straight away and confirm that you understand that your {REFUND_DAYS}-day
+          right of withdrawal ends once access starts. A Lifetime purchase is therefore not refunded
+          on withdrawal, and nothing is refunded automatically.
+        </p>
+        <p id="goodwill-refund">
+          <strong>Goodwill refund for Lifetime.</strong> Within {REFUND_DAYS} days of paying for
+          Lifetime you can still ask for a goodwill refund and tell us why: use{" "}
+          <a href={`/en${CANCEL_CONTRACT_PATH}#goodwill-refund`}>Ask for a goodwill refund</a>, with
+          your order reference, the email address of your Toone account or the one you entered at
+          checkout, and your reason, or write the same to{" "}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a>. Toone reviews each request and tells you its
+          decision by email. A goodwill refund is voluntary: Toone decides each request on its own
+          merits and does not have to grant it. If it is granted, the payment is refunded in full to
+          the payment method you used, and the Toone Pro Lifetime it paid for ends. This does not
+          affect your rights if Toone Pro does not work as described (see{" "}
+          <a href="#conformity">If Toone Pro does not work as described</a>).
+        </p>
+        <p id="earlier-terms">
+          <strong>Purchases made under earlier terms.</strong> A purchase made before{" "}
+          {REVIEWED_REFUNDS_FROM}, or whose checkout still showed the earlier consent text, keeps the
+          refund promised when it was made: if it was your Toone account&apos;s first paid Toone Pro
+          purchase, whatever the plan, it is refunded in full if you withdraw from it within{" "}
+          {REFUND_DAYS} days of paying, as the{" "}
+          <a href={termsVersionPath(EARLIER_TERMS_VERSION)}>Terms of {EARLIER_TERMS_LABEL}</a>{" "}
+          describe. Your purchase confirmation email repeats what you agreed to at checkout and
+          links the terms you accepted.
         </p>
         <p>
           A withdrawal counts as made within {REFUND_DAYS} days when you send it within{" "}
-          {REFUND_DAYS} days, even if the refund is made later. Toone Pro from the purchase you
-          withdraw from ends when your withdrawal takes effect.
+          {REFUND_DAYS} days, even if the refund is made later; the same goes for a goodwill refund
+          request. Toone Pro from the purchase you withdraw from ends when your withdrawal takes
+          effect.
         </p>
 
         <h3 id="withdraw-or-cancel">How to withdraw or cancel without signing in</h3>
         <p>
           Use <a href={`/en${CANCEL_CONTRACT_PATH}`}>Withdraw from contract here</a> to withdraw.
           Cancelling works the same way, at{" "}
-          <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>. Both are linked at the
-          bottom of every page of trytoone.com, and neither needs a sign-in. Enter the email address
+          <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>. Both are on the same page,
+          linked from the <a href={`/en${PRICING_PATH}`}>pricing page</a>, your{" "}
+          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> and your purchase confirmation email
+          (and, on German pages, from the bottom of every page), and neither needs a sign-in. Enter the email address
           of your Toone account or the one you entered at checkout, and the order reference
           (TOONE-…) from the purchase confirmation email Toone sends after every purchase. Your{" "}
           <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> also shows it for a purchase made in
@@ -339,24 +368,29 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           </li>
           <li>
             <strong>Withdraw from a subscription within {REFUND_DAYS} days of paying for
-            it</strong>: the subscription ends straight away and Toone Pro ends. The payment is
-            refunded in full if it was your account&apos;s first paid Toone Pro purchase; otherwise
-            the unused part of the period is refunded.
+            it</strong>: the subscription ends straight away and Toone Pro ends. The unused part of
+            the period you paid for is refunded, or the whole payment where earlier terms promised
+            that (see{" "}
+            <a href="#earlier-terms">Purchases made under earlier terms</a>).
           </li>
           <li>
             <strong>Withdraw from a subscription later</strong>: the request is treated as a
             cancellation, as above.
           </li>
           <li>
-            <strong>Withdraw from Lifetime within {REFUND_DAYS} days of the payment, when it was
-            your account&apos;s first paid Toone Pro purchase</strong>: the payment is refunded in
-            full and Toone Pro is removed from the account.
+            <strong>Withdraw from Lifetime</strong>: your right of withdrawal ended when access
+            started, so nothing is refunded and Toone Pro stays on. The email we send explains how to
+            ask for a goodwill refund within {REFUND_DAYS} days of paying. A Lifetime purchase made
+            under earlier terms that was your account&apos;s first paid Toone Pro purchase is still
+            refunded in full on a withdrawal within {REFUND_DAYS} days, and Toone Pro is removed from
+            the account.
           </li>
           <li>
-            <strong>Withdraw from Lifetime bought while a web subscription was active</strong>:
-            buying Lifetime had set that subscription to stop renewing. If the subscription is still
-            running when you withdraw, it renews again as before. If it has already ended, it is not
-            restarted, and Toone Pro ends with the Lifetime purchase; you can buy a plan again.
+            <strong>Lifetime bought while a web subscription was active, when it is
+            refunded</strong>: buying Lifetime had set that subscription to stop renewing. If the
+            subscription is still running when the Lifetime payment is refunded, it renews again as
+            before. If it has already ended, it is not restarted, and Toone Pro ends with the
+            Lifetime purchase; you can buy a plan again.
           </li>
           <li>
             <strong>Cancel Lifetime, or withdraw from it later</strong>: there is nothing to cancel,
@@ -405,8 +439,8 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           cannot be moved to another account. Checkout is refused while your account already has a
           paid Toone Pro plan, from the web or from Apple, so you are not charged twice; the one
           exception is upgrading a web subscription to Lifetime, described above. If you bought on
-          the wrong account, withdraw within {REFUND_DAYS} days as described above, or contact us
-          before buying again.
+          the wrong account, withdraw from a subscription, or ask for a goodwill refund of Lifetime,
+          within {REFUND_DAYS} days as described above, or contact us before buying again.
         </p>
         <p>
           Deleting your Toone account cancels a web subscription at once: Toone Pro ends straight
@@ -561,7 +595,7 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           subject to Apple&apos;s Media Services Terms and Conditions.
         </p>
 
-        <h3>If Toone Pro does not work as described</h3>
+        <h3 id="conformity">If Toone Pro does not work as described</h3>
         <p>
           Toone Pro must work as described on this page and on the pricing page for as long as you
           have it. If it does not, tell us and we will fix it. As a consumer you also keep the

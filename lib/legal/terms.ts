@@ -39,8 +39,22 @@ export const TOONE_PRO_GUEST_MONTH_DAYS = 30;
  * while a withdrawal of it is pending or once it is withdrawn.
  */
 export const TOONE_PRO_GUEST_PASS_MARGIN_DAYS = 1;
-/** Withdrawal window: the first paid Pro purchase of an account is refunded in full within it; a later subscription pro rata. */
-export const TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS = 14;
+/**
+ * Withdrawal window of a web purchase, from the payment: a subscription
+ * withdrawn within it ends at once and its unused part is refunded pro rata;
+ * a Lifetime purchase may ask for a goodwill refund (with a reason) within it.
+ */
+export const TOONE_PRO_WITHDRAWAL_DAYS = 14;
+/**
+ * The same window under the Terms before 2026-11-20, which refunded an
+ * account's first paid Pro purchase in full within it. Kept for the frozen
+ * Terms versions and for purchases made under them.
+ */
+export const TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS = TOONE_PRO_WITHDRAWAL_DAYS;
+/** A goodwill refund request must give a reason at least this long (characters, trimmed). */
+export const GOODWILL_REASON_MIN_LENGTH = 20;
+/** A goodwill refund request's reason is at most this long (characters, trimmed). */
+export const GOODWILL_REASON_MAX_LENGTH = 2000;
 /** Redeemable codes that grant days of Pro last at most this long. */
 export const TOONE_PRO_CODE_MAX_DAYS = 365;
 /** The emailed link that confirms a login-free request made before requests took effect on submission works this long. */

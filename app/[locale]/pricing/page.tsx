@@ -6,7 +6,7 @@ import PricingPlans from "@/components/billing/PricingPlans";
 import { PRICING_CSS } from "@/components/billing/pricing-styles";
 import { checkoutAvailable } from "@/components/billing/PricingPlans.helpers";
 import { getBillingFeaturesOrOff, getPrices, type Price } from "@/lib/billing/api";
-import { TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
+import { TOONE_PRO_WITHDRAWAL_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 import { pricingMetadata } from "./pricing-metadata";
 
 /**
@@ -60,7 +60,7 @@ export default async function PricingPage({ params }: Props) {
           checkoutEnabled={checkoutEnabled}
           paidEntry={features.paid_entry}
           freeCreations={TOONE_PRO_FREE_ROUTINE_CREATIONS}
-          refundDays={TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS}
+          refundDays={TOONE_PRO_WITHDRAWAL_DAYS}
         />
       </main>
       <Footer />

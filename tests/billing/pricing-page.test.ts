@@ -90,7 +90,9 @@ test("with checkout on, the plans render in order with the disclosures", () => {
   assert.match(html, /€9\.99/);
   assert.match(html, /Prices are in euros and include VAT where applicable\. Checkout may show the price in your local currency, with any tax that applies there; it shows the exact amount before you pay\./);
   assert.match(html, /renew automatically until you cancel/);
-  assert.match(html, /Your first Toone Pro purchase is refunded in full if you withdraw within 14 days/);
+  assert.match(html, /Withdraw from a subscription within 14 days and the unused part of the period is refunded\. Lifetime starts at once and isn&#x27;t refunded on withdrawal, but you can ask for a goodwill refund within 14 days\./);
+  assert.match(html, /14‑day withdrawal on subscriptions, unused part refunded\./);
+  assert.doesNotMatch(html, /refunded in full|first purchase/, "no automatic full refund is promised");
   assert.match(html, /href="\/en\/terms#toone-pro"/);
   // The session is only known in the browser: no buy button in the server HTML.
   assert.doesNotMatch(html, /Get (Monthly|Yearly|Lifetime)/);

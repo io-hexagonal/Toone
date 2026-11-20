@@ -2,7 +2,7 @@ import { SOLD_BY, type TooneProSeller } from "@/lib/legal/seller";
 
 export const PRIVACY_PATH = "/privacy";
 export const PRIVACY_CANONICAL = `https://trytoone.com/en${PRIVACY_PATH}`;
-export const PRIVACY_UPDATED_DATE = "November 11, 2026";
+export const PRIVACY_UPDATED_DATE = "November 20, 2026";
 
 /** The contact for privacy requests, named on the page. */
 export const PRIVACY_CONTACT = "hello@trytoone.com";
@@ -115,7 +115,7 @@ export const PRIVACY_RECIPIENTS: readonly PrivacyRecipient[] = [
     name: "Discord Inc.",
     role: "Service provider",
     purpose:
-      "Receives the messages you send through the website's contact form, so the team can read and answer them.",
+      "Receives the messages you send through the website's contact form, and goodwill refund requests (order reference, purchase email address, the name you gave and your reason), so the team can read and answer them.",
     where: `United States (${TRANSFER_SCC})`,
   },
   {
@@ -335,8 +335,8 @@ export function privacyRetention(): PrivacyRetention[] {
     },
     {
       id: "contact",
-      data: "Waitlist entries and contact messages",
-      period: "As long as needed to answer you and administer early access.",
+      data: "Waitlist entries, contact messages and goodwill refund requests",
+      period: "As long as needed to answer you and administer early access; a goodwill refund request, as long as needed to decide on it and answer you.",
       confirm: true,
     },
   ];

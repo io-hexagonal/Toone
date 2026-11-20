@@ -8,7 +8,7 @@ import DownloadGate from "@/components/billing/DownloadGate";
 import { checkoutAvailable } from "@/components/billing/PricingPlans.helpers";
 import { PRICING_CSS } from "@/components/billing/pricing-styles";
 import { getBillingFeaturesOrOff, getPrices, type Price } from "@/lib/billing/api";
-import { TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
+import { TOONE_PRO_WITHDRAWAL_DAYS, TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 
 const CACHE = { next: { revalidate: 300 } } as const;
 
@@ -173,7 +173,7 @@ export default async function DownloadPage({ params }: Props) {
           prices={prices}
           checkoutEnabled={checkoutAvailable(features.stripe_pro_checkout, prices)}
           freeCreations={TOONE_PRO_FREE_ROUTINE_CREATIONS}
-          refundDays={TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS}
+          refundDays={TOONE_PRO_WITHDRAWAL_DAYS}
         >
         <header className="download-head">
           <div className="download-eyebrow">{t("eyebrow")}</div>

@@ -364,6 +364,8 @@ export default function PricingPlans({
               terms: chunks => <Link href="/terms#toone-pro">{chunks}</Link>,
             })}
           </p>
+          {/* EU withdrawal function and German cancel button, without signing in. */}
+          <p className="pricing-contract"><Link href="/cancel-contract">{t("contractLink")}</Link></p>
           <details>
             <summary>{t("termsMore")}</summary>
             <ul className="pricing-terms">

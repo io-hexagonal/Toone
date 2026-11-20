@@ -204,9 +204,13 @@ test("the request sends the page's locale (the acknowledgement uses it) and the 
   assert.equal(en.account.contract.name, "Your name (optional)");
 });
 
-test("withdrawal copy follows the refund rules: first purchase in full, later subscription pro rata, later Lifetime not refunded", async () => {
+test("withdrawal copy follows the refund rules (Terms 2026-11-20): subscriptions pro rata, Lifetime goodwill on request, earlier purchases keep their full refund", async () => {
   const en = (await import("../../messages/en.json", { with: { type: "json" } })).default as { account: Record<string, Record<string, string>> };
-  assert.match(en.account.contract.withdrawBody, /Your first Toone Pro purchase is refunded in full; a later subscription is refunded for the unused part of the period, and a later Lifetime purchase is not refunded\./);
+  assert.match(en.account.contract.withdrawBody, /Within 14 days of paying for a subscription, you can withdraw without giving a reason: it ends at once and the unused part of the period you paid for is refunded\./);
+  assert.match(en.account.contract.withdrawBody, /Your right to withdraw from Lifetime ends once access starts, so withdrawing from it refunds nothing; you can ask for a goodwill refund instead\./);
+  assert.match(en.account.contract.withdrawBody, /Purchases made before 20 November 2026 keep the refund promised then: an account's first paid Toone Pro purchase is refunded in full\./);
+  assert.doesNotMatch(en.account.contract.sentWithdrawEffect, /later\. Toone Pro from that purchase ends\./, "a Lifetime withdrawal no longer ends Pro");
+  assert.match(en.account.contract.sentWithdrawEffect, /The acknowledgement email says what is refunded and whether Toone Pro from that purchase ends\./);
   // A withdrawn Lifetime that had stopped a running web subscription: that subscription renews again.
   assert.match(en.account.contractConfirm.withdrawnBody, /that subscription renews again/);
   assert.doesNotMatch(en.account.contractConfirm.withdrawnBody, /Your payment is being refunded and Toone Pro has ended\./);

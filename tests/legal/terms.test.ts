@@ -90,11 +90,12 @@ const SHARED_TEXT = [
   /at least 30 days before the new price applies/,
   /consumer with a billing address in Germany and your Yearly subscription has renewed at least once, you can cancel it at any time with one month's notice: the subscription then ends one month after the day we receive your cancellation, and the part of the period you paid for that falls after that date is refunded automatically, pro rata/,
   /Switching between Monthly and Yearly is not offered yet/,
-  /If you withdraw from your Toone account's first paid Toone Pro purchase within 14 days of paying, it is refunded in full, whatever the plan/,
-  /It applies once per Toone account/,
-  /withdraw from a later subscription within 14 days of paying for it, without giving a reason\. Because you asked for Toone Pro to start straight away, you pay for the days you had it: the unused part of the period you paid for is refunded, pro rata/,
-  /A later Lifetime purchase is digital content: you asked for it to start straight away and confirmed that your right of withdrawal ends when it does, so it is not refunded on withdrawal/,
-  /A withdrawal counts as made within 14 days when you send it within 14 days, even if the refund is made later/,
+  /You can withdraw from a Monthly or Yearly subscription within 14 days of paying for it, without giving a reason; for a consumer in the EU, the EEA or the UK this is the legal right of withdrawal\. It applies to your first subscription as well as to later ones\. Because you asked for Toone Pro to start straight away, you pay for the days you had it: the subscription ends at once and the unused part of the period you paid for is refunded, pro rata/,
+  /Toone Pro Lifetime is digital content\. At checkout you ask for it to start straight away and confirm that you understand that your 14-day right of withdrawal ends once access starts\. A Lifetime purchase is therefore not refunded on withdrawal, and nothing is refunded automatically/,
+  /Within 14 days of paying for Lifetime you can still ask for a goodwill refund and tell us why: use Ask for a goodwill refund, with your order reference, the email address of your Toone account or the one you entered at checkout, and your reason, or write the same to hello@trytoone\.com\. Toone reviews each request and tells you its decision by email\. A goodwill refund is voluntary/,
+  /If it is granted, the payment is refunded in full to the payment method you used, and the Toone Pro Lifetime it paid for ends\. This does not affect your rights if Toone Pro does not work as described/,
+  /A purchase made before November 20, 2026, or whose checkout still showed the earlier consent text, keeps the refund promised when it was made: if it was your Toone account's first paid Toone Pro purchase, whatever the plan, it is refunded in full if you withdraw from it within 14 days of paying, as the Terms of November 13, 2026 describe/,
+  /A withdrawal counts as made within 14 days when you send it within 14 days, even if the refund is made later; the same goes for a goodwill refund request/,
   /These terms and the other legal pages of trytoone\.com are published in English, and a Toone Pro purchase is made under the English text/,
   /Anything that is not available in your language, including these terms and some emails, is shown in English/,
   /Withdraw from contract here/,
@@ -188,22 +189,26 @@ test("withdrawal and cancellation match what the server does", () => {
     const text = terms(seller);
     for (const phrase of [
       /Cancel a subscription: it stops renewing\. Toone Pro stays on until the end of the period you have paid for, and nothing is refunded, except as described for Germany above/,
-      /Withdraw from a subscription within 14 days of paying for it: the subscription ends straight away and Toone Pro ends\. The payment is refunded in full if it was your account's first paid Toone Pro purchase; otherwise the unused part of the period is refunded/,
+      /Withdraw from a subscription within 14 days of paying for it: the subscription ends straight away and Toone Pro ends\. The unused part of the period you paid for is refunded, or the whole payment where earlier terms promised that/,
       /Withdraw from a subscription later: the request is treated as a cancellation/,
-      /Withdraw from Lifetime within 14 days of the payment, when it was your account's first paid Toone Pro purchase: the payment is refunded in full and Toone Pro is removed/,
-      /Withdraw from Lifetime bought while a web subscription was active: buying Lifetime had set that subscription to stop renewing\. If the subscription is still running when you withdraw, it renews again as before\. If it has already ended, it is not restarted, and Toone Pro ends with the Lifetime purchase/,
+      /Withdraw from Lifetime: your right of withdrawal ended when access started, so nothing is refunded and Toone Pro stays on\. The email we send explains how to ask for a goodwill refund within 14 days of paying/,
+      /A Lifetime purchase made under earlier terms that was your account's first paid Toone Pro purchase is still refunded in full on a withdrawal within 14 days, and Toone Pro is removed from the account/,
+      /Lifetime bought while a web subscription was active, when it is refunded: buying Lifetime had set that subscription to stop renewing\. If the subscription is still running when the Lifetime payment is refunded, it renews again as before\. If it has already ended, it is not restarted, and Toone Pro ends with the Lifetime purchase/,
       /Cancel Lifetime, or withdraw from it later: there is nothing to cancel/,
       // Pressing the button is the declaration (no emailed link to open).
       /Pressing it is your declaration: if the details match a Toone Pro purchase, your withdrawal or cancellation takes effect at that moment, with no further step and no link to open/,
       /the date and time we received it and, for a cancellation, the date the contract ends/,
       /Enter the email address of your Toone account or the one you entered at checkout, and the order reference \(TOONE-…\) from the purchase confirmation email Toone sends after every purchase/,
       /whether it is an ordinary or an extraordinary termination \(with the reason\), and when the contract should end: at the next possible date, or on a later date you choose/,
-      /Both are linked at the bottom of every page of trytoone\.com, and neither needs a sign-in/,
+      /Both are on the same page, linked from the pricing page, your Toone account page and your purchase confirmation email \(and, on German pages, from the bottom of every page\), and neither needs a sign-in/,
       /Cancel contract here applies this by itself/,
     ]) {
       assert.match(text, phrase, `${seller}: ${phrase}`);
     }
     assert.doesNotMatch(text, /Nothing changes until you open the link|works for 24 hours|order reference from your receipt|Whatever the plan, you can ask for a full refund of your first payment|Prices in US dollars/, String(seller));
+    // The statutory withdrawal never asks for a reason; only the goodwill request does.
+    assert.doesNotMatch(text, /withdraw[^.]*(must|need to|have to) (give|state) (a|your) reason/i, String(seller));
+    assert.doesNotMatch(text, /If you withdraw from your Toone account's first paid Toone Pro purchase within 14 days of paying, it is refunded in full/, String(seller));
   }
 });
 
@@ -229,7 +234,7 @@ test("Terms link the withdraw/cancel page, the legal notice, pricing and account
   assert.deepEqual([...new Set(labels)].sort(), ["Cancel contract here", "Withdraw from contract here"]);
   for (const seller of RENDERINGS) {
     const html = termsHtml(seller);
-    for (const href of ["/en/cancel-contract", "/en/legal-notice", "/en/account", "/en/pricing"]) {
+    for (const href of ["/en/cancel-contract", "/en/cancel-contract#goodwill-refund", "/en/terms?version=2026-11-13", "/en/legal-notice", "/en/account", "/en/pricing"]) {
       assert.ok(html.includes(`href="${href}"`), `${seller}: ${href}`);
     }
   }
@@ -287,7 +292,9 @@ test("Toone Pro numbers match the server's limits (free plan = 2)", async () => 
   assert.equal(legal.TOONE_PRO_GUEST_PASSES, 5);
   assert.equal(legal.TOONE_PRO_GUEST_MONTH_DAYS, 30);
   assert.equal(legal.TOONE_PRO_GUEST_PASS_MARGIN_DAYS, 1, "guest passes from a web purchase: withdrawal window + 1 day");
-  assert.equal(legal.TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, 14);
+  assert.equal(legal.TOONE_PRO_WITHDRAWAL_DAYS, 14);
+  assert.equal(legal.TOONE_PRO_FIRST_PAYMENT_REFUND_DAYS, 14, "the earlier Terms' window, kept for their frozen copies");
+  assert.equal(legal.GOODWILL_REASON_MIN_LENGTH, 20);
   assert.equal(legal.TOONE_PRO_CODE_MAX_DAYS, 365);
   assert.equal(legal.TOONE_PRO_CONTRACT_LINK_HOURS, 24);
   assert.equal(legal.APPLE_REPORT_A_PROBLEM_URL, "https://reportaproblem.apple.com");
@@ -387,17 +394,22 @@ test("the Terms name no blocked country: the server's list is shown at checkout"
   }
 });
 
-test("the footer links the withdraw and cancel functions on every page, in every locale, unconditionally", () => {
-  const footer = read("components/Footer.tsx");
-  assert.match(footer, /<Link href="\/cancel-contract\?kind=withdraw">\{t\("withdrawContract"\)\}<\/Link>/);
-  assert.match(footer, /<Link href="\/cancel-contract\?kind=cancel">\{t\("cancelContract"\)\}<\/Link>/);
-  const block = footer.slice(footer.indexOf('href="/terms"'), footer.indexOf('kind=cancel'));
-  assert.doesNotMatch(block, /&&|\?\s*</, "not behind a flag or a session");
+test("the pricing page and the account page link the withdraw and cancel page, without a flag or a session", () => {
+  const pricing = read("components/billing/PricingPlans.tsx");
+  assert.match(pricing, /<Link href="\/cancel-contract">\{t\("contractLink"\)\}<\/Link>/);
+  const account = read("components/account/AccountPage.tsx");
+  assert.match(account, /href="\/cancel-contract\?kind=withdraw"/);
+  assert.match(account, /href="\/cancel-contract\?kind=cancel"/);
   for (const locale of locales) {
     const messages = JSON.parse(read(`messages/${locale}.json`));
+    assert.ok(messages.billing.pricing.contractLink, locale);
     assert.equal(messages.footer.withdrawContract, messages.account.page.withdrawLink, locale);
     assert.equal(messages.footer.cancelContract, messages.account.page.cancelLink, locale);
   }
   const de = JSON.parse(read("messages/de.json"));
   assert.equal(de.footer.cancelContract, "Verträge hier kündigen");
+  // German pages keep both in the footer, with no other condition.
+  const footer = read("components/Footer.tsx");
+  assert.match(footer, /\{locale === "de" && <Link href="\/cancel-contract\?kind=withdraw">\{t\("withdrawContract"\)\}<\/Link>\}/);
+  assert.match(footer, /\{locale === "de" && <Link href="\/cancel-contract\?kind=cancel">\{t\("cancelContract"\)\}<\/Link>\}/);
 });

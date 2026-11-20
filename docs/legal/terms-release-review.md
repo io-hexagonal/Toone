@@ -33,9 +33,13 @@ the sitemap. Other locale routes redirect to the English page.
   checkout stays the seller of that purchase), plans, VAT-inclusive euro prices
   with checkout's local currency shown before paying, renewal and cancellation,
   the German one-month notice for renewed Yearly plans (ends one month after
-  receipt, unused remainder refunded pro rata), no plan switching, a full
-  refund of an account's first paid Pro purchase within 14 days, a pro-rata
-  refund for a later subscription withdrawn within 14 days, the withdrawal
+  receipt, unused remainder refunded pro rata), no plan switching, a pro-rata
+  refund for any subscription withdrawn within 14 days (no reason needed),
+  no withdrawal refund for Lifetime (digital content; the right ends once
+  access starts) but a goodwill refund on request within 14 days, with a
+  reason, decided by Toone (`#goodwill-refund`), purchases made under earlier
+  Terms keeping the first-purchase full refund (`#earlier-terms`, linking the
+  2026-11-13 version), the withdrawal
   right and a model form, the login-free withdraw and cancel pages (pressing
   confirm is the declaration; cancellations state their type and end date),
   Lifetime, one
@@ -80,7 +84,7 @@ the pages re-read it every five minutes and leave the sentence out when the API
 does not say. There is no fallback constant, so a switch needs no website step
 and an unreachable API can never name the wrong seller.
 
-Withdrawal, cancellation, the 14-day refunds, codes, account deletion and the
+Withdrawal, cancellation, the 14-day refunds, goodwill refunds, codes, account deletion and the
 Mac App Store edition read the same for both. The tests render the pages for
 either seller and for an unknown one.
 
@@ -106,3 +110,37 @@ LEGAL_RELEASE_CHECK=1 npm run test:legal
 ```
 
 The values must match the EU trader details on the App Store listing.
+
+## Terms versions and the checkout consent
+
+Each version of the Terms is kept readable at `/en/terms?version=<date>`
+(`lib/legal/terms-versions.ts`; a replaced text is frozen under
+`app/[locale]/terms/versions/`). The server keeps the same list
+(`ProTermsVersions`) to link a purchase confirmation to the Terms in force when
+the buyer accepted them, and versions the consent text Checkout shows
+(`ProCheckoutConsentVersion`); each purchase records the consent version it
+showed, and the refund rules follow that version.
+
+- 2026-11-11: first web-sales Terms.
+- 2026-11-13: codes sold by authorised resellers (AppSumo).
+- 2026-11-20: reviewed refunds. Subscriptions withdrawn within 14 days are
+  refunded pro rata (also the first purchase); Lifetime is not refunded on
+  withdrawal, but a goodwill refund can be asked for within 14 days, with a
+  reason of at least 20 characters, on `/en/cancel-contract#goodwill-refund`
+  (posted through `/api/contact` to the team's Discord channel; the owner
+  decides and refunds by hand in the Stripe Dashboard). Purchases made before
+  then, or whose checkout showed the earlier consent text, keep the full refund
+  of an account's first paid purchase. Checkout consent version 2026-11-20
+  goes with it.
+
+Release the website version and the server's consent version together, and
+not before the version's date: `termsVersionAt` treats a version dated after
+today as not yet in force (`?version=2026-11-20` shows the current text with a
+note until that day), and the server picks the Terms version by date. A new
+consent text live before the new Terms would sell under Terms that still
+promise the full refund; the Terms already say that a purchase whose checkout
+showed the earlier consent keeps it, so the safe order is: Terms first (on or
+after 2026-11-20 UTC), then the server's consent version.
+
+The goodwill form and `/api/contact` have no rate limit; the route checks the
+input again and posts only well-formed requests.
