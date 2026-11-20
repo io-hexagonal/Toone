@@ -141,17 +141,18 @@ test("the contract page shows the goodwill request apart from withdraw and cance
   assert.match(form, /mailto:\$\{SUPPORT_EMAIL\}/);
 });
 
-test("the contract copy no longer promises a full refund for every first purchase, and says how earlier buyers keep theirs", () => {
+test("the contract copy no longer promises a full refund for every first purchase, and no longer talks about earlier purchases", () => {
   const c = en.account.contract;
   assert.doesNotMatch(c.withdrawBody, /^Within 14 days of buying, you can withdraw from the contract and Toone Pro ends\. Your first Toone Pro purchase is refunded in full/);
   assert.match(c.withdrawBody, /withdraw without giving a reason: it ends at once and the unused part of the period you paid for is refunded/);
   assert.match(c.withdrawBody, /you can ask for a goodwill refund instead/);
-  assert.match(c.withdrawBody, /Purchases made before 20 November 2026 keep the refund promised then/);
+  assert.doesNotMatch(c.withdrawBody, /20 November 2026/);
+  assert.equal((c as Record<string, string>).goodwillEarlier, undefined, "no earlier-purchase notice on the form");
   assert.match(c.goodwillBody, /\{days\} days/);
   assert.match(c.goodwillErrSend, /<link>\{email\}<\/link>/);
   for (const locale of locales) {
     const local = JSON.parse(fs.readFileSync(`messages/${locale}.json`, "utf8")).account.contract as Record<string, string>;
     if (locale !== "en") assert.notEqual(local.goodwillTitle, en.account.contract.goodwillTitle, `${locale} translated`);
-    assert.match(local.goodwillEarlier, new RegExp(local.withdrawTitle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), `${locale} names the withdraw function as the page does`);
+    assert.equal(local.goodwillEarlier, undefined, `${locale} has no earlier-purchase notice`);
   }
 });
