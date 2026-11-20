@@ -244,6 +244,12 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           communications system, and account data is processed by the Toone account service.
         </p>
         <p>
+          Your account also stores whether, and since when, you turned off product emails (news
+          and updates). You can change this on your account page or with the unsubscribe link in
+          any product email. Account emails, such as receipts and security messages, are always
+          sent.
+        </p>
+        <p>
           If you choose Sign in with Apple on the website or in Toone (Mac App Store), Apple returns
           an identity token: a statement signed by Apple that contains a stable Apple account
           identifier and, when available, your email address. That address may be an Apple private

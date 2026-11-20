@@ -5,7 +5,8 @@
       "redeemTitle": "Code einlösen",
       "contractTitle": "Vertrag widerrufen oder kündigen",
       "contractDescription": "Einen auf trytoone.com gekauften Toone-Pro-Vertrag widerrufen oder kündigen, ohne Anmeldung.",
-      "contractConfirmTitle": "Anfrage bestätigen"
+      "contractConfirmTitle": "Anfrage bestätigen",
+      "unsubscribeTitle": "Produkt-E-Mails abbestellen"
     },
     "common": {
       "checking": "Dein Konto wird geprüft…",
@@ -272,6 +273,28 @@
       "expiredBody": "Bestätigungslinks gelten 24 Stunden. Stelle eine neue Anfrage, um einen neuen Link zu erhalten.",
       "startAgain": "Neue Anfrage stellen",
       "terms": "Deine Rechte stehen in den <link>Bedingungen</link>."
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "productUpdates": "Produktneuigkeiten und Updates",
+      "productUpdatesSub": "Ein paar E-Mails im Jahr zu neuen Funktionen und Launches. Belege und Konto-E-Mails kommen immer an.",
+      "loadError": "Deine E-Mail-Einstellungen konnten nicht geladen werden. Lade die Seite neu, um es erneut zu versuchen.",
+      "saveError": "Die Änderung konnte nicht gespeichert werden. Bitte versuche es erneut."
+    },
+    "unsubscribe": {
+      "eyebrow": "E-Mails",
+      "title": "Produkt-E-Mails abbestellen",
+      "reading": "Link wird gelesen…",
+      "body": "Keine Produkt-E-Mails von Toone (Neuigkeiten und Updates) mehr erhalten? Konto-E-Mails wie Belege und Sicherheitsnachrichten kommen weiterhin an.",
+      "button": "Abbestellen",
+      "sending": "Wird abbestellt…",
+      "error": "Mit diesem Link konnten wir dich nicht abmelden. Versuche es erneut oder schreib an {email}, dann erledigen wir das für dich.",
+      "doneTitle": "Du bist abgemeldet",
+      "done": "Du erhältst keine Produkt-E-Mails mehr.",
+      "turnBackOn": "Doch anders entschieden? Schalte sie in <link>deinem Konto</link> wieder ein.",
+      "missingTitle": "Dieser Link ist unvollständig",
+      "missingBody": "Öffne den Link aus der E-Mail genau so, wie er gesendet wurde, oder schreib an {email}, dann melden wir dich ab.",
+      "openAccount": "Konto öffnen"
     }
   },
   "nav": {

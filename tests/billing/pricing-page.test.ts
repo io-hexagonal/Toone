@@ -77,7 +77,7 @@ test("header and footer link to pricing only once checkout is available", () => 
 
 test("account-like pages send no Referer, by header", () => {
   const config = read("next.config.ts");
-  assert.match(config, /:page\(success\|cancel\|account\|redeem\|cancel-contract\|admin\)/);
+  assert.match(config, /:page\(success\|cancel\|account\|redeem\|cancel-contract\|unsubscribe\|admin\)/);
   assert.match(config, /key: "Referrer-Policy", value: "no-referrer"/);
 });
 
