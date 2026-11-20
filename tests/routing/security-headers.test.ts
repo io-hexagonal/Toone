@@ -8,17 +8,20 @@ import { config as proxyConfig } from "../../proxy";
 
 /* Baseline security headers (next.config.ts) and /.well-known/security.txt. */
 
-type Rule = { source: string; headers: { key: string; value: string }[] };
+type Rule = { source: string; has?: unknown[]; headers: { key: string; value: string }[] };
 
 /**
  * The headers next.config.ts gives `pathname`, applied the way Next does: every
  * matching rule in order, a later rule overriding an earlier one for the same
- * key (docs: next-config-js/headers, "Header Overriding Behavior").
+ * key (docs: next-config-js/headers, "Header Overriding Behavior"). The request
+ * is one to trytoone.com, so host-conditioned rules (`has`, for example the
+ * toone-landing*.vercel.app noindex) do not apply here; they have their own test.
  */
 async function headersFor(pathname: string): Promise<Record<string, string>> {
   const rules = (await nextConfig.headers!()) as Rule[];
   const out: Record<string, string> = {};
   for (const rule of rules) {
+    if (rule.has) continue;
     const params = getPathMatch(rule.source)(pathname);
     if (!params) continue;
     for (const { key, value } of rule.headers) {
