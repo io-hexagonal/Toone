@@ -1,0 +1,102 @@
+# IndexNow notice after each production deploy of trytoone.com (AUTH-013).
+#
+# Vercel reports every deploy to GitHub as a deployment. When a Production
+# deployment succeeds (trytoone.com is live on it), this job reads the live
+# sitemaps and sends IndexNow only the URLs whose lastmod is new or later than
+# the last notice, after checking each one on the live site. Preview deploys
+# never trigger it. Journal posts and /en/journal are left to the Journal
+# webhook. See lib/indexnow/site-notice.ts.
+#
+# Record: each run uploads the artifact "indexnow-site-record" (state.json =
+# what has been sent, log.md = every run with time, URLs and HTTP status) and
+# writes the same run to its job summary. The next run starts from it.
+#
+# Kill switch: set the repository variable SITE_INDEXNOW to "false"
+# (gh variable set SITE_INDEXNOW --body false -R io-hexagonal/Toone).
+name: IndexNow site notice
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: check and list what would be sent, send nothing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: indexnow-site
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: >-
+      vars.SITE_INDEXNOW != 'false' && (
+        (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || (
+          github.event.deployment_status.state == 'success' &&
+          github.event.deployment.environment == 'Production'
+        )
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SITE_INDEXNOW: ${{ vars.SITE_INDEXNOW }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+      TRIGGER: ${{ github.event_name == 'deployment_status' && format('production deploy {0}', github.event.deployment.sha) || 'manual run' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Load the record of what was already sent
+        id: record
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p indexnow-run
+          list=$(gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=indexnow-site-record&per_page=100")
+          if [ "$(jq '.total_count' <<<"$list")" = "0" ]; then
+            echo "No earlier record: the first run starts from the 2026-11-02 manual send."
+            echo "state=baseline" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          newest=$(jq -c '.artifacts | sort_by(.created_at) | last' <<<"$list")
+          if [ "$(jq -r '.expired' <<<"$newest")" = "true" ]; then
+            echo "::error::The latest IndexNow record has expired. Nothing is sent, so no URL can be sent twice. Restore a record or start a new baseline on purpose."
+            exit 1
+          fi
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/$(jq -r '.id' <<<"$newest")/zip" > indexnow-run/previous.zip
+          unzip -q indexnow-run/previous.zip -d indexnow-run/previous
+          echo "Record from $(jq -r '.created_at' <<<"$newest") (run $(jq -r '.workflow_run.id' <<<"$newest"))."
+          echo "state=indexnow-run/previous/state.json" >> "$GITHUB_OUTPUT"
+          echo "log=indexnow-run/previous/log.md" >> "$GITHUB_OUTPUT"
+
+      - name: Check changed URLs live and notify IndexNow
+        env:
+          STATE_IN: ${{ steps.record.outputs.state }}
+          LOG_IN: ${{ steps.record.outputs.log }}
+        run: |
+          args=(--state-in "$STATE_IN" --out indexnow-run/next --trigger "$TRIGGER")
+          if [ -n "$LOG_IN" ]; then args+=(--log-in "$LOG_IN"); fi
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          node --import tsx scripts/indexnow/notify-site.ts "${args[@]}"
+
+      - name: Keep the record for the next run
+        if: always() && env.DRY_RUN != 'true' && hashFiles('indexnow-run/next/state.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-site-record
+          path: |
+            indexnow-run/next/state.json
+            indexnow-run/next/log.md
+          retention-days: 90

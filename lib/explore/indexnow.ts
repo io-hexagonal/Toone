@@ -1,6 +1,7 @@
 import { getBundle, getRoutine, resolveSlug } from "./data";
 import { isExploreIndexable, SITE } from "./presentation";
 import type { RevalidateEvent } from "./types";
+import { submitToIndexNow } from "../indexnow/submit";
 
 /**
  * IndexNow on approval (CONTENT-022 v1.7.0, AUTH-013).
@@ -10,11 +11,13 @@ import type { RevalidateEvent } from "./types";
  * and the other participating engines fetch the fresh `index, follow` page.
  * Records a reviewer set to `noindex` are never submitted.
  *
- * Off unless `EXPLORE_INDEXNOW_ON_APPROVAL=true`: the owner turns it on once
- * IndexNow submission is approved (fix-list TE-03).
+ * Off unless `EXPLORE_INDEXNOW_ON_APPROVAL=true`. Since 2026-11 the site-wide
+ * deploy notice (`scripts/indexnow/notify-site.ts`) sends changed Explore
+ * record URLs from `/sitemap-explore.xml` once each, so turning this on as
+ * well would send a record twice (AUTH-013). Leave it off while that runs.
  */
-export const INDEXNOW_KEY = "kpdkez871rpzxfa3q11m2d2fvpqq4cyg"; // public/<key>.txt
-const ENDPOINT = "https://api.indexnow.org/indexnow";
+export { INDEXNOW_KEY, submitToIndexNow } from "../indexnow/submit";
+
 const SUBMIT_EVENTS = new Set<RevalidateEvent["event"]>(["approved", "repinned", "listing_changed"]);
 
 export function indexNowOnApprovalEnabled(): boolean {
@@ -27,22 +30,6 @@ export async function indexNowUrlFor(event: RevalidateEvent): Promise<string | n
   const detail = event.type === "routine" ? await getRoutine(event.id) : await getBundle(event.id);
   if (!detail || !isExploreIndexable(detail)) return null;
   return `${SITE}/en/explore/${event.type}s/${resolveSlug(detail)}`;
-}
-
-export async function submitToIndexNow(urls: string[]): Promise<number> {
-  const response = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify({
-      host: new URL(SITE).host,
-      key: INDEXNOW_KEY,
-      keyLocation: `${SITE}/${INDEXNOW_KEY}.txt`,
-      urlList: urls,
-    }),
-    cache: "no-store",
-    signal: AbortSignal.timeout(8000),
-  });
-  return response.status;
 }
 
 /** Best effort: failures are logged, never surfaced to the webhook caller. */
