@@ -66,6 +66,7 @@ test("payment copy promises an email only for a confirmed purchase, and a failed
   // From the 2026-11-20 Terms: no automatic full refund; subscriptions pro rata, Lifetime goodwill on request.
   assert.match(pricing.refund, /Withdraw from a subscription within \{days\} days and the unused part of the period is refunded/);
   assert.match(pricing.refund, /ask for a goodwill refund within \{days\} days/);
+  assert.match(pricing.refund, /Lifetime bought with a discount code, including the Product Hunt price, is final/);
   for (const locale of locales) {
     const local = ((await load(locale)).billing as Tree).pricing as Record<string, string>;
     assert.doesNotMatch(`${local.refund} ${local.termsShort}`, /first (Toone Pro )?purchase|in full/i, `${locale} promises a full refund`);

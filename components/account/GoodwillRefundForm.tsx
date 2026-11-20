@@ -91,6 +91,12 @@ export default function GoodwillRefundForm() {
       <h2 id="goodwill-refund-title">{t("goodwillTitle")}</h2>
       <p>{t("goodwillBody", { days: TOONE_PRO_WITHDRAWAL_DAYS })}</p>
       <p className={styles.notice}>{t("goodwillEarlier")}</p>
+      <p className={styles.notice}>
+        {t.rich("goodwillDiscounted", {
+          email: SUPPORT_EMAIL,
+          link: (chunks) => <a href={`mailto:${SUPPORT_EMAIL}`}>{chunks}</a>,
+        })}
+      </p>
       {sent ? (
         <div aria-live="polite">
           <p className={styles.ok} role="status">{t("goodwillSent", { email: sent.email })}</p>
