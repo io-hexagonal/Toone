@@ -335,8 +335,8 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           Cancelling works the same way, at{" "}
           <a href={`/en${CANCEL_CONTRACT_PATH}`}>Cancel contract here</a>. Both are on the same page,
           linked from the <a href={`/en${PRICING_PATH}`}>pricing page</a>, your{" "}
-          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> and your purchase confirmation email,
-          and neither needs a sign-in. Enter the email address
+          <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> and your purchase confirmation email
+          (and, on German pages, from the bottom of every page), and neither needs a sign-in. Enter the email address
           of your Toone account or the one you entered at checkout, and the order reference
           (TOONE-…) from the purchase confirmation email Toone sends after every purchase. Your{" "}
           <a href={`/en${ACCOUNT_PATH}`}>Toone account page</a> also shows it for a purchase made in

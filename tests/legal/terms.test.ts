@@ -200,7 +200,7 @@ test("withdrawal and cancellation match what the server does", () => {
       /the date and time we received it and, for a cancellation, the date the contract ends/,
       /Enter the email address of your Toone account or the one you entered at checkout, and the order reference \(TOONE-…\) from the purchase confirmation email Toone sends after every purchase/,
       /whether it is an ordinary or an extraordinary termination \(with the reason\), and when the contract should end: at the next possible date, or on a later date you choose/,
-      /Both are on the same page, linked from the pricing page, your Toone account page and your purchase confirmation email, and neither needs a sign-in/,
+      /Both are on the same page, linked from the pricing page, your Toone account page and your purchase confirmation email \(and, on German pages, from the bottom of every page\), and neither needs a sign-in/,
       /Cancel contract here applies this by itself/,
     ]) {
       assert.match(text, phrase, `${seller}: ${phrase}`);
@@ -408,4 +408,8 @@ test("the pricing page and the account page link the withdraw and cancel page, w
   }
   const de = JSON.parse(read("messages/de.json"));
   assert.equal(de.footer.cancelContract, "Verträge hier kündigen");
+  // German pages keep both in the footer, with no other condition.
+  const footer = read("components/Footer.tsx");
+  assert.match(footer, /\{locale === "de" && <Link href="\/cancel-contract\?kind=withdraw">\{t\("withdrawContract"\)\}<\/Link>\}/);
+  assert.match(footer, /\{locale === "de" && <Link href="\/cancel-contract\?kind=cancel">\{t\("cancelContract"\)\}<\/Link>\}/);
 });
