@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GOODWILL_REFUND_KIND, goodwillDiscordMessage, goodwillRefundFrom } from "@/lib/billing/goodwill-refund";
+import { clientIp, createRateLimiter, honeypotFilled, originAllowed } from "@/lib/contact-guard";
 
 /**
  * Forwards contact-modal submissions to the team's Discord channel via an
@@ -10,8 +11,16 @@ import { GOODWILL_REFUND_KIND, goodwillDiscordMessage, goodwillRefundFrom } from
  * Toone Pro Lifetime from /cancel-contract#goodwill-refund
  * (lib/billing/goodwill-refund.ts): it is checked again here and posted as
  * its own structured message. Any other body is a contact message, as before.
+ *
+ * Abuse guards (lib/contact-guard.ts), in order: a foreign `Origin` is
+ * refused (403); more than 5 requests per IP in 10 minutes get a 429 (kept in
+ * memory, so per serverless instance: best effort only); a filled honeypot
+ * answers 200 without posting. Every Discord body sets `allowed_mentions`
+ * to parse nothing, so user text can never ping @everyone, @here or a role.
  */
 const WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
+
+const limiter = createRateLimiter();
 
 /** Discord hard-caps embed field values at 1024 chars. */
 function clip(s: string, max: number): string {
@@ -42,8 +51,16 @@ async function goodwillRefund(body: Record<string, unknown>) {
 }
 
 export async function POST(req: NextRequest) {
+  if (!originAllowed(req.headers.get("origin"))) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  if (!limiter.allow(clientIp(req.headers))) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
   try {
     const body = await req.json();
+    // A bot filled the hidden field: look like success, post nothing.
+    if (honeypotFilled(body)) return NextResponse.json({ message: "Sent" });
     if (body?.kind === GOODWILL_REFUND_KIND) return await goodwillRefund(body);
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const email = typeof body?.email === "string" ? body.email.trim() : "";
@@ -79,6 +96,7 @@ export async function POST(req: NextRequest) {
             fields,
           },
         ],
+        allowed_mentions: { parse: [] },
       }),
       signal: AbortSignal.timeout(10_000),
     });

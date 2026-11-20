@@ -79,9 +79,11 @@ async function loadRoute(webhook: string) {
   return import("../../app/api/contact/route");
 }
 
+let nextIp = 1;
+/** Each request from its own IP: the route's per-IP rate limit is not under test here (contact-guard.test.ts). */
 function post(body: unknown) {
   return new NextRequest("https://trytoone.com/api/contact", {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    method: "POST", headers: { "Content-Type": "application/json", "x-forwarded-for": `192.0.2.${nextIp++}` }, body: JSON.stringify(body),
   });
 }
 

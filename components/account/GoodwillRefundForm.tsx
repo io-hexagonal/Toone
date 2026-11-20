@@ -14,6 +14,8 @@ import {
   type GoodwillInputError,
   type GoodwillRefundRequest,
 } from "@/lib/billing/goodwill-refund";
+import { HONEYPOT_FIELD } from "@/lib/contact-guard";
+import HoneypotField from "../HoneypotField";
 import { ORDER_REF_MAX } from "./contract-request";
 import styles from "./account.module.css";
 
@@ -34,6 +36,7 @@ export default function GoodwillRefundForm() {
   const [orderRef, setOrderRef] = useState("");
   const [reason, setReason] = useState("");
   const [person, setPerson] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [error, setError] = useState<GoodwillInputError | "send" | null>(null);
   const [sent, setSent] = useState<GoodwillRefundRequest | null>(null);
   const [busy, setBusy] = useState(false);
@@ -58,7 +61,7 @@ export default function GoodwillRefundForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(checked.request),
+        body: JSON.stringify({ ...checked.request, [HONEYPOT_FIELD]: honeypot }),
       });
       if (res.ok) {
         setSent(checked.request);
@@ -120,6 +123,7 @@ export default function GoodwillRefundForm() {
           <input id="goodwill-name" value={person} onChange={(event) => setPerson(event.target.value)}
             autoComplete="name" maxLength={GOODWILL_NAME_MAX}
             {...fieldErrorProps(errorField === "goodwill-name", ERROR_ID)} />
+          <HoneypotField value={honeypot} onChange={setHoneypot} />
           {error && (
             <p id={ERROR_ID} className={styles.error} role="alert">
               {error === "send"
