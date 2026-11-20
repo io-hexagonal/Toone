@@ -798,6 +798,7 @@
       "fixPaymentBusy": "Apertura della pagina di fatturazione…",
       "errPortal": "Non è stato possibile aprire la pagina di fatturazione. Riprova tra un momento o scrivi a hello@trytoone.com.",
       "termsShort": "IVA inclusa dove applicabile · Gli abbonamenti si rinnovano finché non annulli · Recesso entro {days} giorni sugli abbonamenti, con rimborso della parte non usata. Acquistando accetti i <terms>termini di Toone Pro</terms>.",
+      "contractLink": "Recedi o disdici un contratto",
       "termsMore": "Dettagli di fatturazione"
     },
     "success": {

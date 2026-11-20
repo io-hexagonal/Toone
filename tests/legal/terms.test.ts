@@ -200,7 +200,7 @@ test("withdrawal and cancellation match what the server does", () => {
       /the date and time we received it and, for a cancellation, the date the contract ends/,
       /Enter the email address of your Toone account or the one you entered at checkout, and the order reference \(TOONE-…\) from the purchase confirmation email Toone sends after every purchase/,
       /whether it is an ordinary or an extraordinary termination \(with the reason\), and when the contract should end: at the next possible date, or on a later date you choose/,
-      /Both are on the same page, linked at the bottom of every page of trytoone\.com \(on German pages under both names\), and neither needs a sign-in/,
+      /Both are on the same page, linked from the pricing page, your Toone account page and your purchase confirmation email, and neither needs a sign-in/,
       /Cancel contract here applies this by itself/,
     ]) {
       assert.match(text, phrase, `${seller}: ${phrase}`);
@@ -394,15 +394,15 @@ test("the Terms name no blocked country: the server's list is shown at checkout"
   }
 });
 
-test("the footer links the withdraw function on every page and the cancel button on German pages", () => {
-  const footer = read("components/Footer.tsx");
-  assert.match(footer, /<Link href="\/cancel-contract\?kind=withdraw">\{t\("withdrawContract"\)\}<\/Link>/);
-  // §312k BGB: the cancel button on German pages, with no other condition.
-  assert.match(footer, /\{locale === "de" && <Link href="\/cancel-contract\?kind=cancel">\{t\("cancelContract"\)\}<\/Link>\}/);
-  const block = footer.slice(footer.indexOf('href="/terms"'), footer.indexOf('kind=withdraw'));
-  assert.doesNotMatch(block, /&&|\?\s*</, "withdraw is not behind a flag or a session");
+test("the pricing page and the account page link the withdraw and cancel page, without a flag or a session", () => {
+  const pricing = read("components/billing/PricingPlans.tsx");
+  assert.match(pricing, /<Link href="\/cancel-contract">\{t\("contractLink"\)\}<\/Link>/);
+  const account = read("components/account/AccountPage.tsx");
+  assert.match(account, /href="\/cancel-contract\?kind=withdraw"/);
+  assert.match(account, /href="\/cancel-contract\?kind=cancel"/);
   for (const locale of locales) {
     const messages = JSON.parse(read(`messages/${locale}.json`));
+    assert.ok(messages.billing.pricing.contractLink, locale);
     assert.equal(messages.footer.withdrawContract, messages.account.page.withdrawLink, locale);
     assert.equal(messages.footer.cancelContract, messages.account.page.cancelLink, locale);
   }

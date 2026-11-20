@@ -798,6 +798,7 @@
       "fixPaymentBusy": "Ouverture de la page de facturation…",
       "errPortal": "La page de facturation n’a pas pu s’ouvrir. Réessayez dans un instant ou écrivez à hello@trytoone.com.",
       "termsShort": "TVA incluse le cas échéant · Les abonnements se renouvellent jusqu’à résiliation · Rétractation sous {days} jours sur les abonnements, partie non utilisée remboursée. En achetant, vous acceptez les <terms>conditions de Toone Pro</terms>.",
+      "contractLink": "Se rétracter ou résilier un contrat",
       "termsMore": "Détails de facturation"
     },
     "success": {

@@ -798,6 +798,7 @@
       "fixPaymentBusy": "Opening the billing page…",
       "errPortal": "The billing page couldn't open. Please try again in a moment, or write to hello@trytoone.com.",
       "termsShort": "VAT included where it applies · Subscriptions renew until you cancel · {days}‑day withdrawal on subscriptions, unused part refunded. By buying, you agree to the <terms>Toone Pro terms</terms>.",
+      "contractLink": "Withdraw or cancel a contract",
       "termsMore": "Billing details"
     },
     "success": {

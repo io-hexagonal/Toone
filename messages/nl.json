@@ -798,6 +798,7 @@
       "fixPaymentBusy": "Factuurpagina wordt geopend…",
       "errPortal": "De factuurpagina kon niet worden geopend. Probeer het zo opnieuw of schrijf naar hello@trytoone.com.",
       "termsShort": "Incl. btw waar van toepassing · Abonnementen lopen door tot je opzegt · {days} dagen herroeping bij abonnementen, ongebruikt deel terugbetaald. Door te kopen ga je akkoord met de <terms>Toone Pro-voorwaarden</terms>.",
+      "contractLink": "Contract herroepen of opzeggen",
       "termsMore": "Factuurdetails"
     },
     "success": {

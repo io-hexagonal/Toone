@@ -798,6 +798,7 @@
       "fixPaymentBusy": "A abrir a página de faturação…",
       "errPortal": "Não foi possível abrir a página de faturação. Tente novamente daqui a pouco ou escreva para hello@trytoone.com.",
       "termsShort": "IVA incluído quando aplicável · As subscrições renovam até cancelares · Desistência em {days} dias nas subscrições, com reembolso da parte não usada. Ao comprar, aceitas os <terms>termos do Toone Pro</terms>.",
+      "contractLink": "Desistir ou cancelar um contrato",
       "termsMore": "Detalhes de faturação"
     },
     "success": {
