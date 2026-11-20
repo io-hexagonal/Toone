@@ -2,6 +2,8 @@
 
 import { FormEvent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { HONEYPOT_FIELD } from "@/lib/contact-guard";
+import HoneypotField from "./HoneypotField";
 
 /**
  * ContactCta — a CTA button that opens the contact modal instead of a mailto
@@ -43,6 +45,7 @@ function ContactModal({ source, onClose }: { source: string; onClose: () => void
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -70,7 +73,7 @@ function ContactModal({ source, onClose }: { source: string; onClose: () => void
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, company, message, source }),
+        body: JSON.stringify({ name, email, company, message, source, [HONEYPOT_FIELD]: honeypot }),
       });
       if (res.ok) {
         setStatus("success");
@@ -230,6 +233,7 @@ function ContactModal({ source, onClose }: { source: string; onClose: () => void
                   required
                   maxLength={2000}
                 />
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
                 {status === "error" && <p className="cm-error">{t("error")}</p>}
                 <button className="cm-submit" type="submit" disabled={status === "loading"}>
                   {status === "loading" ? "…" : t("send")}

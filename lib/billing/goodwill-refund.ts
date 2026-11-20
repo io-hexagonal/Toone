@@ -121,5 +121,7 @@ export function goodwillDiscordMessage(request: GoodwillRefundRequest, submitted
         fields,
       },
     ],
+    // User text (reason, name) can never ping @everyone, @here, a role or a user.
+    allowed_mentions: { parse: [] as string[] },
   };
 }

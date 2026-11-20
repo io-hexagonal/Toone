@@ -22,6 +22,22 @@ const nextConfig: NextConfig = {
   // `/assets` and the root files never start with a locale.
   async headers() {
     return [
+      // Baseline for every route. It comes FIRST: when two rules set the same
+      // key, the last match wins, so the per-route `Referrer-Policy:
+      // no-referrer` rules below (and proxy.ts, which runs after these
+      // headers) keep the stricter value. No page is meant to be framed by
+      // another site (no embed or oEmbed routes; OG images are fetched, not
+      // framed), so framing is same-origin only. The CSP carries
+      // `frame-ancestors` and nothing else on purpose.
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
       {
         source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:path*",
         headers: [{ key: "Content-Language", value: ":locale" }],

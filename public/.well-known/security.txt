@@ -1,0 +1,4 @@
+Contact: mailto:hello@trytoone.com
+Expires: 2027-11-20T00:00:00.000Z
+Preferred-Languages: en, pt
+Canonical: https://trytoone.com/.well-known/security.txt
