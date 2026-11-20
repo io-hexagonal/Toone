@@ -308,8 +308,10 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           <a href={`mailto:${CONTACT}`}>{CONTACT}</a>. Toone reviews each request and tells you its
           decision by email. A goodwill refund is voluntary: Toone decides each request on its own
           merits and does not have to grant it. If it is granted, the payment is refunded in full to
-          the payment method you used, and the Toone Pro Lifetime it paid for ends. This does not
-          affect your rights if Toone Pro does not work as described (see{" "}
+          the payment method you used, and the Toone Pro Lifetime it paid for ends. Goodwill refunds
+          are not available for a Lifetime purchase made with a discount code, such as a launch
+          price: that purchase is final once access starts. None of this affects your rights if
+          Toone Pro does not work as described (see{" "}
           <a href="#conformity">If Toone Pro does not work as described</a>).
         </p>
         <p id="earlier-terms">
@@ -460,7 +462,9 @@ export default function TermsContent({ seller = null, traderDetails = TRADER_DET
           Pro for the life of the product, or extra free routine creations on top of the free plan.
           A code may also let you create an account while sign-ups are by invitation. Discount codes
           are different: you enter them at checkout, and the discount, the plan it applies to, and
-          for how many payments are shown there before you pay.
+          for how many payments are shown there before you pay. A Lifetime purchase made with a
+          discount code cannot get a goodwill refund (see{" "}
+          <a href="#goodwill-refund">Goodwill refund for Lifetime</a>).
         </p>
         <ul>
           <li>
