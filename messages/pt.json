@@ -5,7 +5,8 @@
       "redeemTitle": "Resgatar um código",
       "contractTitle": "Desistir ou cancelar um contrato",
       "contractDescription": "Desista ou cancele um contrato do Toone Pro comprado em trytoone.com, sem fazer login.",
-      "contractConfirmTitle": "Confirme o seu pedido"
+      "contractConfirmTitle": "Confirme o seu pedido",
+      "unsubscribeTitle": "Cancelar e-mails de produto"
     },
     "common": {
       "checking": "Verificando sua conta…",
@@ -272,6 +273,28 @@
       "expiredBody": "Os links de confirmação são válidos durante 24 horas. Faça um novo pedido para receber um novo link.",
       "startAgain": "Fazer um novo pedido",
       "terms": "Veja os <link>Termos</link> para conhecer seus direitos."
+    },
+    "notifications": {
+      "title": "Notificações",
+      "productUpdates": "Novidades e atualizações do produto",
+      "productUpdatesSub": "Alguns e-mails por ano sobre novos recursos e lançamentos. Recibos e e-mails da conta sempre chegam.",
+      "loadError": "Não foi possível carregar suas preferências de e-mail. Recarregue a página para tentar novamente.",
+      "saveError": "Não foi possível salvar essa alteração. Tente novamente."
+    },
+    "unsubscribe": {
+      "eyebrow": "E-mails",
+      "title": "Cancelar e-mails de produto",
+      "reading": "Lendo o link…",
+      "body": "Parar de receber e-mails de produto do Toone (novidades e atualizações)? E-mails da conta, como recibos e mensagens de segurança, continuam chegando.",
+      "button": "Cancelar inscrição",
+      "sending": "Cancelando…",
+      "error": "Não foi possível cancelar sua inscrição com este link. Tente novamente ou escreva para {email} e nós fazemos isso por você.",
+      "doneTitle": "Inscrição cancelada",
+      "done": "Você não vai mais receber e-mails de produto.",
+      "turnBackOn": "Mudou de ideia? Ative-os novamente na <link>sua conta</link>.",
+      "missingTitle": "Este link está incompleto",
+      "missingBody": "Abra o link do e-mail tal como foi enviado, ou escreva para {email} e nós cancelamos sua inscrição.",
+      "openAccount": "Abrir sua conta"
     }
   },
   "nav": {

@@ -10,6 +10,7 @@ const PAGES = {
   account: "app/[locale]/account/page.tsx",
   redeem: "app/[locale]/redeem/page.tsx",
   "cancel-contract": "app/[locale]/cancel-contract/page.tsx",
+  unsubscribe: "app/[locale]/unsubscribe/page.tsx",
   "admin/codes": "app/[locale]/admin/codes/page.tsx",
   "admin/invitations": "app/[locale]/admin/invitations/page.tsx",
 };
@@ -21,14 +22,14 @@ test("every new page is noindex, nofollow and sends no referrer", () => {
     assert.match(page, /referrer: "no-referrer"/, route);
     assert.doesNotMatch(page, /localeRobots/, `${route} never becomes indexable`);
   }
-  for (const route of ["account", "redeem", "cancel-contract"]) {
+  for (const route of ["account", "redeem", "cancel-contract", "unsubscribe"]) {
     assert.match(read(PAGES[route as keyof typeof PAGES]), new RegExp(`canonical: \`https://trytoone\\.com/\\$\\{locale\\}/${route}\``), route);
   }
 });
 
 test("none of the new pages is in a sitemap", () => {
   const sitemap = read("app/sitemap.xml/route.ts");
-  for (const route of ["/account", "/redeem", "/cancel-contract", "/admin"]) assert.ok(!sitemap.includes(`"${route}"`), route);
+  for (const route of ["/account", "/redeem", "/cancel-contract", "/unsubscribe", "/admin"]) assert.ok(!sitemap.includes(`"${route}"`), route);
 });
 
 test("/admin/invitations now redirects to /admin/codes", () => {

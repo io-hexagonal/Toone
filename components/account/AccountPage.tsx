@@ -22,6 +22,7 @@ import { useStoredSession } from "@/lib/hooks/useStoredSession";
 import { describePlan, type PlanView } from "./plan-view";
 import RedeemForm from "./RedeemForm";
 import EmailVerification from "./EmailVerification";
+import NotificationsPanel from "./NotificationsPanel";
 import ReturnToToone from "@/components/billing/ReturnToToone";
 import { takeAppReturn } from "./app-return";
 import styles from "./account.module.css";
@@ -198,6 +199,8 @@ function AccountWorkspace({ session, onSessionEnded, fromApp }: { session: ToneS
               <RedeemForm token={session.token} email={session.user.email} onSessionEnded={onSessionEnded} onRedeemed={setEntitlement} headingLevel={3} />
             </section>
           )}
+
+          <NotificationsPanel token={session.token} onSessionEnded={onSessionEnded} />
 
           <section className={styles.panel} aria-labelledby="account-contract">
             <h2 id="account-contract">{t("contractTitle")}</h2>

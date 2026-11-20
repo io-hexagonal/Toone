@@ -5,7 +5,8 @@
       "redeemTitle": "Riscatta un codice",
       "contractTitle": "Recedi o disdici un contratto",
       "contractDescription": "Recedi da un contratto Toone Pro acquistato su trytoone.com o disdicilo, senza accedere.",
-      "contractConfirmTitle": "Conferma la tua richiesta"
+      "contractConfirmTitle": "Conferma la tua richiesta",
+      "unsubscribeTitle": "Annulla l'iscrizione alle email di prodotto"
     },
     "common": {
       "checking": "Verifica del tuo account…",
@@ -272,6 +273,28 @@
       "expiredBody": "I link di conferma valgono 24 ore. Fai una nuova richiesta per riceverne uno nuovo.",
       "startAgain": "Fai una nuova richiesta",
       "terms": "I tuoi diritti sono descritti nei <link>Termini</link>."
+    },
+    "notifications": {
+      "title": "Notifiche",
+      "productUpdates": "Novità e aggiornamenti del prodotto",
+      "productUpdatesSub": "Poche email all'anno su nuove funzioni e lanci. Ricevute ed email dell'account arrivano sempre.",
+      "loadError": "Impossibile caricare le preferenze email. Ricarica la pagina per riprovare.",
+      "saveError": "Impossibile salvare la modifica. Riprova."
+    },
+    "unsubscribe": {
+      "eyebrow": "Email",
+      "title": "Annulla l'iscrizione alle email di prodotto",
+      "reading": "Lettura del link…",
+      "body": "Non ricevere più le email di prodotto di Toone (novità e aggiornamenti)? Le email dell'account, come ricevute e messaggi di sicurezza, continueranno ad arrivare.",
+      "button": "Annulla iscrizione",
+      "sending": "Annullamento…",
+      "error": "Non è stato possibile annullare l'iscrizione con questo link. Riprova, oppure scrivi a {email} e lo faremo noi per te.",
+      "doneTitle": "Iscrizione annullata",
+      "done": "Non riceverai più email di prodotto.",
+      "turnBackOn": "Hai cambiato idea? Riattivale nel <link>tuo account</link>.",
+      "missingTitle": "Questo link è incompleto",
+      "missingBody": "Apri il link dell'email esattamente com'è stato inviato, oppure scrivi a {email} e annulleremo noi l'iscrizione.",
+      "openAccount": "Apri il tuo account"
     }
   },
   "nav": {

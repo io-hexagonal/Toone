@@ -5,7 +5,8 @@
       "redeemTitle": "Redeem a code",
       "contractTitle": "Withdraw or cancel a contract",
       "contractDescription": "Withdraw from or cancel a Toone Pro contract bought on trytoone.com, without signing in.",
-      "contractConfirmTitle": "Confirm your request"
+      "contractConfirmTitle": "Confirm your request",
+      "unsubscribeTitle": "Unsubscribe from product emails"
     },
     "common": {
       "checking": "Checking your account…",
@@ -272,6 +273,28 @@
       "expiredBody": "Confirmation links work for 24 hours. Start a new request to get a fresh link.",
       "startAgain": "Start a new request",
       "terms": "See the <link>Terms</link> for your rights."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "productUpdates": "Product news and updates",
+      "productUpdatesSub": "A few emails a year about new features and launches. Receipts and account emails always arrive.",
+      "loadError": "Could not load your email settings. Reload the page to try again.",
+      "saveError": "Could not save that change. Please try again."
+    },
+    "unsubscribe": {
+      "eyebrow": "Emails",
+      "title": "Unsubscribe from product emails",
+      "reading": "Reading the link…",
+      "body": "Stop Toone product emails (news and updates)? Account emails like receipts and security messages still arrive.",
+      "button": "Unsubscribe",
+      "sending": "Unsubscribing…",
+      "error": "Could not unsubscribe you with this link. Try again, or email {email} and we'll do it for you.",
+      "doneTitle": "You're unsubscribed",
+      "done": "You're unsubscribed from product emails.",
+      "turnBackOn": "Changed your mind? Turn them back on in <link>your account</link>.",
+      "missingTitle": "This link is incomplete",
+      "missingBody": "Open the link from the email exactly as it was sent, or email {email} and we'll unsubscribe you.",
+      "openAccount": "Open your account"
     }
   },
   "nav": {

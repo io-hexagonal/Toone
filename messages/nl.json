@@ -5,7 +5,8 @@
       "redeemTitle": "Code inwisselen",
       "contractTitle": "Contract herroepen of opzeggen",
       "contractDescription": "Herroep of zeg een op trytoone.com gekocht Toone Pro-contract op, zonder in te loggen.",
-      "contractConfirmTitle": "Bevestig je verzoek"
+      "contractConfirmTitle": "Bevestig je verzoek",
+      "unsubscribeTitle": "Afmelden voor productmails"
     },
     "common": {
       "checking": "Je account wordt gecontroleerd…",
@@ -272,6 +273,28 @@
       "expiredBody": "Bevestigingslinks zijn 24 uur geldig. Doe een nieuw verzoek voor een nieuwe link.",
       "startAgain": "Nieuw verzoek doen",
       "terms": "Je rechten staan in de <link>Voorwaarden</link>."
+    },
+    "notifications": {
+      "title": "Meldingen",
+      "productUpdates": "Productnieuws en updates",
+      "productUpdatesSub": "Een paar e-mails per jaar over nieuwe functies en lanceringen. Bonnen en accountmails komen altijd aan.",
+      "loadError": "Je e-mailinstellingen konden niet worden geladen. Herlaad de pagina om het opnieuw te proberen.",
+      "saveError": "Die wijziging kon niet worden opgeslagen. Probeer het opnieuw."
+    },
+    "unsubscribe": {
+      "eyebrow": "E-mails",
+      "title": "Afmelden voor productmails",
+      "reading": "Link wordt gelezen…",
+      "body": "Geen productmails van Toone (nieuws en updates) meer ontvangen? Accountmails zoals bonnen en beveiligingsberichten blijven gewoon komen.",
+      "button": "Afmelden",
+      "sending": "Bezig met afmelden…",
+      "error": "We konden je met deze link niet afmelden. Probeer het opnieuw, of mail naar {email} en wij regelen het voor je.",
+      "doneTitle": "Je bent afgemeld",
+      "done": "Je ontvangt geen productmails meer.",
+      "turnBackOn": "Toch van gedachten veranderd? Zet ze weer aan in <link>je account</link>.",
+      "missingTitle": "Deze link is onvolledig",
+      "missingBody": "Open de link uit de e-mail precies zoals die is verstuurd, of mail naar {email} en wij melden je af.",
+      "openAccount": "Open je account"
     }
   },
   "nav": {

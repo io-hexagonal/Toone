@@ -5,7 +5,8 @@
       "redeemTitle": "Utiliser un code",
       "contractTitle": "Se rétracter ou résilier un contrat",
       "contractDescription": "Rétractez-vous ou résiliez un contrat Toone Pro acheté sur trytoone.com, sans vous connecter.",
-      "contractConfirmTitle": "Confirmez votre demande"
+      "contractConfirmTitle": "Confirmez votre demande",
+      "unsubscribeTitle": "Se désabonner des e-mails produit"
     },
     "common": {
       "checking": "Vérification de votre compte…",
@@ -272,6 +273,28 @@
       "expiredBody": "Les liens de confirmation sont valables 24 heures. Faites une nouvelle demande pour en recevoir un nouveau.",
       "startAgain": "Faire une nouvelle demande",
       "terms": "Vos droits sont décrits dans les <link>Conditions</link>."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "productUpdates": "Actualités et nouveautés du produit",
+      "productUpdatesSub": "Quelques e-mails par an sur les nouvelles fonctionnalités et les lancements. Les reçus et les e-mails liés au compte arrivent toujours.",
+      "loadError": "Impossible de charger vos préférences e-mail. Rechargez la page pour réessayer.",
+      "saveError": "Impossible d’enregistrer ce changement. Veuillez réessayer."
+    },
+    "unsubscribe": {
+      "eyebrow": "E-mails",
+      "title": "Se désabonner des e-mails produit",
+      "reading": "Lecture du lien…",
+      "body": "Ne plus recevoir les e-mails produit de Toone (actualités et nouveautés) ? Les e-mails liés au compte, comme les reçus et les messages de sécurité, continueront d’arriver.",
+      "button": "Se désabonner",
+      "sending": "Désabonnement…",
+      "error": "Impossible de vous désabonner avec ce lien. Réessayez, ou écrivez à {email} et nous le ferons pour vous.",
+      "doneTitle": "Vous êtes désabonné",
+      "done": "Vous ne recevrez plus d’e-mails produit.",
+      "turnBackOn": "Vous avez changé d’avis ? Réactivez-les dans <link>votre compte</link>.",
+      "missingTitle": "Ce lien est incomplet",
+      "missingBody": "Ouvrez le lien de l’e-mail tel qu’il a été envoyé, ou écrivez à {email} et nous vous désabonnerons.",
+      "openAccount": "Ouvrir votre compte"
     }
   },
   "nav": {

@@ -5,7 +5,8 @@
       "redeemTitle": "Canjear un código",
       "contractTitle": "Desistir o cancelar un contrato",
       "contractDescription": "Desiste o cancela un contrato de Toone Pro comprado en trytoone.com, sin iniciar sesión.",
-      "contractConfirmTitle": "Confirma tu solicitud"
+      "contractConfirmTitle": "Confirma tu solicitud",
+      "unsubscribeTitle": "Darse de baja de los emails de producto"
     },
     "common": {
       "checking": "Comprobando tu cuenta…",
@@ -272,6 +273,28 @@
       "expiredBody": "Los enlaces de confirmación duran 24 horas. Haz una nueva solicitud para recibir uno nuevo.",
       "startAgain": "Hacer una nueva solicitud",
       "terms": "Consulta los <link>Términos</link> para conocer tus derechos."
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "productUpdates": "Novedades y actualizaciones del producto",
+      "productUpdatesSub": "Unos pocos emails al año sobre nuevas funciones y lanzamientos. Los recibos y los emails de la cuenta siempre llegan.",
+      "loadError": "No se pudieron cargar tus preferencias de email. Recarga la página para intentarlo de nuevo.",
+      "saveError": "No se pudo guardar ese cambio. Inténtalo de nuevo."
+    },
+    "unsubscribe": {
+      "eyebrow": "Emails",
+      "title": "Darse de baja de los emails de producto",
+      "reading": "Leyendo el enlace…",
+      "body": "¿Dejar de recibir los emails de producto de Toone (novedades y actualizaciones)? Los emails de la cuenta, como recibos y mensajes de seguridad, seguirán llegando.",
+      "button": "Darme de baja",
+      "sending": "Dándote de baja…",
+      "error": "No pudimos darte de baja con este enlace. Inténtalo de nuevo o escribe a {email} y lo haremos por ti.",
+      "doneTitle": "Te has dado de baja",
+      "done": "Ya no recibirás emails de producto.",
+      "turnBackOn": "¿Has cambiado de idea? Vuelve a activarlos en <link>tu cuenta</link>.",
+      "missingTitle": "Este enlace está incompleto",
+      "missingBody": "Abre el enlace del email tal como se envió, o escribe a {email} y te daremos de baja.",
+      "openAccount": "Abrir tu cuenta"
     }
   },
   "nav": {
