@@ -340,7 +340,11 @@
       "statement": {
         "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
         "lead": "Um espaço para os seus agentes, fluxos de trabalho e resultados.",
-        "cta": "Explorar o Toone"
+        "cta": "Explorar o Toone",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "O espaço de trabalho de IA para os seus fluxos agênticos",
     "lead": "Crie fluxos de IA complexos e fiáveis descrevendo-os. Acompanhe cada execução passo a passo num grafo em tempo real. Pause, edite e retome onde parou.",
-    "cta": "Explorar o Toone"
+    "cta": "Explorar o Toone",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Entre no Toone",

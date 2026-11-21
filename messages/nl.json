@@ -340,7 +340,11 @@
       "statement": {
         "title": "De AI-werkruimte voor jouw agentische workflows",
         "lead": "Eén werkplek voor je agents, je workflows en je resultaten.",
-        "cta": "Ontdek Toone"
+        "cta": "Ontdek Toone",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "De AI-werkruimte voor jouw agentische workflows",
     "lead": "Bouw complexe, betrouwbare AI-workflows door ze te beschrijven. Volg elke run stap voor stap in een live diagram. Pauzeer, bewerk en ga verder waar hij stopte.",
-    "cta": "Ontdek Toone"
+    "cta": "Ontdek Toone",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Inloggen bij Toone",

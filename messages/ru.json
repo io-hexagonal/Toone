@@ -340,7 +340,11 @@
       "statement": {
         "title": "ИИ-рабочее пространство для ваших агентных процессов",
         "lead": "Единое пространство для ваших агентов, рабочих процессов и результатов.",
-        "cta": "Познакомиться с Toone"
+        "cta": "Познакомиться с Toone",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "ИИ-рабочее пространство для ваших агентных процессов",
     "lead": "Создавайте сложные и надёжные ИИ-процессы, описав их словами. Следите за каждым запуском шаг за шагом на живом графе. Ставьте на паузу, редактируйте и продолжайте с того места, где он остановился.",
-    "cta": "Познакомиться с Toone"
+    "cta": "Познакомиться с Toone",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Вход в Toone",
