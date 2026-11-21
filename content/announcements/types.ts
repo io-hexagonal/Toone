@@ -33,6 +33,8 @@ export type AnnouncementImage = {
    * into the free right-hand side.
    */
   framing?: { scale: number; anchor: "left" | "center" | "right" };
+  /** CSS object-position on phones, where the card is tall and crops the sides (default "center 30%"). */
+  narrowFocus?: string;
 };
 
 /** Additional editorial panels after a campaign's primary invitation panel. */
@@ -40,10 +42,25 @@ export type AnnouncementShowcasePanel = {
   id: string;
   eyebrow?: string;
   title: string;
-  body: string;
+  /** Omit when the artwork already says it (poster panels). */
+  body?: string;
   image: AnnouncementImage;
+  /** A commemorative line between laurels, above the title. */
+  ribbon?: { kicker: string; title: string };
   items?: { title: string; description: string }[];
-  cta: { label: string; /** Locale-relative destination. */ href: string };
+  /** Small line under the button, e.g. dates. */
+  note?: string;
+  cta: {
+    label: string;
+    /** Locale-relative destination, or a full https:// URL that opens in a new tab. */
+    href: string;
+  };
+  /**
+   * "poster": the artwork carries the message (a partner banner with its own
+   * text). It is shown unshaded, the title is kept for screen readers only,
+   * and the button sits at the bottom.
+   */
+  layout?: "poster";
 };
 
 type AnnouncementBase = {
@@ -81,8 +98,19 @@ export type AccessCodeAnnouncement = AnnouncementBase & {
   otherPlatforms: Copy & { ctaLabel: string; dismissLabel?: string };
 };
 
+/**
+ * A news carousel with no code: the first panel is an editorial panel like
+ * the ones that follow it, shown the same way on every platform.
+ */
+export type ShowcaseAnnouncement = AnnouncementBase & {
+  kind: "showcase";
+  intro: Omit<AnnouncementShowcasePanel, "id" | "image">;
+};
+
 /** Add new card kinds here as a union member, with a component in components/announcements. */
-export type Announcement = AccessCodeAnnouncement;
+export type Announcement = AccessCodeAnnouncement | ShowcaseAnnouncement;
+
+type WithoutDates<T> = T extends unknown ? Omit<T, "startsAt" | "endsAt"> : never;
 
 /** Allows a development preview before an invitation's dates are confirmed. */
-export type AnnouncementContent = Omit<AccessCodeAnnouncement, "startsAt" | "endsAt">;
+export type AnnouncementContent = WithoutDates<Announcement>;

@@ -5,10 +5,11 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { announcements, type AnnouncementContent } from "@/content/announcements";
 import { explorePrereleaseContent } from "@/content/announcements/explore-prerelease";
+import { launchWeekContent } from "@/content/announcements/launch-week-2026-11";
 import { activeAnnouncement, isMacDesktop, rememberDismissal, track, wasDismissed } from "@/lib/announcements";
 import { PRIVACY_CHOICE_SAVED_EVENT, savedPrivacyChoice } from "@/lib/privacy-choices";
 import AccessCodeCard from "./AccessCodeCard";
-import ShowcaseCard from "./ShowcaseCard";
+import ShowcaseCard, { ShowcaseIntroCard } from "./ShowcaseCard";
 
 export type Platform = "mac" | "other";
 export type CloseReason = "dismiss" | "cta" | "notify" | "close";
@@ -22,6 +23,7 @@ export type CardProps<A extends AnnouncementContent = AnnouncementContent> = {
 
 const cards: { [K in AnnouncementContent["kind"]]: ComponentType<CardProps<Extract<AnnouncementContent, { kind: K }>>> } = {
   "access-code": AccessCodeCard,
+  showcase: ShowcaseIntroCard,
 };
 
 type ShownAnnouncement = Omit<CardProps, "close"> & { preview: boolean };
@@ -51,8 +53,10 @@ export default function AnnouncementModal() {
     const params = new URLSearchParams(window.location.search);
     const variant = params.get("preview-announcement");
     const preview = variant === "mac" || variant === "other";
-    const draft = process.env.NODE_ENV === "development" && preview && params.get("preview-campaign") === "explore-prerelease"
-      ? explorePrereleaseContent : null;
+    const campaign = process.env.NODE_ENV === "development" && preview ? params.get("preview-campaign") : null;
+    const draft = campaign === "explore-prerelease" ? explorePrereleaseContent
+      : campaign === "launch-week" ? launchWeekContent.before
+      : campaign === "launch-week-live" ? launchWeekContent.live : null;
     const active = draft ?? activeAnnouncement(announcements, Date.now(), pathname);
     if (!active || (wasDismissed(active) && !preview)) return;
     const platform: Platform = preview ? variant : isMacDesktop() ? "mac" : "other";
@@ -96,10 +100,12 @@ export function AnnouncementDialog({ announcement, platform, close, endsAt }: Ca
   const panel = index > 0 ? panels[index - 1] : undefined;
   const artwork = panel?.image ?? announcement.image;
   const framing = artwork.framing;
-  const introduction = platform === "mac" ? announcement.mac : announcement.otherPlatforms;
+  const introduction = announcement.kind === "showcase" ? announcement.intro
+    : platform === "mac" ? announcement.mac : announcement.otherPlatforms;
   const labels = [introduction.title, ...panels.map(item => item.title)];
+  const layout = panel ? panel.layout : announcement.kind === "showcase" ? announcement.intro.layout : undefined;
   const rotating = multiple && playing && !hovered && visible && !reducedMotion;
-  const Card = cards[announcement.kind];
+  const Card = cards[announcement.kind] as ComponentType<CardProps>;
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -218,10 +224,11 @@ export function AnnouncementDialog({ announcement, platform, close, endsAt }: Ca
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className="an-overlay" onMouseDown={event => { if (event.target === event.currentTarget) close("close"); }}>
-        <div ref={dialog} className="an-card" role="dialog" aria-modal="true" aria-labelledby="an-title" data-carousel={multiple} data-dragging={dragging}
+        <div ref={dialog} className="an-card" role="dialog" aria-modal="true" aria-labelledby="an-title" data-carousel={multiple} data-dragging={dragging} data-layout={layout}
           style={{ "--an-drag-offset": `${dragOffset}px` } as React.CSSProperties}>
           <img key={artwork.src} className="an-image" src={artwork.src} alt={artwork.alt ?? ""} data-anchor={framing?.anchor ?? "center"}
-            draggable={false} style={{ "--an-scale": framing?.scale ?? 1 } as React.CSSProperties} />
+            data-focus={artwork.narrowFocus ? "" : undefined} draggable={false}
+            style={{ "--an-scale": framing?.scale ?? 1, "--an-focus": artwork.narrowFocus } as React.CSSProperties} />
           <div className="an-shade" aria-hidden="true" />
           <div className="an-window-controls">
             {multiple && !reducedMotion && <button type="button" className="an-icon-button an-playback" data-carousel-playback onClick={() => setPlaying(value => !value)}
@@ -239,7 +246,7 @@ export function AnnouncementDialog({ announcement, platform, close, endsAt }: Ca
               onClickCapture={event => {
                 if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; }
               }}>
-              <div key={panel?.id ?? "invitation"} className={`an-body${panel ? " an-body-showcase" : ""}`} role={multiple ? "group" : undefined}
+              <div key={panel?.id ?? "invitation"} className={`an-body${panel || announcement.kind === "showcase" ? " an-body-showcase" : ""}`} role={multiple ? "group" : undefined}
                 aria-roledescription={multiple ? t("panelRole") : undefined} aria-label={multiple ? t("panelPosition", { current: index + 1, total: count }) : undefined}>
                 <div className="an-brand" aria-hidden="true"><img src="/assets/brand/toone-mark.svg" alt="" /><span>toone</span></div>
                 {panel ? <ShowcaseCard panel={panel} close={close} /> : <Card announcement={announcement} platform={platform} close={close} endsAt={endsAt} />}
@@ -397,6 +404,27 @@ const styles = `
     color: rgba(255,255,255,0.55); font-size: 13.5px; font-family: inherit;
   }
   .an-secondary:hover { color: rgba(255,255,255,0.9); }
+  .an-ribbon { display: flex; align-items: center; gap: 12px; align-self: flex-start; margin: 0 0 4px; }
+  .an-ribbon img { width: 24px; height: 50px; display: block; }
+  .an-ribbon-kicker { margin: 0 0 4px; color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; }
+  .an-ribbon-title { margin: 0; color: #f0ede6; font-family: var(--font-wordmark), system-ui, sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; white-space: nowrap; }
+  /* Poster panels: the artwork carries the message, so it stays unshaded. */
+  .an-card[data-layout="poster"] .an-shade { background: linear-gradient(0deg, rgba(20,20,19,0.55) 0%, rgba(20,20,19,0) 30%); }
+  .an-card[data-layout="poster"] .an-brand { visibility: hidden; }
+  .an-card[data-layout="poster"] .an-body { margin-top: auto; margin-bottom: 0; padding-bottom: 4px; gap: 10px; }
+  .an-card[data-layout="poster"] .an-deadline { color: rgba(255,255,255,0.78); }
+  /* On wide screens the banner already says it; the copy stays for screen readers. */
+  .an-poster-copy { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  @media (max-width: 720px) {
+    .an-card[data-layout="poster"] { background: #0c0b0a; }
+    .an-card[data-layout="poster"] .an-image { height: auto; aspect-ratio: 16 / 9; top: 0; bottom: auto; object-position: center; }
+    .an-card[data-layout="poster"] .an-shade { background: none; }
+    .an-card[data-layout="poster"] .an-body { gap: 12px; }
+    .an-poster-copy { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+    .an-poster-note { display: none; }
+    .an-image[data-focus] { object-position: var(--an-focus) !important; }
+    .an-ribbon-title { font-size: 19px; }
+  }
   @media (max-width: 720px) {
     .an-overlay { padding: 14px; }
     .an-card { aspect-ratio: auto; height: min(720px, calc(100svh - 28px)); max-height: calc(100svh - 28px); border-radius: 18px; }

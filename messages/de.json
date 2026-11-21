@@ -340,7 +340,11 @@
       "statement": {
         "title": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
         "lead": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
-        "cta": "Toone entdecken"
+        "cta": "Toone entdecken",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
     "lead": "Erstellen Sie komplexe, zuverlässige KI-Workflows, indem Sie sie beschreiben. Verfolgen Sie jeden Lauf Schritt für Schritt in einem Live-Graphen. Pausieren, bearbeiten und dort fortsetzen, wo er angehalten hat.",
-    "cta": "Toone entdecken"
+    "cta": "Toone entdecken",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Bei Toone anmelden",

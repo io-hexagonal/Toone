@@ -16,6 +16,7 @@ export default function AccessCodeCard({ announcement, platform, close, endsAt }
   const t = useTranslations("announcement");
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
+  if (announcement.kind !== "access-code") return null;
   const { mac, otherPlatforms: other } = announcement;
 
   async function copyCode() {

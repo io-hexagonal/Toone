@@ -340,7 +340,11 @@
       "statement": {
         "title": "L’espace de travail IA pour vos workflows agentiques",
         "lead": "Un espace pour vos agents, vos processus et vos résultats.",
-        "cta": "Découvrir Toone"
+        "cta": "Découvrir Toone",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "L’espace de travail IA pour vos workflows agentiques",
     "lead": "Créez des workflows IA complexes et fiables en les décrivant. Suivez chaque exécution étape par étape sur un graphe en direct. Mettez en pause, modifiez et reprenez là où elle s’est arrêtée.",
-    "cta": "Découvrir Toone"
+    "cta": "Découvrir Toone",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Connectez-vous à Toone",

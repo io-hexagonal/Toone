@@ -340,7 +340,11 @@
       "statement": {
         "title": "The AI workspace for your agentic workflows",
         "lead": "One workspace for your agents, your workflows, and the results that matter.",
-        "cta": "Explore Toone"
+        "cta": "Explore Toone",
+        "videoLabel": "Toone builds a live market watcher",
+        "videoPlay": "Play the Toone video",
+        "videoMute": "Mute",
+        "videoUnmute": "Turn sound on"
       },
       "features": {
         "spotlight": {
@@ -890,7 +894,11 @@
   "statement": {
     "title": "The AI workspace for your agentic workflows",
     "lead": "Build complex, reliable AI workflows by describing them. Watch each run step by step on a live graph. Pause, edit, and resume where it stopped.",
-    "cta": "Explore Toone"
+    "cta": "Explore Toone",
+    "videoLabel": "Toone builds a live market watcher",
+    "videoPlay": "Play the Toone video",
+    "videoMute": "Mute",
+    "videoUnmute": "Turn sound on"
   },
   "auth": {
     "signinTitle": "Sign in to Toone",

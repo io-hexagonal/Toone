@@ -67,7 +67,7 @@ export async function TooneLandingPage({
         dangerouslySetInnerHTML={{
           __html: `
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { width: 100%; overflow-x: hidden; background: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+            html, body { width: 100%; overflow-x: hidden; overflow-x: clip; background: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
 
             /* --- tech strip (substrate credibility) --- */
             .ts-wrap {
