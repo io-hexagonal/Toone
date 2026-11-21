@@ -2,7 +2,8 @@ import type { AnnouncementShowcasePanel, ShowcaseAnnouncement } from "./types";
 
 /**
  * Week after the Product Hunt launch: the #3 thank-you, the AppSumo Black
- * Friday sale and the new Product Hunt routines in Product Launch Essentials.
+ * Friday sale and what is new in Product Launch Essentials (Day Launch added,
+ * Launch Surface Preparation updated).
  * Two windows share one id: version 2 starts when the AppSumo sale goes live,
  * so people who closed the "starts Sunday" version see the live one once.
  */
@@ -21,22 +22,22 @@ const appsumo = (live: boolean): AnnouncementShowcasePanel => ({
 });
 
 const routines: AnnouncementShowcasePanel = {
-  id: "product-hunt-launch-routines",
+  id: "product-launch-essentials-update",
   eyebrow: "New in Product Launch Essentials",
-  title: "New Product Launch routines",
-  body: "Toone's own Product Hunt launch, turned into routines you can run for yours.",
+  title: "Now with a launch day routine",
+  body: "Toone's own launch, turned into routines you can run for yours.",
   image: {
-    src: "/assets/announcements/product-hunt-launch-routines.webp",
-    alt: "Warm coral and violet nebula from the Product Launch Essentials cover",
+    src: "/assets/announcements/product-launch-essentials-2026-11.webp",
+    alt: "Soft pink and rose spheres fading into pale blue, from the Product Launch Essentials cover",
   },
   items: [
     {
       title: "Day Launch",
-      description: "On your launch day, reach the people behind the other launches while the day is live.",
+      description: "New. On your launch day, run the outreach that matters and approve every message before it goes out.",
     },
     {
-      title: "PH Prospection & Connection",
-      description: "Build a network on Product Hunt before you launch, so you arrive with people who know you.",
+      title: "Launch Surface Preparation",
+      description: "Updated. Get your accounts, profiles, checklists and unpublished drafts ready on the launch sites you choose.",
     },
   ],
   cta: { label: "Explore the bundle", href: "/explore/bundles/product-launch-essentials-trwv3k5g" },
