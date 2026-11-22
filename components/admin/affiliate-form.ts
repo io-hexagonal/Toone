@@ -40,7 +40,6 @@ export function affiliateRequestFrom(form: AffiliateFormState): { ok: true; inpu
     return { ok: false, error: `Revenue share: 0 to ${COMMISSION_MAX} percent.`, field: "affiliate-commission" };
   }
   const input: CreateAffiliateInput = { name, slug, commission_percent: form.commission };
-  if (form.email.trim()) input.creator_email = form.email.trim();
   if (form.source === "existing") {
     const code = form.existingCode.trim().toUpperCase();
     if (!/^[A-Z0-9]{3,40}$/.test(code)) return { ok: false, error: "Stripe promotion code: 3 to 40 letters and digits.", field: "affiliate-existing" };
@@ -50,17 +49,8 @@ export function affiliateRequestFrom(form: AffiliateFormState): { ok: true; inpu
   if (!Number.isInteger(form.percent) || form.percent < DISCOUNT_MIN || form.percent > DISCOUNT_MAX) {
     return { ok: false, error: `Discount: ${DISCOUNT_MIN} to ${DISCOUNT_MAX} percent.`, field: "affiliate-percent" };
   }
-  // Lifetime is one payment: a lifetime-only discount applies once.
-  const duration = form.scope === "lifetime" ? "once" : form.duration;
-  if (duration === "repeating" && (!Number.isInteger(form.months) || form.months < 1 || form.months > MONTHS_MAX)) {
-    return { ok: false, error: `Months: 1 to ${MONTHS_MAX}.`, field: "affiliate-months" };
-  }
-  input.discount = {
-    percent: form.percent,
-    duration,
-    months: duration === "repeating" ? form.months : null,
-    scope: form.scope,
-  };
+  // Checkout applies creator codes to the Lifetime plan only, which is one payment.
+  input.discount = { percent: form.percent, duration: "once", months: null, scope: "lifetime" };
   return { ok: true, input };
 }
 

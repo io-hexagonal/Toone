@@ -9,7 +9,6 @@ import {
   COMMISSION_MAX,
   DISCOUNT_MAX,
   DISCOUNT_MIN,
-  MONTHS_MAX,
   createAffiliate,
   discountText,
   formatMoney,
@@ -20,8 +19,6 @@ import {
   slugProblem,
   updateAffiliate,
   type Affiliate,
-  type AffiliateDiscountDuration,
-  type AffiliateDiscountScope,
   type CreatedAffiliate,
 } from "@/lib/affiliates";
 import { EMPTY_AFFILIATE_FORM as EMPTY_FORM, affiliateRequestFrom, type AffiliateFormState as FormState } from "./affiliate-form";
@@ -33,6 +30,12 @@ const creatorStatus: Record<string, string> = { pending: "Not joined yet", joine
 
 function formatDate(value: string | null | undefined) {
   return value ? new Date(value).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "—";
+}
+
+/** The Lifetime price after a percent off, as Stripe charges it ($199.99 list; the discount is rounded, then subtracted). */
+function lifetimePrice(percent: number): string {
+  const list = 19999;
+  return "$" + ((list - Math.round((list * percent) / 100)) / 100).toFixed(2);
 }
 
 function errorMessage(caught: unknown, fallback: string): string {
@@ -141,7 +144,10 @@ function AffiliatesWorkspace({ session, onSessionEnded }: { session: ToneSession
   async function toggle(record: Affiliate) {
     if (rowBusy) return;
     const pausing = record.status === "active";
-    if (pausing && !window.confirm(`Pause ${record.name}'s link? The link and the code ${record.promotion_code} stop giving the discount until you resume it. Sales already made stay in the report.`)) return;
+    const confirmText = record.provider_managed === false
+      ? `Pause ${record.name}'s link? The vanity link stops working, but the code ${record.promotion_code} was made in Stripe and keeps giving the discount (and counting sales) until you switch it off in Stripe. Sales already made stay in the report.`
+      : `Pause ${record.name}'s link? The link and the code ${record.promotion_code} stop giving the discount until you resume it. Sales already made stay in the report.`;
+    if (pausing && !window.confirm(confirmText)) return;
     setRowBusy(record.id); setError("");
     try {
       await updateAffiliate(session.token, record.id, { status: pausing ? "paused" : "active" });
@@ -247,54 +253,20 @@ function AffiliatesWorkspace({ session, onSessionEnded }: { session: ToneSession
               <option value="existing">Use a promotion code already in Stripe</option>
             </select>
             {form.source === "new" ? <>
-              <div className={styles.row2}>
-                <div>
-                  <label htmlFor="affiliate-percent">Percent off</label>
-                  <input id="affiliate-percent" type="number" inputMode="numeric" min={DISCOUNT_MIN} max={DISCOUNT_MAX} step={1}
-                    value={Number.isFinite(form.percent) ? form.percent : ""} onChange={(e) => update("percent", e.target.valueAsNumber)} disabled={busy} />
-                </div>
-                <div>
-                  <label htmlFor="affiliate-scope">Plans</label>
-                  <select id="affiliate-scope" value={form.scope} onChange={(e) => update("scope", e.target.value as AffiliateDiscountScope)} disabled={busy}>
-                    <option value="all">Monthly, yearly and lifetime</option>
-                    <option value="lifetime">Lifetime only</option>
-                  </select>
-                </div>
-              </div>
-              {form.scope === "all" && <div className={styles.row2}>
-                <div>
-                  <label htmlFor="affiliate-duration">On subscriptions</label>
-                  <select id="affiliate-duration" value={form.duration} onChange={(e) => update("duration", e.target.value as AffiliateDiscountDuration)} disabled={busy}>
-                    <option value="once">First payment</option>
-                    <option value="repeating">First months</option>
-                    <option value="forever">Every payment</option>
-                  </select>
-                </div>
-                {form.duration === "repeating" && <div>
-                  <label htmlFor="affiliate-months">Months</label>
-                  <input id="affiliate-months" type="number" inputMode="numeric" min={1} max={MONTHS_MAX} step={1}
-                    value={Number.isFinite(form.months) ? form.months : ""} onChange={(e) => update("months", e.target.valueAsNumber)} disabled={busy} />
-                </div>}
-              </div>}
-              <small>{discountText({ percent: form.percent || 0, duration: form.scope === "lifetime" ? "once" : form.duration, months: form.months, scope: form.scope })}. Lifetime is one payment, so it gets the percent once.</small>
+              <label htmlFor="affiliate-percent">Percent off Toone Pro Lifetime</label>
+              <input id="affiliate-percent" type="number" inputMode="numeric" min={DISCOUNT_MIN} max={DISCOUNT_MAX} step={1}
+                value={Number.isFinite(form.percent) ? form.percent : ""} onChange={(e) => update("percent", e.target.valueAsNumber)} disabled={busy} />
+              <small>{discountText({ percent: form.percent || 0, duration: "once", months: null, scope: "lifetime" })}{Number.isFinite(form.percent) && form.percent > 0 ? ` (Lifetime ${lifetimePrice(form.percent)})` : ""}. Creator codes apply to the Lifetime plan only: checkout does not take a code on monthly or yearly.</small>
             </> : <>
               <label htmlFor="affiliate-existing">Stripe promotion code</label>
               <input id="affiliate-existing" className={shell.code} value={form.existingCode} onChange={(e) => update("existingCode", e.target.value.toUpperCase())} placeholder="e.g. JANE20" maxLength={40} disabled={busy} autoComplete="off" spellCheck={false} />
-              <small>Make it in Stripe first (Product catalog → Coupons → add a customer-facing code). Pausing this affiliate will not switch it off in Stripe.</small>
+              <small>Make a new code in Stripe first (Product catalog → Coupons → add a customer-facing code, with a minimum order of the Lifetime price). It must be unused, so the launch offer can never be attached. Pausing this affiliate will not switch it off in Stripe.</small>
             </>}
 
-            <div className={styles.row2}>
-              <div>
-                <label htmlFor="affiliate-commission">Revenue share <span className={shell.muted}>(%)</span></label>
-                <input id="affiliate-commission" type="number" inputMode="numeric" min={0} max={COMMISSION_MAX} step={1}
-                  value={Number.isFinite(form.commission) ? form.commission : ""} onChange={(e) => update("commission", e.target.valueAsNumber)} disabled={busy} />
-              </div>
-              <div>
-                <label htmlFor="affiliate-email">Email the creator link to <span className={shell.muted}>(optional)</span></label>
-                <input id="affiliate-email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="Leave blank to send it yourself" maxLength={254} disabled={busy} autoComplete="off" />
-              </div>
-            </div>
-            <small>The share is what you owe the creator from sales made with their link or code. The emailed message is the standard Toone code email.</small>
+            <label htmlFor="affiliate-commission">Revenue share <span className={shell.muted}>(%, usually 20–30)</span></label>
+            <input id="affiliate-commission" type="number" inputMode="numeric" min={0} max={COMMISSION_MAX} step={1}
+              value={Number.isFinite(form.commission) ? form.commission : ""} onChange={(e) => update("commission", e.target.valueAsNumber)} disabled={busy} />
+            <small>What you owe the creator from Lifetime sales made with their link or code, as a share of what the buyer paid. Send the creator the message from the panel once the affiliate is created.</small>
             {formError && <p className={shell.formError} role="alert">{formError}</p>}
             <button className={shell.primary} type="submit" disabled={busy || !form.name.trim()}>{busy ? "Creating…" : "Create affiliate"}</button>
           </form>
@@ -309,7 +281,6 @@ function AffiliatesWorkspace({ session, onSessionEnded }: { session: ToneSession
               <div className={shell.copyRow}><input id="created-link" value={created.affiliate.link} readOnly /><button onClick={() => void copy(created.affiliate.link, "Vanity link")}>Copy</button></div>
               <label htmlFor="created-code">Checkout code</label>
               <div className={shell.copyRow}><input id="created-code" className={shell.code} value={created.affiliate.promotion_code} readOnly /><button onClick={() => void copy(created.affiliate.promotion_code, "Code")}>Copy</button></div>
-              {created.email_queued && <p className={shell.notice}>The creator code was emailed. Keep the creator link above in case it does not arrive.</p>}
               <button className={shell.primary} onClick={() => void copy(message, "Message")}>Copy message for the creator</button>
               <p className={shell.notice}>The creator link is shown only now and works once. If it gets lost, use “New creator link” in the list.</p>
               <p className={shell.feedback} role="status">{copyFeedback}</p>

@@ -19,7 +19,7 @@ export default function SetupPrompt({ label, text, showLabel }: { label: string;
     <div className={css.prompt}>
       <div className={css.promptHead}>
         <span className={css.promptLabel}>{showLabel ? label : "Prompt"}</span>
-        <button type="button" className={css.copy} onClick={() => void copy()} data-umami-event="creator-idea-copy-prompt" data-umami-event-item={label}>
+        <button type="button" className={css.copy} aria-live="polite" onClick={() => void copy()} data-umami-event="creator-idea-copy-prompt" data-umami-event-item={label}>
           {state === "copied" ? "Copied" : state === "failed" ? "Select and copy" : "Copy prompt"}
         </button>
       </div>

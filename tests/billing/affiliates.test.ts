@@ -110,19 +110,18 @@ test("a tampered or malformed remembered value is ignored", () => {
 });
 
 test("the admin form builds the create request and names the first problem", () => {
-  const ok = affiliateRequestFrom({ ...EMPTY_AFFILIATE_FORM, name: " Jane ", slug: "jane", email: " jane@example.com " });
+  const ok = affiliateRequestFrom({ ...EMPTY_AFFILIATE_FORM, name: " Jane ", slug: "jane" });
   assert.deepEqual(ok, {
     ok: true,
     input: {
       name: "Jane",
       slug: "jane",
       commission_percent: 25,
-      creator_email: "jane@example.com",
       discount: { percent: 75, duration: "once", months: null, scope: "lifetime" },
     },
   });
-  const lifetime = affiliateRequestFrom({ ...EMPTY_AFFILIATE_FORM, name: "Jane", slug: "jane", scope: "lifetime", duration: "repeating", months: 0 });
-  assert.equal(lifetime.ok && lifetime.input.discount?.duration, "once");
+  const lifetime = affiliateRequestFrom({ ...EMPTY_AFFILIATE_FORM, name: "Jane", slug: "jane", scope: "all", duration: "repeating", months: 0 });
+  assert.deepEqual(lifetime.ok && lifetime.input.discount, { percent: 75, duration: "once", months: null, scope: "lifetime" });
   const existing = affiliateRequestFrom({ ...EMPTY_AFFILIATE_FORM, name: "Jane", slug: "jane", source: "existing", existingCode: "spring26" });
   assert.equal(existing.ok && existing.input.existing_promotion_code, "SPRING26");
   assert.equal(existing.ok && existing.input.discount, undefined);
@@ -131,7 +130,6 @@ test("the admin form builds the create request and names the first problem", () 
     [{ slug: "admin" }, "affiliate-slug"],
     [{ commission: 60 }, "affiliate-commission"],
     [{ percent: 95 }, "affiliate-percent"],
-    [{ scope: "all", duration: "repeating", months: 40 }, "affiliate-months"],
     [{ source: "existing", existingCode: "x" }, "affiliate-existing"],
   ];
   for (const [change, field] of problems) {

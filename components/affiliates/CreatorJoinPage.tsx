@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import RedeemPage from "@/components/account/RedeemPage";
 import { Link } from "@/lib/navigation";
+import { codeFromFragment, locationWithoutCode } from "@/components/account/redeem-code";
+import { rememberPendingCode } from "@/lib/billing/pending-code";
 import CreatorIdeas from "./CreatorIdeas";
 import styles from "@/components/account/account.module.css";
 import css from "./creators.module.css";
@@ -22,6 +24,15 @@ const BENEFITS: { title: string; text: string; featured?: boolean }[] = [
  */
 export default function CreatorJoinPage() {
   const [started, setStarted] = useState(false);
+  // Take the single-use creator code out of the address bar at once (history, screenshots,
+  // analytics page views); it stays in this tab's session storage, where RedeemPage reads it.
+  useEffect(() => {
+    const code = codeFromFragment(window.location.hash);
+    if (code) rememberPendingCode(code);
+    if (window.location.hash || new URLSearchParams(window.location.search).has("code")) {
+      window.history.replaceState(null, "", locationWithoutCode(window.location.pathname, window.location.search));
+    }
+  }, []);
   if (started) return <RedeemPage doneLink={{ href: "/creators", label: "Open your creator dashboard" }} />;
   return (
     <main className={styles.page}>

@@ -266,7 +266,7 @@ export default function PricingPlans({
 
       {affiliate && plans.length > 0 ? (
         <div className="pricing-soon" role="status">
-          <h2>{t("affiliateTitle", { name: affiliate.name })}</h2>
+          <h2>{affiliate.name ? t("affiliateTitle", { name: affiliate.name }) : t("promoTitle")}</h2>
           <p>
             {affiliate.discount
               ? t(affiliate.discount.scope === "lifetime" ? "affiliateNoteLifetime" : "affiliateNoteAll", {

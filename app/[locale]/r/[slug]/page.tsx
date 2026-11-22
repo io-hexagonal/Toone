@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+function safeSlug(raw: string): string {
+  try {
+    return decodeURIComponent(raw).toLowerCase();
+  } catch {
+    return raw.toLowerCase();
+  }
+}
+
 /** A creator's vanity link (trytoone.com/r/{slug}); never indexed. */
 export default async function AffiliateLink({ params }: Props) {
   const { locale, slug } = await params;
@@ -17,7 +25,7 @@ export default async function AffiliateLink({ params }: Props) {
   const messages = (await getMessages()) as Record<string, unknown>;
   return (
     <NextIntlClientProvider messages={{ affiliate: messages.affiliate } as never}>
-      <AffiliateLanding slug={decodeURIComponent(slug).toLowerCase()} />
+      <AffiliateLanding slug={safeSlug(slug)} />
     </NextIntlClientProvider>
   );
 }

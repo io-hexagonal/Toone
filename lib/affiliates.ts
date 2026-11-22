@@ -111,6 +111,9 @@ export function slugProblem(slug: string): string | null {
   if (!/^[a-z0-9-]+$/.test(slug)) return "Use lowercase letters, digits and hyphens only.";
   if (slug.startsWith("-") || slug.endsWith("-") || slug.includes("--")) return "Start and end with a letter or digit, no double hyphens.";
   if (RESERVED_SLUGS.has(slug)) return "This word is reserved for Toone pages.";
+  const code = slug.replace(/-/g, "");
+  if (code.length < SLUG_MIN) return "The checkout code (the link without hyphens) needs at least 3 characters.";
+  if (RESERVED_SLUGS.has(code)) return "Without hyphens this spells a word reserved for Toone pages.";
   return null;
 }
 
@@ -223,6 +226,14 @@ export function rememberAffiliate(affiliate: PublicAffiliate, now: Date = new Da
   }
 }
 
+/** A remembered discount only when it is one the server could have made (whole 5-90%). */
+function validDiscount(discount: unknown): AffiliateDiscount | null {
+  const d = discount as Partial<AffiliateDiscount> | null | undefined;
+  if (!d || !Number.isInteger(d.percent) || (d.percent as number) < DISCOUNT_MIN || (d.percent as number) > DISCOUNT_MAX) return null;
+  if (d.scope !== "all" && d.scope !== "lifetime") return null;
+  return { percent: d.percent as number, duration: d.duration === "forever" || d.duration === "repeating" ? d.duration : "once", months: typeof d.months === "number" ? d.months : null, scope: d.scope };
+}
+
 function parseRemembered(raw: string | null, now: Date): RememberedAffiliate | null {
   if (!raw) return null;
   try {
@@ -233,7 +244,7 @@ function parseRemembered(raw: string | null, now: Date): RememberedAffiliate | n
       slug: typeof value.slug === "string" ? value.slug : "",
       name: typeof value.name === "string" ? value.name : "",
       code: value.code,
-      discount: value.discount && typeof value.discount.percent === "number" ? value.discount : null,
+      discount: validDiscount(value.discount),
       savedAt: value.savedAt,
     };
   } catch {
