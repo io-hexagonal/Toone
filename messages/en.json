@@ -792,6 +792,13 @@
       "promoApplied": "{code} applied",
       "promoBadge": "Product Hunt week",
       "promoDaysLeft": "{count, plural, one {# day left} other {# days left}}",
+      "affiliateTitle": "{name}'s offer",
+      "affiliateNoteAll": "{percent}% off Toone Pro through {name}'s link. Code {code} is applied automatically at checkout.",
+      "affiliateNoteLifetime": "{percent}% off the Lifetime plan through {name}'s link. Code {code} is applied automatically at checkout.",
+      "affiliateNoteCode": "Code {code} from {name}'s link is applied automatically at checkout.",
+      "affiliateBadge": "{percent}% off",
+      "affiliateFirstPayment": "First payment",
+      "affiliateFirstMonths": "{count, plural, one {First month} other {First # months}}",
       "accountLine": "Toone Pro will be added to {email}.",
       "notYou": "Not you?",
       "signOut": "Sign out",
@@ -1282,5 +1289,19 @@
     "routinesInside": "The routines inside",
     "routineName": "Routine name",
     "bundleName": "Bundle name"
+  },
+  "affiliate": {
+    "checking": "Opening {slug}'s link…",
+    "title": "{name} invited you to Toone",
+    "sub": "Toone turns repeatable work into routines that run on your Mac.",
+    "offerAll": "{percent}% off Toone Pro, applied automatically at checkout.",
+    "offerLifetime": "{percent}% off Toone Pro Lifetime, applied automatically at checkout.",
+    "offerCode": "Code {code} is applied automatically at checkout.",
+    "code": "Code: {code}",
+    "seePlans": "See plans",
+    "download": "Download Toone",
+    "missingTitle": "This link is not active",
+    "missingSub": "It may have ended. You can still try Toone.",
+    "error": "We could not open this link. Try again in a moment."
   }
 }

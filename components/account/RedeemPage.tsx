@@ -29,7 +29,10 @@ import styles from "./account.module.css";
  * code (`APPSUMO-…`) or a Product Hunt context (the code's label, or
  * `?ref=producthunt`) gets its own welcome.
  */
-export default function RedeemPage() {
+export default function RedeemPage({ doneLink }: {
+  /** An extra link under the signed-in panel (the creator dashboard after /creators/join). */
+  doneLink?: { href: string; label: string };
+} = {}) {
   const t = useTranslations("account");
   const { session, ready, setSession, endSession } = useStoredSession();
   const [linkedCode, setLinkedCode] = useState<string | null>(null);
@@ -136,6 +139,7 @@ export default function RedeemPage() {
           )}
         </section>
         <nav className={styles.footerLinks} aria-label={t("page.moreLinks")}>
+          {doneLink && <Link href={doneLink.href}>{doneLink.label}</Link>}
           <Link href="/account">{t("redeem.viewAccount")}</Link>
           <Link href="/terms#codes">{t("common.terms")}</Link>
         </nav>
