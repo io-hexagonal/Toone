@@ -24,6 +24,7 @@ import {
 } from "@/lib/api";
 import { appleSignInConfig } from "@/lib/appleSignIn";
 import { rememberedCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { rememberedAffiliate } from "@/lib/affiliates";
 import { normalizeBenefit, type CodeBenefit } from "@/lib/billing/api";
 import { benefitCopy, codeCampaign } from "@/components/account/redeem-code";
 
@@ -222,7 +223,12 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       track(event);
       if (mode === "invite") setStep("handle");
       if (mode === "signup") {
-        if (rememberedCheckoutPromotion()) {
+        const affiliate = rememberedAffiliate();
+        if (affiliate) {
+          // Arrived through a creator's link: the plans, with the creator's discount applied at checkout.
+          await syncSiteSession(s);
+          router.replace(affiliate.discount?.scope === "lifetime" ? "/pricing?plan=lifetime" : "/pricing");
+        } else if (rememberedCheckoutPromotion()) {
           // Arrived with the launch offer: the lifetime plan, with the discount applied at checkout.
           await syncSiteSession(s);
           router.replace("/pricing?plan=lifetime");

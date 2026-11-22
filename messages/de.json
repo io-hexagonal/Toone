@@ -792,6 +792,13 @@
       "promoApplied": "{code} angewendet",
       "promoBadge": "Product-Hunt-Woche",
       "promoDaysLeft": "{count, plural, one {Noch # Tag} other {Noch # Tage}}",
+      "affiliateTitle": "Angebot von {name}",
+      "affiliateNoteAll": "{percent} % Rabatt auf Toone Pro über den Link von {name}. Der Code {code} wird beim Bezahlen automatisch angewendet.",
+      "affiliateNoteLifetime": "{percent} % Rabatt auf den Lifetime-Plan über den Link von {name}. Der Code {code} wird beim Bezahlen automatisch angewendet.",
+      "affiliateNoteCode": "Der Code {code} aus dem Link von {name} wird beim Bezahlen automatisch angewendet.",
+      "affiliateBadge": "{percent} % Rabatt",
+      "affiliateFirstPayment": "Erste Zahlung",
+      "affiliateFirstMonths": "{count, plural, one {Erster Monat} other {Erste # Monate}}",
       "accountLine": "Toone Pro wird zu {email} hinzugefügt.",
       "notYou": "Nicht Sie?",
       "signOut": "Abmelden",
@@ -1282,5 +1289,19 @@
     "routinesInside": "The routines inside",
     "routineName": "Routine name",
     "bundleName": "Bundle name"
+  },
+  "affiliate": {
+    "checking": "Link von {slug} wird geöffnet…",
+    "title": "{name} lädt dich zu Toone ein",
+    "sub": "Toone macht aus wiederkehrender Arbeit Routinen, die auf deinem Mac laufen.",
+    "offerAll": "{percent} % Rabatt auf Toone Pro, beim Bezahlen automatisch angewendet.",
+    "offerLifetime": "{percent} % Rabatt auf Toone Pro Lifetime, beim Bezahlen automatisch angewendet.",
+    "offerCode": "Der Code {code} wird beim Bezahlen automatisch angewendet.",
+    "code": "Code: {code}",
+    "seePlans": "Pläne ansehen",
+    "download": "Toone herunterladen",
+    "missingTitle": "Dieser Link ist nicht aktiv",
+    "missingSub": "Er ist vielleicht abgelaufen. Du kannst Toone trotzdem ausprobieren.",
+    "error": "Dieser Link konnte nicht geöffnet werden. Versuche es gleich noch einmal."
   }
 }

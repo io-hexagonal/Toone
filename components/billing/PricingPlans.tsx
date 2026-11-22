@@ -1,6 +1,7 @@
 "use client";
 
 import { activeCheckoutPromotion, checkoutPromotionEnds, discountedLifetimePrice, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
+import { affiliateAppliesTo, percentOffPrice, rememberedAffiliate, type RememberedAffiliate } from "@/lib/affiliates";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
@@ -88,9 +89,17 @@ export default function PricingPlans({
   // effect (React's development double-invoke) must not read it again.
   /** The checkout discount code in effect: the running site-wide offer, a Product Hunt link, or one typed into the code box. */
   const [promo, setPromo] = useState<string | null>(null);
-  /** The lifetime price with the launch code applied; null for other plans or without a code. */
+  /** The creator link this browser came through (/r/{slug}); its discount wins over the launch code. */
+  const [affiliate, setAffiliate] = useState<RememberedAffiliate | null>(null);
+  /** Whether a plan's shown discount is the creator's. */
+  const affiliateOffer = (plan: string) => Boolean(affiliate?.discount) && affiliateAppliesTo(affiliate, plan);
+  /** The price with the creator's or the launch code applied; null without a discount for this plan. */
   const offerPrice = (price: { plan: string; amount: number; display_price: string }) =>
-    promo && price.plan === "pro_lifetime" ? discountedLifetimePrice(promo, price.amount, price.display_price) : null;
+    affiliate?.discount && affiliateOffer(price.plan)
+      ? percentOffPrice(affiliate.discount.percent, price.amount, price.display_price)
+      : !affiliate && promo && price.plan === "pro_lifetime"
+        ? discountedLifetimePrice(promo, price.amount, price.display_price)
+        : null;
   /** "6 days left": whole days until the running offer ends, counting the last partial day as one. */
   const promoEnds = promo ? checkoutPromotionEnds(promo) : null;
   const promoDaysLeft = promoEnds ? Math.max(1, Math.ceil((promoEnds.getTime() - Date.now()) / 86_400_000)) : null;
@@ -100,6 +109,7 @@ export default function PricingPlans({
     if (/[?&]ref=product[\s_-]?hunt\b/i.test(window.location.search)) rememberCheckoutPromotion("PRODUCTHUNT");
     // Applied for every visitor while the offer runs, not only those who came through a launch link.
     setPromo(activeCheckoutPromotion());
+    setAffiliate(rememberedAffiliate());
     const params = (initialParams.current ??= readPricingParams(window.location.search));
     setSelected(params.plan);
     setCancelled(params.cancelled);
@@ -254,7 +264,20 @@ export default function PricingPlans({
         </div>
       )}
 
-      {promo && plans.length > 0 && (
+      {affiliate && plans.length > 0 ? (
+        <div className="pricing-soon" role="status">
+          <h2>{affiliate.name ? t("affiliateTitle", { name: affiliate.name }) : t("promoTitle")}</h2>
+          <p>
+            {affiliate.discount
+              ? t(affiliate.discount.scope === "lifetime" ? "affiliateNoteLifetime" : "affiliateNoteAll", {
+                  percent: affiliate.discount.percent,
+                  name: affiliate.name,
+                  code: affiliate.code,
+                })
+              : t("affiliateNoteCode", { name: affiliate.name, code: affiliate.code })}
+          </p>
+        </div>
+      ) : promo && plans.length > 0 && (
         <div className="pricing-soon" role="status">
           <h2>{t("promoTitle")}</h2>
           <p>{t("promoNote", { code: promo })}</p>
@@ -277,7 +300,9 @@ export default function PricingPlans({
               id={`plan-${planParam(price.plan)}`}
               className={`pricing-card${selected === price.plan ? " selected" : ""}`}
             >
-              {offerPrice(price) ? (
+              {offerPrice(price) && affiliateOffer(price.plan) && affiliate?.discount ? (
+                <span className="pricing-badge pricing-badge--offer">{t("affiliateBadge", { percent: affiliate.discount.percent })}</span>
+              ) : offerPrice(price) ? (
                 <span className="pricing-badge pricing-badge--offer">
                   <svg viewBox="0 0 40 40" width="13" height="13" aria-hidden="true" focusable="false">
                     <circle cx="20" cy="20" r="20" fill="#FF6154" />
@@ -299,7 +324,15 @@ export default function PricingPlans({
                 {/* Lifetime's description already opens with "Pay once", so its price carries no unit. */}
                 {price.plan !== "pro_lifetime" && <span className="pricing-per">{t(PER_KEY[price.plan])}</span>}
               </p>
-              {offerPrice(price) && promoUntil && (
+              {offerPrice(price) && affiliateOffer(price.plan) && affiliate?.discount && price.plan !== "pro_lifetime" &&
+                affiliate.discount.duration !== "forever" && (
+                <p className="pricing-was">
+                  {affiliate.discount.duration === "repeating"
+                    ? t("affiliateFirstMonths", { count: affiliate.discount.months ?? 1 })
+                    : t("affiliateFirstPayment")}
+                </p>
+              )}
+              {offerPrice(price) && !affiliateOffer(price.plan) && promoUntil && (
                 <p className="pricing-was">
                   {promoUntil}
                 </p>

@@ -1,0 +1,93 @@
+/* Creator pages: the join offer and the ideas grid. Colours follow account.module.css. */
+.wide { max-width: 1080px; margin: 0 auto; }
+.narrow { max-width: 760px; margin: 0 auto; text-align: center; }
+
+/* The offer: a flat card whose background is the editorial image bed, under one even
+   dimming layer so the text stays readable. No gradients. */
+.offer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 8px auto 0;
+  max-width: 760px;
+  border: 1px solid #ffffff1f;
+  border-radius: 16px;
+  padding: 26px;
+  background: #1b1b19 var(--offer-bed) 0% 100% / cover no-repeat;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+  text-align: left;
+}
+.offer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(20, 20, 19, 0.4);
+}
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 5px 12px; border-radius: 8px;
+  border: 1px solid #e3b26b66; color: #ecc78f;
+  font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+}
+.offerHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.offerHead h2 { margin: 0 !important; font-size: 20px !important; }
+.benefits { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.benefit {
+  display: flex; gap: 14px; align-items: baseline;
+  padding: 16px; border-radius: 12px;
+  border: 1px solid #ffffff1a; background: rgba(27, 27, 25, 0.8);
+}
+.featured { border-color: #e3b26b80; }
+.benefit .num {
+  flex: none; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px; letter-spacing: .06em; color: #96938b;
+}
+.benefit.featured .num { color: #e3b26b; }
+.benefitText strong { display: block; color: #f0ede6; font-size: 15px; font-weight: 600; margin-bottom: 3px; letter-spacing: -.01em; }
+.benefitText span { display: block; color: #aaa8a1; font-size: 13.5px; line-height: 1.5; }
+.offer .cta {
+  display: flex; width: 100%; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 20px; padding: 16px 20px; border-radius: 12px; border: 0;
+  background: #f0ede6; color: #141413; font: inherit; font-size: 16px; font-weight: 650; cursor: pointer;
+}
+.offer .cta:hover { background: #ded9cd; }
+.offer .cta:focus-visible { outline: 2px solid #e3b26b; outline-offset: 3px; }
+.footnote { margin: 14px 0 0; text-align: center; color: #c9c6bf; font-size: 13px; line-height: 1.55; }
+
+/* Ideas grid. */
+.ideas { margin-top: 56px; }
+.ideasHead { text-align: center; margin-bottom: 22px; }
+.ideasHead h2 { font-size: 24px !important; margin-bottom: 6px !important; }
+.ideasHead p { margin: 0; color: #aaa8a1; font-size: 14.5px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card {
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid #ffffff1c; border-radius: 16px; background: #1b1b19;
+  color: inherit; text-decoration: none; text-align: left;
+  transition: border-color .15s ease;
+}
+.card:hover { border-color: #ffffff3a; }
+.card:focus-visible { outline: 2px solid #d9d3c5; outline-offset: 3px; }
+.card img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; mix-blend-mode: lighten; }
+.cardBody { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.cardLabel { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #b5b0a4; }
+.cardBody h3 { margin: 0; font-size: 17px; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; color: #f0ede6; }
+.cardBody p { margin: 0; color: #aaa8a1; font-size: 13.5px; line-height: 1.55; }
+.more { margin-top: auto; padding-top: 6px; font-size: 13px; font-weight: 600; color: #f0ede6; }
+
+@media (max-width: 640px) {
+  .benefits { grid-template-columns: 1fr; }
+  .offer { padding: 18px; }
+}
+
+/* Setup prompts on idea pages. */
+.setupSteps { list-style: none; counter-reset: step; padding: 0; margin: 4px 0 0; display: grid; gap: 8px; }
+.setupSteps li { counter-increment: step; display: flex; gap: 12px; align-items: baseline; color: #d2cec4; font-size: 14px; line-height: 1.5; }
+.setupSteps li::before { content: counter(step, decimal-leading-zero); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #96938b; }
+.prompt { margin-top: 16px; border: 1px solid #ffffff1f; border-radius: 12px; background: #141413; overflow: hidden; }
+.promptHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px 10px 16px; border-bottom: 1px solid #ffffff14; }
+.promptLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #b5b0a4; }
+.prompt .copy { border: 1px solid #ffffff24; border-radius: 8px; background: #f0ede6; color: #141413; padding: 7px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.prompt .copy:hover { background: #ded9cd; }
+.promptText { margin: 0; padding: 16px; white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.6; color: #e6e2d8; max-height: 420px; overflow: auto; }
