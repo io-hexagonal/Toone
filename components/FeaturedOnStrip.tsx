@@ -9,7 +9,7 @@ import { FEATURED_BADGES, type FeaturedBadge } from "@/lib/featured-badges";
  * tab order, and dropped entirely when the visitor prefers reduced motion.
  */
 
-// One set of the five current badges is ~1,300px wide. Each half of the
+// One set of the six current badges is ~1,700px wide. Each half of the
 // track repeats the set until it is wider than a large desktop viewport,
 // so the loop never shows a gap; the track then holds two identical halves.
 const MIN_HALF_WIDTH = 2000;

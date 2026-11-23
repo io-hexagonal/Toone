@@ -45,11 +45,8 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
   {
     name: "MacIgniter",
     framed: true,
-    // The issued link is https://macigniter.com/apps/toone, which is a 404
-    // until MacIgniter publishes the listing (checked 19 Nov 2026: not in
-    // their catalogue yet). Point at their site meanwhile; switch back once
-    // the listing page answers.
-    href: "https://macigniter.com/",
+    // The issued listing link; published and answering 200 (checked 23 Nov 2026).
+    href: "https://macigniter.com/apps/toone",
     img: "https://macigniter.com/badge/cc33b1c2-3157-463b-a10d-da740ba24906.svg",
     alt: "Listed on MacIgniter",
     width: 200,
@@ -87,6 +84,18 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
     width: 203,
     height: 54,
     rel: "noopener noreferrer",
+    style: { height: "54px", width: "auto" },
+  },
+  {
+    name: "Startup Fame",
+    framed: true,
+    // Issued snippet: 224×36, no rel. Source WebP is 655×105; shown 54px high
+    // (the height of every rectangular badge) → 337px wide.
+    href: "https://startupfa.me/s/toone?utm_source=trytoone.com",
+    img: "https://startupfa.me/badges/featured-badge-small.webp",
+    alt: "Toone - Featured on Startup Fame",
+    width: 337,
+    height: 54,
     style: { height: "54px", width: "auto" },
   },
 ];
