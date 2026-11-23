@@ -142,7 +142,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #141413e0 10%, #141413cc 65%, #14141347 100%);
+  background: linear-gradient(to right, #141413e6 10%, #141413d1 65%, #1414135c 100%);
 }
 
 /* label / value strip under the deck */
@@ -1291,7 +1291,7 @@
     max-width: 740px;
   }
   .explore-detail-head > .explore-cover-frame::after {
-    background: #141413bf;
+    background: #141413c5;
   }
 }
 @media (max-width: 760px) {
