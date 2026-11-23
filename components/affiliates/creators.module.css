@@ -91,3 +91,13 @@
 .prompt .copy { border: 1px solid #ffffff24; border-radius: 8px; background: #f0ede6; color: #141413; padding: 7px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .prompt .copy:hover { background: #ded9cd; }
 .promptText { margin: 0; padding: 16px; white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.6; color: #e6e2d8; max-height: 420px; overflow: auto; }
+
+/* Newcomer idea pages: breadcrumb, who it is for, questions. */
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; font-size: 13px; color: #96938b; }
+.crumbs a { color: #b2b0aa !important; }
+.forWho { margin-top: 10px !important; color: #d2cec4 !important; }
+.startPanel { max-width: 760px; margin: 0 auto; }
+.indexFoot { max-width: 760px; margin: 40px auto 0; }
+.faq { margin: 4px 0 0; display: grid; gap: 14px; }
+.faq dt { color: #f0ede6; font-size: 14.5px; font-weight: 600; margin: 0 0 4px; }
+.faq dd { margin: 0; color: #aaa8a1; font-size: 14px; line-height: 1.6; }

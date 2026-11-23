@@ -1,7 +1,8 @@
 /**
  * Ideas shown to creators on /creators/join and /creators, each with its own
- * page at /creators/ideas/{slug}. Every idea is something Toone already runs.
- * Add an idea here and it appears on every creator page. English only.
+ * page at /creators/ideas/{slug}, and to people new to Toone on the public,
+ * indexed /newcomers/ideas pages. Every idea is something Toone already runs.
+ * Add an idea here and it appears on every creator and newcomer page. English only.
  */
 
 export type CreatorIdeaLink = { label: string; href: string };
@@ -30,6 +31,22 @@ export type CreatorIdea = {
   links: CreatorIdeaLink[];
   /** One or more setup prompts; more than one when the idea has several routines. */
   prompts: CreatorIdeaPrompt[];
+  /** Copy for the public /newcomers/ideas/{slug} page. */
+  newcomer: NewcomerCopy;
+};
+
+/** The public, indexed version of an idea, written for someone new to Toone. */
+export type NewcomerCopy = {
+  /** <title>, under 60 characters, used as is. */
+  metaTitle: string;
+  /** Meta and social description, under 160 characters. */
+  metaDescription: string;
+  /** Who the idea is for, in plain words, shown under the summary. */
+  forWho: string;
+  /** What to have ready before pasting the prompt. */
+  needs: string[];
+  /** Short questions newcomers ask; also published as FAQPage data. */
+  faq: { q: string; a: string }[];
 };
 
 export const CREATOR_IDEAS: readonly CreatorIdea[] = [
@@ -74,6 +91,33 @@ Rules: never upload or schedule a video I have not accepted on the page. Never a
 Schedule: daily. Ask me for the time.`,
       },
     ],
+    newcomer: {
+      metaTitle: "A YouTube channel that improves with every review",
+      metaDescription:
+        "Toone researches topics, drafts and edits each video with Claude, and turns every review note into a rule the next video follows. You approve every upload.",
+      forWho:
+        "For anyone starting or running a channel who wants help with research, scripts and edits, and wants the final say on every video.",
+      needs: [
+        "A Mac with Toone installed.",
+        "A short description of your channel, its audience and the topics to avoid.",
+        "The editing tools you use, connected in Toone.",
+        "Time to review each video on the review page Toone keeps for you.",
+      ],
+      faq: [
+        {
+          q: "Does it upload videos on its own?",
+          a: "No. A video is uploaded or scheduled only after you accept it on the review page.",
+        },
+        {
+          q: "What happens to my review notes?",
+          a: "Each note becomes a rule in the channel's playbook, so you never give the same note twice. The review page shows what changed because of each note.",
+        },
+        {
+          q: "Is there a channel that runs this way?",
+          a: "Yes. Tube of Ideas, a Shorts channel hosted by Chip and Mo, runs on it. Its playbook is on its 41st version.",
+        },
+      ],
+    },
   },
   {
     slug: "reddit-watcher",
@@ -81,34 +125,76 @@ Schedule: daily. Ask me for the time.`,
     label: "Outreach: Reddit watcher",
     title: "Reddit watcher: find the people already asking for you",
     summary:
-      "Toone watches the communities you pick for new posts where people ask for a tip or a tool you can help with, and drafts a reply in your voice.",
+      "Toone watches the communities you pick for people asking for a tip or a tool you can help with, drafts replies in your voice for you to approve, and learns from every note and every edit you make.",
     steps: [
-      "Watch: Toone reads new posts in the subreddits you choose, on a schedule.",
-      "Pick: it keeps the posts where your answer would help and checks each community's rules.",
-      "Reply: it drafts the answer in your voice; you decide what gets posted.",
+      "Watch: scripts read new threads, the replies to your comments and your comments' points every couple of minutes, with no AI. A live page shows them as they come in, and a Fetch now button reads Reddit straight away.",
+      "Pick: the AI marks threads Relevant, Maybe or Not relevant, moves the best ones to the top, checks each community's rules and drafts a reply in your voice. A Run AI now button starts it on demand.",
+      "Follow up: each reply to your comments gets a short AI breakdown of what it says, its tone and whether it needs an answer.",
+      "Post: only the replies you approve go out, word for word, at most 10 a day and never two in the same subreddit within an hour.",
+      "Learn: every remark, thumbs up or thumbs down becomes a rule, and every draft you edit is compared with your version, so the next drafts sound more like you.",
     ],
-    showYourAudience: "Show a week of matched posts and the replies that started real conversations.",
+    showYourAudience: "Show the radar page live, one draft next to the version you edited, and the rule the radar learned from that edit.",
     links: [],
     prompts: [
       {
         label: "Reddit watcher",
-        text: `Set up a routine that watches Reddit for people asking for what I offer and drafts replies for me to approve.
+        text: `Set up a routine that watches Reddit for people asking for what I offer, drafts replies for me to approve, and gets closer to how I write every time I correct it.
 
-Radar page (radar.html), where I track every match and polish the replies with my remarks: create it in this project, open it in my browser and keep it open and updated. It lists every matched post with the subreddit, its rules summary, the post and your draft reply. On each draft I can Approve, Skip, or write a remark and ask for a new draft. Show replies to my past comments there too, and how my recent comments did (points, removed or not). Save every approval and remark as a file in this project.
+Radar page (radar.html): create it in this project, open it in my browser and keep it open and live. Split it in half:
+- Left: every new thread fetched from my subreddits. Once the AI has run, the relevant ones move to the top, marked Relevant, Maybe or Not relevant. A relevant thread shows the subreddit, its rules summary, the post and your draft reply in an editable box. On each draft I can Approve (it posts exactly the text in the box, with my edits), Skip, ask for a new draft with a remark, or tell you how to approach threads like this. On any thread I can say "good thread, draft it" or "not our kind of thread", with an optional note.
+- Right: the replies to my comments with an AI breakdown (what each one says, its tone, whether it needs my answer and what to say), the replies you have posted, my recent comments with their points and whether they were removed, and an overview: counts, a heatmap of when threads appear by subreddit and hour, relevant threads by subreddit, and my points by subreddit.
+- At the top: when the feed was last updated and when the AI last ran, a "Fetch now" button that reads Reddit straight away, a "Run AI now" button, and a Pause posting switch.
+Save every click on the page (approval, skip, feedback, run request) as a file in this project. Every button must lead somewhere: whatever checks those files has to recognise every kind of click, including "Run AI now", and never drop one it doesn't know. Test each button once after setup and show me that it worked.
+
+Learning: keep three files in this project, my voice notes, the matching rules (which threads to answer and which to leave) and a playbook (how to approach each kind of thread). Turn every piece of feedback into a rule in the right file, so I never have to say the same thing twice. Show the current rules and what each piece of feedback changed on a Playbook tab.
+
+Learning from my edits: when I change a draft before approving it, save your draft next to the text I approved. On the next AI run, compare the two, name what I changed (length, first line, tone, details I added or cut, how I mentioned what I offer, the ending), and turn whatever would apply to other threads into rules in my voice notes or the playbook. If I keep making the same kind of edit, make that rule stronger. Keep my 10 latest edited pairs in an examples file with one lesson each, and read them before drafting, so new drafts read like my edited versions rather than your first drafts. On the page, show my edits as a highlighted before-and-after on the approved reply and on the Playbook tab.
 
 During setup, ask me for: what I offer and the one link I may share, the subreddits to watch (suggest some from my description), the kinds of questions that count as a match, and my voice (I will paste a few of my own comments). Use my Reddit account signed in on Toone's browser.
 
-Every 10 minutes from 08:00 to 23:00, without AI: read the newest posts in those subreddits and the replies to my comments, and update the radar page.
+Fetching, without AI: keep it running all the time from 08:00 to 23:00, reading the newest posts in those subreddits, the replies to my comments and how my recent comments are doing every couple of minutes, and update the page.
 
-Every hour, or right away when I approve something on the page, with AI:
-1. Read my remarks since the last run and apply them to my voice notes and the matching rules, so the same remark is never needed twice. Note on the page what you changed.
-2. Keep only the posts where a reply would really help. Read each subreddit's rules first and skip any community that bans links, self-promotion or AI-written text.
-3. Draft a reply in my voice that answers the question first. Mention what I offer only when it fits, say that I made it, and add the link only where the rules allow.
-4. Post only the replies I approved on the page, exactly as approved.
+With AI: a quick check with no AI runs every minute from 08:00 to 23:00 and wakes the AI only when there is something to do: an approval, a piece of feedback, an edit, "Run AI now", or new threads and replies once an hour. Then:
+1. Apply my feedback and edits since the last run to the voice notes, matching rules and playbook. Note on the page what changed.
+2. Sort the new threads into relevant, maybe and not relevant. Keep a thread as relevant only where a reply would really help. Read each subreddit's rules first and skip any community that bans links, self-promotion or AI-written text.
+3. Draft a reply in my voice for each relevant thread, following the playbook and my edited examples, that answers the question first. Mention what I offer only when it fits, say that I made it, and add the link only where the rules allow.
+4. Break down the new replies to my comments.
+5. Post only the replies I approved on the page, exactly as approved. If posting is paused, keep my approvals and post them once I switch it back on.
 
-Limits: at most 10 replies a day, never two in the same subreddit within an hour, and stop for the day if one of my comments is removed. Remember every thread so a post is never answered twice.`,
+Limits: at most 10 replies a day, never two in the same subreddit within an hour, and stop for the day if one of my comments is removed. Remember every thread so a post is never answered twice. Tell me only when new drafts are ready, when posting stops, or when Reddit can't be read, and only once per problem.`,
       },
     ],
+    newcomer: {
+      metaTitle: "Reddit watcher: find people who need what you offer",
+      metaDescription:
+        "Toone watches the subreddits you pick, finds people asking for what you offer, drafts replies in your voice and posts only the ones you approve.",
+      forWho:
+        "For anyone with a product, a service or a skill that people ask about on Reddit. You don't need to code. Paste one prompt and Toone builds the watcher with you.",
+      needs: [
+        "A Mac with Toone installed.",
+        "Your Reddit account, signed in on Toone's browser.",
+        "One or two sentences on what you offer, and the one link you are happy to share.",
+        "A few of your own Reddit comments, so the drafts sound like you.",
+      ],
+      faq: [
+        {
+          q: "Does it post anything without asking me?",
+          a: "No. It posts only the replies you approve on the radar page, exactly as you approved them. Everything else stays a draft.",
+        },
+        {
+          q: "Will it break subreddit rules?",
+          a: "It reads each community's rules before drafting and skips any that ban links, self-promotion or AI-written text. It posts at most 10 replies a day, never two in the same subreddit within an hour, and stops for the day if one of your comments is removed.",
+        },
+        {
+          q: "How does it learn how I write?",
+          a: "Every note you leave becomes a rule. When you edit a draft before approving it, Toone compares its draft with your version and applies what you changed to the next drafts, so they need fewer edits over time.",
+        },
+        {
+          q: "Does it use AI all the time?",
+          a: "No. Plain scripts read Reddit every couple of minutes, so new threads show up almost at once. The AI runs only when there is work: new threads to sort, a note to apply, an edit to learn from or a reply to post. The page shows when each last ran.",
+        },
+      ],
+    },
   },
   {
     slug: "market-watchers",
@@ -167,6 +253,33 @@ Every morning at 08:00:
 Information only: never place bets or trades.`,
       },
     ],
+    newcomer: {
+      metaTitle: "Stock and prediction market watchers with AI briefs",
+      metaDescription:
+        "Toone follows your stocks and prediction markets with plain scripts and sends a short brief with sources when something moves. Information only, never trades.",
+      forWho:
+        "For anyone who follows a few stocks or prediction markets and wants to know when something moves and why, without watching charts all day.",
+      needs: [
+        "A Mac with Toone installed.",
+        "The tickers or prediction markets you follow.",
+        "What counts as a big move for you (Toone suggests a starting point).",
+        "Where you want the brief: email, Discord or a page on your Mac.",
+      ],
+      faq: [
+        {
+          q: "Does it trade or give investment advice?",
+          a: "No. Briefs are information only. It never places trades or bets and never tells you to buy or sell.",
+        },
+        {
+          q: "How often does it check?",
+          a: "The stock watcher checks prices every 30 minutes while the market is open, and the politics watcher checks the odds every 15 minutes. Both use plain scripts and wake the AI only when something crosses your threshold.",
+        },
+        {
+          q: "Can I tune what it tells me?",
+          a: "Yes. Mark any alert as Useful, Noise or Wrong reason, or leave a note. Toone adjusts its thresholds and sources and shows what it changed.",
+        },
+      ],
+    },
   },
 ];
 

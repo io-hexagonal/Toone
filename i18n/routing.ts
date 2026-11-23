@@ -24,6 +24,7 @@ export const ENGLISH_ONLY_PATHS = [
   "/how-to",
   "/journal",
   "/legal-notice",
+  "/newcomers",
   "/privacy",
   "/terms",
 ] as const;
