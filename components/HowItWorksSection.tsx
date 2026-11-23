@@ -540,6 +540,10 @@ export default function HowItWorksSection() {
                 radial-gradient(rgba(29,28,25,0.065) 1px, transparent 1.2px) 0 0 / 18px 18px,
                 #f6f4ef;
             }
+            .hiw-outcome {
+              margin: 0 0 14px; color: rgba(29,28,25,0.92); font-size: 17px; font-weight: 600;
+              line-height: 1.4; letter-spacing: -0.01em; text-wrap: pretty;
+            }
             .hiw-cards { display: grid; }
             .hiw-card {
               grid-area: 1 / 1; display: flex; flex-direction: column;
@@ -787,6 +791,7 @@ export default function HowItWorksSection() {
         </div>
 
         <div className="hiw-panel" role="tabpanel" id={panelId} aria-labelledby={`${id}-title-${active}`} ref={panelRef}>
+          <p className="hiw-outcome">{t(`${sc}.outcome`)}</p>
           <div className="hiw-cards">
             <div className="hiw-card hiw-card--prompt" data-on={active === 0 ? "" : undefined}>
               <p className="hiw-card-head">

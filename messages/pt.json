@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Motor de conteúdo semanal",
+          "outcome": "Segunda de manhã: três posts para o LinkedIn escritos, com fontes e à espera do teu OK.",
           "prompt": "<k>Todas as segundas às 9:00</k>, escolhe os temas da semana a partir dos resultados da anterior e pesquisa-os com <k>2 agentes em paralelo no Haiku</k>: tendências e concorrentes. Pede a <k>um agente Sonnet</k> que redija 3 publicações para o LinkedIn e a <k>um agente GPT</k> que as reveja: <k>voz da marca com pelo menos 8/10 e todas as afirmações com fonte</k>. <k>Devolve os rascunhos fracos, no máximo duas vezes.</k> Cria os visuais no Figma, <k>pergunta-me antes de publicar</k> e depois publica no LinkedIn, Threads e Instagram. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "seg. 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Atualização semanal de conteúdo",
+          "outcome": "Segunda de manhã: as páginas do cliente que perderam posições atualizadas, verificadas e guardadas como rascunhos, com o relatório já na caixa de entrada.",
           "prompt": "<k>Todas as segundas às 7:00</k>, vai buscar as posições do nosso cliente à Search Console — <k>se falhar, usa o Semrush</k>. Escolhe <k>pelo menos 8 páginas que perderam posições</k>, <k>uma palavra-chave por página</k>. Atualiza-as com <k>um agente Sonnet por página</k>, pede a <k>um agente GPT</k> que verifique os factos de cada alteração, guarda os rascunhos no WordPress e envia o relatório ao cliente por email. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "seg. 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Produção semanal do episódio",
+          "outcome": "Sexta-feira: o rough cut da próxima semana à espera no YouTube como rascunho, com voz, B-roll e miniaturas prontos.",
           "prompt": "<k>Todas as sextas às 8:00</k>, pede a <k>um agente Opus</k> que faça a decupagem do guião da próxima semana. Depois avança em <k>3 frentes em simultâneo</k>: encontra <k>pelo menos 12 clips de B-roll</k> no Pexels, <k>só de utilização livre</k>; grava a voz-off no ElevenLabs; e cria 3 miniaturas no Higgsfield — <k>se falhar, usa o GPT Image</k>. Monta um primeiro corte, verifica a continuidade com o guião e envia-o para o YouTube como rascunho. <k>Se um passo falhar, tenta mais uma vez e depois pergunta-me.</k>",
           "graph": {
             "schedule": "sex. 8:00",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} aplicado",
       "promoBadge": "Semana Product Hunt",
+      "promoTitleBlackFriday": "Semana Black Friday",
+      "promoNoteBlackFriday": "O código {code} é aplicado automaticamente no checkout: 80% de desconto no plano Vitalício até 1 de dezembro.",
+      "promoBadgeBlackFriday": "Black Friday · 80% off",
       "promoDaysLeft": "{count, plural, one {Falta # dia} other {Faltam # dias}}",
       "affiliateTitle": "Oferta de {name}",
       "affiliateNoteAll": "{percent}% de desconto no Toone Pro pelo link de {name}. O código {code} é aplicado automaticamente no pagamento.",

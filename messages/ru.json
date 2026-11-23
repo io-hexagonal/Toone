@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Еженедельная контент-машина",
+          "outcome": "Утро понедельника: три поста для LinkedIn написаны, с источниками, и ждут вашего OK.",
           "prompt": "<k>Каждый понедельник в 9:00</k> выбери темы недели по результатам прошлой и исследуй их <k>2 параллельными агентами на Haiku</k>: тренды и конкуренты. Пусть <k>агент на Sonnet</k> напишет 3 поста для LinkedIn, а <k>агент на GPT</k> проверит их: <k>голос бренда не ниже 8/10, у каждого утверждения есть источник</k>. <k>Слабые черновики возвращай на доработку, но не больше двух раз.</k> Сделай визуалы в Figma, <k>спроси меня перед публикацией</k>, затем опубликуй в LinkedIn, Threads и Instagram. <k>Если шаг не удался, повтори один раз, потом спроси меня.</k>",
           "graph": {
             "schedule": "пн 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Еженедельное обновление контента",
+          "outcome": "Утро понедельника: просевшие страницы клиента обновлены, проверены и сохранены как черновики, а отчёт уже у него в почте.",
           "prompt": "<k>Каждый понедельник в 7:00</k> выгрузи позиции сайта нашего клиента из Search Console — <k>если не получится, возьми их из Semrush</k>. Выбери <k>не меньше 8 страниц, потерявших позиции</k>, <k>по одному ключевому слову на страницу</k>. Обнови их, выделив <k>по одному агенту на Sonnet на страницу</k>, пусть <k>агент на GPT</k> проверит факты в каждой правке, сохрани черновики в WordPress и отправь отчёт клиенту по почте. <k>Если шаг не удался, повтори один раз, потом спроси меня.</k>",
           "graph": {
             "schedule": "пн 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Еженедельный конвейер выпуска",
+          "outcome": "Пятница: черновой монтаж на следующую неделю ждёт на YouTube как черновик, с озвучкой, B-roll и обложками.",
           "prompt": "<k>Каждую пятницу в 8:00</k> пусть <k>агент на Opus</k> разберёт сценарий следующей недели. Затем запусти <k>3 потока параллельно</k>: найди на Pexels <k>не меньше 12 клипов B-roll</k>, <k>только со свободной лицензией</k>; запиши озвучку в ElevenLabs; сделай 3 обложки в Higgsfield — <k>если не получится, используй GPT Image</k>. Собери черновой монтаж, сверь его связность со сценарием и загрузи на YouTube как черновик. <k>Если шаг не удался, повтори один раз, потом спроси меня.</k>",
           "graph": {
             "schedule": "пт 8:00",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} applied",
       "promoBadge": "Product Hunt week",
+      "promoTitleBlackFriday": "Black Friday Week",
+      "promoNoteBlackFriday": "Your code {code} is applied automatically at checkout: 80% off the Lifetime plan until 1 December.",
+      "promoBadgeBlackFriday": "Black Friday · 80% off",
       "promoDaysLeft": "{count, plural, one {# day left} other {# days left}}",
       "affiliateTitle": "{name}'s offer",
       "affiliateNoteAll": "{percent}% off Toone Pro through {name}'s link. Code {code} is applied automatically at checkout.",

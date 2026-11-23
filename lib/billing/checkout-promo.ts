@@ -3,14 +3,14 @@
  * code"), not in Toone's own code box. Typed into the code box they are not
  * Toone codes, so the box explains where they go instead of refusing them.
  */
-const CHECKOUT_PROMOTION_CODES: readonly string[] = ["PRODUCTHUNT"];
+const CHECKOUT_PROMOTION_CODES: readonly string[] = ["PRODUCTHUNT", "BLACKFRIDAY"];
 
 /**
  * What each code takes off the lifetime plan, in percent. It mirrors the
  * coupon in Stripe and is only used to show the price before the payment
  * page; Stripe computes what is actually charged.
  */
-const LIFETIME_PERCENT_OFF: Readonly<Record<string, number>> = { PRODUCTHUNT: 81.5 };
+const LIFETIME_PERCENT_OFF: Readonly<Record<string, number>> = { PRODUCTHUNT: 81.5, BLACKFRIDAY: 80 };
 
 /**
  * The lifetime price with the code applied, written like `displayPrice`
@@ -32,7 +32,11 @@ export function discountedLifetimePrice(code: string, amount: number, displayPri
 const STORAGE_KEY = "toone.checkoutPromotion";
 
 /** When each code stops being accepted at the payment page (mirrors Stripe). */
-const PROMOTION_ENDS: Readonly<Record<string, string>> = { PRODUCTHUNT: "2026-11-25T23:59:00Z" };
+const PROMOTION_ENDS: Readonly<Record<string, string>> = {
+  PRODUCTHUNT: "2026-11-25T23:59:00Z",
+  // Stripe promo_1Uf12zDlJ5eMLfNlZF1d1vxc (coupon WHRwp98m, 80% once, Lifetime minimum), expires 1796169599.
+  BLACKFRIDAY: "2026-12-01T23:59:59Z",
+};
 
 /** When the code stops being accepted; null for a code with no end date. */
 export function checkoutPromotionEnds(code: string): Date | null {
@@ -88,7 +92,7 @@ export function rememberedCheckoutPromotion(now: Date = new Date()): string | nu
  * pricing page shows it and the lifetime checkout sends it. Null when no
  * such offer is on.
  */
-const SITE_WIDE_PROMOTION: string | null = "PRODUCTHUNT";
+const SITE_WIDE_PROMOTION: string | null = "BLACKFRIDAY";
 
 /** The site-wide code while it is still accepted; null otherwise. */
 export function siteWideCheckoutPromotion(now: Date = new Date()): string | null {

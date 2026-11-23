@@ -304,7 +304,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
             {t(audience === "personal" ? "personal.heroTitle" : "heroTitle")}
           </h1>
           <p className="ha-tag">
-            {t(audience === "personal" ? "personal.heroTag" : "heroTag2")}
+            {audience === "personal"
+              ? t.rich("personal.heroTag", { b: (chunks) => <strong>{chunks}</strong> })
+              : t("heroTag2")}
           </p>
           <Link className="ha-explore" href="/explore">
             <span>
