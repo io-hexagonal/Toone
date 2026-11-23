@@ -81,30 +81,37 @@ Schedule: daily. Ask me for the time.`,
     label: "Outreach: Reddit watcher",
     title: "Reddit watcher: find the people already asking for you",
     summary:
-      "Toone watches the communities you pick for new posts where people ask for a tip or a tool you can help with, and drafts a reply in your voice.",
+      "Toone watches the communities you pick for people asking for a tip or a tool you can help with, drafts replies in your voice, and learns from every note you give it.",
     steps: [
-      "Watch: Toone reads new posts in the subreddits you choose, on a schedule.",
-      "Pick: it keeps the posts where your answer would help and checks each community's rules.",
-      "Reply: it drafts the answer in your voice; you decide what gets posted.",
+      "Watch: scripts read new threads in your subreddits every couple of minutes, with no AI, and a live page shows them as they come in.",
+      "Pick: the AI marks the threads worth answering, checks each community's rules and drafts a reply in your voice. You decide what gets posted.",
+      "Learn: every remark, edit, thumbs up or thumbs down becomes a rule, so the next drafts sound more like you.",
     ],
-    showYourAudience: "Show a week of matched posts and the replies that started real conversations.",
+    showYourAudience: "Show a week of matched posts, the rules the radar learned from your notes, and the replies that started real conversations.",
     links: [],
     prompts: [
       {
         label: "Reddit watcher",
-        text: `Set up a routine that watches Reddit for people asking for what I offer and drafts replies for me to approve.
+        text: `Set up a Reddit watcher that finds people asking for what I offer, drafts replies for me to approve, and learns from my feedback.
 
-Radar page (radar.html), where I track every match and polish the replies with my remarks: create it in this project, open it in my browser and keep it open and updated. It lists every matched post with the subreddit, its rules summary, the post and your draft reply. On each draft I can Approve, Skip, or write a remark and ask for a new draft. Show replies to my past comments there too, and how my recent comments did (points, removed or not). Save every approval and remark as a file in this project.
+Radar page (radar.html): create it in this project, open it in my browser and keep it open and live. Split it in half:
+- Left: every new thread fetched from my subreddits. Once the AI has run, the relevant ones move to the top, marked Relevant, Maybe or Not relevant. A relevant thread shows the subreddit, its rules summary, the post and your draft reply. On each draft I can Approve (it posts exactly the text in the box, with my edits), Skip, ask for a new draft with a remark, or tell you how to approach threads like this. On any thread I can say "good thread, draft it" or "not our kind of thread", with an optional note.
+- Right: the replies to my comments with an AI breakdown (what each one says, its tone, whether it needs my answer and what to say), the replies you have posted, my recent comments with their points and whether they were removed, and an overview: counts, a heatmap of when threads appear by subreddit and hour, relevant threads by subreddit, and my points by subreddit.
+- At the top: when the feed was last updated and when the AI last ran, a "Fetch now" button that runs the fetch straight away, and a "Run AI now" button.
+Save every approval, skip and piece of feedback as a file in this project.
+
+Learning: keep three files in this project, my voice notes, the matching rules (which threads to answer and which to leave) and a playbook (how to approach each kind of thread). Turn every piece of feedback into a rule in the right file, including what you learn from the edits I make before approving, so I never have to say the same thing twice. Show the current rules and what each piece of feedback changed on a Playbook tab.
 
 During setup, ask me for: what I offer and the one link I may share, the subreddits to watch (suggest some from my description), the kinds of questions that count as a match, and my voice (I will paste a few of my own comments). Use my Reddit account signed in on Toone's browser.
 
-Every 10 minutes from 08:00 to 23:00, without AI: read the newest posts in those subreddits and the replies to my comments, and update the radar page.
+Fetching, without AI: every couple of minutes from 08:00 to 23:00, read the newest posts in those subreddits, the replies to my comments and how my recent comments are doing, and update the page.
 
-Every hour, or right away when I approve something on the page, with AI:
-1. Read my remarks since the last run and apply them to my voice notes and the matching rules, so the same remark is never needed twice. Note on the page what you changed.
-2. Keep only the posts where a reply would really help. Read each subreddit's rules first and skip any community that bans links, self-promotion or AI-written text.
-3. Draft a reply in my voice that answers the question first. Mention what I offer only when it fits, say that I made it, and add the link only where the rules allow.
-4. Post only the replies I approved on the page, exactly as approved.
+With AI, every hour, or within a minute or two of an approval, a piece of feedback or "Run AI now":
+1. Apply my feedback since the last run to the voice notes, matching rules and playbook. Note on the page what changed.
+2. Sort the new threads into relevant, maybe and not relevant. Keep a thread as relevant only where a reply would really help. Read each subreddit's rules first and skip any community that bans links, self-promotion or AI-written text.
+3. Draft a reply in my voice for each relevant thread, following the playbook, that answers the question first. Mention what I offer only when it fits, say that I made it, and add the link only where the rules allow.
+4. Break down the new replies to my comments.
+5. Post only the replies I approved on the page, exactly as approved.
 
 Limits: at most 10 replies a day, never two in the same subreddit within an hour, and stop for the day if one of my comments is removed. Remember every thread so a post is never answered twice.`,
       },
