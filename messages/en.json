@@ -387,7 +387,7 @@
     "downloadFor": "Request Early Access",
     "macOS": "macOS",
     "soon": "Soon",
-    "heroTitle": "Run company operations as governed AI routines",
+    "heroTitle": "Hand off the operations work that comes back every week",
     "featuresEyebrow": "Features",
     "pillarsTitle": "Everything your agents need to get work done",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
@@ -427,7 +427,7 @@
     "waitlistSignIn": "Sign in",
     "emailPrivacyLink": "Privacy policy",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
-    "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
+    "heroTag2": "Scripts handle the steps that never change, specialist agents take the judgment calls under your approval, and every step leaves a receipt.",
     "haveInvitation": "Have an invitation code?",
     "eaIntro": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
     "eaBeforeTitle": "Before you request",
@@ -734,8 +734,8 @@
     "featuredOn": "Featured on"
   },
   "meta": {
-    "siteTitle": "Toone | The AI workspace for your agentic workflows on macOS",
-    "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your routines under your control, built on Claude Code and Codex.",
+    "siteTitle": "Toone for Mac | Hand off the work that comes back every week",
+    "siteDescription": "Toone for Mac takes the work you repeat every week: scripts handle the steps that never change, and Claude Code or Codex steps in only where judgment is needed.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
@@ -906,7 +906,7 @@
   },
   "statement": {
     "title": "The AI workspace for your agentic workflows",
-    "lead": "Build complex, reliable AI workflows by describing them. Watch each run step by step on a live graph. Pause, edit, and resume where it stopped.",
+    "lead": "Describe a recurring job once. Scripts handle the steps that never change, AI only where it needs judgment. Watch each run on a live graph and pause, fix and resume where it stopped.",
     "cta": "Explore Toone",
     "videoLabel": "Toone builds a live market watcher",
     "videoPlay": "Play the Toone video",
@@ -1159,7 +1159,7 @@
     "price": "Price",
     "title": "Explore",
     "heading": "Explore AI Routines & Workflow Templates",
-    "intro": "Reviewed routines and bundles made by experts. Bring your own AI, add a routine to Toone, answer a few setup questions, then run it and review the output.",
+    "intro": "Pick a reviewed routine for work you repeat, add it to Toone, bring your own AI and get the result without building the workflow yourself.",
     "all": "All",
     "routines": "Routines",
     "bundles": "Bundles",

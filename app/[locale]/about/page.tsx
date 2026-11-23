@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // the root `%s | Toone` template from adding a third (audit P2-5).
     title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
-      "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app published by Matheus Paranhos, a sole trader in Portugal (Hexagonal.io), that turns repeat work into reliable routines you can watch, pause, edit, and resume, on your own Claude Code or Codex.",
+      "Toone (Toone AI) is a macOS app published by Matheus Paranhos, a sole trader in Portugal (Hexagonal.io), for the work that comes back every week: scripts handle the fixed steps, AI only the steps that need judgment.",
     alternates: { canonical: "https://trytoone.com/en/about" },
     robots: localeRobots(locale),
     other: localeVersions("/about", ["en"]),
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: "https://trytoone.com/en/about",
       title: "About Toone (Toone AI)",
       description:
-        "Precision for your agentic workflows and routines: describe the work, watch specialist agents run it on a live graph, and pause, edit, and resume where it stopped.",
+        "Hand off the work that comes back every week: scripts handle the steps that never change, and AI steps in only where a step needs judgment.",
       siteName: "Toone",
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },
@@ -40,8 +40,8 @@ export default async function AboutPage({ params, searchParams }: Props) {
     <TrustPage
         eyebrow="Company"
         title="About Toone"
-        lede="Precision for your agentic workflows and routines. Toone is a Mac workspace where you describe repeat work in plain words and specialist agents run it the same way every time, on a live graph you can pause, edit, and resume."
-        updated="November 1, 2026"
+        lede="Hand off the work that comes back every week. Describe the job in plain words: scripts handle the steps that never change, AI agents take only the steps that need judgment, and you can pause, fix and resume any run where it stopped."
+        updated="November 23, 2026"
       >
         <section>
           <h2>What Toone is</h2>
