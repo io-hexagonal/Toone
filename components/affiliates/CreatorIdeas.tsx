@@ -18,7 +18,8 @@ export default function CreatorIdeas({
   intro = "Things Toone already runs, to try yourself or show your audience.",
 }: Props) {
   const Heading = headingLevel === 1 ? "h1" : "h2";
-  const language = basePath === "/newcomers/ideas" ? "en" : undefined;
+  const isNewcomer = basePath === "/newcomers/ideas";
+  const language = isNewcomer ? "en" : undefined;
   return (
     <section lang={language} className={css.ideas} aria-labelledby={headingLevel === false ? undefined : "creator-ideas"} aria-label={headingLevel === false ? heading : undefined}>
       {headingLevel !== false && (
@@ -35,7 +36,7 @@ export default function CreatorIdeas({
             <div className={css.cardBody}>
               <p className={css.cardLabel}>{idea.label}</p>
               <h3>{idea.title}</h3>
-              <p>{idea.summary}</p>
+              <p>{isNewcomer ? idea.newcomer.cardSummary : idea.summary}</p>
               <span className={css.more}>Explore the idea →</span>
             </div>
           </Link>
