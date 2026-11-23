@@ -1674,6 +1674,54 @@
 }
 
 /* ---------- listing profile layout (contract §13, page spec §3) ---------- */
+.explore-hero-profile--routine {
+  position: relative;
+  isolation: isolate;
+}
+.explore-hero-profile--routine .explore-detail-head {
+  display: block;
+}
+/* Keep the text inside the darker part of the desktop cover. */
+.explore-hero-profile--routine :is(.explore-breadcrumb, .explore-detail-copy) {
+  max-width: min(740px, 52vw);
+}
+.explore-hero-profile--routine .explore-detail-head > .explore-cover-frame {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+.explore-hero-profile--routine .explore-cover-mark {
+  display: none;
+}
+.explore-hero-profile--routine .explore-cover-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, #141413 0, #14141300 30%, #14141300 75%, #141413 100%),
+    linear-gradient(to right, #141413f5 10%, #141413de 58%, #14141352 100%);
+}
+.explore-hero-profile--routine :is(.explore-breadcrumb, .explore-eyebrow, .explore-edit-link) {
+  color: #c3c2bf;
+}
+.explore-hero-profile--routine .explore-button-secondary {
+  background: #14141380;
+  border-color: #9b9a95;
+}
+@media (max-width: 900px) {
+  .explore-hero-profile--routine :is(.explore-breadcrumb, .explore-detail-copy) {
+    max-width: 740px;
+  }
+  .explore-hero-profile--routine .explore-cover-frame::after {
+    background: linear-gradient(to bottom, #141413 0, #141413ce 30%, #141413ce 78%, #141413 100%);
+  }
+}
 .explore-answer {
   font-size: 19px;
   color: #dcdad3;

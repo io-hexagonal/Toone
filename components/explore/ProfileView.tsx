@@ -59,8 +59,11 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
     "step_count" in detail
       ? ui.count("steps", detail.step_count)
       : ui.count("routines", detail.member_count);
+  const heroClass = type === "routine"
+    ? "explore-hero explore-hero-detail explore-hero-profile explore-hero-profile--routine"
+    : "explore-hero explore-hero-detail explore-hero-profile";
   return (
-    <header className="explore-hero explore-hero-detail explore-hero-profile">
+    <header className={heroClass}>
       <div className="explore-width">
         <nav className="explore-breadcrumb" aria-label={ui.breadcrumb}>
           <a href={`/${locale}`}>{ui.home}</a>
