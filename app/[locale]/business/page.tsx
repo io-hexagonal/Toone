@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? "Toone for business | Fixed steps and AI for operations"
     : t("siteTitle"); // already carries the brand (Ahrefs F06)
   const description = isEnglish
-    ? "Run company operations as routines: fixed steps run the same way every time, and agents take the judgment calls under human approval. Pilot one workflow first."
+    ? "Think Grokbot meets n8n/zapier for operations: fixed steps run the same way every time, and agents take the judgment calls under your approval. Pilot one first."
     : t("siteDescription");
   const ogTitle = isEnglish ? "Toone for business" : t("ogTitle");
   const ogDescription = isEnglish ? description : t("ogDescription");

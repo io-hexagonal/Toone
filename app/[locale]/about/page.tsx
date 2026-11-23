@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // the root `%s | Toone` template from adding a third (audit P2-5).
     title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
-      "Toone (Toone AI) is a macOS app by Hexagonal.io for recurring work: fixed steps run the same way every time, and AI agents handle the steps that need judgment.",
+      "Toone (Toone AI) is a macOS app by Hexagonal.io, think Grokbot meets n8n/zapier: fixed steps run the same way every time, and AI agents take the judgment calls.",
     alternates: { canonical: "https://trytoone.com/en/about" },
     robots: localeRobots(locale),
     other: localeVersions("/about", ["en"]),
@@ -40,7 +40,7 @@ export default async function AboutPage({ params, searchParams }: Props) {
     <TrustPage
         eyebrow="Company"
         title="About Toone"
-        lede="Toone is a Mac app for recurring work that mixes fixed, scripted steps, which run the same way every time, with AI agents used only where a step needs judgment. Describe the job in plain words, watch it run on a live graph, and pause, fix and resume where it stopped."
+        lede="Think Grokbot meets n8n/zapier. Toone is a Mac app for recurring work that mixes fixed, scripted steps, which run the same way every time, with AI agents used only where a step needs judgment. Describe the job in plain words, watch it run on a live graph, and pause, fix and resume where it stopped."
         updated="November 1, 2026"
       >
         <section>
