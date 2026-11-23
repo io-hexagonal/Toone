@@ -2,6 +2,7 @@ import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
 import { gitLastCommitDate } from "@/lib/source-date";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 
 export const dynamic = "force-static";
 
@@ -46,6 +47,10 @@ const ENGLISH_ONLY_ROUTES = [
   // revalidates at runtime; this file stays `force-static` so the git-derived
   // `lastmod` values above are computed on the build host (omitted if it has no git).
   { path: "/explore", source: "app/[locale]/explore/page.tsx" },
+  // Public routine ideas for people new to Toone. English only; the idea
+  // pages come from lib/creator-ideas.ts, so that file dates them.
+  { path: "/newcomers/ideas", source: "app/[locale]/newcomers/ideas/page.tsx" },
+  ...CREATOR_IDEAS.map((idea) => ({ path: `/newcomers/ideas/${idea.slug}`, source: "lib/creator-ideas.ts" })),
 ] as const;
 
 /**
