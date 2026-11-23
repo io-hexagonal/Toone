@@ -128,9 +128,11 @@ export const PRICING_CSS = `
             .download-wall-sub { text-wrap: balance; }
             .download-wall-sub strong { color: rgba(255,255,255,0.92); font-weight: 600; }
             .pricing-fineprint {
-              margin: 36px auto 0; max-width: 760px; text-align: center;
+              margin: var(--pricing-section-gap) auto 0; max-width: 760px; text-align: center;
               color: rgba(255,255,255,0.5); font-size: 12.5px; line-height: 1.7;
             }
+            .pricing-plans { --pricing-section-gap: 36px; }
+            .pricing-page .pricing-plans { --ideas-spacing: var(--pricing-section-gap); }
             .pricing-fineprint + .pricing-fineprint { margin-top: 0; }
             .pricing-fineprint p { margin: 0; text-wrap: balance; }
             .pricing-fineprint .pricing-stripe {
@@ -138,6 +140,7 @@ export const PRICING_CSS = `
               border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
               color: rgba(255,255,255,0.78); font-size: 12.5px; font-weight: 550;
             }
+            .pricing-page .pricing-fineprint .pricing-stripe { margin-bottom: 0; }
             .pricing-stripe img { display: block; border-radius: 4px; background: #fff; padding: 2px; box-sizing: border-box; }
             .pricing-fineprint a { color: rgba(255,255,255,0.82); text-underline-offset: 3px; }
             .pricing-fineprint .pricing-contract { margin-top: 6px; }
