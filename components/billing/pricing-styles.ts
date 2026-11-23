@@ -9,14 +9,17 @@ export const PRICING_CSS = `
               color: rgba(255,255,255,0.34); font-size: 11px; font-weight: 650;
               letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 16px;
             }
-            .pricing-head h1 {
+            .pricing-head h1, .pricing-page h2#creator-ideas {
               font-family: var(--font-wordmark), system-ui, sans-serif;
               font-size: clamp(36px, 5vw, 56px); line-height: 1.04;
               letter-spacing: -0.035em; margin: 0 0 16px; text-wrap: balance;
             }
-            .pricing-head p {
-              color: rgba(255,255,255,0.55); font-size: 17px;
-              line-height: 1.6; margin: 0 auto; max-width: 58ch;
+            .pricing-head-outline {
+              -webkit-text-stroke: 1px #f0ede6;
+              -webkit-text-fill-color: transparent;
+            }
+            @media (forced-colors: active) {
+              .pricing-head-outline { -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; }
             }
             .pricing-includes {
               display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px;
@@ -125,15 +128,19 @@ export const PRICING_CSS = `
             .download-wall-sub { text-wrap: balance; }
             .download-wall-sub strong { color: rgba(255,255,255,0.92); font-weight: 600; }
             .pricing-fineprint {
-              margin: 36px auto 0; max-width: 760px; text-align: center;
+              margin: var(--pricing-section-gap) auto 0; max-width: 760px; text-align: center;
               color: rgba(255,255,255,0.5); font-size: 12.5px; line-height: 1.7;
             }
+            .pricing-plans { --pricing-section-gap: 36px; }
+            .pricing-page .pricing-plans { --ideas-spacing: var(--pricing-section-gap); }
+            .pricing-fineprint + .pricing-fineprint { margin-top: 0; }
             .pricing-fineprint p { margin: 0; text-wrap: balance; }
             .pricing-fineprint .pricing-stripe {
               display: inline-flex; align-items: center; gap: 7px; margin: 0 0 12px; padding: 5px 12px 5px 8px;
               border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
               color: rgba(255,255,255,0.78); font-size: 12.5px; font-weight: 550;
             }
+            .pricing-page .pricing-fineprint .pricing-stripe { margin-bottom: 0; }
             .pricing-stripe img { display: block; border-radius: 4px; background: #fff; padding: 2px; box-sizing: border-box; }
             .pricing-fineprint a { color: rgba(255,255,255,0.82); text-underline-offset: 3px; }
             .pricing-fineprint .pricing-contract { margin-top: 6px; }

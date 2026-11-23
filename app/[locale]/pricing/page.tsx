@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { NewcomerIdeasCards } from "@/components/affiliates/CreatorIdeas";
 import PricingPlans from "@/components/billing/PricingPlans";
 import { PRICING_CSS } from "@/components/billing/pricing-styles";
 import { checkoutAvailable } from "@/components/billing/PricingPlans.helpers";
@@ -47,8 +48,9 @@ export default async function PricingPage({ params }: Props) {
       <main className="pricing-page" data-page="pricing">
         <header className="pricing-head">
           <div className="pricing-eyebrow">{t("eyebrow")}</div>
-          <h1>{t("title")}</h1>
-          <p>{t("sub", { free: TOONE_PRO_FREE_ROUTINE_CREATIONS })}</p>
+          <h1>
+            {t.rich("title", { outline: chunks => <span className="pricing-head-outline">{chunks}</span> })}
+          </h1>
         </header>
         <ul className="pricing-includes">
           <li>{t("includeUnlimited")}</li>
@@ -61,6 +63,8 @@ export default async function PricingPage({ params }: Props) {
           paidEntry={features.paid_entry}
           freeCreations={TOONE_PRO_FREE_ROUTINE_CREATIONS}
           refundDays={TOONE_PRO_WITHDRAWAL_DAYS}
+          showBlackFridayNotice={false}
+          afterStripe={<NewcomerIdeasCards />}
         />
       </main>
       <Footer />
