@@ -332,8 +332,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Precision for your agentic workflows and routines",
-      "heroTag": "Build complex, reliable AI workflows by describing them.\nAttach your own accounts in a browser. Test, edit, and resume where it stopped.",
+      "heroTitle": "Hand off the work that comes back every week.",
+      "heroTag": "Scripts handle the steps that never change, AI only where it needs judgment.\nSave your tokens, <b>automate everything.</b>",
       "featuresTitle": "Everything your agents need to get work done",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Weekly content engine",
+          "outcome": "Monday morning: three LinkedIn posts drafted, sourced and waiting for your OK.",
           "prompt": "<k>Every Monday at 9:00</k>, pick this week’s topics from last week’s results and research them with <k>2 parallel agents on Haiku</k>: trends and competitors. Have <k>a Sonnet agent</k> draft 3 LinkedIn posts and <k>a GPT agent</k> review them: <k>brand voice at least 8/10, every claim sourced</k>. <k>Send weak drafts back, twice at most.</k> Make the visuals in Figma, <k>ask me before publishing</k>, then post to LinkedIn, Threads and Instagram. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Weekly content refresh",
+          "outcome": "Monday morning: the client's slipping pages refreshed, fact-checked and saved as drafts, with the report already in their inbox.",
           "prompt": "<k>Every Monday at 7:00</k>, pull our client’s rankings from Search Console — <k>if it fails, use Semrush</k>. Pick <k>at least 8 pages that lost positions</k>, <k>one keyword per page</k>. Refresh them with <k>one Sonnet agent per page</k>, have <k>a GPT agent</k> fact-check every change, save the drafts in WordPress and email the report to the client. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Mon 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Weekly episode pipeline",
+          "outcome": "Friday: next week's rough cut waiting on YouTube as a draft, with voiceover, B-roll and thumbnails done.",
           "prompt": "<k>Every Friday at 8:00</k>, have <k>an Opus agent</k> break down next week’s script. Then run <k>3 tracks side by side</k>: find <k>at least 12 B-roll clips</k> on Pexels, <k>free to use only</k>; record the voiceover in ElevenLabs; and make 3 thumbnails in Higgsfield — <k>if it fails, use GPT Image</k>. Assemble a rough cut, check continuity against the script and upload it to YouTube as a draft. <k>If a step fails, retry once, then ask me.</k>",
           "graph": {
             "schedule": "Fri 8:00",
@@ -703,7 +706,7 @@
       }
     },
     "closing": {
-      "title": "Hand your repeat work to agents you can watch."
+      "title": "Hand off this week's repeat work today."
     }
   },
   "privacyChoices": {
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} applied",
       "promoBadge": "Product Hunt week",
+      "promoTitleBlackFriday": "Black Friday Week",
+      "promoNoteBlackFriday": "Your code {code} is applied automatically at checkout: 80% off the Lifetime plan until 1 December.",
+      "promoBadgeBlackFriday": "Black Friday · 80% off",
       "promoDaysLeft": "{count, plural, one {# day left} other {# days left}}",
       "affiliateTitle": "{name}'s offer",
       "affiliateNoteAll": "{percent}% off Toone Pro through {name}'s link. Code {code} is applied automatically at checkout.",

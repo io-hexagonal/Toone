@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Wöchentliche Content-Maschine",
+          "outcome": "Montagmorgen: drei LinkedIn-Posts geschrieben, mit Quellen belegt und bereit für dein OK.",
           "prompt": "<k>Jeden Montag um 9:00</k> die Themen der Woche aus den Ergebnissen der Vorwoche auswählen und mit <k>2 parallelen Agenten auf Haiku</k> recherchieren: Trends und Wettbewerber. <k>Ein Sonnet-Agent</k> entwirft 3 LinkedIn-Posts, <k>ein GPT-Agent</k> prüft sie: <k>Markenstimme mindestens 8/10, jede Aussage belegt</k>. <k>Schwache Entwürfe zurückschicken, höchstens zweimal.</k> Die Visuals in Figma gestalten, <k>vor dem Veröffentlichen mich fragen</k>, dann auf LinkedIn, Threads und Instagram posten. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Mo 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Wöchentliche Content-Auffrischung",
+          "outcome": "Montagmorgen: die abgerutschten Seiten des Kunden aufgefrischt, geprüft und als Entwürfe gespeichert, der Bericht schon in seinem Postfach.",
           "prompt": "<k>Jeden Montag um 7:00</k> die Rankings unseres Kunden aus Search Console abrufen – <k>schlägt das fehl, Semrush nutzen</k>. <k>Mindestens 8 Seiten, die Positionen verloren haben</k>, auswählen, <k>ein Keyword pro Seite</k>. Sie mit <k>einem Sonnet-Agenten pro Seite</k> auffrischen, <k>ein GPT-Agent</k> prüft die Fakten jeder Änderung, die Entwürfe in WordPress speichern und den Bericht per E-Mail an den Kunden senden. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Mo 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Wöchentliche Folgen-Pipeline",
+          "outcome": "Freitag: der Rohschnitt für nächste Woche liegt als Entwurf auf YouTube, mit Voiceover, B-Roll und Thumbnails.",
           "prompt": "<k>Jeden Freitag um 8:00</k> schlüsselt <k>ein Opus-Agent</k> das Skript der nächsten Woche auf. Dann <k>3 Spuren nebeneinander</k> laufen lassen: auf Pexels <k>mindestens 12 B-Roll-Clips</k> finden, <k>nur frei nutzbare</k>; das Voiceover in ElevenLabs aufnehmen; und 3 Thumbnails in Higgsfield erstellen – <k>schlägt das fehl, GPT Image nutzen</k>. Einen Rohschnitt zusammenstellen, die Kontinuität mit dem Skript abgleichen und ihn als Entwurf auf YouTube hochladen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Fr 8:00",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} angewendet",
       "promoBadge": "Product-Hunt-Woche",
+      "promoTitleBlackFriday": "Black-Friday-Woche",
+      "promoNoteBlackFriday": "Dein Code {code} wird an der Kasse automatisch angewendet: 80 % Rabatt auf den Lifetime-Plan bis 1. Dezember.",
+      "promoBadgeBlackFriday": "Black Friday · 80 % Rabatt",
       "promoDaysLeft": "{count, plural, one {Noch # Tag} other {Noch # Tage}}",
       "affiliateTitle": "Angebot von {name}",
       "affiliateNoteAll": "{percent} % Rabatt auf Toone Pro über den Link von {name}. Der Code {code} wird beim Bezahlen automatisch angewendet.",

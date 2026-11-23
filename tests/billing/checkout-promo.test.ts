@@ -65,21 +65,42 @@ test("the launch code ends with the last minute of 25 November UTC", () => {
   assert.equal(checkoutPromotionEnded("OTHER", new Date("2030-01-01T00:00:00Z")), false);
 });
 
-test("every visitor gets the launch code on the lifetime plan while it runs, with no link or typing", () => {
+test("every visitor gets the Black Friday code on the lifetime plan while it runs, with no link or typing", () => {
   const globals = globalThis as unknown as { window?: unknown };
-  const during = new Date("2026-11-20T08:00:00Z");
-  const after = new Date("2026-11-26T00:00:00Z");
+  const during = new Date("2026-11-27T08:00:00Z");
+  const lastMinute = new Date("2026-12-01T23:59:59Z");
+  const after = new Date("2026-12-02T00:00:00Z");
   const empty = () => ({ getItem: () => null, setItem: () => undefined });
   try {
     globals.window = { localStorage: empty(), sessionStorage: empty() };
     assert.equal(rememberedCheckoutPromotion(during), null);
-    assert.equal(siteWideCheckoutPromotion(during), "PRODUCTHUNT");
-    assert.equal(activeCheckoutPromotion(during), "PRODUCTHUNT");
+    assert.equal(siteWideCheckoutPromotion(during), "BLACKFRIDAY");
+    assert.equal(activeCheckoutPromotion(during), "BLACKFRIDAY");
+    assert.equal(siteWideCheckoutPromotion(lastMinute), "BLACKFRIDAY");
     assert.equal(siteWideCheckoutPromotion(after), null);
     assert.equal(activeCheckoutPromotion(after), null);
   } finally {
     delete globals.window;
   }
+});
+
+test("a visitor who came through a Product Hunt link keeps that code until it ends, then gets Black Friday", () => {
+  const globals = globalThis as unknown as { window?: unknown };
+  try {
+    globals.window = { localStorage: memoryStorage(), sessionStorage: memoryStorage() };
+    rememberCheckoutPromotion("PRODUCTHUNT");
+    assert.equal(activeCheckoutPromotion(new Date("2026-11-24T08:00:00Z")), "PRODUCTHUNT");
+    assert.equal(activeCheckoutPromotion(new Date("2026-11-27T08:00:00Z")), "BLACKFRIDAY");
+  } finally {
+    delete globals.window;
+  }
+});
+
+test("the Black Friday code takes 80% off the lifetime price and is typed like any other code", () => {
+  // Stripe: 199.99 with 80% off is a 159.99 discount and 40.00 to pay.
+  assert.equal(discountedLifetimePrice("BLACKFRIDAY", 19999, "€199.99"), "€40.00");
+  assert.equal(checkoutPromotionCode(" black-friday "), "BLACKFRIDAY");
+  assert.equal(checkoutPromotionEnds("BLACKFRIDAY")?.toISOString(), "2026-12-01T23:59:59.000Z");
 });
 
 test("the lifetime card can say when the launch code ends", () => {

@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Moteur de contenu hebdomadaire",
+          "outcome": "Lundi matin : trois posts LinkedIn rédigés, sourcés et en attente de votre accord.",
           "prompt": "<k>Chaque lundi à 9 h</k>, choisis les sujets de la semaine d’après les résultats de la précédente et étudie-les avec <k>2 agents en parallèle sur Haiku</k> : tendances et concurrents. Fais rédiger 3 posts LinkedIn par <k>un agent Sonnet</k> et fais-les relire par <k>un agent GPT</k> : <k>ton de marque à 8/10 au moins, chaque affirmation sourcée</k>. <k>Renvoie les brouillons trop faibles, deux fois au maximum.</k> Crée les visuels dans Figma, <k>demande-moi avant de publier</k>, puis publie sur LinkedIn, Threads et Instagram. <k>Si une étape échoue, réessaie une fois, puis demande-moi.</k>",
           "graph": {
             "schedule": "lun. 9 h",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Mise à jour hebdomadaire des contenus",
+          "outcome": "Lundi matin : les pages du client qui ont reculé rafraîchies, vérifiées et enregistrées en brouillon, avec le rapport déjà dans sa boîte mail.",
           "prompt": "<k>Chaque lundi à 7 h</k>, récupère les positions de notre client dans Search Console — <k>en cas d’échec, utilise Semrush</k>. Choisis <k>au moins 8 pages qui ont perdu des positions</k>, <k>un mot-clé par page</k>. Mets-les à jour avec <k>un agent Sonnet par page</k>, fais vérifier les faits de chaque modification par <k>un agent GPT</k>, enregistre les brouillons dans WordPress et envoie le rapport au client par e-mail. <k>Si une étape échoue, réessaie une fois, puis demande-moi.</k>",
           "graph": {
             "schedule": "lun. 7 h",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Production hebdomadaire de l’épisode",
+          "outcome": "Vendredi : le premier montage de la semaine prochaine en brouillon sur YouTube, avec voix off, B-roll et miniatures prêts.",
           "prompt": "<k>Chaque vendredi à 8 h</k>, fais dépouiller le script de la semaine prochaine par <k>un agent Opus</k>. Lance ensuite <k>3 chantiers en parallèle</k> : trouve <k>au moins 12 plans de B-roll</k> sur Pexels, <k>libres de droits uniquement</k> ; enregistre la voix off dans ElevenLabs ; et crée 3 miniatures dans Higgsfield — <k>en cas d’échec, utilise GPT Image</k>. Assemble un premier montage, vérifie la continuité par rapport au script et mets-le en ligne sur YouTube en brouillon. <k>Si une étape échoue, réessaie une fois, puis demande-moi.</k>",
           "graph": {
             "schedule": "ven. 8 h",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} appliqué",
       "promoBadge": "Semaine Product Hunt",
+      "promoTitleBlackFriday": "Semaine du Black Friday",
+      "promoNoteBlackFriday": "Votre code {code} est appliqué automatiquement au paiement : 80 % de réduction sur l’offre À vie jusqu’au 1er décembre.",
+      "promoBadgeBlackFriday": "Black Friday · -80 %",
       "promoDaysLeft": "{count, plural, one {Plus que # jour} other {Plus que # jours}}",
       "affiliateTitle": "Offre de {name}",
       "affiliateNoteAll": "{percent} % de réduction sur Toone Pro avec le lien de {name}. Le code {code} est appliqué automatiquement au paiement.",

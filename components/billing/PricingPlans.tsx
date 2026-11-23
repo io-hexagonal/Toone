@@ -279,8 +279,8 @@ export default function PricingPlans({
         </div>
       ) : promo && plans.length > 0 && (
         <div className="pricing-soon" role="status">
-          <h2>{t("promoTitle")}</h2>
-          <p>{t("promoNote", { code: promo })}</p>
+          <h2>{promo === "BLACKFRIDAY" ? t("promoTitleBlackFriday") : t("promoTitle")}</h2>
+          <p>{promo === "BLACKFRIDAY" ? t("promoNoteBlackFriday", { code: promo }) : t("promoNote", { code: promo })}</p>
         </div>
       )}
 
@@ -302,6 +302,8 @@ export default function PricingPlans({
             >
               {offerPrice(price) && affiliateOffer(price.plan) && affiliate?.discount ? (
                 <span className="pricing-badge pricing-badge--offer">{t("affiliateBadge", { percent: affiliate.discount.percent })}</span>
+              ) : offerPrice(price) && promo === "BLACKFRIDAY" ? (
+                <span className="pricing-badge pricing-badge--offer">{t("promoBadgeBlackFriday")}</span>
               ) : offerPrice(price) ? (
                 <span className="pricing-badge pricing-badge--offer">
                   <svg viewBox="0 0 40 40" width="13" height="13" aria-hidden="true" focusable="false">

@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Wekelijkse contentmotor",
+          "outcome": "Maandagochtend: drie LinkedIn-posts geschreven, met bronnen en klaar voor jouw OK.",
           "prompt": "<k>Elke maandag om 9:00</k>: kies de thema’s van deze week uit de resultaten van vorige week en onderzoek ze met <k>2 parallelle agents op Haiku</k>: trends en concurrenten. Laat <k>een Sonnet-agent</k> 3 LinkedIn-posts schrijven en <k>een GPT-agent</k> ze beoordelen: <k>merkstem minstens 8/10, elke claim met bron</k>. <k>Stuur zwakke concepten terug, hooguit twee keer.</k> Maak de visuals in Figma, <k>vraag het me vóór het publiceren</k> en post dan op LinkedIn, Threads en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "ma 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Wekelijkse contentopfrisbeurt",
+          "outcome": "Maandagochtend: de gezakte pagina's van de klant bijgewerkt, gecontroleerd en als concept opgeslagen, met het rapport al in hun inbox.",
           "prompt": "<k>Elke maandag om 7:00</k>: haal de rankings van onze klant op uit Search Console – <k>lukt dat niet, gebruik dan Semrush</k>. Kies <k>minstens 8 pagina’s die posities verloren</k>, <k>één keyword per pagina</k>. Fris ze op met <k>één Sonnet-agent per pagina</k>, laat <k>een GPT-agent</k> elke wijziging factchecken, sla de concepten op in WordPress en mail het rapport naar de klant. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "ma 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Wekelijkse afleveringspipeline",
+          "outcome": "Vrijdag: de ruwe montage voor volgende week staat als concept op YouTube, met voice-over, B-roll en thumbnails klaar.",
           "prompt": "<k>Elke vrijdag om 8:00</k>: laat <k>een Opus-agent</k> het script van volgende week ontleden. Draai daarna <k>3 sporen naast elkaar</k>: vind <k>minstens 12 B-roll-clips</k> op Pexels, <k>alleen vrij te gebruiken</k>; neem de voice-over op in ElevenLabs; en maak 3 thumbnails in Higgsfield – <k>lukt dat niet, gebruik dan GPT Image</k>. Zet een ruwe montage in elkaar, controleer de continuïteit aan de hand van het script en upload hem als concept naar YouTube. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "vr 8:00",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} toegepast",
       "promoBadge": "Product Hunt-week",
+      "promoTitleBlackFriday": "Black Friday-week",
+      "promoNoteBlackFriday": "Je code {code} wordt bij het afrekenen automatisch toegepast: 80% korting op het Lifetime-abonnement tot 1 december.",
+      "promoBadgeBlackFriday": "Black Friday · 80% korting",
       "promoDaysLeft": "{count, plural, one {Nog # dag} other {Nog # dagen}}",
       "affiliateTitle": "Aanbod van {name}",
       "affiliateNoteAll": "{percent}% korting op Toone Pro via de link van {name}. Code {code} wordt automatisch toegepast bij het afrekenen.",

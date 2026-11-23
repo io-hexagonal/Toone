@@ -498,6 +498,7 @@
       "scenarios": {
         "marketer": {
           "routineName": "Motore di contenuti settimanale",
+          "outcome": "Lunedì mattina: tre post per LinkedIn scritti, con fonti e in attesa del tuo OK.",
           "prompt": "<k>Ogni lunedì alle 9:00</k>, scegli i temi della settimana in base ai risultati della scorsa e approfondiscili con <k>2 agenti in parallelo su Haiku</k>: tendenze e concorrenti. Fai scrivere 3 post per LinkedIn a <k>un agente Sonnet</k> e falli rivedere da <k>un agente GPT</k>: <k>tono di voce del brand almeno 8/10, ogni affermazione con la sua fonte</k>. <k>Rimanda indietro le bozze deboli, al massimo due volte.</k> Crea i visual in Figma, <k>chiedimi prima di pubblicare</k>, poi pubblica su LinkedIn, Threads e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "lun 9:00",
@@ -534,6 +535,7 @@
         },
         "seo": {
           "routineName": "Aggiornamento settimanale dei contenuti",
+          "outcome": "Lunedì mattina: le pagine del cliente che hanno perso posizioni aggiornate, verificate e salvate come bozze, con il report già nella sua casella.",
           "prompt": "<k>Ogni lunedì alle 7:00</k>, recupera da Search Console le posizioni del nostro cliente — <k>se fallisce, usa Semrush</k>. Scegli <k>almeno 8 pagine che hanno perso posizioni</k>, <k>una keyword per pagina</k>. Aggiornale con <k>un agente Sonnet per pagina</k>, fai verificare i fatti di ogni modifica da <k>un agente GPT</k>, salva le bozze in WordPress e invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "lun 7:00",
@@ -568,6 +570,7 @@
         },
         "film": {
           "routineName": "Produzione settimanale dell’episodio",
+          "outcome": "Venerdì: il primo montaggio della prossima settimana in bozza su YouTube, con voce, B-roll e miniature pronti.",
           "prompt": "<k>Ogni venerdì alle 8:00</k>, fai fare a <k>un agente Opus</k> lo spoglio del copione della prossima settimana. Poi porta avanti <k>3 attività in parallelo</k>: trova <k>almeno 12 clip di B-roll</k> su Pexels, <k>solo a uso libero</k>; registra il voiceover in ElevenLabs; e crea 3 miniature in Higgsfield — <k>se fallisce, usa GPT Image</k>. Prepara un premontato, controlla la continuità rispetto al copione e caricalo su YouTube come bozza. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "ven 8:00",
@@ -791,6 +794,9 @@
       "promoNote": "Your code {code} is applied automatically at checkout for the Lifetime plan. Valid until 25 November.",
       "promoApplied": "{code} applicato",
       "promoBadge": "Settimana Product Hunt",
+      "promoTitleBlackFriday": "Settimana del Black Friday",
+      "promoNoteBlackFriday": "Il codice {code} viene applicato automaticamente al pagamento: 80% di sconto sul piano A vita fino al 1° dicembre.",
+      "promoBadgeBlackFriday": "Black Friday · -80%",
       "promoDaysLeft": "{count, plural, one {Manca # giorno} other {Mancano # giorni}}",
       "affiliateTitle": "Offerta di {name}",
       "affiliateNoteAll": "{percent}% di sconto su Toone Pro con il link di {name}. Il codice {code} viene applicato automaticamente al pagamento.",

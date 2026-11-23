@@ -16,6 +16,7 @@ import LandingAudienceBar, {
   type LandingAudience,
 } from "@/components/LandingAudienceBar";
 import CollaborationPresence from "@/components/CollaborationPresence";
+import BlackFridayMarquee from "@/components/BlackFridayMarquee";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -315,6 +316,8 @@ export async function TooneLandingPage({
         }}
       />
 
+      {/* Black Friday Week: the strip replaces the audience bar until BLACKFRIDAY ends, then the bar returns on its own. */}
+      <BlackFridayMarquee />
       <LandingAudienceBar activeAudience={audience} />
       <SiteHeader
         landingPath={landingPath}
