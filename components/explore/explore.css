@@ -489,6 +489,10 @@
   transition:
     transform 0.2s,
     border-color 0.2s;
+  /* Cards in a row share a height. The column lets the byline and tags sit
+     on the bottom edge, so any slack falls above the byline. */
+  display: flex;
+  flex-direction: column;
 }
 .explore-card:hover {
   transform: translateY(-3px);
@@ -497,7 +501,9 @@
 .explore-card-main {
   text-decoration: none;
   color: inherit;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }
 .explore-card-art {
   position: relative;
@@ -528,6 +534,9 @@
 }
 .explore-card-copy {
   padding: 28px 28px 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }
 .explore-card .explore-eyebrow {
   color: #77756c;
@@ -557,6 +566,10 @@
   gap: 14px;
   margin-top: 18px;
   padding-bottom: 22px;
+  flex: 1 1 auto;
+}
+.explore-card-meta > .explore-byline {
+  margin-top: auto;
 }
 .explore-card-tags {
   padding: 0 28px 24px;
