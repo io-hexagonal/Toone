@@ -36,6 +36,8 @@
   color: #fff;
 }
 .explore-hero-detail {
+  position: relative;
+  isolation: isolate;
   padding-bottom: 72px;
 }
 /* The index header stays compact so the Featured carousel fits on screen. */
@@ -86,14 +88,9 @@
 .explore-breadcrumb a:hover {
   color: #fff;
 }
-.explore-detail-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
-  gap: 64px;
-  align-items: center;
-}
-.explore-detail-copy {
-  min-width: 0;
+/* Keep the copy inside the shaded portion of the desktop cover. */
+.explore-hero-detail :is(.explore-breadcrumb, .explore-detail-copy) {
+  max-width: min(740px, 55vw);
 }
 .explore-cover-frame {
   position: relative;
@@ -130,9 +127,24 @@
   visibility: hidden;
 }
 .explore-detail-head > .explore-cover-frame {
-  aspect-ratio: 4 / 3;
-  border-radius: 18px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  aspect-ratio: auto;
+  border-radius: 0;
+  background: none;
+  pointer-events: none;
+}
+.explore-detail-head > .explore-cover-frame .explore-cover-mark {
+  display: none;
+}
+.explore-detail-head > .explore-cover-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, #141413 0, #141413e8 100px, #14141300 230px, #14141300 82%, #141413 100%),
+    linear-gradient(to right, #141413d9 10%, #141413c2 65%, #14141326 100%);
 }
 
 /* label / value strip under the deck */
@@ -169,6 +181,9 @@
 .explore-howto a {
   color: #c3c2bf;
 }
+.explore-hero-detail :is(.explore-breadcrumb, .explore-eyebrow, .explore-edit-link, .explore-meta dt, .explore-howto a) {
+  color: #d6d4ce;
+}
 .explore-actions {
   display: flex;
   flex-wrap: wrap;
@@ -197,6 +212,10 @@
   background: transparent;
   color: #f0ede6;
   border-color: #605e58;
+}
+.explore-hero-detail .explore-button-secondary {
+  background: #14141380;
+  border-color: #9b9a95;
 }
 /* Admin-only, client-rendered after a capability check (EditListingLink). */
 .explore-edit-link {
@@ -1269,6 +1288,14 @@
     flex: 1 1 320px;
   }
 }
+@media (max-width: 900px) {
+  .explore-hero-detail :is(.explore-breadcrumb, .explore-detail-copy) {
+    max-width: 740px;
+  }
+  .explore-detail-head > .explore-cover-frame::after {
+    background: linear-gradient(to bottom, #141413 0, #141413b8 max(110px, 24%), #141413b8 88%, #141413 100%);
+  }
+}
 @media (max-width: 760px) {
   .explore-hero {
     padding-bottom: 44px;
@@ -1278,14 +1305,6 @@
   }
   .explore-breadcrumb {
     margin-bottom: 28px;
-  }
-  .explore-detail-head {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .explore-detail-head > .explore-cover-frame {
-    max-width: 520px;
-    order: -1;
   }
   .explore-meta {
     gap: 12px 24px;
@@ -1674,54 +1693,6 @@
 }
 
 /* ---------- listing profile layout (contract §13, page spec §3) ---------- */
-.explore-hero-profile--routine {
-  position: relative;
-  isolation: isolate;
-}
-.explore-hero-profile--routine .explore-detail-head {
-  display: block;
-}
-/* Keep the text inside the darker part of the desktop cover. */
-.explore-hero-profile--routine :is(.explore-breadcrumb, .explore-detail-copy) {
-  max-width: min(740px, 52vw);
-}
-.explore-hero-profile--routine .explore-detail-head > .explore-cover-frame {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  max-width: none;
-  aspect-ratio: auto;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  pointer-events: none;
-}
-.explore-hero-profile--routine .explore-cover-mark {
-  display: none;
-}
-.explore-hero-profile--routine .explore-cover-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, #141413 0, #14141300 30%, #14141300 75%, #141413 100%),
-    linear-gradient(to right, #141413f5 10%, #141413de 58%, #14141352 100%);
-}
-.explore-hero-profile--routine :is(.explore-breadcrumb, .explore-eyebrow, .explore-edit-link) {
-  color: #c3c2bf;
-}
-.explore-hero-profile--routine .explore-button-secondary {
-  background: #14141380;
-  border-color: #9b9a95;
-}
-@media (max-width: 900px) {
-  .explore-hero-profile--routine :is(.explore-breadcrumb, .explore-detail-copy) {
-    max-width: 740px;
-  }
-  .explore-hero-profile--routine .explore-cover-frame::after {
-    background: linear-gradient(to bottom, #141413 0, #141413ce 30%, #141413ce 78%, #141413 100%);
-  }
-}
 .explore-answer {
   font-size: 19px;
   color: #dcdad3;
