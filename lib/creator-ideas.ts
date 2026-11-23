@@ -169,7 +169,7 @@ Limits: at most 10 replies a day, never two in the same subreddit within an hour
       metaDescription:
         "Toone watches the subreddits you pick, finds people asking for what you offer, drafts replies in your voice and posts only the ones you approve.",
       forWho:
-        "For anyone with a product, a service or a skill that people ask about on Reddit. You don't need to code: you paste one prompt and Toone builds the watcher with you.",
+        "For anyone with a product, a service or a skill that people ask about on Reddit. You don't need to code. Paste one prompt and Toone builds the watcher with you.",
       needs: [
         "A Mac with Toone installed.",
         "Your Reddit account, signed in on Toone's browser.",

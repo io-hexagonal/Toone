@@ -30,7 +30,7 @@ export default function CreatorIdeas({
         {CREATOR_IDEAS.map((idea) => (
           <Link key={idea.slug} href={`${basePath}/${idea.slug}`} className={css.card}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={idea.image} alt={basePath === "/newcomers/ideas" ? `Illustration for ${idea.label}` : ""} width={1600} height={900} loading="lazy" />
+            <img src={idea.image} alt="" width={1600} height={900} loading="lazy" />
             <div className={css.cardBody}>
               <p className={css.cardLabel}>{idea.label}</p>
               <h3>{idea.title}</h3>
