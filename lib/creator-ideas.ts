@@ -92,7 +92,7 @@ Schedule: daily. Ask me for the time.`,
     prompts: [
       {
         label: "Reddit watcher",
-        text: `Set up a Reddit watcher that finds people asking for what I offer, drafts replies for me to approve, and gets closer to how I write every time I correct it.
+        text: `Set up a routine that watches Reddit for people asking for what I offer, drafts replies for me to approve, and gets closer to how I write every time I correct it.
 
 Radar page (radar.html): create it in this project, open it in my browser and keep it open and live. Split it in half:
 - Left: every new thread fetched from my subreddits. Once the AI has run, the relevant ones move to the top, marked Relevant, Maybe or Not relevant. A relevant thread shows the subreddit, its rules summary, the post and your draft reply in an editable box. On each draft I can Approve (it posts exactly the text in the box, with my edits), Skip, ask for a new draft with a remark, or tell you how to approach threads like this. On any thread I can say "good thread, draft it" or "not our kind of thread", with an optional note.
