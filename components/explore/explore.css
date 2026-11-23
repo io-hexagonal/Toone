@@ -38,7 +38,7 @@
 .explore-hero-detail {
   position: relative;
   isolation: isolate;
-  padding-bottom: 72px;
+  padding-bottom: 24px;
 }
 /* The index header stays compact so the Featured carousel fits on screen. */
 .explore-hero-index {
@@ -142,7 +142,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #141413d9 10%, #141413c2 65%, #14141326 100%);
+  background: linear-gradient(to right, #141413e0 10%, #141413cc 65%, #14141347 100%);
 }
 
 /* label / value strip under the deck */
@@ -1291,7 +1291,7 @@
     max-width: 740px;
   }
   .explore-detail-head > .explore-cover-frame::after {
-    background: #141413b8;
+    background: #141413bf;
   }
 }
 @media (max-width: 760px) {
@@ -1299,7 +1299,7 @@
     padding-bottom: 44px;
   }
   .explore-hero-detail {
-    padding-bottom: 52px;
+    padding-bottom: 20px;
   }
   .explore-breadcrumb {
     margin-bottom: 28px;
