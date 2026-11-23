@@ -22,6 +22,14 @@ A useful routine identifies its input, the agents responsible for the work, the 
 routine-definition-card
 ```
 
+## Mix fixed steps with agent steps
+
+Not every step needs an AI agent. Mechanical work, such as fetching a known file, comparing it with the last run, sorting a list or filling a fixed template, can run as a script step: it runs the same way every time, finishes in seconds and uses no AI. Agent steps take the parts that need judgment: reading something unstructured to decide what to do, writing for a person, or working through a website.
+
+A script step can also end a run early when there is nothing to do, so no agent starts and the run uses no AI at all. You don't write the scripts. The agent that drafts the routine with you decides which steps run as scripts and sets them up.
+
+Script steps run in the Toone download from trytoone.com, not in the App Store edition. A routine that contains one can't be shared on Explore yet.
+
 ## Compose larger workflows
 
 Routines can delegate to specialized agents and call smaller routines. This lets a complex workflow remain understandable as a set of focused responsibilities instead of becoming one long prompt. For published examples of focused routines, see [Launch Surface Preparation](/explore/routines/launch-surface-preparation-xzmzpbkf), which checks launch sites and prepares unpublished drafts, and [Launch Content Production](/explore/routines/launch-content-production-gni2lxu6), which turns an approved brief into reviewed launch content.

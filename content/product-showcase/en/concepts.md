@@ -76,6 +76,8 @@ A routine is a graph of steps. Each step has a job, something it consumes, and s
 draft-pipeline-graph
 ```
 
+A step is done by an agent or by a script. Agent steps take the work that needs judgment: reading, deciding and writing. Script steps take mechanical work and run it the same way every time, in seconds and without AI. The agent drafting the routine decides which steps run as scripts, so you never write one yourself. See [Routines](/how-to/features/routines).
+
 A sub-routine is a step that is a routine in its own right. When a piece of work is reusable, such as "investigate a topic", make it a sub-routine so several routines can share it and you can improve it in one place. Small, focused routines are quicker to test; compose them into a bigger one once they are reliable, or chain them by having the last step of one routine call the next.
 
 ## Run
@@ -118,7 +120,7 @@ question-card-approval
 
 ## How the pieces connect
 
-A provider supplies the intelligence. A project gives the work a home. Agents take responsibility, threads are where you talk to them and watch them work, and routines capture the processes that should happen the same way every time. Drafts are routines in the making; steps and sub-routines are their shape. Runs turn those definitions into observable work, tools and context give agents what they need to do it, and governance keeps the whole thing accountable to you.
+A provider supplies the intelligence. A project gives the work a home. Agents take responsibility, threads are where you talk to them and watch them work, and routines capture the work you repeat, with script steps for the mechanical parts and agents for the judgment calls. Drafts are routines in the making; steps and sub-routines are their shape. Runs turn those definitions into observable work, tools and context give agents what they need to do it, and governance keeps the whole thing accountable to you.
 
 ```toone-ui
 app-window-overview
