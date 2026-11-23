@@ -142,9 +142,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(to bottom, #141413 0, #141413e8 100px, #14141300 230px, #14141300 82%, #141413 100%),
-    linear-gradient(to right, #141413d9 10%, #141413c2 65%, #14141326 100%);
+  background: linear-gradient(to right, #141413d9 10%, #141413c2 65%, #14141326 100%);
 }
 
 /* label / value strip under the deck */
@@ -1293,7 +1291,7 @@
     max-width: 740px;
   }
   .explore-detail-head > .explore-cover-frame::after {
-    background: linear-gradient(to bottom, #141413 0, #141413b8 max(110px, 24%), #141413b8 88%, #141413 100%);
+    background: #141413b8;
   }
 }
 @media (max-width: 760px) {
