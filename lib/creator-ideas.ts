@@ -169,7 +169,7 @@ Limits: at most 10 replies a day, never two in the same subreddit within an hour
       },
     ],
     newcomer: {
-      cardSummary: "Find customers where they are.",
+      cardSummary: "Find your customers where they are",
       cardExplanation: "Toone watches the subreddits you choose and drafts replies for you to approve.",
       metaTitle: "Reddit watcher: find people who need what you offer",
       metaDescription:
