@@ -1,6 +1,6 @@
 import { Link } from "@/lib/navigation";
 import { CREATOR_IDEAS, type CreatorIdea } from "@/lib/creator-ideas";
-import CreatorIdeas from "@/components/affiliates/CreatorIdeas";
+import { NewcomerIdeasCards } from "@/components/affiliates/CreatorIdeas";
 import SetupPrompt from "@/components/affiliates/SetupPrompt";
 import {
   NEWCOMER_FAQ,
@@ -92,11 +92,7 @@ export function NewcomerIdeasIndex() {
           <h2 id="start-heading">How to start</h2>
           <SetupSteps />
         </section>
-        <CreatorIdeas
-          heading="Ideas you can set up today"
-          basePath="/newcomers/ideas"
-          intro="Each one comes with a prompt you can paste into Toone as it is."
-        />
+        <NewcomerIdeasCards />
         <div className={`${styles.stack} ${css.indexFoot}`}>
           <Faq items={NEWCOMER_FAQ} heading="Questions from new users" />
           <section className={styles.panel}>

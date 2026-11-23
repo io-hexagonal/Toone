@@ -2,7 +2,7 @@
 
 import { activeCheckoutPromotion, checkoutPromotionEnds, discountedLifetimePrice, rememberCheckoutPromotion } from "@/lib/billing/checkout-promo";
 import { affiliateAppliesTo, percentOffPrice, rememberedAffiliate, type RememberedAffiliate } from "@/lib/affiliates";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import { logout } from "@/lib/api";
@@ -60,6 +60,8 @@ export default function PricingPlans({
   freeCreations,
   refundDays,
   paidEntry = false,
+  showBlackFridayNotice = true,
+  afterStripe,
 }: {
   prices: Price[];
   checkoutEnabled: boolean;
@@ -67,6 +69,8 @@ export default function PricingPlans({
   refundDays: number;
   /** Downloads need Pro for now: show the Free plan, closed, beside the paid ones. */
   paidEntry?: boolean;
+  showBlackFridayNotice?: boolean;
+  afterStripe?: ReactNode;
 }) {
   const entry = useTranslations("billing.paidEntry");
   const t = useTranslations("billing.pricing");
@@ -277,7 +281,7 @@ export default function PricingPlans({
               : t("affiliateNoteCode", { name: affiliate.name, code: affiliate.code })}
           </p>
         </div>
-      ) : promo && plans.length > 0 && (
+      ) : promo && plans.length > 0 && (promo !== "BLACKFRIDAY" || showBlackFridayNotice) && (
         <div className="pricing-soon" role="status">
           <h2>{promo === "BLACKFRIDAY" ? t("promoTitleBlackFriday") : t("promoTitle")}</h2>
           <p>{promo === "BLACKFRIDAY" ? t("promoNoteBlackFriday", { code: promo }) : t("promoNote", { code: promo })}</p>
@@ -393,6 +397,13 @@ export default function PricingPlans({
             <img src="/assets/logos/stripe.svg" alt="" width={16} height={16} />
             {t("stripeLine")}
           </p>
+        </div>
+      )}
+
+      {afterStripe}
+
+      {plans.length > 0 && (
+        <div className="pricing-fineprint">
           <p>
             {t.rich("termsShort", {
               days: refundDays,

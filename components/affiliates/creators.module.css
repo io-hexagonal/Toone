@@ -58,7 +58,7 @@
 /* Ideas grid. */
 .ideas { margin-top: 56px; }
 .ideasHead { text-align: center; margin-bottom: 22px; }
-.ideasHead h2 { font-size: 24px !important; margin-bottom: 6px !important; }
+.ideas .ideasHead h2 { font-size: 24px; margin-bottom: 6px; }
 .ideasHead p { margin: 0; color: #aaa8a1; font-size: 14.5px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 .card {
