@@ -36,7 +36,14 @@ export default function CreatorIdeas({
             <div className={css.cardBody}>
               <p className={css.cardLabel}>{idea.label}</p>
               <h3>{idea.title}</h3>
-              <p>{isNewcomer ? idea.newcomer.cardSummary : idea.summary}</p>
+              {isNewcomer ? (
+                <p>
+                  <strong className={css.cardLead}>{idea.newcomer.cardSummary}</strong>{" "}
+                  {idea.newcomer.cardExplanation}
+                </p>
+              ) : (
+                <p>{idea.summary}</p>
+              )}
               <span className={css.more}>Explore the idea →</span>
             </div>
           </Link>

@@ -38,6 +38,7 @@ export type CreatorIdea = {
 /** The public, indexed version of an idea, written for someone new to Toone. */
 export type NewcomerCopy = {
   cardSummary: string;
+  cardExplanation: string;
   /** <title>, under 60 characters, used as is. */
   metaTitle: string;
   /** Meta and social description, under 160 characters. */
@@ -94,6 +95,7 @@ Schedule: daily. Ask me for the time.`,
     ],
     newcomer: {
       cardSummary: "Grow your YouTube channel and refine your approach with every upload.",
+      cardExplanation: "Toone turns your review notes into rules for the next video.",
       metaTitle: "A YouTube channel that improves with every review",
       metaDescription:
         "Toone researches topics, drafts and edits each video with Claude, and turns every review note into a rule the next video follows. You approve every upload.",
@@ -168,6 +170,7 @@ Limits: at most 10 replies a day, never two in the same subreddit within an hour
     ],
     newcomer: {
       cardSummary: "Find customers where they are.",
+      cardExplanation: "Toone watches the subreddits you choose and drafts replies for you to approve.",
       metaTitle: "Reddit watcher: find people who need what you offer",
       metaDescription:
         "Toone watches the subreddits you pick, finds people asking for what you offer, drafts replies in your voice and posts only the ones you approve.",
@@ -258,6 +261,7 @@ Information only: never place bets or trades.`,
     ],
     newcomer: {
       cardSummary: "Spot market moves early so you can act sooner.",
+      cardExplanation: "Toone monitors your watchlist and sends a short brief with sources when something moves.",
       metaTitle: "Stock and prediction market watchers with AI briefs",
       metaDescription:
         "Toone follows your stocks and prediction markets with plain scripts and sends a short brief with sources when something moves. Information only, never trades.",
