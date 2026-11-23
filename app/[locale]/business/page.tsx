@@ -27,10 +27,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // English copy onto all eight locales.
   const isEnglish = locale === "en";
   const title = isEnglish
-    ? "Toone for business | Governed AI routines for company operations"
+    ? "Toone for business | Fixed steps and AI for operations"
     : t("siteTitle"); // already carries the brand (Ahrefs F06)
   const description = isEnglish
-    ? "Encode how your company works as routines that specialist agents run under human approval. See how teams pilot Toone on one recurring workflow first."
+    ? "Run company operations as routines: fixed steps run the same way every time, and agents take the judgment calls under human approval. Pilot one workflow first."
     : t("siteDescription");
   const ogTitle = isEnglish ? "Toone for business" : t("ogTitle");
   const ogDescription = isEnglish ? description : t("ogDescription");

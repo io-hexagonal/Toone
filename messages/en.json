@@ -332,8 +332,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Precision for your agentic workflows and routines",
-      "heroTag": "Build complex, reliable AI workflows by describing them.\nAttach your own accounts in a browser. Test, edit, and resume where it stopped.",
+      "heroTitle": "Fixed steps for the routine parts, AI for the judgment calls",
+      "heroTag": "Describe the work once. Toone runs the mechanical steps the same way every time and calls an AI agent only where a step needs to read, decide or write.\nAttach your own accounts, then pause, fix and resume any run where it stopped.",
       "featuresTitle": "Everything your agents need to get work done",
       "featuresSub": "One workspace for your agents, your workflows, and the results that matter.",
       "seeAllFeatures": "See all features",
@@ -387,7 +387,7 @@
     "downloadFor": "Request Early Access",
     "macOS": "macOS",
     "soon": "Soon",
-    "heroTitle": "Run company operations as governed AI routines",
+    "heroTitle": "Run company operations on fixed steps, with AI for judgment",
     "featuresEyebrow": "Features",
     "pillarsTitle": "Everything your agents need to get work done",
     "pillarsSub": "One workspace for your agents, your workflows, and the results that matter.",
@@ -427,7 +427,7 @@
     "waitlistSignIn": "Sign in",
     "emailPrivacyLink": "Privacy policy",
     "productLanguageDisclosure": "The desktop app is currently available in English.",
-    "heroTag2": "Encode how your company works as routines that specialist agents run under human approval, with a receipt for every step.",
+    "heroTag2": "Scripted steps run the same way every time. Specialist agents handle only the steps that need judgment, under human approval, with a receipt for every step.",
     "haveInvitation": "Have an invitation code?",
     "eaIntro": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
     "eaBeforeTitle": "Before you request",
@@ -731,8 +731,8 @@
     "featuredOn": "Featured on"
   },
   "meta": {
-    "siteTitle": "Toone | The AI workspace for your agentic workflows on macOS",
-    "siteDescription": "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your routines under your control, built on Claude Code and Codex.",
+    "siteTitle": "Toone | Workflows that mix fixed steps with AI judgment",
+    "siteDescription": "Toone is a Mac app for recurring work: fixed steps run the same way every time, and AI agents take only the steps that need judgment, on Claude Code or Codex.",
     "ogDescription": "Turn recurring work into useful results, with specialist agents and you in control.",
     "ogTitle": "Toone | The AI workspace for your agentic workflows"
   },
@@ -1153,7 +1153,7 @@
     "price": "Price",
     "title": "Explore",
     "heading": "Explore AI Routines & Workflow Templates",
-    "intro": "Reviewed routines and bundles made by experts. Bring your own AI, add a routine to Toone, answer a few setup questions, then run it and review the output.",
+    "intro": "Reviewed routines and bundles made by experts. Bring your own AI, add a routine to Toone and run it.",
     "all": "All",
     "routines": "Routines",
     "bundles": "Bundles",
