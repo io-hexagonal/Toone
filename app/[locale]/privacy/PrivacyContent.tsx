@@ -306,7 +306,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
         <h2>Cookies and browser storage</h2>
         <p>
           trytoone.com sets two cookies, keeps up to five items in your browser&apos;s local storage
-          and up to three in its session storage. All of them are needed for what you asked for,
+          and up to four in its session storage. All of them are needed for what you asked for,
           and none is used for analytics or advertising:
         </p>
         <Table
@@ -372,9 +372,18 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
               "Keeps the code from a redeem link while you sign in.",
               "Until the code is redeemed, you sign out or you close the tab",
             ],
+            [
+              <code key="c">toone.connect.answered.…</code>,
+              "Session storage",
+              "Remembers that you already allowed or declined connecting an assistant, so going back to that page says so. It holds only the answer.",
+              "Until you close the tab",
+            ],
           ]}
         />
         <p>
+          When you connect an assistant online, Toone&apos;s server (api.trytoone.com) sets one more
+          cookie, <code>__Host-toone_consent</code> (httpOnly, for five minutes), so that only the
+          browser that started the connection can approve it.
           If you decline analytics, its script is not loaded; allowing it adds no cookie.
           trytoone.com sets no Stripe cookies and loads no Stripe script. When you buy Toone Pro or
           manage a subscription, you leave trytoone.com for Stripe&apos;s checkout on
@@ -453,8 +462,8 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           reasoning, redacts credentials it recognises, never includes temporary or hidden
           conversations, and limits how much text one answer can carry. What the connector reads goes
           to the assistant you use, under your own account with Anthropic or OpenAI and that
-          provider&apos;s terms. It does not pass through Toone&apos;s server, and Toone does not
-          receive, log or store it. Anything that changes something, such as starting a run or
+          provider&apos;s terms. Through this plugin it does not pass through Toone&apos;s server,
+          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or
           answering a question, asks for your confirmation first.
         </p>
         <p>
@@ -464,6 +473,54 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           Searching Toone Explore from your assistant sends only your search words to Toone&apos;s
           server, with no account or identifier. The connector keeps two small files on your Mac: a
           random identifier per project, and the key Toone gave it when you allowed it.
+        </p>
+        <p>
+          You can also connect an assistant that runs online, such as Claude on claude.ai or in the
+          Claude phone app, to your Toone account. You sign in on trytoone.com and choose what it may
+          do, in the same browser that started the connection; connecting an assistant this way needs
+          Toone Pro. Its requests then go through Toone&apos;s server to the Toone app on your Mac,
+          which must be open, and the answers come back the same way. Toone passes the content of
+          these requests and answers on without storing it. Toone keeps the connection itself (the
+          assistant&apos;s name and web address, what you allowed, the Mac you chose for it if any,
+          and when it was made and last used) until 30 days after you disconnect it or it lapses a
+          year after you allowed it, and a record of which tools were used, when, on which Mac and
+          whether they worked, without any content, for 30 days. Both are deleted with your account.
+          Anything that changes something still asks for your confirmation on your Mac, and you can
+          disconnect the assistant at any time in the Toone app, under Settings, Connected Apps. The connector is available with Toone (Direct), not Toone (Mac App Store).
+        </p>
+        <p>
+          When you ask your assistant about your routines, the connector reads from Toone what your
+          request needs: routine and run names and status, what is waiting for you, record-book
+          entries and the messages of a run or a conversation. Toone leaves out the agents&apos;
+          reasoning, redacts credentials it recognises, never includes temporary or hidden
+          conversations, and limits how much text one answer can carry. What the connector reads goes
+          to the assistant you use, under your own account with Anthropic or OpenAI and that
+          provider&apos;s terms. Through this plugin it does not pass through Toone&apos;s server,
+          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or
+          answering a question, asks for your confirmation first.
+        </p>
+        <p>
+          To show a routine&apos;s live graph, the connector draws it inside the conversation where
+          the assistant supports it or, if you ask, on a page served only to your own Mac (127.0.0.1)
+          at an address with a random secret, which stops after a few minutes without a viewer.
+          Searching Toone Explore from your assistant sends only your search words to Toone&apos;s
+          server, with no account or identifier. The connector keeps two small files on your Mac: a
+          random identifier per project, and the key Toone gave it when you allowed it.
+        </p>
+        <p>
+          You can also connect an assistant that runs online, such as Claude on claude.ai or in the
+          Claude phone app, to your Toone account. You sign in on trytoone.com and choose what it may
+          do, in the same browser that started the connection; connecting an assistant this way needs
+          Toone Pro. Its requests then go through
+          Toone&apos;s server to the Toone app on your Mac, which must be open, and the answers come
+          back the same way. Toone passes the content of these requests and answers on without
+          storing it. Toone keeps the connection itself (the assistant&apos;s name and web address,
+          what you allowed, and when it was made and last used) until 30 days after you disconnect it
+          or it lapses a year after you allowed it, and a record of which tools were used, when, on
+          which Mac and whether they worked, without any content, for 30 days. Both are deleted with
+          your account. Anything that changes something still asks for your confirmation on your Mac,
+          and you can disconnect the assistant at any time in the Toone app, under Settings,
+          Connected Apps.
         </p>
       </section>
 
