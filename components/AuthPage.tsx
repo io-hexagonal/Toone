@@ -131,9 +131,11 @@ type AuthPageProps = {
    * this code" when signing in, "Sign in" when signing up.
    */
   onSwitchMode?: () => void;
+  /** Sign-in mode: a title and line of its own, for a page that hosts the sign-in (the consent page). */
+  heading?: { title: string; sub: string };
 };
 
-export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode }: AuthPageProps) {
+export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode, heading }: AuthPageProps) {
   const t = useTranslations("auth");
   const accountCopy = useTranslations("account");
   const locale = useLocale();
@@ -540,7 +542,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : t("inviteAccountTitle")
             : mode === "signup"
               ? step === "handle" ? t("handleTitle") : step === "verify" ? t("signupVerifyTitle") : t("signupTitle")
-              : t("signinTitle")}
+              : heading?.title ?? t("signinTitle")}
         </h1>
         <p className="auth-sub">
           {mode === "invite"
@@ -557,7 +559,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : t("inviteAccountSub")
             : mode === "signup"
               ? step === "handle" ? t("handleSub") : step === "verify" ? t("signupVerifySub", { email: email.trim() }) : t("signupOpenSub")
-              : t("signinSub")}
+              : heading?.sub ?? t("signinSub")}
         </p>
         {mode === "invite" && step === "account" && benefit && (() => {
           const copy = benefitCopy(benefit);

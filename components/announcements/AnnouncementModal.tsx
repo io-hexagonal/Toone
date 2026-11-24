@@ -38,7 +38,7 @@ export default function AnnouncementModal() {
   const pathname = usePathname() ?? "/";
   const [current, setCurrent] = useState<ShownAnnouncement | null>(null);
   const [privacyResolved, setPrivacyResolved] = useState(false);
-  const isPublicPage = !/\/(admin|signin|signup)(\/|$)/.test(pathname);
+  const isPublicPage = !/\/(admin|signin|signup|connect)(\/|$)/.test(pathname);
 
   useEffect(() => {
     const refresh = () => setPrivacyResolved(savedPrivacyChoice() !== null);

@@ -18,6 +18,7 @@ export const LOCALE_CHOICE_COOKIE = "toone_locale";
  */
 export const ENGLISH_ONLY_PATHS = [
   "/about",
+  "/connect",
   "/contact",
   "/editorial-policy",
   "/governance",

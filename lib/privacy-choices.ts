@@ -2,6 +2,16 @@ const STORAGE_KEY = "toone-web-analytics-choice-v1";
 const CHOICE_LIFETIME_MS = 180 * 24 * 60 * 60 * 1000;
 
 export const PRIVACY_CHOICE_SAVED_EVENT = "toone:privacy-choice-saved";
+
+/**
+ * Pages that load no analytics and show no privacy panel, whatever the saved
+ * choice: the consent page, whose address carries a one-use request id
+ * (analytics would record it) and whose Allow button the panel would cover
+ * on a phone.
+ */
+export function isAnalyticsFreePath(pathname: string | null | undefined): boolean {
+  return /^(?:\/[a-z]{2})?\/connect(?:\/|$)/.test(pathname ?? "");
+}
 export type PrivacyChoice = "allow" | "deny";
 
 export function savedPrivacyChoice(): PrivacyChoice | null {
