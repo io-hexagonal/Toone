@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ClientKind, ConnectorMac, ConsentFailure, ConsentRequest } from "@/lib/connect/consent";
+import { assistantName, type ClientKind, type ConnectorMac, type ConsentFailure, type ConsentRequest } from "@/lib/connect/consent";
 import styles from "./connect.module.css";
 
 /*
@@ -10,8 +10,6 @@ import styles from "./connect.module.css";
 
 /** The privacy policy's section on connecting an assistant. */
 export const PRIVACY_CONNECTOR_PATH = "/en/privacy#claude-connector";
-/** The plain plans page: the only link the no-Pro state shows (no prices or checkout on this page). */
-export const PLANS_PATH = "/en/pricing";
 
 export type MacsView =
   | { status: "loading" }
@@ -38,6 +36,8 @@ export type ConsentState =
       macs: MacsView;
       /** The "start and control routines" option; only shown when the request asked for it. */
       allowAct: boolean;
+      /** The Mac the person picked; null keeps the default (the most recent one). */
+      macId: string | null;
       /** A decision is on its way: both buttons stay disabled. */
       busy: "allow" | "deny" | null;
       /** A failed decision that can be tried again. */
@@ -50,22 +50,23 @@ export type ConsentHandlers = {
   onAllow?: () => void;
   onDeny?: () => void;
   onToggleAct?: (allow: boolean) => void;
+  onPickMac?: (macId: string) => void;
   onSwitchAccount?: () => void;
   onRetry?: () => void;
 };
 
 /** Who the person goes back to. */
 function backTo(kind: ClientKind | null): string {
-  return kind === "claude" ? "Claude" : "the app you came from";
+  return assistantName(kind) ?? "the app you came from";
 }
 
 /** The subject of "… wants to use Toone" sentences after the first mention. */
 function subject(kind: ClientKind): string {
-  return kind === "claude" ? "Claude" : "This app";
+  return assistantName(kind) ?? "This app";
 }
 
 export function consentTitle(kind: ClientKind): string {
-  return kind === "claude" ? "Connect Claude to your Toone" : "Connect an app to your Toone";
+  return `Connect ${assistantName(kind) ?? "an app"} to your Toone`;
 }
 
 const NOTICE: Record<ConsentFailure, string> = {
@@ -82,7 +83,7 @@ const NOTICE: Record<ConsentFailure, string> = {
 
 export function endedCopy(reason: EndedReason, kind: ClientKind | null): { title: string; body: string; retry: boolean } {
   const back = backTo(kind);
-  const app = kind === "claude" ? "Claude" : kind ? "this app" : "an assistant";
+  const app = assistantName(kind) ?? (kind ? "this app" : "an assistant");
   switch (reason) {
     case "invalid-link":
       return { title: "This link is incomplete", body: `Go back to ${back} and connect again.`, retry: false };
@@ -120,8 +121,9 @@ function Shell({ children }: { children: ReactNode }) {
 /** "Claude (claude.ai) wants to use Toone on your Mac." The name a client gave itself never stands alone. */
 export function WhoIsAsking({ request }: { request: ConsentRequest }) {
   const host = request.redirectHost || "an unknown address";
-  if (request.clientKind === "claude") {
-    return <p className={styles.lede}><strong>Claude</strong> ({host}) wants to use Toone on your Mac.</p>;
+  const assistant = assistantName(request.clientKind);
+  if (assistant) {
+    return <p className={styles.lede}><strong>{assistant}</strong> ({host}) wants to use Toone on your Mac.</p>;
   }
   if (request.clientKind === "local") {
     return (
@@ -157,7 +159,7 @@ function Abilities({ request, allowAct, disabled, onToggleAct }: {
   const who = subject(request.clientKind);
   return (
     <section className={styles.panel} aria-labelledby="connect-abilities">
-      <h2 id="connect-abilities">What {who === "Claude" ? "Claude" : "it"} will be able to do</h2>
+      <h2 id="connect-abilities">What {assistantName(request.clientKind) ?? "it"} will be able to do</h2>
       <ul className={styles.abilities}>
         <li>
           <CheckIcon />
@@ -173,7 +175,7 @@ function Abilities({ request, allowAct, disabled, onToggleAct }: {
             onChange={(event) => onToggleAct?.(event.target.checked)}
           />
           <span>
-            <strong>Start, pause, continue, cancel and answer routines.</strong>{" "}
+            <strong>Start, pause, continue, cancel and answer routines, draft new routines and install shared ones from Explore.</strong>{" "}
             Toone still asks you on your Mac before each of these.
           </span>
         </label>
@@ -182,9 +184,12 @@ function Abilities({ request, allowAct, disabled, onToggleAct }: {
   );
 }
 
-function Macs({ macs, kind }: { macs: MacsView; kind: ClientKind }) {
+function Macs({ macs, kind, choice, picked, disabled, onPickMac }: {
+  macs: MacsView; kind: ClientKind; choice: boolean; picked: string | null; disabled: boolean; onPickMac?: (macId: string) => void;
+}) {
   if (macs.status === "hidden") return null;
   const who = subject(kind);
+  const assistant = assistantName(kind);
   let body: ReactNode;
   if (macs.status === "loading") {
     body = <p role="status">Looking for your Mac…</p>;
@@ -193,11 +198,31 @@ function Macs({ macs, kind }: { macs: MacsView; kind: ClientKind }) {
       <>
         <p>Toone isn&apos;t open on any of your Macs right now.</p>
         <p className={styles.strong}>Open Toone on your Mac and sign in.</p>
-        <p>You can allow this now; {who === "Claude" ? "Claude" : "the app"} reaches your Mac once Toone is open.</p>
+        <p>You can allow this now; {assistant ?? "the app"} reaches your Mac once Toone is open.</p>
       </>
     );
   } else if (macs.macs.length === 1) {
     body = <p>{who} will reach <strong className={styles.macName}>{macs.macs[0].name}</strong>, where Toone is open now.</p>;
+  } else if (choice) {
+    // The API takes the choice with the decision: a real picker, the most recent Mac first and chosen by default.
+    const current = picked ?? macs.macs[0].id;
+    body = (
+      <>
+        <p id="connect-mac-choice">
+          Toone is open on {macs.macs.length} of your Macs. Choose the one {assistant ?? "this app"} reaches.
+        </p>
+        <div className={styles.macPicker} role="radiogroup" aria-labelledby="connect-mac-choice">
+          {macs.macs.map((mac, index) => (
+            <label key={mac.id} className={styles.macOption}>
+              <input type="radio" name="connect-mac" value={mac.id} checked={current === mac.id} disabled={disabled}
+                onChange={() => onPickMac?.(mac.id)} />
+              <span className={styles.macName}>{mac.name}</span>
+              {index === 0 && <span className={styles.tag}>Most recent</span>}
+            </label>
+          ))}
+        </div>
+      </>
+    );
   } else {
     body = (
       <>
@@ -225,14 +250,15 @@ function Macs({ macs, kind }: { macs: MacsView; kind: ClientKind }) {
 }
 
 function HowItWorks({ kind }: { kind: ClientKind }) {
-  const requests = kind === "claude" ? "Claude's requests" : "Its requests";
+  const assistant = assistantName(kind);
+  const requests = assistant ? `${assistant}'s requests` : "Its requests";
   return (
     <section className={styles.panel} aria-labelledby="connect-how">
       <h2 id="connect-how">How it works</h2>
       <p>
         {requests} go to Toone&apos;s servers and on to the Toone app on your Mac, which must be open. Toone passes
         them on without storing their content, and keeps a record of which tools were used for 30 days. You can
-        disconnect at any time in your Toone account or app.
+        disconnect at any time in the Toone app (Settings › Connected Apps).
       </p>
       <p><a href={PRIVACY_CONNECTOR_PATH}>How Toone handles your data</a></p>
     </section>
@@ -245,14 +271,13 @@ function Ineligible({ request }: { request: ConsentRequest }) {
       <section className={styles.panel} aria-labelledby="connect-pro">
         <h2 id="connect-pro">Toone Pro</h2>
         <p className={styles.strong}>Connecting an assistant needs Toone Pro. Your account doesn&apos;t have it.</p>
-        <p><a href={PLANS_PATH}>About Toone plans</a></p>
       </section>
     );
   }
   return (
     <section className={styles.panel} aria-labelledby="connect-not-yet">
       <h2 id="connect-not-yet">Not available yet</h2>
-      <p className={styles.strong}>Connecting {request.clientKind === "claude" ? "Claude" : "an app"} is not available for this account yet.</p>
+      <p className={styles.strong}>Connecting {assistantName(request.clientKind) ?? "an app"} is not available for this account yet.</p>
     </section>
   );
 }
@@ -314,7 +339,8 @@ export default function ConsentScreen({ state, ...on }: { state: ConsentState } 
         {request.eligible ? (
           <>
             <Abilities request={request} allowAct={state.allowAct} disabled={disabled} onToggleAct={on.onToggleAct} />
-            <Macs macs={state.macs} kind={request.clientKind} />
+            <Macs macs={state.macs} kind={request.clientKind} choice={request.macChoice} picked={state.macId}
+              disabled={disabled} onPickMac={on.onPickMac} />
             <HowItWorks kind={request.clientKind} />
           </>
         ) : (

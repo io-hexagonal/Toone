@@ -23,6 +23,11 @@
 .option input { flex: none; width: 16px; height: 16px; margin: 3px 0 0; accent-color: #f0ede6; cursor: pointer; }
 .macList { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
 .macList li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff14; border-radius: 10px; font-size: 14px; color: #d2cec4; }
+.macPicker { display: grid; gap: 6px; margin-top: 10px; }
+.macOption { display: flex; align-items: center; gap: 10px; padding: 12px; min-height: 48px; border: 1px solid #ffffff14; border-radius: 10px; font-size: 14px; color: #d2cec4; cursor: pointer; }
+.macOption:has(input:checked) { border-color: #f0ede666; background: #ffffff08; }
+.macOption input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: #f0ede6; cursor: pointer; }
+.macOption .tag { margin-left: auto; }
 .macName { color: #f0ede6; overflow-wrap: anywhere; }
 .tag { flex: none; padding: 2px 8px; border-radius: 999px; border: 1px solid #ffffff2e; color: #b5b0a4; font-size: 11px; letter-spacing: .04em; }
 .page a:not(.brand) { color: #f0ede6; text-decoration: underline; text-decoration-color: #f0ede666; text-underline-offset: 3px; font-size: 14px; }

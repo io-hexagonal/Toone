@@ -25,7 +25,7 @@ function text(html: string) {
 
 const claude: ConsentRequest = {
   id: "car_abc234", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null,
+  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false,
 };
 const studio = { id: "mac_1", name: "Ana's Mac Studio" };
 const air = { id: "mac_2", name: "MacBook Air" };
@@ -33,7 +33,7 @@ const air = { id: "mac_2", name: "MacBook Air" };
 function screen(patch: Partial<Extract<ConsentState, { kind: "request" }>> = {}, request: Partial<ConsentRequest> = {}, macs: MacsView = { status: "list", macs: [studio] }) {
   const state: ConsentState = {
     kind: "request", request: { ...claude, ...request }, email: "ana@example.com", macs,
-    allowAct: true, busy: null, notice: null, ...patch,
+    allowAct: true, macId: null, busy: null, notice: null, ...patch,
   };
   return render(createElement(ConsentScreen, { state }));
 }
@@ -68,9 +68,10 @@ test("Claude, one Mac: who asks, the account, what it can do, which Mac, how it 
   assert.match(words, /Signed in as ana@example\.com\. Not you\? Switch account/);
   assert.match(words, /See your routines, runs, what is waiting for you, record books, and conversations in your Toone projects\./);
   assert.match(html, /<input type="checkbox" checked=""/);
-  assert.match(words, /Start, pause, continue, cancel and answer routines\. Toone still asks you on your Mac before each of these\./);
+  assert.match(words, /Start, pause, continue, cancel and answer routines, draft new routines and install shared ones from Explore\. Toone still asks you on your Mac before each of these\./);
   assert.match(words, /Claude will reach Ana's Mac Studio, where Toone is open now\./);
   assert.match(words, /go to Toone's servers and on to the Toone app on your Mac.*without storing their content/);
+  assert.match(words, /You can disconnect at any time in the Toone app \(Settings › Connected Apps\)\./);
   assert.match(html, /href="\/en\/privacy#claude-connector"/);
   assert.match(html, /<button type="button" class="primary"[^>]*>Allow<\/button>/);
   assert.match(html, />Don't allow<\/button>|>Don&#x27;t allow<\/button>/);
@@ -101,17 +102,51 @@ test("several Macs: all listed, the most recent one marked as the one used by de
   assert.equal(html.match(/Most recent/g)?.length, 1);
 });
 
+/** Whether the radio for `id` is the checked one. */
+const checkedMac = (html: string, id: string) =>
+  [...html.matchAll(/<input type="radio"[^>]*>/g)].some(([tag]) => tag.includes(`value="${id}"`) && tag.includes('checked=""'));
+
+test("several Macs and the API takes a choice: a real picker, the most recent Mac chosen by default", () => {
+  const html = screen({}, { macChoice: true }, { status: "list", macs: [studio, air] });
+  assert.match(text(html), /Toone is open on 2 of your Macs\. Choose the one Claude reaches\./);
+  assert.match(html, /role="radiogroup" aria-labelledby="connect-mac-choice"/);
+  assert.equal(html.match(/type="radio"/g)?.length, 2);
+  assert.equal(checkedMac(html, "mac_1"), true);
+  assert.equal(checkedMac(html, "mac_2"), false);
+  assert.doesNotMatch(html, /<legend/, "no legend: Safari on iPhone renders it badly");
+  const picked = screen({ macId: "mac_2" }, { macChoice: true }, { status: "list", macs: [studio, air] });
+  assert.equal(checkedMac(picked, "mac_2"), true);
+  assert.equal(checkedMac(picked, "mac_1"), false);
+  assert.match(screen({ busy: "allow" }, { macChoice: true }, { status: "list", macs: [studio, air] }), /type="radio"[^>]*disabled=""/);
+});
+
+test("no picker without the API's say-so, or with one Mac", () => {
+  assert.doesNotMatch(screen({}, { macChoice: false }, { status: "list", macs: [studio, air] }), /type="radio"/);
+  assert.doesNotMatch(screen({}, { macChoice: true }, { status: "list", macs: [studio] }), /type="radio"/);
+  assert.doesNotMatch(screen({}, { macChoice: true }, { status: "list", macs: [] }), /type="radio"/);
+});
+
+test("ChatGPT, vouched for by its own callbacks: named like Claude, no warning", () => {
+  const html = screen({}, { clientKind: "chatgpt", clientName: "ChatGPT", redirectHost: "chatgpt.com" });
+  const words = text(html);
+  assert.match(html, /<h1>Connect ChatGPT to your Toone<\/h1>/);
+  assert.match(words, /ChatGPT \(chatgpt\.com\) wants to use Toone on your Mac\./);
+  assert.match(words, /What ChatGPT will be able to do/);
+  assert.match(words, /ChatGPT's requests go to Toone's servers/);
+  assert.doesNotMatch(words, /This is not Claude/);
+});
+
 test("the Mac section waits quietly, and disappears when the list cannot be read", () => {
   assert.match(screen({}, {}, { status: "loading" }), /role="status">Looking for your Mac…/);
   assert.doesNotMatch(screen({}, {}, { status: "hidden" }), /connect-macs/);
 });
 
-test("no Toone Pro: one plain sentence, at most a link to the plans page, no upgrade, prices or checkout; Don't allow stays", () => {
+test("no Toone Pro: one plain sentence and Don't allow; no link, upgrade, prices or checkout", () => {
   const html = screen({}, { eligible: false, ineligibleReason: "subscription_required" }, { status: "hidden" });
   const words = text(html);
   assert.match(words, /Connecting an assistant needs Toone Pro\. Your account doesn't have it\./);
   const links = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(links.filter((href) => href !== "/en"), ["/en/pricing"], "the only link besides the logo");
+  assert.deepEqual(links, ["/en"], "only the logo: no plans or pricing link inside an assistant's flow");
   assert.doesNotMatch(words, /upgrade|buy|checkout|subscribe|trial|€|\$|\/ ?month|per month|year/i);
   assert.doesNotMatch(html, />Allow</);
   assert.match(html, /Don(&#x27;|')t allow/);

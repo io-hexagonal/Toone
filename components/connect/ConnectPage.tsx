@@ -105,7 +105,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       setState({
         kind: "request", request, email,
         macs: request.eligible ? { status: "loading" } : { status: "hidden" },
-        allowAct: request.scopes.includes("act"), busy: null, notice: null,
+        allowAct: request.scopes.includes("act"), macId: null, busy: null, notice: null,
       });
       if (!request.eligible) return;
       // Which Macs Claude can reach is a help, not a condition: a failure hides it.
@@ -142,9 +142,9 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
 
   async function submit(approve: boolean) {
     if (state.kind !== "request" || state.busy !== null || decided.current) return;
-    const { request, allowAct } = state;
+    const { request, allowAct, macId } = state;
     setState({ ...state, busy: approve ? "allow" : "deny", notice: null });
-    const outcome = await decide(token, request, approve, allowAct);
+    const outcome = await decide(token, request, approve, allowAct, undefined, macId);
     if (!alive.current) return;
     const kind = request.clientKind;
     if (outcome.kind === "navigate") {
@@ -173,7 +173,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
         setState({
           kind: "request", request: { ...request, eligible: false,
             ineligibleReason: outcome.failure === "needs-pro" ? "subscription_required" : "not_allowed" },
-          email, macs: { status: "hidden" }, allowAct, busy: null, notice: null,
+          email, macs: { status: "hidden" }, allowAct, macId, busy: null, notice: null,
         });
         return;
       default:
@@ -187,6 +187,11 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       onAllow={() => void submit(true)}
       onDeny={() => void submit(false)}
       onToggleAct={(allow) => setState((current) => (current.kind === "request" ? { ...current, allowAct: allow } : current))}
+      onPickMac={(macId) => setState((current) => {
+        if (current.kind !== "request" || current.macs.status !== "list") return current;
+        // The most recent Mac is the default: picking it again sends nothing.
+        return { ...current, macId: macId === current.macs.macs[0]?.id ? null : macId };
+      })}
       onSwitchAccount={() => void onSwitchAccount()}
       onRetry={() => void load()}
     />

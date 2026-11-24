@@ -24,10 +24,24 @@ export function parseRequestId(value: string | string[] | null | undefined): str
 }
 
 /**
- * `claude`: the code goes to one of Claude's own callbacks. `local`: to a
- * program on this computer (a loopback address). `other`: anywhere else.
+ * `claude` / `chatgpt`: the code goes to one of that assistant's own
+ * callbacks. `local`: to a program on this computer (a loopback address).
+ * `other`: anywhere else.
  */
-export type ClientKind = "claude" | "local" | "other";
+export type ClientKind = "claude" | "chatgpt" | "local" | "other";
+
+/** The assistant's name when the API vouches for it (its own callbacks), else null. */
+export function assistantName(kind: ClientKind | null): string | null {
+  return kind === "claude" ? "Claude" : kind === "chatgpt" ? "ChatGPT" : null;
+}
+
+/**
+ * The view field by which the API says the decision may name a Mac. Lane C2
+ * adds it; until consent-page.md names it, both spellings are read.
+ */
+export const MAC_CHOICE_VIEW_FIELDS = ["mac_choice", "macChoice"] as const;
+/** The decision field carrying the chosen Mac (snake case like the rest of the API). */
+export const MAC_CHOICE_DECISION_FIELD = "mac_id";
 export type Scope = "read" | "act";
 export type Ineligibility = "subscription_required" | "not_allowed";
 
@@ -44,6 +58,8 @@ export type ConsentRequest = {
   eligible: boolean;
   /** Set when not eligible; an unknown reason counts as not allowed. */
   ineligibleReason: Ineligibility | null;
+  /** The API accepts a chosen Mac with the decision. */
+  macChoice: boolean;
 };
 
 export type ConnectorMac = { id: string; name: string };
@@ -51,6 +67,7 @@ export type ConnectorMac = { id: string; name: string };
 type RawConsentRequest = {
   id?: unknown; client_name?: unknown; redirect_host?: unknown; client_kind?: unknown;
   scopes?: unknown; expires_at?: unknown; eligible?: unknown; ineligible_reason?: unknown;
+  [field: string]: unknown;
 };
 
 const text = (value: unknown) => (typeof value === "string" ? value : "");
@@ -67,11 +84,12 @@ export function normalizeConsentRequest(raw: RawConsentRequest): ConsentRequest 
     id: text(raw.id),
     clientName: text(raw.client_name).trim(),
     redirectHost: text(raw.redirect_host).trim().toLowerCase(),
-    clientKind: kind === "claude" || kind === "local" ? kind : "other",
+    clientKind: kind === "claude" || kind === "chatgpt" || kind === "local" ? kind : "other",
     scopes: scopes.includes("read") ? scopes : ["read", ...scopes],
     expiresAt: text(raw.expires_at),
     eligible,
     ineligibleReason: eligible ? null : reason === "subscription_required" ? "subscription_required" : "not_allowed",
+    macChoice: MAC_CHOICE_VIEW_FIELDS.some((field) => raw[field] === true),
   };
 }
 
@@ -85,10 +103,14 @@ export async function getConsentRequest(token: string, id: string): Promise<Cons
 /**
  * `POST /v1/connector/authorizations/{id}/decision`. With `readOnly` the
  * request is narrowed to `["read"]`; otherwise the requested scopes stand.
+ * `macId` (only with Allow, only when the API offers the choice) names the
+ * Mac the person picked; without it the API uses the most recent one.
  * Resolves to the API's `redirect_to`, unchecked (see `safeRedirect`).
  */
-export async function postConsentDecision(token: string, id: string, approve: boolean, readOnly = false): Promise<string> {
-  const body = approve && readOnly ? { approve, scopes: ["read"] } : { approve };
+export async function postConsentDecision(token: string, id: string, approve: boolean, readOnly = false, macId: string | null = null): Promise<string> {
+  const body: Record<string, unknown> = { approve };
+  if (approve && readOnly) body.scopes = ["read"];
+  if (approve && macId) body[MAC_CHOICE_DECISION_FIELD] = macId;
   const data = await authedRequest<{ redirect_to?: unknown }>(token, `${path(id)}/decision`, {
     method: "POST",
     body: JSON.stringify(body),
@@ -194,10 +216,12 @@ export async function decide(
   approve: boolean,
   allowAct: boolean,
   post: typeof postConsentDecision = postConsentDecision,
+  macId: string | null = null,
 ): Promise<DecisionOutcome> {
   const readOnly = approve && !allowAct && request.scopes.includes("act");
+  const mac = approve && request.macChoice ? macId : null;
   try {
-    const redirectTo = await post(token, request.id, approve, readOnly);
+    const redirectTo = await post(token, request.id, approve, readOnly, mac);
     const url = safeRedirect(redirectTo, request, approve);
     return url ? { kind: "navigate", url } : { kind: "bad-redirect" };
   } catch (error) {
