@@ -49,6 +49,7 @@ test("cookie and storage names match the code that sets them", () => {
     for (const name of [
       "toone_site_session", "toone_locale", "toone.session", "toone-web-analytics-choice-v1", "toone.locale.dismissed",
       "toone.pro.order:", "toone.pro.checkout:", "toone.pro.checkout", "toone.pro.from", "toone.redeem.pending",
+      "toone.connect.answered.", "__Host-toone_consent",
     ]) {
       assert.ok(text.includes(name), `${seller}: ${name}`);
     }
@@ -57,7 +58,7 @@ test("cookie and storage names match the code that sets them", () => {
     assert.match(text, /trytoone\.com sets no Stripe cookies and loads no Stripe script/);
     assert.match(text, /checkout\.stripe\.com/);
     assert.match(text, /allowing it adds no cookie/);
-    assert.match(text, /up to five items in your browser's local storage and up to three in its session storage/);
+    assert.match(text, /up to five items in your browser's local storage and up to four in its session storage/);
   }
 });
 
