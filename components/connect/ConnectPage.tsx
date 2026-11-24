@@ -171,7 +171,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
 
   useEffect(() => { void load(); }, [load]);
 
-  // The request lapses after ten minutes: say so instead of letting Allow fail.
+  // The request lapses after five minutes: say so instead of letting Allow fail.
   const expiresAt = state.kind === "request" ? state.request.expiresAt : null;
   const clientKind = state.kind === "request" ? state.request.clientKind : null;
   useEffect(() => {

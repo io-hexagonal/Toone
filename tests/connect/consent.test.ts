@@ -201,9 +201,8 @@ test("every server answer maps to one plain outcome (contract §3.1, §3.2)", ()
     [503, "service_unavailable", "unavailable"],
     [403, "subscription_required", "needs-pro"],
     [403, "forbidden", "not-allowed"],
-    [403, "consent_browser_mismatch", "other-browser"],
+    [403, "consent_other_browser", "other-browser"],
     [403, "something_new", "other-browser"],
-    [400, "nonce_mismatch", "other-browser"],
     [429, "rate_limit_exceeded", "rate-limited"],
     [400, "invalid_input", "page-error"],
     [500, "internal_error", "unreachable"],
@@ -222,8 +221,8 @@ test("expiry: time left, zero once past, null when unreadable", () => {
 
 test("the expiry timer trusts the API over a wrong device clock", () => {
   const now = Date.parse("2026-11-24T18:30:00Z");
-  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T18:36:00Z" }, now), 360_000);
+  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T18:34:00Z" }, now), 240_000);
   assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T18:00:00Z" }, now), null, "device clock ahead: no timer, the API answers a late decision");
-  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T19:30:00Z" }, now), 600_000, "device clock behind: at most the request's ten minutes");
+  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T19:30:00Z" }, now), 300_000, "device clock behind: at most the request's five minutes");
   assert.equal(expiryTimerMs({ expiresAt: "soon" }, now), null);
 });

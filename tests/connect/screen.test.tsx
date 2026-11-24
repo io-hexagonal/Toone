@@ -229,7 +229,7 @@ test("server errors that end the page each say one plain thing", () => {
   assert.match(text(ended("unavailable")), /Connecting Claude to Toone is not available right now\./);
   assert.match(text(ended("unavailable", null)), /Connecting an assistant to Toone is not available right now\./);
   assert.match(text(ended("bad-redirect")), /Toone couldn't send you back safely\. Go back to Claude and connect again\./);
-  assert.match(text(ended("other-browser")), /Start again from Claude This page was opened in a different browser from the one that started connecting\. Go back to Claude in this browser and connect again\./);
+  assert.match(text(ended("other-browser")), /Started in another browser This sign-in was started in another browser\. Go back to Claude and connect again from this browser\./);
   assert.match(text(ended("already-allowed", null)), /This connection is already set up You already allowed it\./);
   assert.match(text(ended("already-denied", null)), /You already answered You chose not to allow this connection\./);
   assert.match(text(ended("unreachable")), /Toone couldn't be reached Check your connection and try again\./);

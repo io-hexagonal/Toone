@@ -8,9 +8,10 @@
  *
  * The session travels as a bearer token. The two consent calls also carry
  * the API's own cookies (`credentials: "include"`): the API binds a pending
- * request to the browser that started it with a `__Host-` cookie on
- * api.trytoone.com (security review M1), so a forwarded link cannot be
- * approved in someone else's browser. The OAuth `state` is the API's business: the page
+ * request to the browser that started it with the `__Host-toone_consent`
+ * cookie on api.trytoone.com (security review M1, consent-page.md §3), so a
+ * forwarded link cannot be approved in someone else's browser. The page never
+ * reads or writes that cookie. The OAuth `state` is the API's business: the page
  * never reads, changes or shows `redirect_to`, it only checks that it points
  * at the host the API announced for this request and then navigates there.
  */
@@ -47,12 +48,10 @@ export const MAC_CHOICE_VIEW_FIELDS = ["mac_choice", "macChoice"] as const;
 export const MAC_CHOICE_DECISION_FIELD = "mac_id";
 
 /**
- * Error codes by which the API says the request belongs to another browser
- * (M1). consent-page.md does not name them yet; any other 403 counts too.
+ * The API's answer when the request was started in another browser (M1,
+ * consent-page.md §3). Any other unexpected 403 is treated the same way.
  */
-export const OTHER_BROWSER_CODES: ReadonlySet<string> = new Set([
-  "consent_browser_mismatch", "browser_mismatch", "consent_mismatch", "nonce_mismatch",
-]);
+export const OTHER_BROWSER_CODES: ReadonlySet<string> = new Set(["consent_other_browser"]);
 
 /** The two consent calls send the API's own cookies along with the bearer. */
 const WITH_API_COOKIES: RequestInit = { credentials: "include" };
@@ -211,8 +210,8 @@ export function consentFailure(error: unknown): ConsentFailure {
   return "unreachable";
 }
 
-/** A request lives ten minutes (contract §1). */
-export const REQUEST_LIFETIME_MS = 10 * 60_000;
+/** A request lives five minutes (consent-page.md §1, since M1). */
+export const REQUEST_LIFETIME_MS = 5 * 60_000;
 
 /**
  * When the page should say the request lapsed, read right after loading it.

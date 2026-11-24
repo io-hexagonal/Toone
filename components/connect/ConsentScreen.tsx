@@ -90,7 +90,7 @@ const NOTICE: Record<ConsentFailure, string> = {
   unavailable: "Connecting is not available right now.",
   "not-allowed": "Connecting is not available for this account yet.",
   "needs-pro": "Connecting an assistant needs Toone Pro. Your account doesn't have it.",
-  "other-browser": "This page was opened in a different browser from the one that started connecting.",
+  "other-browser": "This sign-in was started in another browser.",
 };
 
 /** The Mac picked for this connection is gone (removed, or not this account's): choose again. */
@@ -115,7 +115,7 @@ export function endedCopy(reason: EndedReason, kind: ClientKind | null): { title
     case "unreachable":
       return { title: "Toone couldn't be reached", body: "Check your connection and try again.", retry: true };
     case "other-browser":
-      return { title: `Start again from ${back}`, body: `This page was opened in a different browser from the one that started connecting. Go back to ${back} in this browser and connect again.`, retry: false };
+      return { title: "Started in another browser", body: `This sign-in was started in another browser. Go back to ${back} and connect again from this browser.`, retry: false };
     case "already-allowed":
       return { title: "This connection is already set up", body: `You already allowed it. You can go back to ${back}.`, retry: false };
     case "already-denied":
