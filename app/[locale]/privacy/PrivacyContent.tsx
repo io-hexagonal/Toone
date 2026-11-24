@@ -434,6 +434,37 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
         </p>
       </section>
 
+      <section id="claude-connector">
+        <h2>Toone connector for Claude</h2>
+        <p>
+          The Toone connector is an optional, open-source plugin that lets Claude (in Claude Code or
+          the Claude desktop app) see and act on your Toone routines. It runs on your Mac and talks
+          only to the Toone app on the same Mac, over a local connection that does not leave your
+          computer. Before it can do anything, Toone asks you to allow it: you compare a six-digit
+          code and choose whether it may only read, or also start and control routines. You can
+          revoke it at any time in Toone, under Settings, Connected Apps. The connector is available
+          with Toone (Direct), not Toone (Mac App Store).
+        </p>
+        <p>
+          When you ask Claude about your routines, the connector reads from Toone what your request
+          needs: routine and run names and status, what is waiting for you, record-book entries and
+          the messages of a run or a conversation. Toone leaves out the agents&apos; reasoning,
+          redacts credentials it recognises, never includes temporary or hidden conversations, and
+          limits how much text one answer can carry. What the connector reads goes to Claude, under
+          your own Claude account and Anthropic&apos;s terms. It does not pass through Toone&apos;s
+          server, and Toone does not receive, log or store it. Anything that changes something, such
+          as starting a run or answering a question, asks for your confirmation first.
+        </p>
+        <p>
+          To show a routine&apos;s live graph, the connector draws it inside the Claude conversation
+          or, if you ask, on a page served only to your own Mac (127.0.0.1) at an address with a
+          random secret, which stops after a few minutes without a viewer. Searching Toone Explore
+          from Claude sends only your search words to Toone&apos;s server, with no account or
+          identifier. The connector keeps two small files on your Mac: a random identifier per
+          project, and the key Toone gave it when you allowed it.
+        </p>
+      </section>
+
       <section id="business-explore">
         <h2>Business, Live Share, and Explore</h2>
         <p>
