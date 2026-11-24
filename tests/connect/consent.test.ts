@@ -6,7 +6,10 @@ import {
   decide,
   expiryTimerMs,
   getConsentRequest,
+  listAccountMacs,
   listConnectorMacs,
+  recallAnswer,
+  rememberAnswer,
   msUntilExpiry,
   normalizeConsentRequest,
   parseRequestId,
@@ -20,13 +23,13 @@ import {
 const realFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = realFetch; });
 
-type Call = { url: string; method: string; auth: string | null; body: string | null; cache: RequestCache | undefined };
+type Call = { url: string; method: string; auth: string | null; body: string | null; cache: RequestCache | undefined; credentials: RequestCredentials | undefined };
 
 function stubApi(status: number, body: unknown) {
   const calls: Call[] = [];
   globalThis.fetch = (async (url: string | URL, init?: RequestInit) => {
     const headers = new Headers(init?.headers);
-    calls.push({ url: String(url), method: init?.method ?? "GET", auth: headers.get("Authorization"), body: (init?.body as string) ?? null, cache: init?.cache });
+    calls.push({ url: String(url), method: init?.method ?? "GET", auth: headers.get("Authorization"), body: (init?.body as string) ?? null, cache: init?.cache, credentials: init?.credentials });
     return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
   }) as typeof fetch;
   return calls;
@@ -58,6 +61,7 @@ test("the request is read with the session bearer, uncached, and normalized", as
   assert.equal(calls[0].method, "GET");
   assert.equal(calls[0].auth, "Bearer tok");
   assert.equal(calls[0].cache, "no-store");
+  assert.equal(calls[0].credentials, "include", "the API's browser-binding cookie goes along (M1)");
   assert.deepEqual(request, { id: "car_abc", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
     scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false });
 });
@@ -85,6 +89,7 @@ test("the decision posts approve, and narrows to read only when asked", async ()
   assert.equal(calls[0].url, "https://api.trytoone.com/v1/connector/authorizations/car_abc/decision");
   assert.equal(calls[0].method, "POST");
   assert.equal(calls[0].auth, "Bearer tok");
+  assert.equal(calls[0].credentials, "include", "the decision carries the browser-binding cookie too (M1)");
   assert.deepEqual(JSON.parse(calls[0].body!), { approve: true });
 
   calls = stubApi(200, { data: { redirect_to: CODE } });
@@ -105,6 +110,33 @@ test("the Macs list is read and tolerates odd entries", async () => {
   assert.deepEqual(await listConnectorMacs("tok"), [{ id: "mac_1", name: "Studio" }, { id: "mac_2", name: "Mac" }]);
   assert.equal(calls[0].url, "https://api.trytoone.com/v1/me/connector/macs");
   assert.equal(calls[0].auth, "Bearer tok");
+});
+
+test("the account's Macs: only active ones, from the enveloped {macs} answer; the Mac list never sends cookies", async () => {
+  const calls = stubApi(200, { data: { macs: [
+    { id: "mac_1", name: "Studio", state: "active" }, { id: "mac_2", name: "Old", state: "removed" },
+    { id: "mac_3", name: "Paused", state: "paused" }, { id: "mac_4", name: "", state: "active" }, { name: "no id", state: "active" },
+  ] } });
+  assert.deepEqual(await listAccountMacs("tok"), [{ id: "mac_1", name: "Studio" }, { id: "mac_4", name: "Mac" }]);
+  assert.equal(calls[0].url, "https://api.trytoone.com/v1/macs");
+  assert.equal(calls[0].credentials, undefined);
+});
+
+test("this tab remembers an answered request (for Back), and nothing else", () => {
+  const store = new Map<string, string>();
+  const g = globalThis as unknown as { window?: unknown };
+  const before = g.window;
+  g.window = { sessionStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => { store.set(k, v); } } };
+  try {
+    assert.equal(recallAnswer("car_a"), null);
+    rememberAnswer("car_a", true);
+    rememberAnswer("car_b", false);
+    assert.equal(recallAnswer("car_a"), "allowed");
+    assert.equal(recallAnswer("car_b"), "denied");
+    assert.deepEqual([...store.values()].sort(), ["allowed", "denied"], "only the answer, never an address or code");
+  } finally {
+    g.window = before;
+  }
 });
 
 test("redirect safety: only the announced host, https (http only to loopback), carrying the expected answer", () => {
@@ -169,6 +201,9 @@ test("every server answer maps to one plain outcome (contract §3.1, §3.2)", ()
     [503, "service_unavailable", "unavailable"],
     [403, "subscription_required", "needs-pro"],
     [403, "forbidden", "not-allowed"],
+    [403, "consent_browser_mismatch", "other-browser"],
+    [403, "something_new", "other-browser"],
+    [400, "nonce_mismatch", "other-browser"],
     [429, "rate_limit_exceeded", "rate-limited"],
     [400, "invalid_input", "page-error"],
     [500, "internal_error", "unreachable"],

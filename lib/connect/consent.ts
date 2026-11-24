@@ -6,8 +6,11 @@
  * with the address to send the browser to (the assistant's callback with a
  * one-time code, or with `error=access_denied`).
  *
- * The session travels as a bearer token, never a cookie, so the API routes
- * have no CSRF surface. The OAuth `state` is the API's business: the page
+ * The session travels as a bearer token. The two consent calls also carry
+ * the API's own cookies (`credentials: "include"`): the API binds a pending
+ * request to the browser that started it with a `__Host-` cookie on
+ * api.trytoone.com (security review M1), so a forwarded link cannot be
+ * approved in someone else's browser. The OAuth `state` is the API's business: the page
  * never reads, changes or shows `redirect_to`, it only checks that it points
  * at the host the API announced for this request and then navigates there.
  */
@@ -40,8 +43,19 @@ export function assistantName(kind: ClientKind | null): string | null {
  * adds it; until consent-page.md names it, both spellings are read.
  */
 export const MAC_CHOICE_VIEW_FIELDS = ["mac_choice", "macChoice"] as const;
-/** The decision field carrying the chosen Mac (snake case like the rest of the API). */
+/** The decision field carrying the chosen Mac (consent-page.md §3.2). */
 export const MAC_CHOICE_DECISION_FIELD = "mac_id";
+
+/**
+ * Error codes by which the API says the request belongs to another browser
+ * (M1). consent-page.md does not name them yet; any other 403 counts too.
+ */
+export const OTHER_BROWSER_CODES: ReadonlySet<string> = new Set([
+  "consent_browser_mismatch", "browser_mismatch", "consent_mismatch", "nonce_mismatch",
+]);
+
+/** The two consent calls send the API's own cookies along with the bearer. */
+const WITH_API_COOKIES: RequestInit = { credentials: "include" };
 export type Scope = "read" | "act";
 export type Ineligibility = "subscription_required" | "not_allowed";
 
@@ -97,7 +111,7 @@ const path = (id: string) => `/connector/authorizations/${encodeURIComponent(id)
 
 /** `GET /v1/connector/authorizations/{id}`. */
 export async function getConsentRequest(token: string, id: string): Promise<ConsentRequest> {
-  return normalizeConsentRequest(await authedRequest<RawConsentRequest>(token, path(id)));
+  return normalizeConsentRequest(await authedRequest<RawConsentRequest>(token, path(id), { ...WITH_API_COOKIES }));
 }
 
 /**
@@ -112,6 +126,7 @@ export async function postConsentDecision(token: string, id: string, approve: bo
   if (approve && readOnly) body.scopes = ["read"];
   if (approve && macId) body[MAC_CHOICE_DECISION_FIELD] = macId;
   const data = await authedRequest<{ redirect_to?: unknown }>(token, `${path(id)}/decision`, {
+    ...WITH_API_COOKIES,
     method: "POST",
     body: JSON.stringify(body),
   });
@@ -126,6 +141,20 @@ export async function listConnectorMacs(token: string): Promise<ConnectorMac[]> 
     const mac = (raw ?? {}) as { mac_id?: unknown; name?: unknown };
     const id = text(mac.mac_id);
     return id ? [{ id, name: text(mac.name).trim() || "Mac" }] : [];
+  });
+}
+
+/**
+ * `GET /v1/macs`: the account's registered Macs that are active, open or not
+ * (consent-page.md §3.1 `mac_choice`). Answers `{"macs": […]}` in the envelope.
+ */
+export async function listAccountMacs(token: string): Promise<ConnectorMac[]> {
+  const data = await authedRequest<unknown>(token, "/macs");
+  const list = Array.isArray(data) ? data : Array.isArray((data as { macs?: unknown } | null)?.macs) ? (data as { macs: unknown[] }).macs : [];
+  return list.flatMap((raw) => {
+    const mac = (raw ?? {}) as { id?: unknown; name?: unknown; state?: unknown };
+    const id = text(mac.id);
+    return id && mac.state === "active" ? [{ id, name: text(mac.name).trim() || "Mac" }] : [];
   });
 }
 
@@ -162,6 +191,7 @@ export type ConsentFailure =
   | "unavailable"
   | "not-allowed"
   | "needs-pro"
+  | "other-browser"
   | "rate-limited"
   | "page-error"
   | "unreachable";
@@ -169,11 +199,13 @@ export type ConsentFailure =
 /** Maps an API or network error to what the page says (contract §3.1, §3.2). */
 export function consentFailure(error: unknown): ConsentFailure {
   if (!(error instanceof ApiError)) return "unreachable";
+  if (OTHER_BROWSER_CODES.has(error.code)) return "other-browser";
   if (error.status === 401 || error.code === "unauthorized") return "signed-out";
   if (error.status === 404 || error.code === "not_found") return "expired";
   if (error.status === 503 || error.code === "service_unavailable") return "unavailable";
   if (error.code === "subscription_required") return "needs-pro";
-  if (error.status === 403) return "not-allowed";
+  if (error.status === 403 && error.code === "forbidden") return "not-allowed";
+  if (error.status === 403) return "other-browser";
   if (error.status === 429 || error.code === "rate_limit_exceeded") return "rate-limited";
   if (error.status === 400) return "page-error";
   return "unreachable";
@@ -198,6 +230,22 @@ export function expiryTimerMs(request: Pick<ConsentRequest, "expiresAt">, now = 
 export function msUntilExpiry(request: Pick<ConsentRequest, "expiresAt">, now = Date.now()): number | null {
   const at = Date.parse(request.expiresAt);
   return Number.isFinite(at) ? Math.max(0, at - now) : null;
+}
+
+/** This tab's note that a request was already answered, for the Back button (never the address or the code). */
+const ANSWERED_KEY = (id: string) => `toone.connect.answered.${id}`;
+
+export function rememberAnswer(id: string, approve: boolean): void {
+  try { window.sessionStorage.setItem(ANSWERED_KEY(id), approve ? "allowed" : "denied"); } catch { /* private mode */ }
+}
+
+export function recallAnswer(id: string): "allowed" | "denied" | null {
+  try {
+    const value = window.sessionStorage.getItem(ANSWERED_KEY(id));
+    return value === "allowed" || value === "denied" ? value : null;
+  } catch {
+    return null;
+  }
 }
 
 /** How a decision ended: go to the checked address, refuse a bad one, or explain a failure. */

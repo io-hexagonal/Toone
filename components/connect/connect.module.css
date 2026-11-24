@@ -41,8 +41,9 @@
 .page .linkButton { display: inline; min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; color: #dfdcd4; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; }
 .page .linkButton:hover { background: none; color: #f0ede6; }
 /* Allow first: on top on a phone, on the right from tablet width. */
-.decision { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
+.decision { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
 .decision button { width: 100%; }
+.onlyIf { margin: 18px 0 0; color: #b5b0a4; font-size: 13.5px; line-height: 1.55; }
 .error { color: #f3a393; font-size: 14px; line-height: 1.5; margin: 16px 0 0; }
 .centered { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding-top: clamp(40px, 14vh, 140px); }
 .centered p { color: #aaa8a1; font-size: 15px; line-height: 1.6; margin: 0; max-width: 40ch; }

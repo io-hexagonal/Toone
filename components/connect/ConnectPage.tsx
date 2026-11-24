@@ -8,12 +8,17 @@ import {
   consentFailure,
   decide,
   getConsentRequest,
+  listAccountMacs,
   listConnectorMacs,
   expiryTimerMs,
+  recallAnswer,
+  rememberAnswer,
   type ClientKind,
   type ConsentFailure,
+  type ConsentRequest,
 } from "@/lib/connect/consent";
-import ConsentScreen, { type ConsentState, type EndedReason } from "./ConsentScreen";
+import { browserAttentionEnv, watchAttention, type AttentionGate } from "@/lib/connect/attention";
+import ConsentScreen, { MAC_GONE_NOTICE, type ConsentState, type EndedReason, type MacsView } from "./ConsentScreen";
 
 /**
  * /connect?request=car_…: sign in if needed (on this page, so the request
@@ -54,6 +59,7 @@ export function ConnectSignIn({ sessionEnded, onAuthenticated }: {
   return (
     <AuthPage
       mode="signin"
+      contained
       onAuthenticated={onAuthenticated}
       heading={{
         title: "Sign in to connect",
@@ -69,6 +75,7 @@ export function ConnectSignIn({ sessionEnded, onAuthenticated }: {
 const ENDS_ON_LOAD: Partial<Record<ConsentFailure, EndedReason>> = {
   expired: "expired",
   unavailable: "unavailable",
+  "other-browser": "other-browser",
   "rate-limited": "rate-limited",
   "page-error": "page-error",
   unreachable: "unreachable",
@@ -95,7 +102,51 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
 
   const { token } = session;
   const email = session.user.email;
+  const [macNotice, setMacNotice] = useState<string | null>(null);
+
+  // Allow arms after a moment of the person's attention, and disarms when the page loses it (M2).
+  const [armed, setArmed] = useState(false);
+  const gate = useRef<AttentionGate | null>(null);
+  useEffect(() => {
+    const watcher = watchAttention(browserAttentionEnv(), setArmed);
+    gate.current = watcher;
+    return () => { watcher.stop(); gate.current = null; };
+  }, []);
+
+  // Back after a decision: a page restored from the back-forward cache says it was already answered.
+  useEffect(() => {
+    const onShow = (event: PageTransitionEvent) => {
+      const answer = recallAnswer(requestId);
+      if (event.persisted && answer) setState({ kind: "ended", reason: answer === "allowed" ? "already-allowed" : "already-denied", clientKind: null });
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, [requestId]);
+
+  /** Which Macs to show: a picker when the API takes a choice and the account has several, else who is open now. */
+  const loadMacs = useCallback(async (request: ConsentRequest): Promise<MacsView> => {
+    // Reachable now: a help, not a condition; a failure hides it.
+    const reachable = listConnectorMacs(token).catch(() => null);
+    if (request.macChoice) {
+      const account = await listAccountMacs(token).catch(() => null);
+      if (account && account.length > 1) {
+        const open = await reachable;
+        return { status: "choice", macs: account, open: (open ?? []).map((mac) => mac.id) };
+      }
+    }
+    const open = await reachable;
+    return open ? { status: "list", macs: open } : { status: "hidden" };
+  }, [token]);
+
   const load = useCallback(async () => {
+    setMacNotice(null);
+    // This tab already answered (Back after Allow): say so rather than "expired".
+    const answer = recallAnswer(requestId);
+    if (answer) {
+      decided.current = true;
+      setState({ kind: "ended", reason: answer === "allowed" ? "already-allowed" : "already-denied", clientKind: null });
+      return;
+    }
     setState({ kind: "loading" });
     let kind: ClientKind | null = null;
     try {
@@ -105,14 +156,10 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       setState({
         kind: "request", request, email,
         macs: request.eligible ? { status: "loading" } : { status: "hidden" },
-        allowAct: request.scopes.includes("act"), macId: null, busy: null, notice: null,
+        allowAct: request.scopes.includes("act"), macId: null, armed: false, busy: null, notice: null,
       });
       if (!request.eligible) return;
-      // Which Macs Claude can reach is a help, not a condition: a failure hides it.
-      const macs = await listConnectorMacs(token).then(
-        (list) => ({ status: "list" as const, macs: list }),
-        () => ({ status: "hidden" as const }),
-      );
+      const macs = await loadMacs(request);
       if (alive.current) setState((current) => (current.kind === "request" ? { ...current, macs } : current));
     } catch (error) {
       if (!alive.current) return;
@@ -120,7 +167,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       if (failure === "signed-out") return sessionLost.current();
       setState({ kind: "ended", reason: ENDS_ON_LOAD[failure] ?? "unreachable", clientKind: kind });
     }
-  }, [token, email, requestId]);
+  }, [token, email, requestId, loadMacs]);
 
   useEffect(() => { void load(); }, [load]);
 
@@ -140,15 +187,19 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
     return () => window.clearTimeout(timer);
   }, [expiresAt, clientKind]);
 
-  async function submit(approve: boolean) {
+  async function submit(approve: boolean, fromPointer = true) {
     if (state.kind !== "request" || state.busy !== null || decided.current) return;
+    // A press that began before Allow armed (or while the page was away) does not count.
+    if (approve && !gate.current?.accepts(fromPointer)) return;
     const { request, allowAct, macId } = state;
+    setMacNotice(null);
     setState({ ...state, busy: approve ? "allow" : "deny", notice: null });
     const outcome = await decide(token, request, approve, allowAct, undefined, macId);
     if (!alive.current) return;
     const kind = request.clientKind;
     if (outcome.kind === "navigate") {
       decided.current = true;
+      rememberAnswer(request.id, approve);
       setState({ kind: "leaving", approve, clientKind: kind });
       // Top-level navigation, same tab: the address carries a one-time code.
       window.location.assign(outcome.url);
@@ -164,7 +215,8 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
         return sessionLost.current();
       case "expired":
       case "unavailable":
-        decided.current = outcome.failure === "expired";
+      case "other-browser":
+        decided.current = outcome.failure !== "unavailable";
         setState({ kind: "ended", reason: outcome.failure, clientKind: kind });
         return;
       case "needs-pro":
@@ -173,25 +225,33 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
         setState({
           kind: "request", request: { ...request, eligible: false,
             ineligibleReason: outcome.failure === "needs-pro" ? "subscription_required" : "not_allowed" },
-          email, macs: { status: "hidden" }, allowAct, macId, busy: null, notice: null,
+          email, macs: { status: "hidden" }, allowAct, macId, armed: false, busy: null, notice: null,
         });
+        return;
+      case "page-error":
+        if (macId) {
+          // consent-page.md §3.2: a Mac that is no longer this account's is refused; reload the list and ask again.
+          setMacNotice(MAC_GONE_NOTICE);
+          const macs = await loadMacs(request);
+          if (alive.current) setState((current) => (current.kind === "request" ? { ...current, macs, macId: null, busy: null } : current));
+          return;
+        }
+        setState((current) => (current.kind === "request" ? { ...current, busy: null, notice: outcome.failure } : current));
         return;
       default:
         setState((current) => (current.kind === "request" ? { ...current, busy: null, notice: outcome.failure } : current));
     }
   }
 
+  const shown: ConsentState = state.kind === "request" ? { ...state, armed } : state;
   return (
     <ConsentScreen
-      state={state}
-      onAllow={() => void submit(true)}
+      state={shown}
+      macNotice={macNotice}
+      onAllow={(fromPointer) => void submit(true, fromPointer)}
       onDeny={() => void submit(false)}
       onToggleAct={(allow) => setState((current) => (current.kind === "request" ? { ...current, allowAct: allow } : current))}
-      onPickMac={(macId) => setState((current) => {
-        if (current.kind !== "request" || current.macs.status !== "list") return current;
-        // The most recent Mac is the default: picking it again sends nothing.
-        return { ...current, macId: macId === current.macs.macs[0]?.id ? null : macId };
-      })}
+      onPickMac={(macId) => setState((current) => (current.kind === "request" ? { ...current, macId } : current))}
       onSwitchAccount={() => void onSwitchAccount()}
       onRetry={() => void load()}
     />

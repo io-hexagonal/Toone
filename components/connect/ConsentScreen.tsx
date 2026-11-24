@@ -14,7 +14,10 @@ export const PRIVACY_CONNECTOR_PATH = "/en/privacy#claude-connector";
 export type MacsView =
   | { status: "loading" }
   | { status: "hidden" }
-  | { status: "list"; macs: ConnectorMac[] };
+  /** The Macs reachable now, explained (no choice to make). */
+  | { status: "list"; macs: ConnectorMac[] }
+  /** The API takes a chosen Mac: the account's active Macs, and which of them are open now. */
+  | { status: "choice"; macs: ConnectorMac[]; open: string[] };
 
 /** A failure that ends the page, with what can still be done. */
 export type EndedReason =
@@ -24,7 +27,12 @@ export type EndedReason =
   | "unreachable"
   | "rate-limited"
   | "page-error"
-  | "bad-redirect";
+  | "bad-redirect"
+  /** The request was started in another browser (or the link was forwarded). */
+  | "other-browser"
+  /** This tab already answered it (the Back button after a decision). */
+  | "already-allowed"
+  | "already-denied";
 
 export type ConsentState =
   | { kind: "checking" }
@@ -36,8 +44,10 @@ export type ConsentState =
       macs: MacsView;
       /** The "start and control routines" option; only shown when the request asked for it. */
       allowAct: boolean;
-      /** The Mac the person picked; null keeps the default (the most recent one). */
+      /** The Mac the person picked; null is "the Mac I used last" (nothing sent). */
       macId: string | null;
+      /** Allow works only after the page has had the person's attention for a moment (M2). */
+      armed: boolean;
       /** A decision is on its way: both buttons stay disabled. */
       busy: "allow" | "deny" | null;
       /** A failed decision that can be tried again. */
@@ -47,10 +57,11 @@ export type ConsentState =
   | { kind: "ended"; reason: EndedReason; clientKind: ClientKind | null };
 
 export type ConsentHandlers = {
-  onAllow?: () => void;
+  /** `fromPointer` is false when Allow was pressed with the keyboard. */
+  onAllow?: (fromPointer: boolean) => void;
   onDeny?: () => void;
   onToggleAct?: (allow: boolean) => void;
-  onPickMac?: (macId: string) => void;
+  onPickMac?: (macId: string | null) => void;
   onSwitchAccount?: () => void;
   onRetry?: () => void;
 };
@@ -79,7 +90,11 @@ const NOTICE: Record<ConsentFailure, string> = {
   unavailable: "Connecting is not available right now.",
   "not-allowed": "Connecting is not available for this account yet.",
   "needs-pro": "Connecting an assistant needs Toone Pro. Your account doesn't have it.",
+  "other-browser": "This page was opened in a different browser from the one that started connecting.",
 };
+
+/** The Mac picked for this connection is gone (removed, or not this account's): choose again. */
+export const MAC_GONE_NOTICE = "That Mac is no longer available. Choose again.";
 
 export function endedCopy(reason: EndedReason, kind: ClientKind | null): { title: string; body: string; retry: boolean } {
   const back = backTo(kind);
@@ -99,6 +114,12 @@ export function endedCopy(reason: EndedReason, kind: ClientKind | null): { title
       return { title: "Something went wrong", body: "Something on this page didn't work. Try again.", retry: true };
     case "unreachable":
       return { title: "Toone couldn't be reached", body: "Check your connection and try again.", retry: true };
+    case "other-browser":
+      return { title: `Start again from ${back}`, body: `This page was opened in a different browser from the one that started connecting. Go back to ${back} in this browser and connect again.`, retry: false };
+    case "already-allowed":
+      return { title: "This connection is already set up", body: `You already allowed it. You can go back to ${back}.`, retry: false };
+    case "already-denied":
+      return { title: "You already answered", body: `You chose not to allow this connection. To connect, go back to ${back} and start again.`, retry: false };
   }
 }
 
@@ -107,10 +128,11 @@ function Shell({ children }: { children: ReactNode }) {
     <main className={styles.page}>
       <div className={styles.column}>
         <header className={styles.header}>
-          <a href="/en" className={styles.brand} aria-label="Toone">
+          {/* Not a link: nothing on this page leads off into the site (plans, pricing) mid-flow. */}
+          <span className={styles.brand} aria-label="Toone">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/assets/brand/toone-mark.svg" alt="" width={26} height={26} />toone
-          </a>
+          </span>
         </header>
         {children}
       </div>
@@ -184,8 +206,8 @@ function Abilities({ request, allowAct, disabled, onToggleAct }: {
   );
 }
 
-function Macs({ macs, kind, choice, picked, disabled, onPickMac }: {
-  macs: MacsView; kind: ClientKind; choice: boolean; picked: string | null; disabled: boolean; onPickMac?: (macId: string) => void;
+function Macs({ macs, kind, picked, disabled, onPickMac }: {
+  macs: MacsView; kind: ClientKind; picked: string | null; disabled: boolean; onPickMac?: (macId: string | null) => void;
 }) {
   if (macs.status === "hidden") return null;
   const who = subject(kind);
@@ -193,6 +215,30 @@ function Macs({ macs, kind, choice, picked, disabled, onPickMac }: {
   let body: ReactNode;
   if (macs.status === "loading") {
     body = <p role="status">Looking for your Mac…</p>;
+  } else if (macs.status === "choice") {
+    // consent-page.md §4: each Mac by name, then "The Mac I used last" (the default, which sends nothing).
+    const open = new Set(macs.open);
+    body = (
+      <>
+        <p id="connect-mac-choice">Reach Toone on:</p>
+        <div className={styles.macPicker} role="radiogroup" aria-labelledby="connect-mac-choice">
+          {macs.macs.map((mac) => (
+            <label key={mac.id} className={styles.macOption}>
+              <input type="radio" name="connect-mac" value={mac.id} checked={picked === mac.id} disabled={disabled}
+                onChange={() => onPickMac?.(mac.id)} />
+              <span className={styles.macName}>{mac.name}</span>
+              {open.has(mac.id) && <span className={styles.tag}>Open now</span>}
+            </label>
+          ))}
+          <label className={styles.macOption}>
+            <input type="radio" name="connect-mac" value="" checked={picked === null} disabled={disabled}
+              onChange={() => onPickMac?.(null)} />
+            <span className={styles.macName}>The Mac I used last</span>
+          </label>
+        </div>
+        {macs.open.length === 0 && <p>Toone isn&apos;t open on any of your Macs right now. Open Toone on your Mac and sign in.</p>}
+      </>
+    );
   } else if (macs.macs.length === 0) {
     body = (
       <>
@@ -203,26 +249,6 @@ function Macs({ macs, kind, choice, picked, disabled, onPickMac }: {
     );
   } else if (macs.macs.length === 1) {
     body = <p>{who} will reach <strong className={styles.macName}>{macs.macs[0].name}</strong>, where Toone is open now.</p>;
-  } else if (choice) {
-    // The API takes the choice with the decision: a real picker, the most recent Mac first and chosen by default.
-    const current = picked ?? macs.macs[0].id;
-    body = (
-      <>
-        <p id="connect-mac-choice">
-          Toone is open on {macs.macs.length} of your Macs. Choose the one {assistant ?? "this app"} reaches.
-        </p>
-        <div className={styles.macPicker} role="radiogroup" aria-labelledby="connect-mac-choice">
-          {macs.macs.map((mac, index) => (
-            <label key={mac.id} className={styles.macOption}>
-              <input type="radio" name="connect-mac" value={mac.id} checked={current === mac.id} disabled={disabled}
-                onChange={() => onPickMac?.(mac.id)} />
-              <span className={styles.macName}>{mac.name}</span>
-              {index === 0 && <span className={styles.tag}>Most recent</span>}
-            </label>
-          ))}
-        </div>
-      </>
-    );
   } else {
     body = (
       <>
@@ -241,12 +267,21 @@ function Macs({ macs, kind, choice, picked, disabled, onPickMac }: {
       </>
     );
   }
+  const several = (macs.status === "list" || macs.status === "choice") && macs.macs.length > 1;
   return (
     <section className={styles.panel} aria-labelledby="connect-macs">
-      <h2 id="connect-macs">{macs.status === "list" && macs.macs.length > 1 ? "Your Macs" : "Your Mac"}</h2>
+      <h2 id="connect-macs">{several ? "Your Macs" : "Your Mac"}</h2>
       {body}
     </section>
   );
+}
+
+/** M1: who should be allowing this, in one line above the buttons. */
+function onlyIf(kind: ClientKind): string {
+  const assistant = assistantName(kind);
+  if (assistant) return `Only allow this if you just clicked Connect in ${assistant} in this browser.`;
+  if (kind === "local") return "Only allow this if you just started connecting from an app on this computer.";
+  return "Only allow this if you just started this connection yourself, in this browser.";
 }
 
 function HowItWorks({ kind }: { kind: ClientKind }) {
@@ -283,7 +318,11 @@ function Ineligible({ request }: { request: ConsentRequest }) {
 }
 
 /** The page for every state. */
-export default function ConsentScreen({ state, ...on }: { state: ConsentState } & ConsentHandlers) {
+export default function ConsentScreen({ state, macNotice = null, ...on }: {
+  state: ConsentState;
+  /** Shown instead of the decision notice when the picked Mac was refused. */
+  macNotice?: string | null;
+} & ConsentHandlers) {
   if (state.kind === "checking" || state.kind === "loading") {
     return (
       <Shell>
@@ -339,7 +378,7 @@ export default function ConsentScreen({ state, ...on }: { state: ConsentState } 
         {request.eligible ? (
           <>
             <Abilities request={request} allowAct={state.allowAct} disabled={disabled} onToggleAct={on.onToggleAct} />
-            <Macs macs={state.macs} kind={request.clientKind} choice={request.macChoice} picked={state.macId}
+            <Macs macs={state.macs} kind={request.clientKind} picked={state.macId}
               disabled={disabled} onPickMac={on.onPickMac} />
             <HowItWorks kind={request.clientKind} />
           </>
@@ -348,11 +387,14 @@ export default function ConsentScreen({ state, ...on }: { state: ConsentState } 
         )}
       </div>
 
-      {notice && <p className={styles.error} role="alert">{NOTICE[notice]}</p>}
+      {(macNotice || notice) && <p className={styles.error} role="alert">{macNotice ?? NOTICE[notice!]}</p>}
+
+      {request.eligible && <p className={styles.onlyIf}>{onlyIf(request.clientKind)}</p>}
 
       <div className={styles.decision}>
         {request.eligible && (
-          <button type="button" className={styles.primary} onClick={on.onAllow} disabled={disabled} aria-busy={busy === "allow"}>
+          <button type="button" className={styles.primary} disabled={disabled || !state.armed} aria-busy={busy === "allow"}
+            onClick={(event) => on.onAllow?.(event.detail > 0)}>
             {busy === "allow" ? "Allowing…" : "Allow"}
           </button>
         )}

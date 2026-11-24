@@ -5,7 +5,7 @@ import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import ConsentScreen, { type ConsentState, type MacsView } from "../../components/connect/ConsentScreen";
+import ConsentScreen, { MAC_GONE_NOTICE, type ConsentState, type MacsView } from "../../components/connect/ConsentScreen";
 import ConnectPage, { ConnectSignIn } from "../../components/connect/ConnectPage";
 import type { ConsentRequest } from "../../lib/connect/consent";
 import en from "../../messages/en.json";
@@ -33,7 +33,7 @@ const air = { id: "mac_2", name: "MacBook Air" };
 function screen(patch: Partial<Extract<ConsentState, { kind: "request" }>> = {}, request: Partial<ConsentRequest> = {}, macs: MacsView = { status: "list", macs: [studio] }) {
   const state: ConsentState = {
     kind: "request", request: { ...claude, ...request }, email: "ana@example.com", macs,
-    allowAct: true, macId: null, busy: null, notice: null, ...patch,
+    allowAct: true, macId: null, armed: true, busy: null, notice: null, ...patch,
   };
   return render(createElement(ConsentScreen, { state }));
 }
@@ -44,6 +44,10 @@ const INTERNALS = /ledger|prompt|engine setting|internal agent|\bagents?\b|\bMCP
 test("signed out: the site's sign-in, titled for connecting, with the request kept in the page", () => {
   const html = render(createElement(ConnectSignIn, { sessionEnded: false, onAuthenticated() {} }));
   assert.match(html, /<h1 class="auth-title">Sign in to connect<\/h1>/);
+  assert.doesNotMatch(html, /<a /, "no way off into the site: no logo link, Create account, Forgot password or account links");
+  assert.doesNotMatch(html, /create-account|reset-password|pricing|\/account/);
+  assert.doesNotMatch(html, /class="auth-google-soon"|>Soon</i, "no placeholder for a sign-in method that is not live");
+  assert.doesNotMatch(html, /class="auth-or"/, "nothing to put 'or' between when no provider is configured");
   assert.match(text(html), /You'll see what is being connected before anything happens/);
   assert.match(html, /type="password"/, "email and password");
   assert.match(html, /auth-card/);
@@ -76,7 +80,15 @@ test("Claude, one Mac: who asks, the account, what it can do, which Mac, how it 
   assert.match(html, /<button type="button" class="primary"[^>]*>Allow<\/button>/);
   assert.match(html, />Don't allow<\/button>|>Don&#x27;t allow<\/button>/);
   assert.doesNotMatch(html, /disabled=""/);
+  assert.match(words, /Only allow this if you just clicked Connect in Claude in this browser\./);
+  assert.doesNotMatch(html, /<a href="\/en"/, "the logo is not a link");
   assert.doesNotMatch(words, /This is not Claude/);
+});
+
+test("Allow stays disabled until the page has had the person's attention (Don't allow does not wait)", () => {
+  const html = screen({ armed: false });
+  assert.match(html, /<button type="button" class="primary" disabled=""[^>]*>Allow<\/button>/);
+  assert.doesNotMatch(html, /<button type="button" disabled=""[^>]*>Don(&#x27;|')t allow/);
 });
 
 test("the act option appears only when it was asked for, unticked when the person unticked it", () => {
@@ -106,24 +118,35 @@ test("several Macs: all listed, the most recent one marked as the one used by de
 const checkedMac = (html: string, id: string) =>
   [...html.matchAll(/<input type="radio"[^>]*>/g)].some(([tag]) => tag.includes(`value="${id}"`) && tag.includes('checked=""'));
 
-test("several Macs and the API takes a choice: a real picker, the most recent Mac chosen by default", () => {
-  const html = screen({}, { macChoice: true }, { status: "list", macs: [studio, air] });
-  assert.match(text(html), /Toone is open on 2 of your Macs\. Choose the one Claude reaches\./);
+test("the API takes a choice and the account has several Macs: each by name, then the default 'The Mac I used last'", () => {
+  const macs: MacsView = { status: "choice", macs: [studio, air], open: ["mac_1"] };
+  const html = screen({}, { macChoice: true }, macs);
+  const words = text(html);
+  assert.match(words, /Your Macs Reach Toone on: Ana's Mac Studio Open now MacBook Air The Mac I used last/);
   assert.match(html, /role="radiogroup" aria-labelledby="connect-mac-choice"/);
-  assert.equal(html.match(/type="radio"/g)?.length, 2);
-  assert.equal(checkedMac(html, "mac_1"), true);
-  assert.equal(checkedMac(html, "mac_2"), false);
+  assert.equal(html.match(/type="radio"/g)?.length, 3);
+  assert.equal(checkedMac(html, ""), true, "the default sends no Mac");
+  assert.equal(checkedMac(html, "mac_1"), false);
   assert.doesNotMatch(html, /<legend/, "no legend: Safari on iPhone renders it badly");
-  const picked = screen({ macId: "mac_2" }, { macChoice: true }, { status: "list", macs: [studio, air] });
+  const picked = screen({ macId: "mac_2" }, { macChoice: true }, macs);
   assert.equal(checkedMac(picked, "mac_2"), true);
-  assert.equal(checkedMac(picked, "mac_1"), false);
-  assert.match(screen({ busy: "allow" }, { macChoice: true }, { status: "list", macs: [studio, air] }), /type="radio"[^>]*disabled=""/);
+  assert.equal(checkedMac(picked, ""), false);
+  assert.match(screen({ busy: "allow" }, { macChoice: true }, macs), /type="radio"[^>]*disabled=""/);
+  assert.match(text(screen({}, { macChoice: true }, { ...macs, open: [] })), /Toone isn't open on any of your Macs right now\. Open Toone on your Mac and sign in\./);
 });
 
-test("no picker without the API's say-so, or with one Mac", () => {
+test("a refused Mac asks to choose again", () => {
+  const html = render(createElement(ConsentScreen, {
+    state: { kind: "request", request: { ...claude, macChoice: true }, email: "ana@example.com",
+      macs: { status: "choice", macs: [studio, air], open: [] }, allowAct: true, macId: null, armed: true, busy: null, notice: null },
+    macNotice: MAC_GONE_NOTICE,
+  }));
+  assert.match(text(html), /That Mac is no longer available\. Choose again\./);
+});
+
+test("no picker without the API's say-so", () => {
   assert.doesNotMatch(screen({}, { macChoice: false }, { status: "list", macs: [studio, air] }), /type="radio"/);
   assert.doesNotMatch(screen({}, { macChoice: true }, { status: "list", macs: [studio] }), /type="radio"/);
-  assert.doesNotMatch(screen({}, { macChoice: true }, { status: "list", macs: [] }), /type="radio"/);
 });
 
 test("ChatGPT, vouched for by its own callbacks: named like Claude, no warning", () => {
@@ -146,7 +169,7 @@ test("no Toone Pro: one plain sentence and Don't allow; no link, upgrade, prices
   const words = text(html);
   assert.match(words, /Connecting an assistant needs Toone Pro\. Your account doesn't have it\./);
   const links = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(links, ["/en"], "only the logo: no plans or pricing link inside an assistant's flow");
+  assert.deepEqual(links, [], "no link at all: no plans or pricing inside an assistant's flow");
   assert.doesNotMatch(words, /upgrade|buy|checkout|subscribe|trial|€|\$|\/ ?month|per month|year/i);
   assert.doesNotMatch(html, />Allow</);
   assert.match(html, /Don(&#x27;|')t allow/);
@@ -206,10 +229,13 @@ test("server errors that end the page each say one plain thing", () => {
   assert.match(text(ended("unavailable")), /Connecting Claude to Toone is not available right now\./);
   assert.match(text(ended("unavailable", null)), /Connecting an assistant to Toone is not available right now\./);
   assert.match(text(ended("bad-redirect")), /Toone couldn't send you back safely\. Go back to Claude and connect again\./);
+  assert.match(text(ended("other-browser")), /Start again from Claude This page was opened in a different browser from the one that started connecting\. Go back to Claude in this browser and connect again\./);
+  assert.match(text(ended("already-allowed", null)), /This connection is already set up You already allowed it\./);
+  assert.match(text(ended("already-denied", null)), /You already answered You chose not to allow this connection\./);
   assert.match(text(ended("unreachable")), /Toone couldn't be reached Check your connection and try again\./);
   assert.match(text(ended("rate-limited")), /Too many attempts Wait a minute, then try again\./);
   for (const reason of ["unreachable", "rate-limited", "page-error"] as const) assert.match(ended(reason), />Try again</, reason);
-  for (const reason of ["expired", "unavailable", "bad-redirect", "invalid-link"] as const) {
+  for (const reason of ["expired", "unavailable", "bad-redirect", "invalid-link", "other-browser", "already-allowed", "already-denied"] as const) {
     assert.doesNotMatch(ended(reason), />Try again<|>Allow</, reason);
   }
 });
