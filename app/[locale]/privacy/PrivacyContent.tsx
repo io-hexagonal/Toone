@@ -453,8 +453,8 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           reasoning, redacts credentials it recognises, never includes temporary or hidden
           conversations, and limits how much text one answer can carry. What the connector reads goes
           to the assistant you use, under your own account with Anthropic or OpenAI and that
-          provider&apos;s terms. It does not pass through Toone&apos;s server, and Toone does not
-          receive, log or store it. Anything that changes something, such as starting a run or
+          provider&apos;s terms. Through this plugin it does not pass through Toone&apos;s server,
+          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or
           answering a question, asks for your confirmation first.
         </p>
         <p>
@@ -464,6 +464,20 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           Searching Toone Explore from your assistant sends only your search words to Toone&apos;s
           server, with no account or identifier. The connector keeps two small files on your Mac: a
           random identifier per project, and the key Toone gave it when you allowed it.
+        </p>
+        <p>
+          You can also connect an assistant that runs online, such as Claude on claude.ai or in the
+          Claude phone app, to your Toone account. You sign in on trytoone.com and choose what it may
+          do; connecting an assistant this way needs Toone Pro. Its requests then go through
+          Toone&apos;s server to the Toone app on your Mac, which must be open, and the answers come
+          back the same way. Toone passes the content of these requests and answers on without
+          storing it. Toone keeps the connection itself (the assistant&apos;s name and web address,
+          what you allowed, and when it was made and last used) until 30 days after you disconnect it
+          or it lapses a year after you allowed it, and a record of which tools were used, when, on
+          which Mac and whether they worked, without any content, for 30 days. Both are deleted with
+          your account. Anything that changes something still asks for your confirmation on your Mac,
+          and you can disconnect the assistant at any time in the Toone app, under Settings,
+          Connected Apps.
         </p>
       </section>
 
