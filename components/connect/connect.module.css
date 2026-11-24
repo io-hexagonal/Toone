@@ -25,7 +25,8 @@
 .macList li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff14; border-radius: 10px; font-size: 14px; color: #d2cec4; }
 .macName { color: #f0ede6; overflow-wrap: anywhere; }
 .tag { flex: none; padding: 2px 8px; border-radius: 999px; border: 1px solid #ffffff2e; color: #b5b0a4; font-size: 11px; letter-spacing: .04em; }
-.page a:not(.brand) { color: #f0ede6; text-underline-offset: 3px; font-size: 14px; }
+.page a:not(.brand) { color: #f0ede6; text-decoration: underline; text-decoration-color: #f0ede666; text-underline-offset: 3px; font-size: 14px; }
+.page a:not(.brand):hover { text-decoration-color: #f0ede6; }
 .page button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ffffff24; border-radius: 12px; background: transparent; color: #f0ede6; padding: 13px 18px; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; min-height: 48px; }
 .page button:hover { background: #ffffff0b; }
 .page button:disabled { opacity: .55; cursor: default; }

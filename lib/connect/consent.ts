@@ -157,6 +157,21 @@ export function consentFailure(error: unknown): ConsentFailure {
   return "unreachable";
 }
 
+/** A request lives ten minutes (contract §1). */
+export const REQUEST_LIFETIME_MS = 10 * 60_000;
+
+/**
+ * When the page should say the request lapsed, read right after loading it.
+ * The API's clock is the truth and the device's may be wrong: a request the
+ * API just served cannot have lapsed, so "already past" means a fast device
+ * clock and no timer is set (a late decision still gets the API's answer);
+ * a slow clock is capped at the request's lifetime.
+ */
+export function expiryTimerMs(request: Pick<ConsentRequest, "expiresAt">, now = Date.now()): number | null {
+  const left = msUntilExpiry(request, now);
+  return left === null || left <= 0 ? null : Math.min(left, REQUEST_LIFETIME_MS);
+}
+
 /** Milliseconds until the request lapses (0 when past), or null when the time is unreadable (the API still decides). */
 export function msUntilExpiry(request: Pick<ConsentRequest, "expiresAt">, now = Date.now()): number | null {
   const at = Date.parse(request.expiresAt);

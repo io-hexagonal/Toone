@@ -9,7 +9,7 @@ import {
   decide,
   getConsentRequest,
   listConnectorMacs,
-  msUntilExpiry,
+  expiryTimerMs,
   type ClientKind,
   type ConsentFailure,
 } from "@/lib/connect/consent";
@@ -84,7 +84,11 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
   /** Set once the API has taken a decision: the buttons never come back. */
   const decided = useRef(false);
   const alive = useRef(true);
-  useEffect(() => () => { alive.current = false; }, []);
+  // Set on every mount: development runs effects twice (mount, unmount, mount).
+  useEffect(() => {
+    alive.current = true;
+    return () => { alive.current = false; };
+  }, []);
   // The parent's callbacks change on every render; reading them through a ref keeps `load` stable.
   const sessionLost = useRef(onSessionLost);
   sessionLost.current = onSessionLost;
@@ -125,14 +129,14 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
   const clientKind = state.kind === "request" ? state.request.clientKind : null;
   useEffect(() => {
     if (expiresAt === null) return;
-    const left = msUntilExpiry({ expiresAt });
+    const left = expiryTimerMs({ expiresAt });
     if (left === null) return;
     const timer = window.setTimeout(() => {
       if (decided.current) return;
       setState((current) => (current.kind === "request" && current.busy === null
         ? { kind: "ended", reason: "expired", clientKind }
         : current));
-    }, Math.min(left, 2_147_483_647));
+    }, left);
     return () => window.clearTimeout(timer);
   }, [expiresAt, clientKind]);
 

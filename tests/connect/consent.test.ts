@@ -4,6 +4,7 @@ import { ApiError } from "../../lib/api";
 import {
   consentFailure,
   decide,
+  expiryTimerMs,
   getConsentRequest,
   listConnectorMacs,
   msUntilExpiry,
@@ -163,4 +164,12 @@ test("expiry: time left, zero once past, null when unreadable", () => {
   assert.equal(msUntilExpiry({ expiresAt: "2026-11-24T18:40:00Z" }, now), 600_000);
   assert.equal(msUntilExpiry({ expiresAt: "2026-11-24T18:00:00Z" }, now), 0);
   assert.equal(msUntilExpiry({ expiresAt: "" }, now), null);
+});
+
+test("the expiry timer trusts the API over a wrong device clock", () => {
+  const now = Date.parse("2026-11-24T18:30:00Z");
+  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T18:36:00Z" }, now), 360_000);
+  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T18:00:00Z" }, now), null, "device clock ahead: no timer, the API answers a late decision");
+  assert.equal(expiryTimerMs({ expiresAt: "2026-11-24T19:30:00Z" }, now), 600_000, "device clock behind: at most the request's ten minutes");
+  assert.equal(expiryTimerMs({ expiresAt: "soon" }, now), null);
 });

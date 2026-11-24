@@ -171,6 +171,8 @@ test("server errors that end the page each say one plain thing", () => {
   assert.match(text(ended("unavailable")), /Connecting Claude to Toone is not available right now\./);
   assert.match(text(ended("unavailable", null)), /Connecting an assistant to Toone is not available right now\./);
   assert.match(text(ended("bad-redirect")), /Toone couldn't send you back safely\. Go back to Claude and connect again\./);
+  assert.match(text(ended("unreachable")), /Toone couldn't be reached Check your connection and try again\./);
+  assert.match(text(ended("rate-limited")), /Too many attempts Wait a minute, then try again\./);
   for (const reason of ["unreachable", "rate-limited", "page-error"] as const) assert.match(ended(reason), />Try again</, reason);
   for (const reason of ["expired", "unavailable", "bad-redirect", "invalid-link"] as const) {
     assert.doesNotMatch(ended(reason), />Try again<|>Allow</, reason);
@@ -179,7 +181,7 @@ test("server errors that end the page each say one plain thing", () => {
 
 test("after a decision: going back, no buttons and never the address", () => {
   const html = render(createElement(ConsentScreen, { state: { kind: "leaving", approve: true, clientKind: "claude" } }));
-  assert.match(text(html), /Connected Taking you back to Claude…/);
+  assert.match(text(html), /Allowed Taking you back to Claude…/);
   assert.doesNotMatch(html, /<button|claude\.ai|code=/);
   assert.match(text(render(createElement(ConsentScreen, { state: { kind: "leaving", approve: false, clientKind: "claude" } }))), /Not allowed/);
 });

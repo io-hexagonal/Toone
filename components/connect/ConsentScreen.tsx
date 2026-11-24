@@ -93,11 +93,11 @@ export function endedCopy(reason: EndedReason, kind: ClientKind | null): { title
     case "bad-redirect":
       return { title: "Connecting didn't finish", body: `Toone couldn't send you back safely. Go back to ${back} and connect again.`, retry: false };
     case "rate-limited":
-      return { title: "Too many attempts", body: NOTICE["rate-limited"], retry: true };
+      return { title: "Too many attempts", body: "Wait a minute, then try again.", retry: true };
     case "page-error":
-      return { title: "Something went wrong", body: NOTICE["page-error"], retry: true };
+      return { title: "Something went wrong", body: "Something on this page didn't work. Try again.", retry: true };
     case "unreachable":
-      return { title: "Toone couldn't be reached", body: NOTICE.unreachable, retry: true };
+      return { title: "Toone couldn't be reached", body: "Check your connection and try again.", retry: true };
   }
 }
 
@@ -273,7 +273,7 @@ export default function ConsentScreen({ state, ...on }: { state: ConsentState } 
     return (
       <Shell>
         <div className={styles.centered}>
-          <h1>{state.approve ? "Connected" : "Not allowed"}</h1>
+          <h1>{state.approve ? "Allowed" : "Not allowed"}</h1>
           <p role="status">Taking you back to {backTo(state.clientKind)}…</p>
         </div>
       </Shell>
