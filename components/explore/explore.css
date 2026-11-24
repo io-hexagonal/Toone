@@ -632,6 +632,47 @@
 .explore-about-links a {
   color: inherit;
 }
+.explore-featured-on {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid #dcd8cd;
+}
+.explore-featured-on-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1d1c196b;
+  margin: 0 0 16px;
+}
+.explore-featured-on ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.explore-featured-on a {
+  display: block;
+  line-height: 0;
+  border-radius: 10px;
+}
+/* Quiet gray like the landing strip; the badge's own colour returns on hover or focus. */
+.explore-featured-on img {
+  display: block;
+  filter: grayscale(1);
+  opacity: 0.72;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
+}
+.explore-featured-on a:hover img,
+.explore-featured-on a:focus-visible img {
+  opacity: 1;
+  filter: grayscale(0);
+}
 .explore-empty {
   padding: 65px 24px;
   background: #fff6;

@@ -1,3 +1,4 @@
+import ExploreFeaturedOn from "./ExploreFeaturedOn";
 import ExploreFilters from "./ExploreFilters";
 import FeaturedCarousel, { type FeaturedSlide } from "./FeaturedCarousel";
 import {hasTaxonomyFilters, termLabel} from "@/lib/explore/taxonomy";
@@ -295,6 +296,7 @@ export default async function ExploreCatalog({ locale, query, topic }: {
             </ul>
           </section>
         )}
+        {unfiltered && <ExploreFeaturedOn />}
       </main>
     </ExploreShell>
   );
