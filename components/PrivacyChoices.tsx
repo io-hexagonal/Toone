@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
-import { rememberPrivacyChoice, savedPrivacyChoice, type PrivacyChoice } from "@/lib/privacy-choices";
+import { isAnalyticsFreePath, rememberPrivacyChoice, savedPrivacyChoice, type PrivacyChoice } from "@/lib/privacy-choices";
 import styles from "./PrivacyChoices.module.css";
 
 const SCRIPT_ID = "toone-website-analytics";
@@ -26,18 +27,19 @@ export default function PrivacyChoices() {
   const t = useTranslations("privacyChoices");
   const [choice, setChoice] = useState<PrivacyChoice | null | undefined>();
   const [open, setOpen] = useState(false);
+  const analyticsFree = isAnalyticsFreePath(usePathname());
 
   useEffect(() => {
     const existing = savedPrivacyChoice();
     setChoice(existing);
-    setOpen(existing === null);
+    setOpen(existing === null && !analyticsFree);
     const showChoices = () => setOpen(true);
     window.addEventListener(OPEN_EVENT, showChoices);
     return () => window.removeEventListener(OPEN_EVENT, showChoices);
-  }, []);
+  }, [analyticsFree]);
 
   useEffect(() => {
-    if (choice !== "allow" || document.getElementById(SCRIPT_ID)) return;
+    if (analyticsFree || choice !== "allow" || document.getElementById(SCRIPT_ID)) return;
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.src = "https://analytics.truleaf.org/script.js";
@@ -45,7 +47,7 @@ export default function PrivacyChoices() {
     script.dataset.websiteId = "70c91dbc-6116-453f-9702-cbd942760e51";
     script.dataset.domains = "trytoone.com,www.trytoone.com";
     document.head.appendChild(script);
-  }, [choice]);
+  }, [choice, analyticsFree]);
 
   function choose(next: PrivacyChoice) {
     const analyticsWasLoaded = document.getElementById(SCRIPT_ID) !== null;

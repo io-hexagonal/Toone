@@ -1,0 +1,58 @@
+/* /connect: one calm column in the account pages' palette (account.module.css), phone first. */
+.page { min-height: 100svh; background: #141413; color: #f0ede6; padding: 22px 18px 48px; }
+.column { max-width: 520px; margin: 0 auto; }
+.header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; margin-bottom: 26px; border-bottom: 1px solid #ffffff14; }
+.brand { display: inline-flex; align-items: center; gap: 9px; color: #f0ede6; font-family: var(--font-wordmark), system-ui, sans-serif; font-weight: 600; font-size: 20px; text-decoration: none; letter-spacing: -.03em; text-transform: lowercase; }
+.page h1 { font-family: var(--font-wordmark), system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 7vw, 34px); line-height: 1.15; letter-spacing: -.03em; margin: 0 0 12px; text-wrap: balance; }
+.page h2 { font-size: 15px; line-height: 1.3; font-weight: 600; margin: 0 0 10px; letter-spacing: -.01em; color: #f0ede6; }
+.lede { color: #d2cec4; font-size: 16px; line-height: 1.55; margin: 0; overflow-wrap: anywhere; }
+.lede strong { color: #f0ede6; font-weight: 600; }
+.warning { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; border: 1px solid #f3a39359; background: #f3a39314; color: #f6c3b7; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.account { margin: 14px 0 0; color: #aaa8a1; font-size: 13.5px; line-height: 1.6; overflow-wrap: anywhere; }
+.account strong { color: #dfdcd4; font-weight: 500; }
+.stack { display: grid; gap: 12px; margin-top: 22px; }
+.panel { border: 1px solid #ffffff1c; background: #1b1b19; border-radius: 16px; padding: 18px; min-width: 0; }
+.panel p { color: #aaa8a1; font-size: 14px; line-height: 1.6; margin: 0; }
+.panel p + p { margin-top: 8px; }
+.panel .strong { color: #f0ede6; }
+.abilities { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.abilities li { display: flex; gap: 10px; align-items: flex-start; color: #d2cec4; font-size: 14px; line-height: 1.55; }
+.check { flex: none; width: 16px; height: 16px; margin-top: 3px; color: #b7d4ad; }
+.option { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding-top: 12px; border-top: 1px solid #ffffff12; color: #aaa8a1; font-size: 14px; line-height: 1.55; cursor: pointer; }
+.option strong { color: #d2cec4; font-weight: 500; }
+.option input { flex: none; width: 16px; height: 16px; margin: 3px 0 0; accent-color: #f0ede6; cursor: pointer; }
+.macList { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.macList li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff14; border-radius: 10px; font-size: 14px; color: #d2cec4; }
+.macPicker { display: grid; gap: 6px; margin-top: 10px; }
+.macOption { display: flex; align-items: center; gap: 10px; padding: 12px; min-height: 48px; border: 1px solid #ffffff14; border-radius: 10px; font-size: 14px; color: #d2cec4; cursor: pointer; }
+.macOption:has(input:checked) { border-color: #f0ede666; background: #ffffff08; }
+.macOption input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: #f0ede6; cursor: pointer; }
+.macOption .tag { margin-left: auto; }
+.macName { color: #f0ede6; overflow-wrap: anywhere; }
+.tag { flex: none; padding: 2px 8px; border-radius: 999px; border: 1px solid #ffffff2e; color: #b5b0a4; font-size: 11px; letter-spacing: .04em; }
+.page a:not(.brand) { color: #f0ede6; text-decoration: underline; text-decoration-color: #f0ede666; text-underline-offset: 3px; font-size: 14px; }
+.page a:not(.brand):hover { text-decoration-color: #f0ede6; }
+.page button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ffffff24; border-radius: 12px; background: transparent; color: #f0ede6; padding: 13px 18px; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; min-height: 48px; }
+.page button:hover { background: #ffffff0b; }
+.page button:disabled { opacity: .55; cursor: default; }
+.page :is(button, input, a):focus-visible { outline: 2px solid #d9d3c5; outline-offset: 3px; }
+.page .primary { background: #f0ede6; color: #1b1b19; border-color: #f0ede6; font-weight: 600; }
+.page .primary:hover:not(:disabled) { background: #ded9cd; }
+.page .linkButton { display: inline; min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; color: #dfdcd4; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; }
+.page .linkButton:hover { background: none; color: #f0ede6; }
+/* Allow first: on top on a phone, on the right from tablet width. */
+.decision { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.decision button { width: 100%; }
+.onlyIf { margin: 18px 0 0; color: #b5b0a4; font-size: 13.5px; line-height: 1.55; }
+.error { color: #f3a393; font-size: 14px; line-height: 1.5; margin: 16px 0 0; }
+.centered { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding-top: clamp(40px, 14vh, 140px); }
+.centered p { color: #aaa8a1; font-size: 15px; line-height: 1.6; margin: 0; max-width: 40ch; }
+.centered h1 { margin: 0; }
+.actions { display: flex; gap: 10px; margin-top: 8px; }
+@media (min-width: 600px) {
+  .page { padding: 32px 24px 80px; }
+  .header { margin-bottom: 34px; }
+  .panel { padding: 20px 22px; }
+  .decision { flex-direction: row-reverse; justify-content: flex-start; }
+  .decision button { width: auto; min-width: 140px; }
+}

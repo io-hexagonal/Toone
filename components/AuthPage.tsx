@@ -131,9 +131,18 @@ type AuthPageProps = {
    * this code" when signing in, "Sign in" when signing up.
    */
   onSwitchMode?: () => void;
+  /** Sign-in mode: a title and line of its own, for a page that hosts the sign-in (the consent page). */
+  heading?: { title: string; sub: string };
+  /**
+   * Sign-in mode, hosted inside another flow (the consent page an assistant
+   * opens): nothing leads off into the site (the logo is not a link; no
+   * "Create account", "Forgot password?" or account links, whose pages offer
+   * plans), and no "Soon" placeholder for a sign-in method that is not live.
+   */
+  contained?: boolean;
 };
 
-export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode }: AuthPageProps) {
+export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitationAccepted, onSwitchMode, heading, contained = false }: AuthPageProps) {
   const t = useTranslations("auth");
   const accountCopy = useTranslations("account");
   const locale = useLocale();
@@ -516,11 +525,19 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       />
 
       <main className="auth-page">
-        <Link href="/" aria-label="Toone" className="auth-brand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/brand/toone-mark.svg" alt="" />
-          <span className="wm">toone</span>
-        </Link>
+        {contained ? (
+          <span aria-label="Toone" className="auth-brand">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/brand/toone-mark.svg" alt="" />
+            <span className="wm">toone</span>
+          </span>
+        ) : (
+          <Link href="/" aria-label="Toone" className="auth-brand">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/brand/toone-mark.svg" alt="" />
+            <span className="wm">toone</span>
+          </Link>
+        )}
 
         {mode === "invite" && !session && (isLaunchCode ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -540,7 +557,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : t("inviteAccountTitle")
             : mode === "signup"
               ? step === "handle" ? t("handleTitle") : step === "verify" ? t("signupVerifyTitle") : t("signupTitle")
-              : t("signinTitle")}
+              : heading?.title ?? t("signinTitle")}
         </h1>
         <p className="auth-sub">
           {mode === "invite"
@@ -557,7 +574,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     : t("inviteAccountSub")
             : mode === "signup"
               ? step === "handle" ? t("handleSub") : step === "verify" ? t("signupVerifySub", { email: email.trim() }) : t("signupOpenSub")
-              : t("signinSub")}
+              : heading?.sub ?? t("signinSub")}
         </p>
         {mode === "invite" && step === "account" && benefit && (() => {
           const copy = benefitCopy(benefit);
@@ -653,7 +670,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                     </p>
                   )}
                 </>
-              ) : (
+              ) : contained ? null : (
                 <button
                   className="auth-google-soon"
                   type="button"
@@ -681,7 +698,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 onFailure={() => setError(t("appleFailed"))}
               />
 
-              <div className="auth-or">{t("or")}</div>
+              {/* Contained, with neither provider live, there is nothing to put "or" between. */}
+              {(!contained || GOOGLE_CLIENT_ID || appleConfig) && <div className="auth-or">{t("or")}</div>}
 
               </>}
               <form
@@ -738,7 +756,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
               </form>
 
               {error && <p className="auth-error">{error}</p>}
-              {!creating && step === "account" && (
+              {!creating && step === "account" && !contained && (
                 <p style={{ textAlign: "center", margin: "6px 0 0" }}>
                   <Link className="auth-signout" href={`/reset-password${email ? `#email=${encodeURIComponent(email)}` : ""}`}>
                     {t("forgotPassword")}
@@ -769,7 +787,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           )}
         </div>
 
-        {!session && (
+        {!session && !contained && (
           <p className="auth-switch">
             {onSwitchMode ? (
               mode === "invite" ? (

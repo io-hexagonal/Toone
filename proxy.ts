@@ -25,6 +25,8 @@ const ENGLISH_ONLY = new RegExp(`^(?:/([a-z]{2}))?(${ENGLISH_ONLY_PATHS.join("|"
 /** Unprefixed paths of the retired AI digest. */
 const AI_DIGEST_PATH = /^\/ai-digest(\/.*)?$/;
 const JOURNAL_PREVIEW = /^\/en\/journal\/preview\//;
+/** The consent page an assistant sends the person to while connecting (`?request=car_…`). */
+const CONNECT_PAGE = /^\/en\/connect\/?$/;
 const CATALOG_PARAMS = ["type", "q", "tag", "category", "topic", "useful_for", "page"];
 /** The Terms page; `?version=` asks for one version of it. */
 const TERMS_PAGE = `/${routing.defaultLocale}/terms`;
@@ -150,6 +152,18 @@ export default function proxy(req: NextRequest) {
     const response = intlMiddleware(req);
     response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
     response.headers.set("Cache-Control", "private, no-store, max-age=0");
+    response.headers.set("Referrer-Policy", "no-referrer");
+    return response;
+  }
+
+  // The consent page carries a one-use request id and the signed-in
+  // account's decision: never stored by a browser or shared cache, never
+  // indexed, and no Referer to the assistant it sends the person back to.
+  // Framing is refused in next.config.ts.
+  if (CONNECT_PAGE.test(pathname)) {
+    const response = intlMiddleware(req);
+    response.headers.set("Cache-Control", "private, no-store, max-age=0");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
     response.headers.set("Referrer-Policy", "no-referrer");
     return response;
   }

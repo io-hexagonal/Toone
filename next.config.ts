@@ -64,6 +64,17 @@ const nextConfig: NextConfig = {
         source: "/:page(success|cancel)",
         headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
       },
+      // The consent page an assistant sends the person to while connecting
+      // their account: no site may frame it, its own included (a framed
+      // consent page can be clickjacked). proxy.ts adds no-store.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/connect",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
       // Duplicate Vercel hosts (toone-landing*.vercel.app) stay out of the
       // index; trytoone.com is the only indexable host (lib/vercel-host.ts).
       // robots.txt stays open there so crawlers can read this header.
