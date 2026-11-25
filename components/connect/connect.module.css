@@ -55,6 +55,8 @@
 .decision { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
 .decision button { width: 100%; }
 .onlyIf { margin: 18px 0 0; color: #b5b0a4; font-size: 13.5px; line-height: 1.55; }
+.codeInput { display: block; width: 100%; max-width: 220px; margin: 2px 0 0; padding: 12px 14px; border: 1px solid #ffffff2e; border-radius: 12px; background: #141413; color: #f0ede6; font: inherit; font-size: 24px; font-variant-numeric: tabular-nums; letter-spacing: .3em; }
+.codeInput:focus-visible { outline: 2px solid #d9d3c5; outline-offset: 3px; }
 .error { color: #f3a393; font-size: 14px; line-height: 1.5; margin: 16px 0 0; }
 .centered { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding-top: clamp(40px, 14vh, 140px); }
 .centered p { color: #aaa8a1; font-size: 15px; line-height: 1.6; margin: 0; max-width: 40ch; }

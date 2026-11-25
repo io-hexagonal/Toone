@@ -4,9 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import AuthPage from "@/components/AuthPage";
 import { logout, type ToneSession } from "@/lib/api";
 import { useStoredSession } from "@/lib/hooks/useStoredSession";
+import { ApiError } from "@/lib/api";
 import {
+  cleanCode,
+  confirmWithCode,
   consentFailure,
   decide,
+  resendConsentCode,
   getConsentRequest,
   listAccountMacs,
   listConnectorMacs,
@@ -15,6 +19,7 @@ import {
   rememberAnswer,
   type ClientKind,
   type ConsentFailure,
+  type CodePending,
   type ConsentRequest,
 } from "@/lib/connect/consent";
 import { browserAttentionEnv, watchAttention, type AttentionGate } from "@/lib/connect/attention";
@@ -155,6 +160,11 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       const request = await getConsentRequest(token, requestId);
       kind = request.clientKind;
       if (!alive.current) return;
+      // Allow was already pressed (the page was reloaded): go straight to the emailed code.
+      if (request.codePending) {
+        setState(codeState(request, email, request.codePending, null));
+        return;
+      }
       setState({
         kind: "request", request, email,
         macs: request.eligible ? { status: "loading" } : { status: "hidden" },
@@ -175,20 +185,22 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
 
   useEffect(() => { void load(); }, [load]);
 
-  // The request lapses after five minutes: say so instead of letting Allow fail.
-  const expiresAt = state.kind === "request" ? state.request.expiresAt : null;
-  const clientKind = state.kind === "request" ? state.request.clientKind : null;
+  // The request lapses after five minutes, or when its emailed code does:
+  // say so instead of letting Allow or the code fail.
+  const expiresAt = state.kind === "request" ? state.request.expiresAt : state.kind === "code" ? state.pending.codeExpiresAt : null;
+  const clientKind = state.kind === "request" || state.kind === "code" ? state.request.clientKind : null;
   useEffect(() => {
     if (expiresAt === null) return;
-    const left = expiryTimerMs({ expiresAt });
+    const left = expiryTimerMs({ expiresAt }, Date.now(), state.kind === "code" ? CODE_LIFETIME_MS : undefined);
     if (left === null) return;
     const timer = window.setTimeout(() => {
       if (decided.current) return;
-      setState((current) => (current.kind === "request" && current.busy === null
+      setState((current) => ((current.kind === "request" || current.kind === "code") && current.busy === null
         ? { kind: "ended", reason: "expired", clientKind }
         : current));
     }, left);
     return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the timer follows the deadline, not every state change
   }, [expiresAt, clientKind]);
 
   async function submit(approve: boolean, fromPointer = true) {
@@ -201,6 +213,10 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
     const outcome = await decide(token, request, approve, { allowAct, macId, accessMode });
     if (!alive.current) return;
     const kind = request.clientKind;
+    if (outcome.kind === "code") {
+      setState(codeState(request, email, outcome.pending, null));
+      return;
+    }
     if (outcome.kind === "navigate") {
       decided.current = true;
       rememberAnswer(request.id, approve);
@@ -247,6 +263,98 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
     }
   }
 
+  /** The emailed code: approve with it, or come back with `error` after too many wrong ones. */
+  async function confirmCode() {
+    if (state.kind !== "code" || state.busy !== null || decided.current) return;
+    const { request } = state;
+    setState({ ...state, busy: "verify", notice: null });
+    const outcome = await confirmWithCode(token, request, state.code);
+    if (!alive.current) return;
+    const kind = request.clientKind;
+    switch (outcome.kind) {
+      case "navigate":
+        decided.current = true;
+        rememberAnswer(request.id, outcome.approve);
+        setState({ kind: "leaving", approve: outcome.approve, clientKind: kind, tooManyCodes: !outcome.approve });
+        window.location.assign(outcome.url);
+        return;
+      case "bad-redirect":
+        decided.current = true;
+        setState({ kind: "ended", reason: "bad-redirect", clientKind: kind });
+        return;
+      case "wrong":
+        setState((current) => current.kind === "code"
+          ? { ...current, busy: null, code: "", pending: { ...current.pending, attemptsLeft: outcome.attemptsLeft }, notice: wrongCodeNotice(outcome.attemptsLeft) }
+          : current);
+        return;
+      case "incomplete":
+        setState((current) => current.kind === "code" ? { ...current, busy: null, notice: "Enter the 6-digit code from the email." } : current);
+        return;
+      case "failure":
+        if (outcome.failure === "signed-out") return sessionLost.current();
+        const failure = outcome.failure;
+        if (failure === "no-code") return void load();
+        if (failure === "expired" || failure === "other-browser") {
+          decided.current = true;
+          setState({ kind: "ended", reason: failure, clientKind: kind });
+          return;
+        }
+        setState((current) => current.kind === "code" ? { ...current, busy: null, notice: codeFailureNotice(failure) } : current);
+    }
+  }
+
+  async function resendCode() {
+    if (state.kind !== "code" || state.busy !== null || decided.current) return;
+    const { request } = state;
+    setState({ ...state, busy: "resend", notice: null });
+    try {
+      const pending = await resendConsentCode(token, request.id);
+      if (!alive.current) return;
+      setState((current) => current.kind === "code"
+        ? { ...current, busy: null, code: "", pending, notice: `We sent a new code to ${pending.emailHint || "your email"}. The earlier code no longer works.` }
+        : current);
+    } catch (error) {
+      if (!alive.current) return;
+      const failure = consentFailure(error);
+      if (failure === "signed-out") return sessionLost.current();
+      if (failure === "expired" || failure === "other-browser") {
+        decided.current = true;
+        setState({ kind: "ended", reason: failure, clientKind: request.clientKind });
+        return;
+      }
+      const noMore = error instanceof ApiError && error.status === 429 && /no more codes/i.test(error.message);
+      setState((current) => current.kind === "code"
+        ? { ...current, busy: null, pending: noMore ? { ...current.pending, resendsLeft: 0 } : current.pending,
+            notice: noMore ? "No more codes can be sent for this connection. Use the last code, or start connecting again." : codeFailureNotice(failure) }
+        : current);
+    }
+  }
+
+  /** Don't allow, from the code step: the same decision as before the code was sent. */
+  async function denyFromCode() {
+    if (state.kind !== "code" || state.busy !== null || decided.current) return;
+    const { request } = state;
+    setState({ ...state, busy: "deny", notice: null });
+    const outcome = await decide(token, request, false, { allowAct: false });
+    if (!alive.current) return;
+    if (outcome.kind === "navigate") {
+      decided.current = true;
+      rememberAnswer(request.id, false);
+      setState({ kind: "leaving", approve: false, clientKind: request.clientKind });
+      window.location.assign(outcome.url);
+      return;
+    }
+    if (outcome.kind === "failure" && outcome.failure === "signed-out") return sessionLost.current();
+    if (outcome.kind === "failure" && (outcome.failure === "expired" || outcome.failure === "other-browser")) {
+      decided.current = true;
+      setState({ kind: "ended", reason: outcome.failure, clientKind: request.clientKind });
+      return;
+    }
+    setState((current) => current.kind === "code"
+      ? { ...current, busy: null, notice: outcome.kind === "failure" ? codeFailureNotice(outcome.failure) : "Something went wrong on this page. Reload it and try again." }
+      : current);
+  }
+
   const shown: ConsentState = state.kind === "request" ? { ...state, armed } : state;
   return (
     <ConsentScreen
@@ -259,6 +367,32 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       onPickMac={(macId) => setState((current) => (current.kind === "request" ? { ...current, macId } : current))}
       onSwitchAccount={() => void onSwitchAccount()}
       onRetry={() => void load()}
+      onCodeChange={(code) => setState((current) => (current.kind === "code" ? { ...current, code: cleanCode(code) } : current))}
+      onConfirmCode={() => void confirmCode()}
+      onResendCode={() => void resendCode()}
+      onDenyCode={() => void denyFromCode()}
     />
   );
+}
+
+/** A code lives ten minutes from its last send (the API's clock decides). */
+const CODE_LIFETIME_MS = 10 * 60_000;
+
+function codeState(request: ConsentRequest, email: string, pending: CodePending, notice: string | null): ConsentState {
+  return { kind: "code", request, email, pending, code: "", busy: null, notice };
+}
+
+function wrongCodeNotice(attemptsLeft: number): string {
+  if (attemptsLeft <= 0) return "That code is not right.";
+  return `That code is not right. ${attemptsLeft} ${attemptsLeft === 1 ? "try" : "tries"} left.`;
+}
+
+function codeFailureNotice(failure: ConsentFailure): string {
+  switch (failure) {
+    case "rate-limited": return "Too many attempts in a short time. Wait a minute, then try again.";
+    case "unavailable": return "The email could not be sent just now. Try sending a new code in a moment.";
+    case "unreachable": return "Toone could not be reached. Check your connection and try again.";
+    case "not-allowed": return "This connection belongs to another account. Switch to that account to finish it.";
+    default: return "Something went wrong on this page. Reload it and try again.";
+  }
 }
