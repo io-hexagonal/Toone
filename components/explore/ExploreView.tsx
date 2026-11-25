@@ -273,6 +273,8 @@ export function Markdown({ text }: { text?: string | null }) {
     </div>
   );
 }
+export type CoverEntry = { cover_url?: string | null; cover_image_data_url?: string | null };
+
 /**
  * `inline` permits the legacy data-URL cover (detail hero only). Cards use
  * the placeholder tile instead so a page of them stays light.
@@ -282,12 +284,14 @@ export function Cover({
   className = "",
   inline = false,
   alt,
+  titleOverlay,
 }: {
-  entry: { cover_url?: string | null; cover_image_data_url?: string | null };
+  entry: CoverEntry;
   className?: string;
   inline?: boolean;
   /** Described covers (listing profile `cover_alt`) are exposed to assistive tech. */
   alt?: string;
+  titleOverlay?: string;
 }) {
   const url = inline ? resolveCoverUrl(entry) : resolveCardCoverUrl(entry);
   const described = !!(url && alt);
@@ -301,6 +305,7 @@ export function Cover({
         <img src="/assets/brand/toone-mark.svg" alt="" />
       </span>
       {url && <CoverImage className={`explore-cover ${className}`} src={url} alt={described ? alt : undefined} />}
+      {url && titleOverlay && <span className="explore-card-cover-title" aria-hidden="true">{titleOverlay}</span>}
     </span>
   );
 }
@@ -408,11 +413,12 @@ export function CatalogCard({
   const href = `/${locale}/explore/${item.type}s/${resolveSlug(entry)}`;
   const text = cardText(entry);
   const audiences = entry.classification?.useful_for_ids ?? [];
+  const titleOnCover = item.type === "bundle" && item.entry.bundle_id === "wfb_ux67rregtrwv3k5g";
   return (
     <article className="explore-card" data-explore-type={item.type}>
       <a href={href} className="explore-card-main">
         <div className="explore-card-art">
-          <Cover entry={entry} />
+          <Cover entry={entry} titleOverlay={titleOnCover ? text.title : undefined} />
           {item.type === "bundle" && (
             <div className="explore-cover-stack">
               {item.entry.members.slice(0, 2).map((member) => (
@@ -476,7 +482,9 @@ export async function DetailHero({
   type,
   locale,
   ui,
+  coverEntry = detail,
 }: {
+  coverEntry?: CoverEntry;
   detail: RoutinePublicDetail | BundlePublicDetail;
   type: "routine" | "bundle";
   locale: string;
@@ -576,7 +584,7 @@ export async function DetailHero({
               <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
             </p>
           </div>
-          <Cover entry={detail} inline />
+          <Cover entry={coverEntry} inline />
         </div>
       </div>
     </header>

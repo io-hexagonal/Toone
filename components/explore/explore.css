@@ -512,6 +512,20 @@
 .explore-card-art > .explore-cover-frame {
   aspect-ratio: 2.25;
 }
+.explore-card-cover-title {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-inline: 16px;
+  color: #fff;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 1px 4px #141413d9, 0 0 12px #14141380;
+}
 .explore-cover-stack {
   display: flex;
   position: absolute;

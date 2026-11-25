@@ -31,6 +31,7 @@ import {
   capitalize,
   formatDate,
   PriceTag,
+  type CoverEntry,
   type ExploreCopy,
 } from "./ExploreView";
 
@@ -51,7 +52,7 @@ function label(taxonomy: ExploreTaxonomy | null, id: string) {
   return capitalize(termLabel(taxonomy, id));
 }
 
-export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Props) {
+export function ProfileHero({ detail, profile, type, locale, ui, taxonomy, coverEntry }: Props & { coverEntry?: CoverEntry }) {
   const id = recordId(detail);
   const category = detail.classification?.category_id;
   const audiences = profile.for_whom.map((entry) => label(taxonomy, entry.useful_for_id));
@@ -112,7 +113,7 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy }: Pro
               <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
             </p>
           </div>
-          <Cover entry={detail} inline alt={profile.cover_alt} />
+          <Cover entry={coverEntry ?? detail} inline alt={coverEntry ? undefined : profile.cover_alt} />
         </div>
       </div>
     </header>

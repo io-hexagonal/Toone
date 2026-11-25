@@ -96,6 +96,10 @@ export default async function BundlePage({ params }: Props) {
   if (canonical !== slug)
     permanentRedirect(`/${locale}/explore/bundles/${canonical}`);
   const members = [...detail.members].sort((a, b) => a.position - b.position);
+  // The grants bundle cover has a printed title. Use the funding routine's artwork behind the page heading.
+  const heroCover = detail.bundle_id === "wfb_mq35pytutf7lj72j"
+    ? members.find((member) => member.workflow_id === "wfl_xmzuqsazhn64ep4n" && resolveCoverUrl(member))
+    : undefined;
   const profile = detail.listing_profile;
   if (profile) {
     const path = `/explore/bundles/${canonical}`;
@@ -126,7 +130,7 @@ export default async function BundlePage({ params }: Props) {
           }}
         />
         <JsonLd value={breadcrumbSchema(profile.search.display_title, path, category)} />
-        <ProfileHero {...view} />
+        <ProfileHero {...view} coverEntry={heroCover} />
         <main>
           <ProfileBody
             {...view}
@@ -158,7 +162,7 @@ export default async function BundlePage({ params }: Props) {
       <JsonLd
         value={breadcrumbSchema(detail.title, `/explore/bundles/${canonical}`)}
       />
-      <DetailHero detail={detail} type="bundle" locale={locale} ui={ui} />
+      <DetailHero detail={detail} type="bundle" locale={locale} ui={ui} coverEntry={heroCover} />
       <main className="explore-detail-body explore-width">
         <div className="explore-body">
           <section className="explore-section" id="routines">
