@@ -5,6 +5,7 @@
  * Records without a profile keep the legacy layout in `ExploreView`.
  */
 import type { ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
 import { termLabel, type ExploreTaxonomy } from "@/lib/explore/taxonomy";
 import { resolveSlug } from "@/lib/explore/api";
 import {
@@ -52,7 +53,37 @@ function label(taxonomy: ExploreTaxonomy | null, id: string) {
   return capitalize(termLabel(taxonomy, id));
 }
 
-export function ProfileHero({ detail, profile, type, locale, ui, taxonomy, coverEntry }: Props & { coverEntry?: CoverEntry }) {
+async function SampleCommunityRating({ locale, count }: { locale: string; count: number }) {
+  const t = await getTranslations({ locale, namespace: "explore" });
+  const score = 4.9;
+  const formattedScore = new Intl.NumberFormat(locale).format(score);
+  return (
+    <div className="explore-community-rating">
+      <strong className="explore-community-rating-title">{t("communityRatingTitle")}</strong>
+      <div className="explore-community-rating-summary">
+        <span className="explore-community-rating-stars" aria-hidden="true">
+          ★★★★★
+          <span style={{ width: `${score / 5 * 100}%` }}>★★★★★</span>
+        </span>
+        <strong aria-hidden="true">{formattedScore}</strong>
+        <span className="explore-sr-only">{t("sampleRatingScore", { score: formattedScore })}</span>
+        <span aria-hidden="true">·</span>
+        <span>{t("sampleRatingCount", { count })}</span>
+      </div>
+    </div>
+  );
+}
+
+export function ProfileHero({
+  detail,
+  profile,
+  type,
+  locale,
+  ui,
+  taxonomy,
+  coverEntry,
+  sampleRatingCount,
+}: Props & { coverEntry?: CoverEntry; sampleRatingCount?: number }) {
   const id = recordId(detail);
   const category = detail.classification?.category_id;
   const audiences = profile.for_whom.map((entry) => label(taxonomy, entry.useful_for_id));
@@ -92,6 +123,7 @@ export function ProfileHero({ detail, profile, type, locale, ui, taxonomy, cover
               <li>{size}</li>
               <li>{ui.runsInToone}</li>
             </ul>
+            {sampleRatingCount ? <SampleCommunityRating locale={locale} count={sampleRatingCount} /> : null}
             <div className="explore-actions">
               <OpenInToone
                 url={deepLink(type, id, detail.revision_id)}

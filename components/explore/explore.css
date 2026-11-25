@@ -1781,6 +1781,44 @@
   line-height: 1.3;
   color: #cecdc7;
 }
+.explore-community-rating,
+.explore-community-rating + .explore-actions {
+  margin-top: 20px;
+}
+.explore-community-rating {
+  display: grid;
+  gap: 4px;
+  width: fit-content;
+  color: #dcdad3;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.explore-community-rating-title {
+  font-weight: 550;
+}
+.explore-community-rating-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #cac2bd;
+  font-size: 12px;
+}
+.explore-community-rating-summary strong {
+  color: #f0ede6;
+  font-weight: 650;
+}
+.explore-community-rating-stars {
+  position: relative;
+  color: #93817b;
+  letter-spacing: 0.7px;
+  white-space: nowrap;
+}
+.explore-community-rating-stars > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #e7bd81;
+}
 /* Price (contract §5): a chip in the detail hero, a badge on card covers. */
 .explore-hero-chips .explore-price-chip {
   border-color: #cecdc7;
