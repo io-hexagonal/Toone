@@ -123,19 +123,21 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
     return () => window.removeEventListener("pageshow", onShow);
   }, [requestId]);
 
-  /** Which Macs to show: a picker when the API takes a choice and the account has several, else who is open now. */
+  /**
+   * Which Macs to show: a picker when the API takes a choice and the account
+   * has several, else who is open now. The account's Macs also say why none
+   * is reachable (assistants switched off, or a Toone too old). Both lists
+   * are a help, not a condition: a failure hides what it would have shown.
+   */
   const loadMacs = useCallback(async (request: ConsentRequest): Promise<MacsView> => {
-    // Reachable now: a help, not a condition; a failure hides it.
-    const reachable = listConnectorMacs(token).catch(() => null);
-    if (request.macChoice) {
-      const account = await listAccountMacs(token).catch(() => null);
-      if (account && account.length > 1) {
-        const open = await reachable;
-        return { status: "choice", macs: account, open: (open ?? []).map((mac) => mac.id) };
-      }
+    const [open, account] = await Promise.all([
+      listConnectorMacs(token).catch(() => null),
+      listAccountMacs(token).catch(() => null),
+    ]);
+    if (request.macChoice && account && account.length > 1) {
+      return { status: "choice", macs: account, open: (open ?? []).map((mac) => mac.id) };
     }
-    const open = await reachable;
-    return open ? { status: "list", macs: open } : { status: "hidden" };
+    return open ? { status: "list", macs: open, account: account ?? [] } : { status: "hidden" };
   }, [token]);
 
   const load = useCallback(async () => {
@@ -157,6 +159,8 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
         kind: "request", request, email,
         macs: request.eligible ? { status: "loading" } : { status: "hidden" },
         allowAct: request.scopes.includes("act"), macId: null, armed: false, busy: null, notice: null,
+        // Owner decision A: Auto is recommended and chosen by default when the API offers it.
+        accessMode: request.accessModes.includes("auto") ? "auto" : "ask",
       });
       if (!request.eligible) return;
       const macs = await loadMacs(request);
@@ -191,10 +195,10 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
     if (state.kind !== "request" || state.busy !== null || decided.current) return;
     // A press that began before Allow armed (or while the page was away) does not count.
     if (approve && !gate.current?.accepts(fromPointer)) return;
-    const { request, allowAct, macId } = state;
+    const { request, allowAct, macId, accessMode } = state;
     setMacNotice(null);
     setState({ ...state, busy: approve ? "allow" : "deny", notice: null });
-    const outcome = await decide(token, request, approve, allowAct, undefined, macId);
+    const outcome = await decide(token, request, approve, { allowAct, macId, accessMode });
     if (!alive.current) return;
     const kind = request.clientKind;
     if (outcome.kind === "navigate") {
@@ -225,7 +229,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
         setState({
           kind: "request", request: { ...request, eligible: false,
             ineligibleReason: outcome.failure === "needs-pro" ? "subscription_required" : "not_allowed" },
-          email, macs: { status: "hidden" }, allowAct, macId, armed: false, busy: null, notice: null,
+          email, macs: { status: "hidden" }, allowAct, macId, accessMode, armed: false, busy: null, notice: null,
         });
         return;
       case "page-error":
@@ -251,6 +255,7 @@ function ConsentFlow({ session, requestId, onSessionLost, onSwitchAccount }: {
       onAllow={(fromPointer) => void submit(true, fromPointer)}
       onDeny={() => void submit(false)}
       onToggleAct={(allow) => setState((current) => (current.kind === "request" ? { ...current, allowAct: allow } : current))}
+      onPickAccessMode={(mode) => setState((current) => (current.kind === "request" ? { ...current, accessMode: mode } : current))}
       onPickMac={(macId) => setState((current) => (current.kind === "request" ? { ...current, macId } : current))}
       onSwitchAccount={() => void onSwitchAccount()}
       onRetry={() => void load()}

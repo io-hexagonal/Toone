@@ -73,9 +73,24 @@ export type ConsentRequest = {
   ineligibleReason: Ineligibility | null;
   /** The API accepts a chosen Mac with the decision. */
   macChoice: boolean;
+  /**
+   * How the connection may act, when the API takes a choice (`access_modes`,
+   * consent-page.md §3.1, owner decision A): `auto` runs actions without
+   * asking again on the Mac, `ask` asks on the Mac each time. Empty: no choice.
+   */
+  accessModes: AccessMode[];
 };
 
-export type ConnectorMac = { id: string; name: string };
+export type AccessMode = "ask" | "auto";
+
+/**
+ * Whether a Mac's Toone lets online assistants in (`connector_enabled` on
+ * `GET /v1/macs`): `on`, `off` (its switch is off), or `update` (that Toone
+ * never reported it: too old). Undefined when the API did not say.
+ */
+export type MacAssistants = "on" | "off" | "update";
+
+export type ConnectorMac = { id: string; name: string; assistants?: MacAssistants };
 
 type RawConsentRequest = {
   id?: unknown; client_name?: unknown; redirect_host?: unknown; client_kind?: unknown;
@@ -103,6 +118,9 @@ export function normalizeConsentRequest(raw: RawConsentRequest): ConsentRequest 
     eligible,
     ineligibleReason: eligible ? null : reason === "subscription_required" ? "subscription_required" : "not_allowed",
     macChoice: MAC_CHOICE_VIEW_FIELDS.some((field) => raw[field] === true),
+    accessModes: Array.isArray(raw.access_modes)
+      ? (["ask", "auto"] as const).filter((mode) => (raw.access_modes as unknown[]).includes(mode))
+      : [],
   };
 }
 
@@ -113,17 +131,25 @@ export async function getConsentRequest(token: string, id: string): Promise<Cons
   return normalizeConsentRequest(await authedRequest<RawConsentRequest>(token, path(id), { ...WITH_API_COOKIES }));
 }
 
+/** What goes with Allow besides `approve`; Don't allow sends none of it. */
+export type DecisionChoices = {
+  /** Narrow the request to `["read"]`; otherwise the requested scopes stand. */
+  readOnly?: boolean;
+  /** The Mac the person picked (only when the API offers the choice); none: the Mac used last. */
+  macId?: string | null;
+  /** How the connection may act (only when the API offers the choice and acting is kept). */
+  accessMode?: AccessMode | null;
+};
+
 /**
- * `POST /v1/connector/authorizations/{id}/decision`. With `readOnly` the
- * request is narrowed to `["read"]`; otherwise the requested scopes stand.
- * `macId` (only with Allow, only when the API offers the choice) names the
- * Mac the person picked; without it the API uses the most recent one.
- * Resolves to the API's `redirect_to`, unchecked (see `safeRedirect`).
+ * `POST /v1/connector/authorizations/{id}/decision`. Resolves to the API's
+ * `redirect_to`, unchecked (see `safeRedirect`).
  */
-export async function postConsentDecision(token: string, id: string, approve: boolean, readOnly = false, macId: string | null = null): Promise<string> {
+export async function postConsentDecision(token: string, id: string, approve: boolean, choices: DecisionChoices = {}): Promise<string> {
   const body: Record<string, unknown> = { approve };
-  if (approve && readOnly) body.scopes = ["read"];
-  if (approve && macId) body[MAC_CHOICE_DECISION_FIELD] = macId;
+  if (approve && choices.readOnly) body.scopes = ["read"];
+  if (approve && choices.macId) body[MAC_CHOICE_DECISION_FIELD] = choices.macId;
+  if (approve && choices.accessMode && !choices.readOnly) body.access_mode = choices.accessMode;
   const data = await authedRequest<{ redirect_to?: unknown }>(token, `${path(id)}/decision`, {
     ...WITH_API_COOKIES,
     method: "POST",
@@ -151,9 +177,15 @@ export async function listAccountMacs(token: string): Promise<ConnectorMac[]> {
   const data = await authedRequest<unknown>(token, "/macs");
   const list = Array.isArray(data) ? data : Array.isArray((data as { macs?: unknown } | null)?.macs) ? (data as { macs: unknown[] }).macs : [];
   return list.flatMap((raw) => {
-    const mac = (raw ?? {}) as { id?: unknown; name?: unknown; state?: unknown };
+    const mac = (raw ?? {}) as { id?: unknown; name?: unknown; state?: unknown; connector_enabled?: unknown };
     const id = text(mac.id);
-    return id && mac.state === "active" ? [{ id, name: text(mac.name).trim() || "Mac" }] : [];
+    if (!id || mac.state !== "active") return [];
+    const entry: ConnectorMac = { id, name: text(mac.name).trim() || "Mac" };
+    // `null` means that Toone never reported the switch (too old); a missing field means the API did not say.
+    if (mac.connector_enabled === true) entry.assistants = "on";
+    else if (mac.connector_enabled === false) entry.assistants = "off";
+    else if ("connector_enabled" in mac && mac.connector_enabled === null) entry.assistants = "update";
+    return [entry];
   });
 }
 
@@ -253,22 +285,30 @@ export type DecisionOutcome =
   | { kind: "bad-redirect" }
   | { kind: "failure"; failure: ConsentFailure };
 
+/** What the person chose on the page. */
+export type PageChoices = { allowAct: boolean; macId?: string | null; accessMode?: AccessMode | null };
+
 /**
  * Posts the decision and checks the answer. `allowAct` false narrows a
- * request that asked to act down to reading only. Never throws.
+ * request that asked to act down to reading only (and drops the access
+ * mode). A Mac or an access mode goes only with Allow, and only when the API
+ * offers that choice. Never throws.
  */
 export async function decide(
   token: string,
   request: ConsentRequest,
   approve: boolean,
-  allowAct: boolean,
+  page: PageChoices,
   post: typeof postConsentDecision = postConsentDecision,
-  macId: string | null = null,
 ): Promise<DecisionOutcome> {
-  const readOnly = approve && !allowAct && request.scopes.includes("act");
-  const mac = approve && request.macChoice ? macId : null;
+  const acts = page.allowAct && request.scopes.includes("act");
+  const choices: DecisionChoices = approve ? {
+    readOnly: !page.allowAct && request.scopes.includes("act"),
+    macId: request.macChoice ? page.macId ?? null : null,
+    accessMode: acts && page.accessMode && request.accessModes.includes(page.accessMode) ? page.accessMode : null,
+  } : {};
   try {
-    const redirectTo = await post(token, request.id, approve, readOnly, mac);
+    const redirectTo = await post(token, request.id, approve, choices);
     const url = safeRedirect(redirectTo, request, approve);
     return url ? { kind: "navigate", url } : { kind: "bad-redirect" };
   } catch (error) {

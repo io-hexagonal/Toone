@@ -28,6 +28,17 @@
 .macOption:has(input:checked) { border-color: #f0ede666; background: #ffffff08; }
 .macOption input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: #f0ede6; cursor: pointer; }
 .macOption .tag { margin-left: auto; }
+.macText { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.macNote { color: #e7b9a6; font-size: 12.5px; line-height: 1.45; }
+.macNotes { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 8px; color: #e7b9a6; font-size: 14px; line-height: 1.55; }
+.quiet { margin-top: 10px; color: #8f8c85 !important; font-size: 13px !important; line-height: 1.5 !important; }
+.modes { margin-top: 12px; padding-left: 26px; }
+.modes > p:first-child { color: #aaa8a1; font-size: 13.5px; margin: 0 0 8px; }
+.modePicker { display: grid; gap: 6px; }
+.modeOption { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff14; border-radius: 10px; color: #aaa8a1; font-size: 14px; line-height: 1.5; cursor: pointer; }
+.modeOption strong { color: #d2cec4; font-weight: 500; }
+.modeOption:has(input:checked) { border-color: #f0ede666; background: #ffffff08; color: #d2cec4; }
+.modeOption input { flex: none; width: 16px; height: 16px; margin: 3px 0 0; accent-color: #f0ede6; cursor: pointer; }
 .macName { color: #f0ede6; overflow-wrap: anywhere; }
 .tag { flex: none; padding: 2px 8px; border-radius: 999px; border: 1px solid #ffffff2e; color: #b5b0a4; font-size: 11px; letter-spacing: .04em; }
 .page a:not(.brand) { color: #f0ede6; text-decoration: underline; text-decoration-color: #f0ede666; text-underline-offset: 3px; font-size: 14px; }

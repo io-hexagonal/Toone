@@ -37,7 +37,7 @@ function stubApi(status: number, body: unknown) {
 
 const claude: ConsentRequest = {
   id: "car_abc234", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false,
+  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [],
 };
 const local: ConsentRequest = { ...claude, clientName: "Claude Code", redirectHost: "localhost", clientKind: "local" };
 const CODE = "https://claude.ai/api/mcp/auth_callback?code=tc_ac_x&iss=https%3A%2F%2Fapi.trytoone.com&state=s1";
@@ -63,7 +63,7 @@ test("the request is read with the session bearer, uncached, and normalized", as
   assert.equal(calls[0].cache, "no-store");
   assert.equal(calls[0].credentials, "include", "the API's browser-binding cookie goes along (M1)");
   assert.deepEqual(request, { id: "car_abc", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-    scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false });
+    scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [] });
 });
 
 test("unknown values fall to the cautious side", () => {
@@ -83,6 +83,13 @@ test("the Mac choice is offered only when the API says so", () => {
   assert.equal(normalizeConsentRequest({ mac_choice: "yes" }).macChoice, false);
 });
 
+test("the access modes are read from the API, unknown ones dropped", () => {
+  assert.deepEqual(normalizeConsentRequest({}).accessModes, []);
+  assert.deepEqual(normalizeConsentRequest({ access_modes: ["ask", "auto"] }).accessModes, ["ask", "auto"]);
+  assert.deepEqual(normalizeConsentRequest({ access_modes: ["auto", "god"] }).accessModes, ["auto"]);
+  assert.deepEqual(normalizeConsentRequest({ access_modes: "auto" }).accessModes, []);
+});
+
 test("the decision posts approve, and narrows to read only when asked", async () => {
   let calls = stubApi(200, { data: { redirect_to: CODE } });
   assert.equal(await postConsentDecision("tok", "car_abc", true), CODE);
@@ -93,16 +100,16 @@ test("the decision posts approve, and narrows to read only when asked", async ()
   assert.deepEqual(JSON.parse(calls[0].body!), { approve: true });
 
   calls = stubApi(200, { data: { redirect_to: CODE } });
-  await postConsentDecision("tok", "car_abc", true, true);
-  assert.deepEqual(JSON.parse(calls[0].body!), { approve: true, scopes: ["read"] });
+  await postConsentDecision("tok", "car_abc", true, { readOnly: true, accessMode: "auto" });
+  assert.deepEqual(JSON.parse(calls[0].body!), { approve: true, scopes: ["read"] }, "read only: no access mode");
 
   calls = stubApi(200, { data: { redirect_to: DENIED } });
-  await postConsentDecision("tok", "car_abc", false, true, "mac_2");
-  assert.deepEqual(JSON.parse(calls[0].body!), { approve: false }, "a denial carries no scopes and no Mac");
+  await postConsentDecision("tok", "car_abc", false, { readOnly: true, macId: "mac_2", accessMode: "auto" });
+  assert.deepEqual(JSON.parse(calls[0].body!), { approve: false }, "a denial carries no scopes, Mac or mode");
 
   calls = stubApi(200, { data: { redirect_to: CODE } });
-  await postConsentDecision("tok", "car_abc", true, false, "mac_2");
-  assert.deepEqual(JSON.parse(calls[0].body!), { approve: true, mac_id: "mac_2" });
+  await postConsentDecision("tok", "car_abc", true, { macId: "mac_2", accessMode: "auto" });
+  assert.deepEqual(JSON.parse(calls[0].body!), { approve: true, mac_id: "mac_2", access_mode: "auto" });
 });
 
 test("the Macs list is read and tolerates odd entries", async () => {
@@ -120,6 +127,21 @@ test("the account's Macs: only active ones, from the enveloped {macs} answer; th
   assert.deepEqual(await listAccountMacs("tok"), [{ id: "mac_1", name: "Studio" }, { id: "mac_4", name: "Mac" }]);
   assert.equal(calls[0].url, "https://api.trytoone.com/v1/macs");
   assert.equal(calls[0].credentials, undefined);
+});
+
+test("each Mac says whether its Toone lets online assistants in (connector_enabled)", async () => {
+  stubApi(200, { data: { macs: [
+    { id: "mac_1", name: "On", state: "active", connector_enabled: true },
+    { id: "mac_2", name: "Off", state: "active", connector_enabled: false },
+    { id: "mac_3", name: "Old", state: "active", connector_enabled: null },
+    { id: "mac_4", name: "Unsaid", state: "active" },
+  ] } });
+  assert.deepEqual(await listAccountMacs("tok"), [
+    { id: "mac_1", name: "On", assistants: "on" },
+    { id: "mac_2", name: "Off", assistants: "off" },
+    { id: "mac_3", name: "Old", assistants: "update" },
+    { id: "mac_4", name: "Unsaid" },
+  ]);
 });
 
 test("this tab remembers an answered request (for Back), and nothing else", () => {
@@ -168,30 +190,37 @@ test("redirect safety: only the announced host, https (http only to loopback), c
 test("decide navigates only to a checked address and never throws", async () => {
   const seen: unknown[][] = [];
   const post = (async (...args: unknown[]) => { seen.push(args); return CODE; }) as typeof postConsentDecision;
-  assert.deepEqual(await decide("tok", claude, true, true, post), { kind: "navigate", url: CODE });
-  assert.deepEqual(seen[0], ["tok", "car_abc234", true, false, null], "act kept: no narrowing");
-  await decide("tok", claude, true, false, post);
-  assert.deepEqual(seen[1], ["tok", "car_abc234", true, true, null], "act unticked: read only");
-  await decide("tok", { ...claude, scopes: ["read"] }, true, false, post);
-  assert.deepEqual(seen[2], ["tok", "car_abc234", true, false, null], "nothing to narrow when only read was asked");
-  await decide("tok", claude, true, true, post, "mac_2");
-  assert.deepEqual(seen[3], ["tok", "car_abc234", true, false, null], "a picked Mac is not sent when the API does not offer the choice");
-  await decide("tok", { ...claude, macChoice: true }, true, true, post, "mac_2");
-  assert.deepEqual(seen[4], ["tok", "car_abc234", true, false, "mac_2"], "the picked Mac goes with Allow");
+  const sent = (index: number) => seen[index][3];
+  assert.deepEqual(await decide("tok", claude, true, { allowAct: true }, post), { kind: "navigate", url: CODE });
+  assert.deepEqual(seen[0].slice(0, 3), ["tok", "car_abc234", true]);
+  assert.deepEqual(sent(0), { readOnly: false, macId: null, accessMode: null }, "act kept: no narrowing");
+  await decide("tok", claude, true, { allowAct: false }, post);
+  assert.equal((sent(1) as { readOnly: boolean }).readOnly, true, "act unticked: read only");
+  await decide("tok", { ...claude, scopes: ["read"] }, true, { allowAct: false }, post);
+  assert.equal((sent(2) as { readOnly: boolean }).readOnly, false, "nothing to narrow when only read was asked");
+  await decide("tok", claude, true, { allowAct: true, macId: "mac_2", accessMode: "auto" }, post);
+  assert.deepEqual(sent(3), { readOnly: false, macId: null, accessMode: null }, "no Mac or mode unless the API offers them");
+  const offers = { ...claude, macChoice: true, accessModes: ["ask", "auto"] as ("ask" | "auto")[] };
+  await decide("tok", offers, true, { allowAct: true, macId: "mac_2", accessMode: "auto" }, post);
+  assert.deepEqual(sent(4), { readOnly: false, macId: "mac_2", accessMode: "auto" }, "the picked Mac and mode go with Allow");
+  await decide("tok", offers, true, { allowAct: false, macId: null, accessMode: "auto" }, post);
+  assert.deepEqual(sent(5), { readOnly: true, macId: null, accessMode: null }, "read only drops the mode");
+  await decide("tok", { ...offers, accessModes: ["ask"] }, true, { allowAct: true, accessMode: "auto" }, post);
+  assert.equal((sent(6) as { accessMode: unknown }).accessMode, null, "a mode the API does not offer is not sent");
   const denied = (async (...args: unknown[]) => { seen.push(args); return DENIED; }) as typeof postConsentDecision;
-  await decide("tok", { ...claude, macChoice: true }, false, true, denied, "mac_2");
-  assert.deepEqual(seen[5], ["tok", "car_abc234", false, false, null], "never with Don't allow");
+  await decide("tok", offers, false, { allowAct: true, macId: "mac_2", accessMode: "auto" }, denied);
+  assert.deepEqual(sent(7), {}, "never with Don't allow");
 
   const tampered = (async () => "https://evil.example/cb?code=tc_ac_x") as typeof postConsentDecision;
-  assert.deepEqual(await decide("tok", claude, true, true, tampered), { kind: "bad-redirect" });
+  assert.deepEqual(await decide("tok", claude, true, { allowAct: true }, tampered), { kind: "bad-redirect" });
 
   const failing = (status: number, code: string) =>
     (async () => { throw new ApiError(code, "x", status); }) as typeof postConsentDecision;
-  assert.deepEqual(await decide("tok", claude, true, true, failing(403, "subscription_required")), { kind: "failure", failure: "needs-pro" });
-  assert.deepEqual(await decide("tok", claude, true, true, failing(403, "forbidden")), { kind: "failure", failure: "not-allowed" });
-  assert.deepEqual(await decide("tok", claude, false, true, failing(404, "not_found")), { kind: "failure", failure: "expired" });
+  assert.deepEqual(await decide("tok", claude, true, { allowAct: true }, failing(403, "subscription_required")), { kind: "failure", failure: "needs-pro" });
+  assert.deepEqual(await decide("tok", claude, true, { allowAct: true }, failing(403, "forbidden")), { kind: "failure", failure: "not-allowed" });
+  assert.deepEqual(await decide("tok", claude, false, { allowAct: true }, failing(404, "not_found")), { kind: "failure", failure: "expired" });
   const offline = (async () => { throw new TypeError("Failed to fetch"); }) as typeof postConsentDecision;
-  assert.deepEqual(await decide("tok", claude, true, true, offline), { kind: "failure", failure: "unreachable" });
+  assert.deepEqual(await decide("tok", claude, true, { allowAct: true }, offline), { kind: "failure", failure: "unreachable" });
 });
 
 test("every server answer maps to one plain outcome (contract §3.1, §3.2)", () => {

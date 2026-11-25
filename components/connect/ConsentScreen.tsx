@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { assistantName, type ClientKind, type ConnectorMac, type ConsentFailure, type ConsentRequest } from "@/lib/connect/consent";
+import { assistantName, type AccessMode, type ClientKind, type ConnectorMac, type ConsentFailure, type ConsentRequest } from "@/lib/connect/consent";
 import styles from "./connect.module.css";
 
 /*
@@ -14,8 +14,8 @@ export const PRIVACY_CONNECTOR_PATH = "/en/privacy#claude-connector";
 export type MacsView =
   | { status: "loading" }
   | { status: "hidden" }
-  /** The Macs reachable now, explained (no choice to make). */
-  | { status: "list"; macs: ConnectorMac[] }
+  /** The Macs reachable now, explained (no choice to make); `account`: the registered ones, to say why none is reachable. */
+  | { status: "list"; macs: ConnectorMac[]; account?: ConnectorMac[] }
   /** The API takes a chosen Mac: the account's active Macs, and which of them are open now. */
   | { status: "choice"; macs: ConnectorMac[]; open: string[] };
 
@@ -48,6 +48,8 @@ export type ConsentState =
       macId: string | null;
       /** Allow works only after the page has had the person's attention for a moment (M2). */
       armed: boolean;
+      /** How actions run, when the API offers the choice (`request.accessModes`). */
+      accessMode: AccessMode;
       /** A decision is on its way: both buttons stay disabled. */
       busy: "allow" | "deny" | null;
       /** A failed decision that can be tried again. */
@@ -61,6 +63,7 @@ export type ConsentHandlers = {
   onAllow?: (fromPointer: boolean) => void;
   onDeny?: () => void;
   onToggleAct?: (allow: boolean) => void;
+  onPickAccessMode?: (mode: AccessMode) => void;
   onPickMac?: (macId: string | null) => void;
   onSwitchAccount?: () => void;
   onRetry?: () => void;
@@ -175,10 +178,18 @@ function CheckIcon() {
   );
 }
 
-function Abilities({ request, allowAct, disabled, onToggleAct }: {
-  request: ConsentRequest; allowAct: boolean; disabled: boolean; onToggleAct?: (allow: boolean) => void;
+/** The access-mode choice (owner decision A): Auto first and recommended, the stricter "ask" second. */
+const ACCESS_MODES: { mode: AccessMode; label: ReactNode }[] = [
+  { mode: "auto", label: <><strong>Auto (recommended):</strong> run what you ask without asking again on your Mac</> },
+  { mode: "ask", label: <>Ask me on my Mac each time</> },
+];
+
+function Abilities({ request, allowAct, accessMode, disabled, onToggleAct, onPickAccessMode }: {
+  request: ConsentRequest; allowAct: boolean; accessMode: AccessMode; disabled: boolean;
+  onToggleAct?: (allow: boolean) => void; onPickAccessMode?: (mode: AccessMode) => void;
 }) {
-  const who = subject(request.clientKind);
+  const offered = ACCESS_MODES.filter(({ mode }) => request.accessModes.includes(mode));
+  const choosing = offered.length > 1;
   return (
     <section className={styles.panel} aria-labelledby="connect-abilities">
       <h2 id="connect-abilities">What {assistantName(request.clientKind) ?? "it"} will be able to do</h2>
@@ -197,13 +208,38 @@ function Abilities({ request, allowAct, disabled, onToggleAct }: {
             onChange={(event) => onToggleAct?.(event.target.checked)}
           />
           <span>
-            <strong>Start, pause, continue, cancel and answer routines, draft new routines and install shared ones from Explore.</strong>{" "}
-            Toone still asks you on your Mac before each of these.
+            <strong>Start, pause, continue, cancel and answer routines, draft new routines and install shared ones from Explore.</strong>
+            {/* With a mode to choose, the choice below says whether the Mac asks. */}
+            {!choosing && <>{" "}Toone still asks you on your Mac before each of these.</>}
           </span>
         </label>
       )}
+      {request.scopes.includes("act") && allowAct && choosing && (
+        <div className={styles.modes}>
+          <p id="connect-access-mode">When it acts:</p>
+          <div className={styles.modePicker} role="radiogroup" aria-labelledby="connect-access-mode">
+            {offered.map(({ mode, label }) => (
+              <label key={mode} className={styles.modeOption}>
+                <input type="radio" name="connect-access-mode" value={mode} checked={accessMode === mode} disabled={disabled}
+                  onChange={() => onPickAccessMode?.(mode)} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <p className={styles.quiet}>
+            Your Mac&apos;s own setting still applies, and the stricter one wins. You can change this in Toone → Settings → Connected Apps.
+          </p>
+        </div>
+      )}
     </section>
   );
+}
+
+/** Why a Mac cannot take assistants yet, or null. */
+export function macAssistantsNote(mac: ConnectorMac): string | null {
+  if (mac.assistants === "off") return "Assistants are off on this Mac: turn on Claude and other assistants (online) in Toone → Settings → Connected Apps.";
+  if (mac.assistants === "update") return "Update Toone on this Mac to use assistants.";
+  return null;
 }
 
 function Macs({ macs, kind, picked, disabled, onPickMac }: {
@@ -222,25 +258,50 @@ function Macs({ macs, kind, picked, disabled, onPickMac }: {
       <>
         <p id="connect-mac-choice">Reach Toone on:</p>
         <div className={styles.macPicker} role="radiogroup" aria-labelledby="connect-mac-choice">
-          {macs.macs.map((mac) => (
-            <label key={mac.id} className={styles.macOption}>
-              <input type="radio" name="connect-mac" value={mac.id} checked={picked === mac.id} disabled={disabled}
-                onChange={() => onPickMac?.(mac.id)} />
-              <span className={styles.macName}>{mac.name}</span>
-              {open.has(mac.id) && <span className={styles.tag}>Open now</span>}
-            </label>
-          ))}
+          {macs.macs.map((mac) => {
+            const note = macAssistantsNote(mac);
+            return (
+              <label key={mac.id} className={styles.macOption}>
+                <input type="radio" name="connect-mac" value={mac.id} checked={picked === mac.id} disabled={disabled}
+                  onChange={() => onPickMac?.(mac.id)} />
+                <span className={styles.macText}>
+                  <span className={styles.macName}>{mac.name}</span>
+                  {note && <span className={styles.macNote}>{note}</span>}
+                </span>
+                {open.has(mac.id) && <span className={styles.tag}>Open now</span>}
+              </label>
+            );
+          })}
           <label className={styles.macOption}>
             <input type="radio" name="connect-mac" value="" checked={picked === null} disabled={disabled}
               onChange={() => onPickMac?.(null)} />
-            <span className={styles.macName}>The Mac I used last</span>
+            <span className={styles.macText}><span className={styles.macName}>The Mac I used last</span></span>
           </label>
         </div>
-        {macs.open.length === 0 && <p>Toone isn&apos;t open on any of your Macs right now. Open Toone on your Mac and sign in.</p>}
+        {/* consent-page.md §3.2: a chosen Mac is the only one reached (refused while it is away); "last" falls back. */}
+        <p className={styles.quiet}>
+          {pickedName(macs.macs, picked)
+            ? <>{who} will reach <strong className={styles.macName}>{pickedName(macs.macs, picked)}</strong> only.</>
+            : <>{who} will reach the Mac you used last.</>}
+        </p>
+        {macs.open.length === 0 && !macs.macs.some(macAssistantsNote) && (
+          <p>Toone isn&apos;t open on any of your Macs right now. Open Toone on your Mac and sign in.</p>
+        )}
       </>
     );
   } else if (macs.macs.length === 0) {
-    body = (
+    // None reachable: say why when a registered Mac tells us (its switch is off, or its Toone is too old).
+    const blocked = (macs.account ?? []).filter((mac) => macAssistantsNote(mac));
+    body = blocked.length > 0 ? (
+      <>
+        <ul className={styles.macNotes}>
+          {blocked.map((mac) => (
+            <li key={mac.id}><strong className={styles.macName}>{mac.name}</strong>: {macAssistantsNote(mac)}</li>
+          ))}
+        </ul>
+        <p>You can allow this now; {assistant ?? "the app"} reaches your Mac once that is done.</p>
+      </>
+    ) : (
       <>
         <p>Toone isn&apos;t open on any of your Macs right now.</p>
         <p className={styles.strong}>Open Toone on your Mac and sign in.</p>
@@ -274,6 +335,10 @@ function Macs({ macs, kind, picked, disabled, onPickMac }: {
       {body}
     </section>
   );
+}
+
+function pickedName(macs: ConnectorMac[], picked: string | null): string | null {
+  return picked ? macs.find((mac) => mac.id === picked)?.name ?? null : null;
 }
 
 /** M1: who should be allowing this, in one line above the buttons. */
@@ -377,7 +442,8 @@ export default function ConsentScreen({ state, macNotice = null, ...on }: {
       <div className={styles.stack}>
         {request.eligible ? (
           <>
-            <Abilities request={request} allowAct={state.allowAct} disabled={disabled} onToggleAct={on.onToggleAct} />
+            <Abilities request={request} allowAct={state.allowAct} accessMode={state.accessMode} disabled={disabled}
+              onToggleAct={on.onToggleAct} onPickAccessMode={on.onPickAccessMode} />
             <Macs macs={state.macs} kind={request.clientKind} picked={state.macId}
               disabled={disabled} onPickMac={on.onPickMac} />
             <HowItWorks kind={request.clientKind} />
