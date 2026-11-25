@@ -32,7 +32,7 @@ const RENDERINGS: readonly (TooneProSeller | null)[] = [...TOONE_PRO_SELLERS, nu
 test("Privacy page renders the seller model and the bumped date", () => {
   assert.match(page, /<PrivacyContent seller=\{seller\} \/>/);
   assert.match(page, /updated=\{PRIVACY_UPDATED_DATE\}/);
-  assert.equal(PRIVACY_UPDATED_DATE, "November 24, 2026");
+  assert.equal(PRIVACY_UPDATED_DATE, "November 25, 2026");
   for (const seller of RENDERINGS) {
     assert.doesNotMatch(privacy(seller), /Toone Pro \(Mac App Store\)\s*$/m, "Pro is no longer described as Store-only");
   }

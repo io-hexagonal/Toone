@@ -463,8 +463,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           conversations, and limits how much text one answer can carry. What the connector reads goes
           to the assistant you use, under your own account with Anthropic or OpenAI and that
           provider&apos;s terms. Through this plugin it does not pass through Toone&apos;s server,
-          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or
-          answering a question, asks for your confirmation first.
+          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or answering a question, follows the access you chose: in &ldquo;Ask me each time&rdquo; Toone asks for your confirmation on your Mac; in &ldquo;Auto&rdquo; it runs what you asked for without asking again. You can change this, or disconnect the assistant, at any time in the Toone app, under Settings, Connected Apps. Installing a shared routine that contains scripts always asks.
         </p>
         <p>
           To show a routine&apos;s live graph, the connector draws it inside the conversation where
@@ -485,8 +484,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           and when it was made and last used) until 30 days after you disconnect it or it lapses a
           year after you allowed it, and a record of which tools were used, when, on which Mac and
           whether they worked, without any content, for 30 days. Both are deleted with your account.
-          Anything that changes something still asks for your confirmation on your Mac, and you can
-          disconnect the assistant at any time in the Toone app, under Settings, Connected Apps. The connector is available with Toone (Direct), not Toone (Mac App Store).
+          Anything that changes something, such as starting a run or answering a question, follows the access you chose: in &ldquo;Ask me each time&rdquo; Toone asks for your confirmation on your Mac; in &ldquo;Auto&rdquo; it runs what you asked for without asking again. You can change this, or disconnect the assistant, at any time in the Toone app, under Settings, Connected Apps. Installing a shared routine that contains scripts always asks. The connector is available with Toone (Direct), not Toone (Mac App Store).
         </p>
         <p>
           When you ask your assistant about your routines, the connector reads from Toone what your
@@ -496,8 +494,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           conversations, and limits how much text one answer can carry. What the connector reads goes
           to the assistant you use, under your own account with Anthropic or OpenAI and that
           provider&apos;s terms. Through this plugin it does not pass through Toone&apos;s server,
-          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or
-          answering a question, asks for your confirmation first.
+          and Toone does not receive, log or store it. Anything that changes something, such as starting a run or answering a question, follows the access you chose: in &ldquo;Ask me each time&rdquo; Toone asks for your confirmation on your Mac; in &ldquo;Auto&rdquo; it runs what you asked for without asking again. You can change this, or disconnect the assistant, at any time in the Toone app, under Settings, Connected Apps. Installing a shared routine that contains scripts always asks.
         </p>
         <p>
           To show a routine&apos;s live graph, the connector draws it inside the conversation where
@@ -518,9 +515,7 @@ export default function PrivacyContent({ seller = null, traderDetails = TRADER_D
           what you allowed, and when it was made and last used) until 30 days after you disconnect it
           or it lapses a year after you allowed it, and a record of which tools were used, when, on
           which Mac and whether they worked, without any content, for 30 days. Both are deleted with
-          your account. Anything that changes something still asks for your confirmation on your Mac,
-          and you can disconnect the assistant at any time in the Toone app, under Settings,
-          Connected Apps.
+          your account. Anything that changes something, such as starting a run or answering a question, follows the access you chose: in &ldquo;Ask me each time&rdquo; Toone asks for your confirmation on your Mac; in &ldquo;Auto&rdquo; it runs what you asked for without asking again. You can change this, or disconnect the assistant, at any time in the Toone app, under Settings, Connected Apps. Installing a shared routine that contains scripts always asks.
         </p>
       </section>
 

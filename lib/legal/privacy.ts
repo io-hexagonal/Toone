@@ -2,7 +2,7 @@ import { SOLD_BY, type TooneProSeller } from "@/lib/legal/seller";
 
 export const PRIVACY_PATH = "/privacy";
 export const PRIVACY_CANONICAL = `https://trytoone.com/en${PRIVACY_PATH}`;
-export const PRIVACY_UPDATED_DATE = "November 24, 2026";
+export const PRIVACY_UPDATED_DATE = "November 25, 2026";
 
 /** The contact for privacy requests, named on the page. */
 export const PRIVACY_CONTACT = "hello@trytoone.com";
