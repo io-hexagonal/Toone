@@ -332,8 +332,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Precisie voor je agentische workflows en routines",
-      "heroTag": "Bouw complexe, betrouwbare AI-workflows door ze te beschrijven.\nKoppel je eigen accounts in een browser. Test, bewerk en ga verder waar hij stopte.",
+      "heroTitle": "Precisie voor je <accent>agentische workflows en routines</accent>",
+      "heroTag": "Beschrijf het één keer en Toone maakt er een routine van op je Mac: scripts voeren de stappen uit die nooit veranderen, AI-agents alleen de stappen die oordeelsvermogen vragen.",
       "featuresTitle": "Alles wat je agents nodig hebben om het werk te doen",
       "featuresSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
       "seeAllFeatures": "Bekijk alle functies",
@@ -387,7 +387,7 @@
     "downloadFor": "Vroege toegang aanvragen",
     "macOS": "macOS",
     "soon": "Binnenkort",
-    "heroTitle": "De AI-werkruimte voor jouw agentische workflows",
+    "heroTitle": "Laat het terugkerende werk van je bedrijf draaien als routines die <accent>je team kan controleren</accent>",
     "featuresEyebrow": "Functies",
     "pillarsTitle": "Alles wat je agents nodig hebben om het werk te doen",
     "pillarsSub": "Eén werkplek voor je agents, je workflows en je resultaten.",
@@ -427,7 +427,7 @@
     "waitlistSignIn": "Inloggen",
     "emailPrivacyLink": "Privacybeleid",
     "productLanguageDisclosure": "De desktop-app is momenteel alleen beschikbaar in het Engels.",
-    "heroTag2": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
+    "heroTag2": "Beschrijf hoe een proces werkt en Toone maakt er een routine van: scripts voeren de vaste stappen uit, AI-agents nemen de beslissingen waar oordeel voor nodig is. Stappen die versturen, posten of betalen kunnen op goedkeuring wachten, en elke run laat een logboek achter.",
     "haveInvitation": "Heb je een uitnodigingscode?",
     "eaIntro": "Toone is de AI-werkruimte voor je agentische workflows: een macOS-app waarin gespecialiseerde agents je workflows en routines uitvoeren, onder jouw controle.",
     "eaBeforeTitle": "Voordat je aanvraagt",
@@ -442,11 +442,11 @@
     "howItWorks": {
       "eyebrow": "Hoe het werkt",
       "title": "Van gewone woorden naar een draaiende routine",
-      "sub": "Jij beschrijft het werk. Je agents doen het terwijl je meekijkt.",
+      "sub": "Kies hieronder een voorbeeld en zie hoe het van verzoek naar afgeronde run gaat.",
       "steps": {
         "describe": {
           "title": "Beschrijf het",
-          "body": "Leg het uit zoals aan een collega: wanneer, welke modellen, welke accounts. Toone tekent de graaf, jij kijkt hem na.",
+          "body": "Leg het uit zoals aan een collega: wat, wanneer, met welke accounts. Toone tekent de routine uit en bepaalt welke stappen een script kan doen en welke een agent nodig hebben.",
           "chips": {
             "words": "Gewone woorden",
             "schedule": "Op schema",
@@ -455,16 +455,16 @@
         },
         "run": {
           "title": "Kijk hoe hij draait",
-          "body": "Agents werken parallel, elk op het model dat je koos, en elke stap licht live op in je eigen accounts.",
+          "body": "Automatische stappen zijn scripts: ze voeren de vaste delen exact uit, zonder agent en zonder tokens. Agents nemen de stappen die oordeelsvermogen vragen, elk op het model dat je koos. Elke stap licht op terwijl hij draait.",
           "chips": {
-            "parallel": "Parallelle agents",
-            "models": "Een model per agent",
+            "auto": "Automatische stappen",
+            "agents": "Agents waar nodig",
             "live": "Live graaf"
           }
         },
         "resume": {
           "title": "Pauzeer, bewerk, ga verder",
-          "body": "Contracten controleren elke uitkomst. Haalt een stap ze niet, dan pauzeert alleen die: pas hem aan en ga verder waar hij stopte.",
+          "body": "Elke stap heeft een contract: een controle waar de uitkomst aan moet voldoen. Haalt een stap het niet, dan probeert hij het opnieuw, schakelt hij over op een fallback of pauzeert hij en vraagt het jou. Pas hem aan in gewone woorden en ga verder waar hij stopte.",
           "chips": {
             "contracts": "Contracten",
             "fallbacks": "Fallbacks",
@@ -473,69 +473,28 @@
         }
       },
       "personaLabel": "Routine voor",
-      "more": "Meer in Explore",
+      "more": "Meer kant-en-klare routines",
       "tabs": {
-        "marketer": "Marketeer",
         "seo": "SEO-bureau",
-        "film": "Filmmaker"
+        "ops": "Financiële ops",
+        "film": "Videomaker"
       },
       "promptLabel": "Nieuwe routine",
       "promptSend": "Versturen",
       "fallback": "1× opnieuw → vraag mij",
       "pauseNote": "Afgeronde stappen houden hun resultaten.",
       "agents": {
-        "strategist": "Strateeg",
-        "researcher": "Onderzoeker",
         "writer": "Schrijver",
         "reviewer": "Reviewer",
         "designer": "Designer",
         "publisher": "Publisher",
         "analyst": "Analist",
-        "producer": "Producer",
-        "editor": "Editor",
-        "narrator": "Verteller"
+        "producer": "Producer"
       },
       "scenarios": {
-        "marketer": {
-          "routineName": "Wekelijkse contentmotor",
-          "outcome": "Maandagochtend: drie LinkedIn-posts geschreven, met bronnen en klaar voor jouw OK.",
-          "prompt": "<k>Elke maandag om 9:00</k>: kies de thema’s van deze week uit de resultaten van vorige week en onderzoek ze met <k>2 parallelle agents op Haiku</k>: trends en concurrenten. Laat <k>een Sonnet-agent</k> 3 LinkedIn-posts schrijven en <k>een GPT-agent</k> ze beoordelen: <k>merkstem minstens 8/10, elke claim met bron</k>. <k>Stuur zwakke concepten terug, hooguit twee keer.</k> Maak de visuals in Figma, <k>vraag het me vóór het publiceren</k> en post dan op LinkedIn, Threads en Instagram. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
-          "graph": {
-            "schedule": "ma 9:00",
-            "parallelShort": "Onderzoek ×2",
-            "nodes": {
-              "topics": "Thema’s kiezen",
-              "trends": "Trends",
-              "competitors": "Concurrenten",
-              "draft": "Posts schrijven",
-              "review": "Review",
-              "visuals": "Visuals",
-              "publish": "Publiceren"
-            },
-            "chips": {
-              "min": "merkstem ≥ 8/10",
-              "other": "claims met bron",
-              "loop": "needs_fix",
-              "gate": "vraagt mij eerst"
-            }
-          },
-          "run": {
-            "topics": "Opus kiest thema’s op basis van vorige week",
-            "research": "2 Haiku-agents onderzoeken parallel",
-            "draft": "Sonnet schrijft 3 posts",
-            "review": "GPT beoordeelt de merkstem",
-            "loop": "Onder de 8: terug voor een herschrijving",
-            "contract": "Contract gehaald: stem ≥ 8/10, met bron",
-            "publish": "Visuals klaar, jij keurt goed, hij post"
-          },
-          "pause": {
-            "reason": "Merkstem 6 / 10: onder het contract",
-            "edit": "Minder hype, meer cijfers"
-          }
-        },
         "seo": {
           "routineName": "Wekelijkse contentopfrisbeurt",
-          "outcome": "Maandagochtend: de gezakte pagina's van de klant bijgewerkt, gecontroleerd en als concept opgeslagen, met het rapport al in hun inbox.",
+          "outcome": "Maandagochtend: de gezakte pagina’s van de klant opgefrist, gecontroleerd en als concept opgeslagen, met het rapport al in hun inbox.",
           "prompt": "<k>Elke maandag om 7:00</k>: haal de rankings van onze klant op uit Search Console – <k>lukt dat niet, gebruik dan Semrush</k>. Kies <k>minstens 8 pagina’s die posities verloren</k>, <k>één keyword per pagina</k>. Fris ze op met <k>één Sonnet-agent per pagina</k>, laat <k>een GPT-agent</k> elke wijziging factchecken, sla de concepten op in WordPress en mail het rapport naar de klant. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "ma 7:00",
@@ -546,7 +505,7 @@
               "refresh": "Opfrissen",
               "check": "Factcheck",
               "save": "Concepten opslaan",
-              "report": "Rapport"
+              "report": "Rapport mailen"
             },
             "chips": {
               "fallback": "fallback → Semrush",
@@ -555,30 +514,64 @@
             }
           },
           "run": {
-            "pull": "Rankings ophalen uit Search Console",
+            "pull": "Rankings opvragen bij Search Console · geen AI",
             "fallback": "Search Console time-out: verder met Semrush",
-            "pick": "Pagina’s kiezen die posities verloren",
+            "pick": "Pagina’s die posities verloren, gesorteerd · geen AI",
             "contract": "Contract gehaald: ≥ 8 pagina’s, elk 1 keyword",
             "refresh": "8 Sonnet-agents frissen elk een pagina op",
             "check": "GPT factcheckt elke wijziging",
-            "report": "Concepten in WordPress, rapport per mail"
+            "report": "Concepten opgeslagen in WordPress, rapport gemaild · geen AI"
           },
           "pause": {
             "reason": "5 / 8 pagina’s: onder het contract",
             "edit": "Ook dalingen van 2+ posities"
           }
         },
+        "ops": {
+          "routineName": "Wekelijkse omzetcontrole",
+          "outcome": "Maandagochtend: elke Stripe-betaling gekoppeld aan zijn deal, de afwijkende bedragen uitgelegd en de samenvatting al in Slack.",
+          "prompt": "<k>Elke maandag om 8:00</k>: haal de Stripe-betalingen van vorige week op en koppel elke betaling aan zijn HubSpot-deal: <k>elke betaling krijgt een deal</k>. Werk de deals bij en laat <k>een Sonnet-agent</k> elk bedrag uitzoeken dat afwijkt van de deal. Laat dan <k>een Haiku-agent</k> een korte samenvatting schrijven en die in #revenue in Slack posten. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "graph": {
+            "schedule": "ma 8:00",
+            "parallelShort": "Uitzoeken ×2",
+            "nodes": {
+              "payments": "Betalingen ophalen",
+              "match": "Aan deals koppelen",
+              "odd": "Vreemde bedragen checken",
+              "crm": "Deals bijwerken",
+              "summary": "Samenvatting schrijven",
+              "post": "Posten in Slack"
+            },
+            "chips": {
+              "min": "elke betaling",
+              "other": "heeft een deal"
+            }
+          },
+          "run": {
+            "payments": "Stripe-betalingen van vorige week opgehaald · geen AI",
+            "match": "Betalingen gekoppeld aan HubSpot-deals · geen AI",
+            "contract": "Contract gehaald: elke betaling heeft een deal",
+            "odd": "Sonnet zoekt 3 afwijkende bedragen uit",
+            "crm": "Deals bijgewerkt in HubSpot · geen AI",
+            "summary": "Haiku schrijft de weeksamenvatting",
+            "post": "Samenvatting gepost in #revenue · geen AI"
+          },
+          "pause": {
+            "reason": "41 / 46 betalingen gekoppeld: onder het contract",
+            "edit": "Koppel ook op het factuur-e-mailadres"
+          }
+        },
         "film": {
           "routineName": "Wekelijkse afleveringspipeline",
-          "outcome": "Vrijdag: de ruwe montage voor volgende week staat als concept op YouTube, met voice-over, B-roll en thumbnails klaar.",
-          "prompt": "<k>Elke vrijdag om 8:00</k>: laat <k>een Opus-agent</k> het script van volgende week ontleden. Draai daarna <k>3 sporen naast elkaar</k>: vind <k>minstens 12 B-roll-clips</k> op Pexels, <k>alleen vrij te gebruiken</k>; neem de voice-over op in ElevenLabs; en maak 3 thumbnails in Higgsfield – <k>lukt dat niet, gebruik dan GPT Image</k>. Zet een ruwe montage in elkaar, controleer de continuïteit aan de hand van het script en upload hem als concept naar YouTube. <k>Mislukt een stap, probeer het één keer opnieuw en vraag het me dan.</k>",
+          "outcome": "Vrijdagochtend: de ruwe montage voor volgende week staat als concept op YouTube, met voice-over, B-roll en thumbnails klaar.",
+          "prompt": "Laat <k>elke vrijdag om 8:00</k> <k>een Opus-agent</k> het script van volgende week uitsplitsen. Draai daarna <k>3 sporen naast elkaar</k>: <k>minstens 12 B-roll-clips</k> van Pexels, <k>alleen vrij te gebruiken</k>, op lengte getrimd; een ElevenLabs-voice-over met ondertitels; en 3 Higgsfield-thumbnails (<k>bij een fout: GPT Image</k>), en kies de beste. Zet een ruwe montage in elkaar, controleer de continuïteit en upload hem als concept naar YouTube. <k>Als een stap mislukt, probeer het één keer opnieuw en vraag het me dan.</k>",
           "graph": {
             "schedule": "vr 8:00",
             "parallelShort": "3 sporen",
             "nodes": {
               "breakdown": "Script ontleden",
               "broll": "B-roll",
-              "trim": "Inkorten",
+              "trim": "Op lengte knippen",
               "voice": "Voice-over",
               "captions": "Ondertitels",
               "thumbs": "Thumbnails",
@@ -588,25 +581,31 @@
               "upload": "Concept uploaden"
             },
             "chips": {
-              "min": "≥ 12",
+              "min": "≥ 12 clips",
               "other": "vrij te gebruiken",
               "fallback": "fallback → GPT Image"
             }
           },
           "run": {
             "breakdown": "Opus ontleedt het script",
-            "tracks": "3 sporen draaien naast elkaar",
+            "tracks": "Drie sporen starten: B-roll, voice-over, thumbnails",
             "fallback": "Higgsfield mislukt: GPT Image neemt over",
-            "contract": "Contract gehaald: ≥ 12, vrij te gebruiken",
-            "cut": "De ruwe montage in elkaar zetten",
+            "contract": "Contract gehaald: ≥ 12 clips, alle vrij te gebruiken",
+            "cut": "Ruwe montage samengesteld · geen AI",
             "review": "Opus controleert de continuïteit",
-            "upload": "Concept uploaden naar YouTube"
+            "upload": "Concept geüpload naar YouTube · geen AI"
           },
           "pause": {
             "reason": "7 / 12 clips: onder het contract",
             "edit": "Lucht- en nachtbeelden toevoegen"
           }
         }
+      },
+      "automatic": "Automatisch",
+      "legend": {
+        "auto": "Automatische stap: een script, geen agent",
+        "agent": "Agent: waar oordeelsvermogen nodig is",
+        "tally": "{n} van {total} stappen draaien als script"
       }
     },
     "routineGraph": {
@@ -706,7 +705,69 @@
       }
     },
     "closing": {
-      "title": "Geef je terugkerende werk aan agents die je aan het werk ziet."
+      "title": "Begin met één routine. Houd wat werkt.",
+      "sub": "Kies een kant-en-klare routine of beschrijf je eigen, en geef hem een week.",
+      "facts": {
+        "free": "Maak {free} routines gratis",
+        "runs": "Onbeperkte runs",
+        "plan": "Je eigen Claude Code of Codex"
+      },
+      "explore": "Bekijk kant-en-klare routines"
+    },
+    "trust": {
+      "productHunt": "Product Hunt",
+      "productHuntRank": "#3 Product van de dag",
+      "supportedBy": "Ondersteund door",
+      "claudeStartups": "Claude for Startups",
+      "askAi": "Vraag een AI naar ons",
+      "askAiPrompt": "Wat is Toone (trytoone.com)? Leg uit wat het doet, voor wie het is en hoe het zich verhoudt tot andere AI-automatiseringstools."
+    },
+    "built": {
+      "eyebrow": "Anders gebouwd",
+      "title": "AI kan het werk nu doen. Maar niet al het werk.",
+      "sub": "Dezelfde klus van zes stappen, op drie manieren gebouwd. De vonk markeert elke stap die via een AI-model loopt.",
+      "tokens": "{n, plural, =0 {Geen stap gebruikt AI} one {# stap gebruikt AI} other {# stappen gebruiken AI}}",
+      "more": "Vergelijk in detail",
+      "ways": {
+        "nodes": {
+          "name": "Nodegebaseerde automatisering",
+          "like": "Zoals n8n, Make of Zapier",
+          "verdict": "Exact, maar elke node bedraad je met de hand, en AI is er gewoon een node bij."
+        },
+        "agents": {
+          "name": "Agents op een schema",
+          "like": "Zoals een ingeplande chattaak of een coderingsagent op een timer",
+          "verdict": "Flexibel, maar elke stap loopt via een model, dus elke stap kost van je AI-abonnement en kan anders uitpakken."
+        },
+        "toone": {
+          "name": "Toone",
+          "like": "Scripts plus agents, op je Mac",
+          "verdict": "Scripts voeren de vaste stappen exact uit; agents nemen alleen de stappen die oordeelsvermogen vragen."
+        }
+      }
+    },
+    "outcomes": {
+      "eyebrow": "Wat je krijgt",
+      "title": "Wat er verandert zodra het werk als routine draait",
+      "sub": "Vergeleken met alles zelf bedraden of alles aan een agent overlaten.",
+      "items": {
+        "cost": {
+          "title": "AI alleen waar het loont",
+          "body": "Alleen de stappen die oordeelsvermogen vragen gebruiken je Claude- of ChatGPT-abonnement, dus de gebruikslimieten gaan langer mee."
+        },
+        "same": {
+          "title": "Bij elke stap gecontroleerd",
+          "body": "De uitkomst van elke stap moet door het contract voordat de volgende stap begint, en elke run weet wat eerdere runs al deden, zodat het werk van vorige week niet opnieuw gebeurt."
+        },
+        "wire": {
+          "title": "Niets te bedraden",
+          "body": "Je koppelt nooit een veld en tekent nooit een vertakking. Verandert er een tool of de klus, zeg dan wat er veranderd is en Toone past de routine aan."
+        },
+        "control": {
+          "title": "Jij houdt de controle",
+          "body": "Elke stap zie je live in de graaf, met wat hij deed en waarom hij stopte. Stappen die versturen, posten of betalen kunnen op jouw akkoord wachten."
+        }
+      }
     }
   },
   "privacyChoices": {
@@ -731,36 +792,39 @@
     "legal": "Juridisch",
     "contact": "Contact",
     "rights": "Alle rechten voorbehouden.",
-    "featuredOn": "Uitgelicht op"
+    "featuredOn": "Uitgelicht op",
+    "compare": "Vergelijking"
   },
   "meta": {
-    "siteTitle": "Toone | De AI-werkruimte voor jouw agentische workflows",
-    "siteDescription": "De AI-werkruimte voor jouw agentische workflows. Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
-    "ogDescription": "Maak van terugkerend werk bruikbare resultaten met gespecialiseerde agents, terwijl jij de controle houdt.",
-    "ogTitle": "Toone | De AI-werkruimte voor jouw agentische workflows"
+    "siteTitle": "Toone | Routines met scripts én AI-agents, op je Mac",
+    "siteDescription": "Toone maakt van werk dat je herhaalt routines op je Mac: scripts voeren de stappen uit die nooit veranderen, AI-agents alleen die waar oordeelsvermogen nodig is. Beschrijf het in gewone woorden en kijk mee bij elke run, op je eigen Claude Code of Codex.",
+    "ogDescription": "Beschrijf het werk. Scripts voeren de vaste stappen uit, agents de stappen met oordeelsvermogen, en jij kijkt bij elke run mee.",
+    "ogTitle": "Toone | Agentic als standaard. Scripts waar het telt."
   },
   "faq": {
     "eyebrow": "FAQ",
-    "title": "Vragen, beantwoord.",
-    "sub": "De korte versie van alles wat men ons vraagt.",
+    "title": "Wat mensen ons als eerste vragen",
+    "sub": "Korte antwoorden. De <link>productgids</link> gaat dieper.",
     "q1": "Wat is Toone?",
-    "a1": "Toone is een native macOS-werkruimte voor projecten met AI-agents: gespecialiseerde agents, de herhaalbare routines die ze uitvoeren en de tools en kennis die ze delen, op één plek.",
-    "q2": "Voor wie is Toone?",
-    "a2": "Iedereen op een Mac met complex werk in meerdere stappen dat elke week of maand terugkomt: operations, onderzoek, marketing, oprichters en makers. Je gebruikt je eigen Claude Code of Codex, maakt van dat werk een routine en kunt elke run volgen, pauzeren, bewerken en controleren.",
-    "q3": "Heb ik een bestaand abonnement nodig?",
-    "a3": "Ja. Toone werkt met je eigen OpenAI- of Anthropic-abonnement en verbindt daarmee tijdens de installatie. Je hoeft bij ons geen apart modelabonnement te kopen.",
-    "q4": "Is er een leercurve?",
-    "a4": "Een kleine. Je beschrijft agents en routines in natuurlijke taal, en de begeleide installatie brengt je in ongeveer vijftien minuten van installatie naar een eerste routine-run. De Explore-pagina heeft ook beoordeelde routines en bundels die je in Toone kunt openen en aanpassen.",
-    "q5": "Is het veilig?",
-    "a5": "Toone draait op je Mac. Je providergegevens en projectbestanden blijven bij jou, elke run is zichtbaar terwijl die loopt, en routines kunnen vóór gevoelige stappen op je goedkeuring wachten. Routines en bundels die in Explore worden gedeeld, worden beoordeeld voordat ze verschijnen.",
-    "q6": "Hoe krijg ik toegang?",
-    "a6": "Maak een account aan op trytoone.com, kies een abonnement en download Toone voor je Mac. Heb je een code, wissel die dan in op trytoone.com/redeem.",
-    "q7": "Kan ik mijn bestaande app blijven gebruiken?",
-    "a7": "Ja. Bestaande accounthouders kunnen op de gebruikelijke manier blijven inloggen.",
-    "q8": "Hoe werken uitnodigingen?",
-    "a8": "Wissel je persoonlijke code in op de website om een account met e-mail en wachtwoord aan te maken en gebruik dat daarna in de desktop-app.",
+    "a1": "Toone is een Mac-app die werk dat je herhaalt omzet in routines. Je beschrijft het werk in gewone woorden; Toone tekent de routine uit, voert de stappen die nooit veranderen uit als scripts en geeft de stappen die oordeelsvermogen vragen aan AI-agents op je eigen Claude Code of Codex. Je ziet elke run live en kunt hem pauzeren, bewerken en hervatten.",
+    "q2": "Is Toone gewoon n8n met AI?",
+    "a2": "Nee. In n8n, Make of Zapier bedraad je elke node met de hand en is AI één node in de flow. In Toone beschrijf je het werk en bouwt Toone de routine: scripts voor wat nooit verandert, agents voor wat oordeelsvermogen vraagt, en een contract op elke uitkomst. Gaat het om app-naar-app-synchronisaties die dag en nacht moeten draaien, dan passen n8n, Make of Zapier beter: Toone draait zolang je Mac aan staat.",
+    "q3": "Wat kost een run?",
+    "a3": "Automatische stappen zijn scripts, dus ze gebruiken niets van je AI-abonnement. Agentstappen gebruiken het Claude- of ChatGPT-abonnement dat je al betaalt, via Claude Code of Codex; je koopt bij ons geen apart AI-abonnement. Betaalde diensten die een stap aanroept, zoals Semrush, factureren je gewoon zelf. Routines draaien is nooit beperkt.",
+    "q4": "Moet ik code schrijven?",
+    "a4": "Nee. Je beschrijft de routine en Toone schrijft de scripts voor de automatische stappen. Wil je een stap aanpassen, beschrijf dan de wijziging; Toone werkt de routine bij en jij controleert hem voordat hij draait.",
+    "q5": "Met welke tools kan Toone werken?",
+    "a5": "Elke dienst met een API, tools die via MCP zijn gekoppeld (de standaardmanier waarop AI-apps op andere tools aansluiten) en websites, via een browser in Toone waarin je inlogt met je eigen accounts.",
+    "q6": "Wat gebeurt er als een stap mislukt of tekortschiet?",
+    "a6": "Contracten controleren de uitkomst van elke stap. Een stap die tekortschiet probeert het opnieuw, schakelt over op een fallback of pauzeert en vraagt het jou, afhankelijk van de regel die je instelt. Pas hem aan in gewone woorden en ga verder waar hij stopte; afgeronde stappen houden hun resultaten.",
+    "q7": "Waar draait het, en waar staat mijn data?",
+    "a7": "Op je Mac. Routines, runhistorie en projectbestanden blijven op je eigen machine. Agentstappen sturen waar ze aan werken naar Anthropic of OpenAI, via je eigen Claude Code of Codex, onder de voorwaarden van je abonnement. Stappen die iets versturen, posten of betalen kunnen op jouw goedkeuring wachten.",
+    "q8": "Wat als mijn Mac in slaap staat wanneer een routine aan de beurt is?",
+    "a8": "Geplande routines hebben een Mac nodig die wakker is, met Toone open. Een run die aan de beurt komt terwijl hij slaapt, gaat niet verloren: hij draait één keer zodra de Mac weer wakker is, daarna volgt de routine weer het gewone schema.",
     "q9": "Is Toone gratis? Wat voegt Toone Pro toe?",
-    "a9": "Ja. Elk account kan gratis {free} routines aanmaken, en het uitvoeren van routines is nooit beperkt. Toone Pro haalt de limiet op het aanmaken van routines weg, met een maandelijkse, jaarlijkse of eenmalige levenslange betaling. Abonnementen en prijzen staan op de prijzenpagina."
+    "a9": "Ja. Elk account kan gratis {free} routines maken, en routines draaien is nooit beperkt. Toone Pro haalt de limiet op het maken van routines weg, met een maandelijkse, een jaarlijkse of een eenmalige betaling voor het leven. Abonnementen en prijzen staan op de prijzenpagina.",
+    "q10": "Hoe begin ik?",
+    "a10": "Maak een account aan op trytoone.com en download Toone voor je Mac. Begin met een kant-en-klare routine uit Explore of beschrijf je eigen; met de begeleide installatie ben je in zo’n vijftien minuten bij je eerste run. Heb je een code, wissel hem dan in op trytoone.com/redeem."
   },
   "billing": {
     "nav": "Prijzen",

@@ -55,7 +55,16 @@ function BadgeSet({
   );
 }
 
-export default async function FeaturedOnStrip() {
+type Props = {
+  /**
+   * "trust": inside a TrustPage (the About page): a plain section with the
+   * page's own h2, in the text column, on the dark ground. The default is
+   * the original cream, edge-to-edge landing strip.
+   */
+  variant?: "landing" | "trust";
+};
+
+export default async function FeaturedOnStrip({ variant = "landing" }: Props) {
   if (FEATURED_BADGES.length === 0) return null;
   const t = await getTranslations("footer");
 
@@ -108,6 +117,10 @@ export default async function FeaturedOnStrip() {
             .fo-set img { display: block; max-width: none; filter: grayscale(1); opacity: 0.72; transition: opacity 0.2s ease, filter 0.2s ease; }
             .fo-set img.fo-framed { clip-path: inset(2.5px round 10px); }
             .fo-set a:hover img, .fo-set a:focus-visible img { opacity: 1; filter: grayscale(0); }
+            /* Trust variant: the TrustPage section supplies padding, border and h2. */
+            .fo--trust { margin: 0; text-align: left; }
+            .fo--trust .fo-viewport { margin-top: 18px; }
+            .fo--trust .fo-set a:focus-visible { outline-color: rgba(255,255,255,0.7); }
             @keyframes fo-scroll {
               from { transform: translateX(0); }
               to { transform: translateX(-50%); }
@@ -121,10 +134,14 @@ export default async function FeaturedOnStrip() {
           `,
         }}
       />
-      <section className="fo" aria-labelledby="fo-label">
-        <p className="fo-label" id="fo-label">
-          {t("featuredOn")}
-        </p>
+      <section className={variant === "trust" ? "fo fo--trust" : "fo"} aria-labelledby="fo-label">
+        {variant === "trust" ? (
+          <h2 id="fo-label">{t("featuredOn")}</h2>
+        ) : (
+          <p className="fo-label" id="fo-label">
+            {t("featuredOn")}
+          </p>
+        )}
         <div className="fo-viewport">
           <div className="fo-track">
             {Array.from({ length: sets }, (_, i) => (

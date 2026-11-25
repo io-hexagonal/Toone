@@ -332,8 +332,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Präzision für Ihre agentischen Workflows und Routinen",
-      "heroTag": "Erstellen Sie komplexe, zuverlässige KI-Workflows, indem Sie sie beschreiben.\nVerbinden Sie Ihre eigenen Konten in einem Browser. Testen, bearbeiten und dort fortsetzen, wo er angehalten hat.",
+      "heroTitle": "Präzision für Ihre <accent>agentischen Workflows und Routinen</accent>",
+      "heroTag": "Beschreiben Sie es einmal, und Toone macht daraus eine Routine auf Ihrem Mac: Skripte führen die Schritte aus, die sich nie ändern, KI-Agenten nur die, die Urteilsvermögen brauchen.",
       "featuresTitle": "Alles, was Ihre Agenten für ihre Arbeit brauchen",
       "featuresSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
       "seeAllFeatures": "Alle Funktionen ansehen",
@@ -387,7 +387,7 @@
     "downloadFor": "Frühzugang anfragen",
     "macOS": "macOS",
     "soon": "Bald",
-    "heroTitle": "Der KI-Arbeitsbereich für Ihre agentischen Workflows",
+    "heroTitle": "Erledigen Sie die wiederkehrende Arbeit Ihres Unternehmens als Routinen, die <accent>Ihr Team prüfen kann</accent>",
     "featuresEyebrow": "Funktionen",
     "pillarsTitle": "Alles, was Ihre Agenten für ihre Arbeit brauchen",
     "pillarsSub": "Ein Arbeitsbereich für Ihre Agenten, Abläufe und Ergebnisse.",
@@ -427,7 +427,7 @@
     "waitlistSignIn": "Anmelden",
     "emailPrivacyLink": "Datenschutzerklärung",
     "productLanguageDisclosure": "Die Desktop-App ist derzeit nur auf Englisch verfügbar.",
-    "heroTag2": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
+    "heroTag2": "Beschreiben Sie, wie ein Prozess funktioniert, und Toone macht daraus eine Routine: Skripte führen die festen Schritte aus, KI-Agenten treffen die Ermessensentscheidungen. Schritte, die senden, posten oder zahlen, können auf Freigabe warten, und jeder Lauf hinterlässt ein Protokoll.",
     "haveInvitation": "Haben Sie einen Einladungscode?",
     "eaIntro": "Toone ist der KI-Arbeitsbereich für deine agentischen Workflows: eine macOS-App, in der spezialisierte Agenten deine Workflows und Routinen unter deiner Kontrolle ausführen.",
     "eaBeforeTitle": "Bevor du anfragst",
@@ -442,11 +442,11 @@
     "howItWorks": {
       "eyebrow": "So funktioniert es",
       "title": "Von einfachen Worten zur laufenden Routine",
-      "sub": "Sie beschreiben die Arbeit. Ihre Agenten erledigen sie vor Ihren Augen.",
+      "sub": "Wählen Sie unten ein Beispiel und sehen Sie zu, wie aus einer Anfrage ein fertiger Lauf wird.",
       "steps": {
         "describe": {
           "title": "Beschreiben",
-          "body": "Briefen Sie es wie ein Teammitglied: wann es läuft, welche Modelle, welche Konten. Toone entwirft den Graphen zum Prüfen.",
+          "body": "Briefen Sie es wie ein Teammitglied: was zu tun ist, wann, mit welchen Konten. Toone entwirft die Routine und entscheidet, welche Schritte ein Skript erledigen kann und welche einen Agenten brauchen.",
           "chips": {
             "words": "Einfache Worte",
             "schedule": "Nach Zeitplan",
@@ -455,16 +455,16 @@
         },
         "run": {
           "title": "Beim Laufen zusehen",
-          "body": "Agenten arbeiten parallel, jeder mit dem Modell Ihrer Wahl, und jeder Schritt leuchtet live auf Ihren eigenen Konten auf.",
+          "body": "Automatikschritte sind Skripte: Sie führen die festen Teile exakt aus, ohne Agent und ohne Tokens. Agenten übernehmen die Schritte mit Urteilsvermögen, jeder mit dem Modell Ihrer Wahl. Jeder Schritt leuchtet auf, während er läuft.",
           "chips": {
-            "parallel": "Parallele Agenten",
-            "models": "Modell pro Agent",
+            "auto": "Automatikschritte",
+            "agents": "Agenten bei Bedarf",
             "live": "Live-Graph"
           }
         },
         "resume": {
           "title": "Pausieren, bearbeiten, fortsetzen",
-          "body": "Vorgaben prüfen jedes Ergebnis. Verfehlt ein Schritt sie, pausiert nur er: anpassen und dort fortsetzen, wo er stand.",
+          "body": "Jeder Schritt hat eine Vorgabe: eine Prüfung, die sein Ergebnis bestehen muss. Verfehlt ein Schritt sie, wird er wiederholt, wechselt zu einem Fallback oder pausiert und fragt Sie. Bearbeiten Sie ihn in einfachen Worten und setzen Sie dort fort, wo er stand.",
           "chips": {
             "contracts": "Vorgaben",
             "fallbacks": "Fallbacks",
@@ -473,70 +473,29 @@
         }
       },
       "personaLabel": "Routine für",
-      "more": "Mehr in Explore",
+      "more": "Mehr fertige Routinen",
       "tabs": {
-        "marketer": "Marketing",
         "seo": "SEO-Agentur",
-        "film": "Filmemacher"
+        "ops": "Finanzen",
+        "film": "Video-Creator"
       },
       "promptLabel": "Neue Routine",
       "promptSend": "Senden",
       "fallback": "1× wiederholen → fragen",
       "pauseNote": "Fertige Schritte behalten ihre Ergebnisse.",
       "agents": {
-        "strategist": "Stratege",
-        "researcher": "Rechercheur",
         "writer": "Texter",
         "reviewer": "Prüfer",
         "designer": "Designer",
         "publisher": "Publisher",
         "analyst": "Analyst",
-        "producer": "Producer",
-        "editor": "Cutter",
-        "narrator": "Sprecher"
+        "producer": "Producer"
       },
       "scenarios": {
-        "marketer": {
-          "routineName": "Wöchentliche Content-Maschine",
-          "outcome": "Montagmorgen: drei LinkedIn-Posts geschrieben, mit Quellen belegt und bereit für dein OK.",
-          "prompt": "<k>Jeden Montag um 9:00</k> die Themen der Woche aus den Ergebnissen der Vorwoche auswählen und mit <k>2 parallelen Agenten auf Haiku</k> recherchieren: Trends und Wettbewerber. <k>Ein Sonnet-Agent</k> entwirft 3 LinkedIn-Posts, <k>ein GPT-Agent</k> prüft sie: <k>Markenstimme mindestens 8/10, jede Aussage belegt</k>. <k>Schwache Entwürfe zurückschicken, höchstens zweimal.</k> Die Visuals in Figma gestalten, <k>vor dem Veröffentlichen mich fragen</k>, dann auf LinkedIn, Threads und Instagram posten. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
-          "graph": {
-            "schedule": "Mo 9:00",
-            "parallelShort": "Recherche ×2",
-            "nodes": {
-              "topics": "Themen wählen",
-              "trends": "Trends",
-              "competitors": "Wettbewerber",
-              "draft": "Posts entwerfen",
-              "review": "Prüfung",
-              "visuals": "Visuals",
-              "publish": "Veröffentlichen"
-            },
-            "chips": {
-              "min": "Stimme ≥ 8/10",
-              "other": "Aussagen belegt",
-              "loop": "needs_fix",
-              "gate": "fragt mich zuerst"
-            }
-          },
-          "run": {
-            "topics": "Opus wählt Themen anhand der Vorwoche",
-            "research": "2 Haiku-Agenten recherchieren parallel",
-            "draft": "Sonnet entwirft 3 Posts",
-            "review": "GPT prüft die Markenstimme",
-            "loop": "Unter 8: zurück zum Überarbeiten",
-            "contract": "Vorgabe erfüllt: Stimme ≥ 8/10, belegt",
-            "publish": "Visuals fertig, Sie geben frei, dann gepostet"
-          },
-          "pause": {
-            "reason": "Markenstimme 6 / 10: unter der Vorgabe",
-            "edit": "Weniger Hype, mehr Zahlen"
-          }
-        },
         "seo": {
           "routineName": "Wöchentliche Content-Auffrischung",
-          "outcome": "Montagmorgen: die abgerutschten Seiten des Kunden aufgefrischt, geprüft und als Entwürfe gespeichert, der Bericht schon in seinem Postfach.",
-          "prompt": "<k>Jeden Montag um 7:00</k> die Rankings unseres Kunden aus Search Console abrufen – <k>schlägt das fehl, Semrush nutzen</k>. <k>Mindestens 8 Seiten, die Positionen verloren haben</k>, auswählen, <k>ein Keyword pro Seite</k>. Sie mit <k>einem Sonnet-Agenten pro Seite</k> auffrischen, <k>ein GPT-Agent</k> prüft die Fakten jeder Änderung, die Entwürfe in WordPress speichern und den Bericht per E-Mail an den Kunden senden. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "outcome": "Montagmorgen: die abgerutschten Seiten des Kunden aufgefrischt, faktengeprüft und als Entwürfe gespeichert, der Bericht schon in seinem Postfach.",
+          "prompt": "<k>Jeden Montag um 7:00</k> die Rankings unseres Kunden aus Search Console abrufen – <k>schlägt das fehl, Semrush nutzen</k>. <k>Mindestens 8 Seiten, die Positionen verloren haben</k>, auswählen, <k>ein Keyword pro Seite</k>. Sie mit <k>einem Sonnet-Agenten pro Seite</k> auffrischen, <k>einen GPT-Agenten</k> jede Änderung auf Fakten prüfen lassen, die Entwürfe in WordPress speichern und den Bericht per E-Mail an den Kunden senden. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Mo 7:00",
             "parallelShort": "Liefern ×2",
@@ -546,7 +505,7 @@
               "refresh": "Auffrischen",
               "check": "Faktencheck",
               "save": "Entwürfe sichern",
-              "report": "Bericht"
+              "report": "Bericht senden"
             },
             "chips": {
               "fallback": "Fallback → Semrush",
@@ -555,30 +514,64 @@
             }
           },
           "run": {
-            "pull": "Rankings aus Search Console abrufen",
+            "pull": "Rankings bei Search Console abgefragt · ohne KI",
             "fallback": "Search Console Timeout: weiter mit Semrush",
-            "pick": "Seiten mit Positionsverlust auswählen",
+            "pick": "Seiten mit Positionsverlust sortiert · ohne KI",
             "contract": "Vorgabe erfüllt: ≥ 8 Seiten, je ein Keyword",
             "refresh": "8 Sonnet-Agenten frischen je eine Seite auf",
             "check": "GPT prüft die Fakten jeder Änderung",
-            "report": "Entwürfe in WordPress, Bericht per E-Mail"
+            "report": "Entwürfe in WordPress gesichert, Bericht per E-Mail · ohne KI"
           },
           "pause": {
             "reason": "5 / 8 Seiten: unter der Vorgabe",
             "edit": "Auch Verluste ab 2 Positionen"
           }
         },
+        "ops": {
+          "routineName": "Wöchentlicher Umsatzcheck",
+          "outcome": "Montagmorgen: jede Stripe-Zahlung ihrem Deal zugeordnet, die Auffälligen erklärt, und die Zusammenfassung schon in Slack.",
+          "prompt": "<k>Jeden Montag um 8:00</k> die Stripe-Zahlungen der Vorwoche abrufen und jede ihrem HubSpot-Deal zuordnen: <k>jede Zahlung bekommt einen Deal</k>. Die Deals aktualisieren und <k>einen Sonnet-Agenten</k> jedem Betrag nachgehen lassen, der vom Deal abweicht. Dann schreibt <k>ein Haiku-Agent</k> eine kurze Zusammenfassung und postet sie in #revenue in Slack. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "graph": {
+            "schedule": "Mo 8:00",
+            "parallelShort": "Nachprüfen ×2",
+            "nodes": {
+              "payments": "Zahlungen abrufen",
+              "match": "Deals zuordnen",
+              "odd": "Ungewöhnliche Beträge prüfen",
+              "crm": "Deals aktualisieren",
+              "summary": "Zusammenfassung",
+              "post": "In Slack posten"
+            },
+            "chips": {
+              "min": "jede Zahlung",
+              "other": "hat einen Deal"
+            }
+          },
+          "run": {
+            "payments": "Stripe-Zahlungen der Vorwoche abgerufen · ohne KI",
+            "match": "Zahlungen HubSpot-Deals zugeordnet · ohne KI",
+            "contract": "Vorgabe erfüllt: jede Zahlung hat einen Deal",
+            "odd": "Sonnet prüft 3 abweichende Beträge",
+            "crm": "Deals in HubSpot aktualisiert · ohne KI",
+            "summary": "Haiku schreibt die Wochenzusammenfassung",
+            "post": "Zusammenfassung in #revenue gepostet · ohne KI"
+          },
+          "pause": {
+            "reason": "41 / 46 Zahlungen zugeordnet: unter der Vorgabe",
+            "edit": "Auch über die Rechnungs-E-Mail zuordnen"
+          }
+        },
         "film": {
           "routineName": "Wöchentliche Folgen-Pipeline",
-          "outcome": "Freitag: der Rohschnitt für nächste Woche liegt als Entwurf auf YouTube, mit Voiceover, B-Roll und Thumbnails.",
-          "prompt": "<k>Jeden Freitag um 8:00</k> schlüsselt <k>ein Opus-Agent</k> das Skript der nächsten Woche auf. Dann <k>3 Spuren nebeneinander</k> laufen lassen: auf Pexels <k>mindestens 12 B-Roll-Clips</k> finden, <k>nur frei nutzbare</k>; das Voiceover in ElevenLabs aufnehmen; und 3 Thumbnails in Higgsfield erstellen – <k>schlägt das fehl, GPT Image nutzen</k>. Einen Rohschnitt zusammenstellen, die Kontinuität mit dem Skript abgleichen und ihn als Entwurf auf YouTube hochladen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
+          "outcome": "Freitagmorgen: der Rohschnitt für nächste Woche liegt als Entwurf auf YouTube, mit Voiceover, B-Roll und Thumbnails.",
+          "prompt": "<k>Jeden Freitag um 8:00</k> soll <k>ein Opus-Agent</k> das Skript der kommenden Woche aufschlüsseln. Danach laufen <k>3 Spuren parallel</k>: <k>mindestens 12 B-Roll-Clips</k> von Pexels, <k>nur frei nutzbare</k>, auf Länge geschnitten; ein ElevenLabs-Voiceover mit Untertiteln; und 3 Higgsfield-Thumbnails (<k>bei Fehlschlag GPT Image</k>), dann das beste wählen. Einen Rohschnitt zusammensetzen, Anschlüsse prüfen und als Entwurf auf YouTube hochladen. <k>Schlägt ein Schritt fehl, einmal wiederholen, dann mich fragen.</k>",
           "graph": {
             "schedule": "Fr 8:00",
             "parallelShort": "3 Spuren",
             "nodes": {
               "breakdown": "Aufschlüsselung",
               "broll": "B-Roll",
-              "trim": "Zuschneiden",
+              "trim": "Auf Länge kürzen",
               "voice": "Voiceover",
               "captions": "Untertitel",
               "thumbs": "Thumbnails",
@@ -588,25 +581,31 @@
               "upload": "Entwurf hochladen"
             },
             "chips": {
-              "min": "≥ 12",
+              "min": "≥ 12 Clips",
               "other": "frei nutzbar",
               "fallback": "Fallback → GPT Image"
             }
           },
           "run": {
             "breakdown": "Opus schlüsselt das Skript auf",
-            "tracks": "3 Spuren laufen nebeneinander",
+            "tracks": "Drei Spuren starten: B-Roll, Voiceover, Thumbnails",
             "fallback": "Higgsfield scheitert: GPT Image übernimmt",
-            "contract": "Vorgabe erfüllt: ≥ 12, frei nutzbar",
-            "cut": "Rohschnitt zusammenstellen",
+            "contract": "Vorgabe erfüllt: ≥ 12 Clips, alle frei nutzbar",
+            "cut": "Rohschnitt zusammengesetzt · ohne KI",
             "review": "Opus prüft die Kontinuität",
-            "upload": "Entwurf auf YouTube hochladen"
+            "upload": "Entwurf auf YouTube hochgeladen · ohne KI"
           },
           "pause": {
             "reason": "7 / 12 Clips: unter der Vorgabe",
             "edit": "Luft- und Nachtaufnahmen dazu"
           }
         }
+      },
+      "automatic": "Automatisch",
+      "legend": {
+        "auto": "Automatikschritt: ein Skript, kein Agent",
+        "agent": "Agent: wo Urteilsvermögen nötig ist",
+        "tally": "{n} von {total} Schritten laufen als Skripte"
       }
     },
     "routineGraph": {
@@ -706,7 +705,69 @@
       }
     },
     "closing": {
-      "title": "Übergeben Sie wiederkehrende Arbeit an Agenten, denen Sie zusehen können."
+      "title": "Starten Sie mit einer Routine. Behalten Sie, was funktioniert.",
+      "sub": "Wählen Sie eine fertige Routine oder beschreiben Sie Ihre eigene, und geben Sie ihr eine Woche.",
+      "facts": {
+        "free": "{free} Routinen kostenlos erstellen",
+        "runs": "Unbegrenzte Läufe",
+        "plan": "Ihr eigenes Claude Code oder Codex"
+      },
+      "explore": "Fertige Routinen entdecken"
+    },
+    "trust": {
+      "productHunt": "Product Hunt",
+      "productHuntRank": "#3 Produkt des Tages",
+      "supportedBy": "Unterstützt von",
+      "claudeStartups": "Claude for Startups",
+      "askAi": "Fragen Sie eine KI nach uns",
+      "askAiPrompt": "Was ist Toone (trytoone.com)? Erkläre, was es macht, für wen es gedacht ist und wie es sich von anderen KI-Automatisierungstools unterscheidet."
+    },
+    "built": {
+      "eyebrow": "Anders gebaut",
+      "title": "KI kann die Arbeit jetzt übernehmen. Aber nicht alles davon.",
+      "sub": "Derselbe Job in sechs Schritten, auf drei Arten gebaut. Das Funkeln markiert jeden Schritt, der über ein KI-Modell läuft.",
+      "tokens": "{n, plural, =0 {Kein Schritt nutzt KI} one {# Schritt nutzt KI} other {# Schritte nutzen KI}}",
+      "more": "Im Detail vergleichen",
+      "ways": {
+        "nodes": {
+          "name": "Knotenbasierte Automatisierung",
+          "like": "Wie n8n, Make oder Zapier",
+          "verdict": "Exakt, aber jeder Knoten ist von Hand verdrahtet, und KI ist ein weiterer Knoten, den Sie konfigurieren."
+        },
+        "agents": {
+          "name": "Agenten nach Zeitplan",
+          "like": "Wie eine geplante Chat-Aufgabe oder ein Coding-Agent mit Timer",
+          "verdict": "Flexibel, aber jeder Schritt läuft über ein Modell, belastet also Ihren KI-Tarif und kann jedes Mal anders ausfallen."
+        },
+        "toone": {
+          "name": "Toone",
+          "like": "Skripte plus Agenten, auf Ihrem Mac",
+          "verdict": "Skripte führen die festen Schritte exakt aus; Agenten übernehmen nur die Schritte, die Urteilsvermögen brauchen."
+        }
+      }
+    },
+    "outcomes": {
+      "eyebrow": "Das bekommen Sie",
+      "title": "Was sich ändert, wenn die Arbeit als Routine läuft",
+      "sub": "Im Vergleich dazu, alles selbst zu verdrahten oder komplett einem Agenten zu überlassen.",
+      "items": {
+        "cost": {
+          "title": "KI nur dort, wo sie sich lohnt",
+          "body": "Nur die Schritte, die Urteilsvermögen brauchen, nutzen Ihren Claude- oder ChatGPT-Tarif, sodass dessen Nutzungslimits länger reichen."
+        },
+        "same": {
+          "title": "Bei jedem Schritt geprüft",
+          "body": "Das Ergebnis jedes Schritts muss seine Vorgabe erfüllen, bevor der nächste beginnt, und jeder Lauf weiß, was frühere Läufe schon erledigt haben, damit die Arbeit der Vorwoche nicht wiederholt wird."
+        },
+        "wire": {
+          "title": "Nichts zu verdrahten",
+          "body": "Sie ordnen nie ein Feld zu und zeichnen keine Verzweigung. Ändert sich ein Tool oder die Aufgabe, sagen Sie, was sich geändert hat, und Toone passt die Routine an."
+        },
+        "control": {
+          "title": "Sie behalten die Kontrolle",
+          "body": "Jeder Schritt erscheint live im Graphen, mit dem, was er getan hat und warum er angehalten hat. Schritte, die senden, posten oder zahlen, können auf Ihr OK warten."
+        }
+      }
     }
   },
   "privacyChoices": {
@@ -731,36 +792,39 @@
     "legal": "Rechtliches",
     "contact": "Kontakt",
     "rights": "Alle Rechte vorbehalten.",
-    "featuredOn": "Vorgestellt auf"
+    "featuredOn": "Vorgestellt auf",
+    "compare": "Vergleich"
   },
   "meta": {
-    "siteTitle": "Toone | Der KI-Arbeitsbereich für Ihre agentischen Workflows",
-    "siteDescription": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
-    "ogDescription": "Verwandeln Sie wiederkehrende Arbeit mit spezialisierten Agenten in nützliche Ergebnisse und behalten Sie die Kontrolle.",
-    "ogTitle": "Toone | Der KI-Arbeitsbereich für Ihre agentischen Workflows"
+    "siteTitle": "Toone | Routinen aus Skripten und KI-Agenten, auf Ihrem Mac",
+    "siteDescription": "Toone macht aus wiederkehrender Arbeit Routinen auf Ihrem Mac: Skripte erledigen die Schritte, die sich nie ändern, KI-Agenten nur die, die Urteilsvermögen brauchen. Beschreiben Sie es in einfachen Worten und sehen Sie jedem Lauf zu, mit Ihrem eigenen Claude Code oder Codex.",
+    "ogDescription": "Beschreiben Sie die Arbeit. Skripte erledigen die festen Schritte, Agenten die, die Urteilsvermögen brauchen, und Sie sehen jedem Lauf zu.",
+    "ogTitle": "Toone | Agentisch von Haus aus. Skriptgesteuert, wo es zählt."
   },
   "faq": {
     "eyebrow": "FAQ",
-    "title": "Fragen, beantwortet.",
-    "sub": "Die Kurzfassung von allem, was man uns fragt.",
+    "title": "Was man uns zuerst fragt",
+    "sub": "Kurze Antworten. Der <link>Produktleitfaden</link> geht tiefer.",
     "q1": "Was ist Toone?",
-    "a1": "Toone ist ein nativer macOS-Arbeitsbereich für Projekte mit KI-Agenten: spezialisierte Agenten, die wiederholbaren Routinen, die sie ausführen, und die Werkzeuge und das Wissen, das sie teilen, an einem Ort.",
-    "q2": "Für wen ist Toone?",
-    "a2": "Für alle am Mac mit komplexer, mehrstufiger Arbeit, die jede Woche oder jeden Monat wiederkommt: Operations-Teams, Forschende, Marketingleute, Gründerinnen und Gründer sowie Creator. Sie bringen Ihr eigenes Claude Code oder Codex mit, machen aus der Arbeit eine Routine und können jeden Lauf verfolgen, pausieren, bearbeiten und prüfen.",
-    "q3": "Brauche ich ein bestehendes Abonnement?",
-    "a3": "Ja. Toone arbeitet mit Ihrem eigenen OpenAI- oder Anthropic-Abonnement und verbindet sich bei der Einrichtung damit. Einen separaten Modelltarif müssen Sie bei uns nicht kaufen.",
-    "q4": "Gibt es eine Lernkurve?",
-    "a4": "Eine kleine. Sie beschreiben Agenten und Routinen in natürlicher Sprache, und die geführte Einrichtung bringt Sie in etwa fünfzehn Minuten von der Installation zum ersten Routinelauf. Auf der Explore-Seite gibt es außerdem geprüfte Routinen und Bundles, die Sie in Toone öffnen und anpassen können.",
-    "q5": "Ist es sicher?",
-    "a5": "Toone läuft auf Ihrem Mac. Ihre Anbieter-Zugangsdaten und Projektdateien bleiben bei Ihnen, jeder Lauf ist während der Ausführung sichtbar, und Routinen können vor sensiblen Schritten auf Ihre Freigabe warten. In Explore geteilte Routinen und Bundles werden vor der Veröffentlichung geprüft.",
-    "q6": "Wie bekomme ich Zugang?",
-    "a6": "Erstellen Sie ein Konto auf trytoone.com, wählen Sie einen Tarif und laden Sie Toone für Ihren Mac herunter. Wenn Sie einen Code haben, lösen Sie ihn unter trytoone.com/redeem ein.",
-    "q7": "Kann ich meine bestehende App weiter nutzen?",
-    "a7": "Ja. Bestehende Kontoinhaber können sich weiterhin wie gewohnt anmelden.",
-    "q8": "Wie funktionieren Einladungen?",
-    "a8": "Lösen Sie Ihren persönlichen Code auf der Website ein, um ein Konto mit E-Mail und Passwort zu erstellen, und nutzen Sie es dann in der Desktop-App.",
+    "a1": "Toone ist eine Mac-App, die wiederkehrende Arbeit in Routinen verwandelt. Sie beschreiben die Arbeit in einfachen Worten; Toone entwirft die Routine, führt die Schritte, die sich nie ändern, als Skripte aus und gibt die Schritte, die Urteilsvermögen brauchen, an KI-Agenten in Ihrem eigenen Claude Code oder Codex. Sie sehen jedem Lauf live zu und können ihn pausieren, bearbeiten und fortsetzen.",
+    "q2": "Ist Toone nur n8n mit KI?",
+    "a2": "Nein. In n8n, Make oder Zapier verdrahten Sie jeden Knoten von Hand, und KI ist ein Knoten im Ablauf. In Toone beschreiben Sie die Arbeit und Toone baut die Routine: Skripte für alles, was sich nie ändert, Agenten für alles, was Urteilsvermögen braucht, und eine Vorgabe für jedes Ergebnis. Für Abgleiche zwischen Apps, die rund um die Uhr laufen müssen, passen n8n, Make oder Zapier besser: Toone läuft, solange Ihr Mac wach ist.",
+    "q3": "Was kostet ein Lauf?",
+    "a3": "Automatikschritte sind Skripte und verbrauchen nichts von Ihrem KI-Tarif. Agentenschritte nutzen den Claude- oder ChatGPT-Tarif, den Sie ohnehin bezahlen, über Claude Code oder Codex; einen separaten KI-Tarif müssen Sie bei uns nicht kaufen. Kostenpflichtige Dienste, die ein Schritt aufruft, etwa Semrush, rechnen wie gewohnt mit Ihnen ab. Das Ausführen von Routinen ist nie begrenzt.",
+    "q4": "Muss ich programmieren können?",
+    "a4": "Nein. Sie beschreiben die Routine und Toone schreibt die Skripte für ihre Automatikschritte. Um einen Schritt zu ändern, beschreiben Sie die Änderung; Toone passt die Routine an und Sie prüfen sie, bevor sie läuft.",
+    "q5": "Mit welchen Tools kann Toone arbeiten?",
+    "a5": "Mit jedem Dienst mit API, mit Tools, die über MCP verbunden sind (der Standard, mit dem KI-Apps andere Tools anbinden), und mit Websites, über einen Browser in Toone, in dem Sie sich mit Ihren eigenen Konten anmelden.",
+    "q6": "Was passiert, wenn ein Schritt scheitert oder zu kurz greift?",
+    "a6": "Vorgaben prüfen das Ergebnis jedes Schritts. Ein Schritt, der sie verfehlt, wird wiederholt, wechselt zu einem Fallback oder pausiert und fragt Sie, je nach Regel. Bearbeiten Sie ihn in einfachen Worten und setzen Sie dort fort, wo er stand; fertige Schritte behalten ihre Ergebnisse.",
+    "q7": "Wo läuft es, und wo sind meine Daten?",
+    "a7": "Auf Ihrem Mac. Routinen, Laufverlauf und Projektdateien bleiben auf Ihrem Gerät. Agentenschritte senden das, woran sie arbeiten, über Ihr eigenes Claude Code oder Codex an Anthropic oder OpenAI, nach den Bedingungen Ihres Tarifs. Schritte, die senden, posten oder zahlen, können auf Ihre Freigabe warten.",
+    "q8": "Was, wenn mein Mac schläft, wenn eine Routine fällig ist?",
+    "a8": "Geplante Routinen brauchen einen aktiven Mac mit geöffnetem Toone. Ein Lauf, der fällig wird, während er schläft, geht nicht verloren: Er läuft einmal, sobald der Mac wieder aktiv ist, danach gilt wieder der gewohnte Zeitplan.",
     "q9": "Ist Toone kostenlos? Was bietet Toone Pro?",
-    "a9": "Ja. Jedes Konto kann {free} Routinen kostenlos erstellen, und das Ausführen von Routinen ist nie begrenzt. Toone Pro hebt das Limit für das Erstellen von Routinen auf, monatlich, jährlich oder mit einer einmaligen Lifetime-Zahlung. Pläne und Preise finden Sie auf der Preisseite."
+    "a9": "Ja. Jedes Konto kann {free} Routinen kostenlos erstellen, und das Ausführen von Routinen ist nie begrenzt. Toone Pro hebt das Limit für das Erstellen von Routinen auf, monatlich, jährlich oder mit einer einmaligen Lifetime-Zahlung. Pläne und Preise stehen auf der Preisseite.",
+    "q10": "Wie fange ich an?",
+    "a10": "Erstellen Sie ein Konto auf trytoone.com und laden Sie Toone für Ihren Mac herunter. Starten Sie mit einer fertigen Routine aus Explore oder beschreiben Sie Ihre eigene; die geführte Einrichtung bringt Sie in etwa fünfzehn Minuten zum ersten Lauf. Wenn Sie einen Code haben, lösen Sie ihn unter trytoone.com/redeem ein."
   },
   "billing": {
     "nav": "Preise",

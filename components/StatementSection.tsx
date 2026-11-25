@@ -10,6 +10,9 @@ type Props = {
   audience?: LandingAudience;
 };
 
+/** The scroll-to-fullscreen product video above the statement. Off for now; set to true to bring it back. */
+const SHOW_VIDEO = false;
+
 export default async function StatementSection({ audience = "business" }: Props) {
   const namespace = audience === "personal" ? "landing.personal.statement" : "statement";
   const t = await getTranslations(namespace);
@@ -95,7 +98,9 @@ export default async function StatementSection({ audience = "business" }: Props)
           `,
         }}
       />
-      <StatementVideo label={t("videoLabel")} playLabel={t("videoPlay")} muteLabel={t("videoMute")} unmuteLabel={t("videoUnmute")} />
+      {SHOW_VIDEO && (
+        <StatementVideo label={t("videoLabel")} playLabel={t("videoPlay")} muteLabel={t("videoMute")} unmuteLabel={t("videoUnmute")} />
+      )}
       <section className="stmt" id="statement">
         <h2>{t("title")}</h2>
         <p>{t("lead")}</p>

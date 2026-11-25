@@ -35,7 +35,10 @@ export type LogoKey =
   | "youtube"
   | "elevenlabs"
   | "pexels"
-  | "wordpress";
+  | "wordpress"
+  | "stripe"
+  | "hubspot"
+  | "slack";
 
 /** draft: proposed, not yet real. idle: waiting. The rest are run states. */
 export type RowState = "draft" | "idle" | "running" | "done" | "paused";

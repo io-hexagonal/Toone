@@ -16,3 +16,44 @@
     --site-hero-top: 135px;
   }
 }
+
+/* Landing design tokens: three radii and two elevations, nothing else.
+   --r-s buttons, inputs, graph nodes · --r-m cards, inner panels ·
+   --r-l the big panels. 999px is for chips only. */
+:root {
+  --r-s: 8px; --r-m: 14px; --r-l: 20px;
+  --e1: 0 0 0 1px rgba(29, 28, 25, .08), 0 1px 2px rgba(29, 28, 25, .05);
+  --e2: 0 0 0 1px rgba(29, 28, 25, .07), 0 16px 36px -18px rgba(29, 28, 25, .3);
+}
+
+/* Primary "holo" button (landing hero + light header), modelled on the
+   distribution.dev button but kept monochrome to match the landing: a
+   near-black fill, a faint white sheen over it and a 1px edge that runs
+   from graphite to a soft grey, all three gradient layers sliding across on
+   hover so the light seems to travel along the edge. Size is set here for the hero; the header
+   overrides it. The magnetic pull lives in components/MagneticPull.tsx. */
+:root {
+  --holo-edge: linear-gradient(100deg, #3b3a37 0%, #55534f 25%, #7d7b76 50%, #8c8a85 62%, #55534f 82%, #3b3a37 100%);
+  --holo-sheen: linear-gradient(100deg, rgba(255, 255, 255, .03) 0%, rgba(255, 255, 255, .045) 25%, rgba(255, 255, 255, .08) 50%, rgba(255, 255, 255, .055) 62%, rgba(255, 255, 255, .04) 82%, rgba(255, 255, 255, .03) 100%);
+}
+.holo-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.85rem 1.5rem; border: 1px solid transparent; border-radius: 8px;
+  font-family: var(--font-ui), "Helvetica Neue", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 500; font-size: 1rem; line-height: 1.25; white-space: nowrap;
+  color: #fff; text-decoration: none; cursor: pointer;
+  background:
+    var(--holo-sheen) padding-box,
+    linear-gradient(#0b0c10, #0b0c10) padding-box,
+    var(--holo-edge) border-box;
+  background-size: 200% 100%, 100% 100%, 200% 100%;
+  background-position: 0% 50%, 0 0, 0% 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .14),
+    0 1px 2px rgba(11, 12, 16, .2),
+    0 6px 16px -8px rgba(29, 28, 25, .45),
+    0 8px 18px -10px rgba(29, 28, 25, .35);
+  transition: background-position .7s, background-color .15s, border-color .15s, box-shadow .15s;
+}
+.holo-btn:hover { background-position: 100% 50%, 0 0, 100% 50%; color: #fff; }
+.holo-btn:focus-visible { outline: 2px solid #0b0c10; outline-offset: 2px; }

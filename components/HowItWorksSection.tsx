@@ -7,7 +7,6 @@ import HowItWorksGraph, {
   Icon,
   type ContractState,
   type GraphSpec,
-  type IconName,
   type NodeSpec,
   type NodeState,
 } from "@/components/HowItWorksGraph";
@@ -34,25 +33,13 @@ import HowItWorksGraph, {
  */
 const STEPS = ["describe", "run", "resume"] as const;
 const DURATIONS = [7200, 10400, 9600];
-const CHIPS: Record<(typeof STEPS)[number], readonly (readonly [string, IconName])[]> = {
-  describe: [
-    ["words", "chat"],
-    ["schedule", "clock"],
-    ["accounts", "key"],
-  ],
-  run: [
-    ["parallel", "fan"],
-    ["models", "spark"],
-    ["live", "pulse"],
-  ],
-  resume: [
-    ["contracts", "shield"],
-    ["fallbacks", "retry"],
-    ["resume", "play"],
-  ],
-};
-/** The routines the picker offers: each a different formation. */
-const PERSONAS = ["marketer", "seo", "film"] as const;
+/**
+ * The routines the picker offers: each a different formation, and each an
+ * honest split of automatic (script) steps and agent steps. A step is
+ * automatic when a script can do it exactly (an API call, a sort, a file
+ * move); an agent only where the work needs judgment.
+ */
+const PERSONAS = ["seo", "ops", "film"] as const;
 type Persona = (typeof PERSONAS)[number];
 type Span = readonly [number, number];
 type Scenario = {
@@ -77,43 +64,16 @@ type Scenario = {
   next: readonly string[];
 };
 const SCENARIOS: Record<Persona, Scenario> = {
-  // A split, then a draft and its reviewer joined by a needs_fix loop.
-  marketer: {
-    graph: {
-      rows: [
-        { id: "topics", agent: "strategist", model: "Opus" },
-        [{ id: "trends", agent: "researcher", model: "Haiku" }, { id: "competitors", agent: "researcher", model: "Haiku" }],
-        { id: "draft", agent: "writer", model: "Sonnet" },
-        { id: "review", agent: "reviewer", model: "GPT", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
-        { id: "visuals", agent: "designer", logos: ["figma"] },
-        { id: "publish", agent: "publisher", logos: ["linkedin", "threads", "instagram"], chips: [{ key: "gate", icon: "chat" }] },
-      ],
-      loop: { from: "review", to: "draft", chip: "loop" },
-    },
-    run: {
-      topics: [[300, 1100]], trends: [[1100, 2300]], competitors: [[1100, 2700]],
-      draft: [[2700, 3700], [4700, 5400]], review: [[3700, 4700], [5400, 6300]],
-      visuals: [[6300, 7400]], publish: [[7400, 9000]],
-    },
-    count: [[3800, 0], [4600, 6], [5400, 6], [6200, 9]],
-    counterNode: "review", max: 10, pass: 8, pausedAt: 6, final: 9,
-    unmet: [4600, 5400], loop: [4700, 5400], fire: { loop: 4700, gate: 7400 },
-    log: [
-      { key: "topics", at: 300 }, { key: "research", at: 1100 }, { key: "draft", at: 2700 },
-      { key: "review", at: 3700, count: true }, { key: "loop", at: 4700, icon: "retry" },
-      { key: "contract", at: 6250, icon: "shield" }, { key: "publish", at: 6300 },
-    ],
-    next: ["visuals"],
-  },
   // A straight chain with a source fallback and one agent per page, ending in a fork.
+  // Scripts pull, sort and deliver; agents only rewrite and fact-check.
   seo: {
     graph: {
       rows: [
-        { id: "pull", agent: "analyst", logos: ["search-console", "semrush"], chips: [{ key: "fallback", icon: "retry" }] },
-        { id: "pick", agent: "analyst", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        { id: "pull", agent: "analyst", kind: "script", logos: ["search-console", "semrush"], chips: [{ key: "fallback", icon: "retry" }] },
+        { id: "pick", agent: "analyst", kind: "script", counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
         { id: "refresh", agent: "writer", model: "Sonnet", each: 8 },
         { id: "check", agent: "reviewer", model: "GPT" },
-        [{ id: "save", agent: "publisher", logos: ["wordpress"] }, { id: "report", agent: "analyst", logos: ["google-docs", "gmail"] }],
+        [{ id: "save", agent: "publisher", kind: "script", logos: ["wordpress"] }, { id: "report", agent: "analyst", kind: "script", logos: ["google-docs", "gmail"] }],
       ],
     },
     run: {
@@ -130,25 +90,53 @@ const SCENARIOS: Record<Persona, Scenario> = {
     ],
     next: ["refresh"],
   },
-  // Three lanes of two steps that merge into the cut.
+  // Operations: classic automation ground (payments, CRM, chat) with one
+  // judgment step in the middle. Scripts move and match the data; agents
+  // explain the odd ones and write the summary.
+  ops: {
+    graph: {
+      rows: [
+        { id: "payments", agent: "analyst", kind: "script", logos: ["stripe"] },
+        { id: "match", agent: "analyst", kind: "script", logos: ["hubspot"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+        [{ id: "odd", agent: "analyst", model: "Sonnet" }, { id: "crm", agent: "analyst", kind: "script", logos: ["hubspot"] }],
+        { id: "summary", agent: "writer", model: "Haiku" },
+        { id: "post", agent: "publisher", kind: "script", logos: ["slack"] },
+      ],
+    },
+    run: {
+      payments: [[300, 1600]], match: [[1600, 3600]], odd: [[3600, 5600]], crm: [[3600, 4800]],
+      summary: [[5600, 7000]], post: [[7000, 8200]],
+    },
+    count: [[1700, 0], [3400, 46]],
+    counterNode: "match", max: 46, pass: 46, pausedAt: 41, final: 46,
+    log: [
+      { key: "payments", at: 300 }, { key: "match", at: 1600, count: true },
+      { key: "contract", at: 3450, icon: "shield" }, { key: "odd", at: 3600 }, { key: "crm", at: 4800 },
+      { key: "summary", at: 5600 }, { key: "post", at: 7000 },
+    ],
+    next: ["odd", "crm"],
+  },
+  // Three lanes of two steps that merge into the cut. The media work is
+  // scripted (search, trim, voice, captions, assembly, upload); agents break
+  // the script down, choose the thumbnail and check continuity.
   film: {
     graph: {
       rows: [
         { id: "breakdown", agent: "producer", model: "Opus" },
         [
           [
-            { id: "broll", agent: "researcher", logos: ["pexels"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
-            { id: "trim", agent: "editor", model: "Haiku" },
+            { id: "broll", agent: "researcher", kind: "script", logos: ["pexels"], counter: true, chips: [{ key: "min", icon: "shield" }, { key: "other", icon: "shield" }] },
+            { id: "trim", agent: "editor", kind: "script" },
           ],
-          [{ id: "voice", agent: "narrator", logos: ["elevenlabs"] }, { id: "captions", agent: "editor", model: "Haiku" }],
+          [{ id: "voice", agent: "narrator", kind: "script", logos: ["elevenlabs"] }, { id: "captions", agent: "editor", kind: "script" }],
           [
             { id: "thumbs", agent: "designer", logos: ["higgsfield", "openai"], chips: [{ key: "fallback", icon: "retry" }] },
             { id: "pick", agent: "producer", model: "Opus" },
           ],
         ],
-        { id: "cut", agent: "editor" },
+        { id: "cut", agent: "editor", kind: "script" },
         { id: "review", agent: "reviewer", model: "Opus" },
-        { id: "upload", agent: "publisher", logos: ["youtube"] },
+        { id: "upload", agent: "publisher", kind: "script", logos: ["youtube"] },
       ],
     },
     run: {
@@ -317,7 +305,7 @@ export default function HowItWorksSection() {
   const barRef = useRef<HTMLSpanElement | null>(null);
   const elapsed = useRef(0);
   const hold = useRef({ live: false, hover: false, focus: false });
-  const [persona, setPersona] = useState<Persona>("marketer");
+  const [persona, setPersona] = useState<Persona>("seo");
   const scenario = SCENARIOS[persona];
   const [active, setActive] = useState(0);
   const [frame, setFrame] = useState<Frame>(() => frameAt(0, 0, scenario));
@@ -432,7 +420,8 @@ export default function HowItWorksSection() {
     fallback: t("fallback"),
     parallelShort: t(`${sc}.graph.parallelShort`),
     nodes: Object.fromEntries(ids.map((n) => [n.id, t(`${sc}.graph.nodes.${n.id}`)])),
-    agents: Object.fromEntries(ids.map((n) => [n.agent, t(`agents.${n.agent}`)])),
+    agents: Object.fromEntries(ids.filter((n) => n.kind !== "script").map((n) => [n.agent, t(`agents.${n.agent}`)])),
+    automatic: t("automatic"),
     chips: Object.fromEntries(chipKeys.map((key) => [key, t(`${sc}.graph.chips.${key}`)])),
     running: g("running"),
     paused: g("paused"),
@@ -441,6 +430,7 @@ export default function HowItWorksSection() {
   const durations = Object.fromEntries(Object.entries(scenario.run).map(([id, spans]) => [id, spans[0][1] - spans[0][0]]));
 
   const mark = (chunks: ReactNode) => <span className="hiw-k">{chunks}</span>;
+  const automaticSteps = ids.filter((n) => n.kind === "script").length;
 
   return (
     <section
@@ -452,45 +442,44 @@ export default function HowItWorksSection() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            /* The intro is centred over the two columns. */
-            .hiw > :is(.eyebrow, h2, .sub) { text-align: center; margin-left: auto; margin-right: auto; }
-
-            /* The persona picker: which routine the scene shows. */
+            /* The persona picker: a segmented control, the same as the hero's
+               Personal / Business switch on phones. The black pill stays the
+               primary button's alone. */
             .hiw-personas {
-              display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-              margin: 26px auto 30px;
+              display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; margin: 0 0 28px;
+              border-radius: 999px; background: rgba(29,28,25,0.06);
             }
             .hiw-persona {
-              display: inline-flex; align-items: center; height: 36px; padding: 0 16px;
-              border-radius: 999px; border: 1px solid rgba(29,28,25,0.14);
-              background: rgba(255,255,255,0.55); color: rgba(29,28,25,0.72);
-              font: inherit; font-size: 14px; font-weight: 550; letter-spacing: -0.005em;
-              gap: 6px; text-decoration: none; white-space: nowrap; cursor: pointer;
-              transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+              display: inline-flex; align-items: center; height: 34px; padding: 0 16px;
+              border-radius: 999px; border: 0; background: none; color: rgba(29,28,25,0.62);
+              font: inherit; font-size: 14.5px; font-weight: 500; letter-spacing: -0.005em;
+              white-space: nowrap; cursor: pointer; transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
             }
-            .hiw-persona:hover { border-color: rgba(29,28,25,0.3); color: rgba(29,28,25,0.95); }
-            .hiw-persona[aria-pressed="true"] { background: #141311; border-color: #141311; color: #f0ede6; }
-            .hiw-persona:focus-visible { outline: 2px solid #141311; outline-offset: 2px; }
-            .hiw-persona--more { border-color: transparent; background: none; padding: 0 8px; }
-            .hiw-persona--more:hover { border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+            .hiw-persona:hover { color: #1d1c19; }
+            .hiw-persona[aria-pressed="true"] { background: #fff; color: #1d1c19; box-shadow: var(--e1); }
+            .hiw-persona:focus-visible { outline: 2px solid #1d1c19; outline-offset: 2px; }
+            /* The step list holds still beside the panel as the page scrolls. */
+            .hiw-side { position: sticky; top: 112px; align-self: start; }
+            .hiw .text-link { display: inline-block; margin-top: 24px; }
 
             /* Two columns: the steps run the full height of the panel (rules
                flush with its top and bottom edges) with room between them. */
             .hiw-grid {
-              display: grid; grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.17fr);
-              column-gap: clamp(48px, 6vw, 76px); align-items: stretch;
+              display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+              column-gap: clamp(40px, 5vw, 72px); align-items: start;
             }
 
             /* --- the step list: every step open, the active one in full ink --- */
             .hiw-steps { display: flex; flex-direction: column; }
-            .hiw-step { position: relative; flex: 1 0 auto; display: flex; border-bottom: 1px solid rgba(29,28,25,0.1); }
+            .hiw-step { position: relative; display: flex; border-bottom: 1px solid rgba(29,28,25,0.1); }
             .hiw-step:first-child { border-top: 1px solid rgba(29,28,25,0.1); }
             .hiw-tab {
               all: unset; box-sizing: border-box; cursor: pointer; display: grid;
               grid-template-columns: 30px minmax(0, 1fr); width: 100%;
-              align-content: center; padding: 22px 4px 24px 2px; border-radius: 6px;
+              align-content: center; padding: 28px 4px 30px 2px; border-radius: 10px;
             }
-            .hiw-tab:focus-visible { outline: 2px solid #1d1c19; outline-offset: 2px; }
+            .hiw-tab:focus-visible { outline: none; }
+            .hiw-tab:focus-visible .hiw-title { outline: 2px solid #1d1c19; outline-offset: 4px; border-radius: 4px; }
             .hiw-num {
               padding-top: 4px; font-size: 13px; font-weight: 600;
               font-variant-numeric: tabular-nums; color: rgba(29,28,25,0.38);
@@ -503,28 +492,14 @@ export default function HowItWorksSection() {
             }
             .hiw-body {
               display: block; grid-column: 2; margin-top: 8px; max-width: 46ch;
-              color: rgba(29,28,25,0.44); font-size: 14.5px; line-height: 1.55;
+              color: rgba(29,28,25,0.44); font-size: 16px; line-height: 1.55;
               transition: color 0.25s;
             }
-            .hiw-chips { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
-            .hiw-chip {
-              display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px;
-              border-radius: 999px; background: rgba(255,255,255,0.4);
-              box-shadow: inset 0 0 0 1px rgba(29,28,25,0.1);
-              color: rgba(29,28,25,0.5); font-size: 12px; font-weight: 550; white-space: nowrap;
-              transition: color 0.25s, background-color 0.25s, box-shadow 0.25s;
-            }
-            .hiw-chip svg { width: 13px; height: 13px; flex-shrink: 0; color: rgba(29,28,25,0.42); transition: color 0.25s; }
             .hiw-tab:hover .hiw-title, .hiw-tab:hover .hiw-num { color: rgba(29,28,25,0.72); }
             .hiw-tab:hover .hiw-body { color: rgba(29,28,25,0.58); }
             .hiw-tab[aria-selected="true"] .hiw-num { color: #1d1c19; }
             .hiw-tab[aria-selected="true"] .hiw-title { color: #1d1c19; }
             .hiw-tab[aria-selected="true"] .hiw-body { color: rgba(29,28,25,0.64); }
-            .hiw-tab[aria-selected="true"] .hiw-chip {
-              background: rgba(255,255,255,0.78); color: rgba(29,28,25,0.8);
-              box-shadow: inset 0 0 0 1px rgba(29,28,25,0.14);
-            }
-            .hiw-tab[aria-selected="true"] .hiw-chip svg { color: rgba(29,28,25,0.55); }
             /* the active step's bottom rule fills as the step plays */
             .hiw-bar {
               position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; z-index: 1;
@@ -535,7 +510,7 @@ export default function HowItWorksSection() {
             .hiw-panel {
               display: flex; flex-direction: column; gap: 26px;
               padding: 28px 30px 32px;
-              border: 1px solid rgba(29,28,25,0.1); border-radius: 18px;
+              border: 1px solid rgba(29,28,25,0.1); border-radius: var(--r-l);
               background:
                 radial-gradient(rgba(29,28,25,0.065) 1px, transparent 1.2px) 0 0 / 18px 18px,
                 #f6f4ef;
@@ -559,9 +534,12 @@ export default function HowItWorksSection() {
             }
             .hiw-card svg { width: 13px; height: 13px; flex-shrink: 0; }
             .hiw-card-head {
-              display: flex; align-items: center; gap: 8px; margin-bottom: 9px;
-              color: rgba(29,28,25,0.5); font-size: 11px; font-weight: 600;
-              letter-spacing: 0.08em; text-transform: uppercase;
+              display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+              color: rgba(29,28,25,0.72); font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em;
+            }
+            .hiw-when {
+              display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 6px; border-radius: 999px;
+              color: rgba(29,28,25,0.6); font-size: 12px; font-weight: 500; box-shadow: inset 0 0 0 1px rgba(29,28,25,0.14);
             }
             .hiw-card-head svg { color: rgba(29,28,25,0.55); }
             .hiw-card-head .hiw-right { margin-left: auto; }
@@ -569,8 +547,8 @@ export default function HowItWorksSection() {
             /* step 1: the request, with what Toone picked out of it underlined */
             .hiw-prompt { padding-right: 34px; text-wrap: pretty; }
             .hiw-k {
-              font-weight: 600;
-              background: linear-gradient(rgba(29,28,25,0.38), rgba(29,28,25,0.38)) 0 100% / 0 1.25px no-repeat;
+              font-weight: 500; color: #1d1c19;
+              background: linear-gradient(rgba(29,28,25,0.25), rgba(29,28,25,0.25)) 0 100% / 0 1px no-repeat;
               padding-bottom: 1px;
             }
             .hiw-card[data-on] .hiw-k { animation: hiw-underline 0.6s ease-out forwards; }
@@ -582,7 +560,7 @@ export default function HowItWorksSection() {
             .hiw-card[data-on] .hiw-k:nth-of-type(7) { animation-delay: 1.85s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(8) { animation-delay: 2.1s; }
             .hiw-card[data-on] .hiw-k:nth-of-type(1) { animation-delay: 0.35s; }
-            @keyframes hiw-underline { to { background-size: 100% 1.25px; } }
+            @keyframes hiw-underline { to { background-size: 100% 1px; } }
             .hiw-caret {
               display: inline-block; width: 1.5px; height: 1.1em; margin-left: 2px;
               vertical-align: -0.18em; background: rgba(29,28,25,0.75);
@@ -669,6 +647,24 @@ export default function HowItWorksSection() {
             .hiw-note { display: flex; align-items: center; gap: 7px; margin-top: 11px; color: rgba(29,28,25,0.5); font-size: 12px; }
             .hiw-note svg { color: rgba(29,28,25,0.45); }
 
+            /* legend + tally under the graph: what the two kinds of step are */
+            .hiw-legend {
+              display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+              margin-top: -6px; padding-top: 16px; border-top: 1px solid rgba(29,28,25,0.09);
+              color: rgba(29,28,25,0.62); font-size: 12px; line-height: 1.4;
+            }
+            .hiw-key { display: inline-flex; align-items: center; gap: 7px; }
+            .hiw-swatch {
+              display: grid; place-items: center; width: 22px; height: 16px; border-radius: 4px;
+              background: rgba(29,28,25,0.06); box-shadow: inset 0 0 0 1px rgba(29,28,25,0.14);
+            }
+            .hiw-swatch--agent { border-radius: 6px; background: rgba(255,255,255,0.8); }
+            .hiw-swatch svg { width: 11px; height: 11px; color: rgba(29,28,25,0.6); }
+            .hiw-tally {
+              margin-left: auto; color: #1d1c19; font-weight: 600; font-variant-numeric: tabular-nums;
+            }
+            @media (max-width: 640px) { .hiw-tally { margin-left: 0; flex-basis: 100%; } }
+
             /* the draft pops in, row by row, each time "Describe it" comes up
                (first once the panel is in view, so the visitor sees it build) */
             .hiw[data-seen] .hiw-stage[data-step="0"] :is(.hg-chip, .hg-card, .hg-cap) {
@@ -687,13 +683,16 @@ export default function HowItWorksSection() {
               .hiw-grid { grid-template-columns: 1fr; gap: 32px; align-items: start; }
               .hiw-body { max-width: 60ch; }
             }
+            @media (max-width: 720px) {
+              .hiw-personas { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+              .hiw-persona { justify-content: center; padding: 8px 4px; font-size: 14px; }
+            }
+            @media (max-width: 960px) { .hiw-side { position: static; } }
             @media (max-width: 640px) {
               .hiw-tab { padding: 18px 2px 20px; grid-template-columns: 26px minmax(0, 1fr); }
               .hiw-title { font-size: 18px; }
-              .hiw-body { font-size: 14px; }
-              .hiw-chips { margin-top: 12px; }
-              .hiw-chip { height: 24px; font-size: 11.5px; }
-              .hiw-panel { padding: 18px 16px 22px; gap: 22px; border-radius: 16px; }
+              .hiw-body { font-size: 15px; }
+              .hiw-panel { padding: 18px 16px 22px; gap: 22px; border-radius: var(--r-m); }
               .hiw-card { padding: 13px 14px 14px; font-size: 13px; }
               .hiw-prompt { padding-right: 26px; }
               .hiw-when { display: none; }
@@ -703,17 +702,16 @@ export default function HowItWorksSection() {
               .hiw-field { flex-basis: 100%; }
             }
             @media (prefers-reduced-motion: reduce) {
-              .hiw-num, .hiw-title, .hiw-body, .hiw-chip, .hiw-card { transition: none; }
+              .hiw-num, .hiw-title, .hiw-body, .hiw-card { transition: none; }
               .hiw-bar { display: none; }
               .hiw-caret, .hiw-log-dot::after { animation: none; }
-              .hiw-card[data-on] .hiw-k { animation: none; background-size: 100% 1.25px; }
+              .hiw-card[data-on] .hiw-k { animation: none; background-size: 100% 1px; }
               .hiw-log li { animation: none; }
               .hiw[data-seen] .hiw-stage[data-step="0"] :is(.hg-chip, .hg-card, .hg-cap, .hg-svg) { animation: none; }
             }
           `,
         }}
       />
-      <p className="eyebrow">{t("eyebrow")}</p>
       <h2>{t("title")}</h2>
       <p className="sub">{t("sub")}</p>
 
@@ -730,10 +728,6 @@ export default function HowItWorksSection() {
             {t(`tabs.${p}`)}
           </button>
         ))}
-        <Link className="hiw-persona hiw-persona--more" href="/explore">
-          {t("more")}
-          <span aria-hidden="true">→</span>
-        </Link>
       </div>
 
       <div
@@ -743,6 +737,7 @@ export default function HowItWorksSection() {
         onFocus={(e) => updateHold({ focus: e.target.matches(":focus-visible") })}
         onBlur={() => updateHold({ focus: false })}
       >
+        <div className="hiw-side">
         <div className="hiw-steps" role="tablist" aria-orientation="vertical" aria-label={t("eyebrow")} onKeyDown={onKeyDown}>
           {STEPS.map((step, i) => {
             const selected = i === active;
@@ -766,14 +761,6 @@ export default function HowItWorksSection() {
                   <span className="hiw-num">{i + 1}.</span>
                   <span className="hiw-title" id={`${id}-title-${i}`}>{t(`steps.${step}.title`)}</span>
                   <span className="hiw-body" id={`${id}-body-${i}`}>{t(`steps.${step}.body`)}</span>
-                  <span className="hiw-chips">
-                    {CHIPS[step].map(([chip, icon]) => (
-                      <span className="hiw-chip" key={chip}>
-                        <Icon name={icon} />
-                        {t(`steps.${step}.chips.${chip}`)}
-                      </span>
-                    ))}
-                  </span>
                 </button>
                 {selected && !reduced && (
                   <span
@@ -788,6 +775,8 @@ export default function HowItWorksSection() {
               </div>
             );
           })}
+        </div>
+          <Link className="text-link" href="/explore">{t("more")}</Link>
         </div>
 
         <div className="hiw-panel" role="tabpanel" id={panelId} aria-labelledby={`${id}-title-${active}`} ref={panelRef}>
@@ -811,10 +800,10 @@ export default function HowItWorksSection() {
 
             <div className="hiw-card" data-on={active === 1 ? "" : undefined}>
               <p className="hiw-card-head">
-                <Icon name="clock" />
-                <span>
-                  {t(`${sc}.routineName`)}
-                  <span className="hiw-when"> · {t(`${sc}.graph.schedule`)}</span>
+                <span>{t(`${sc}.routineName`)}</span>
+                <span className="hiw-when">
+                  <Icon name="clock" />
+                  {t(`${sc}.graph.schedule`)}
                 </span>
                 <span className="hiw-right hiw-status">
                   <Icon name="pulse" />
@@ -895,6 +884,17 @@ export default function HowItWorksSection() {
               motion={!reduced}
             />
           </div>
+          <p className="hiw-legend">
+            <span className="hiw-key hiw-key--auto">
+              <span className="hiw-swatch" aria-hidden="true"><Icon name="code" /></span>
+              {t("legend.auto")}
+            </span>
+            <span className="hiw-key">
+              <span className="hiw-swatch hiw-swatch--agent" aria-hidden="true"><Icon name="spark" /></span>
+              {t("legend.agent")}
+            </span>
+            <span className="hiw-tally">{t("legend.tally", { n: automaticSteps, total: ids.length })}</span>
+          </p>
         </div>
       </div>
     </section>

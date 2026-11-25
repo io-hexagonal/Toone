@@ -32,7 +32,7 @@ export default async function Footer({
           __html: `
             .ftr {
               position: relative; z-index: 5;
-              background: #141413; color: rgba(255,255,255,0.55);
+              background: #1d1c19; color: rgba(255,255,255,0.55);
               border-top: 1px solid rgba(255,255,255,0.08);
               padding: 60px 24px 72px;
             }
@@ -51,9 +51,9 @@ export default async function Footer({
 
             .ftr-lang { margin-top: 16px; }
             .ftr-cols { display: flex; gap: 64px; flex-wrap: wrap; }
+            @media (max-width: 720px) { .ftr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 24px; } }
             .ftr-heading {
-              font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em;
-              text-transform: uppercase; color: rgba(255,255,255,0.66);
+              font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5);
               margin-bottom: 14px;
             }
             .ftr-cols a {
@@ -86,7 +86,7 @@ export default async function Footer({
               <span className="wm">toone</span>
             </Link>
             <div className="ftr-legal">
-              © {new Date().getFullYear()} Toone — {t("rights")}
+              © {new Date().getFullYear()} Toone. {t("rights")}
             </div>
 
             <div className="ftr-lang">
@@ -96,7 +96,8 @@ export default async function Footer({
           <div className="ftr-cols">
             <div>
               <p className="ftr-heading">{t("product")}</p>
-              <Link href={`${landingPath}#how`}>{t("how")}</Link>
+              <Link href={`${landingPath}#how-it-works`}>{t("how")}</Link>
+              <Link href="/compare">{t("compare")}</Link>
               <Link href={`${landingPath}#faq`}>FAQ</Link>
               <PricingLink href="/pricing">{billing("nav")}</PricingLink>
               <CreateAccountLink className="ftr-download" placement="footer">{nav("download")}</CreateAccountLink>

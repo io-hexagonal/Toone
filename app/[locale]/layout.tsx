@@ -6,7 +6,7 @@ import { localeRobots } from "@/i18n/indexing";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
-import { Newsreader, Rubik } from "next/font/google";
+import { Hanken_Grotesk, Newsreader, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
 import AnnouncementModal from "@/components/announcements/AnnouncementModal";
@@ -57,6 +57,19 @@ const newsreader = Newsreader({
   preload: false,
 });
 
+/**
+ * The landing's text face: body copy, the routine graph and the primary
+ * button (Rubik stays the heading face). Not preloaded: only the landing
+ * uses it.
+ */
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-ui",
+  display: "swap",
+  preload: false,
+});
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -97,7 +110,7 @@ const siteSchema: Graph = {
         height: "512",
       },
       description:
-        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
+        "Toone is a macOS app that turns work you repeat into routines: scripts run the steps that never change and AI agents handle only the steps that need judgment, on your own Claude Code or Codex. You describe the work in plain words and watch every run. An alternative to hand-wired automation such as n8n, Make and Zapier.",
       sameAs,
       founder: {
         "@type": "Person",
@@ -120,7 +133,7 @@ const siteSchema: Graph = {
       name: "Toone",
       url: "https://trytoone.com",
       description:
-        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
+        "Toone is a macOS app that turns work you repeat into routines: scripts run the steps that never change and AI agents handle only the steps that need judgment, on your own Claude Code or Codex. You describe the work in plain words and watch every run. An alternative to hand-wired automation such as n8n, Make and Zapier.",
       inLanguage: [...locales],
       publisher: { "@id": "https://trytoone.com/#organization" },
     },
@@ -136,7 +149,7 @@ const siteSchema: Graph = {
       operatingSystem: "macOS",
       url: "https://trytoone.com",
       description:
-        "Toone is the AI workspace for your agentic workflows: a macOS app where specialist agents run your workflows and routines under your control.",
+        "Toone is a macOS app that turns work you repeat into routines: scripts run the steps that never change and AI agents handle only the steps that need judgment, on your own Claude Code or Codex. You describe the work in plain words and watch every run. An alternative to hand-wired automation such as n8n, Make and Zapier.",
       publisher: { "@id": "https://trytoone.com/#organization" },
       sameAs,
     },
@@ -252,7 +265,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   };
 
   return (
-    <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable}`}>
+    <html lang={locale} className={`${newsreader.variable} ${pixel.variable} ${rubik.variable} ${hanken.variable}`}>
       <head>
         {/* No hreflang (TECH-021): English is the only indexed locale. The
             language links read each page's versions from the metadata API

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { openGraphLocale } from "@/i18n/open-graph";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { TooneLandingPage } from "../page";
+export { viewport } from "../page";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -27,10 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // English copy onto all eight locales.
   const isEnglish = locale === "en";
   const title = isEnglish
-    ? "Toone for business | Governed AI routines for company operations"
+    ? "Toone for business | Recurring company work as routines your team can check"
     : t("siteTitle"); // already carries the brand (Ahrefs F06)
   const description = isEnglish
-    ? "Encode how your company works as routines that specialist agents run under human approval. See how teams pilot Toone on one recurring workflow first."
+    ? "Describe how a process works and Toone turns it into a routine on your Mac: scripts run the fixed steps, AI agents take the judgment calls, and steps that send, post or pay can wait for approval."
     : t("siteDescription");
   const ogTitle = isEnglish ? "Toone for business" : t("ogTitle");
   const ogDescription = isEnglish ? description : t("ogDescription");

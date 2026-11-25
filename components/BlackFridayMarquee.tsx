@@ -51,7 +51,7 @@ export default function BlackFridayMarquee() {
             .bf-bar {
               position: relative; z-index: 51; display: block;
               height: ${BAR_HEIGHT}px; overflow: hidden;
-              background: #000; color: #fff; text-decoration: none;
+              background: #1d1c19; color: #fff; text-decoration: none;
             }
             .bf-track {
               display: flex; width: max-content; height: 100%;
@@ -68,7 +68,7 @@ export default function BlackFridayMarquee() {
             .bf-hot {
               display: inline-flex; align-items: center;
               padding: 7px 14px; border-radius: 999px;
-              background: #fff; color: #000;
+              background: #fff; color: #1d1c19;
               font-size: 14px; font-weight: 800; letter-spacing: 0.1em;
             }
             .bf-sep { margin: 0 22px; font-size: 9px; opacity: 0.55; }
@@ -86,7 +86,7 @@ export default function BlackFridayMarquee() {
       />
       <script
         dangerouslySetInnerHTML={{
-          __html: `try{if(Date.now()>${ENDS_AT})document.documentElement.classList.add("bf-over")}catch(e){}`,
+          __html: `try{if(Date.now()>${ENDS_AT}){document.documentElement.classList.add("bf-over");document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content","#f9f8f5")})}}catch(e){}`,
         }}
       />
       <Link href="/pricing" className="bf-bar" aria-label="Black Friday Week: 80% off Toone Lifetime, see pricing">

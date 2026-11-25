@@ -64,7 +64,7 @@ export const STRICT_SECTIONS = [
 
 /** Statically cached sections with no outside content: the static policy. */
 export const STATIC_SECTIONS = [
-  "about", "ai-digest", "business", "claude", "contact", "docs-ui-gallery", "download", "editorial-policy",
+  "about", "ai-digest", "business", "claude", "compare", "contact", "docs-ui-gallery", "download", "editorial-policy",
   "governance", "guides", "legal-notice", "newcomers", "privacy", "request-access", "showcases", "terms",
 ] as const;
 

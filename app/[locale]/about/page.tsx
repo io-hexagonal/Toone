@@ -3,6 +3,7 @@ import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import TrustPage from "@/components/TrustPage";
+import FeaturedOnStrip from "@/components/FeaturedOnStrip";
 import { LEGAL_NOTICE_PATH } from "@/lib/legal/terms";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // the root `%s | Toone` template from adding a third (audit P2-5).
     title: { absolute: "About Toone (Toone AI) | macOS app by Hexagonal.io" },
     description:
-      "Toone, also known as Toone AI, is the AI workspace for your agentic workflows: a macOS app published by Matheus Paranhos, a sole trader in Portugal (Hexagonal.io), that turns repeat work into reliable routines you can watch, pause, edit, and resume, on your own Claude Code or Codex.",
+      "Toone, also known as Toone AI, is a macOS app published by Matheus Paranhos, a sole trader in Portugal (Hexagonal.io), that turns repeat work into routines: scripts run the steps that never change and AI agents only the steps that need judgment, on your own Claude Code or Codex, with every run visible and editable.",
     alternates: { canonical: "https://trytoone.com/en/about" },
     robots: localeRobots(locale),
     other: localeVersions("/about", ["en"]),
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: "https://trytoone.com/en/about",
       title: "About Toone (Toone AI)",
       description:
-        "Precision for your agentic workflows and routines: describe the work, watch specialist agents run it on a live graph, and pause, edit, and resume where it stopped.",
+        "Agentic by default, scripted where it counts: describe the work, and Toone runs the fixed steps as scripts and the judgment calls with AI agents, on a live graph you can pause, edit, and resume.",
       siteName: "Toone",
       images: ["https://trytoone.com/assets/og/toone-og.png"],
     },
@@ -40,21 +41,24 @@ export default async function AboutPage({ params, searchParams }: Props) {
     <TrustPage
         eyebrow="Company"
         title="About Toone"
-        lede="Precision for your agentic workflows and routines. Toone is a Mac workspace where you describe repeat work in plain words and specialist agents run it the same way every time, on a live graph you can pause, edit, and resume."
-        updated="November 1, 2026"
+        lede="Agentic by default, scripted where it counts. Toone is a Mac app where you describe repeat work in plain words; the steps that never change run as scripts, the steps that need judgment go to AI agents, and every run plays out on a live graph you can pause, edit, and resume."
+        updated="November 25, 2026"
       >
         <section>
           <h2>What Toone is</h2>
           <p>
-            Toone is a native macOS workspace for agentic workflows. You describe a multi-step job
-            the way you would brief a colleague (when it runs, which models, which accounts) and
-            Toone drafts it as a routine: a graph of steps that specialist agents carry out, in
-            parallel where the work allows. You can start with one agent and one useful task; as
-            the work grows, agents specialize and routines can call other routines.
+            Toone is a native macOS app for work that comes back every week or month. You describe
+            a multi-step job the way you would brief a colleague (when it runs, which models, which
+            accounts) and Toone drafts it as a routine: a graph of steps, in parallel where the work
+            allows. Each step is one of two kinds. An <strong>automatic step</strong> runs a script
+            that does the mechanical part exactly (an API call, a sort, a file move) with no model
+            and no tokens. An <strong>agent step</strong> goes to an AI agent, only where
+            the work needs research, writing, or a decision. As the work grows, routines can call
+            other routines.
           </p>
           <p>
             A routine is a process, not a prompt on a timer. It runs the same steps and the same
-            checks every time, remembers what it already did, so nothing is lost or repeated between runs, and
+            checks every time, remembers what it already did, so finished work isn&apos;t redone, and
             lets each step use the model that suits it. Contracts check each step&apos;s output; a
             step that falls short pauses on its own, so you can edit it and resume where it
             stopped while finished steps keep their results.
@@ -64,10 +68,12 @@ export default async function AboutPage({ params, searchParams }: Props) {
         <section>
           <h2>Who it is for</h2>
           <p>
-            Anyone on a Mac with complex work that comes back every week or month: operators,
-            researchers, marketers, founders, and creators. For companies, the same routines become
-            governed operations: specialist agents run how the company works, under human approval,
-            with a record of every step.
+            Anyone on a Mac with complex work that comes back every week or month: operators and
+            agencies running the same client or back-office work, researchers, marketers, founders,
+            and creators. It suits jobs that mix integrations, like moving and matching data between your
+            tools, with steps that need judgment. In n8n, Make or Zapier that work takes many
+            hand-wired nodes; see <a href="/en/compare">how they compare</a>. For companies, the same routines write down how the team works: steps that send,
+            post or pay can wait for a person&apos;s approval, and every run leaves a record.
           </p>
           <p>
             The public <a href="/en/explore">Explore</a> library has reviewed routines and bundles
@@ -78,8 +84,8 @@ export default async function AboutPage({ params, searchParams }: Props) {
         <section>
           <h2>Your models, your accounts</h2>
           <p>
-            Toone runs on your own Claude Code or Codex, with the Anthropic or OpenAI subscription
-            you already pay for, and works in your own accounts through its built-in browser.
+            Toone runs on your own Claude Code or Codex, with the Claude or ChatGPT plan you
+            already pay for, and works in your own accounts through its built-in browser.
             Toone supplies the layer around those agents (structure, checks, memory, and control)
             rather than presenting itself as an AI model provider.
           </p>
@@ -129,6 +135,8 @@ export default async function AboutPage({ params, searchParams }: Props) {
             repository, and release evidence before publication.
           </p>
         </section>
+
+        <FeaturedOnStrip variant="trust" />
 
         <section>
           <h2>Evidence standards</h2>

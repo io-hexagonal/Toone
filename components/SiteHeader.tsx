@@ -9,6 +9,7 @@ import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
 import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
+import type { LandingAudience } from "@/components/LandingAudienceBar";
 
 /**
  * Morphing landing header — one element, two states.
@@ -17,17 +18,32 @@ import PricingLink from "@/components/billing/PricingLink";
  * per side). Past the hero it shrinks into the glassy cream pill. The same
  * DOM nodes stay put and every property tweens, so the elements visibly
  * "stay" while the chrome contracts around them.
+ *
+ * tone="light" is for a light hero (the landing): ink text from the start,
+ * nav links next to the logo, the account actions pushed right. With
+ * `audience` set, Personal / Business lead the nav.
  */
 type Props = {
   landingPath?: "/" | "/business";
   scrollThreshold?: number;
+  tone?: "dark" | "light";
+  /** The landing being shown (marked current), or "any" to list both on other pages. */
+  audience?: LandingAudience | "any";
 };
+
+const AUDIENCES = [
+  { id: "personal", href: "/", labelKey: "audiencePersonal" },
+  { id: "business", href: "/business", labelKey: "audienceBusiness" },
+] as const;
 
 export default function SiteHeader({
   landingPath = "/",
   scrollThreshold,
+  tone = "dark",
+  audience,
 }: Props) {
   const t = useTranslations("nav");
+  const landing = useTranslations("landing");
   const billing = useTranslations("billing");
   const links = useTranslations("account.links");
   const [scrolled, setScrolled] = useState(false);
@@ -116,16 +132,77 @@ export default function SiteHeader({
             @media (max-width: 720px) {
               .hdr2 { padding: 16px 20px; gap: 14px; }
               .hdr2 .links { gap: 12px; }
-              .hdr2 .links a[data-optional] { display: none; }
+              .hdr2 .links [data-optional] { display: none; }
               .hdr2 .dl { padding: 10px 14px; font-size: 12px; white-space: nowrap; }
               /* No room for the language menu on phones: the footer keeps the locale links. */
               .hdr2 .links .lp { display: none; }
+            }
+
+            /* Nav and account actions are two groups; on the dark tone they
+               still sit together on the right, as one row. */
+            .hdr2 .links-actions { margin-left: 0; }
+
+            /* --- light tone: ink on a light hero, nav beside the logo --- */
+            .hdr2[data-tone="light"]:not([data-scrolled="true"]) { top: 0; }
+            .hdr2[data-tone="light"] .links-nav { margin-left: 22px; gap: 28px; }
+            .hdr2[data-tone="light"] .links-actions { margin-left: auto; gap: 22px; }
+            .hdr2[data-tone="light"] .wm { color: #1d1c19; }
+            .hdr2[data-tone="light"] .mark .on-dark { opacity: 0; }
+            .hdr2[data-tone="light"] .mark .on-light { opacity: 1; }
+            .hdr2[data-tone="light"] .links a:not(.dl),
+            .hdr2[data-tone="light"] .links span:not(.dl) { color: rgba(29,28,25,0.74); }
+            .hdr2[data-tone="light"] .links [aria-current="page"] { color: #1d1c19; font-weight: 600; }
+            .hdr2[data-tone="light"] .links-nav span[aria-current] {
+              font-size: 14.5px; white-space: nowrap;
+            }
+            .hdr2[data-tone="light"] .lp { color: rgba(29,28,25,0.74); }
+            /* Scrolled, the light header is a pane of glass: translucent,
+               blurred and lifted, with a 1px rim that catches light at the
+               top-left. Corners match the button inside it (16 = 8 + 8). */
+            .hdr2[data-tone="light"][data-scrolled="true"] {
+              border-radius: 16px; padding: 8px 8px 8px 20px;
+              background-color: rgba(249, 248, 245, 0.82);
+              -webkit-backdrop-filter: blur(24px) saturate(1.2) brightness(1.06);
+                      backdrop-filter: blur(24px) saturate(1.2) brightness(1.06);
+              box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(29,28,25,0.06),
+                0 0 0 1px rgba(29,28,25,0.07), 0 14px 34px -18px rgba(29,28,25,0.4);
+            }
+            .hdr2[data-tone="light"]::before {
+              content: ""; position: absolute; inset: 0; padding: 1px; border-radius: inherit;
+              pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
+              background: linear-gradient(115deg, rgba(255,255,255,0.9), transparent 35%, rgba(29,28,25,0.1) 60%, rgba(255,255,255,0.7));
+              -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              -webkit-mask-composite: xor; mask-composite: exclude;
+            }
+            .hdr2[data-tone="light"][data-scrolled="true"]::before { opacity: 1; }
+            @media (max-width: 720px) {
+              /* The hero's button is the only call to action in the first screen. */
+              .hdr2[data-tone="light"]:not([data-scrolled="true"]) .dl { display: none; }
+            }
+            /* Light tone: the landing's .holo-btn (app/globals.css), header size. */
+            .hdr2 .dl.holo-btn {
+              font-family: var(--font-ui), "Helvetica Neue", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+              font-weight: 500; font-size: 0.96rem; letter-spacing: normal;
+              padding: 0.72rem 1.25rem; border-radius: 6px;
+              background:
+                var(--holo-sheen) padding-box,
+                linear-gradient(#0b0c10, #0b0c10) padding-box,
+                var(--holo-edge) border-box;
+              background-size: 200% 100%, 100% 100%, 200% 100%;
+              background-position: 0% 50%, 0 0, 0% 50%;
+              color: #fff;
+              transition: background-position .7s, box-shadow .15s;
+            }
+            .hdr2 .dl.holo-btn:hover { transform: none; background-position: 100% 50%, 0 0, 100% 50%; }
+            @media (max-width: 720px) {
+              .hdr2 .dl.holo-btn { padding: 9px 13px; font-size: 13px; }
             }
           `,
         }}
       />
 
-      <header className="hdr2" data-scrolled={scrolled}>
+      <header className="hdr2" data-scrolled={scrolled} data-tone={tone}>
         <Link href={landingPath} aria-label="Toone" className="brand">
           <span className="mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -135,19 +212,33 @@ export default function SiteHeader({
           </span>
           <span className="wm">toone</span>
         </Link>
-        <nav className="links" aria-label="Primary">
+        <nav className="links links-nav" aria-label="Primary">
+          {audience &&
+            AUDIENCES.map((a) =>
+              a.id === audience ? (
+                <span key={a.id} aria-current="page" data-optional>
+                  {landing(a.labelKey)}
+                </span>
+              ) : (
+                <Link key={a.id} href={a.href} data-optional>
+                  {landing(a.labelKey)}
+                </Link>
+              ),
+            )}
           <SignedInLink href="/how-to" data-optional>
             {t("howTo")}
           </SignedInLink>
           <Link href="/explore" data-optional>{t("explore")}</Link>
           <Link href="/journal" data-optional>{t("journal")}</Link>
           <PricingLink href="/pricing" data-optional>{billing("nav")}</PricingLink>
+        </nav>
+        <div className="links links-actions">
           <LocalePicker />
           <SignedOutLink href="/signin">{t("signin")}</SignedOutLink>
           <SignedInLink href="/account" data-optional>{links("account")}</SignedInLink>
           <InvitationAdminLink />
-          <CreateAccountLink className="dl" placement="header">{t("download")}</CreateAccountLink>
-        </nav>
+          <CreateAccountLink className={tone === "light" ? "dl holo-btn" : "dl"} placement="header">{t("download")}</CreateAccountLink>
+        </div>
       </header>
     </>
   );

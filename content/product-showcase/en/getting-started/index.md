@@ -1,7 +1,7 @@
 ---
 title: "Getting started with Toone"
 navTitle: "Getting started"
-description: "Go from a fresh install to a working project with one specialized agent and a repeatable routine, then run it, follow its progress, and review the result."
+description: "Go from a fresh install to a routine you can run, follow and review."
 eyebrow: "Quickstart"
 pageType: "tutorial"
 estimatedTime: "About 15 minutes"
