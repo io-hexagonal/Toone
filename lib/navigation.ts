@@ -1,6 +1,7 @@
 import { createElement, type ComponentProps } from "react";
 import { createNavigation } from "next-intl/navigation";
 import { ENGLISH_ONLY_PATHS, routing } from "@/i18n/routing";
+import SectionLink from "@/lib/section-link";
 
 const navigation = createNavigation(routing);
 
@@ -22,10 +23,11 @@ function isEnglishOnly(href: ComponentProps<typeof navigation.Link>["href"]) {
 
 /**
  * next-intl's Link, except English-only routes always resolve to `/en/…`
- * instead of the current locale's redirecting URL.
+ * instead of the current locale's redirecting URL, and a link from a static
+ * page into a strict-CSP section loads a new document (lib/section-link.tsx).
  */
 export function Link(props: ComponentProps<typeof navigation.Link>) {
-  return createElement(navigation.Link, {
+  return createElement(SectionLink, {
     ...props,
     locale: props.locale ?? (isEnglishOnly(props.href) ? "en" : undefined),
   });

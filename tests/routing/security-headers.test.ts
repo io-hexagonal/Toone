@@ -70,3 +70,18 @@ test("security.txt is served as a static file: RFC 9116 fields, not expired, nev
   assert.equal(unstable_doesMiddlewareMatch({ config: proxyConfig, url: "/.well-known/security.txt" }), false);
   assert.equal(unstable_doesMiddlewareMatch({ config: proxyConfig, url: "/pricing" }), true, "the matcher check itself works");
 });
+
+test("every route sends HSTS without preload, COOP that keeps sign-in popups working, a Permissions-Policy, and no X-Powered-By", async () => {
+  for (const path of [...PATHS, "/en/connect", "/en/signin"]) {
+    const headers = await headersFor(path);
+    assert.equal(headers["strict-transport-security"], "max-age=63072000; includeSubDomains", path);
+    assert.doesNotMatch(headers["strict-transport-security"], /preload/, path);
+    assert.equal(headers["cross-origin-opener-policy"], "same-origin-allow-popups", path);
+    const policy = headers["permissions-policy"];
+    for (const feature of ["camera", "microphone", "geolocation", "payment", "usb"]) {
+      assert.match(policy, new RegExp(`(^|, )${feature}=\\(\\)`), `${path}: ${feature} denied`);
+    }
+    assert.doesNotMatch(policy, /identity-credentials-get|fullscreen/, `${path}: FedCM and fullscreen stay available`);
+  }
+  assert.equal(nextConfig.poweredByHeader, false);
+});

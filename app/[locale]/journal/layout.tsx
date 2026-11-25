@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import StrictCspLayout from "@/components/StrictCspLayout";
 
 /**
  * Fail-closed robots default for the Journal segment. Every page sets its own
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
+/** Strict CSP section (lib/csp.ts): rendered per request for the script nonce. */
 export default function JournalLayout({ children }: { children: ReactNode }) {
-  return children;
+  return <StrictCspLayout>{children}</StrictCspLayout>;
 }

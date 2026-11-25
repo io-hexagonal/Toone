@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { ENGLISH_ONLY_PATHS, LOCALE_CHOICE_COOKIE, routing, type Locale } from "./i18n/routing";
 import { TERMS_VERSION_PARAM } from "./lib/legal/terms-versions";
+import { apiOriginsFromEnv, buildCsp, buildStaticCsp, createNonce, isStrictPath, NONCE_HEADER } from "./lib/csp";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -59,11 +60,48 @@ function perVisitor(response: NextResponse, vary: string) {
   return response;
 }
 
+/** The consent page under any prefix: no site may frame it (next.config.ts sends DENY too). */
+const CONNECT_ANY = /^(?:\/[a-z]{2})?\/connect\/?$/;
+
+/**
+ * Every page gets a Content-Security-Policy (lib/csp.ts). Sections that use
+ * the session or show content written by others get the strict policy with
+ * a fresh script nonce; the policy goes on the request too, because Next.js
+ * reads the nonce from the request's CSP header while rendering and the
+ * pages read `x-nonce` for their own inline scripts. Every other page is
+ * statically cached and gets the static policy (no nonce).
+ */
 export default function proxy(req: NextRequest) {
+  const shared = {
+    frameAncestors: CONNECT_ANY.test(req.nextUrl.pathname) ? ("'none'" as const) : ("'self'" as const),
+    apiOrigins: apiOriginsFromEnv({
+      NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      EXPLORE_API_BASE_URL: process.env.EXPLORE_API_BASE_URL,
+    }),
+    development: process.env.NODE_ENV === "development",
+    preview: process.env.VERCEL_ENV === "preview",
+  };
+  if (!isStrictPath(req.nextUrl.pathname)) {
+    const response = route(req, null);
+    response.headers.set("Content-Security-Policy", buildStaticCsp(shared));
+    return response;
+  }
+  const nonce = createNonce();
+  const csp = buildCsp({ ...shared, nonce });
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set(NONCE_HEADER, nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+  const response = route(new NextRequest(req, { headers: requestHeaders }), requestHeaders);
+  response.headers.set("Content-Security-Policy", csp);
+  return response;
+}
+
+function route(req: NextRequest, requestHeaders: Headers | null) {
   const { pathname } = req.nextUrl;
+  const forward = requestHeaders ? { request: { headers: requestHeaders } } : undefined;
 
   if (pathname === "/" && PREVIEW_BOTS.test(req.headers.get("user-agent") ?? "")) {
-    return NextResponse.rewrite(new URL("/en", req.url));
+    return NextResponse.rewrite(new URL("/en", req.url), forward);
   }
 
   // R6: the bare root is a permanent 308 to the default locale, never
@@ -126,7 +164,7 @@ export default function proxy(req: NextRequest) {
   if (aiDigest) {
     const target = req.nextUrl.clone();
     target.pathname = `/${routing.defaultLocale}/ai-digest${aiDigest[1] ?? ""}`;
-    return NextResponse.rewrite(target);
+    return NextResponse.rewrite(target, forward);
   }
 
   // Other unprefixed paths (`/downloads`, `/request-access?…`): an explicit
@@ -175,18 +213,19 @@ export default function proxy(req: NextRequest) {
   if (pathname === TERMS_PAGE && req.nextUrl.searchParams.has(TERMS_VERSION_PARAM)) {
     const target = req.nextUrl.clone();
     target.pathname = `${TERMS_PAGE}/versioned`;
-    return NextResponse.rewrite(target);
+    return NextResponse.rewrite(target, forward);
   }
 
-  // TE-01: the parameter-free hub is prerendered. Catalog parameters (type,
-  // search, tag, taxonomy facets, page) need a per-request render, so those
-  // URLs are rewritten to the request-time view; the address bar keeps them.
-  // Anything else in the query (utm_*, ref) still gets the cached hub.
+  // TE-01: catalog parameters (type, search, tag, taxonomy facets, page) are
+  // served by the request-time view, so those URLs are rewritten to it; the
+  // address bar keeps them. Anything else in the query (utm_*, ref) gets the
+  // plain hub. (Explore renders per request for the CSP nonce; the hub's
+  // data still comes from the data cache.)
   const hub = pathname.match(EXPLORE_HUB);
   if (hub && isLocale(hub[1]) && CATALOG_PARAMS.some((key) => req.nextUrl.searchParams.has(key))) {
     const target = req.nextUrl.clone();
     target.pathname = `/${hub[1]}/explore/search`;
-    return NextResponse.rewrite(target);
+    return NextResponse.rewrite(target, forward);
   }
 
   return intlMiddleware(req);
