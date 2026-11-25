@@ -7,10 +7,11 @@ export const PRIVACY_CHOICE_SAVED_EVENT = "toone:privacy-choice-saved";
  * Pages that load no analytics and show no privacy panel, whatever the saved
  * choice: the consent page, whose address carries a one-use request id
  * (analytics would record it) and whose Allow button the panel would cover
- * on a phone.
+ * on a phone; and Journal draft previews, whose address is the preview token
+ * (valid for days), which must not reach the analytics server.
  */
 export function isAnalyticsFreePath(pathname: string | null | undefined): boolean {
-  return /^(?:\/[a-z]{2})?\/connect(?:\/|$)/.test(pathname ?? "");
+  return /^(?:\/[a-z]{2})?\/(?:connect|journal\/preview)(?:\/|$)/.test(pathname ?? "");
 }
 export type PrivacyChoice = "allow" | "deny";
 

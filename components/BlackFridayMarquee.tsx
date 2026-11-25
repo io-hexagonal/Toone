@@ -1,5 +1,6 @@
 import { Link } from "@/lib/navigation";
 import { checkoutPromotionEnds } from "@/lib/billing/checkout-promo";
+import { cspNonce } from "@/lib/csp-nonce";
 
 /**
  * Black Friday Week strip: a black bar in the audience bar's slot whose text
@@ -40,7 +41,7 @@ function Half({ hidden }: { hidden?: boolean }) {
   );
 }
 
-export default function BlackFridayMarquee() {
+export default async function BlackFridayMarquee() {
   return (
     <>
       <style
@@ -85,6 +86,7 @@ export default function BlackFridayMarquee() {
         }}
       />
       <script
+        nonce={await cspNonce()}
         dangerouslySetInnerHTML={{
           __html: `try{if(Date.now()>${ENDS_AT})document.documentElement.classList.add("bf-over")}catch(e){}`,
         }}

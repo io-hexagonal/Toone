@@ -2,7 +2,7 @@ import { useId } from "react";
 import { HONEYPOT_FIELD } from "@/lib/contact-guard";
 
 /**
- * The spam honeypot for forms that post to `/api/contact`
+ * The spam honeypot for forms that post to `/api/contact` or `/api/waitlist`
  * (lib/contact-guard.ts): an ordinary-looking text input, moved off screen
  * rather than `display: none` (which many bots skip), hidden from assistive
  * technology and out of the tab order. People leave it empty; the route drops

@@ -8,6 +8,8 @@ import HeroGraphBackground from "@/components/HeroGraphBackground";
 import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
+import HoneypotField from "@/components/HoneypotField";
+import { HONEYPOT_FIELD } from "@/lib/contact-guard";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
 
@@ -55,6 +57,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
   const t = useTranslations("landing");
   const locale = useLocale();
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const router = useRouter();
   const submissionRef = useRef(false);
   const [status, setStatus] = useState<
@@ -78,7 +81,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: WAITLIST_SOURCE }),
+        body: JSON.stringify({ email, source: WAITLIST_SOURCE, [HONEYPOT_FIELD]: honeypot }),
       });
       const outcome: unknown = await res.json().catch(() => null);
       if (res.ok && isWaitlistOutcome(outcome)) {
@@ -329,6 +332,7 @@ export default function HeroAuth({ audience = "business" }: Props) {
                   onSubmit={handleSubmit}
                   style={{ display: "flex", flexDirection: "column", gap: 12 }}
                 >
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <span className="ha-field">
                     <input
                       className="ha-email"

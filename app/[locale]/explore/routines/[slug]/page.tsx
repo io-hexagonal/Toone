@@ -32,9 +32,8 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 // TE-01: rendered on the first request, then served from cache. The data
 // cache window matches, and the signed webhook expires both on approval.
 export const revalidate = 600;
-export function generateStaticParams(): { slug: string }[] {
-  return [];
-}
+// Rendered per request (the CSP nonce, lib/csp.ts); `revalidate` still sets
+// the default data-cache lifetime of this page's fetches.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   try {

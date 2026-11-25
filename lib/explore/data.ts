@@ -151,13 +151,28 @@ const LAST_GOOD_LIMIT = 200;
 type ExploreMemo = {
   notServed: Map<string, number>;
   lastGood: Map<string, Fetched<unknown>>;
+  oversize?: Map<string, { at: number; result: Fetched<unknown> }>;
 };
 const MEMO_KEY = Symbol.for("toone.explore.memo");
 const memo: ExploreMemo = ((globalThis as Record<symbol, unknown>)[MEMO_KEY] ??= {
   notServed: new Map<string, number>(),
   lastGood: new Map<string, Fetched<unknown>>(),
 }) as ExploreMemo;
+memo.oversize ??= new Map();
 const { notServed, lastGood } = memo;
+const oversize = memo.oversize;
+
+/**
+ * Next.js refuses to keep a fetch response over 2 MB in its data cache. The
+ * full catalog list is over that (the legacy inline cover data URLs), and
+ * pages render per request (the CSP nonce, lib/csp.ts), so without this every
+ * Explore view would fetch it again. Such a response is reused by this server
+ * instance for a minute; the revalidation webhook clears it like the other
+ * memos.
+ */
+const DATA_CACHE_LIMIT_BYTES = 2 * 1024 * 1024;
+const OVERSIZE_TTL_MS = 60_000;
+const OVERSIZE_LIMIT = 20;
 
 function remember<K, V>(map: Map<K, V>, key: K, value: V, limit: number) {
   map.delete(key);
@@ -172,6 +187,7 @@ function remember<K, V>(map: Map<K, V>, key: K, value: V, limit: number) {
 export function resetExploreMemo(): void {
   notServed.clear();
   lastGood.clear();
+  oversize.clear();
 }
 
 /** True when `path` answered 404 within the negative window (test hook). */
@@ -203,6 +219,9 @@ async function getJson<T>(
     notServed.delete(routeKey);
   }
 
+  const recent = oversize.get(url.href);
+  if (recent && Date.now() - recent.at < OVERSIZE_TTL_MS) return recent.result as Fetched<T>;
+
   const response = await fetch(url, {
     headers: { Accept: "application/json" },
     signal: AbortSignal.timeout(8000),
@@ -231,7 +250,8 @@ async function getJson<T>(
     throw new ExploreApiError(url.pathname, response.status, message);
   }
 
-  const envelope = (await response.json()) as { data?: T };
+  const text = await response.text();
+  const envelope = JSON.parse(text) as { data?: T };
   if (
     envelope === null ||
     typeof envelope !== "object" ||
@@ -255,6 +275,9 @@ async function getJson<T>(
         : 0;
   const result = { data, total };
   remember(lastGood, url.href, result, LAST_GOOD_LIMIT);
+  if (Buffer.byteLength(text) > DATA_CACHE_LIMIT_BYTES) {
+    remember(oversize, url.href, { at: Date.now(), result }, OVERSIZE_LIMIT);
+  }
   return result;
 }
 

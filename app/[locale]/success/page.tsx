@@ -4,6 +4,7 @@ import CheckoutReturn from "@/components/billing/CheckoutReturn";
 import { STRIP_SESSION_ID_SCRIPT } from "@/components/billing/CheckoutReturn.helpers";
 import { CHECKOUT_RETURN_STYLES } from "@/components/billing/CheckoutReturn.styles";
 import { checkoutReturnMetadata } from "./return-metadata";
+import { cspNonce } from "@/lib/csp-nonce";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -24,7 +25,7 @@ export default async function SuccessPage({ params }: Props) {
   setRequestLocale(locale);
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: STRIP_SESSION_ID_SCRIPT }} />
+      <script nonce={await cspNonce()} dangerouslySetInnerHTML={{ __html: STRIP_SESSION_ID_SCRIPT }} />
       <style dangerouslySetInnerHTML={{ __html: CHECKOUT_RETURN_STYLES }} />
       <CheckoutReturn />
     </>

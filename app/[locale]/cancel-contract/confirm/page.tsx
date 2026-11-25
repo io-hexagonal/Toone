@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import AccountMessages from "@/components/account/AccountMessages";
 import ContractConfirmPage from "@/components/account/ContractConfirmPage";
 import { STRIP_CONTRACT_TOKEN_SCRIPT } from "@/components/account/contract-confirm";
+import { cspNonce } from "@/lib/csp-nonce";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -28,7 +29,7 @@ export default async function CancelContractConfirm({ params }: Props) {
   setRequestLocale(locale);
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: STRIP_CONTRACT_TOKEN_SCRIPT }} />
+      <script nonce={await cspNonce()} dangerouslySetInnerHTML={{ __html: STRIP_CONTRACT_TOKEN_SCRIPT }} />
       <AccountMessages><ContractConfirmPage /></AccountMessages>
     </>
   );

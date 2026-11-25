@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { VERCEL_APP_HOST_PATTERN } from "./lib/vercel-host";
+import { PERMISSIONS_POLICY } from "./lib/csp";
+import { collectSourceDates } from "./lib/source-date";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -9,12 +11,23 @@ const nextConfig: NextConfig = {
   // bundles of a production build agree on whether checkout may be offered.
   env: {
     TOONE_RELEASE_BUILD: process.env.VERCEL_ENV === "production" || process.env.LEGAL_RELEASE_CHECK === "1" ? "1" : "0",
+    // Last-commit dates of the content files (lib/source-date.ts). Pages
+    // render per request for the CSP nonce, and the runtime has no git, so
+    // the dates are taken here, at build time, where git history exists.
+    TOONE_SOURCE_DATES: JSON.stringify(collectSourceDates("content")),
+  },
+  // Pages read content/ at request time (lib/content.ts,
+  // lib/product-showcase.ts); ship it with every server function.
+  outputFileTracingIncludes: {
+    "/**": ["./content/**/*"],
   },
   ...(process.env.NEXT_BUILD_DIR ? { distDir: process.env.NEXT_BUILD_DIR } : {}),
   // `next dev` only serves its client bundles to the origin it was started on;
   // opening http://127.0.0.1:<port> instead of localhost renders server HTML
   // without hydration, so nothing client-side (header morph, CTAs) runs.
   allowedDevOrigins: ["127.0.0.1"],
+  // No `X-Powered-By: Next.js` (framework fingerprinting).
+  poweredByHeader: false,
   images: {
     unoptimized: true,
   },
@@ -28,8 +41,16 @@ const nextConfig: NextConfig = {
       // no-referrer` rules below (and proxy.ts, which runs after these
       // headers) keep the stricter value. No page is meant to be framed by
       // another site (no embed or oEmbed routes; OG images are fetched, not
-      // framed), so framing is same-origin only. The CSP carries
-      // `frame-ancestors` and nothing else on purpose.
+      // framed), so framing is same-origin only. This CSP carries
+      // `frame-ancestors` only: it covers routes outside the proxy (API
+      // routes, feeds, OG images, static files). Pages get the full policy
+      // with a per-request script nonce from proxy.ts (lib/csp.ts).
+      //
+      // HSTS has no `preload` on purpose: preloading is hard to undo and
+      // needs every subdomain on HTTPS first. COOP allows popups because
+      // Google and Apple sign-in open one and must keep talking to this page.
+      // Permissions-Policy turns off powerful features the site never uses;
+      // FedCM (`identity-credentials-get`) stays allowed for Google sign-in.
       {
         source: "/:path*",
         headers: [
@@ -37,6 +58,9 @@ const nextConfig: NextConfig = {
           { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+          { key: "Permissions-Policy", value: PERMISSIONS_POLICY },
         ],
       },
       {

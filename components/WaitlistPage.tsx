@@ -6,6 +6,8 @@ import AccessAvatar from "@/components/AccessAvatar";
 import { Link } from "@/lib/navigation";
 import { accessAttribution } from "@/lib/explore/presentation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
+import HoneypotField from "@/components/HoneypotField";
+import { HONEYPOT_FIELD } from "@/lib/contact-guard";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -13,6 +15,7 @@ export default function WaitlistPage() {
   const locale = useLocale();
   const t = useTranslations("landing");
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const submitting = useRef(false);
 
@@ -33,7 +36,7 @@ export default function WaitlistPage() {
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "web" }),
+        body: JSON.stringify({ email, source: "web", [HONEYPOT_FIELD]: honeypot }),
       });
       if (!response.ok) throw new Error("waitlist request failed");
       const outcome = await response.json();
@@ -154,6 +157,7 @@ export default function WaitlistPage() {
           <p className="waitlist-message success" role="status">{t("authJoined")}</p>
         ) : (
           <form className="waitlist-form" onSubmit={handleSubmit}>
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             <input
               className="waitlist-input"
               data-early-access-input=""
