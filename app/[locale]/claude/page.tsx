@@ -75,7 +75,7 @@ export default async function ClaudeConnectorPage({ params, searchParams }: Prop
         <h2>What you need</h2>
         <ul>
           <li>
-            Toone for Mac 1.9 or later, downloaded from trytoone.com, signed in to your Toone
+            Toone for Mac 1.0.90 or later, downloaded from trytoone.com, signed in to your Toone
             account, with Toone Pro. The Mac App Store edition does not include the connector.
           </li>
           <li>
@@ -163,7 +163,7 @@ export default async function ClaudeConnectorPage({ params, searchParams }: Prop
 
         <h3>Update Toone</h3>
         <p>
-          Toone on that Mac is too old for the connector, which needs Toone for Mac 1.9 or later. In
+          Toone on that Mac is too old for the connector, which needs Toone for Mac 1.0.90 or later. In
           Toone, choose Toone &rarr; Check for Updates, then ask again.
         </p>
 

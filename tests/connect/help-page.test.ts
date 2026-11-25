@@ -39,7 +39,7 @@ test("the help page is in the sitemap and indexable", async () => {
 test("the help page names no internals and links a privacy section that exists", () => {
   const page = fs.readFileSync(PAGE, "utf8");
   assert.doesNotMatch(page, /—/, "no em dashes");
-  assert.equal(page.match(/Toone for Mac 1\.9 or later/g)?.length, 2, "the requirement and the update answer name the same release");
+  assert.equal(page.match(/Toone for Mac 1\.0\.90 or later/g)?.length, 2, "the requirement and the update answer name the same release");
   assert.doesNotMatch(page, /\b(?:desktop|toone|org|app|agent|ledger)_[a-z_]+\b/i, "no tool names");
   assert.doesNotMatch(page, /\bledger|\brelay\b|\bprompt\b/i, "no engine terms");
   const addresses = [...page.matchAll(/https:\/\/api\.trytoone\.com[^"\s]*/g)].map((match) => match[0]);
