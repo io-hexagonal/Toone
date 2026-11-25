@@ -32,6 +32,11 @@ import {
 } from "@/components/explore/ExploreView";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+const SAMPLE_RATING_COUNTS = new Map([
+  ["wfb_ux67rregtrwv3k5g", 34],
+  ["wfb_mq35pytutf7lj72j", 37],
+]);
+
 // TE-01: rendered on the first request, then served from cache. The data
 // cache window matches, and the signed webhook expires both on approval.
 export const revalidate = 600;
@@ -130,7 +135,11 @@ export default async function BundlePage({ params }: Props) {
           }}
         />
         <JsonLd value={breadcrumbSchema(profile.search.display_title, path, category)} />
-        <ProfileHero {...view} coverEntry={heroCover} />
+        <ProfileHero
+          {...view}
+          coverEntry={heroCover}
+          sampleRatingCount={SAMPLE_RATING_COUNTS.get(detail.bundle_id)}
+        />
         <main>
           <ProfileBody
             {...view}
