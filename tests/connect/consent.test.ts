@@ -37,7 +37,7 @@ function stubApi(status: number, body: unknown) {
 
 const claude: ConsentRequest = {
   id: "car_abc234", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [],
+  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [], codePending: null,
 };
 const local: ConsentRequest = { ...claude, clientName: "Claude Code", redirectHost: "localhost", clientKind: "local" };
 const CODE = "https://claude.ai/api/mcp/auth_callback?code=tc_ac_x&iss=https%3A%2F%2Fapi.trytoone.com&state=s1";
@@ -63,7 +63,7 @@ test("the request is read with the session bearer, uncached, and normalized", as
   assert.equal(calls[0].cache, "no-store");
   assert.equal(calls[0].credentials, "include", "the API's browser-binding cookie goes along (M1)");
   assert.deepEqual(request, { id: "car_abc", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-    scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [] });
+    scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [], codePending: null });
 });
 
 test("unknown values fall to the cautious side", () => {

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { assistantName, type AccessMode, type ClientKind, type ConnectorMac, type ConsentFailure, type ConsentRequest } from "@/lib/connect/consent";
+import { assistantName, type AccessMode, type ClientKind, type CodePending, type ConnectorMac, type ConsentFailure, type ConsentRequest } from "@/lib/connect/consent";
 import styles from "./connect.module.css";
 
 /*
@@ -10,6 +10,8 @@ import styles from "./connect.module.css";
 
 /** The privacy policy's section on connecting an assistant. */
 export const PRIVACY_CONNECTOR_PATH = "/en/privacy#claude-connector";
+/** The account's connected apps, with Disconnect (also linked from the new-connection email). */
+export const CONNECTIONS_PATH = "/en/connections";
 
 export type MacsView =
   | { status: "loading" }
@@ -55,7 +57,18 @@ export type ConsentState =
       /** A failed decision that can be tried again. */
       notice: ConsentFailure | null;
     }
-  | { kind: "leaving"; approve: boolean; clientKind: ClientKind }
+  /** Allow was pressed: the connection waits for the code emailed to the account. */
+  | {
+      kind: "code";
+      request: ConsentRequest;
+      email: string;
+      pending: CodePending;
+      /** What the person typed (digits only). */
+      code: string;
+      busy: "verify" | "resend" | "deny" | null;
+      notice: string | null;
+    }
+  | { kind: "leaving"; approve: boolean; clientKind: ClientKind; tooManyCodes?: boolean }
   | { kind: "ended"; reason: EndedReason; clientKind: ClientKind | null };
 
 export type ConsentHandlers = {
@@ -67,6 +80,10 @@ export type ConsentHandlers = {
   onPickMac?: (macId: string | null) => void;
   onSwitchAccount?: () => void;
   onRetry?: () => void;
+  onCodeChange?: (code: string) => void;
+  onConfirmCode?: () => void;
+  onResendCode?: () => void;
+  onDenyCode?: () => void;
 };
 
 /** Who the person goes back to. */
@@ -358,7 +375,7 @@ function HowItWorks({ kind }: { kind: ClientKind }) {
       <p>
         {requests} go to Toone&apos;s servers and on to the Toone app on your Mac, which must be open. Toone passes
         them on without storing their content, and keeps a record of which tools were used for 30 days. You can
-        disconnect at any time in the Toone app (Settings › Connected Apps).
+        disconnect at any time in the Toone app (Settings › Connected Apps) or on <a href={CONNECTIONS_PATH}>your connected apps page</a>.
       </p>
       <p><a href={PRIVACY_CONNECTOR_PATH}>How Toone handles your data</a></p>
     </section>
@@ -403,6 +420,7 @@ export default function ConsentScreen({ state, macNotice = null, ...on }: {
       <Shell>
         <div className={styles.centered}>
           <h1>{state.approve ? "Allowed" : "Not allowed"}</h1>
+          {state.tooManyCodes && <p role="alert">Too many wrong codes. This connection was cancelled.</p>}
           <p role="status">Taking you back to {backTo(state.clientKind)}…</p>
         </div>
       </Shell>
@@ -425,6 +443,8 @@ export default function ConsentScreen({ state, macNotice = null, ...on }: {
       </Shell>
     );
   }
+
+  if (state.kind === "code") return <CodeEntry state={state} on={on} />;
 
   const { request, email, busy, notice } = state;
   const disabled = busy !== null;
@@ -468,6 +488,72 @@ export default function ConsentScreen({ state, macNotice = null, ...on }: {
           {busy === "deny" ? "Sending…" : "Don't allow"}
         </button>
       </div>
+    </Shell>
+  );
+}
+
+/**
+ * The emailed code that confirms Allow. Someone who could press Allow in the
+ * person's name (a script on the page, or a session left open) cannot read
+ * their email, so a new connection needs both.
+ */
+function CodeEntry({ state, on }: { state: Extract<ConsentState, { kind: "code" }>; on: ConsentHandlers }) {
+  const { request, email, pending, code, busy, notice } = state;
+  const disabled = busy !== null;
+  const assistant = assistantName(request.clientKind) ?? "this app";
+  const where = pending.emailHint || email;
+  return (
+    <Shell>
+      <h1>Check your email</h1>
+      <p className={styles.lede}>
+        We sent a 6-digit code to <strong>{where}</strong>. Enter it to finish connecting {assistant} to your Toone.
+      </p>
+      <form
+        className={styles.stack}
+        onSubmit={(event) => { event.preventDefault(); on.onConfirmCode?.(); }}
+      >
+        <section className={styles.panel} aria-labelledby="connect-code">
+          <h2 id="connect-code"><label htmlFor="connect-code-input">Code from the email</label></h2>
+          <input
+            id="connect-code-input"
+            className={styles.codeInput}
+            name="code"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="[0-9]{6}"
+            maxLength={6}
+            autoFocus
+            value={code}
+            disabled={disabled}
+            onChange={(event) => on.onCodeChange?.(event.target.value)}
+            aria-describedby="connect-code-help"
+          />
+          <p id="connect-code-help" className={styles.quiet}>
+            The code works for 10 minutes. If you didn&apos;t start connecting {assistant}, choose Don&apos;t allow.
+          </p>
+        </section>
+        {notice && <p className={styles.error} role="alert">{notice}</p>}
+        <div className={styles.decision}>
+          <button type="submit" className={styles.primary} disabled={disabled || code.length !== 6} aria-busy={busy === "verify"}>
+            {busy === "verify" ? "Checking…" : "Confirm"}
+          </button>
+          <button type="button" onClick={on.onDenyCode} disabled={disabled} aria-busy={busy === "deny"}>
+            {busy === "deny" ? "Sending…" : "Don't allow"}
+          </button>
+        </div>
+      </form>
+      <p className={styles.account}>
+        {pending.resendsLeft > 0 ? (
+          <>
+            No email? Check your spam folder, or{" "}
+            <button type="button" className={styles.linkButton} onClick={on.onResendCode} disabled={disabled} aria-busy={busy === "resend"}>
+              {busy === "resend" ? "sending a new code…" : "send a new code"}
+            </button>.
+          </>
+        ) : (
+          <>No email? Check your spam folder. No more codes can be sent for this connection.</>
+        )}
+      </p>
     </Shell>
   );
 }

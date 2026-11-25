@@ -79,9 +79,46 @@ export type ConsentRequest = {
    * asking again on the Mac, `ask` asks on the Mac each time. Empty: no choice.
    */
   accessModes: AccessMode[];
+  /** This account already pressed Allow and a code was emailed (a reloaded page goes straight to the code). */
+  codePending: CodePending | null;
 };
 
 export type AccessMode = "ask" | "auto";
+
+/**
+ * Allow is confirmed with a 6-digit code emailed to the account (a new
+ * connection only takes effect once the code is entered). Directory review
+ * accounts skip it: the API then answers the decision with `redirect_to`.
+ */
+export type CodePending = {
+  /** The account's address, masked by the API (`m•••@example.com`). */
+  emailHint: string;
+  /** RFC 3339; the code and the request lapse then. */
+  codeExpiresAt: string;
+  resendsLeft: number;
+  attemptsLeft: number;
+};
+
+const count = (value: unknown, fallback: number) =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : fallback;
+
+/** The API's `code_required` answer (decision, resend) or `code_pending` (request view), or null. */
+export function normalizeCodePending(raw: unknown): CodePending | null {
+  if (!raw || typeof raw !== "object") return null;
+  const entry = raw as Record<string, unknown>;
+  if (typeof entry.email_hint !== "string" && typeof entry.code_expires_at !== "string") return null;
+  return {
+    emailHint: text(entry.email_hint).trim(),
+    codeExpiresAt: text(entry.code_expires_at),
+    resendsLeft: count(entry.resends_left, 0),
+    attemptsLeft: count(entry.attempts_left, 0),
+  };
+}
+
+/** A code as the person may type it: digits only, at most 6. */
+export function cleanCode(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 6);
+}
 
 /**
  * Whether a Mac's Toone lets online assistants in (`connector_enabled` on
@@ -92,13 +129,14 @@ export type MacAssistants = "on" | "off" | "update";
 
 export type ConnectorMac = { id: string; name: string; assistants?: MacAssistants };
 
+const text = (value: unknown) => (typeof value === "string" ? value : "");
+
 type RawConsentRequest = {
   id?: unknown; client_name?: unknown; redirect_host?: unknown; client_kind?: unknown;
   scopes?: unknown; expires_at?: unknown; eligible?: unknown; ineligible_reason?: unknown;
   [field: string]: unknown;
 };
 
-const text = (value: unknown) => (typeof value === "string" ? value : "");
 
 /** Normalizes the API's answer; unknown values fall to the cautious side. */
 export function normalizeConsentRequest(raw: RawConsentRequest): ConsentRequest {
@@ -121,6 +159,7 @@ export function normalizeConsentRequest(raw: RawConsentRequest): ConsentRequest 
     accessModes: Array.isArray(raw.access_modes)
       ? (["ask", "auto"] as const).filter((mode) => (raw.access_modes as unknown[]).includes(mode))
       : [],
+    codePending: normalizeCodePending(raw.code_pending),
   };
 }
 
@@ -143,19 +182,46 @@ export type DecisionChoices = {
 
 /**
  * `POST /v1/connector/authorizations/{id}/decision`. Resolves to the API's
- * `redirect_to`, unchecked (see `safeRedirect`).
+ * `redirect_to`, unchecked (see `safeRedirect`), or, for an Allow that must
+ * be confirmed by email, to the code the API sent (`status: code_required`,
+ * HTTP 202, no `redirect_to`).
  */
-export async function postConsentDecision(token: string, id: string, approve: boolean, choices: DecisionChoices = {}): Promise<string> {
+export async function postConsentDecision(token: string, id: string, approve: boolean, choices: DecisionChoices = {}): Promise<string | CodePending> {
   const body: Record<string, unknown> = { approve };
   if (approve && choices.readOnly) body.scopes = ["read"];
   if (approve && choices.macId) body[MAC_CHOICE_DECISION_FIELD] = choices.macId;
   if (approve && choices.accessMode && !choices.readOnly) body.access_mode = choices.accessMode;
-  const data = await authedRequest<{ redirect_to?: unknown }>(token, `${path(id)}/decision`, {
+  const data = await authedRequest<{ redirect_to?: unknown; status?: unknown }>(token, `${path(id)}/decision`, {
     ...WITH_API_COOKIES,
     method: "POST",
     body: JSON.stringify(body),
   });
+  if (approve && data?.status === "code_required") {
+    const pending = normalizeCodePending(data);
+    if (pending) return pending;
+  }
   return text(data?.redirect_to);
+}
+
+/** The API's answer to a code: approved (`code` in the address) or cancelled after too many wrong codes (`error`). */
+export type CodeAnswer = { status: "approved" | "cancelled"; redirectTo: string };
+
+/** `POST /v1/connector/authorizations/{id}/verify` with the emailed code. A wrong code throws `invalid_code` with `attempts_left`. */
+export async function verifyConsentCode(token: string, id: string, code: string): Promise<CodeAnswer> {
+  const data = await authedRequest<{ status?: unknown; redirect_to?: unknown }>(token, `${path(id)}/verify`, {
+    ...WITH_API_COOKIES,
+    method: "POST",
+    body: JSON.stringify({ code }),
+  });
+  return { status: data?.status === "approved" ? "approved" : "cancelled", redirectTo: text(data?.redirect_to) };
+}
+
+/** `POST /v1/connector/authorizations/{id}/resend`: a new code (the previous one stops working). */
+export async function resendConsentCode(token: string, id: string): Promise<CodePending> {
+  const data = await authedRequest<unknown>(token, `${path(id)}/resend`, { ...WITH_API_COOKIES, method: "POST" });
+  const pending = normalizeCodePending(data);
+  if (!pending) throw new ApiError("unknown", "no code pending", 500);
+  return pending;
 }
 
 /** `GET /v1/me/connector/macs`: the account's Macs reachable now, most recently active first. */
@@ -252,9 +318,9 @@ export const REQUEST_LIFETIME_MS = 5 * 60_000;
  * clock and no timer is set (a late decision still gets the API's answer);
  * a slow clock is capped at the request's lifetime.
  */
-export function expiryTimerMs(request: Pick<ConsentRequest, "expiresAt">, now = Date.now()): number | null {
+export function expiryTimerMs(request: Pick<ConsentRequest, "expiresAt">, now = Date.now(), cap = REQUEST_LIFETIME_MS): number | null {
   const left = msUntilExpiry(request, now);
-  return left === null || left <= 0 ? null : Math.min(left, REQUEST_LIFETIME_MS);
+  return left === null || left <= 0 ? null : Math.min(left, cap);
 }
 
 /** Milliseconds until the request lapses (0 when past), or null when the time is unreadable (the API still decides). */
@@ -282,6 +348,8 @@ export function recallAnswer(id: string): "allowed" | "denied" | null {
 /** How a decision ended: go to the checked address, refuse a bad one, or explain a failure. */
 export type DecisionOutcome =
   | { kind: "navigate"; url: string }
+  /** Allow must be confirmed with the code just emailed. */
+  | { kind: "code"; pending: CodePending }
   | { kind: "bad-redirect" }
   | { kind: "failure"; failure: ConsentFailure };
 
@@ -308,10 +376,45 @@ export async function decide(
     accessMode: acts && page.accessMode && request.accessModes.includes(page.accessMode) ? page.accessMode : null,
   } : {};
   try {
-    const redirectTo = await post(token, request.id, approve, choices);
-    const url = safeRedirect(redirectTo, request, approve);
+    const answer = await post(token, request.id, approve, choices);
+    if (typeof answer !== "string") return approve ? { kind: "code", pending: answer } : { kind: "bad-redirect" };
+    const url = safeRedirect(answer, request, approve);
     return url ? { kind: "navigate", url } : { kind: "bad-redirect" };
   } catch (error) {
+    return { kind: "failure", failure: consentFailure(error) };
+  }
+}
+
+/** How entering the code ended. */
+export type CodeOutcome =
+  /** Correct: go on with the code (`approve`), or too many wrong codes: back with `error` (`!approve`). */
+  | { kind: "navigate"; url: string; approve: boolean }
+  | { kind: "bad-redirect" }
+  | { kind: "wrong"; attemptsLeft: number }
+  /** Not 6 digits: nothing was sent to count as a try. */
+  | { kind: "incomplete" }
+  | { kind: "failure"; failure: ConsentFailure | "no-code" };
+
+/** Sends the code and checks the answer. Never throws. */
+export async function confirmWithCode(
+  token: string,
+  request: ConsentRequest,
+  code: string,
+  verify: typeof verifyConsentCode = verifyConsentCode,
+): Promise<CodeOutcome> {
+  const clean = cleanCode(code);
+  if (clean.length !== 6) return { kind: "incomplete" };
+  try {
+    const answer = await verify(token, request.id, clean);
+    const approve = answer.status === "approved";
+    const url = safeRedirect(answer.redirectTo, request, approve);
+    return url ? { kind: "navigate", url, approve } : { kind: "bad-redirect" };
+  } catch (error) {
+    if (error instanceof ApiError && error.code === "invalid_code") {
+      return { kind: "wrong", attemptsLeft: count(error.fields?.attempts_left, 0) };
+    }
+    if (error instanceof ApiError && error.code === "invalid_input") return { kind: "incomplete" };
+    if (error instanceof ApiError && (error.status === 409 || error.code === "conflict")) return { kind: "failure", failure: "no-code" };
     return { kind: "failure", failure: consentFailure(error) };
   }
 }

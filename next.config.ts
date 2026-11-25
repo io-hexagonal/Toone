@@ -81,7 +81,7 @@ const nextConfig: NextConfig = {
       // page URL as Referer. The pages' own `referrer` metadata arrives after
       // the stylesheet links, so the header is what actually holds.
       {
-        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:page(success|cancel|account|redeem|cancel-contract|unsubscribe|admin)/:rest*",
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)/:page(success|cancel|account|connections|redeem|cancel-contract|unsubscribe|admin)/:rest*",
         headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
       },
       {

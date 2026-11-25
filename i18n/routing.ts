@@ -20,6 +20,7 @@ export const ENGLISH_ONLY_PATHS = [
   "/about",
   "/claude",
   "/connect",
+  "/connections",
   "/contact",
   "/editorial-policy",
   "/governance",

@@ -25,7 +25,7 @@ function text(html: string) {
 
 const claude: ConsentRequest = {
   id: "car_abc234", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [],
+  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [], codePending: null,
 };
 const studio = { id: "mac_1", name: "Ana's Mac Studio" };
 const air = { id: "mac_2", name: "MacBook Air" };
@@ -75,7 +75,7 @@ test("Claude, one Mac: who asks, the account, what it can do, which Mac, how it 
   assert.match(words, /Start, pause, continue, cancel and answer routines, draft new routines and install shared ones from Explore\. Toone still asks you on your Mac before each of these\./);
   assert.match(words, /Claude will reach Ana's Mac Studio, where Toone is open now\./);
   assert.match(words, /go to Toone's servers and on to the Toone app on your Mac.*without storing their content/);
-  assert.match(words, /You can disconnect at any time in the Toone app \(Settings › Connected Apps\)\./);
+  assert.match(words, /You can disconnect at any time in the Toone app \(Settings › Connected Apps\) or on your connected apps page\./);
   assert.match(html, /href="\/en\/privacy#claude-connector"/);
   assert.match(html, /<button type="button" class="primary"[^>]*>Allow<\/button>/);
   assert.match(html, />Don't allow<\/button>|>Don&#x27;t allow<\/button>/);
@@ -304,4 +304,32 @@ test("no internal names on any state of the page", () => {
     render(createElement(ConnectSignIn, { sessionEnded: true, onAuthenticated() {} })),
   ];
   for (const html of pages) assert.doesNotMatch(text(html), INTERNALS);
+});
+
+test("the code step: where the code went, a one-time-code field, Confirm only with 6 digits, a new code or why not, Don't allow", () => {
+  const pending = { emailHint: "a•••@example.com", codeExpiresAt: "2026-11-24T18:50:00Z", resendsLeft: 2, attemptsLeft: 5 };
+  const base = { kind: "code" as const, request: claude, email: "ana@example.com", pending, code: "", busy: null, notice: null };
+  const html = render(createElement(ConsentScreen, { state: base }));
+  const words = text(html);
+  assert.match(words, /Check your email/);
+  assert.match(words, /We sent a 6-digit code to a•••@example\.com\. Enter it to finish connecting Claude to your Toone\./);
+  assert.match(html, /autoComplete="one-time-code"|autocomplete="one-time-code"/);
+  assert.match(html, /inputMode="numeric"|inputmode="numeric"/);
+  assert.match(html, /<button type="submit"[^>]*disabled=""[^>]*>Confirm<\/button>/, "Confirm waits for 6 digits");
+  assert.match(words, /No email\? Check your spam folder, or send a new code\./);
+  assert.match(words, /Don't allow/);
+  assert.doesNotMatch(words, /—/, "no em dashes");
+  const ready = render(createElement(ConsentScreen, { state: { ...base, code: "123456" } }));
+  assert.doesNotMatch(ready, /<button type="submit"[^>]*disabled=""/);
+  const spent = text(render(createElement(ConsentScreen, { state: { ...base, pending: { ...pending, resendsLeft: 0 } } })));
+  assert.match(spent, /No more codes can be sent for this connection/);
+  assert.doesNotMatch(spent, /send a new code/i);
+  const wrong = text(render(createElement(ConsentScreen, { state: { ...base, notice: "That code is not right. 2 tries left." } })));
+  assert.match(wrong, /That code is not right\. 2 tries left\./);
+});
+
+test("too many wrong codes: says the connection was cancelled while going back", () => {
+  const words = text(render(createElement(ConsentScreen, { state: { kind: "leaving", approve: false, clientKind: "claude", tooManyCodes: true } })));
+  assert.match(words, /Not allowed/);
+  assert.match(words, /Too many wrong codes\. This connection was cancelled\./);
 });
