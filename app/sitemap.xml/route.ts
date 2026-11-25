@@ -33,6 +33,8 @@ const ENGLISH_ONLY_ROUTES = [
   ...(TRADER_DETAILS_COMPLETE ? [LEGAL_NOTICE_ROUTE] : []),
   { path: "/about", source: "app/[locale]/about/page.tsx" },
   { path: "/contact", source: "app/[locale]/contact/page.tsx" },
+  // Help for the Toone connector in Claude; the Connectors Directory links it.
+  { path: "/claude", source: "app/[locale]/claude/page.tsx" },
   { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
   // `/request-access` is the public request page of the invitation-only funnel
   // (request -> personal code -> account). `/early-access` is the code gate
