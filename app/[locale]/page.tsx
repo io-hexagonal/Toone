@@ -1,21 +1,16 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { localeVersions } from "@/i18n/indexing";
 import SiteHeader from "@/components/SiteHeader";
-import HeroAuth from "@/components/HeroAuth";
-import StatementSection from "@/components/StatementSection";
+import HeroLanding from "@/components/HeroLanding";
 import FaqSection from "@/components/FaqSection";
-import SupportBand from "@/components/SupportBand";
 import Footer from "@/components/Footer";
-import FeaturedOnStrip from "@/components/FeaturedOnStrip";
 import ResourcesSection from "@/components/ResourcesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
-import BeforeAfterSection from "@/components/BeforeAfterSection";
+import BuiltDifferentlySection from "@/components/BuiltDifferentlySection";
+import OutcomesSection from "@/components/OutcomesSection";
 import ClosingCtaBand from "@/components/ClosingCtaBand";
-import LandingAudienceBar, {
-  type LandingAudience,
-} from "@/components/LandingAudienceBar";
-import CollaborationPresence from "@/components/CollaborationPresence";
+import type { LandingAudience } from "@/components/LandingAudienceBar";
 import BlackFridayMarquee from "@/components/BlackFridayMarquee";
 
 type Props = {
@@ -34,32 +29,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Each personal feature row links its how-to page. How-to is English-only,
-// so every locale links the /en pages.
-const FEATURE_HOW_TO = {
-  "personal.features.spotlight.title": "/en/how-to/features/agent-spotlight",
-  "personal.features.windows.title": "/en/how-to/features/workspace-windows",
-  "personal.features.browser.title": "/en/how-to/features/browser-sessions",
-  "personal.features.routines.title": "/en/how-to/features/routines",
-  "personal.features.liveShare.title": "/en/how-to/features/live-share",
-  "personal.features.orchestration.title": "/en/how-to/features/orchestration",
-  "personal.features.voice.title": "/en/how-to/features/voice-and-meetings",
-  "personal.features.providers.title": "/en/how-to/features/ai-providers",
-} as const;
+/**
+ * Safari (and Chrome where it tints) colours its toolbar from theme-color.
+ * The landing opens with the Black Friday strip in the page's ink, so the
+ * bar matches it; once the strip retires, its script switches the colour to
+ * the light hero's (#f9f8f5).
+ */
+export const viewport: Viewport = { themeColor: "#1d1c19" };
 
 type TooneLandingPageProps = Props & {
   audience: LandingAudience;
 };
 
-/** Shared presentation shell. Business keeps today's landing verbatim while
- * Personal can be replaced independently as its product story is written. */
+/**
+ * Shared landing for Personal and Business (only the hero copy differs).
+ * Each section answers the next question a visitor has, in order:
+ *
+ *   hero            what is it?
+ *   how it works    what does it look like on my work? (scripts + agents, live)
+ *   built different why automate this way, and not with node automation
+ *                   or an agent on a timer?
+ *   what you get    what changes for me?
+ *   resources       where do I learn more?
+ *   start small     how risky is it to try?
+ *   FAQ             the objections left
+ */
 export async function TooneLandingPage({
   params,
   audience,
 }: TooneLandingPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "landing" });
   const landingPath = audience === "business" ? "/business" : "/";
 
   return (
@@ -68,43 +68,22 @@ export async function TooneLandingPage({
         dangerouslySetInnerHTML={{
           __html: `
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { width: 100%; overflow-x: hidden; overflow-x: clip; background: #141413; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+            html, body { width: 100%; overflow-x: hidden; overflow-x: clip; }
+            /* The shared layout puts the system font and the old dark ground
+               on <body> as an inline style; on the landing (the only page that
+               loads this sheet) Hanken and the page's ink win over it. */
+            html body {
+              background: #1d1c19 !important;
+              font-family: var(--font-ui), -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+            }
 
-            /* --- tech strip (substrate credibility) --- */
-            .ts-wrap {
-              position: relative; text-align: center;
-              padding: clamp(36px, 4vw, 48px) 0 0;
-            }
-            .ts-label {
-              color: rgba(29,28,25,0.42); font-size: 10.5px; font-weight: 600;
-              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px;
-            }
-            .ts-row {
-              display: flex; align-items: center; justify-content: center;
-              gap: 14px 32px; flex-wrap: wrap; list-style: none;
-            }
-            .ts-item {
-              display: flex; align-items: center; gap: 9px;
-              color: rgba(29,28,25,0.55); font-size: 14.5px; font-weight: 500;
-              letter-spacing: 0.01em; white-space: nowrap;
-              text-decoration: none;
-              transition: color 0.2s, opacity 0.2s;
-            }
-            .ts-item:hover { color: rgba(29,28,25,0.95); }
-            .ts-icon {
-              width: 19px; height: 19px; flex-shrink: 0; display: block;
-            }
-            @media (max-width: 640px) {
-              .ts-row { gap: 12px 18px; }
-              .ts-item { font-size: 12.5px; gap: 7px; }
-              .ts-icon { width: 16px; height: 16px; }
-            }
-            /* The light editorial world: everything between the dark hero and
-               the dark footer sits on cream with ink text. */
+            /* The light editorial world: everything between the hero and the
+               dark footer sits on cream with ink text. */
             .sections {
               position: relative; z-index: 5; background: #f0ede6; color: #1d1c19;
               padding: 0 24px clamp(80px, 9vw, 120px);
-              overflow: hidden;
+              /* clip, not hidden: hidden makes a scroll container and breaks the FAQ's sticky heading */
+              overflow: clip;
             }
             /* lantern wash — stops the section reading as one flat slab */
             .sections::before {
@@ -114,42 +93,10 @@ export async function TooneLandingPage({
               background: radial-gradient(ellipse at center,
                 rgba(29,28,25,0.045) 0%, rgba(29,28,25,0.015) 42%, transparent 70%);
             }
-            /* --- support band (programmes Toone belongs to) --- */
-            .sb-wrap { position: relative; text-align: center; padding: clamp(36px, 4vw, 48px) 0 0; }
-            .sb-label {
-              color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
-              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 26px;
-            }
-            .sb-row {
-              display: flex; align-items: center; justify-content: center;
-              gap: 18px 56px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0;
-            }
-            .sb-item {
-              display: inline-flex; align-items: center; gap: 11px;
-              height: 36px; color: #1d1c19; text-decoration: none;
-              font-family: var(--font-wordmark), system-ui, sans-serif;
-              font-size: 19px; font-weight: 500; letter-spacing: -0.01em;
-              opacity: 0.62; transition: opacity 0.25s;
-            }
-            .sb-item:hover { opacity: 1; }
-            .sb-logo { display: block; flex-shrink: 0; fill: currentColor; }
-            .sb-logo--claude { height: 25px; width: auto; transform: translateY(-1px); }
-            /* The AWS letters sit above the smile, so centring the whole mark
-               lifts the letters above the text; drop it to share the baseline. */
-            .sb-logo--aws { height: 30px; width: auto; transform: translateY(8px); }
-            .sb-accent { transition: fill 0.25s; }
-            .sb-item:hover .sb-accent--claude { fill: #d97757; }
-            .sb-item:hover .sb-accent--aws { fill: #ff9900; }
-            @media (max-width: 640px) {
-              .sb-label { font-size: 10px; letter-spacing: 0.14em; }
-              .sb-row { gap: 14px 36px; }
-              .sb-item { font-size: 17px; gap: 9px; }
-              .sb-logo--claude { height: 22px; }
-              .sb-logo--aws { height: 26px; transform: translateY(7px); }
-            }
 
             /* One rhythm for every editorial section: the same top space, the
-               same eyebrow → title → sub stack, the same gap into the content. */
+               same title → sub stack, the same gap into the content. No
+               labels above the headings: the headings carry the meaning. */
             /* The homepage runs wider than the other pages; the shared header
                and footer read --site-max so their edges line up with it. */
             :root:has(.sections) { --site-max: 1300px; --site-gutter: 48px; }
@@ -159,254 +106,40 @@ export async function TooneLandingPage({
             }
             .section h2 {
               font-family: var(--font-wordmark), system-ui, sans-serif;
-              color: #1d1c19; font-size: clamp(25px, 2.2vw, 30px); font-weight: 600;
-              line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 10px; text-wrap: balance;
+              color: #1d1c19; font-size: clamp(32px, 3.4vw, 46px); font-weight: 500;
+              line-height: 1.08; letter-spacing: -0.028em; margin-bottom: 16px;
+              max-width: 22ch; text-wrap: balance;
             }
             .section .sub {
-              color: rgba(29,28,25,0.58); font-size: 15px; line-height: 1.6;
-              max-width: 74ch; margin-bottom: clamp(28px, 3vw, 40px);
+              color: rgba(29,28,25,0.62); font-size: 17.5px; line-height: 1.55;
+              max-width: 60ch; margin-bottom: clamp(32px, 3.4vw, 48px); text-wrap: pretty;
             }
-            /* small-caps label above an H2 (How it works, Why Toone) */
-            .section .eyebrow {
-              color: rgba(29,28,25,0.42); font-size: 11px; font-weight: 600;
-              letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px;
+            /* Plain text links on the page: underlined, never an arrow. */
+            .text-link {
+              color: #1d1c19; font-size: 15.5px; font-weight: 500; text-decoration: underline;
+              text-decoration-thickness: 1px; text-underline-offset: 4px;
+              text-decoration-color: rgba(29,28,25,0.3); transition: text-decoration-color .2s;
             }
-
-            /* The highlighted collaboration row makes shared presence tangible
-               without letting the decorative cursors take control of the page. */
-            .ai-native-section { isolation: isolate; }
-            .ai-native-section > .eyebrow,
-            .ai-native-section > h2,
-            .ai-native-section > .sub,
-            .ai-native-section > .pillars {
-              position: relative; z-index: 2;
-            }
-            .collab-presence {
-              position: absolute; z-index: 4; inset: -18px -48px;
-              pointer-events: none;
-            }
-            .collab-cursor {
-              position: absolute; width: 34px; height: 42px;
-              filter: drop-shadow(0 7px 13px rgba(20,19,17,0.2));
-              will-change: transform;
-            }
-            .collab-cursor svg { display: block; width: 100%; height: 100%; }
-            .collab-cursor--one {
-              left: 4%; top: 6px;
-              color: #5c7c72;
-              animation: cursor-one-path 12s ease-in-out infinite;
-            }
-            .collab-cursor--two {
-              right: 7%; top: 86px;
-              color: #76687f;
-              animation: cursor-two-path 13.5s ease-in-out -3.4s infinite;
-            }
-            .collab-tooltip {
-              position: absolute; left: 25px; top: 28px;
-              display: flex; align-items: center; gap: 7px;
-              width: max-content; padding: 7px 8px 7px 10px;
-              border: 1px solid rgba(29,28,25,0.14); border-radius: 9px;
-              background: rgba(250,248,243,0.94); color: #292721;
-              box-shadow: 0 10px 28px rgba(29,28,25,0.12);
-              font-size: 11.5px; font-weight: 600; letter-spacing: -0.005em;
-              backdrop-filter: blur(10px);
-            }
-            .collab-tooltip-beta,
-            .pillar-beta {
-              border-radius: 999px; background: rgba(118,104,127,0.12);
-              color: #62556b; font-size: 9px; font-weight: 750;
-              letter-spacing: 0.08em; line-height: 1;
-              padding: 5px 7px 4px; text-transform: uppercase;
-            }
-            @keyframes cursor-one-path {
-              0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
-              27% { transform: translate3d(154px, 46px, 0) rotate(1deg); }
-              56% { transform: translate3d(294px, 20px, 0) rotate(-2deg); }
-              78% { transform: translate3d(214px, 88px, 0) rotate(2deg); }
-            }
-            @keyframes cursor-two-path {
-              0%, 100% { transform: translate3d(0, 0, 0) rotate(3deg); }
-              24% { transform: translate3d(-112px, -54px, 0) rotate(-2deg); }
-              54% { transform: translate3d(-246px, -22px, 0) rotate(2deg); }
-              78% { transform: translate3d(-166px, 38px, 0) rotate(-1deg); }
-            }
-
-            /* The pillars, as a numbered rail. A wrapping card grid left a hole
-               and gave equal-weight boxes no reading order; the rail is ordered,
-               ragged-free, and scales as the list grows. */
-            .pillars { display: flex; flex-direction: column; gap: 10px; }
-            .pillar {
-              display: grid; grid-template-columns: 46px 1fr 1.25fr; gap: 26px;
-              align-items: center; padding: 19px 26px 19px 20px;
-              border: 1px solid rgba(29,28,25,0.1); border-radius: 14px;
-              background: rgba(255,255,255,0.45);
-              transition: border-color 0.28s, transform 0.28s;
-            }
-            .pillar:hover { border-color: rgba(29,28,25,0.32); transform: translateX(4px); }
-            .pillar-governance-link {
-              display: inline-block; margin-top: 6px; color: rgba(29,28,25,0.72);
-              text-underline-offset: 3px;
-            }
-            .pillar-governance-link:hover { color: #1d1c19; }
-            .pillar--collaboration {
-              position: relative;
-              border-color: rgba(92,124,114,0.3);
-              background:
-                linear-gradient(100deg, rgba(92,124,114,0.1), rgba(255,255,255,0.5) 42%),
-                rgba(255,255,255,0.45);
-              box-shadow: 0 14px 40px rgba(29,28,25,0.055);
-            }
-            .pillar-heading {
-              display: flex; align-items: center; gap: 9px; min-width: 0;
-            }
-            /* hexagon + lantern gradient: the mark's own geometry, reused */
-            .phex {
-              width: 40px; height: 44px;
-              clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-              background: rgba(29,28,25,0.08);
-              display: flex; align-items: center; justify-content: center;
-              color: rgba(29,28,25,0.6); font-size: 12.5px; font-weight: 700;
-              transition: background 0.28s, color 0.28s;
-            }
-            .pillar:hover .phex {
-              background: #141311;
-              color: #f0ede6;
-            }
-            .pillar h3 {
-              color: rgba(29,28,25,0.92); font-size: 15.5px; font-weight: 600;
-              letter-spacing: -0.005em;
-            }
-            /* The title link covers the whole row, so the existing hover
-               state now leads somewhere. */
-            .pillar--linked { position: relative; }
-            .pillar h3 a { color: inherit; text-decoration: none; }
-            .pillar h3 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
-            .pillar h3 a:hover, .pillar h3 a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
-            .features-all-link {
-              color: rgba(29,28,25,0.72); font-weight: 600; white-space: nowrap;
-              text-underline-offset: 3px;
-            }
-            .features-all-link:hover { color: #1d1c19; }
-            .pillar p { color: rgba(29,28,25,0.6); font-size: 14px; line-height: 1.6; }
-
-            @media (max-width: 760px) {
-              .collab-presence { inset: -12px; }
-              .collab-cursor { width: 29px; height: 36px; }
-              .collab-cursor--one { left: 2%; }
-              .collab-cursor--two { right: 8%; top: 76px; }
-              .collab-tooltip { left: auto; right: 21px; top: 27px; }
-              @keyframes cursor-one-path {
-                0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
-                50% { transform: translate3d(92px, 52px, 0) rotate(2deg); }
-              }
-              @keyframes cursor-two-path {
-                0%, 100% { transform: translate3d(0, 0, 0) rotate(3deg); }
-                50% { transform: translate3d(-102px, -48px, 0) rotate(-2deg); }
-              }
-              .pillar { grid-template-columns: 40px 1fr; gap: 14px 18px; padding: 18px; }
-              .pillar p { grid-column: 2; }
-              .phex { width: 34px; height: 38px; font-size: 11px; }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .collab-cursor { animation: none; }
-              .collab-cursor--one { transform: translate3d(104px, 54px, 0); }
-              .collab-cursor--two { transform: translate3d(-84px, -34px, 0); }
-            }
+            .text-link:hover { text-decoration-color: #1d1c19; }
           `,
         }}
       />
 
-      {/* Black Friday Week: the strip replaces the audience bar until BLACKFRIDAY ends, then the bar returns on its own. */}
+      {/* Black Friday Week: a strip above the header until BLACKFRIDAY ends. */}
       <BlackFridayMarquee />
-      <LandingAudienceBar activeAudience={audience} />
       <SiteHeader
         landingPath={landingPath}
+        tone="light"
+        audience={audience}
       />
 
       <main>
-        <HeroAuth audience={audience} />
-
-        <StatementSection audience={audience} />
+        <HeroLanding audience={audience} />
 
         <div className="sections">
-          <SupportBand />
-          <FeaturedOnStrip />
-
           <HowItWorksSection />
-
-          <section className="section ai-native-section" id="how">
-            <p className="eyebrow">{t("featuresEyebrow")}</p>
-            <h2>{t(audience === "personal" ? "personal.featuresTitle" : "pillarsTitle")}</h2>
-            <p className="sub">
-              {t(audience === "personal" ? "personal.featuresSub" : "pillarsSub")}
-              {audience === "personal" && (
-                <>
-                  {" "}
-                  <a className="features-all-link" href="/en/how-to/features">
-                    {t("personal.seeAllFeatures")}
-                  </a>
-                </>
-              )}
-            </p>
-            <div className="pillars">
-              {(
-                audience === "personal"
-                  ? [
-                    ["personal.features.spotlight.title", "personal.features.spotlight.description"],
-                    ["personal.features.windows.title", "personal.features.windows.description"],
-                    ["personal.features.browser.title", "personal.features.browser.description"],
-                    ["personal.features.routines.title", "personal.features.routines.description"],
-                    ["personal.features.liveShare.title", "personal.features.liveShare.description"],
-                    ["personal.features.orchestration.title", "personal.features.orchestration.description"],
-                    ["personal.features.voice.title", "personal.features.voice.description"],
-                    ["personal.features.providers.title", "personal.features.providers.description"],
-                  ] as const
-                  : [
-                    ["collaborationTitle", "collaborationDescription"],
-                    ["p1t", "p1d"],
-                    ["p2t", "p2d"],
-                    ["p8t", "p8d"],
-                    ["p3t", "p3d"],
-                    ["p4t", "p4d"],
-                    ["p5t", "p5d"],
-                    ["p6t", "p6d"],
-                    ["p7t", "p7d"],
-                  ] as const
-              ).map(([titleKey, descKey], i) => {
-                const isCollaboration = audience === "personal" ? i === 4 : i === 0;
-                const featureHref = FEATURE_HOW_TO[titleKey as keyof typeof FEATURE_HOW_TO];
-
-                return (
-                  <div
-                    className={`pillar${isCollaboration ? " pillar--collaboration" : ""}${featureHref ? " pillar--linked" : ""}`}
-                    key={titleKey}
-                  >
-                    {isCollaboration && (
-                      <CollaborationPresence tooltip={t("collaborationTooltip")} />
-                    )}
-                    <div className="phex">{String(i + 1).padStart(2, "0")}</div>
-                    <div className="pillar-heading">
-                      <h3>{featureHref ? <a href={featureHref}>{t(titleKey)}</a> : t(titleKey)}</h3>
-                      {isCollaboration && <span className="pillar-beta">Beta</span>}
-                    </div>
-                    <p>
-                      {t(descKey)}
-                      {audience === "business" && locale === "en" && titleKey === "p6t" && (
-                        <>
-                          {" "}
-                          <a className="pillar-governance-link" href="/en/governance">
-                            Read the practical AI agent governance model.
-                          </a>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          <BeforeAfterSection />
+          <BuiltDifferentlySection />
+          <OutcomesSection />
           <ResourcesSection />
           <ClosingCtaBand />
           <FaqSection />

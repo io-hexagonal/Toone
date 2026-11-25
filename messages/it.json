@@ -332,8 +332,8 @@
   },
   "landing": {
     "personal": {
-      "heroTitle": "Precisione per i tuoi flussi agentici e le tue routine",
-      "heroTag": "Crea flussi di IA complessi e affidabili descrivendoli.\nCollega i tuoi account in un browser. Testa, modifica e riprendi da dove si era fermato.",
+      "heroTitle": "Precisione per i tuoi <accent>flussi agentici e le tue routine</accent>",
+      "heroTag": "Descrivilo una volta e Toone lo trasforma in una routine sul tuo Mac: gli script eseguono i passi che non cambiano mai, gli agenti IA solo quelli che richiedono giudizio.",
       "featuresTitle": "Tutto ciò che serve ai tuoi agenti per lavorare",
       "featuresSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
       "seeAllFeatures": "Vedi tutte le funzionalità",
@@ -387,7 +387,7 @@
     "downloadFor": "Richiedi accesso anticipato",
     "macOS": "macOS",
     "soon": "Presto",
-    "heroTitle": "Lo spazio di lavoro IA per i tuoi flussi agentici",
+    "heroTitle": "Gestisci il lavoro ricorrente della tua azienda con routine <accent>che il tuo team può verificare</accent>",
     "featuresEyebrow": "Funzionalità",
     "pillarsTitle": "Tutto ciò che serve ai tuoi agenti per lavorare",
     "pillarsSub": "Uno spazio per i tuoi agenti, i tuoi flussi di lavoro e i risultati.",
@@ -427,7 +427,7 @@
     "waitlistSignIn": "Accedi",
     "emailPrivacyLink": "Informativa sulla privacy",
     "productLanguageDisclosure": "L’app desktop è attualmente disponibile solo in inglese.",
-    "heroTag2": "Trasforma le attività ricorrenti in risultati utili con agenti specializzati, mantenendo il controllo.",
+    "heroTag2": "Descrivi come funziona un processo e Toone lo trasforma in una routine: gli script eseguono i passi fissi, gli agenti IA prendono le decisioni di giudizio. I passi che inviano, pubblicano o pagano possono aspettare la tua approvazione, e ogni esecuzione lascia un registro.",
     "haveInvitation": "Hai un codice di invito?",
     "eaIntro": "Toone è lo spazio di lavoro AI per i tuoi flussi agentici: un'app per macOS in cui agenti specializzati eseguono i tuoi workflow e le tue routine sotto il tuo controllo.",
     "eaBeforeTitle": "Prima di richiedere",
@@ -442,11 +442,11 @@
     "howItWorks": {
       "eyebrow": "Come funziona",
       "title": "Da poche parole a una routine in esecuzione",
-      "sub": "Tu descrivi il lavoro. I tuoi agenti lo svolgono sotto i tuoi occhi.",
+      "sub": "Scegli un esempio qui sotto e guardalo passare da una richiesta a un’esecuzione completata.",
       "steps": {
         "describe": {
           "title": "Descrivilo",
-          "body": "Spiegalo come a un collega: quando parte, quali modelli, quali account. Toone disegna il grafo da controllare.",
+          "body": "Spiegalo come a un collega: cosa fare, quando, con quali account. Toone prepara la routine e decide quali passi può fare uno script e quali richiedono un agente.",
           "chips": {
             "words": "Parole semplici",
             "schedule": "Programmata",
@@ -455,16 +455,16 @@
         },
         "run": {
           "title": "Guardala in azione",
-          "body": "Gli agenti lavorano in parallelo, ognuno con il modello scelto, e ogni passo si accende dal vivo sui tuoi account.",
+          "body": "I passi automatici sono script: eseguono con esattezza le parti fisse, senza agenti e senza token. Gli agenti prendono i passi che richiedono giudizio, ognuno con il modello scelto. Ogni passo si accende mentre viene eseguito.",
           "chips": {
-            "parallel": "Agenti in parallelo",
-            "models": "Un modello per agente",
+            "auto": "Passi automatici",
+            "agents": "Agenti dove servono",
             "live": "Grafo dal vivo"
           }
         },
         "resume": {
           "title": "Metti in pausa, modifica, riprendi",
-          "body": "I contratti verificano ogni risultato. Se un passo non li rispetta, va in pausa solo lui: modificalo e riprendi da lì.",
+          "body": "Ogni passo ha un contratto: un controllo che il suo risultato deve superare. Un passo che non basta riprova, passa a un fallback o va in pausa e ti chiede. Modificalo a parole tue e riprendi da dove si era fermato.",
           "chips": {
             "contracts": "Contratti",
             "fallbacks": "Fallback",
@@ -473,70 +473,29 @@
         }
       },
       "personaLabel": "Routine per",
-      "more": "Altro su Explore",
+      "more": "Altre routine pronte",
       "tabs": {
-        "marketer": "Marketing",
         "seo": "Agenzia SEO",
-        "film": "Filmmaker"
+        "ops": "Finanza",
+        "film": "Creator video"
       },
       "promptLabel": "Nuova routine",
       "promptSend": "Invia",
       "fallback": "riprova ×1 → chiedimi",
       "pauseNote": "I passi completati mantengono i risultati.",
       "agents": {
-        "strategist": "Stratega",
-        "researcher": "Ricercatore",
         "writer": "Copywriter",
         "reviewer": "Revisore",
         "designer": "Designer",
         "publisher": "Publisher",
         "analyst": "Analista",
-        "producer": "Producer",
-        "editor": "Montatore",
-        "narrator": "Narratore"
+        "producer": "Producer"
       },
       "scenarios": {
-        "marketer": {
-          "routineName": "Motore di contenuti settimanale",
-          "outcome": "Lunedì mattina: tre post per LinkedIn scritti, con fonti e in attesa del tuo OK.",
-          "prompt": "<k>Ogni lunedì alle 9:00</k>, scegli i temi della settimana in base ai risultati della scorsa e approfondiscili con <k>2 agenti in parallelo su Haiku</k>: tendenze e concorrenti. Fai scrivere 3 post per LinkedIn a <k>un agente Sonnet</k> e falli rivedere da <k>un agente GPT</k>: <k>tono di voce del brand almeno 8/10, ogni affermazione con la sua fonte</k>. <k>Rimanda indietro le bozze deboli, al massimo due volte.</k> Crea i visual in Figma, <k>chiedimi prima di pubblicare</k>, poi pubblica su LinkedIn, Threads e Instagram. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
-          "graph": {
-            "schedule": "lun 9:00",
-            "parallelShort": "Ricerca ×2",
-            "nodes": {
-              "topics": "Scegli temi",
-              "trends": "Tendenze",
-              "competitors": "Concorrenti",
-              "draft": "Scrivi post",
-              "review": "Revisione",
-              "visuals": "Visual",
-              "publish": "Pubblica"
-            },
-            "chips": {
-              "min": "tono ≥ 8/10",
-              "other": "con fonti",
-              "loop": "needs_fix",
-              "gate": "prima chiede a me"
-            }
-          },
-          "run": {
-            "topics": "Opus sceglie i temi dai risultati scorsi",
-            "research": "2 agenti Haiku cercano in parallelo",
-            "draft": "Sonnet scrive 3 post",
-            "review": "GPT rivede il tono di voce",
-            "loop": "Sotto 8: torna indietro per la riscrittura",
-            "contract": "Contratto rispettato: tono ≥ 8/10, con fonti",
-            "publish": "Visual pronti, tu approvi, si pubblica"
-          },
-          "pause": {
-            "reason": "Tono di voce 6 / 10: sotto il contratto",
-            "edit": "Meno enfasi, più numeri"
-          }
-        },
         "seo": {
           "routineName": "Aggiornamento settimanale dei contenuti",
           "outcome": "Lunedì mattina: le pagine del cliente che hanno perso posizioni aggiornate, verificate e salvate come bozze, con il report già nella sua casella.",
-          "prompt": "<k>Ogni lunedì alle 7:00</k>, recupera da Search Console le posizioni del nostro cliente — <k>se fallisce, usa Semrush</k>. Scegli <k>almeno 8 pagine che hanno perso posizioni</k>, <k>una keyword per pagina</k>. Aggiornale con <k>un agente Sonnet per pagina</k>, fai verificare i fatti di ogni modifica da <k>un agente GPT</k>, salva le bozze in WordPress e invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "prompt": "<k>Ogni lunedì alle 7:00</k>, recupera da Search Console le posizioni del nostro cliente (<k>se fallisce, usa Semrush</k>). Scegli <k>almeno 8 pagine che hanno perso posizioni</k>, <k>una keyword per pagina</k>. Aggiornale con <k>un agente Sonnet per pagina</k>, fai verificare i fatti di ogni modifica da <k>un agente GPT</k>, salva le bozze in WordPress e invia il report al cliente via email. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "lun 7:00",
             "parallelShort": "Consegna ×2",
@@ -546,7 +505,7 @@
               "refresh": "Aggiorna pagine",
               "check": "Verifica fatti",
               "save": "Salva bozze",
-              "report": "Report"
+              "report": "Invia report"
             },
             "chips": {
               "fallback": "fallback → Semrush",
@@ -555,30 +514,64 @@
             }
           },
           "run": {
-            "pull": "Leggi le posizioni da Search Console",
+            "pull": "Richiesta dei posizionamenti a Search Console · senza IA",
             "fallback": "Search Console non risponde: si usa Semrush",
-            "pick": "Scegli le pagine che hanno perso posizioni",
+            "pick": "Pagine che hanno perso posizioni, ordinate · senza IA",
             "contract": "Contratto rispettato: ≥ 8 pagine, 1 keyword l’una",
             "refresh": "8 agenti Sonnet, una pagina ciascuno",
             "check": "GPT verifica i fatti di ogni modifica",
-            "report": "Bozze in WordPress, report via email"
+            "report": "Bozze salvate in WordPress, report inviato via email · senza IA"
           },
           "pause": {
             "reason": "5 / 8 pagine: sotto il contratto",
             "edit": "Includi cali di 2+ posizioni"
           }
         },
+        "ops": {
+          "routineName": "Controllo settimanale dei ricavi",
+          "outcome": "Lunedì mattina: ogni pagamento Stripe abbinato alla sua trattativa, gli importi anomali spiegati e il riepilogo già su Slack.",
+          "prompt": "<k>Ogni lunedì alle 8:00</k>, scarica i pagamenti Stripe della scorsa settimana e abbina ognuno alla sua trattativa HubSpot: <k>ogni pagamento ha una trattativa</k>. Aggiorna le trattative e fai indagare a <k>un agente Sonnet</k> ogni importo diverso da quello della trattativa. Poi <k>un agente Haiku</k> scrive un breve riepilogo e lo pubblica su #revenue in Slack. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "graph": {
+            "schedule": "lun 8:00",
+            "parallelShort": "Verifica ×2",
+            "nodes": {
+              "payments": "Scarica pagamenti",
+              "match": "Abbina alle trattative",
+              "odd": "Controlla importi anomali",
+              "crm": "Aggiorna trattative",
+              "summary": "Scrivi riepilogo",
+              "post": "Pubblica su Slack"
+            },
+            "chips": {
+              "min": "ogni pagamento",
+              "other": "ha una trattativa"
+            }
+          },
+          "run": {
+            "payments": "Pagamenti Stripe della scorsa settimana scaricati · senza IA",
+            "match": "Pagamenti abbinati alle trattative HubSpot · senza IA",
+            "contract": "Contratto rispettato: ogni pagamento ha una trattativa",
+            "odd": "Sonnet indaga su 3 importi che non tornano",
+            "crm": "Trattative aggiornate in HubSpot · senza IA",
+            "summary": "Haiku scrive il riepilogo settimanale",
+            "post": "Riepilogo pubblicato su #revenue · senza IA"
+          },
+          "pause": {
+            "reason": "41 / 46 pagamenti abbinati: sotto il contratto",
+            "edit": "Abbina anche per email di fatturazione"
+          }
+        },
         "film": {
           "routineName": "Produzione settimanale dell’episodio",
-          "outcome": "Venerdì: il primo montaggio della prossima settimana in bozza su YouTube, con voce, B-roll e miniature pronti.",
-          "prompt": "<k>Ogni venerdì alle 8:00</k>, fai fare a <k>un agente Opus</k> lo spoglio del copione della prossima settimana. Poi porta avanti <k>3 attività in parallelo</k>: trova <k>almeno 12 clip di B-roll</k> su Pexels, <k>solo a uso libero</k>; registra il voiceover in ElevenLabs; e crea 3 miniature in Higgsfield — <k>se fallisce, usa GPT Image</k>. Prepara un premontato, controlla la continuità rispetto al copione e caricalo su YouTube come bozza. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
+          "outcome": "Venerdì mattina: il premontato della prossima settimana in bozza su YouTube, con voce, B-roll e miniature pronti.",
+          "prompt": "<k>Ogni venerdì alle 8:00</k>, fai analizzare a <k>un agente Opus</k> il copione della settimana prossima. Poi lancia <k>3 percorsi in parallelo</k>: <k>almeno 12 clip di B-roll</k> da Pexels, <k>solo a uso libero</k>, tagliate a misura; una voce fuori campo ElevenLabs con sottotitoli; e 3 miniature Higgsfield (<k>se fallisce, usa GPT Image</k>), poi scegli la migliore. Monta un primo taglio, controlla la continuità e caricalo su YouTube come bozza. <k>Se un passo fallisce, riprova una volta, poi chiedimi.</k>",
           "graph": {
             "schedule": "ven 8:00",
             "parallelShort": "3 attività",
             "nodes": {
               "breakdown": "Spoglio copione",
               "broll": "B-roll",
-              "trim": "Taglia",
+              "trim": "Taglia a misura",
               "voice": "Voiceover",
               "captions": "Sottotitoli",
               "thumbs": "Miniature",
@@ -588,25 +581,31 @@
               "upload": "Carica bozza"
             },
             "chips": {
-              "min": "≥ 12",
+              "min": "≥ 12 clip",
               "other": "uso libero",
               "fallback": "fallback → GPT Image"
             }
           },
           "run": {
             "breakdown": "Opus fa lo spoglio del copione",
-            "tracks": "3 attività procedono in parallelo",
+            "tracks": "Partono tre attività: B-roll, voce, miniature",
             "fallback": "Higgsfield è fallito: subentra GPT Image",
-            "contract": "Contratto rispettato: ≥ 12, uso libero",
-            "cut": "Prepara il premontato",
+            "contract": "Contratto rispettato: ≥ 12 clip, tutte a uso libero",
+            "cut": "Primo montaggio assemblato · senza IA",
             "review": "Opus controlla la continuità",
-            "upload": "Carica la bozza su YouTube"
+            "upload": "Bozza caricata su YouTube · senza IA"
           },
           "pause": {
             "reason": "7 / 12 clip: sotto il contratto",
             "edit": "Più riprese aeree e notturne"
           }
         }
+      },
+      "automatic": "Automatico",
+      "legend": {
+        "auto": "Passo automatico: uno script, nessun agente",
+        "agent": "Agente: dove serve giudizio",
+        "tally": "{n} passi su {total} girano come script"
       }
     },
     "routineGraph": {
@@ -706,7 +705,69 @@
       }
     },
     "closing": {
-      "title": "Affida il lavoro ripetitivo ad agenti che puoi vedere all'opera."
+      "title": "Parti da una routine. Tieni ciò che funziona.",
+      "sub": "Scegli una routine pronta o descrivi la tua, e dalle una settimana.",
+      "facts": {
+        "free": "Crea {free} routine gratis",
+        "runs": "Esecuzioni illimitate",
+        "plan": "Il tuo Claude Code o Codex"
+      },
+      "explore": "Sfoglia le routine pronte"
+    },
+    "trust": {
+      "productHunt": "Product Hunt",
+      "productHuntRank": "#3 Prodotto del giorno",
+      "supportedBy": "Supportato da",
+      "claudeStartups": "Claude for Startups",
+      "askAi": "Chiedi a un’IA di noi",
+      "askAiPrompt": "Che cos’è Toone (trytoone.com)? Spiega cosa fa, a chi è rivolto e come si confronta con altri strumenti di automazione con IA."
+    },
+    "built": {
+      "eyebrow": "Costruito diversamente",
+      "title": "L’IA ormai sa fare il lavoro. Ma non dovrebbe farlo tutto.",
+      "sub": "Lo stesso lavoro in sei passi, costruito in tre modi. La scintilla segna ogni passo che passa da un modello di IA.",
+      "tokens": "{n, plural, =0 {Nessun passo usa l’IA} one {# passo usa l’IA} many {# di passi usano l’IA} other {# passi usano l’IA}}",
+      "more": "Confronta nel dettaglio",
+      "ways": {
+        "nodes": {
+          "name": "Automazione a nodi",
+          "like": "Come n8n, Make o Zapier",
+          "verdict": "Esatta, ma ogni nodo si collega a mano e l'IA è solo un altro nodo da configurare."
+        },
+        "agents": {
+          "name": "Agenti programmati",
+          "like": "Come un'attività di chat programmata o un agente di coding con un timer",
+          "verdict": "Flessibile, ma ogni passo passa da un modello, quindi ognuno attinge al tuo piano IA e può dare risultati diversi."
+        },
+        "toone": {
+          "name": "Toone",
+          "like": "Script e agenti, sul tuo Mac",
+          "verdict": "Gli script eseguono i passi fissi con esattezza; gli agenti prendono solo i passi che richiedono giudizio."
+        }
+      }
+    },
+    "outcomes": {
+      "eyebrow": "Cosa ottieni",
+      "title": "Cosa cambia quando il lavoro gira come una routine",
+      "sub": "Rispetto a collegare tutto da te o affidare tutto a un agente.",
+      "items": {
+        "cost": {
+          "title": "IA solo dove conviene",
+          "body": "Solo i passi che richiedono giudizio usano il tuo piano Claude o ChatGPT, così i suoi limiti d’uso durano di più."
+        },
+        "same": {
+          "title": "Controllato a ogni passo",
+          "body": "Il risultato di ogni passo deve superare il suo contratto prima che parta il successivo, e ogni esecuzione sa cosa hanno già gestito le precedenti, così il lavoro della settimana scorsa non si rifà."
+        },
+        "wire": {
+          "title": "Niente da collegare",
+          "body": "Non mappi mai un campo né disegni un ramo. Quando cambia uno strumento o il lavoro, dì cosa è cambiato e Toone aggiorna la routine."
+        },
+        "control": {
+          "title": "Il controllo resta a te",
+          "body": "Ogni passo si vede dal vivo sul grafo, con ciò che ha fatto e perché si è fermato. I passi che inviano, pubblicano o pagano possono aspettare il tuo OK."
+        }
+      }
     }
   },
   "privacyChoices": {
@@ -731,36 +792,39 @@
     "legal": "Note legali",
     "contact": "Contatto",
     "rights": "Tutti i diritti riservati.",
-    "featuredOn": "In evidenza su"
+    "featuredOn": "In evidenza su",
+    "compare": "Confronto"
   },
   "meta": {
-    "siteTitle": "Toone | Lo spazio di lavoro IA per i tuoi flussi agentici",
-    "siteDescription": "Lo spazio di lavoro IA per i tuoi flussi agentici. Trasforma le attività ricorrenti in risultati utili con agenti specializzati, mantenendo il controllo.",
-    "ogDescription": "Trasforma le attività ricorrenti in risultati utili con agenti specializzati, mantenendo il controllo.",
-    "ogTitle": "Toone | Lo spazio di lavoro IA per i tuoi flussi agentici"
+    "siteTitle": "Toone | Routine che uniscono script e agenti IA, sul tuo Mac",
+    "siteDescription": "Toone trasforma il lavoro che ripeti in routine sul tuo Mac: gli script eseguono i passi che non cambiano mai, gli agenti IA solo quelli che richiedono giudizio. Descrivilo a parole tue e guarda ogni esecuzione, sul tuo Claude Code o Codex.",
+    "ogDescription": "Descrivi il lavoro. Gli script eseguono i passi fissi, gli agenti quelli che richiedono giudizio, e tu guardi ogni esecuzione.",
+    "ogTitle": "Toone | Agentico per natura. Script dove servono."
   },
   "faq": {
     "eyebrow": "FAQ",
-    "title": "Domande, risposte.",
-    "sub": "La versione breve di tutto ciò che ci chiedono.",
+    "title": "Le prime domande che ci fanno",
+    "sub": "Risposte brevi. La <link>guida al prodotto</link> approfondisce.",
     "q1": "Cos'è Toone?",
-    "a1": "Toone è uno spazio di lavoro nativo per macOS per progetti che usano agenti IA: agenti specializzati, le routine ripetibili che eseguono e gli strumenti e le conoscenze che condividono, tutto in un unico posto.",
-    "q2": "Per chi è Toone?",
-    "a2": "Chiunque lavori su Mac con attività complesse, in più passaggi, che tornano ogni settimana o ogni mese: operations, ricerca, marketing, founder e creator. Usi il tuo Claude Code o Codex, trasformi quel lavoro in una routine e puoi seguire, mettere in pausa, modificare e verificare ogni esecuzione.",
-    "q3": "Serve un abbonamento esistente?",
-    "a3": "Sì. Toone funziona con il tuo abbonamento OpenAI o Anthropic e vi si collega durante la configurazione. Non c'è alcun piano di modelli separato da acquistare da noi.",
-    "q4": "C'è una curva di apprendimento?",
-    "a4": "Piccola. Descrivi agenti e routine in linguaggio naturale, e la configurazione guidata ti porta dall'installazione alla prima esecuzione di una routine in circa quindici minuti. La pagina Explore offre anche routine e bundle verificati che puoi aprire in Toone e adattare.",
-    "q5": "È sicuro?",
-    "a5": "Toone gira sul tuo Mac. Le credenziali del provider e i file di progetto restano con te, ogni esecuzione è visibile mentre avviene e le routine possono fermarsi per la tua approvazione prima dei passaggi sensibili. Le routine e i bundle condivisi in Explore vengono verificati prima della pubblicazione.",
-    "q6": "Come ottengo l'accesso?",
-    "a6": "Crea un account su trytoone.com, scegli un piano e scarica Toone per il tuo Mac. Se hai un codice, riscattalo su trytoone.com/redeem.",
-    "q7": "Posso continuare a usare la mia app attuale?",
-    "a7": "Sì. Chi ha già un account può continuare ad accedere nel modo consueto.",
-    "q8": "Come funzionano gli inviti?",
-    "a8": "Riscatta il tuo codice personale sul sito per creare un account con email e password, poi usalo nell'app desktop.",
+    "a1": "Toone è un'app per Mac che trasforma il lavoro che ripeti in routine. Descrivi il lavoro a parole tue; Toone prepara la routine, esegue come script i passi che non cambiano mai e affida agli agenti IA, sul tuo Claude Code o Codex, i passi che richiedono giudizio. Guardi ogni esecuzione dal vivo e puoi metterla in pausa, modificarla e riprenderla.",
+    "q2": "Toone è solo n8n con l'IA?",
+    "a2": "No. In n8n, Make o Zapier colleghi ogni nodo a mano e l’IA è un nodo del flusso. In Toone descrivi il lavoro e Toone costruisce la routine: script per le parti che non cambiano mai, agenti per quelle che richiedono giudizio e un contratto su ogni risultato. Se il lavoro è sincronizzare app tra loro e deve girare giorno e notte, n8n, Make o Zapier sono più adatti: Toone gira finché il tuo Mac è acceso.",
+    "q3": "Quanto costa un'esecuzione?",
+    "a3": "I passi automatici sono script, quindi non consumano nulla del tuo piano IA. I passi degli agenti usano il piano Claude o ChatGPT che già paghi, tramite Claude Code o Codex; non c’è alcun piano IA separato da acquistare da noi. I servizi a pagamento che un passo richiama, come Semrush, ti vengono fatturati come sempre. L’esecuzione delle routine non ha mai limiti.",
+    "q4": "Devo scrivere codice?",
+    "a4": "No. Descrivi la routine e Toone scrive gli script dei suoi passi automatici. Per cambiare un passo, descrivi la modifica; Toone aggiorna la routine e tu la controlli prima che parta.",
+    "q5": "Con quali strumenti può lavorare Toone?",
+    "a5": "Qualsiasi servizio con un’API, strumenti collegati tramite MCP (il modo standard in cui le app IA si collegano ad altri strumenti) e siti web, tramite un browser dentro Toone in cui accedi con i tuoi account.",
+    "q6": "Cosa succede quando un passo fallisce o non basta?",
+    "a6": "I contratti verificano il risultato di ogni passo. Un passo che non basta riprova, passa a un'alternativa o va in pausa e ti chiede, secondo la regola che hai impostato. Modificalo a parole tue e riprendi da dove si era fermato; i passi completati mantengono i risultati.",
+    "q7": "Dove gira e dove sono i miei dati?",
+    "a7": "Sul tuo Mac. Routine, cronologia delle esecuzioni e file di progetto restano sulla tua macchina. I passi degli agenti inviano ciò su cui lavorano ad Anthropic o OpenAI tramite il tuo Claude Code o Codex, secondo i termini del tuo piano. I passi che inviano, pubblicano o pagano possono aspettare la tua approvazione.",
+    "q8": "Cosa succede se il mio Mac è in stop quando una routine deve partire?",
+    "a8": "Le routine pianificate richiedono il Mac attivo con Toone aperto. Un’esecuzione che scade mentre dorme non va persa: parte una volta quando il Mac torna attivo, poi la routine riprende il suo programma abituale.",
     "q9": "Toone è gratuito? Cosa aggiunge Toone Pro?",
-    "a9": "Sì. Ogni account può creare {free} routine gratis, e l'esecuzione delle routine non ha mai limiti. Toone Pro rimuove il limite di creazione delle routine, con un pagamento mensile, annuale o unico a vita. Piani e prezzi sono nella pagina dei prezzi."
+    "a9": "Sì. Ogni account può creare {free} routine gratis, e l'esecuzione delle routine non ha mai limiti. Toone Pro rimuove il limite di creazione delle routine, con un pagamento mensile, annuale o unico a vita. Piani e prezzi sono nella pagina dei prezzi.",
+    "q10": "Come si comincia?",
+    "a10": "Crea un account su trytoone.com e scarica Toone per il tuo Mac. Parti da una routine pronta su Explore o descrivi la tua; la configurazione guidata ti porta alla prima esecuzione in circa quindici minuti. Se hai un codice, riscattalo su trytoone.com/redeem."
   },
   "billing": {
     "nav": "Prezzi",

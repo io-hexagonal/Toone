@@ -42,6 +42,12 @@ export type NodeSpec = {
   counter?: boolean;
   /** One agent per item: drawn as a stack with "×N". */
   each?: number;
+  /**
+   * "script": an automatic step. A script does the mechanical part (an API
+   * call, a sort, a file move): no agent, no model, no tokens. Drawn squarer,
+   * with "</> Automatic" where an agent step shows its role and model.
+   */
+  kind?: "script";
 };
 export type GraphSpec = {
   /**
@@ -55,6 +61,8 @@ export type GraphSpec = {
 
 export type GraphLabels = {
   schedule: string;
+  /** Sub-label of an automatic (script) step. */
+  automatic: string;
   fallback: string;
   /** Title of the single card that replaces the parallel row on phones. */
   parallelShort: string;
@@ -86,7 +94,7 @@ const CSS = `
   --ink: 29,28,25; --spine: min(190px, calc((100cqw - 20px) / 3));
   container-type: inline-size;
   position: relative; display: flex; flex-direction: column; gap: 16px; padding-top: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-family: var(--font-ui), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 .hg-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: 0; }
 .hg-edge { fill: none; stroke: rgba(var(--ink),0.2); stroke-width: 1.2; transition: stroke .4s ease; }
@@ -157,7 +165,7 @@ const CSS = `
 }
 .hg-mini img { width: 12px; height: 12px; display: block; object-fit: contain; }
 .hg-node[data-s="running"] .hg-mini span { box-shadow: inset 0 0 0 1px rgba(var(--ink),0.5), 0 1px 2px rgba(0,0,0,0.05); }
-.hg-card--agent { padding-bottom: 0; }
+.hg-card--agent { padding-bottom: 6px; }
 /* the first step carries the schedule tag on its top edge: its text sits a little lower */
 .hg-card--first { padding-top: 8px; }
 .hg-sub { min-height: 20px; }
@@ -190,6 +198,14 @@ const CSS = `
   font-variant-numeric: tabular-nums;
 }
 .hg-end svg { width: 12px; height: 12px; }
+/* automatic (script) steps: squarer, a flat ink-tinted fill, "</> Automatic" */
+.hg-card--script { border-radius: 6px; background: rgba(var(--ink),0.045); border-color: rgba(var(--ink),0.13); }
+.hg-auto {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: rgba(var(--ink),0.55); font-size: 11.5px; font-weight: 500;
+}
+.hg-auto svg { width: 11px; height: 11px; color: rgba(var(--ink),0.6); }
+.hg-node[data-s="draft"] .hg-auto { opacity: .55; }
 .hg-model {
   display: inline-flex; align-items: center; gap: 3px;
   color: rgba(var(--ink),0.6); font-size: 10.5px; font-weight: 600; letter-spacing: 0.01em;
@@ -217,8 +233,8 @@ const CSS = `
 
 /* draft: proposed, not yet real */
 .hg-node[data-s="draft"] .hg-card {
-  border-style: dashed; border-color: rgba(var(--ink),0.3);
-  background: rgba(255,255,255,0.22); color: rgba(var(--ink),0.5);
+  border-color: rgba(var(--ink),0.16); opacity: .72;
+  background: rgba(255,255,255,0.3); color: rgba(var(--ink),0.7);
 }
 .hg-node[data-s="draft"] .hg-ring,
 .hg-node[data-s="draft"] .hg-model { opacity: .55; }
@@ -240,7 +256,8 @@ const CSS = `
 
 /* each parallel agent's own progress, with a shimmer */
 .hg-prog {
-  position: absolute; left: 10px; right: 10px; bottom: 3px; height: 2px;
+  /* the running step's progress: a hairline on the card's bottom edge, under the content */
+  position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px;
   border-radius: 2px; overflow: hidden; background: rgba(var(--ink),0.08); display: none;
 }
 .hg-node[data-s="running"] .hg-prog { display: block; }
@@ -387,7 +404,8 @@ export type IconName =
   | "fan"
   | "pulse"
   | "graph"
-  | "ledger";
+  | "ledger"
+  | "code";
 
 const ICONS: Record<IconName, ReactNode> = {
   clock: (
@@ -448,6 +466,7 @@ const ICONS: Record<IconName, ReactNode> = {
       <path d="M6.2 5.2h3.8M6.2 7.6h2.6" />
     </>
   ),
+  code: <path d="M5.6 4.6 2.2 8l3.4 3.4M10.4 4.6 13.8 8l-3.4 3.4M9 3.2 7 12.8" />,
 };
 
 /** The app's step status: dashed ring (waiting), turning (running), check (done). */
@@ -460,14 +479,6 @@ function RoutineGlyph() {
   );
 }
 
-function Badges({ labels }: { labels: GraphLabels }) {
-  return (
-    <>
-      <span className="hg-badge hg-badge--run">{labels.running}</span>
-      <span className="hg-badge hg-badge--pause">{labels.paused}</span>
-    </>
-  );
-}
 
 function Check() {
   return null;
@@ -486,6 +497,16 @@ function Capsule({ logos }: { logos: readonly LogoKey[] }) {
         </span>
       ))}
     </div>
+  );
+}
+
+/** The sub-label of an automatic step: what runs it, instead of who. */
+function Automatic({ label }: { label: string }) {
+  return (
+    <span className="hg-auto">
+      <Icon name="code" />
+      {label}
+    </span>
   );
 }
 
@@ -633,16 +654,21 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
   };
   /** Every step is the same card: title, then its number, model and details. */
   const card = (n: NodeSpec, extra?: ReactNode) => (
-    <div className={`hg-card hg-card--agent${n.each ? " hg-card--each" : ""}${extra ? " hg-card--first" : ""}`} data-n={n.id}>
+    <div className={`hg-card hg-card--agent${n.kind === "script" ? " hg-card--script" : ""}${n.each ? " hg-card--each" : ""}${extra ? " hg-card--first" : ""}`} data-n={n.id}>
       {extra}
-      <Badges labels={labels} />
       <span className="hg-title">
         <RoutineGlyph />
         <span>{labels.nodes[n.id]}</span>
       </span>
       <span className="hg-sub">
-        <span className="hg-step">{labels.agents[n.agent]}</span>
-        {n.model && <Model name={n.model} />}
+        {n.kind === "script" ? (
+          <Automatic label={labels.automatic} />
+        ) : (
+          <>
+            <span className="hg-step">{labels.agents[n.agent]}</span>
+            {n.model && <Model name={n.model} />}
+          </>
+        )}
         {n.each && <span className="hg-times">×{n.each}</span>}
         {again.includes(n.id) && <span className="hg-times">×2</span>}
         {n.counter && counter !== null && <span className="hg-n">{counter}</span>}
@@ -714,15 +740,20 @@ export default function HowItWorksGraph({ spec, nodes, chips, counter, looping, 
               </div>
               <div className="hg-row hg-row--rx hg-node" data-s={fanState} style={{ "--row": r } as CSSProperties}>
                 <div className="hg-c">
-                  <div className="hg-card hg-card--agent" data-n="rx">
-                    <Badges labels={labels} />
-                    <span className="hg-title">
+                  <div className={`hg-card hg-card--agent${all.every((n) => n.kind === "script") ? " hg-card--script" : ""}`} data-n="rx">
+                                  <span className="hg-title">
                       <RoutineGlyph />
                       <span>{labels.parallelShort}</span>
                     </span>
                     <span className="hg-sub">
-                      <span className="hg-step">{labels.agents[all[0].agent]}</span>
-                      {all[0].model && <Model name={all[0].model} />}
+                      {all.every((n) => n.kind === "script") ? (
+                        <Automatic label={labels.automatic} />
+                      ) : (
+                        <>
+                          <span className="hg-step">{labels.agents[all.find((n) => n.kind !== "script")!.agent]}</span>
+                          {all.find((n) => n.kind !== "script")!.model && <Model name={all.find((n) => n.kind !== "script")!.model!} />}
+                        </>
+                      )}
                       {all.some((n) => n.counter) && counter !== null && <span className="hg-n">{counter}</span>}
                     </span>
                     <span className="hg-prog">

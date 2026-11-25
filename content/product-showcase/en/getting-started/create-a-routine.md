@@ -1,7 +1,7 @@
 ---
 title: "Create your first routine"
 navTitle: "Create a routine"
-description: "Create your first routine: describe its intent and objective to an agent, break it into steps or sub-routines, review the draft, and publish it."
+description: "Describe what the routine should do, review the draft Toone makes, and publish it."
 eyebrow: "Getting started · Step 4"
 pageType: "tutorial"
 estimatedTime: "4 minutes"

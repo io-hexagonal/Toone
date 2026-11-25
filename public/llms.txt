@@ -1,0 +1,23 @@
+# Toone
+
+> Toone is a macOS app that turns work you repeat into routines. You describe the work in plain words; Toone drafts the routine, runs the steps that never change as scripts ("automatic steps": API calls, sorting, moving files, with no AI model and no tokens) and gives only the steps that need judgment (research, writing, decisions) to AI agents on your own Claude Code or Codex. Contracts check every step's output, and you watch each run on a live graph where you can pause a step, edit it in plain words and resume where it stopped. Agentic by default, scripted where it counts.
+
+Toone is an alternative to hand-wired, node-based automation such as n8n, Make and Zapier, and to running every step of recurring work through an AI agent on a schedule. It suits recurring work that mixes integrations (moving and matching data between tools) with steps that need judgment. It runs on your Mac, in the accounts you already use, so routines run while your Mac is awake and Toone is open; agent steps use the Claude or ChatGPT plan you already pay for, through Claude Code or Codex. Running routines is never limited; Toone Pro removes the limit on creating routines.
+
+## Product
+
+- [Home](https://trytoone.com/en): what Toone is, how a routine splits into automatic steps and agent steps, and the FAQ
+- [Toone vs n8n, Make and Zapier](https://trytoone.com/en/compare): how Toone compares with node-based automation and with AI agents on a schedule, and when each is the better pick
+- [About Toone](https://trytoone.com/en/about): what Toone is, who builds it, and how claims are checked
+- [Pricing](https://trytoone.com/en/pricing): free routines, and what Toone Pro adds
+
+## Guides
+
+- [Product guide](https://trytoone.com/en/how-to): getting started, features and how-to pages
+- [What an AI agent routine is](https://trytoone.com/en/ai-agent-routines)
+- [Explore](https://trytoone.com/en/explore): reviewed routines and bundles you can add to Toone
+
+## Optional
+
+- [Journal](https://trytoone.com/en/journal): product notes and articles
+- [Editorial policy](https://trytoone.com/en/editorial-policy): evidence standards for product claims
