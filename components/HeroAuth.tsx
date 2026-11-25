@@ -9,6 +9,7 @@ import AppleLogo from "@/components/AppleLogo";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
 import HoneypotField from "@/components/HoneypotField";
+import { hardNavigateIfStrict } from "@/lib/section-link";
 import { HONEYPOT_FIELD } from "@/lib/contact-guard";
 
 /** Real Google auth lives on /signin; the hero button routes there once a client id is configured. */
@@ -72,7 +73,9 @@ export default function HeroAuth({ audience = "business" }: Props) {
     if (OPEN_SIGNUP) {
       // Sign-up is open: carry the address to the sign-up page, which emails the code.
       (window as unknown as { umami?: { track: (name: string) => void } }).umami?.track("hero-create-account");
-      router.push(`/create-account#email=${encodeURIComponent(email.trim())}`);
+      // /create-account is a strict-CSP page: from this static page it is a full load.
+      const target = `/${locale}/create-account#email=${encodeURIComponent(email.trim())}`;
+      if (!hardNavigateIfStrict(target)) router.push(`/create-account#email=${encodeURIComponent(email.trim())}`);
       return;
     }
     submissionRef.current = true;

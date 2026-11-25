@@ -2,7 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { ENGLISH_ONLY_PATHS, LOCALE_CHOICE_COOKIE, routing, type Locale } from "./i18n/routing";
 import { TERMS_VERSION_PARAM } from "./lib/legal/terms-versions";
-import { apiOriginsFromEnv, buildCsp, createNonce, NONCE_HEADER } from "./lib/csp";
+import { apiOriginsFromEnv, buildCsp, buildStaticCsp, createNonce, isStrictPath, NONCE_HEADER } from "./lib/csp";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -64,23 +64,30 @@ function perVisitor(response: NextResponse, vary: string) {
 const CONNECT_ANY = /^(?:\/[a-z]{2})?\/connect\/?$/;
 
 /**
- * Every page gets a Content-Security-Policy with a fresh script nonce
- * (lib/csp.ts). The policy goes on the request too: Next.js reads the nonce
- * from the request's CSP header while rendering and puts it on its own
- * scripts, and the root layout reads `x-nonce` for the site's inline scripts.
+ * Every page gets a Content-Security-Policy (lib/csp.ts). Sections that use
+ * the session or show content written by others get the strict policy with
+ * a fresh script nonce; the policy goes on the request too, because Next.js
+ * reads the nonce from the request's CSP header while rendering and the
+ * pages read `x-nonce` for their own inline scripts. Every other page is
+ * statically cached and gets the static policy (no nonce).
  */
 export default function proxy(req: NextRequest) {
-  const nonce = createNonce();
-  const csp = buildCsp({
-    nonce,
-    frameAncestors: CONNECT_ANY.test(req.nextUrl.pathname) ? "'none'" : "'self'",
+  const shared = {
+    frameAncestors: CONNECT_ANY.test(req.nextUrl.pathname) ? ("'none'" as const) : ("'self'" as const),
     apiOrigins: apiOriginsFromEnv({
       NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
       EXPLORE_API_BASE_URL: process.env.EXPLORE_API_BASE_URL,
     }),
     development: process.env.NODE_ENV === "development",
     preview: process.env.VERCEL_ENV === "preview",
-  });
+  };
+  if (!isStrictPath(req.nextUrl.pathname)) {
+    const response = route(req, null);
+    response.headers.set("Content-Security-Policy", buildStaticCsp(shared));
+    return response;
+  }
+  const nonce = createNonce();
+  const csp = buildCsp({ ...shared, nonce });
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set(NONCE_HEADER, nonce);
   requestHeaders.set("Content-Security-Policy", csp);
@@ -89,9 +96,9 @@ export default function proxy(req: NextRequest) {
   return response;
 }
 
-function route(req: NextRequest, requestHeaders: Headers) {
+function route(req: NextRequest, requestHeaders: Headers | null) {
   const { pathname } = req.nextUrl;
-  const forward = { request: { headers: requestHeaders } };
+  const forward = requestHeaders ? { request: { headers: requestHeaders } } : undefined;
 
   if (pathname === "/" && PREVIEW_BOTS.test(req.headers.get("user-agent") ?? "")) {
     return NextResponse.rewrite(new URL("/en", req.url), forward);
@@ -212,8 +219,8 @@ function route(req: NextRequest, requestHeaders: Headers) {
   // TE-01: catalog parameters (type, search, tag, taxonomy facets, page) are
   // served by the request-time view, so those URLs are rewritten to it; the
   // address bar keeps them. Anything else in the query (utm_*, ref) gets the
-  // plain hub. (Every page now renders per request for the CSP nonce; the
-  // hub's data still comes from the data cache.)
+  // plain hub. (Explore renders per request for the CSP nonce; the hub's
+  // data still comes from the data cache.)
   const hub = pathname.match(EXPLORE_HUB);
   if (hub && isLocale(hub[1]) && CATALOG_PARAMS.some((key) => req.nextUrl.searchParams.has(key))) {
     const target = req.nextUrl.clone();

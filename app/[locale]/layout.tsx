@@ -6,7 +6,6 @@ import { localeRobots } from "@/i18n/indexing";
 import type { Metadata, Viewport } from "next";
 import type { Graph } from "schema-dts";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import { Newsreader, Rubik } from "next/font/google";
 import localFont from "next/font/local";
 import "../globals.css";
@@ -238,12 +237,6 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   if (!isSupportedLocale(locale)) notFound();
   setRequestLocale(locale);
-  // Every page renders per request so Next.js can put this request's CSP
-  // nonce on its scripts (proxy.ts, lib/csp.ts). A prerendered page would
-  // carry inline scripts without a nonce, which the policy blocks. Data
-  // fetches keep their own `next.revalidate` caching, so the API sees no more
-  // traffic than before.
-  await connection();
   const messages = await getMessages();
   const clientMessages = {
     announcement: messages.announcement,

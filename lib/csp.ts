@@ -1,18 +1,28 @@
 /**
- * Content Security Policy for every page (proxy.ts sets it per request).
+ * Content Security Policy, two levels (proxy.ts picks one per path).
  *
- * Scripts: only this origin's bundles, scripts carrying this request's nonce,
- * and the three third-party scripts the site loads on purpose. There is no
- * `'unsafe-inline'` and no `'unsafe-eval'` for scripts (development adds
- * `'unsafe-eval'` for React's dev tooling only). Next.js reads the nonce from
- * the request's CSP header and puts it on its own bootstrap and flight-data
- * scripts; that only happens for pages rendered per request, which is why the
- * root layout reads the request headers (app/[locale]/layout.tsx).
+ * Strict (`buildCsp`), on every page that can use or show the session and
+ * every page that renders content written by others (STRICT_SECTIONS):
+ * scripts only from this origin, scripts carrying this request's nonce, and
+ * the three third-party scripts the site loads on purpose. No
+ * `'unsafe-inline'`, no `'unsafe-eval'` (development adds `'unsafe-eval'` for
+ * React's dev tooling only). Next.js reads the nonce from the request's CSP
+ * header and puts it on its bootstrap and flight-data scripts, which only
+ * happens for pages rendered per request: each strict section's layout
+ * awaits `connection()` (components/StrictCspLayout.tsx).
+ *
+ * Static (`buildStaticCsp`), on the statically cached pages with no outside
+ * content (home, marketing, legal, docs). A prerendered page has no nonce, and
+ * its inline flight-data scripts carry that page's own render output, so
+ * hashes would differ per page and per revalidation and could only be served
+ * from a per-path manifest built after the pages. Those pages therefore allow
+ * inline scripts; script hosts are still limited to this origin and the same
+ * three third-party scripts, with `object-src 'none'`, `base-uri 'none'`,
+ * `form-action 'self'` and the same `frame-ancestors`.
  *
  * The session token is readable by page script (lib/api.ts keeps it in
- * localStorage), so this policy is the second line of defence behind React's
- * escaping: an injected inline script or a script from any other host does
- * not run.
+ * localStorage), so the strict policy is the second line of defence behind
+ * React's escaping where the session or outside content is.
  *
  * Origins, and why each is here:
  * - accounts.google.com/gsi: Google Identity Services. The client script, its
@@ -37,6 +47,33 @@
  * script, and `img-src`/`connect-src`/`font-src` still bound where it can
  * load from.
  */
+
+/**
+ * First path segment (after the locale) of every section served with the
+ * strict policy. Each must render per request (tests/security/csp.test.ts
+ * checks that its layout awaits `connection()`).
+ */
+export const STRICT_SECTIONS = [
+  // Pages that use or show the session.
+  "account", "admin", "cancel", "cancel-contract", "connect", "connections", "create-account", "creators",
+  "downloads", "early-access", "how-to", "invite", "pricing", "redeem", "reset-password", "signin", "signup",
+  "success", "unsubscribe", "welcome",
+  // Pages that render content written by others (Journal, Explore, creator profiles).
+  "explore", "journal", "r", "resources",
+] as const;
+
+/** Statically cached sections with no outside content: the static policy. */
+export const STATIC_SECTIONS = [
+  "about", "ai-digest", "business", "claude", "contact", "docs-ui-gallery", "download", "editorial-policy",
+  "governance", "guides", "legal-notice", "newcomers", "privacy", "request-access", "showcases", "terms",
+] as const;
+
+const STRICT_PATH = new RegExp(`^(?:/[a-z]{2})?/(?:${STRICT_SECTIONS.join("|")})(?:/|$)`);
+
+/** True when `pathname` (locale-prefixed or not) is served with the strict policy. */
+export function isStrictPath(pathname: string): boolean {
+  return STRICT_PATH.test(pathname);
+}
 
 export const GOOGLE_GSI = "https://accounts.google.com/gsi/";
 export const GOOGLE_GSI_CLIENT = "https://accounts.google.com/gsi/client";
@@ -99,16 +136,26 @@ export function createNonce(): string {
   return btoa(binary);
 }
 
+/** The strict policy: scripts by nonce (and the three third-party scripts) only. */
 export function buildCsp(options: CspOptions): string {
-  const { nonce, frameAncestors, development = false, preview = false } = options;
-  if (!/^[A-Za-z0-9+/=]{16,}$/.test(nonce)) throw new Error("invalid CSP nonce");
+  if (!/^[A-Za-z0-9+/=]{16,}$/.test(options.nonce)) throw new Error("invalid CSP nonce");
+  return policy(options, [`'nonce-${options.nonce}'`]);
+}
+
+/** The static-page policy: inline scripts allowed (no nonce on prerendered HTML), hosts still limited. */
+export function buildStaticCsp(options: Omit<CspOptions, "nonce">): string {
+  return policy(options, ["'unsafe-inline'"]);
+}
+
+function policy(options: Omit<CspOptions, "nonce">, inline: string[]): string {
+  const { frameAncestors, development = false, preview = false } = options;
   const api = options.apiOrigins?.length ? options.apiOrigins : [DEFAULT_API_ORIGIN];
 
   const directives: Record<string, string[]> = {
     "default-src": ["'self'"],
     "script-src": [
       "'self'",
-      `'nonce-${nonce}'`,
+      ...inline,
       GOOGLE_GSI_CLIENT,
       APPLE_JS,
       ANALYTICS_SCRIPT,
