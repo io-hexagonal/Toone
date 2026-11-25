@@ -20,12 +20,12 @@ function render(node: ReactElement) {
 /** Visible text, tags dropped and entities decoded, for wording checks. */
 function text(html: string) {
   return html.replace(/<[^>]+>/g, " ").replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&amp;/g, "&")
-    .replace(/[“”]/g, '"').replace(/\s+/g, " ").replace(/ ([.,])/g, "$1").trim();
+    .replace(/[“”]/g, '"').replace(/\s+/g, " ").replace(/ ([.,:])/g, "$1").trim();
 }
 
 const claude: ConsentRequest = {
   id: "car_abc234", clientName: "Claude", redirectHost: "claude.ai", clientKind: "claude",
-  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false,
+  scopes: ["read", "act"], expiresAt: "2026-11-24T18:40:00Z", eligible: true, ineligibleReason: null, macChoice: false, accessModes: [],
 };
 const studio = { id: "mac_1", name: "Ana's Mac Studio" };
 const air = { id: "mac_2", name: "MacBook Air" };
@@ -33,7 +33,7 @@ const air = { id: "mac_2", name: "MacBook Air" };
 function screen(patch: Partial<Extract<ConsentState, { kind: "request" }>> = {}, request: Partial<ConsentRequest> = {}, macs: MacsView = { status: "list", macs: [studio] }) {
   const state: ConsentState = {
     kind: "request", request: { ...claude, ...request }, email: "ana@example.com", macs,
-    allowAct: true, macId: null, armed: true, busy: null, notice: null, ...patch,
+    allowAct: true, macId: null, armed: true, accessMode: "auto", busy: null, notice: null, ...patch,
   };
   return render(createElement(ConsentScreen, { state }));
 }
@@ -122,7 +122,7 @@ test("the API takes a choice and the account has several Macs: each by name, the
   const macs: MacsView = { status: "choice", macs: [studio, air], open: ["mac_1"] };
   const html = screen({}, { macChoice: true }, macs);
   const words = text(html);
-  assert.match(words, /Your Macs Reach Toone on: Ana's Mac Studio Open now MacBook Air The Mac I used last/);
+  assert.match(words, /Your Macs Reach Toone on: Ana's Mac Studio Open now MacBook Air The Mac I used last Claude will reach the Mac you used last\./);
   assert.match(html, /role="radiogroup" aria-labelledby="connect-mac-choice"/);
   assert.equal(html.match(/type="radio"/g)?.length, 3);
   assert.equal(checkedMac(html, ""), true, "the default sends no Mac");
@@ -135,10 +135,58 @@ test("the API takes a choice and the account has several Macs: each by name, the
   assert.match(text(screen({}, { macChoice: true }, { ...macs, open: [] })), /Toone isn't open on any of your Macs right now\. Open Toone on your Mac and sign in\./);
 });
 
+test("the picker says which applies: the chosen Mac only, or the Mac used last", () => {
+  const macs: MacsView = { status: "choice", macs: [studio, air], open: ["mac_1"] };
+  assert.match(text(screen({}, { macChoice: true }, macs)), /Claude will reach the Mac you used last\./);
+  assert.match(text(screen({ macId: "mac_2" }, { macChoice: true }, macs)), /Claude will reach MacBook Air only\./);
+});
+
+test("a Mac whose assistants are off, or whose Toone is too old, says so in the picker", () => {
+  const macs: MacsView = { status: "choice", open: [], macs: [
+    { ...studio, assistants: "off" }, { ...air, assistants: "update" }, { id: "mac_3", name: "Office iMac", assistants: "on" },
+  ] };
+  const words = text(screen({}, { macChoice: true }, macs));
+  assert.match(words, /Ana's Mac Studio Assistants are off on this Mac: turn on Claude and other assistants \(online\) in Toone → Settings → Connected Apps\./);
+  assert.match(words, /MacBook Air Update Toone on this Mac to use assistants\./);
+  assert.doesNotMatch(words, /Office iMac (Assistants|Update)/);
+  assert.doesNotMatch(words, /Toone isn't open on any of your Macs/, "not the closed-or-asleep message when a Mac told us why");
+});
+
+test("no Mac reachable because its assistants are off: says that, not 'Toone isn't open'", () => {
+  const words = text(screen({}, {}, { status: "list", macs: [], account: [{ ...studio, assistants: "off" }] }));
+  assert.match(words, /Ana's Mac Studio: Assistants are off on this Mac: turn on Claude and other assistants \(online\) in Toone → Settings → Connected Apps\./);
+  assert.doesNotMatch(words, /Toone isn't open/);
+  assert.match(text(screen({}, {}, { status: "list", macs: [], account: [{ ...studio, assistants: "update" }] })),
+    /Ana's Mac Studio: Update Toone on this Mac to use assistants\./);
+  assert.match(text(screen({}, {}, { status: "list", macs: [], account: [{ ...studio, assistants: "on" }] })), /Toone isn't open on any of your Macs right now\./);
+});
+
+test("access mode: Auto (recommended) chosen by default, Ask as the other, with the quiet line; only when acting is kept", () => {
+  const html = screen({}, { accessModes: ["ask", "auto"] });
+  const words = text(html);
+  assert.match(words, /When it acts: Auto \(recommended\): run what you ask without asking again on your Mac Ask me on my Mac each time/);
+  assert.match(words, /Your Mac's own setting still applies, and the stricter one wins\. You can change this in Toone → Settings → Connected Apps\./);
+  assert.match(html, /role="radiogroup" aria-labelledby="connect-access-mode"/);
+  const radio = (id: string, from = html) => [...from.matchAll(/<input type="radio"[^>]*>/g)].find(([tag]) => tag.includes(`value="${id}"`))?.[0] ?? "";
+  assert.match(radio("auto"), /checked=""/);
+  assert.doesNotMatch(radio("ask"), /checked=""/);
+  assert.match(radio("ask", screen({ accessMode: "ask" }, { accessModes: ["ask", "auto"] })), /checked=""/);
+  assert.doesNotMatch(words, /Toone still asks you on your Mac before each of these/, "the choice says whether the Mac asks");
+  assert.doesNotMatch(screen({ allowAct: false }, { accessModes: ["ask", "auto"] }), /connect-access-mode/, "read only: no mode");
+  assert.doesNotMatch(screen({}, { scopes: ["read"], accessModes: ["ask", "auto"] }), /connect-access-mode/);
+  assert.match(radio("auto", screen({ busy: "allow" }, { accessModes: ["ask", "auto"] })), /disabled=""/);
+});
+
+test("without access modes from the API: no choice, the old 'asks on your Mac' promise", () => {
+  const html = screen();
+  assert.doesNotMatch(html, /connect-access-mode/);
+  assert.match(text(html), /Toone still asks you on your Mac before each of these\./);
+});
+
 test("a refused Mac asks to choose again", () => {
   const html = render(createElement(ConsentScreen, {
     state: { kind: "request", request: { ...claude, macChoice: true }, email: "ana@example.com",
-      macs: { status: "choice", macs: [studio, air], open: [] }, allowAct: true, macId: null, armed: true, busy: null, notice: null },
+      macs: { status: "choice", macs: [studio, air], open: [] }, allowAct: true, macId: null, armed: true, accessMode: "auto", busy: null, notice: null },
     macNotice: MAC_GONE_NOTICE,
   }));
   assert.match(text(html), /That Mac is no longer available\. Choose again\./);
