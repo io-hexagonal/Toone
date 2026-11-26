@@ -1,6 +1,7 @@
 import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
 import { contentDate } from "@/lib/source-date";
+import { ROUTE_SOURCES, type SourcedRoute } from "@/lib/route-sources";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
 import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 
@@ -19,46 +20,56 @@ const BASE_URL = "https://trytoone.com";
  * `/business` (a near-copy of the home page), `/contact` and
  * `/request-access` (utility pages), `/governance` (thin until filled in).
  */
-const LOCALIZED_ROUTES = [
-  { path: "", source: "app/[locale]/page.tsx" },
-  { path: "/resources", source: "app/[locale]/resources/page.tsx" },
+type StaticRoute = { path: string; sources: SourcedRoute };
+
+const LOCALIZED_ROUTES: readonly StaticRoute[] = [
+  { path: "", sources: "" },
+  { path: "/resources", sources: "/resources" },
   // Toone Pro plans; prices come from the API at request time.
-  { path: "/pricing", source: "app/[locale]/pricing/page.tsx" },
-] as const;
+  { path: "/pricing", sources: "/pricing" },
+];
 
 /** Listed only once the trader details are complete; until then the page is a 404. */
-const LEGAL_NOTICE_ROUTE = { path: "/legal-notice", source: "app/[locale]/legal-notice/page.tsx" } as const;
+const LEGAL_NOTICE_ROUTE: StaticRoute = { path: "/legal-notice", sources: "/legal-notice" };
 
-const ENGLISH_ONLY_ROUTES = [
-  { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
-  { path: "/terms", source: "app/[locale]/terms/page.tsx" },
+const ENGLISH_ONLY_ROUTES: readonly StaticRoute[] = [
+  { path: "/privacy", sources: "/privacy" },
+  { path: "/terms", sources: "/terms" },
   ...(TRADER_DETAILS_COMPLETE ? [LEGAL_NOTICE_ROUTE] : []),
-  { path: "/about", source: "app/[locale]/about/page.tsx" },
+  { path: "/about", sources: "/about" },
   // Toone vs n8n, Make and Zapier, and AI agents on a schedule.
-  { path: "/compare", source: "app/[locale]/compare/page.tsx" },
+  { path: "/compare", sources: "/compare" },
   // Help for the Toone connector in Claude; the Connectors Directory links it.
-  { path: "/claude", source: "app/[locale]/claude/page.tsx" },
-  { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
+  { path: "/claude", sources: "/claude" },
+  { path: "/editorial-policy", sources: "/editorial-policy" },
   // `/explore` is the public routine and bundle directory. Its seven non-English
   // locales render translated chrome around English catalog content and are
-  // `noindex` (self-canonical), so only `/en/explore` is listed. The
-  // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
-  // revalidates at runtime; this file stays `force-static`, its `lastmod`
-  // values come from lib/content-dates.json.
-  { path: "/explore", source: "app/[locale]/explore/page.tsx" },
+  // `noindex` (self-canonical), so only `/en/explore` is listed. Its lastmod is
+  // dated by the page file alone: the catalog it shows is live API data, and
+  // each record's own date is its lastmod in `/sitemap-explore.xml`, which
+  // revalidates at runtime. This file stays `force-static`.
+  { path: "/explore", sources: "/explore" },
   // Public routine ideas for people new to Toone. English only; the idea
-  // pages come from lib/creator-ideas.ts, so that file dates them.
-  { path: "/newcomers/ideas", source: "app/[locale]/newcomers/ideas/page.tsx" },
-  ...CREATOR_IDEAS.map((idea) => ({ path: `/newcomers/ideas/${idea.slug}`, source: "lib/creator-ideas.ts" })),
-] as const;
+  // pages are written in lib/creator-ideas.ts, one of their sources.
+  { path: "/newcomers/ideas", sources: "/newcomers/ideas" },
+  ...CREATOR_IDEAS.map((idea) => ({ path: `/newcomers/ideas/${idea.slug}`, sources: "/newcomers/ideas/[slug]" as const })),
+];
 
 /**
- * `lastmod` for a route: the date of the last commit that touched the file
- * backing it (lib/content-dates.json, written from full git history and
- * checked by `npm test`), then the page's declared editorial date if it has
- * one. When neither is known the entry is listed with no `<lastmod>` at all
- * (TECH-013). `changefreq`/`priority` were dropped: Google has ignored both
- * since 2023 (audit P3-2).
+ * `lastmod` for a route: the latest date among the files that render it, its
+ * page.tsx and the components and data files that make up its main content
+ * (lib/route-sources.ts), each dated by lib/content-dates.json (written from
+ * full git history, checked by `npm test` and CI). A page with
+ * a declared editorial date and no dated source falls back to that date. When
+ * nothing is known the entry is listed with no `<lastmod>` at all (TECH-013).
+ * `changefreq`/`priority` were dropped: Google has ignored both since 2023
+ * (audit P3-2).
+ *
+ * Known limit: copy kept only in messages/<locale>.json does not move any
+ * `lastmod`. Those files are shared by every page, so dating pages by them
+ * would date the whole site to any one copy edit. A copy change that matters
+ * for search should ship with an edit to the page's own sources, or wait for
+ * the next one.
  *
  * Git is never asked at build time. Vercel builds from a shallow clone, where
  * every file untouched in the last ~10 commits looks changed by the oldest
@@ -71,12 +82,15 @@ function makeLastModified() {
   const omitted: string[] = [];
   return {
     omitted,
-    lastModified(loc: string, sourcePath: string | null, declaredDate?: string): string | null {
-      const committed = contentDate(sourcePath);
-      if (committed) return committed;
-      if (declaredDate) return declaredDate;
+    lastModified(loc: string, sourcePaths: readonly (string | null)[], declaredDate?: string): string | null {
+      const dates = sourcePaths.map((source) => contentDate(source));
+      // YYYY-MM-DD sorts as text. A source missing from the manifest is
+      // reported, not skipped silently: the date could be too old without it.
+      const latest = dates.reduce<string | null>((max, date) => (date && (!max || date > max) ? date : max), null);
+      if (latest && !dates.includes(null)) return latest;
+      if (!latest && declaredDate) return declaredDate;
       omitted.push(loc);
-      return null;
+      return latest;
     },
   };
 }
@@ -107,7 +121,7 @@ export async function GET() {
   for (const locale of INDEXED_LOCALES) {
     for (const route of LOCALIZED_ROUTES) {
       const loc = `${BASE_URL}/${locale}${route.path}`;
-      lines.push(url(loc, lastModified(loc, route.source)));
+      lines.push(url(loc, lastModified(loc, ROUTE_SOURCES[route.sources])));
     }
   }
 
@@ -117,7 +131,7 @@ export async function GET() {
   // non-English routes redirect until qualified translations are approved.
   for (const route of ENGLISH_ONLY_ROUTES) {
     const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(url(loc, lastModified(loc, route.source)));
+    lines.push(url(loc, lastModified(loc, ROUTE_SOURCES[route.sources])));
   }
 
   for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {

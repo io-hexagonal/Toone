@@ -44,7 +44,8 @@ test("Terms page points Store users to Apple's standard EULA", () => {
 test("Terms and privacy remain discoverable", () => {
   const sitemap = read("app/sitemap.xml/route.ts");
   const footer = read("components/Footer.tsx");
-  assert.match(sitemap, /\{ path: "\/terms", source: "app\/\[locale\]\/terms\/page\.tsx" \}/);
+  assert.match(sitemap, /\{ path: "\/terms", sources: "\/terms" \}/);
+  assert.match(read("lib/route-sources.ts"), /"\/terms": \[\s*"app\/\[locale\]\/terms\/page\.tsx",/);
   assert.match(footer, /<Link href="\/terms">/);
   assert.match(footer, /<Link href="\/privacy">/);
 });

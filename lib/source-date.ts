@@ -1,13 +1,15 @@
 import { execFileSync } from "node:child_process";
 import committedDates from "./content-dates.json";
+import { ROUTE_SOURCE_FILES } from "./route-sources";
 
 /**
  * Date provenance for `lastmod` / `dateModified` (TECH-013).
  *
  * Both signals describe when the *content* last changed, not when the site
- * was last deployed. The authority is the commit date of the file backing a
- * route, and those dates are read from `lib/content-dates.json`, a manifest
- * committed with the code (A2).
+ * was last deployed. The authority is the commit date of the files backing a
+ * route (its page and the components that render its main content,
+ * lib/route-sources.ts), and those dates are read from
+ * `lib/content-dates.json`, a manifest committed with the code (A2).
  *
  * Why a committed file and not git at build time: Vercel builds from a
  * shallow clone (about 10 commits). In a shallow clone the oldest commit
@@ -22,17 +24,30 @@ import committedDates from "./content-dates.json";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
-/** The files whose dates the site publishes: everything a route names as its source. */
+const ROUTE_FILES = new Set(ROUTE_SOURCE_FILES);
+
+/**
+ * The files whose dates the site publishes: every page and content file, plus
+ * the components and data files a sitemap route names as its sources
+ * (lib/route-sources.ts).
+ */
 export function isDatedSource(path: string): boolean {
   return (
     path.startsWith("content/") ||
     (path.startsWith("app/[locale]/") && path.endsWith("/page.tsx")) ||
-    path === "lib/creator-ideas.ts"
+    ROUTE_FILES.has(path)
   );
 }
 
-/** Top-level pathspecs that hold every dated source (no `[` globs: git reads those as patterns). */
-export const DATED_SOURCE_ROOTS = ["content", "app", "lib/creator-ideas.ts"] as const;
+/**
+ * Pathspecs that hold every dated source: `content`, `app`, and each route
+ * source outside them. No `[` in any of them: git reads those as patterns.
+ */
+export const DATED_SOURCE_ROOTS: readonly string[] = [
+  "content",
+  "app",
+  ...ROUTE_SOURCE_FILES.filter((file) => !file.startsWith("app/") && !file.startsWith("content/")),
+];
 
 /**
  * `YYYY-MM-DD` of the last commit touching each file under `roots`, from one

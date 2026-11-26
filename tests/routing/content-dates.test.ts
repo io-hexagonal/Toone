@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 import { expectedDates, historyKind, manifestDiff } from "../../scripts/content/dates-core";
-import { collectSourceDates, contentDate, isDatedSource } from "../../lib/source-date";
+import { collectSourceDates, contentDate, DATED_SOURCE_ROOTS, isDatedSource } from "../../lib/source-date";
 
 /**
  * A2: lib/content-dates.json replaces git at build time. These tests pin the
@@ -57,7 +57,7 @@ test("the checker reports a stale or missing date and accepts an exact match", (
 test("an uncommitted change to a dated file counts as today", (t) => {
   if (historyKind() !== "full") return t.skip("needs full history");
   const dates = expectedDates(process.cwd(), "2099-01-01");
-  const dirty = execFileSync("git", ["status", "--porcelain=v1", "--", "content", "app", "lib/creator-ideas.ts"], { encoding: "utf8" })
+  const dirty = execFileSync("git", ["status", "--porcelain=v1", "--", ...DATED_SOURCE_ROOTS], { encoding: "utf8" })
     .split("\n")
     .filter((line) => line.length > 3 && !line.startsWith(" D") && !line.startsWith("D "))
     .map((line) => line.slice(3))
