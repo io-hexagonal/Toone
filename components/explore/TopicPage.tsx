@@ -8,6 +8,7 @@ import {
   findTopicTerm,
   isTopicPageIndexable,
   topicPageCopy,
+  topicPageIntro,
   topicPagePath,
   topicQuery,
   type TopicKind,
@@ -33,6 +34,12 @@ export async function topicPageMetadata(kind: TopicKind, { params }: TopicPagePr
     const topic = await resolveTopic(kind, slug);
     if (!topic) return { robots: { index: false, follow: true } };
     const meta = exploreMetadata(locale, topic.path, topic.copy.heading, topic.copy.intro, null);
+    // No written intro: never indexable, so skip the routine count (one less
+    // API call, and one less way for the page to fail).
+    if (topicPageIntro(topic.term.id) === null) {
+      meta.robots.index = false;
+      return meta;
+    }
     let listings = 0;
     try {
       listings = (await getCatalog(JSON.stringify({ ...topic.query, type: "routines" }))).total;

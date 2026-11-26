@@ -112,6 +112,8 @@ Persist only the state required to resume. Microsoft's orchestration guidance re
 
 Record one source owner for every shared instruction, fact, and configuration. If two sources conflict, the organization needs a deterministic precedence or an escalation owner.
 
+Shared knowledge needs the same care as shared state. Write down the facts, rules, and reference files the roles read on every run, name who owns each one and when it is reviewed, and give each role only the part its job needs. In Toone, a project keeps its agents, routines, tools, files, and context together, and nothing leaks between projects; each agent also has custom context it reads every time it works. That keeps the knowledge next to the work instead of being re-explained in every request.
+
 ### 6. Define evidence, recovery, and maintenance
 
 Decide what proves the work is acceptable before running it. Evidence might include a required schema, a source manifest, an immutable artifact, a reviewer applying a rubric, or a state-change receipt. Match the evidence to the job and its risk. In Toone, you can [see and explain every change to a project](/en/how-to/features/project-history), with agent edits marked apart from your own.

@@ -55,6 +55,16 @@ export function topicQuery(term: { id: string; kind: TopicKind }): CatalogQuery 
   return { ...base, usefulFor: [term.id] };
 }
 
+/** The term's written intro, or null when it has none (a blank entry counts as none). */
+export function topicPageIntro(
+  termId: string,
+  intros: Readonly<Record<string, string>> = TOPIC_PAGE_INTROS,
+): string | null {
+  if (!Object.hasOwn(intros, termId)) return null;
+  const intro = intros[termId];
+  return typeof intro === "string" && intro.trim() ? intro.trim() : null;
+}
+
 /** TOPIC-012: a written intro and at least 5 distinct records (routines). */
 export function isTopicPageIndexable(
   termId: string,
@@ -62,7 +72,7 @@ export function isTopicPageIndexable(
   intros: Readonly<Record<string, string>> = TOPIC_PAGE_INTROS,
 ): boolean {
   return (
-    Object.hasOwn(intros, termId) &&
+    topicPageIntro(termId, intros) !== null &&
     Number.isSafeInteger(distinctListings) &&
     distinctListings >= TOPIC_PAGE_MIN_LISTINGS
   );
@@ -86,7 +96,7 @@ function inSentence(label: string): string {
  */
 export function topicPageCopy(term: { id?: string; kind: TopicKind; label: string }): { heading: string; intro: string } {
   const forWhom = term.kind === "useful_for";
-  const written = term.id && Object.hasOwn(TOPIC_PAGE_INTROS, term.id) ? TOPIC_PAGE_INTROS[term.id] : null;
+  const written = term.id ? topicPageIntro(term.id) : null;
   return {
     heading: forWhom
       ? `AI Routines & Workflow Templates for ${term.label}`

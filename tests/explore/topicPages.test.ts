@@ -8,6 +8,7 @@ import {
   isTopicPageIndexable,
   termSlug,
   topicPageCopy,
+  topicPageIntro,
   topicPagePath,
   topicQuery,
 } from "../../lib/explore/topicPages";
@@ -56,6 +57,10 @@ test("a topic page is indexable only with a written intro and 5 distinct records
   assert.equal(isTopicPageIndexable("cat_marketing-sales", 4, intros), false);
   assert.equal(isTopicPageIndexable("cat_marketing-sales", 5, intros), true);
   assert.equal(isTopicPageIndexable("cat_marketing-sales", Number.NaN, intros), false);
+  // A blank intro counts as none.
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 50, { "cat_marketing-sales": "   " }), false);
+  assert.equal(topicPageIntro("cat_marketing-sales", { "cat_marketing-sales": "  Weekly marketing work.  " }), "Weekly marketing work.");
+  assert.equal(topicPageIntro("cat_marketing-sales", { "cat_marketing-sales": "" }), null);
   // No written intro: noindex at any count.
   assert.equal(isTopicPageIndexable("topic_seo-content", 50, intros), false);
   // Nothing has a written intro yet, so no topic page is indexable today.

@@ -14,7 +14,9 @@ import { INDEXNOW_SITE } from "./submit";
  * Left out on purpose:
  * - `/en/journal` and Journal posts: the Journal webhook already sends them
  *   on every publish (`lib/journal/indexnow.ts`). The hub pages
- *   (`/en/journal/releases` …) are not sent by the webhook, so they stay in.
+ *   (`/en/journal/releases` …) are not sent by the webhook, so they are kept
+ *   here; a hub is in the sitemap, and so sent, only once it has 5 posts
+ *   (`JOURNAL_HUB_MIN_POSTS`).
  * - Any URL with no `lastmod` (for example a CLI deploy with no git history,
  *   PR #74): no date means no proof of change, so nothing is sent for it.
  */
