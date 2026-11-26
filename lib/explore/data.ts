@@ -146,8 +146,11 @@ type Fetched<T> = { data: T; total: number };
  *
  * - `notServed`: upstream path -> expiry. A 404 costs one upstream call per
  *   window instead of one per request.
- * - `lastGood`: full URL -> last 200 payload. When upstream answers 429 the
- *   last good catalog renders instead of the outage page.
+ * - `lastGood`: full URL -> last 200 payload and when it arrived. When
+ *   upstream fails in a way a retry can fix (429, 408, 5xx, timeout, network
+ *   error, a body that is not a `{data}` envelope) and Next's data cache has
+ *   nothing for the URL, the last good answer for the same URL renders
+ *   instead of a 500, if it is younger than `LAST_GOOD_MAX_AGE_MS`.
  *
  * Per warm instance only (Vercel functions do not share memory); the TTL
  * bounds staleness where the webhook cannot reach.
@@ -155,6 +158,18 @@ type Fetched<T> = { data: T; total: number };
 const NEGATIVE_TTL_MS = 5 * 60_000;
 const NEGATIVE_LIMIT = 500;
 const LAST_GOOD_LIMIT = 200;
+/**
+ * How old a last-good answer may be and still stand in for an outage: 24 h.
+ * Every Explore page is a 5xx while the API is down and the data cache is
+ * cold (each approval webhook expires it), and Google slows the crawl of the
+ * whole site on repeated 5xx and starts dropping URLs after about two days of
+ * them. A day covers an incident that starts at night and is fixed the next
+ * working morning, inside that window. Past a day the copy may differ too
+ * much from the record (retitled, repriced, removed), and a server error that
+ * crawlers retry is the honest answer. On Vercel an instance rarely lives
+ * that long anyway; the bound matters for long-lived servers.
+ */
+export const LAST_GOOD_MAX_AGE_MS = 24 * 60 * 60_000;
 
 /**
  * Next compiles each route into its own chunk with its own copy of this
@@ -164,13 +179,13 @@ const LAST_GOOD_LIMIT = 200;
  */
 type ExploreMemo = {
   notServed: Map<string, number>;
-  lastGood: Map<string, Fetched<unknown>>;
+  lastGood: Map<string, { at: number; result: Fetched<unknown> }>;
   oversize?: Map<string, { at: number; result: Fetched<unknown> }>;
 };
 const MEMO_KEY = Symbol.for("toone.explore.memo");
 const memo: ExploreMemo = ((globalThis as Record<symbol, unknown>)[MEMO_KEY] ??= {
   notServed: new Map<string, number>(),
-  lastGood: new Map<string, Fetched<unknown>>(),
+  lastGood: new Map<string, { at: number; result: Fetched<unknown> }>(),
 }) as ExploreMemo;
 memo.oversize ??= new Map();
 const { notServed, lastGood } = memo;
@@ -236,22 +251,38 @@ async function getJson<T>(
   const recent = oversize.get(url.href);
   if (recent && Date.now() - recent.at < OVERSIZE_TTL_MS) return recent.result as Fetched<T>;
 
-  const response = await fetch(url, {
-    headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(8000),
-    next: { revalidate: EXPLORE_REVALIDATE_SECONDS, tags },
-  });
+  /** The last good answer for this exact URL while it is young enough. */
+  const fallback = (reason: string): Fetched<T> | null => {
+    const previous = lastGood.get(url.href);
+    const age = previous ? Date.now() - previous.at : Number.NaN;
+    if (!previous || !(age >= 0 && age < LAST_GOOD_MAX_AGE_MS)) return null;
+    console.warn(
+      `[explore] ${reason} on ${url.pathname}; serving last good response from ${Math.round(age / 60_000)} min ago`,
+    );
+    return previous.result as Fetched<T>;
+  };
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(8000),
+      next: { revalidate: EXPLORE_REVALIDATE_SECONDS, tags },
+    });
+  } catch (error) {
+    // Timeout (AbortSignal.timeout) or network failure: no answer at all.
+    const previous = fallback(error instanceof Error ? error.name : "network failure");
+    if (previous) return previous;
+    throw error;
+  }
 
   if (response.status === 404) {
     remember(notServed, routeKey, Date.now() + NEGATIVE_TTL_MS, NEGATIVE_LIMIT);
     return null;
   }
-  if (response.status === 429) {
-    const previous = lastGood.get(url.href);
-    if (previous) {
-      console.warn(`[explore] upstream 429 on ${url.pathname}; serving last good response`);
-      return previous as Fetched<T>;
-    }
+  if (response.status === 429 || response.status === 408 || response.status >= 500) {
+    const previous = fallback(`upstream ${response.status}`);
+    if (previous) return previous;
   }
   if (!response.ok) {
     let message = response.statusText;
@@ -264,13 +295,24 @@ async function getJson<T>(
     throw new ExploreApiError(url.pathname, response.status, message);
   }
 
-  const text = await response.text();
-  const envelope = JSON.parse(text) as { data?: T };
+  let text: string;
+  let envelope: { data?: T } | null;
+  try {
+    text = await response.text();
+    envelope = JSON.parse(text) as { data?: T } | null;
+  } catch (error) {
+    // A 200 that is not JSON (a proxy's error page) or a body cut short.
+    const previous = fallback("unreadable body");
+    if (previous) return previous;
+    throw error;
+  }
   if (
     envelope === null ||
     typeof envelope !== "object" ||
     !("data" in envelope)
   ) {
+    const previous = fallback("no data envelope");
+    if (previous) return previous;
     throw new ExploreApiError(
       url.pathname,
       response.status,
@@ -288,7 +330,7 @@ async function getJson<T>(
         ? data.length
         : 0;
   const result = { data, total };
-  remember(lastGood, url.href, result, LAST_GOOD_LIMIT);
+  remember(lastGood, url.href, { at: Date.now(), result }, LAST_GOOD_LIMIT);
   if (Buffer.byteLength(text) > DATA_CACHE_LIMIT_BYTES) {
     remember(oversize, url.href, { at: Date.now(), result }, OVERSIZE_LIMIT);
   }
