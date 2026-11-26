@@ -53,15 +53,19 @@ const schemas = (html) =>
   ].map((match) => JSON.parse(match[1]));
 const count = (html, type) =>
   [...html.matchAll(new RegExp(`data-explore-type="${type}"`, "g"))].length;
-// The unfiltered hub also lists bundle-only routines under "Routines inside
-// bundles" (Ahrefs F29); `grid` keeps only the main catalog grid.
-const grid = (html) => html.split('id="explore-in-bundles"')[0];
-test("server-rendered catalog has exactly one standalone routine and one bundle", async () => {
+// Since 8789cea the catalog asks for listing=all: a bundle's routines are
+// listed as normal routines in the one grid (the separate "Routines inside
+// bundles" section is retired). The fixture has one standalone routine and
+// one bundle whose members are bundle-only routines.
+const ROUTINES = 1 + bundle.members.length;
+test("server-rendered catalog lists every routine, bundle members included, and one bundle", async () => {
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(grid(html), "routine"), 1);
-  assert.equal(count(grid(html), "bundle"), 1);
-  assert.ok(count(html.slice(grid(html).length), "routine") >= 1, "bundle-only routines are one click from the hub");
+  assert.equal(count(html, "routine"), ROUTINES);
+  assert.equal(count(html, "bundle"), 1);
+  assert.ok(!html.includes('id="explore-in-bundles"'), "no separate bundle-routines section");
+  for (const member of bundle.members)
+    assert.match(html, new RegExp(`href="/en/explore/routines/${member.slug}"`), `bundle-only ${member.slug} is one click from the hub`);
   assert.match(
     html,
     /<link rel="canonical" href="https:\/\/trytoone.com\/en\/explore"/,
@@ -69,12 +73,12 @@ test("server-rendered catalog has exactly one standalone routine and one bundle"
   assert.equal(
     schemas(html).find((s) => s["@type"] === "CollectionPage").mainEntity
       .itemListElement.length,
-    2,
+    ROUTINES + 1,
   );
 });
 test("type, search, and tags filter the actual server-rendered catalog", async () => {
   const routines = await get("/en/explore?type=routines");
-  assert.equal(count(routines.html, "routine"), 1);
+  assert.equal(count(routines.html, "routine"), ROUTINES);
   assert.equal(count(routines.html, "bundle"), 0);
   const bundles = await get("/en/explore?type=bundles");
   assert.equal(count(bundles.html, "routine"), 0);
@@ -276,13 +280,13 @@ test("a server without the bundles route hides the Bundles filter and still list
   await invalidate(routine.slug, routine.workflow_id);
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(grid(html), "routine"), 1);
-  assert.equal(count(grid(html), "bundle"), 0);
+  assert.equal(count(html, "routine"), ROUTINES);
+  assert.equal(count(html, "bundle"), 0);
   const chips = [...html.matchAll(/class="explore-type-option"[^>]*>([^<]*)</g)].map((m) => m[1]);
   assert.deepEqual(chips, ["All", "Routines"]);
   assert.ok(!html.includes("Explore is temporarily unavailable"));
   const filtered = await get("/en/explore?type=routines");
-  assert.equal(count(filtered.html, "routine"), 1);
+  assert.equal(count(filtered.html, "routine"), ROUTINES);
   assert.ok(!filtered.html.includes(">Bundles<"));
   const bundlePage = await get("/en/explore/bundles/" + bundle.slug);
   assert.equal(bundlePage.response.status, 404);
@@ -296,7 +300,7 @@ test("data-URL-only covers render the placeholder on cards but inline in the det
   await mode({ dataUrlCovers: true });
   await invalidate(routine.slug, routine.workflow_id);
   const index = await get("/en/explore");
-  assert.equal(count(grid(index.html), "routine"), 1);
+  assert.equal(count(index.html, "routine"), ROUTINES);
   assert.ok(!index.html.includes("src=\"data:image"), "cards must not inline data URLs");
   assert.match(index.html, /explore-cover-empty/);
   const detail = await get("/en/explore/routines/" + routine.slug);
