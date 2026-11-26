@@ -12,6 +12,7 @@ import {
 } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
 import HowToLink from "@/components/HowToLink";
+import { isUnindexedPage } from "@/lib/page-indexing";
 import SignedInOnly from "@/components/SignedInOnly";
 
 export type ArticleUi = {
@@ -47,6 +48,9 @@ function markdownComponents(locale: Locale): Components {
     if (/^\/[a-z]{2}\/how-to(?:[/?#]|$)/.test(target)) {
       return <HowToLink href={target.replace(/^\/[a-z]{2}\//, "/en/")} fallback="text">{children}</HowToLink>;
     }
+    // A page kept out of the index for now (lib/page-indexing.ts): the words
+    // stay, the link comes back when the page is indexed again (A7).
+    if (isUnindexedPage(target)) return <>{children}</>;
     return (
       <a href={target} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
         {children}

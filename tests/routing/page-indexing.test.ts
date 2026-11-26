@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import LandingAudienceBar from "../../components/LandingAudienceBar";
-import { BUSINESS_LANDING_INDEXED, linksBusinessLanding } from "../../lib/page-indexing";
+import { BUSINESS_LANDING_INDEXED, GOVERNANCE_PAGE_INDEXED, isUnindexedPage, linksBusinessLanding } from "../../lib/page-indexing";
 
 /*
  * TECH-025 / indexing plan A7: an indexable page has no <a href> to a
@@ -48,4 +48,24 @@ test("the business page's robots, its sitemap entry and the landing links read t
   for (const file of ["components/SiteHeader.tsx", "components/HeroLanding.tsx", "components/LandingAudienceBar.tsx"]) {
     assert.match(fs.readFileSync(file, "utf8"), /linksBusinessLanding\(/, file);
   }
+});
+
+test("while /en/governance is noindex, the footer does not link it; page, sitemap and footer read one flag", () => {
+  assert.equal(GOVERNANCE_PAGE_INDEXED, false);
+  const page = fs.readFileSync("app/[locale]/governance/page.tsx", "utf8");
+  assert.match(page, /robots: localeRobots\(locale, GOVERNANCE_PAGE_INDEXED\)/);
+  assert.match(fs.readFileSync("app/sitemap.xml/route.ts", "utf8"), /GOVERNANCE_PAGE_INDEXED \? getPublication\("ai-agent-governance", "en"\)/);
+  const footer = fs.readFileSync("components/Footer.tsx", "utf8");
+  assert.match(footer, /\{GOVERNANCE_PAGE_INDEXED && <a href="\/en\/governance">/);
+  assert.equal(footer.match(/\/governance/g)?.length, 1, "no other governance link in the footer");
+});
+
+test("article Markdown and the resources list drop links to pages kept out of the index", () => {
+  assert.equal(isUnindexedPage("/en/governance"), true);
+  assert.equal(isUnindexedPage("/en/governance#approvals"), true);
+  assert.equal(isUnindexedPage("/en/business/"), true);
+  assert.equal(isUnindexedPage("/en/ai-agent-routines"), false);
+  assert.equal(isUnindexedPage("/en/guides/ai-agent-governance"), false);
+  assert.match(fs.readFileSync("components/ArticlePage.tsx", "utf8"), /if \(isUnindexedPage\(target\)\) return <>\{children\}<\/>;/);
+  assert.match(fs.readFileSync("app/[locale]/resources/page.tsx", "utf8"), /\.filter\(\s*\(publication\) => !isUnindexedPage\(`\/en\$\{publication\.canonicalPath\}`\)/);
 });

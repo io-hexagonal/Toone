@@ -4,6 +4,7 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
+import { isUnindexedPage } from "@/lib/page-indexing";
 import { getLatestPosts } from "@/lib/journal/api";
 import { PostCard } from "@/components/journal/JournalParts";
 import { type Locale } from "@/i18n/routing";
@@ -54,7 +55,10 @@ export default async function ResourcesPage({ params }: Props) {
   const locale = localeParam as Locale;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "resources" });
-  const publications = getPublications(locale);
+  // A page kept out of the index for now (/governance) is not listed (A7).
+  const publications = getPublications(locale).filter(
+    (publication) => !isUnindexedPage(`/en${publication.canonicalPath}`),
+  );
   // The Journal is English-only and API-driven; a failure hides the section.
   const journalPosts = await getLatestPosts(3);
   const dateFormatter = new Intl.DateTimeFormat(locale, {

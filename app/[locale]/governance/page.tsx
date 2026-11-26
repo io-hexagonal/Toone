@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
+import { GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 import type { Article, BreadcrumbList, WithContext } from "schema-dts";
 import { notFound } from "next/navigation";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
@@ -27,7 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // plan A4): 207 words under a title that promises approval gates,
     // permissions and receipts. It returns to the index once it shows them
     // with real screenshots (approval step, Safe Mode, audit log).
-    robots: localeRobots(locale, false),
+    // GOVERNANCE_PAGE_INDEXED (lib/page-indexing.ts) reopens it: the same
+    // flag drives this `robots`, the sitemap entry and the footer link.
+    robots: localeRobots(locale, GOVERNANCE_PAGE_INDEXED),
     other: localeVersions("/governance", ["en"]),
     openGraph: {
       type: "article",

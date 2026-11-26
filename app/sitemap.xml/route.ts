@@ -3,7 +3,7 @@ import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/cont
 import { contentDate } from "@/lib/source-date";
 import { ROUTE_SOURCES, type SourcedRoute } from "@/lib/route-sources";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
-import { BUSINESS_LANDING_INDEXED } from "@/lib/page-indexing";
+import { BUSINESS_LANDING_INDEXED, GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 
 export const dynamic = "force-static";
@@ -149,6 +149,13 @@ export async function GET() {
 
   // `/governance` (an English-only editorial page outside the guide family)
   // is `noindex` until it is filled in, so it is not listed (indexing plan A4).
+  // GOVERNANCE_PAGE_INDEXED (lib/page-indexing.ts) lists it again, dated like
+  // its `Article.dateModified`.
+  const governance = GOVERNANCE_PAGE_INDEXED ? getPublication("ai-agent-governance", "en") : null;
+  if (governance) {
+    const loc = `${BASE_URL}/en${governance.canonicalPath}`;
+    lines.push(url(loc, lastModified(loc, [governance.sourcePath], governance.updated)));
+  }
   lines.push("</urlset>");
 
   reportOmitted(omitted);

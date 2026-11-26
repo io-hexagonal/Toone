@@ -7,6 +7,7 @@ import SignedInLink from "@/components/SignedInLink";
 import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -107,7 +108,8 @@ export default async function Footer({
               <Link href="/explore">{nav("explore")}</Link>
               <Link href="/resources">{nav("resources")}</Link>
               <Link href="/journal">{nav("journal")}</Link>
-              <a href="/en/governance">{nav("governance")}</a>
+              {/* Linked only while the governance page is indexed (lib/page-indexing.ts, A7). */}
+              {GOVERNANCE_PAGE_INDEXED && <a href="/en/governance">{nav("governance")}</a>}
               <SignedInLink href="/how-to">{nav("howTo")}</SignedInLink>
             </div>
             <div>

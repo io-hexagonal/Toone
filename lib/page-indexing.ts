@@ -30,3 +30,18 @@ export const GOVERNANCE_PAGE_INDEXED = false;
 export function linksBusinessLanding(locale: string, current?: "personal" | "business" | "any"): boolean {
   return BUSINESS_LANDING_INDEXED || !isIndexedLocale(locale) || current === "business";
 }
+
+/**
+ * Whether a same-site path (`/en/governance`, `/en/business#faq`) is one of
+ * the pages above while it is kept out of the index. Article and guide
+ * Markdown keeps the words of such a link but drops the link, and listings
+ * leave the page out, so the content can keep its links for when the page
+ * reopens (TECH-025).
+ */
+export function isUnindexedPage(path: string): boolean {
+  const page = path.replace(/[?#].*$/, "").replace(/\/+$/, "");
+  return (
+    (!GOVERNANCE_PAGE_INDEXED && /^\/en\/governance$/.test(page)) ||
+    (!BUSINESS_LANDING_INDEXED && /^\/en\/business$/.test(page))
+  );
+}
