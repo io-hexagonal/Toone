@@ -34,19 +34,19 @@ const AUDIENCES = [
   { id: "business", href: "/business", labelKey: "audienceBusiness" },
 ] as const;
 
-/** #3 medal in ink tones, drawn so it needs no third-party image. */
+/** #3 medal, drawn so it needs no third-party image: ink tones at rest, its bronze on hover. */
 function MedalIcon() {
   return (
     <svg className="hl-badge-icon" viewBox="0 0 28 32" aria-hidden="true" focusable="false">
       <defs>
         <linearGradient id="hl-medal" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#8a8780" />
-          <stop offset="0.55" stopColor="#5c5a55" />
-          <stop offset="1" stopColor="#3b3a37" />
+          <stop className="hl-m0" offset="0" />
+          <stop className="hl-m1" offset="0.55" />
+          <stop className="hl-m2" offset="1" />
         </linearGradient>
       </defs>
-      <path d="M8 18 4.5 30l5-2.4L12.6 31l2.2-9.6Z" fill="#6b6862" />
-      <path d="M20 18l3.5 12-5-2.4-3.1 3.4-2.2-9.6Z" fill="#4a4844" />
+      <path className="hl-r0" d="M8 18 4.5 30l5-2.4L12.6 31l2.2-9.6Z" />
+      <path className="hl-r1" d="M20 18l3.5 12-5-2.4-3.1 3.4-2.2-9.6Z" />
       <circle cx="14" cy="12" r="11" fill="url(#hl-medal)" />
       <circle cx="14" cy="12" r="8.2" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2" />
       <text x="14" y="16.2" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#fff" fontFamily="system-ui, sans-serif">
@@ -60,7 +60,7 @@ function ClaudeSpark() {
   return (
     <svg className="hl-badge-icon hl-badge-icon--claude" viewBox="0 0 148.18 148.18" aria-hidden="true" focusable="false">
       <g transform="translate(-75.96,-223.53)">
-        <path d={CLAUDE_SPARK} fill="#1d1c19" fillOpacity="0.75" />
+        <path className="hl-spark" d={CLAUDE_SPARK} />
       </g>
     </svg>
   );
@@ -168,6 +168,20 @@ export default async function HeroLanding({ audience = "business" }: Props) {
             .hl-badge:hover { border-color: rgba(29,28,25,0.3); transform: translateY(-1px); }
             .hl-badge-icon { width: 24px; height: 28px; flex: none; }
             .hl-badge-icon--claude { width: 22px; height: 22px; }
+            /* The icons rest in ink and take their own colours on hover or focus:
+               Claude's clay spark, the medal's bronze and red ribbons. */
+            .hl-spark { fill: rgba(29,28,25,0.75); transition: fill .25s ease; }
+            .hl-m0 { stop-color: #8a8780; transition: stop-color .25s ease; }
+            .hl-m1 { stop-color: #5c5a55; transition: stop-color .25s ease; }
+            .hl-m2 { stop-color: #3b3a37; transition: stop-color .25s ease; }
+            .hl-r0 { fill: #6b6862; transition: fill .25s ease; }
+            .hl-r1 { fill: #4a4844; transition: fill .25s ease; }
+            .hl-badge:is(:hover, :focus-visible) .hl-spark { fill: #d97757; }
+            .hl-badge:is(:hover, :focus-visible) .hl-m0 { stop-color: #e7b58a; }
+            .hl-badge:is(:hover, :focus-visible) .hl-m1 { stop-color: #c98a5a; }
+            .hl-badge:is(:hover, :focus-visible) .hl-m2 { stop-color: #9c623a; }
+            .hl-badge:is(:hover, :focus-visible) .hl-r0 { fill: #d9654b; }
+            .hl-badge:is(:hover, :focus-visible) .hl-r1 { fill: #b84a36; }
             .hl-badge-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
             .hl-badge-kicker {
               color: #6f6b64; font-size: 10px; font-weight: 600;

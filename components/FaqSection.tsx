@@ -11,14 +11,18 @@ import { TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 export default async function FaqSection() {
   const t = await getTranslations("faq");
   const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] as const;
-  const answer = (i: (typeof items)[number]) => t(`a${i}`, { free: TOONE_PRO_FREE_ROUTINE_CREATIONS });
+  /** On the page: "coming soon" as a chip. In structured data: plain text. */
+  const answer = (i: (typeof items)[number]) =>
+    t.rich(`a${i}`, { free: TOONE_PRO_FREE_ROUTINE_CREATIONS, soon: (chunks) => <span className="soon-chip">{chunks}</span> });
+  const answerText = (i: (typeof items)[number]) =>
+    t.markup(`a${i}`, { free: TOONE_PRO_FREE_ROUTINE_CREATIONS, soon: (chunks) => `(${[chunks].flat().join("").toLowerCase()})` });
   const structured = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: items.map((i) => ({
       "@type": "Question",
       name: t(`q${i}`),
-      acceptedAnswer: { "@type": "Answer", text: answer(i) },
+      acceptedAnswer: { "@type": "Answer", text: answerText(i) },
     })),
   };
 
@@ -58,6 +62,12 @@ export default async function FaqSection() {
               transition: transform 0.2s ease; flex-shrink: 0;
             }
             .faq-list details[open] summary::after { transform: rotate(45deg); }
+            .soon-chip {
+              display: inline-flex; align-items: center; height: 22px; padding: 0 9px; margin-left: 4px;
+              border-radius: 999px; vertical-align: 1px; white-space: nowrap;
+              background: rgba(29,28,25,0.07); color: rgba(29,28,25,0.78);
+              font-size: 12.5px; font-weight: 600; line-height: 1;
+            }
             .faq-list summary:focus-visible { outline: 2px solid #1d1c19; outline-offset: 2px; border-radius: 4px; }
             .faq-list details p {
               color: rgba(29,28,25,0.66); font-size: 16px; line-height: 1.65;
