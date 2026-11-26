@@ -9,6 +9,7 @@ import { PostCard } from "@/components/journal/JournalParts";
 import { type Locale } from "@/i18n/routing";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { openGraphLocale } from "@/i18n/open-graph";
+import HowToLink from "@/components/HowToLink";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -203,7 +204,7 @@ export default async function ResourcesPage({ params }: Props) {
           <ul>
             {PRODUCT_GUIDES.map(([key, href]) => (
               <li key={key}>
-                <a href={href}>{t(`productGuides.${key}.title`)}</a>
+                <HowToLink href={href} fallback="text">{t(`productGuides.${key}.title`)}</HowToLink>
                 <span>{t(`productGuides.${key}.description`)}</span>
               </li>
             ))}

@@ -96,7 +96,15 @@ test("with checkout on, the plans render in order with the disclosures", () => {
   assert.match(html, /href="\/en\/terms#toone-pro"/);
   // The session is only known in the browser: no buy button in the server HTML.
   assert.doesNotMatch(html, /Get (Monthly|Yearly|Lifetime)/);
+  // ...and no placeholder text either: the pending buttons are labelled for
+  // screen readers only, so crawlers read no "Checking your account…" (A10).
+  assert.doesNotMatch(html, />Checking your account…</);
+  assert.match(html, /aria-label="Checking your account…"/);
   assert.doesNotMatch(html, /coming soon/i);
+});
+
+test("the pricing heading reads 'Automate', not 'Automatise'", () => {
+  assert.match(messages.billing.pricing.title, /^Save your tokens\. Automate /);
 });
 
 test("with checkout off, there is no purchase control, only 'coming soon'", () => {

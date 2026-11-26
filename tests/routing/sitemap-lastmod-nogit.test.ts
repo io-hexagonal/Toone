@@ -1,14 +1,26 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { test } from "node:test";
 
 /**
- * TECH-013: a build host without git history (Vercel Git or CLI deploys) must
- * not stamp the build date on every URL. Unknown dates are omitted and the
- * build warns. GIT_DIR points git at nothing, so every git lookup fails.
+ * TECH-013 / A2: the build host has no usable git history (Vercel builds from
+ * a shallow clone, where every old file looks changed by the oldest commit
+ * present). The sitemap must not depend on it: its dates come from the
+ * committed lib/content-dates.json. GIT_DIR points git at nothing, so any git
+ * lookup would fail; every URL still gets its manifest date and nothing warns.
  */
 process.env.GIT_DIR = "/nonexistent-toone-git-dir";
 
-test("without git, lastmod is omitted, never the build date, and the build warns", async () => {
+const SOURCES: Record<string, string> = {
+  "https://trytoone.com/en": "app/[locale]/page.tsx",
+  "https://trytoone.com/en/privacy": "app/[locale]/privacy/page.tsx",
+  "https://trytoone.com/en/contact": "app/[locale]/contact/page.tsx",
+  "https://trytoone.com/en/pricing": "app/[locale]/pricing/page.tsx",
+  "https://trytoone.com/en/explore": "app/[locale]/explore/page.tsx",
+  "https://trytoone.com/en/governance": "content/guides/ai-agent-governance.md",
+};
+
+test("without git, every URL still carries its content date from the manifest", async () => {
   const warnings: string[] = [];
   const original = console.warn;
   console.warn = (...args: unknown[]) => void warnings.push(args.join(" "));
@@ -20,25 +32,15 @@ test("without git, lastmod is omitted, never the build date, and the build warns
     console.warn = original;
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const urls = [...xml.matchAll(/<url>.*?<\/url>/g)].map((m) => m[0]);
-  assert.ok(urls.length > 0, "sitemap lists URLs");
+  const manifest = JSON.parse(fs.readFileSync("lib/content-dates.json", "utf8")) as Record<string, string>;
+  const urls = [...xml.matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)];
+  assert.ok(urls.length > 20, "sitemap lists URLs");
   assert.ok(!xml.includes("<lastmod></lastmod>") && !xml.includes("null"), "no empty or null lastmod");
+  assert.deepEqual(urls.filter((m) => !m[2]).map((m) => m[1]), [], "no URL without a lastmod");
+  assert.equal(warnings.find((w) => w.startsWith("[sitemap] WARNING")), undefined, "no omitted-date warning");
 
-  const bare = urls.filter((u) => !u.includes("<lastmod>"));
-  for (const loc of [
-    "https://trytoone.com/en",
-  ]) {
-    assert.ok(bare.includes(`<url><loc>${loc}</loc></url>`), `${loc} has no lastmod`);
+  const lastmod = new Map(urls.map((m) => [m[1], m[2]]));
+  for (const [loc, source] of Object.entries(SOURCES)) {
+    assert.equal(lastmod.get(loc), manifest[source], `${loc} is dated by ${source}`);
   }
-  for (const u of urls) {
-    if (u.includes(`<lastmod>${today}</lastmod>`)) {
-      // Only a declared editorial date may equal today; git-backed routes may not.
-      assert.ok(!bare.includes(u), u);
-    }
-  }
-
-  const warning = warnings.find((w) => w.startsWith("[sitemap] WARNING: lastmod omitted"));
-  assert.ok(warning, "build warns about omitted lastmod");
-  assert.ok(warning.includes(`for ${bare.length} URL(s)`), "warning counts every bare URL");
 });

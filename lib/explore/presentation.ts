@@ -53,6 +53,14 @@ export function parseCatalogQuery(
     ...(usefulFor.length ? { usefulFor } : {}),
   };
 }
+/**
+ * A record's page. Records and bundles are English text, so every locale's
+ * copy is one permanent redirect to `/en` (proxy.ts, A6), and links from any
+ * locale point straight at the English URL (TECH-020).
+ */
+export function recordHref(type: "routine" | "bundle", slug: string): string {
+  return `/en/explore/${type}s/${slug}`;
+}
 export function catalogHref(locale: string, query: CatalogQuery): string {
   const params = new URLSearchParams();
   if (query.type !== "all") params.set("type", query.type);

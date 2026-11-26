@@ -6,7 +6,7 @@ import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ArticlePage from "@/components/ArticlePage";
 import { getPublication } from "@/lib/content";
-import { gitLastCommitDate } from "@/lib/source-date";
+import { contentDate } from "@/lib/source-date";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -16,8 +16,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!publication) return {};
   const url = "https://trytoone.com/en/governance";
   // The frontmatter `updated:` is hand-maintained and drifted behind the
-  // commit that rewrote this article (G2 follow-up 4). Git is the authority.
-  const dateModified = gitLastCommitDate(publication.sourcePath) ?? publication.updated;
+  // commit that rewrote this article (G2 follow-up 4). The commit date, from
+  // lib/content-dates.json, is the authority.
+  const dateModified = contentDate(publication.sourcePath) ?? publication.updated;
   return {
     title: publication.title,
     description: publication.description,
@@ -48,7 +49,7 @@ export default async function GovernancePage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const publication = getPublication("ai-agent-governance");
   if (!publication) notFound();
-  const dateModified = gitLastCommitDate(publication.sourcePath) ?? publication.updated;
+  const dateModified = contentDate(publication.sourcePath) ?? publication.updated;
 
   const schema: WithContext<Article> = {
     "@context": "https://schema.org",

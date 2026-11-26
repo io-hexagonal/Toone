@@ -67,19 +67,24 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
     assert.ok(catalog.includes(probe), "webhook must evict cached catalog");
     await mode({ unavailable: true });
     await invalidate();
-    for (const path of ["/en/explore", detailPath]) {
+    // A8: an indexable Explore URL answers an outage with a server error
+    // that crawlers retry, never "200 + noindex" (which reads as "drop me").
+    for (const path of ["/en/explore", detailPath, "/en/explore/bundles/" + "launch-kit-r5h8c2nd"]) {
+      // Next.js answers an uncaught render error with 500 (pages cannot pick
+      // 503). Its error shell carries its own `noindex`, which Google never
+      // reads on a 5xx: the status is the signal.
       const response = await fetch(base + path);
-      assert.notEqual(response.status, 404);
+      assert.equal(response.status, 500, path);
       const html = await response.text();
-      assert.match(html, /Explore is temporarily unavailable/);
-      assert.match(html, /<meta name="robots" content="noindex, follow"/);
+      assert.ok(!html.includes("Explore is temporarily unavailable"), path);
       assert.ok(!html.includes("No items match"));
-      if (path === detailPath)
-        assert.ok(
-          html.includes(`href="${detailPath}"`),
-          "detail retry preserves the item URL",
-        );
     }
+    // Filter and search views are noindex anyway: people get the retry page.
+    const search = await fetch(base + "/en/explore?q=audit");
+    assert.equal(search.status, 200);
+    const searchHtml = await search.text();
+    assert.match(searchHtml, /Explore is temporarily unavailable/);
+    assert.match(searchHtml, /<meta name="robots" content="noindex, follow"/);
     // An outage yields a valid, uncached, empty Explore sitemap rather than a
     // 5xx; the static /sitemap.xml is unaffected.
     const sitemap = await fetch(base + "/sitemap-explore.xml");

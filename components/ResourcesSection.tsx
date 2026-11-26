@@ -1,4 +1,5 @@
 import { getProductGuidePage } from "@/lib/product-showcase";
+import HowToLink from "@/components/HowToLink";
 
 const FEATURED_GUIDE_SLUGS = ["getting-started", "getting-started/create-a-routine"];
 
@@ -60,11 +61,11 @@ export default function ResourcesSection() {
           <h2 id="resources-title">From install to your first run</h2>
           <p className="sub">Two short guides: set up Toone, then build a routine you can run and inspect.</p>
         </div>
-        <a href="/en/how-to" className="text-link">Browse the full guide</a>
+        <HowToLink href="/en/how-to" className="text-link" fallback="none">Browse the full guide</HowToLink>
       </div>
       <div className="resource-preview-grid">
         {guides.map((guide) => (
-          <a key={guide.slug} href={`/en/how-to/${guide.slug}`} className="resource-preview-card">
+          <HowToLink key={guide.slug} href={`/en/how-to/${guide.slug}`} className="resource-preview-card" fallback="block">
             {/* The guide's section only ("Getting started"), without its step counter. */}
             <span className="resource-preview-type">{guide.eyebrow.split(" · ")[0]}</span>
             <h3>{guide.title}</h3>
@@ -72,7 +73,7 @@ export default function ResourcesSection() {
             {guide.estimatedTime ? (
               <span className="resource-preview-meta">{guide.estimatedTime}</span>
             ) : null}
-          </a>
+          </HowToLink>
         ))}
       </div>
       <p className="resource-preview-more">

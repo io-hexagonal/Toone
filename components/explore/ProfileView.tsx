@@ -5,7 +5,6 @@
  * Records without a profile keep the legacy layout in `ExploreView`.
  */
 import type { ReactNode } from "react";
-import { getTranslations } from "next-intl/server";
 import { termLabel, type ExploreTaxonomy } from "@/lib/explore/taxonomy";
 import { resolveSlug } from "@/lib/explore/api";
 import {
@@ -14,6 +13,7 @@ import {
   categoryHref,
   deepLink,
   requestAccessHref,
+  recordHref,
 } from "@/lib/explore/presentation";
 import type {
   BundlePublicDetail,
@@ -24,6 +24,7 @@ import type {
 } from "@/lib/explore/types";
 import OpenInToone from "./OpenInToone";
 import EditListingLink from "./EditListingLink";
+import HowToLink from "@/components/HowToLink";
 import {
   Author,
   Cover,
@@ -53,27 +54,6 @@ function label(taxonomy: ExploreTaxonomy | null, id: string) {
   return capitalize(termLabel(taxonomy, id));
 }
 
-async function SampleCommunityRating({ locale, count }: { locale: string; count: number }) {
-  const t = await getTranslations({ locale, namespace: "explore" });
-  const score = 4.9;
-  const formattedScore = new Intl.NumberFormat(locale).format(score);
-  return (
-    <div className="explore-community-rating">
-      <strong className="explore-community-rating-title">{t("communityRatingTitle")}</strong>
-      <div className="explore-community-rating-summary">
-        <span className="explore-community-rating-stars" aria-hidden="true">
-          ★★★★★
-          <span style={{ width: `${score / 5 * 100}%` }}>★★★★★</span>
-        </span>
-        <strong aria-hidden="true">{formattedScore}</strong>
-        <span className="explore-sr-only">{t("sampleRatingScore", { score: formattedScore })}</span>
-        <span aria-hidden="true">·</span>
-        <span>{t("sampleRatingCount", { count })}</span>
-      </div>
-    </div>
-  );
-}
-
 export function ProfileHero({
   detail,
   profile,
@@ -82,8 +62,7 @@ export function ProfileHero({
   ui,
   taxonomy,
   coverEntry,
-  sampleRatingCount,
-}: Props & { coverEntry?: CoverEntry; sampleRatingCount?: number }) {
+}: Props & { coverEntry?: CoverEntry }) {
   const id = recordId(detail);
   const category = detail.classification?.category_id;
   const audiences = profile.for_whom.map((entry) => label(taxonomy, entry.useful_for_id));
@@ -123,7 +102,6 @@ export function ProfileHero({
               <li>{size}</li>
               <li>{ui.runsInToone}</li>
             </ul>
-            {sampleRatingCount ? <SampleCommunityRating locale={locale} count={sampleRatingCount} /> : null}
             <div className="explore-actions">
               <OpenInToone
                 url={deepLink(type, id, detail.revision_id)}
@@ -142,7 +120,7 @@ export function ProfileHero({
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
             <p className="explore-howto">
-              <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
+              <HowToLink href={EXPLORE_GUIDES.setup} fallback="none">{ui.setupGuide} →</HowToLink>
             </p>
           </div>
           <Cover entry={coverEntry ?? detail} inline alt={coverEntry ? undefined : profile.cover_alt} />
@@ -387,7 +365,7 @@ function profileSections(
             const text = cardText(entry);
             return (
               <li key={entry.workflow_id}>
-                <a href={`/${locale}/explore/routines/${resolveSlug(entry)}`}>
+                <a href={recordHref("routine", resolveSlug(entry))}>
                   <strong>{text.title}</strong>
                   <span>{text.summary}</span>
                 </a>

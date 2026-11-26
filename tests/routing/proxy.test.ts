@@ -167,3 +167,38 @@ test("a versioned Terms link is rewritten to the request-time view; the plain Te
     assertRedirect(run(path, { "accept-language": "pt-BR" }), 308, "https://trytoone.com/en/terms?version=2026-11-11", path);
   }
 });
+
+test("A6: other locales' Explore record and bundle pages are one 308 to /en, query kept", () => {
+  for (const locale of ["pt", "es", "fr", "de", "it", "nl", "ru"]) {
+    assertRedirect(
+      run(`/${locale}/explore/routines/find-funding-abc123?ref=x`),
+      308,
+      "https://trytoone.com/en/explore/routines/find-funding-abc123?ref=x",
+      locale,
+    );
+    assertRedirect(
+      run(`/${locale}/explore/bundles/product-launch-essentials-trwv3k5g`, { "user-agent": GOOGLEBOT }),
+      308,
+      "https://trytoone.com/en/explore/bundles/product-launch-essentials-trwv3k5g",
+      locale,
+    );
+  }
+  // Unprefixed: straight to English, never through a negotiated locale first.
+  assertRedirect(
+    run("/explore/routines/find-funding-abc123", { "accept-language": "pt-BR", cookie: "toone_locale=pt" }),
+    308,
+    "https://trytoone.com/en/explore/routines/find-funding-abc123",
+  );
+});
+
+test("A6: the English record pages and the translated hubs and topic pages are not redirected", () => {
+  for (const path of [
+    "/en/explore/routines/find-funding-abc123",
+    "/en/explore/bundles/product-launch-essentials-trwv3k5g",
+    "/pt/explore",
+    "/de/explore/category/marketing-sales",
+    "/fr/explore/topic/drafting",
+  ]) {
+    assert.equal(run(path).headers.get("location"), null, path);
+  }
+});

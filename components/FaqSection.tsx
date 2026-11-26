@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
+import HowToLink from "@/components/HowToLink";
 
 /**
  * Landing FAQ — native <details> accordion. Questions are the objections
@@ -85,7 +86,7 @@ export default async function FaqSection() {
         <div className="faq-head">
           <h2>{t("title")}</h2>
           <p className="sub">
-            {t.rich("sub", { link: (chunks) => <a className="text-link" href="/en/how-to">{chunks}</a> })}
+            {t.rich("sub", { link: (chunks) => <HowToLink className="text-link" href="/en/how-to" fallback="text">{chunks}</HowToLink> })}
           </p>
         </div>
         <div className="faq-list">

@@ -1,8 +1,11 @@
 import ExploreFeaturedOn from "./ExploreFeaturedOn";
 import ExploreFilters from "./ExploreFilters";
 import FeaturedCarousel, { type FeaturedSlide } from "./FeaturedCarousel";
-import {hasTaxonomyFilters, termLabel} from "@/lib/explore/taxonomy";
+import { hasTaxonomyFilters, termLabel, type TaxonomyTerm } from "@/lib/explore/taxonomy";
+import { facetListings, isTopicPageIndexable, topicPagePath } from "@/lib/explore/topicPages";
 import { getCatalog, PAGE_SIZE, resolveCardCoverUrl, resolveSlug } from "@/lib/explore/api";
+import { exploreOutage } from "@/lib/explore/outage";
+import HowToLink from "@/components/HowToLink";
 import {
   catalogHref,
   type CatalogQuery,
@@ -13,6 +16,7 @@ import {
   featuredItems,
   SITE,
   EXPLORE_GUIDES,
+  recordHref,
 } from "@/lib/explore/presentation";
 import {
   ExploreShell,
@@ -23,6 +27,11 @@ import {
   priceLabel,
 } from "./ExploreView";
 
+/** The parameter-free first view of the hub, the only indexable one. */
+function isPlainView(query: CatalogQuery) {
+  return !(query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all" || query.page > 1);
+}
+
 /**
  * Hub metadata: only the plain first view of `/en/explore` is indexable. The
  * other locales' hubs are `noindex` with a self canonical, and no sitemap
@@ -31,12 +40,13 @@ import {
 export async function exploreCatalogMetadata(locale: string, query: CatalogQuery) {
   const ui = await getExploreCopy(locale);
   const meta = exploreMetadata(locale, "/explore", ui.heading, ui.intro, null);
-  if (query.query || query.tag || hasTaxonomyFilters(query) || query.type !== "all" || query.page > 1)
-    meta.robots.index = false;
+  if (!isPlainView(query)) meta.robots.index = false;
+  if (!meta.robots.index) return meta;
   try {
     await getCatalog(JSON.stringify(query));
-  } catch {
-    meta.robots.index = false;
+  } catch (error) {
+    // The plain hub is indexable: an outage is a server error, not noindex (A8).
+    exploreOutage("catalog metadata", error);
   }
   return meta;
 }
@@ -60,6 +70,10 @@ export default async function ExploreCatalog({ locale, query, topic }: {
     catalog = await getCatalog(JSON.stringify(query));
     tags = catalog.tags;
   } catch (error) {
+    // The hub and topic pages are indexable URLs: an outage there is a server
+    // error that crawlers retry (A8). Filter and search views are `noindex`
+    // already, so people get the retry page there.
+    if (topic || isPlainView(query)) exploreOutage("catalog", error);
     console.error(
       "[explore] catalog unavailable",
       error instanceof Error ? error.name : "unknown",
@@ -69,17 +83,28 @@ export default async function ExploreCatalog({ locale, query, topic }: {
   const active = { ...query, page: catalog.page };
   // Featured only on the plain first view, never on a search or filter.
   const unfiltered = !query.query && !query.tag && !hasTaxonomyFilters(query) && query.type === "all" && catalog.page === 1;
-  const libraryTerms = (kind: "category" | "useful_for") =>
+  const libraryTerms = (kind: "category" | "topic" | "useful_for") =>
     (catalog.taxonomy?.terms ?? [])
       .filter((term) => term.kind === kind && term.active)
       .sort((a, b) => a.sort_order - b.sort_order);
+  // The hub's crawlable way into its taxonomy: each term links to its own
+  // topic page while that page is indexable (the same test as the page's
+  // metadata and /sitemap-explore.xml), never to a `noindex` filter view (A7).
+  const termLink = (term: TaxonomyTerm) => {
+    const path = topicPagePath(term);
+    return path && isTopicPageIndexable(term.id, facetListings(catalog.facets, term.id)) ? (
+      <a href={`/${locale}${path}`}>{term.label}</a>
+    ) : (
+      <>{term.label}</>
+    );
+  };
   const featured: FeaturedSlide[] = unfiltered
     ? featuredItems(catalog.items, (item) => !!featuredCover(item, resolveCardCoverUrl)).map((item) => {
         const text = cardText(item.entry);
         const category = item.entry.classification?.category_id;
         return {
           id: item.type + ("workflow_id" in item.entry ? item.entry.workflow_id : item.entry.bundle_id),
-          href: `/${locale}/explore/${item.type}s/${resolveSlug(item.entry)}`,
+          href: recordHref(item.type, resolveSlug(item.entry)),
           eyebrow: [ui.featured, item.type === "bundle" ? ui.bundle : ui.routine, category && termLabel(catalog.taxonomy, category), priceLabel(item.entry.price, locale, ui)]
             .filter(Boolean)
             .join(" · "),
@@ -118,7 +143,7 @@ export default async function ExploreCatalog({ locale, query, topic }: {
           <h1>{heading}</h1>
           <p className="explore-intro">{intro}</p>
           <p className="explore-howto">
-            <a href={EXPLORE_GUIDES.explore}>{ui.exploreGuide} →</a>
+            <HowToLink href={EXPLORE_GUIDES.explore} fallback="none">{ui.exploreGuide} →</HowToLink>
           </p>
         </div>
       </header>
@@ -137,20 +162,30 @@ export default async function ExploreCatalog({ locale, query, topic }: {
             <span className="explore-filter-label" id="explore-type-label">
               {ui.show}
             </span>
-            <div className="explore-type-options">
+            {/* A form, not links: each type is a `noindex` filter view of
+                the hub, so crawlers get no link to it (A7). It still works
+                without JavaScript. */}
+            <form className="explore-type-options" method="get" action={`/${locale}/explore`}>
+              {query.query && <input type="hidden" name="q" value={query.query} />}
+              {query.tag && <input type="hidden" name="tag" value={query.tag} />}
+              {query.category && <input type="hidden" name="category" value={query.category} />}
+              {(query.topics ?? []).map((id) => <input key={id} type="hidden" name="topic" value={id} />)}
+              {(query.usefulFor ?? []).map((id) => <input key={id} type="hidden" name="useful_for" value={id} />)}
               {(["all", "routines", "bundles"] as const)
                 .filter((type) => type !== "bundles" || catalog.bundlesAvailable)
                 .map((type) => (
-                <a
+                <button
+                  type="submit"
+                  name="type"
+                  value={type}
                   className="explore-type-option"
                   aria-current={query.type === type ? "true" : undefined}
                   key={type}
-                  href={catalogHref(locale, { ...active, type, page: 1 })}
                 >
                   {ui[type]}
-                </a>
+                </button>
               ))}
-            </div>
+            </form>
           </nav>
           <form
             className="explore-search"
@@ -186,29 +221,32 @@ export default async function ExploreCatalog({ locale, query, topic }: {
             <span className="explore-filter-label" id="explore-topic-label">
               {ui.topics}
             </span>
-            <ul className="explore-topic-options">
+            {/* A form, not links: a `?tag=` view is a `noindex` filter of
+                the hub (A7). Only shown on servers without the taxonomy. */}
+            <form className="explore-topic-options" method="get" action={`/${locale}/explore`}>
+              {query.type !== "all" && <input type="hidden" name="type" value={query.type} />}
+              {query.query && <input type="hidden" name="q" value={query.query} />}
               {tags.map(({ tag }) => (
-                <li key={tag}>
-                  <a
-                    className="explore-topic-option"
-                    aria-current={query.tag === tag ? "true" : undefined}
-                    href={catalogHref(locale, { ...active, tag, page: 1 })}
-                  >
-                    {tag}
-                  </a>
-                </li>
+                <button
+                  type="submit"
+                  name="tag"
+                  value={tag}
+                  key={tag}
+                  className="explore-topic-option"
+                  aria-current={query.tag === tag ? "true" : undefined}
+                >
+                  {tag}
+                </button>
               ))}
               {query.tag && (
-                <li>
-                  <a
-                    className="explore-topic-clear"
-                    href={catalogHref(locale, { ...active, tag: "", page: 1 })}
-                  >
-                    {ui.clearTopic} <span aria-hidden="true">×</span>
-                  </a>
-                </li>
+                <a
+                  className="explore-topic-clear"
+                  href={catalogHref(locale, { ...active, tag: "", page: 1 })}
+                >
+                  {ui.clearTopic} <span aria-hidden="true">×</span>
+                </a>
               )}
-            </ul>
+            </form>
           </nav>
         )}
         <p className="explore-results">{ui.count("results", catalog.total)}</p>
@@ -274,7 +312,15 @@ export default async function ExploreCatalog({ locale, query, topic }: {
               <>
                 <h3>{ui.aboutCategories}</h3>
                 <ul className="explore-about-terms">
-                  {libraryTerms("category").map((term) => <li key={term.id}>{term.label}</li>)}
+                  {libraryTerms("category").map((term) => <li key={term.id}>{termLink(term)}</li>)}
+                </ul>
+              </>
+            )}
+            {libraryTerms("topic").length > 0 && (
+              <>
+                <h3>{ui.topics}</h3>
+                <ul className="explore-about-terms">
+                  {libraryTerms("topic").map((term) => <li key={term.id}>{termLink(term)}</li>)}
                 </ul>
               </>
             )}
@@ -282,16 +328,16 @@ export default async function ExploreCatalog({ locale, query, topic }: {
               <>
                 <h3>{ui.aboutRoles}</h3>
                 <ul className="explore-about-terms">
-                  {libraryTerms("useful_for").map((term) => <li key={term.id}>{term.label}</li>)}
+                  {libraryTerms("useful_for").map((term) => <li key={term.id}>{termLink(term)}</li>)}
                 </ul>
               </>
             )}
             <h3>{ui.aboutUseHeading}</h3>
             <ul className="explore-about-links">
-              <li><a href={EXPLORE_GUIDES.explore}>{ui.exploreGuide}</a></li>
-              <li><a href={EXPLORE_GUIDES.setup}>{ui.aboutImport}</a></li>
-              <li><a href={EXPLORE_GUIDES.share}>{ui.aboutShare}</a></li>
-              <li><a href={EXPLORE_GUIDES.routines}>{ui.learnRoutines}</a></li>
+              <li><HowToLink href={EXPLORE_GUIDES.explore} fallback="text">{ui.exploreGuide}</HowToLink></li>
+              <li><HowToLink href={EXPLORE_GUIDES.setup} fallback="text">{ui.aboutImport}</HowToLink></li>
+              <li><HowToLink href={EXPLORE_GUIDES.share} fallback="text">{ui.aboutShare}</HowToLink></li>
+              <li><HowToLink href={EXPLORE_GUIDES.routines} fallback="text">{ui.learnRoutines}</HowToLink></li>
               <li><a href={EXPLORE_GUIDES.routineGuide}>{ui.aboutRoutineGuide}</a></li>
             </ul>
           </section>

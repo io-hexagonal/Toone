@@ -18,6 +18,7 @@ import {
 } from "@/lib/journal/presentation";
 import type { JournalPostEntry } from "@/lib/journal/types";
 import { JournalShell, JsonLd, PostCard, RssIcon } from "./JournalParts";
+import HowToLink from "@/components/HowToLink";
 
 /**
  * Index (`/en/journal`), its pages (`/page/{n}`), and the three type hubs
@@ -147,7 +148,7 @@ export async function JournalList({ hub, page }: { hub: JournalHub | null; page:
               ? `The first ${hub.label.toLowerCase()} post will appear here when it is published.`
               : "The first post will appear here when it is published."}{" "}
             Meanwhile, browse <a href="/en/explore">routines in Explore</a> or read the{" "}
-            <a href="/en/how-to">how-to guides</a>.
+            <HowToLink href="/en/how-to" fallback="text">how-to guides</HowToLink>.
           </div>
         ) : (
           <ul className="jr-grid">

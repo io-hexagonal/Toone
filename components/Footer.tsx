@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
-import LocaleLinks from "@/components/LocaleLinks";
+import LocalePicker from "@/components/LocalePicker";
 import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
 import SignedOutLink from "@/components/SignedOutLink";
@@ -90,7 +90,7 @@ export default async function Footer({
             </div>
 
             <div className="ftr-lang">
-              <LocaleLinks />
+              <LocalePicker placement="footer" />
             </div>
           </div>
           <div className="ftr-cols">

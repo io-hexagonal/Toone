@@ -134,7 +134,7 @@ export default function SiteHeader({
               .hdr2 .links { gap: 12px; }
               .hdr2 .links [data-optional] { display: none; }
               .hdr2 .dl { padding: 10px 14px; font-size: 12px; white-space: nowrap; }
-              /* No room for the language menu on phones: the footer keeps the locale links. */
+              /* No room for the language menu on phones: the footer has its own. */
               .hdr2 .links .lp { display: none; }
             }
 

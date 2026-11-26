@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import ExploreCatalog from "./ExploreCatalog";
 import { getCatalog, getExploreTaxonomy } from "@/lib/explore/api";
 import { exploreMetadata } from "@/lib/explore/presentation";
+import { exploreOutage } from "@/lib/explore/outage";
 import {
   findTopicTerm,
   isTopicPageIndexable,
@@ -25,8 +26,8 @@ async function resolveTopic(kind: TopicKind, slug: string) {
 /**
  * A topic page is its own canonical. It is indexable only in English and only
  * once it meets TOPIC-012 (a written intro and `TOPIC_PAGE_MIN_LISTINGS`
- * distinct records, counted as routines); below that, and on any catalog
- * failure, it stays `noindex, follow`.
+ * distinct records, counted as routines); below that it stays
+ * `noindex, follow`. A catalog outage is a server error (A8).
  */
 export async function topicPageMetadata(kind: TopicKind, { params }: TopicPageProps): Promise<Metadata> {
   const { locale, term: slug } = await params;
@@ -40,16 +41,12 @@ export async function topicPageMetadata(kind: TopicKind, { params }: TopicPagePr
       meta.robots.index = false;
       return meta;
     }
-    let listings = 0;
-    try {
-      listings = (await getCatalog(JSON.stringify({ ...topic.query, type: "routines" }))).total;
-    } catch {
-      listings = 0;
-    }
+    const listings = (await getCatalog(JSON.stringify({ ...topic.query, type: "routines" }))).total;
     if (!isTopicPageIndexable(topic.term.id, listings)) meta.robots.index = false;
     return meta;
-  } catch {
-    return { robots: { index: false, follow: true } };
+  } catch (error) {
+    // An outage is a server error that crawlers retry, never `noindex` (A8).
+    exploreOutage("topic metadata", error);
   }
 }
 

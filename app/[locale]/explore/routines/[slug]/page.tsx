@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
+import { exploreOutage } from "@/lib/explore/outage";
 import { setRequestLocale } from "next-intl/server";
 import {
   getRoutine,
@@ -18,7 +19,6 @@ import {
 import { termLabel } from "@/lib/explore/taxonomy";
 import {
   ExploreShell,
-  ExploreUnavailable,
   DetailHero,
   RoutineContent,
   JsonLd,
@@ -58,8 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       resolveCoverUrl(detail),
       { indexable: isExploreIndexable(detail) },
     );
-  } catch {
-    return { title: "Explore", robots: { index: false, follow: true } };
+  } catch (error) {
+    // Never "200 + noindex" for an outage: a server error, retried later (A8).
+    exploreOutage("routine metadata", error);
   }
 }
 export default async function RoutinePage({ params }: Props) {
@@ -70,17 +71,7 @@ export default async function RoutinePage({ params }: Props) {
   try {
     detail = await getRoutine(slug);
   } catch (error) {
-    console.error(
-      "[explore] routine unavailable",
-      error instanceof Error ? error.name : "unknown",
-    );
-    return (
-      <ExploreUnavailable
-        ui={ui}
-        locale={locale}
-        retryHref={`/${locale}/explore/routines/${encodeURIComponent(slug)}`}
-      />
-    );
+    exploreOutage("routine", error);
   }
   if (!detail) {
     const moved = await findRoutineByIdTail(slug).catch(() => null);

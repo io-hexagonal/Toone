@@ -77,6 +77,7 @@ export const PRICING_CSS = `
             }
             .pricing-button:hover { transform: translateY(-2px); }
             .pricing-button:disabled { cursor: default; opacity: .6; transform: none; }
+            .pricing-button--pending { min-height: 50px; }
             .pricing-owned {
               margin: auto 0 0; padding: 13px 16px; border-radius: 12px; text-align: center;
               border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.62); font-size: 14px;

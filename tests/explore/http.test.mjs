@@ -151,7 +151,6 @@ test("id URLs issue permanent redirects to the slug URL, including translated re
   // "301s"; both are permanent and 308 matches the site's other redirects).
   for (const path of [
     `/en/explore/routines/${routine.workflow_id}`,
-    `/pt/explore/routines/${routine.workflow_id}`,
   ]) {
     const response = await fetch(base + path, { redirect: "manual" });
     assert.ok([301, 308].includes(response.status), `${path}: ${response.status}`);
@@ -167,10 +166,35 @@ test("id URLs issue permanent redirects to the slug URL, including translated re
   assert.ok(
     response.headers.get("location").endsWith("/bundles/" + bundle.slug),
   );
-  // An unprefixed link goes through locale negotiation first, then the page.
+  // A6: another locale's copy is one 308 to the English URL (proxy.ts),
+  // which then resolves the id like any English request.
+  const translated = await fetch(`${base}/pt/explore/routines/${routine.workflow_id}`, { redirect: "manual" });
+  assert.equal(translated.status, 308);
+  assert.equal(new URL(translated.headers.get("location"), base).pathname, `/en/explore/routines/${routine.workflow_id}`);
+  for (const path of [`/de/explore/routines/${routine.slug}`, `/fr/explore/bundles/${bundle.slug}`]) {
+    const copy = await fetch(base + path, { redirect: "manual" });
+    assert.equal(copy.status, 308, path);
+    assert.equal(new URL(copy.headers.get("location"), base).pathname, path.replace(/^\/[a-z]{2}\//, "/en/"), path);
+  }
+  // An unprefixed link goes straight to English, then the page.
   const followed = await fetch(`${base}/explore/routines/${routine.workflow_id}`);
   assert.equal(followed.status, 200);
   assert.ok(followed.url.endsWith(`/en/explore/routines/${routine.slug}`));
+});
+test("A1/A6/A7: the hub and record pages link no noindex URL and show no invented ratings", async () => {
+  for (const path of ["/en/explore", "/en/explore/routines/" + routine.slug, "/en/explore/bundles/" + bundle.slug]) {
+    const { response, html } = await get(path);
+    assert.equal(response.status, 200, path);
+    const hrefs = [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1].replaceAll("&amp;", "&"));
+    assert.deepEqual(hrefs.filter((href) => /^\/[a-z]{2}\/explore\?/.test(href)), [], `${path}: filter-view links`);
+    assert.deepEqual(hrefs.filter((href) => /\/how-to(\/|$)/.test(href)), [], `${path}: /how-to links`);
+    assert.deepEqual(hrefs.filter((href) => /^\/(pt|es|fr|de|it|nl|ru)(\/|$)/.test(href)), [], `${path}: locale links`);
+    assert.doesNotMatch(html, /sample rating|out of 5/i, path);
+  }
+  const translated = await get("/pt/explore");
+  const recordLinks = [...translated.html.matchAll(/href="(\/[a-z]{2}\/explore\/(?:routines|bundles)\/[^"]+)"/g)].map((m) => m[1]);
+  assert.ok(recordLinks.length > 0, "the Portuguese hub links records");
+  assert.ok(recordLinks.every((href) => href.startsWith("/en/")), "straight to the English record, no redirect hop");
 });
 test("all translated hubs have localized chrome, noindex and a self canonical", async () => {
   for (const locale of ["pt", "es", "fr", "de", "it", "nl", "ru"]) {

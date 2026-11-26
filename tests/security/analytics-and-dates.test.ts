@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { isAnalyticsFreePath } from "../../lib/privacy-choices";
-import { collectSourceDates, gitLastCommitDate } from "../../lib/source-date";
+import fs from "node:fs";
+import { collectSourceDates, contentDate } from "../../lib/source-date";
 
 test("Journal draft previews load no analytics (the token is in the path)", () => {
   for (const path of ["/en/journal/preview/abc", "/journal/preview/abc", "/pt/journal/preview/x/"]) {
@@ -12,19 +13,16 @@ test("Journal draft previews load no analytics (the token is in the path)", () =
   }
 });
 
-test("content dates are taken once at build time and preferred at request time", () => {
-  const dates = collectSourceDates("content");
-  const [file, date] = Object.entries(dates).find(([name]) => name.startsWith("content/guides/")) ?? [];
-  assert.ok(file && /^\d{4}-\d{2}-\d{2}$/.test(date!), "git dates collected for content/");
-  assert.equal(gitLastCommitDate(file), date, "same date as git log -1");
-
-  process.env.TOONE_SOURCE_DATES = JSON.stringify({ "content/inlined-only.md": "2026-01-02" });
-  try {
-    assert.equal(gitLastCommitDate("content/inlined-only.md"), "2026-01-02", "the inlined map answers without git");
-  } finally {
-    delete process.env.TOONE_SOURCE_DATES;
-  }
+test("content dates come from the committed manifest, never from git at build time", () => {
+  const manifest = JSON.parse(fs.readFileSync("lib/content-dates.json", "utf8")) as Record<string, string>;
+  const [file, date] = Object.entries(manifest).find(([name]) => name.startsWith("content/guides/")) ?? [];
+  assert.ok(file && /^\d{4}-\d{2}-\d{2}$/.test(date!), "the manifest dates content/");
+  assert.equal(contentDate(file), date, "contentDate reads the manifest");
+  assert.equal(contentDate("content/not-a-file.md"), null, "unknown path: null, not today");
+  assert.equal(contentDate(null), null);
   assert.deepEqual(collectSourceDates("content", "/"), {}, "no git repository: empty, no throw");
+  const config = fs.readFileSync("next.config.ts", "utf8");
+  assert.doesNotMatch(config, /collectSourceDates|TOONE_SOURCE_DATES/, "the build does not ask git");
 });
 
 test("a catalog answer too big for the data cache is reused for a minute, not fetched on every request", async () => {
