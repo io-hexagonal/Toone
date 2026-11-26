@@ -9,7 +9,7 @@ import { FEATURED_BADGES, type FeaturedBadge } from "@/lib/featured-badges";
  * tab order, and dropped entirely when the visitor prefers reduced motion.
  */
 
-// One set of the six current badges is ~1,700px wide. Each half of the
+// One set of the seven current badges is ~1,950px wide. Each half of the
 // track repeats the set until it is wider than a large desktop viewport,
 // so the loop never shows a gap; the track then holds two identical halves.
 const MIN_HALF_WIDTH = 2000;
@@ -34,6 +34,7 @@ function BadgeSet({
             href={b.href}
             target="_blank"
             rel={b.rel}
+            title={copy ? undefined : b.title}
             tabIndex={copy ? -1 : undefined}
           >
             {/* Exact image URL as issued by the directory; next/image would rewrite it. */}
