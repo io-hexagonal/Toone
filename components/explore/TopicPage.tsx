@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import ExploreCatalog from "./ExploreCatalog";
-import { getCatalog, getExploreTaxonomy } from "@/lib/explore/api";
+import { getExploreTaxonomy, topicListings } from "@/lib/explore/api";
 import { exploreMetadata } from "@/lib/explore/presentation";
 import { exploreOutage } from "@/lib/explore/outage";
 import {
@@ -41,7 +41,7 @@ export async function topicPageMetadata(kind: TopicKind, { params }: TopicPagePr
       meta.robots.index = false;
       return meta;
     }
-    const listings = (await getCatalog(JSON.stringify({ ...topic.query, type: "routines" }))).total;
+    const listings = await topicListings(topic.term.id);
     if (!isTopicPageIndexable(topic.term.id, listings)) meta.robots.index = false;
     return meta;
   } catch (error) {

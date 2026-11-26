@@ -93,7 +93,7 @@ test("record pages link the category only while its topic page is indexable (A7)
   const api = readFileSync("lib/explore/api.ts", "utf8");
   assert.match(api, /export const isCategoryTopicIndexable = cache\(/);
   assert.match(api, /topicPageIntro\(categoryId\) === null\) return false/);
-  assert.match(api, /isTopicPageIndexable\(categoryId, facetListings\(facets, categoryId\)\)/);
+  assert.match(api, /isTopicPageIndexable\(categoryId, await topicListings\(categoryId\)\)/);
   for (const page of ["app/[locale]/explore/routines/[slug]/page.tsx", "app/[locale]/explore/bundles/[slug]/page.tsx"]) {
     const source = readFileSync(page, "utf8");
     assert.match(source, /const categoryLinked = !!categoryId && \(await isCategoryTopicIndexable\(categoryId\)\)/, page);
@@ -101,4 +101,13 @@ test("record pages link the category only while its topic page is indexable (A7)
   }
   const hero = readFileSync("components/explore/ProfileView.tsx", "utf8");
   assert.match(hero, /category && categoryLinked \? categoryHref\(locale, category\) : null/);
+});
+
+test("TOPIC-012: topic metadata and record breadcrumbs count listings with one shared helper", () => {
+  const page = readFileSync("components/explore/TopicPage.tsx", "utf8");
+  const api = readFileSync("lib/explore/api.ts", "utf8");
+  assert.match(page, /await topicListings\(topic\.term\.id\)/, "metadata uses the facet count");
+  assert.doesNotMatch(page, /getCatalog\(/, "no second, differently counted catalog read");
+  assert.match(api, /isTopicPageIndexable\(categoryId, await topicListings\(categoryId\)\)/);
+  assert.match(api, /facetListings\(await getExploreFacets\(\{ type: "all", query: "", tag: "", page: 1 \}\), termId\)/);
 });

@@ -26,14 +26,23 @@ export const getCatalog = cache(async (serializedQuery: string) => {
  * answers false: the breadcrumb then skips the level, it never links a page
  * that may be `noindex`.
  */
+/**
+ * Distinct records (routines) a taxonomy term lists, from the unfiltered
+ * facet counts: the one count used by topic page metadata, the hub's term
+ * links, record breadcrumbs and /sitemap-explore.xml, so they cannot disagree
+ * (TOPIC-012). Throws on an outage; callers decide.
+ */
+export const topicListings = cache(async (termId: string): Promise<number> =>
+  facetListings(await getExploreFacets({ type: "all", query: "", tag: "", page: 1 }), termId),
+);
+
 export const isCategoryTopicIndexable = cache(async (categoryId: string): Promise<boolean> => {
   if (!topicPagePath({ id: categoryId, kind: "category" }) || topicPageIntro(categoryId) === null) return false;
   try {
     const taxonomy = await getExploreTaxonomy();
     const active = taxonomy?.terms.some((term) => term.id === categoryId && term.kind === "category" && term.active);
     if (!active) return false;
-    const facets = await getExploreFacets({ type: "all", query: "", tag: "", page: 1 });
-    return isTopicPageIndexable(categoryId, facetListings(facets, categoryId));
+    return isTopicPageIndexable(categoryId, await topicListings(categoryId));
   } catch {
     return false;
   }
