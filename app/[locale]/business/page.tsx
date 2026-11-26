@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { openGraphLocale } from "@/i18n/open-graph";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
+import { BUSINESS_LANDING_INDEXED } from "@/lib/page-indexing";
 import { TooneLandingPage } from "../page";
 export { viewport } from "../page";
 
@@ -16,6 +17,10 @@ type Props = {
  * links, `noindex, follow` with a self-canonical and no sitemap entry, until
  * it has content of its own. The seven non-English variants were already
  * `noindex, follow` (TECH-021). No hreflang.
+ *
+ * BUSINESS_LANDING_INDEXED (lib/page-indexing.ts) reopens it: the same flag
+ * drives this `robots`, the sitemap entry and the English Personal / Business
+ * links (SiteHeader, HeroLanding, LandingAudienceBar).
  */
 const ENGLISH_BUSINESS_URL = "https://trytoone.com/en/business";
 
@@ -44,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical },
-    robots: localeRobots(locale, false),
+    robots: localeRobots(locale, BUSINESS_LANDING_INDEXED),
     other: localeVersions("/business"),
     openGraph: {
       type: "website",

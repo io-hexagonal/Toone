@@ -3,6 +3,7 @@ import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/cont
 import { contentDate } from "@/lib/source-date";
 import { ROUTE_SOURCES, type SourcedRoute } from "@/lib/route-sources";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { BUSINESS_LANDING_INDEXED } from "@/lib/page-indexing";
 import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 
 export const dynamic = "force-static";
@@ -25,6 +26,8 @@ type StaticRoute = { path: string; sources: SourcedRoute };
 const LOCALIZED_ROUTES: readonly StaticRoute[] = [
   { path: "", sources: "" },
   { path: "/resources", sources: "/resources" },
+  // Listed again once BUSINESS_LANDING_INDEXED reopens it (lib/page-indexing.ts).
+  ...(BUSINESS_LANDING_INDEXED ? [{ path: "/business", sources: "/business" as const }] : []),
   // Toone Pro plans; prices come from the API at request time.
   { path: "/pricing", sources: "/pricing" },
 ];
