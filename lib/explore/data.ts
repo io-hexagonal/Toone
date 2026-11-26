@@ -146,8 +146,9 @@ type Fetched<T> = { data: T; total: number };
  *
  * - `notServed`: upstream path -> expiry. A 404 costs one upstream call per
  *   window instead of one per request.
- * - `lastGood`: full URL -> last 200 payload and when it arrived. When
- *   upstream fails in a way a retry can fix (429, 408, 5xx, timeout, network
+ * - `lastGood`: full URL -> last answer and when it arrived: a 200 payload,
+ *   or `null` for a collection route that answered 404 (not served yet).
+ *   When upstream fails in a way a retry can fix (429, 408, 5xx, timeout, network
  *   error, a body that is not a `{data}` envelope) and Next's data cache has
  *   nothing for the URL, the last good answer for the same URL renders
  *   instead of a 500, if it is younger than `LAST_GOOD_MAX_AGE_MS`.
@@ -179,13 +180,13 @@ export const LAST_GOOD_MAX_AGE_MS = 24 * 60 * 60_000;
  */
 type ExploreMemo = {
   notServed: Map<string, number>;
-  lastGood: Map<string, { at: number; result: Fetched<unknown> }>;
+  lastGood: Map<string, { at: number; result: Fetched<unknown> | null }>;
   oversize?: Map<string, { at: number; result: Fetched<unknown> }>;
 };
 const MEMO_KEY = Symbol.for("toone.explore.memo");
 const memo: ExploreMemo = ((globalThis as Record<symbol, unknown>)[MEMO_KEY] ??= {
   notServed: new Map<string, number>(),
-  lastGood: new Map<string, { at: number; result: Fetched<unknown> }>(),
+  lastGood: new Map<string, { at: number; result: Fetched<unknown> | null }>(),
 }) as ExploreMemo;
 memo.oversize ??= new Map();
 const { notServed, lastGood } = memo;
@@ -212,11 +213,42 @@ function remember<K, V>(map: Map<K, V>, key: K, value: V, limit: number) {
   }
 }
 
-/** Clears the negative and last-good memos (called by the webhook handler). */
+/** Clears every memo, last-good included (tests and a cold start). */
 export function resetExploreMemo(): void {
   notServed.clear();
   lastGood.clear();
   oversize.clear();
+}
+
+/**
+ * What the approval webhook clears (app/api/revalidate). The negative
+ * "route not served" memo goes, so a route the server starts serving shows
+ * up on the next request, and so does the oversize memo, which holds the
+ * catalog list itself and must show the approved record at once.
+ *
+ * The last-good memo stays. The webhook also expires Next's data cache, so
+ * right after an approval every Explore URL is a cold read; with last-good
+ * cleared too, any API blip in that moment was a 500 on every URL. Kept, a
+ * blip renders the copy from before the approval (at most
+ * `LAST_GOOD_MAX_AGE_MS` old) and the next good read replaces it.
+ *
+ * One exception: a `removed` record loses the last-good copies of its own
+ * detail URLs (by id and by slug), so an outage can never bring a removed
+ * record's page back (TECH-023). Lists keep theirs; during an outage they may
+ * still name it, and its link answers a server error until the API is back.
+ */
+export function refreshExploreMemo(event?: {
+  event: string;
+  type: "routine" | "bundle";
+  id: string;
+  slug: string;
+}): void {
+  notServed.clear();
+  oversize.clear();
+  if (event?.event !== "removed") return;
+  const route = event.type === "routine" ? "workflows" : "bundles";
+  for (const key of [event.id, event.slug])
+    lastGood.delete(new URL(`${exploreApiBase()}/${route}/${encodeURIComponent(key)}`).href);
 }
 
 /** True when `path` answered 404 within the negative window (test hook). */
@@ -251,15 +283,20 @@ async function getJson<T>(
   const recent = oversize.get(url.href);
   if (recent && Date.now() - recent.at < OVERSIZE_TTL_MS) return recent.result as Fetched<T>;
 
-  /** The last good answer for this exact URL while it is young enough. */
-  const fallback = (reason: string): Fetched<T> | null => {
+  /**
+   * The last answer for this exact URL while it is young enough: a payload,
+   * `null` for a collection route remembered as not served (still the right
+   * answer during an outage: the webhook clears `notServed`, so without it a
+   * blip right after an approval was a 500), or undefined when there is none.
+   */
+  const fallback = (reason: string): Fetched<T> | null | undefined => {
     const previous = lastGood.get(url.href);
     const age = previous ? Date.now() - previous.at : Number.NaN;
-    if (!previous || !(age >= 0 && age < LAST_GOOD_MAX_AGE_MS)) return null;
+    if (!previous || !(age >= 0 && age < LAST_GOOD_MAX_AGE_MS)) return undefined;
     console.warn(
-      `[explore] ${reason} on ${url.pathname}; serving last good response from ${Math.round(age / 60_000)} min ago`,
+      `[explore] ${reason} on ${url.pathname}; serving last ${previous.result ? "good response" : "404"} from ${Math.round(age / 60_000)} min ago`,
     );
-    return previous.result as Fetched<T>;
+    return previous.result as Fetched<T> | null;
   };
 
   let response: Response;
@@ -272,17 +309,23 @@ async function getJson<T>(
   } catch (error) {
     // Timeout (AbortSignal.timeout) or network failure: no answer at all.
     const previous = fallback(error instanceof Error ? error.name : "network failure");
-    if (previous) return previous;
+    if (previous !== undefined) return previous;
     throw error;
   }
 
   if (response.status === 404) {
     remember(notServed, routeKey, Date.now() + NEGATIVE_TTL_MS, NEGATIVE_LIMIT);
+    // A collection route not served yet is remembered as such. A detail 404
+    // only forgets the record's older copy, so an outage can never bring a
+    // removed record back; unknown slugs (crawlers, typos) are not stored,
+    // so they cannot push real answers out of the bounded memo.
+    if (/^(workflows|bundles)\//.test(path)) lastGood.delete(url.href);
+    else remember(lastGood, url.href, { at: Date.now(), result: null }, LAST_GOOD_LIMIT);
     return null;
   }
   if (response.status === 429 || response.status === 408 || response.status >= 500) {
     const previous = fallback(`upstream ${response.status}`);
-    if (previous) return previous;
+    if (previous !== undefined) return previous;
   }
   if (!response.ok) {
     let message = response.statusText;
@@ -303,7 +346,7 @@ async function getJson<T>(
   } catch (error) {
     // A 200 that is not JSON (a proxy's error page) or a body cut short.
     const previous = fallback("unreadable body");
-    if (previous) return previous;
+    if (previous !== undefined) return previous;
     throw error;
   }
   if (
@@ -312,7 +355,7 @@ async function getJson<T>(
     !("data" in envelope)
   ) {
     const previous = fallback("no data envelope");
-    if (previous) return previous;
+    if (previous !== undefined) return previous;
     throw new ExploreApiError(
       url.pathname,
       response.status,

@@ -5,7 +5,10 @@ import {
   LAST_GOOD_MAX_AGE_MS,
   getBundle,
   getRoutine,
+  isMemoizedNotServed,
+  listBundles,
   listRoutines,
+  refreshExploreMemo,
   resetExploreMemo,
 } from "../../lib/explore/data";
 import { exploreOutage, isExploreRecordGone } from "../../lib/explore/outage";
@@ -142,4 +145,55 @@ test("a last good answer older than a day is not served: the outage throws", asy
   now += 60_000;
   t.mock.method(globalThis, "fetch", async () => status(503));
   assert.equal((await getRoutine(routine.slug))?.workflow_id, routine.workflow_id);
+});
+
+test("the approval webhook keeps last-good copies, clears the not-served memo, and drops a removed record's page", async (t) => {
+  const routine = fixture("routine-detail");
+  const entry = fixture("routine-entry");
+  const event = (name: string) => ({ event: name, type: "routine" as const, id: routine.workflow_id, slug: routine.slug });
+  t.mock.method(globalThis, "fetch", async (url: URL) => {
+    if (url.pathname.endsWith("/bundles")) return status(404);
+    if (url.pathname.endsWith("/workflows")) return new Response(JSON.stringify({ data: [entry] }), { headers: { "X-Total-Count": "1" } });
+    return ok(routine);
+  });
+  const detail = await getRoutine(routine.slug);
+  const byId = await getRoutine(routine.workflow_id);
+  const list = await listRoutines();
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
+  assert.ok(isMemoizedNotServed("bundles"));
+
+  refreshExploreMemo(event("approved"));
+  assert.equal(isMemoizedNotServed("bundles"), false, "a route served since must show up on the next request");
+  // Right after the webhook the data cache is cold; a blip renders the copy from before,
+  // including "this route is not served yet" for a collection that answered 404.
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  assert.deepEqual(await getRoutine(routine.slug), detail);
+  assert.deepEqual(await listRoutines(), list);
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
+
+  // A removal drops the record's own pages (by slug and by id), never the lists.
+  refreshExploreMemo(event("removed"));
+  await assert.rejects(getRoutine(routine.slug), /503/);
+  await assert.rejects(getRoutine(routine.workflow_id), /503/);
+  assert.ok(byId);
+  assert.deepEqual(await listRoutines(), list);
+});
+
+test("the webhook route refreshes the memo instead of resetting it and expires every Explore tag", () => {
+  const route = readFileSync(new URL("../../app/api/revalidate/route.ts", import.meta.url), "utf8");
+  assert.match(route, /refreshExploreMemo\(event\)/);
+  assert.doesNotMatch(route, /resetExploreMemo/, "the webhook must not clear the last-good memo");
+  for (const tag of ['"explore"', "`explore:${event.slug}`", "`explore:${event.id}`"])
+    assert.ok(route.includes(`revalidateTag(${tag}, { expire: 0 })`), tag);
+});
+
+test("a record that answered 404 is never brought back by an older copy during an outage", async (t) => {
+  const routine = fixture("routine-detail");
+  t.mock.method(globalThis, "fetch", async () => ok(routine));
+  await getRoutine(routine.slug);
+  t.mock.method(globalThis, "fetch", async () => status(404));
+  assert.equal(await getRoutine(routine.slug), null);
+  refreshExploreMemo();
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine(routine.slug), /503/);
 });

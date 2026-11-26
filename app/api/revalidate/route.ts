@@ -1,6 +1,6 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { after } from "next/server";
-import { resetExploreMemo } from "@/lib/explore/api";
+import { refreshExploreMemo } from "@/lib/explore/api";
 import {
   indexNowOnApprovalEnabled,
   submitApprovedRecord,
@@ -80,12 +80,23 @@ export async function POST(request: Request) {
   }
   const event = parseRevalidateEvent(raw);
   if (!event) return Response.json({ revalidated: false }, { status: 400 });
-  // The in-memory memos (negative "route not served" + last-good fallback)
-  // live outside Next's cache, so the webhook clears them explicitly too.
-  resetExploreMemo();
-  revalidateTag("explore", { expire: 0 });
+  // The in-memory memos live outside Next's cache. The negative "route not
+  // served" memo is cleared so new routes appear; the last-good memo is kept
+  // (except a removed record's own copies), so the cold reads below survive
+  // an API blip instead of answering 500 (lib/explore/data.ts).
+  refreshExploreMemo(event);
+  // The record's own tags are expired outright: its next request blocks on a
+  // fresh read, so an approval, repin or removal is never served stale.
   revalidateTag(`explore:${event.slug}`, { expire: 0 });
   revalidateTag(`explore:${event.id}`, { expire: 0 });
+  // The broad tag is expired outright too, not marked stale ("max"). It tags
+  // the catalog lists, the feed (sitemap), taxonomy and facets, which carry
+  // no per-record tag, and a newly approved record must be listed on the
+  // very next request (tests/explore/outage.test.mjs, "webhook must evict
+  // cached catalog"); stale-while-revalidate would serve the old list once.
+  // The cost is that every Explore read is cold after each approval; the
+  // last-good memo kept above covers an API failure in that window.
+  revalidateTag("explore", { expire: 0 });
   // Runs after the response, against the freshly expired caches.
   if (indexNowOnApprovalEnabled()) after(() => submitApprovedRecord(event));
   return Response.json({ revalidated: true });

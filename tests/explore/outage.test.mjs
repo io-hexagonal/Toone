@@ -65,11 +65,30 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
     assert.ok(fresh.includes(probe), "webhook must evict cached detail");
     const catalog = await (await fetch(base + "/en/explore")).text();
     assert.ok(catalog.includes(probe), "webhook must evict cached catalog");
+    // Every URL checked below as "served before" is fetched once while the
+    // API is up (the bundle page and the sitemap too), so each has a
+    // last-good copy; its title and robots tag are the reference.
+    const bundlePath = "/en/explore/bundles/" + "launch-kit-r5h8c2nd";
+    const head = (html) => [
+      /<title>[^<]*<\/title>/.exec(html)?.[0],
+      /<meta name="robots"[^>]*>/.exec(html)?.[0],
+    ];
+    const warm = {};
+    for (const path of ["/en/explore", detailPath, bundlePath]) {
+      const response = await fetch(base + path);
+      assert.equal(response.status, 200, path);
+      warm[path] = head(await response.text());
+    }
+    assert.ok((await (await fetch(base + "/sitemap-explore.xml")).text()).includes("/en/explore/routines/" + routine.slug));
     await mode({ unavailable: true });
+    // The webhook expires Next's data cache but keeps the last-good memo, so
+    // every read below is a cold read against a failing API.
     await invalidate();
     // A8: an indexable Explore URL answers an outage with a server error
     // that crawlers retry, never "200 + noindex" (which reads as "drop me").
-    for (const path of ["/en/explore", detailPath, "/en/explore/bundles/" + "launch-kit-r5h8c2nd"]) {
+    // A URL this server has never served has nothing to fall back on.
+    const cold = "cold-outage-" + Date.now().toString(36);
+    for (const path of ["/en/explore/routines/" + cold, "/en/explore/bundles/" + cold]) {
       // Next.js answers an uncaught render error with 500 (pages cannot pick
       // 503). Its error shell carries its own `noindex`, which Google never
       // reads on a 5xx: the status is the signal.
@@ -77,20 +96,30 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
       assert.equal(response.status, 500, path);
       const html = await response.text();
       assert.ok(!html.includes("Explore is temporarily unavailable"), path);
-      assert.ok(!html.includes("No items match"));
+    }
+    // A URL served before the outage renders its last good copy (under a
+    // day old), even right after a webhook: a 200 with the real content.
+    for (const path of ["/en/explore", detailPath, bundlePath]) {
+      const response = await fetch(base + path);
+      assert.equal(response.status, 200, path);
+      const html = await response.text();
+      assert.deepEqual(head(html), warm[path], path + ": same title and robots as before");
+      assert.ok(!html.includes("Explore is temporarily unavailable"), path);
+      assert.ok(!html.includes("No items match"), path);
+      if (path !== bundlePath) assert.ok(html.includes(probe), path + " renders the last good copy");
     }
     // Filter and search views are noindex anyway: people get the retry page.
-    const search = await fetch(base + "/en/explore?q=audit");
+    const search = await fetch(base + "/en/explore?q=" + cold);
     assert.equal(search.status, 200);
     const searchHtml = await search.text();
     assert.match(searchHtml, /Explore is temporarily unavailable/);
     assert.match(searchHtml, /<meta name="robots" content="noindex, follow"/);
-    // An outage yields a valid, uncached, empty Explore sitemap rather than a
-    // 5xx; the static /sitemap.xml is unaffected.
+    // The Explore sitemap is never a 5xx: it lists its last good feed here
+    // (a cold outage yields a valid, uncached, empty urlset instead); the
+    // static /sitemap.xml is unaffected.
     const sitemap = await fetch(base + "/sitemap-explore.xml");
     assert.equal(sitemap.status, 200);
-    assert.match(sitemap.headers.get("cache-control"), /no-store/);
-    assert.ok(!(await sitemap.text()).includes("/en/explore/routines/"));
+    assert.ok((await sitemap.text()).includes("/en/explore/routines/" + routine.slug));
     assert.equal((await fetch(base + "/sitemap.xml")).status, 200);
     await mode({ edge: true });
     await invalidate();
