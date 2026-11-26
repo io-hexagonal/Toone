@@ -174,6 +174,7 @@ export function recordSchemaFields(detail: {
   author_name: string;
   author_official?: boolean;
   approved_at: string;
+  updated_at?: string | null;
 }) {
   // Toone-published records are authored by the organization node itself.
   const author: Record<string, string> | undefined = detail.author_official
@@ -181,8 +182,13 @@ export function recordSchemaFields(detail: {
     : detail.author_name
       ? { "@type": "Person", name: detail.author_name }
       : undefined;
+  // dateModified is the same date /sitemap-explore.xml gives the record as
+  // lastmod (`updated_at`, falling back to `approved_at`), so the two never
+  // disagree; datePublished is when the record was approved.
+  const updated = detail.updated_at && Number.isFinite(Date.parse(detail.updated_at)) ? detail.updated_at : null;
   return {
-    dateModified: detail.approved_at,
+    datePublished: detail.approved_at,
+    dateModified: updated ?? detail.approved_at,
     ...(author ? { author } : {}),
     publisher: { "@id": `${SITE}/#organization` },
     isPartOf: { "@id": `${SITE}/#website` },
