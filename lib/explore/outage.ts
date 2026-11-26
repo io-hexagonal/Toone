@@ -25,20 +25,21 @@ function asExploreApiError(error: unknown): ExploreApiError | null {
  *   make Google re-crawl a URL that never recovers, and many of them slow the
  *   crawl of the whole site.
  * - A record the API returned with a 200 but in a shape the site cannot
- *   render (`ExploreInvalidRecordError`, "invalid routine detail") is a bad
- *   record, not an outage: the HTTP call worked, and the same bytes will come
- *   back on every retry until someone fixes the record. A 404 lets the URL
- *   drop out; it comes back by itself once the record is fixed and the
- *   approval webhook expires its cache.
+ *   render (`ExploreInvalidRecordError`, "invalid routine detail") is NOT
+ *   gone: it stays a server error. The usual cause is a contract change in an
+ *   API deploy, which breaks every record at once, and the record pages are
+ *   the site's main indexable pages; a 404 would make Google drop all of them
+ *   quickly, while a 5xx keeps their index state until the site is fixed. One
+ *   bad record stays a 500 too, and shows in the logs.
  *
  * Everything else stays an outage: 5xx, 408, 429, timeouts and network
  * errors, a body that is not JSON or has no `{data}` envelope (a proxy error
- * page), and collection-level errors.
+ * page), an unrenderable record, and collection-level errors.
  */
 export function isExploreRecordGone(error: unknown): boolean {
   const api = asExploreApiError(error);
   if (!api) return false;
-  if (api.name === "ExploreInvalidRecordError") return true;
+  if (api.name === "ExploreInvalidRecordError") return false;
   return api.status >= 400 && api.status < 500 && api.status !== 408 && api.status !== 429;
 }
 

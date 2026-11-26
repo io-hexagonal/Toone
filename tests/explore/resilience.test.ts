@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test, { beforeEach } from "node:test";
 import { readFileSync } from "node:fs";
 import {
+  LAST_GOOD_DETAIL_MAX_AGE_MS,
   LAST_GOOD_MAX_AGE_MS,
   getBundle,
   getRoutine,
@@ -66,14 +67,16 @@ test("timeouts and network errors are outages, not not-found", async (t) => {
   assert.equal(await pageOutcome(() => getRoutine("some-routine")), "500");
 });
 
-test("a record served with a 200 but unrenderable is a 404; a broken envelope is an outage", async (t) => {
+test("a record served with a 200 but unrenderable is a server error, like a broken envelope", async (t) => {
   const routine = fixture("routine-detail");
   t.mock.method(globalThis, "fetch", async () => ok({ ...routine, workflow_id: "not-an-id" }));
-  assert.equal(await pageOutcome(() => getRoutine(routine.slug)), "404", "invalid routine detail");
+  // A contract change breaks every record at once: 404 would drop the site's
+  // main indexable pages from Google, a 500 keeps them while it is fixed.
+  assert.equal(await pageOutcome(() => getRoutine(routine.slug)), "500", "invalid routine detail");
   resetExploreMemo();
   const bundle = fixture("bundle-detail");
   t.mock.method(globalThis, "fetch", async () => ok({ ...bundle, members: "wrong" }));
-  assert.equal(await pageOutcome(() => getBundle(bundle.slug)), "404", "invalid bundle detail");
+  assert.equal(await pageOutcome(() => getBundle(bundle.slug)), "500", "invalid bundle detail");
   resetExploreMemo();
   // No {data} envelope, or not JSON at all: a proxy or error page, not a record.
   t.mock.method(globalThis, "fetch", async () => new Response("{}"));
@@ -94,10 +97,11 @@ test("collection pages never turn an API error into a 404", async (t) => {
   assert.equal(await pageOutcome(() => Promise.reject(error), true), "500");
 });
 
-test("an outage on a URL served before renders the last good answer while it is under a day old", async (t) => {
+test("an outage on a URL served before renders the last good answer: records up to 6 h, lists up to a day", async (t) => {
   const routine = fixture("routine-detail");
   const entry = fixture("routine-entry");
-  let now = Date.UTC(2026, 10, 26, 12);
+  const start = Date.UTC(2026, 10, 26, 12);
+  let now = start;
   t.mock.method(Date, "now", () => now);
   t.mock.method(globalThis, "fetch", async (url: URL) =>
     url.pathname.endsWith("/workflows") ? new Response(JSON.stringify({ data: [entry] }), { headers: { "X-Total-Count": "1" } }) : ok(routine),
@@ -114,12 +118,20 @@ test("an outage on a URL served before renders the last good answer while it is 
     ["network", async () => { throw new TypeError("fetch failed"); }],
     ["proxy page", async () => new Response("<html>Bad gateway</html>")],
   ];
-  now += LAST_GOOD_MAX_AGE_MS - 60_000;
+  now += LAST_GOOD_DETAIL_MAX_AGE_MS - 60_000;
   for (const [label, failure] of failures) {
     t.mock.method(globalThis, "fetch", failure);
     assert.deepEqual(await getRoutine(routine.slug), detail, `${label}: last good detail`);
     assert.deepEqual(await listRoutines(), list, `${label}: last good catalog`);
   }
+  // Past 6 h a single record is no longer covered (a removed or noindexed
+  // record must not linger on other instances); lists keep their copy to 24 h.
+  now += 2 * 60_000;
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine(routine.slug), /503/, "detail copy past 6 h");
+  assert.deepEqual(await listRoutines(), list, "list copy still inside 24 h");
+  now = start + LAST_GOOD_MAX_AGE_MS - 60_000;
+  assert.deepEqual(await listRoutines(), list, "list copy just inside 24 h");
   // A URL never served before has nothing to fall back on.
   t.mock.method(globalThis, "fetch", async () => status(503));
   await assert.rejects(getRoutine("never-served"), /503/);

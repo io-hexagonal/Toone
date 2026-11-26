@@ -151,7 +151,8 @@ type Fetched<T> = { data: T; total: number };
  *   When upstream fails in a way a retry can fix (429, 408, 5xx, timeout, network
  *   error, a body that is not a `{data}` envelope) and Next's data cache has
  *   nothing for the URL, the last good answer for the same URL renders
- *   instead of a 500, if it is younger than `LAST_GOOD_MAX_AGE_MS`.
+ *   instead of a 500, if it is younger than `LAST_GOOD_MAX_AGE_MS` (lists)
+ *   or `LAST_GOOD_DETAIL_MAX_AGE_MS` (single records).
  *
  * Per warm instance only (Vercel functions do not share memory); the TTL
  * bounds staleness where the webhook cannot reach.
@@ -171,6 +172,15 @@ const LAST_GOOD_LIMIT = 200;
  * that long anyway; the bound matters for long-lived servers.
  */
 export const LAST_GOOD_MAX_AGE_MS = 24 * 60 * 60_000;
+/**
+ * Single-record detail URLs (`workflows/{id}`, `bundles/{id}`) get 6 h. The
+ * approval webhook reaches one instance, so another warm instance can still
+ * hold the copy of a record that was since removed or set to `noindex`; a
+ * shorter bound limits how long an outage can show it there. Lists, the feed
+ * and the taxonomy keep 24 h: they carry the hub and the sitemap.
+ */
+export const LAST_GOOD_DETAIL_MAX_AGE_MS = 6 * 60 * 60_000;
+const DETAIL_PATH = /^(?:workflows|bundles)\/[^/]+$/;
 
 /**
  * Next compiles each route into its own chunk with its own copy of this
@@ -233,9 +243,11 @@ export function resetExploreMemo(): void {
  * `LAST_GOOD_MAX_AGE_MS` old) and the next good read replaces it.
  *
  * One exception: a `removed` record loses the last-good copies of its own
- * detail URLs (by id and by slug), so an outage can never bring a removed
- * record's page back (TECH-023). Lists keep theirs; during an outage they may
- * still name it, and its link answers a server error until the API is back.
+ * detail URLs (by id and by slug) on the instance that received the webhook
+ * (TECH-023). Memos are per instance, so another warm instance may still
+ * serve that copy during an outage, for at most `LAST_GOOD_DETAIL_MAX_AGE_MS`
+ * after it was fetched. Lists keep theirs; during an outage they may still
+ * name it, and its link answers a server error until the API is back.
  */
 export function refreshExploreMemo(event?: {
   event: string;
@@ -292,7 +304,8 @@ async function getJson<T>(
   const fallback = (reason: string): Fetched<T> | null | undefined => {
     const previous = lastGood.get(url.href);
     const age = previous ? Date.now() - previous.at : Number.NaN;
-    if (!previous || !(age >= 0 && age < LAST_GOOD_MAX_AGE_MS)) return undefined;
+    const maxAge = DETAIL_PATH.test(path) ? LAST_GOOD_DETAIL_MAX_AGE_MS : LAST_GOOD_MAX_AGE_MS;
+    if (!previous || !(age >= 0 && age < maxAge)) return undefined;
     console.warn(
       `[explore] ${reason} on ${url.pathname}; serving last ${previous.result ? "good response" : "404"} from ${Math.round(age / 60_000)} min ago`,
     );
