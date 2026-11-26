@@ -65,7 +65,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     );
   } catch (error) {
     // Never "200 + noindex" for an outage: a server error, retried later (A8).
-    exploreOutage("bundle metadata", error);
+    // A record the API refuses (4xx) or cannot render is a 404 (TECH-023).
+    exploreOutage("bundle metadata", error, { record: true });
   }
 }
 export default async function BundlePage({ params }: Props) {
@@ -76,7 +77,7 @@ export default async function BundlePage({ params }: Props) {
   try {
     detail = await getBundle(slug);
   } catch (error) {
-    exploreOutage("bundle", error);
+    exploreOutage("bundle", error, { record: true });
   }
   if (!detail) {
     const moved = await findBundleByIdTail(slug).catch(() => null);

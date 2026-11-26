@@ -60,7 +60,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     );
   } catch (error) {
     // Never "200 + noindex" for an outage: a server error, retried later (A8).
-    exploreOutage("routine metadata", error);
+    // A record the API refuses (4xx) or cannot render is a 404 (TECH-023).
+    exploreOutage("routine metadata", error, { record: true });
   }
 }
 export default async function RoutinePage({ params }: Props) {
@@ -71,7 +72,7 @@ export default async function RoutinePage({ params }: Props) {
   try {
     detail = await getRoutine(slug);
   } catch (error) {
-    exploreOutage("routine", error);
+    exploreOutage("routine", error, { record: true });
   }
   if (!detail) {
     const moved = await findRoutineByIdTail(slug).catch(() => null);

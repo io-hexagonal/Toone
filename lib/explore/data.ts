@@ -108,6 +108,20 @@ export class ExploreApiError extends Error {
 }
 
 /**
+ * One record the API returned with a 200 that the site cannot render (no id,
+ * no members, no approval date). Still a 502 for logs and callers that only
+ * read `status`, but pages read it as a bad record, not an outage
+ * (lib/explore/outage.ts): the HTTP call itself succeeded, so a retry gets
+ * the same bytes.
+ */
+export class ExploreInvalidRecordError extends ExploreApiError {
+  constructor(path: string, message: string) {
+    super(path, 502, message);
+    this.name = "ExploreInvalidRecordError";
+  }
+}
+
+/**
  * Card covers never inline the legacy data URL: the live entry carries a
  * ~100 KB data URL, so a page of covered cards would weigh megabytes (twice,
  * counting the RSC payload). Cards render the placeholder tile until
@@ -307,8 +321,10 @@ export async function listRoutines(
     },
     [EXPLORE_TAG],
   );
+  // The catalog route itself answering 404 is a broken deployment or base
+  // URL, not a missing record: an outage (502), never a page-level 404.
   if (!result)
-    throw new ExploreApiError("workflows", 404, "catalog unavailable");
+    throw new ExploreApiError("workflows", 502, "catalog route answered 404");
   if (!Array.isArray(result.data))
     throw new ExploreApiError("workflows", 502, "expected array");
   return { items: result.data.map(withCardPresentation), total: result.total };
@@ -558,7 +574,7 @@ export async function getRoutine(
   );
   if (!result) return null;
   if (!result.data || typeof result.data !== "object") {
-    throw new ExploreApiError("workflows/detail", 502, "invalid routine detail");
+    throw new ExploreInvalidRecordError("workflows/detail", "invalid routine detail");
   }
   const detail = normalizeRoutineDetail(result.data);
   if (
@@ -566,7 +582,7 @@ export async function getRoutine(
     !Array.isArray(detail.package?.members) ||
     !Number.isFinite(Date.parse(detail.approved_at))
   ) {
-    throw new ExploreApiError("workflows/detail", 502, "invalid routine detail");
+    throw new ExploreInvalidRecordError("workflows/detail", "invalid routine detail");
   }
   return detail;
 }
@@ -584,7 +600,7 @@ export async function getBundle(
   if (!result) return null;
   const detail = normalizeBundleDetail(result.data);
   if (!detail) {
-    throw new ExploreApiError("bundles/detail", 502, "invalid bundle detail");
+    throw new ExploreInvalidRecordError("bundles/detail", "invalid bundle detail");
   }
   return detail;
 }
