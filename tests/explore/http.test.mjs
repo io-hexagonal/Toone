@@ -110,7 +110,17 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
       assert.ok(html.includes(step.title), step.title);
   for (const agent of routine.package.agents)
     assert.ok(html.includes(agent.name));
-  assert.match(html, /Completion criteria/);
+  // c5eebd3: step instructions stay off the public page. Step titles are the
+  // public description of a step; descriptions and completion criteria are not
+  // published, in the page or in its HowTo markup.
+  assert.doesNotMatch(html, /Completion criteria/);
+  const unescaped = decode(html);
+  for (const member of routine.package.members)
+    for (const step of member.payload.steps ?? []) {
+      if (step.description) assert.ok(!unescaped.includes(step.description), `${step.title}: description published`);
+      for (const criterion of step.completionCriteria ?? [])
+        assert.ok(!unescaped.includes(criterion), `${step.title}: completion criterion published`);
+    }
   // Revision number is shown; ids, hashes and the raw package JSON are not
   // published (they are for the app and the API, and add page weight).
   // Ids may only appear inside attributes (deep link, cover URLs), never as text.
@@ -129,6 +139,7 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
     routine.package.members.find((m) => m.key === routine.package.root_key)
       .payload.steps.length,
   );
+  for (const step of schema.step) assert.equal(step.text, step.name, "HowTo steps carry the title only");
   assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_[a-z0-9]+"/);
 });
 test("bundle preserves pin metadata, renders member pages and distinguishes missing items", async () => {
@@ -431,7 +442,10 @@ test("the legacy routine keeps the fallback layout", async () => {
   assert.match(html, /<meta name="robots" content="index, follow"/);
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!/<h2[^>]*>What you get<\/h2>/.test(html));
-  assert.match(html, /Completion criteria/);
+  // The fallback shows the step titles (not their instructions, c5eebd3).
+  const root = routine.package.members.find((m) => m.key === routine.package.root_key);
+  for (const step of root.payload.steps) assert.ok(html.includes(step.title), step.title);
+  assert.doesNotMatch(html, /Completion criteria/);
   assert.match(html, />Open in Toone</);
   assert.match(html, new RegExp(`<title>${routine.title} \\| Toone</title>`));
   assert.equal(
@@ -446,7 +460,9 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
   assert.equal(response.status, 200);
   assert.ok(!h2s(html).includes("What you get"), "legacy layout");
-  assert.match(html, /Completion criteria/);
+  // The legacy layout lists the step titles the profile page keeps off (c5eebd3: titles only).
+  assert.ok(visible(html).includes("Validate the site list"), "legacy layout lists the steps");
+  assert.doesNotMatch(html, /Completion criteria/);
   assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
   // The server's indexable flag decides, not the profile's shape.
   assert.match(html, /<meta name="robots" content="index, follow"/);
