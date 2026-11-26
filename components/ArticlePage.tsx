@@ -12,6 +12,7 @@ import {
 } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
 import HowToLink from "@/components/HowToLink";
+import SignedInOnly from "@/components/SignedInOnly";
 
 export type ArticleUi = {
   breadcrumb: string;
@@ -257,11 +258,14 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(locale)}>
               {publication.body}
             </ReactMarkdown>
-            <aside className="article-close">
-              <h2>{ui.continueTitle}</h2>
-              <p>{ui.continueDescription}</p>
-              <HowToLink href="/en/how-to" fallback="none">{ui.continueAction}</HowToLink>
-            </aside>
+            {/* Its only action is the signed-in /how-to guides, so signed out it is not shown at all. */}
+            <SignedInOnly>
+              <aside className="article-close">
+                <h2>{ui.continueTitle}</h2>
+                <p>{ui.continueDescription}</p>
+                <a href="/en/how-to">{ui.continueAction}</a>
+              </aside>
+            </SignedInOnly>
           </article>
           <aside className="article-toc" aria-label={ui.onThisPage}>
             <p className="article-toc-title">{ui.onThisPage}</p>
