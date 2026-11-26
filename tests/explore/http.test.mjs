@@ -395,9 +395,16 @@ test("profile routine renders every section in page-spec order without the routi
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!html.includes('href="#builders"'));
   assert.ok(!visible(html).includes("Validate the site list"), "step titles stay off the profile page");
-  // Cover alt, breadcrumb with category, CTAs with attribution.
+  // Cover alt, breadcrumb, CTAs with attribution. The category level links
+  // its topic page only while that page is indexable (A7); with #144 that
+  // needs a written intro, and TOPIC_PAGE_INTROS is empty, so the breadcrumb
+  // is Home / Explore / record. It never links the noindex filtered hub.
   assert.ok(html.includes(`alt="${profileFixture.cover_alt}"`));
-  assert.match(html, /href="\/en\/explore\?category=cat_marketing-sales"/);
+  const breadcrumb = html.match(/<nav class="explore-breadcrumb"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(breadcrumb, "breadcrumb");
+  assert.deepEqual([...breadcrumb.matchAll(/href="([^"]+)"/g)].map((m) => m[1]), ["/en", "/en/explore"]);
+  assert.ok(!html.includes('href="/en/explore/category/'), "no link to a noindex topic page");
+  assert.ok(!html.includes('href="/en/explore?category='), "no link to the filtered hub");
   assert.match(html, />Use this routine</);
   assert.match(html, /data-umami-event="explore-open-in-toone"/);
   assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_lnchprepqk4m2x7a"/);
@@ -420,9 +427,10 @@ test("profile routine metadata, robots and JSON-LD come from the profile", async
   assert.deepEqual(howTo.supply.map((t) => t.name), profileFixture.you_provide.map((t) => t.label));
   assert.ok(!all.some((s) => s["@type"] === "FAQPage"));
   const crumbs = all.find((s) => s["@type"] === "BreadcrumbList").itemListElement;
-  assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3, 4]);
-  assert.equal(crumbs[2].item, "https://trytoone.com/en/explore?category=cat_marketing-sales");
-  assert.equal(crumbs[3].name, profileFixture.search.display_title);
+  // No category level while its topic page is noindex (A7, see above).
+  assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3]);
+  assert.deepEqual(crumbs.map((c) => c.item).slice(0, 2), ["https://trytoone.com/en", "https://trytoone.com/en/explore"]);
+  assert.equal(crumbs[2].name, profileFixture.search.display_title);
 });
 
 test("indexable:false renders noindex, follow and leaves the Explore sitemap; indexable profiles stay", async () => {
