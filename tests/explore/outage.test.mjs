@@ -114,9 +114,13 @@ test("webhook expires rendered detail, catalog and sitemap; outages stay distinc
     const searchHtml = await search.text();
     assert.match(searchHtml, /Explore is temporarily unavailable/);
     assert.match(searchHtml, /<meta name="robots" content="noindex, follow"/);
-    // The Explore sitemap is never a 5xx: it lists its last good feed here
-    // (a cold outage yields a valid, uncached, empty urlset instead); the
-    // static /sitemap.xml is unaffected.
+    // The Explore sitemap was served before the outage, so it lists its last
+    // good feed (under a day old): 200 with the records. Only with no usable
+    // copy (never served, or older than 24 h) does it fail visibly with
+    // 503 + Retry-After (TECH-023); that case is the unit test in
+    // tests/explore/sitemap-explore.test.ts, since a feed this server has
+    // served cannot be made cold over HTTP. The static /sitemap.xml is
+    // unaffected.
     const sitemap = await fetch(base + "/sitemap-explore.xml");
     assert.equal(sitemap.status, 200);
     assert.ok((await sitemap.text()).includes("/en/explore/routines/" + routine.slug));
