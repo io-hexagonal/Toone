@@ -33,15 +33,46 @@ test("in a shallow clone git misdates old files; the manifest does not depend on
     execFileSync("git", ["clone", "-q", "--depth=1", `file://${process.cwd()}`, dir], { stdio: "ignore" });
     assert.equal(historyKind(dir), "shallow");
     const shallow = collectSourceDates(["content", "app"], dir);
-    const head = execFileSync("git", ["log", "-1", "--format=%cs"], { cwd: dir, encoding: "utf8" }).trim();
+    const head = execFileSync("git", ["log", "-1", "--format=%as"], { cwd: dir, encoding: "utf8" }).trim();
     // Depth 1: the single commit present "adds" every file, so git dates
-    // every source to HEAD's day, which is the deploy-day bug (audit M3).
+    // every source to HEAD's author day, which is the deploy-day bug (audit M3).
     const older = Object.keys(manifest).filter((file) => manifest[file] < head && shallow[file]);
     assert.ok(older.length > 10, "some sources are older than HEAD");
     for (const file of older) {
       assert.equal(shallow[file], head, `${file}: shallow git says ${shallow[file]}`);
       assert.equal(contentDate(file), manifest[file], `${file}: the site still says ${manifest[file]}`);
     }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a file is dated by its newest author date, whatever the log order or commit date", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "toone-dates-"));
+  const git = (args: string[], env: Record<string, string> = {}) =>
+    execFileSync("git", args, { cwd: dir, env: { ...process.env, ...env }, stdio: "ignore" });
+  const commit = (file: string, text: string, author: string, committer: string) => {
+    fs.mkdirSync(path.dirname(path.join(dir, file)), { recursive: true });
+    fs.writeFileSync(path.join(dir, file), text);
+    git(["add", file]);
+    git(["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", text], {
+      GIT_AUTHOR_DATE: `${author}T12:00:00Z`,
+      GIT_COMMITTER_DATE: `${committer}T12:00:00Z`,
+    });
+  };
+  try {
+    git(["init", "-q"]);
+    // As after a rebase: the change written on 03-10 lands on top of one
+    // written on 03-20, so git log lists the older-authored commit first, and
+    // both commit dates are the day the rebase ran.
+    commit("content/a.md", "a1", "2026-03-01", "2026-03-01");
+    commit("content/a.md", "a2", "2026-03-20", "2026-04-02");
+    commit("content/a.md", "a3", "2026-03-10", "2026-04-02");
+    commit("content/b.md", "b1", "2026-02-05", "2026-04-02");
+    assert.deepEqual(collectSourceDates(["content"], dir), {
+      "content/a.md": "2026-03-20",
+      "content/b.md": "2026-02-05",
+    });
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

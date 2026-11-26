@@ -6,8 +6,9 @@
  *   npm run content:dates         rewrite the manifest from git history
  *   npm run content:dates:check   fail if the manifest is stale (part of npm test)
  *
- * A file's date is the date of the last commit touching it; a file with
- * uncommitted changes counts as changed today, so regenerating before a
+ * A file's date is the newest author date (`%as`) among the commits touching
+ * it, so a rebase or a log order that differs from authoring order cannot move
+ * it; a file with uncommitted changes counts as changed today, so regenerating before a
  * commit puts the right date in that same commit. Both modes need full
  * history: in a shallow clone every old file looks new, which is the bug the
  * manifest exists to avoid, so writing refuses and checking is skipped.
@@ -32,14 +33,14 @@ export function historyKind(cwd: string = process.cwd()): "full" | "shallow" | "
   }
 }
 
-/** The manifest as git history says it should be, sorted by path. */
-/** Today as git's `%cs` writes a commit made now: the local calendar date. */
+/** Today as git's `%as` writes a commit made now: the local calendar date. */
 function localToday(): string {
   const now = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
+/** The manifest as git history says it should be, sorted by path. */
 export function expectedDates(cwd: string = process.cwd(), today = localToday()) {
   const roots = [...DATED_SOURCE_ROOTS];
   const tracked = git(["ls-files", "-z", "--", ...roots], cwd).split("\0").filter(isDatedSource);

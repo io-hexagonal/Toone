@@ -6,10 +6,16 @@ import { ROUTE_SOURCE_FILES } from "./route-sources";
  * Date provenance for `lastmod` / `dateModified` (TECH-013).
  *
  * Both signals describe when the *content* last changed, not when the site
- * was last deployed. The authority is the commit date of the files backing a
- * route (its page and the components that render its main content,
+ * was last deployed. The authority is the latest author date of the files
+ * backing a route (its page and the components that render its main content,
  * lib/route-sources.ts), and those dates are read from
  * `lib/content-dates.json`, a manifest committed with the code (A2).
+ *
+ * Author dates, not commit dates: a rebase, cherry-pick or amend rewrites the
+ * commit date to the day it ran, while the author date stays the day the
+ * change was written. And the newest author date across a file's history, not
+ * the first entry `git log` prints: log order follows the commit graph, so
+ * after a rebase an older-authored commit can be listed above a newer one.
  *
  * Why a committed file and not git at build time: Vercel builds from a
  * shallow clone (about 10 commits). In a shallow clone the oldest commit
@@ -50,10 +56,10 @@ export const DATED_SOURCE_ROOTS: readonly string[] = [
 ];
 
 /**
- * `YYYY-MM-DD` of the last commit touching each file under `roots`, from one
- * `git log` pass. Used only to write and check the manifest
- * (scripts/content/dates.ts), on a clone with full history. Empty when git is
- * unavailable.
+ * `YYYY-MM-DD` of the newest author date among the commits touching each file
+ * under `roots`, from one `git log` pass. Used only to write and check the
+ * manifest (scripts/content/dates.ts), on a clone with full history. Empty
+ * when git is unavailable.
  */
 export function collectSourceDates(
   roots: string | readonly string[],
@@ -61,7 +67,7 @@ export function collectSourceDates(
 ): Record<string, string> {
   const dates: Record<string, string> = {};
   try {
-    const out = execFileSync("git", ["log", "--format=%x00%cs", "--name-only", "--", ...[roots].flat()], {
+    const out = execFileSync("git", ["log", "--format=%x00%as", "--name-only", "--", ...[roots].flat()], {
       cwd,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
@@ -72,9 +78,11 @@ export function collectSourceDates(
       if (line.startsWith("\0")) {
         const date = line.slice(1).trim();
         current = DATE.test(date) ? date : null;
-      } else if (current && line.trim() && !(line.trim() in dates)) {
-        dates[line.trim()] = current;
+        continue;
       }
+      const file = line.trim();
+      // YYYY-MM-DD compares as text: keep the newest date seen for the file.
+      if (current && file && !(dates[file] >= current)) dates[file] = current;
     }
   } catch {
     // No git on this host.
