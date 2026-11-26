@@ -23,6 +23,7 @@ import {
 } from "@/lib/affiliates";
 import { EMPTY_AFFILIATE_FORM as EMPTY_FORM, affiliateRequestFrom, type AffiliateFormState as FormState } from "./affiliate-form";
 import { accessOutcome } from "./access";
+import AdminTokensPanel from "./AdminTokensPanel";
 import shell from "@/components/InvitationAdminPage.module.css";
 import styles from "./CodesAdmin.module.css";
 
@@ -317,6 +318,7 @@ function AffiliatesWorkspace({ session, onSessionEnded }: { session: ToneSession
           <p className={shell.feedback} role="status">{copyFeedback}</p>
           <p className={shell.notice}>Sales are completed Pro checkouts that used the affiliate&apos;s code, through the link or typed at checkout, counted at what the buyer paid on the first payment. Refunded lifetime purchases and withdrawn orders are left out. Renewals are not counted yet. Pay creators by bank transfer from the “Share owed” column.</p>
         </section>
+        <AdminTokensPanel sessionToken={session.token} onAccessError={handleAccessError} />
       </div>
     </main>
   );

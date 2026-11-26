@@ -291,3 +291,58 @@ export function percentOffPrice(percent: number, amount: number, displayPrice: s
   const text = (discounted / 100).toFixed(2);
   return displayPrice.replace(number[0], decimalComma ? text.replace(".", ",") : text);
 }
+
+/* ---- admin API tokens: scripts call the affiliates admin routes without a browser session */
+
+export type AdminApiTokenScope = "affiliates";
+
+export type AdminApiToken = {
+  id: string;
+  name: string;
+  scopes: AdminApiTokenScope[];
+  /** The token's last four characters. */
+  token_hint: string;
+  created_by: string;
+  created_at: string;
+  last_used_at: string | null;
+  expires_at: string | null;
+  revoked_at: string | null;
+};
+
+/** Only the create response carries the token itself, once. */
+export type CreatedAdminApiToken = AdminApiToken & { token: string };
+
+export type CreateAdminApiTokenInput = { name: string; scopes?: AdminApiTokenScope[]; expires_in_days?: number };
+
+export const ADMIN_TOKEN_NAME_MAX = 80;
+
+/** Null when the token name is valid, else what is wrong with it. */
+export function adminTokenNameProblem(name: string): string | null {
+  const trimmed = name.trim();
+  if (!trimmed) return "Give the token a name, e.g. where it will be used.";
+  if ([...trimmed].length > ADMIN_TOKEN_NAME_MAX) return `Use at most ${ADMIN_TOKEN_NAME_MAX} characters.`;
+  if (/[\r\n\t]/.test(trimmed)) return "Use one line.";
+  return null;
+}
+
+/** Whether a token still works at `now`. */
+export function adminTokenState(token: AdminApiToken, now: Date = new Date()): "active" | "revoked" | "expired" {
+  if (token.revoked_at) return "revoked";
+  if (token.expires_at && new Date(token.expires_at).getTime() <= now.getTime()) return "expired";
+  return "active";
+}
+
+export function listAdminTokens(token: string): Promise<AdminApiToken[]> {
+  return authedRequest<AdminApiToken[]>(token, "/admin/api-tokens").then(list => (Array.isArray(list) ? list : []));
+}
+
+export function createAdminToken(token: string, input: CreateAdminApiTokenInput): Promise<CreatedAdminApiToken> {
+  return authedRequest<CreatedAdminApiToken>(token, "/admin/api-tokens", {
+    method: "POST",
+    body: JSON.stringify({ scopes: ["affiliates"], ...input, name: input.name.trim() }),
+  });
+}
+
+export function revokeAdminToken(token: string, id: string): Promise<AdminApiToken> {
+  return authedRequest<AdminApiToken>(token, `/admin/api-tokens/${encodeURIComponent(id)}/revoke`, { method: "POST" });
+}
