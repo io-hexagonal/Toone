@@ -1,4 +1,6 @@
 import { getProductGuidePage } from "@/lib/product-showcase";
+import { CREATOR_IDEAS } from "@/lib/creator-ideas";
+import { NEWCOMER_IDEAS_PATH, NEWCOMER_INDEX } from "@/lib/newcomer-ideas-seo";
 
 const FEATURED_GUIDE_SLUGS = ["getting-started", "getting-started/create-a-routine"];
 
@@ -18,7 +20,7 @@ export default function ResourcesSection() {
         }
         .resource-preview-head .sub { margin-bottom: 0; }
         .resource-preview-head .text-link { white-space: nowrap; }
-        .resource-preview-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+        .resource-preview-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
         .resource-preview-card {
           position: relative; display: flex; flex-direction: column; min-height: 252px;
           padding: 28px 30px 26px; overflow: hidden; color: inherit; text-decoration: none;
@@ -49,6 +51,7 @@ export default function ResourcesSection() {
           position: relative; z-index: 1; margin-top: auto; padding-top: 22px;
           color: rgba(29,28,25,.5); font-size: 14px;
         }
+        @media (max-width: 1000px) { .resource-preview-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
         @media (max-width: 700px) {
           .resource-preview-head { align-items: start; flex-direction: column; }
           .resource-preview-grid { grid-template-columns: 1fr; }
@@ -58,7 +61,7 @@ export default function ResourcesSection() {
       <div className="resource-preview-head">
         <div>
           <h2 id="resources-title">From install to your first run</h2>
-          <p className="sub">Two short guides: set up Toone, then build a routine you can run and inspect.</p>
+          <p className="sub">Set up Toone, build a routine you can run and inspect, or start from an idea Toone already runs.</p>
         </div>
         <a href="/en/how-to" className="text-link">Browse the full guide</a>
       </div>
@@ -74,6 +77,12 @@ export default function ResourcesSection() {
             ) : null}
           </a>
         ))}
+        <a href={`/en${NEWCOMER_IDEAS_PATH}`} className="resource-preview-card">
+          <span className="resource-preview-type">Ideas</span>
+          <h3>{NEWCOMER_INDEX.heading}</h3>
+          <p>Ready-made routines, like a Reddit watcher or a YouTube channel that improves with every review. Copy a prompt to start.</p>
+          <span className="resource-preview-meta">{CREATOR_IDEAS.length} ideas</span>
+        </a>
       </div>
       <p className="resource-preview-more">
         New to routines? Read{" "}

@@ -93,16 +93,6 @@ export function appleScriptURL(locale: string): string {
   return `https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/${appleLocale}/appleid.auth.js`;
 }
 
-/** Apple-supplied button artwork keeps the logo, title and spacing approved. */
-export function appleButtonURL(locale: string, type: "sign-in" | "continue"): string {
-  const appleLocale = APPLE_JS_LOCALES[locale] ?? APPLE_JS_LOCALES.en;
-  const params = new URLSearchParams({
-    color: "white", height: "40", width: "356", type,
-    border_radius: "4", scale: "2", locale: appleLocale,
-  });
-  return `https://appleid.cdn-apple.com/appleid/button?${params}`;
-}
-
 /**
  * Apple sends the name once, on first authorization, and never inside the
  * identity token. It is forwarded as untrusted display text; the server

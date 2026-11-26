@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Automatización por nodos",
           "like": "Como n8n, Make o Zapier",
-          "verdict": "Exacta, pero cada nodo se conecta a mano, y la IA es un nodo más que configuras."
+          "verdict": "Exacta, pero cada nodo se conecta <b>a mano</b>, y la IA es un nodo más que configuras."
         },
         "agents": {
           "name": "Agentes con horario",
           "like": "Como una tarea de chat programada o un agente de código con temporizador",
-          "verdict": "Flexible, pero cada paso pasa por un modelo, así que todos gastan de tu plan de IA y pueden salir distintos."
+          "verdict": "Flexible, pero <b>caro</b>: cada paso pasa por un modelo, así que todos gastan de tu plan de IA y pueden salir distintos."
         },
         "toone": {
           "name": "Toone",
           "like": "Scripts y agentes, en tu Mac",
-          "verdict": "Los scripts ejecutan los pasos fijos con exactitud; los agentes solo los pasos que requieren criterio."
+          "verdict": "Los scripts ejecutan los pasos fijos con exactitud; los agentes solo los pasos que requieren <b>criterio</b>."
         }
       }
     },

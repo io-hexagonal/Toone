@@ -127,6 +127,16 @@ export default async function HeroLanding({ audience = "business" }: Props) {
             /* Second line: dot-matrix fill. The colour is clipped to the
                letters, then masked to a grid of dots sized in em so the dots
                scale with the type. */
+            /* The dots sit inside a crisp, unmasked outline of the same
+               letters: the same text again, drawn by CSS (stroke only) so the
+               heading's text is not duplicated. */
+            .hl-accent-wrap { position: relative; display: block; }
+            .hl-accent-wrap::after {
+              content: attr(data-text);
+              position: absolute; inset: 0; pointer-events: none;
+              color: transparent;
+              -webkit-text-stroke: 0.022em rgba(43,42,39,0.9);
+            }
             .hl-accent {
               display: block; padding-bottom: 0.06em;
               background: linear-gradient(95deg, #2b2a27 0%, #6b6862 100%);
@@ -246,7 +256,11 @@ export default async function HeroLanding({ audience = "business" }: Props) {
 
           <h1 className="hl-title">
             {t.rich(audience === "personal" ? "personal.heroTitle" : "heroTitle", {
-              accent: (chunks) => <span className="hl-accent">{chunks}</span>,
+              accent: (chunks) => (
+                <span className="hl-accent-wrap" data-text={[chunks].flat().join("")}>
+                  <span className="hl-accent">{chunks}</span>
+                </span>
+              ),
             })}
           </h1>
           <p className="hl-tag">
