@@ -12,8 +12,11 @@ import {
 } from "@/lib/locale-preference";
 
 /**
- * Language picker: a button that opens a menu on click, in the header and,
- * opening upwards, in the footer. Each language links to this page's
+ * Language picker: a disclosure button that shows a list of language links,
+ * in the header and, opening upwards, in the footer. It is not an ARIA menu:
+ * no `aria-haspopup`, the links are reached with Tab as usual. Escape closes
+ * the list and returns focus to the button; a click or focus moving outside
+ * the picker closes it too. Each language links to this page's
  * language version when it has one, else to that language's home, and
  * stores the explicit choice (the `toone_locale` cookie). Full page loads on
  * purpose: the server renders the new language.
@@ -28,6 +31,7 @@ export default function LocalePicker({ placement = "header" }: { placement?: "he
   const [open, setOpen] = useState(false);
   const alternates = usePageAlternates();
   const root = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
   useEffect(() => {
@@ -36,7 +40,10 @@ export default function LocalePicker({ placement = "header" }: { placement?: "he
       if (!root.current?.contains(event.target as Node)) setOpen(false);
     };
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      // The focused link may be about to unmount; keep focus on the picker.
+      button.current?.focus();
     };
     document.addEventListener("pointerdown", onPointer);
     document.addEventListener("keydown", onKey);
@@ -50,7 +57,18 @@ export default function LocalePicker({ placement = "header" }: { placement?: "he
   const copy = LOCALE_COPY[current];
 
   return (
-    <div className={`lp lp-${placement}`} ref={root}>
+    <div
+      className={`lp lp-${placement}`}
+      ref={root}
+      onBlur={(event) => {
+        // Focus moved to something outside the picker (Tab past the last
+        // link, Shift+Tab before the button). A null target (a click on
+        // nothing focusable) is left to the pointerdown handler, so a click
+        // on a link is never cut short by the button's blur.
+        const next = event.relatedTarget as Node | null;
+        if (open && next && !root.current?.contains(next)) setOpen(false);
+      }}
+    >
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -89,8 +107,8 @@ export default function LocalePicker({ placement = "header" }: { placement?: "he
       />
       <button
         type="button"
+        ref={button}
         className="lp-btn"
-        aria-haspopup="true"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         aria-label={`${copy.label}: ${copy.name}`}
