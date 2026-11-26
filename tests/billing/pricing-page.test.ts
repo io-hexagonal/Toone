@@ -100,6 +100,7 @@ test("with checkout on, the plans render in order with the disclosures", () => {
   // screen readers only, so crawlers read no "Checking your account…" (A10).
   assert.doesNotMatch(html, />Checking your account…</);
   assert.match(html, /aria-label="Checking your account…"/);
+  assert.match(html, /<button[^>]*class="pricing-button pricing-button--pending"[^>]*aria-busy="true"[^>]*><\/button>/, "pending buttons are empty");
   assert.doesNotMatch(html, /coming soon/i);
 });
 
@@ -272,4 +273,10 @@ test("prices: known plans in display order, unknown plans skipped, tax line from
   assert.equal(taxNoteKey(PRICES), "vatIncluded");
   assert.equal(taxNoteKey(PRICES.map((price) => ({ ...price, tax_inclusive: false }))), "taxExcluded");
   assert.equal(taxNoteKey([]), "taxExcluded");
+});
+
+test("the blank pending button is as tall as a one-line buy button (padding + 1lh)", () => {
+  const styles = read("components/billing/pricing-styles.ts");
+  assert.match(styles, /\.pricing-button \{[^}]*padding: 14px 18px;/);
+  assert.match(styles, /\.pricing-button--pending \{[^}]*box-sizing: border-box;[^}]*min-height: calc\(28px \+ 1lh\);/);
 });
