@@ -1,0 +1,35 @@
+# Content dates check (TECH-013).
+#
+# lib/content-dates.json dates every page for the sitemap `lastmod` and JSON-LD
+# `dateModified`. It is written from full git history by `npm run content:dates`
+# and Vercel's shallow clone cannot check it, so this job does: it fails when a
+# page, a file under content/ or a dated component (lib/route-sources.ts)
+# changed without the manifest being regenerated.
+name: Content dates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Full history: in a shallow clone every old file looks new.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - run: npm run content:dates:check

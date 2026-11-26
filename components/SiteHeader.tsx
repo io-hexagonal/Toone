@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
 import InvitationAdminLink from "@/components/InvitationAdminLink";
 import LocalePicker from "@/components/LocalePicker";
@@ -10,6 +10,7 @@ import SignedInLink from "@/components/SignedInLink";
 import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
+import { linksBusinessLanding } from "@/lib/page-indexing";
 
 /**
  * Morphing landing header — one element, two states.
@@ -21,7 +22,8 @@ import type { LandingAudience } from "@/components/LandingAudienceBar";
  *
  * tone="light" is for a light hero (the landing): ink text from the start,
  * nav links next to the logo, the account actions pushed right. With
- * `audience` set, Personal / Business lead the nav.
+ * `audience` set, Personal / Business lead the nav, unless the page may not
+ * link the Business landing (lib/page-indexing.ts): then neither shows.
  */
 type Props = {
   landingPath?: "/" | "/business";
@@ -46,6 +48,8 @@ export default function SiteHeader({
   const landing = useTranslations("landing");
   const billing = useTranslations("billing");
   const links = useTranslations("account.links");
+  const locale = useLocale();
+  const showAudiences = !!audience && linksBusinessLanding(locale, audience);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -134,7 +138,7 @@ export default function SiteHeader({
               .hdr2 .links { gap: 12px; }
               .hdr2 .links [data-optional] { display: none; }
               .hdr2 .dl { padding: 10px 14px; font-size: 12px; white-space: nowrap; }
-              /* No room for the language menu on phones: the footer keeps the locale links. */
+              /* No room for the language menu on phones: the footer has its own. */
               .hdr2 .links .lp { display: none; }
             }
 
@@ -213,7 +217,7 @@ export default function SiteHeader({
           <span className="wm">toone</span>
         </Link>
         <nav className="links links-nav" aria-label="Primary">
-          {audience &&
+          {showAudiences &&
             AUDIENCES.map((a) =>
               a.id === audience ? (
                 <span key={a.id} aria-current="page" data-optional>

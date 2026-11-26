@@ -1,12 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import {
+  TOPIC_PAGE_INTROS,
   TOPIC_PAGE_MIN_LISTINGS,
   facetListings,
   findTopicTerm,
   isTopicPageIndexable,
   termSlug,
   topicPageCopy,
+  topicPageIntro,
   topicPagePath,
   topicQuery,
 } from "../../lib/explore/topicPages";
@@ -49,13 +52,24 @@ test("a topic page filters the catalog on exactly its term", () => {
   assert.deepEqual(topicQuery(taxonomy.terms[2]).usefulFor, ["role_founders-entrepreneurs"]);
 });
 
-test("a topic page is indexable only with enough listings", () => {
-  assert.equal(TOPIC_PAGE_MIN_LISTINGS, 3);
-  assert.equal(isTopicPageIndexable(2), false);
-  assert.equal(isTopicPageIndexable(3), true);
-  assert.equal(isTopicPageIndexable(Number.NaN), false);
-  const facets = [{ term_id: "cat_marketing-sales", routines: 2, bundles: 1 }];
-  assert.equal(facetListings(facets, "cat_marketing-sales"), 3);
+test("a topic page is indexable only with a written intro and 5 distinct records (TOPIC-012)", () => {
+  assert.equal(TOPIC_PAGE_MIN_LISTINGS, 5);
+  const intros = { "cat_marketing-sales": "Routines for a marketing team's weekly work." };
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 4, intros), false);
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 5, intros), true);
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", Number.NaN, intros), false);
+  // A blank intro counts as none.
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 50, { "cat_marketing-sales": "   " }), false);
+  assert.equal(topicPageIntro("cat_marketing-sales", { "cat_marketing-sales": "  Weekly marketing work.  " }), "Weekly marketing work.");
+  assert.equal(topicPageIntro("cat_marketing-sales", { "cat_marketing-sales": "" }), null);
+  // No written intro: noindex at any count.
+  assert.equal(isTopicPageIndexable("topic_seo-content", 50, intros), false);
+  // Nothing has a written intro yet, so no topic page is indexable today.
+  assert.deepEqual(TOPIC_PAGE_INTROS, {});
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 50), false);
+  // Bundles repeat routines already listed: only routines count as distinct.
+  const facets = [{ term_id: "cat_marketing-sales", routines: 4, bundles: 1 }];
+  assert.equal(facetListings(facets, "cat_marketing-sales"), 4);
   assert.equal(facetListings(facets, "topic_seo-content"), 0);
 });
 
@@ -68,7 +82,32 @@ test("the copy comes from the label, never the classifier description", () => {
   assert.equal(topicPageCopy(taxonomy.terms[2]).heading, "AI Routines & Workflow Templates for Founders & entrepreneurs");
 });
 
-test("the category breadcrumb links to the topic page", () => {
+test("the category breadcrumb links to the topic page, never to a filter view", () => {
   assert.equal(categoryHref("en", "cat_marketing-sales"), "/en/explore/category/marketing-sales");
-  assert.match(categoryHref("en", "odd id"), /^\/en\/explore\?/);
+  assert.equal(categoryHref("en", "odd id"), null);
+});
+
+test("record pages link the category only while its topic page is indexable (A7)", () => {
+  // The decision lives in isCategoryTopicIndexable (lib/explore/api.ts, server-only):
+  // the topic page's own rule, so with no written intro there is no category level.
+  const api = readFileSync("lib/explore/api.ts", "utf8");
+  assert.match(api, /export const isCategoryTopicIndexable = cache\(/);
+  assert.match(api, /topicPageIntro\(categoryId\) === null\) return false/);
+  assert.match(api, /isTopicPageIndexable\(categoryId, await topicListings\(categoryId\)\)/);
+  for (const page of ["app/[locale]/explore/routines/[slug]/page.tsx", "app/[locale]/explore/bundles/[slug]/page.tsx"]) {
+    const source = readFileSync(page, "utf8");
+    assert.match(source, /const categoryLinked = !!categoryId && \(await isCategoryTopicIndexable\(categoryId\)\)/, page);
+    assert.match(source, /const category = categoryId && categoryLinked/, page);
+  }
+  const hero = readFileSync("components/explore/ProfileView.tsx", "utf8");
+  assert.match(hero, /category && categoryLinked \? categoryHref\(locale, category\) : null/);
+});
+
+test("TOPIC-012: topic metadata and record breadcrumbs count listings with one shared helper", () => {
+  const page = readFileSync("components/explore/TopicPage.tsx", "utf8");
+  const api = readFileSync("lib/explore/api.ts", "utf8");
+  assert.match(page, /await topicListings\(topic\.term\.id\)/, "metadata uses the facet count");
+  assert.doesNotMatch(page, /getCatalog\(/, "no second, differently counted catalog read");
+  assert.match(api, /isTopicPageIndexable\(categoryId, await topicListings\(categoryId\)\)/);
+  assert.match(api, /facetListings\(await getExploreFacets\(\{ type: "all", query: "", tag: "", page: 1 \}\), termId\)/);
 });

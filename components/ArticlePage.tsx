@@ -11,6 +11,9 @@ import {
   type Publication,
 } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
+import HowToLink from "@/components/HowToLink";
+import { isUnindexedPage } from "@/lib/page-indexing";
+import SignedInOnly from "@/components/SignedInOnly";
 
 export type ArticleUi = {
   breadcrumb: string;
@@ -39,8 +42,17 @@ function markdownComponents(locale: Locale): Components {
   h3: ({ children }) => <h3 id={headingId(String(children))}>{children}</h3>,
   a: ({ href = "", children }) => {
     const external = href.startsWith("http");
+    const target = localizedHref(href, locale);
+    // The how-to guides are signed-in only and noindex: the words stay, the
+    // link is added for signed-in readers only (A7).
+    if (/^\/[a-z]{2}\/how-to(?:[/?#]|$)/.test(target)) {
+      return <HowToLink href={target.replace(/^\/[a-z]{2}\//, "/en/")} fallback="text">{children}</HowToLink>;
+    }
+    // A page kept out of the index for now (lib/page-indexing.ts): the words
+    // stay, the link comes back when the page is indexed again (A7).
+    if (isUnindexedPage(target)) return <>{children}</>;
     return (
-      <a href={localizedHref(href, locale)} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
+      <a href={target} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
         {children}
       </a>
     );
@@ -250,11 +262,14 @@ export default function ArticlePage({ publication, locale = "en", ui = ENGLISH_U
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(locale)}>
               {publication.body}
             </ReactMarkdown>
-            <aside className="article-close">
-              <h2>{ui.continueTitle}</h2>
-              <p>{ui.continueDescription}</p>
-              <Link href="/how-to">{ui.continueAction}</Link>
-            </aside>
+            {/* Its only action is the signed-in /how-to guides, so signed out it is not shown at all. */}
+            <SignedInOnly>
+              <aside className="article-close">
+                <h2>{ui.continueTitle}</h2>
+                <p>{ui.continueDescription}</p>
+                <a href="/en/how-to">{ui.continueAction}</a>
+              </aside>
+            </SignedInOnly>
           </article>
           <aside className="article-toc" aria-label={ui.onThisPage}>
             <p className="article-toc-title">{ui.onThisPage}</p>

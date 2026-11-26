@@ -53,15 +53,19 @@ const schemas = (html) =>
   ].map((match) => JSON.parse(match[1]));
 const count = (html, type) =>
   [...html.matchAll(new RegExp(`data-explore-type="${type}"`, "g"))].length;
-// The unfiltered hub also lists bundle-only routines under "Routines inside
-// bundles" (Ahrefs F29); `grid` keeps only the main catalog grid.
-const grid = (html) => html.split('id="explore-in-bundles"')[0];
-test("server-rendered catalog has exactly one standalone routine and one bundle", async () => {
+// Since 8789cea the catalog asks for listing=all: a bundle's routines are
+// listed as normal routines in the one grid (the separate "Routines inside
+// bundles" section is retired). The fixture has one standalone routine and
+// one bundle whose members are bundle-only routines.
+const ROUTINES = 1 + bundle.members.length;
+test("server-rendered catalog lists every routine, bundle members included, and one bundle", async () => {
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(grid(html), "routine"), 1);
-  assert.equal(count(grid(html), "bundle"), 1);
-  assert.ok(count(html.slice(grid(html).length), "routine") >= 1, "bundle-only routines are one click from the hub");
+  assert.equal(count(html, "routine"), ROUTINES);
+  assert.equal(count(html, "bundle"), 1);
+  assert.ok(!html.includes('id="explore-in-bundles"'), "no separate bundle-routines section");
+  for (const member of bundle.members)
+    assert.match(html, new RegExp(`href="/en/explore/routines/${member.slug}"`), `bundle-only ${member.slug} is one click from the hub`);
   assert.match(
     html,
     /<link rel="canonical" href="https:\/\/trytoone.com\/en\/explore"/,
@@ -69,12 +73,12 @@ test("server-rendered catalog has exactly one standalone routine and one bundle"
   assert.equal(
     schemas(html).find((s) => s["@type"] === "CollectionPage").mainEntity
       .itemListElement.length,
-    2,
+    ROUTINES + 1,
   );
 });
 test("type, search, and tags filter the actual server-rendered catalog", async () => {
   const routines = await get("/en/explore?type=routines");
-  assert.equal(count(routines.html, "routine"), 1);
+  assert.equal(count(routines.html, "routine"), ROUTINES);
   assert.equal(count(routines.html, "bundle"), 0);
   const bundles = await get("/en/explore?type=bundles");
   assert.equal(count(bundles.html, "routine"), 0);
@@ -106,7 +110,17 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
       assert.ok(html.includes(step.title), step.title);
   for (const agent of routine.package.agents)
     assert.ok(html.includes(agent.name));
-  assert.match(html, /Completion criteria/);
+  // c5eebd3: step instructions stay off the public page. Step titles are the
+  // public description of a step; descriptions and completion criteria are not
+  // published, in the page or in its HowTo markup.
+  assert.doesNotMatch(html, /Completion criteria/);
+  const unescaped = decode(html);
+  for (const member of routine.package.members)
+    for (const step of member.payload.steps ?? []) {
+      if (step.description) assert.ok(!unescaped.includes(step.description), `${step.title}: description published`);
+      for (const criterion of step.completionCriteria ?? [])
+        assert.ok(!unescaped.includes(criterion), `${step.title}: completion criterion published`);
+    }
   // Revision number is shown; ids, hashes and the raw package JSON are not
   // published (they are for the app and the API, and add page weight).
   // Ids may only appear inside attributes (deep link, cover URLs), never as text.
@@ -125,6 +139,7 @@ test("routine HTML contains root and child steps, agents, safe Markdown, source,
     routine.package.members.find((m) => m.key === routine.package.root_key)
       .payload.steps.length,
   );
+  for (const step of schema.step) assert.equal(step.text, step.name, "HowTo steps carry the title only");
   assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_[a-z0-9]+"/);
 });
 test("bundle preserves pin metadata, renders member pages and distinguishes missing items", async () => {
@@ -151,7 +166,6 @@ test("id URLs issue permanent redirects to the slug URL, including translated re
   // "301s"; both are permanent and 308 matches the site's other redirects).
   for (const path of [
     `/en/explore/routines/${routine.workflow_id}`,
-    `/pt/explore/routines/${routine.workflow_id}`,
   ]) {
     const response = await fetch(base + path, { redirect: "manual" });
     assert.ok([301, 308].includes(response.status), `${path}: ${response.status}`);
@@ -167,10 +181,35 @@ test("id URLs issue permanent redirects to the slug URL, including translated re
   assert.ok(
     response.headers.get("location").endsWith("/bundles/" + bundle.slug),
   );
-  // An unprefixed link goes through locale negotiation first, then the page.
+  // A6: another locale's copy is one 308 to the English URL (proxy.ts),
+  // which then resolves the id like any English request.
+  const translated = await fetch(`${base}/pt/explore/routines/${routine.workflow_id}`, { redirect: "manual" });
+  assert.equal(translated.status, 308);
+  assert.equal(new URL(translated.headers.get("location"), base).pathname, `/en/explore/routines/${routine.workflow_id}`);
+  for (const path of [`/de/explore/routines/${routine.slug}`, `/fr/explore/bundles/${bundle.slug}`]) {
+    const copy = await fetch(base + path, { redirect: "manual" });
+    assert.equal(copy.status, 308, path);
+    assert.equal(new URL(copy.headers.get("location"), base).pathname, path.replace(/^\/[a-z]{2}\//, "/en/"), path);
+  }
+  // An unprefixed link goes straight to English, then the page.
   const followed = await fetch(`${base}/explore/routines/${routine.workflow_id}`);
   assert.equal(followed.status, 200);
   assert.ok(followed.url.endsWith(`/en/explore/routines/${routine.slug}`));
+});
+test("A1/A6/A7: the hub and record pages link no noindex URL and show no invented ratings", async () => {
+  for (const path of ["/en/explore", "/en/explore/routines/" + routine.slug, "/en/explore/bundles/" + bundle.slug]) {
+    const { response, html } = await get(path);
+    assert.equal(response.status, 200, path);
+    const hrefs = [...html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)].map((m) => m[1].replaceAll("&amp;", "&"));
+    assert.deepEqual(hrefs.filter((href) => /^\/[a-z]{2}\/explore\?/.test(href)), [], `${path}: filter-view links`);
+    assert.deepEqual(hrefs.filter((href) => /\/how-to(\/|$)/.test(href)), [], `${path}: /how-to links`);
+    assert.deepEqual(hrefs.filter((href) => /^\/(pt|es|fr|de|it|nl|ru)(\/|$)/.test(href)), [], `${path}: locale links`);
+    assert.doesNotMatch(html, /sample rating|out of 5/i, path);
+  }
+  const translated = await get("/pt/explore");
+  const recordLinks = [...translated.html.matchAll(/href="(\/[a-z]{2}\/explore\/(?:routines|bundles)\/[^"]+)"/g)].map((m) => m[1]);
+  assert.ok(recordLinks.length > 0, "the Portuguese hub links records");
+  assert.ok(recordLinks.every((href) => href.startsWith("/en/")), "straight to the English record, no redirect hop");
 });
 test("all translated hubs have localized chrome, noindex and a self canonical", async () => {
   for (const locale of ["pt", "es", "fr", "de", "it", "nl", "ru"]) {
@@ -252,13 +291,13 @@ test("a server without the bundles route hides the Bundles filter and still list
   await invalidate(routine.slug, routine.workflow_id);
   const { response, html } = await get("/en/explore");
   assert.equal(response.status, 200);
-  assert.equal(count(grid(html), "routine"), 1);
-  assert.equal(count(grid(html), "bundle"), 0);
+  assert.equal(count(html, "routine"), ROUTINES);
+  assert.equal(count(html, "bundle"), 0);
   const chips = [...html.matchAll(/class="explore-type-option"[^>]*>([^<]*)</g)].map((m) => m[1]);
   assert.deepEqual(chips, ["All", "Routines"]);
   assert.ok(!html.includes("Explore is temporarily unavailable"));
   const filtered = await get("/en/explore?type=routines");
-  assert.equal(count(filtered.html, "routine"), 1);
+  assert.equal(count(filtered.html, "routine"), ROUTINES);
   assert.ok(!filtered.html.includes(">Bundles<"));
   const bundlePage = await get("/en/explore/bundles/" + bundle.slug);
   assert.equal(bundlePage.response.status, 404);
@@ -272,7 +311,7 @@ test("data-URL-only covers render the placeholder on cards but inline in the det
   await mode({ dataUrlCovers: true });
   await invalidate(routine.slug, routine.workflow_id);
   const index = await get("/en/explore");
-  assert.equal(count(grid(index.html), "routine"), 1);
+  assert.equal(count(index.html, "routine"), ROUTINES);
   assert.ok(!index.html.includes("src=\"data:image"), "cards must not inline data URLs");
   assert.match(index.html, /explore-cover-empty/);
   const detail = await get("/en/explore/routines/" + routine.slug);
@@ -356,9 +395,16 @@ test("profile routine renders every section in page-spec order without the routi
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!html.includes('href="#builders"'));
   assert.ok(!visible(html).includes("Validate the site list"), "step titles stay off the profile page");
-  // Cover alt, breadcrumb with category, CTAs with attribution.
+  // Cover alt, breadcrumb, CTAs with attribution. The category level links
+  // its topic page only while that page is indexable (A7); with #144 that
+  // needs a written intro, and TOPIC_PAGE_INTROS is empty, so the breadcrumb
+  // is Home / Explore / record. It never links the noindex filtered hub.
   assert.ok(html.includes(`alt="${profileFixture.cover_alt}"`));
-  assert.match(html, /href="\/en\/explore\?category=cat_marketing-sales"/);
+  const breadcrumb = html.match(/<nav class="explore-breadcrumb"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(breadcrumb, "breadcrumb");
+  assert.deepEqual([...breadcrumb.matchAll(/href="([^"]+)"/g)].map((m) => m[1]), ["/en", "/en/explore"]);
+  assert.ok(!html.includes('href="/en/explore/category/'), "no link to a noindex topic page");
+  assert.ok(!html.includes('href="/en/explore?category='), "no link to the filtered hub");
   assert.match(html, />Use this routine</);
   assert.match(html, /data-umami-event="explore-open-in-toone"/);
   assert.match(html, /href="\/en\/create-account\?from=explore&amp;item=routine%3Awfl_lnchprepqk4m2x7a"/);
@@ -381,9 +427,10 @@ test("profile routine metadata, robots and JSON-LD come from the profile", async
   assert.deepEqual(howTo.supply.map((t) => t.name), profileFixture.you_provide.map((t) => t.label));
   assert.ok(!all.some((s) => s["@type"] === "FAQPage"));
   const crumbs = all.find((s) => s["@type"] === "BreadcrumbList").itemListElement;
-  assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3, 4]);
-  assert.equal(crumbs[2].item, "https://trytoone.com/en/explore?category=cat_marketing-sales");
-  assert.equal(crumbs[3].name, profileFixture.search.display_title);
+  // No category level while its topic page is noindex (A7, see above).
+  assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3]);
+  assert.deepEqual(crumbs.map((c) => c.item).slice(0, 2), ["https://trytoone.com/en", "https://trytoone.com/en/explore"]);
+  assert.equal(crumbs[2].name, profileFixture.search.display_title);
 });
 
 test("indexable:false renders noindex, follow and leaves the Explore sitemap; indexable profiles stay", async () => {
@@ -403,7 +450,10 @@ test("the legacy routine keeps the fallback layout", async () => {
   assert.match(html, /<meta name="robots" content="index, follow"/);
   assert.ok(!html.includes("explore-builders"));
   assert.ok(!/<h2[^>]*>What you get<\/h2>/.test(html));
-  assert.match(html, /Completion criteria/);
+  // The fallback shows the step titles (not their instructions, c5eebd3).
+  const root = routine.package.members.find((m) => m.key === routine.package.root_key);
+  for (const step of root.payload.steps) assert.ok(html.includes(step.title), step.title);
+  assert.doesNotMatch(html, /Completion criteria/);
   assert.match(html, />Open in Toone</);
   assert.match(html, new RegExp(`<title>${routine.title} \\| Toone</title>`));
   assert.equal(
@@ -418,7 +468,9 @@ test("a malformed profile falls back to the legacy layout instead of failing", a
   const { response, html } = await get("/en/explore/routines/" + PROFILE_SLUG);
   assert.equal(response.status, 200);
   assert.ok(!h2s(html).includes("What you get"), "legacy layout");
-  assert.match(html, /Completion criteria/);
+  // The legacy layout lists the step titles the profile page keeps off (c5eebd3: titles only).
+  assert.ok(visible(html).includes("Validate the site list"), "legacy layout lists the steps");
+  assert.doesNotMatch(html, /Completion criteria/);
   assert.match(html, /<title>Launch Surface Preparation \| Toone<\/title>/);
   // The server's indexable flag decides, not the profile's shape.
   assert.match(html, /<meta name="robots" content="index, follow"/);
@@ -460,4 +512,19 @@ test("hub cards use display_title, card summary, For line and results count", as
   assert.ok(list.itemListElement.some((item) => item.name === profileFixture.search.display_title));
   await mode({});
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
+});
+test("the type filter's All button and the search form never ask for ?type=all", async () => {
+  const { html } = await get("/en/explore");
+  const buttons = [...html.matchAll(/<button[^>]*class="explore-type-option"[^>]*>([^<]*)</g)];
+  const all = buttons.find((m) => m[1] === "All");
+  assert.ok(all, "All button");
+  assert.doesNotMatch(all[0], /name=/);
+  // Attribute order is React's, not the source's: check each on its own.
+  const routines = buttons.find((m) => m[1] === "Routines")[0];
+  assert.match(routines, /\bname="type"/);
+  assert.match(routines, /\bvalue="routines"/);
+  assert.ok(!html.includes('name="type" value="all"'));
+  const filtered = await get("/en/explore?type=routines&q=audit");
+  assert.match(filtered.html, /<input type="hidden" name="q" value="audit"\/>/);
+  assert.match(filtered.html, /<input type="hidden" name="type" value="routines"\/>/);
 });

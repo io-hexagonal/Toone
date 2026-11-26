@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
+import { exploreOutage } from "@/lib/explore/outage";
 import { setRequestLocale } from "next-intl/server";
 import {
   getRoutine,
@@ -7,6 +8,7 @@ import {
   resolveSlug,
   resolveCoverUrl,
   getExploreTaxonomy,
+  isCategoryTopicIndexable,
 } from "@/lib/explore/api";
 import {
   exploreMetadata,
@@ -18,7 +20,6 @@ import {
 import { termLabel } from "@/lib/explore/taxonomy";
 import {
   ExploreShell,
-  ExploreUnavailable,
   DetailHero,
   RoutineContent,
   JsonLd,
@@ -58,8 +59,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       resolveCoverUrl(detail),
       { indexable: isExploreIndexable(detail) },
     );
-  } catch {
-    return { title: "Explore", robots: { index: false, follow: true } };
+  } catch (error) {
+    // Never "200 + noindex" for an outage: a server error, retried later (A8).
+    // A record the API refuses (4xx) or cannot render is a 404 (TECH-023).
+    exploreOutage("routine metadata", error, { record: true });
   }
 }
 export default async function RoutinePage({ params }: Props) {
@@ -70,17 +73,7 @@ export default async function RoutinePage({ params }: Props) {
   try {
     detail = await getRoutine(slug);
   } catch (error) {
-    console.error(
-      "[explore] routine unavailable",
-      error instanceof Error ? error.name : "unknown",
-    );
-    return (
-      <ExploreUnavailable
-        ui={ui}
-        locale={locale}
-        retryHref={`/${locale}/explore/routines/${encodeURIComponent(slug)}`}
-      />
-    );
+    exploreOutage("routine", error, { record: true });
   }
   if (!detail) {
     const moved = await findRoutineByIdTail(slug).catch(() => null);
@@ -109,10 +102,12 @@ export default async function RoutinePage({ params }: Props) {
     ? await getExploreTaxonomy().catch(() => null)
     : null;
   const categoryId = detail.classification?.category_id;
-  const category = categoryId
+  // The breadcrumb's category level only while its topic page is indexable (A7).
+  const categoryLinked = !!categoryId && (await isCategoryTopicIndexable(categoryId));
+  const category = categoryId && categoryLinked
     ? { id: categoryId, label: capitalize(termLabel(taxonomy, categoryId)) }
     : null;
-  const view = { detail, profile, type: "routine" as const, locale, ui, taxonomy };
+  const view = { detail, profile, type: "routine" as const, locale, ui, taxonomy, categoryLinked };
   return (
     <ExploreShell>
       <JsonLd value={profileSchema(detail, profile, path)} />

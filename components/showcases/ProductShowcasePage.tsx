@@ -13,7 +13,7 @@ import {
   getProductGuideSourcePath,
   type ProductGuidePage,
 } from "@/lib/product-showcase";
-import { gitLastCommitDate } from "@/lib/source-date";
+import { contentDate } from "@/lib/source-date";
 import styles from "./ProductShowcase.module.css";
 
 type Props = {
@@ -115,11 +115,12 @@ function GuideNavigation({ locale, activeSlug }: { locale: string; activeSlug: s
  * Article JSON-LD for every product guide page, server-rendered (TECH-015,
  * TECH-016). Toone wrote the guides, so the author is the organization.
  * `dateModified` is the commit date of the backing markdown, the same source
- * as the sitemap `lastmod` (TECH-013); it is left out when git is unavailable.
+ * as the sitemap `lastmod` (TECH-013), read from lib/content-dates.json; it
+ * is left out when the manifest has no date for the file.
  */
 function guideArticleSchema(page: ProductGuidePage): WithContext<Article> {
   const url = `https://trytoone.com/en/how-to${page.slug ? `/${page.slug}` : ""}`;
-  const modified = gitLastCommitDate(getProductGuideSourcePath(page.slug));
+  const modified = contentDate(getProductGuideSourcePath(page.slug));
   return {
     "@context": "https://schema.org",
     "@type": "Article",

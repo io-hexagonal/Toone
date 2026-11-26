@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
+import { GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 import type { Article, BreadcrumbList, WithContext } from "schema-dts";
 import { notFound } from "next/navigation";
 import { redirectToEnglish, type PageSearchParams } from "@/lib/english-only";
 import { setRequestLocale } from "next-intl/server";
 import ArticlePage from "@/components/ArticlePage";
 import { getPublication } from "@/lib/content";
-import { gitLastCommitDate } from "@/lib/source-date";
+import { contentDate } from "@/lib/source-date";
 
 type Props = { params: Promise<{ locale: string }>; searchParams: PageSearchParams };
 
@@ -16,13 +17,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!publication) return {};
   const url = "https://trytoone.com/en/governance";
   // The frontmatter `updated:` is hand-maintained and drifted behind the
-  // commit that rewrote this article (G2 follow-up 4). Git is the authority.
-  const dateModified = gitLastCommitDate(publication.sourcePath) ?? publication.updated;
+  // commit that rewrote this article (G2 follow-up 4). The commit date, from
+  // lib/content-dates.json, is the authority.
+  const dateModified = contentDate(publication.sourcePath) ?? publication.updated;
   return {
     title: publication.title,
     description: publication.description,
     alternates: { canonical: url },
-    robots: localeRobots(locale),
+    // `noindex, follow` and out of the sitemap since 2026-11-26 (indexing
+    // plan A4): 207 words under a title that promises approval gates,
+    // permissions and receipts. It returns to the index once it shows them
+    // with real screenshots (approval step, Safe Mode, audit log).
+    // GOVERNANCE_PAGE_INDEXED (lib/page-indexing.ts) reopens it: the same
+    // flag drives this `robots`, the sitemap entry and the footer link.
+    robots: localeRobots(locale, GOVERNANCE_PAGE_INDEXED),
     other: localeVersions("/governance", ["en"]),
     openGraph: {
       type: "article",
@@ -44,7 +52,7 @@ export default async function GovernancePage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const publication = getPublication("ai-agent-governance");
   if (!publication) notFound();
-  const dateModified = gitLastCommitDate(publication.sourcePath) ?? publication.updated;
+  const dateModified = contentDate(publication.sourcePath) ?? publication.updated;
 
   const schema: WithContext<Article> = {
     "@context": "https://schema.org",

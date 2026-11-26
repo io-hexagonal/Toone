@@ -53,6 +53,14 @@ export function parseCatalogQuery(
     ...(usefulFor.length ? { usefulFor } : {}),
   };
 }
+/**
+ * A record's page. Records and bundles are English text, so every locale's
+ * copy is one permanent redirect to `/en` (proxy.ts, A6), and links from any
+ * locale point straight at the English URL (TECH-020).
+ */
+export function recordHref(type: "routine" | "bundle", slug: string): string {
+  return `/en/explore/${type}s/${slug}`;
+}
 export function catalogHref(locale: string, query: CatalogQuery): string {
   const params = new URLSearchParams();
   if (query.type !== "all") params.set("type", query.type);
@@ -166,6 +174,7 @@ export function recordSchemaFields(detail: {
   author_name: string;
   author_official?: boolean;
   approved_at: string;
+  updated_at?: string | null;
 }) {
   // Toone-published records are authored by the organization node itself.
   const author: Record<string, string> | undefined = detail.author_official
@@ -173,8 +182,13 @@ export function recordSchemaFields(detail: {
     : detail.author_name
       ? { "@type": "Person", name: detail.author_name }
       : undefined;
+  // dateModified is the same date /sitemap-explore.xml gives the record as
+  // lastmod (`updated_at`, falling back to `approved_at`), so the two never
+  // disagree; datePublished is when the record was approved.
+  const updated = detail.updated_at && Number.isFinite(Date.parse(detail.updated_at)) ? detail.updated_at : null;
   return {
-    dateModified: detail.approved_at,
+    datePublished: detail.approved_at,
+    dateModified: updated ?? detail.approved_at,
     ...(author ? { author } : {}),
     publisher: { "@id": `${SITE}/#organization` },
     isPartOf: { "@id": `${SITE}/#website` },
@@ -253,17 +267,22 @@ export function routineSchema(detail: RoutinePublicDetail) {
     })),
   };
 }
+/**
+ * Home → Explore → [category] → record. Pass `category` only while its topic
+ * page is indexable (`isCategoryTopicIndexable`, lib/explore/api.ts): a
+ * breadcrumb on an indexable page never points at a `noindex` URL (TECH-025,
+ * A7), so without it the level is left out rather than linked.
+ */
 export function breadcrumbSchema(
   title: string,
   path: string,
   category?: { id: string; label: string } | null,
 ) {
+  const categoryPath = category ? categoryHref("en", category.id) : null;
   const levels = [
     { name: "Toone", item: `${SITE}/en` },
     { name: "Explore", item: `${SITE}/en/explore` },
-    ...(category
-      ? [{ name: category.label, item: `${SITE}${categoryHref("en", category.id)}` }]
-      : []),
+    ...(category && categoryPath ? [{ name: category.label, item: `${SITE}${categoryPath}` }] : []),
     { name: title, item: `${SITE}/en${path}` },
   ];
   return {
@@ -276,11 +295,14 @@ export function breadcrumbSchema(
     })),
   };
 }
-/** The category's topic page (the breadcrumb's middle level); the filtered hub for an unexpected id. */
-export function categoryHref(locale: string, categoryId: string): string {
+/**
+ * The category's topic page (the breadcrumb's middle level), or null for an
+ * id with no topic page. Never the `?category=` filter view: that view is
+ * `noindex` (TECH-007), so the breadcrumb leaves the level out instead.
+ */
+export function categoryHref(locale: string, categoryId: string): string | null {
   const path = topicPagePath({ id: categoryId, kind: "category" });
-  if (path) return `/${locale}${path}`;
-  return catalogHref(locale, { type: "all", query: "", tag: "", page: 1, category: categoryId });
+  return path ? `/${locale}${path}` : null;
 }
 
 /* ---------- listing profile (contract §13) ---------- */

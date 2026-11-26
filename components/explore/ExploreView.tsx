@@ -19,11 +19,11 @@ import {
 import {
   cardText,
   EXPLORE_GUIDES,
-  catalogHref,
   deepLink,
   requestAccessHref,
   safeMarkdownUrl,
   type CatalogItem,
+  recordHref,
 } from "@/lib/explore/presentation";
 import type {
   PackageMember,
@@ -32,6 +32,7 @@ import type {
 } from "@/lib/explore/types";
 import { formatPrice, isFree, type ExplorePrice } from "@/lib/explore/price";
 import "./explore.css";
+import HowToLink from "@/components/HowToLink";
 
 export const COPY_KEYS = [
   "category",
@@ -311,11 +312,9 @@ export function Cover({
 }
 export function Tags({
   tags,
-  locale,
   ui,
 }: {
   tags: string[];
-  locale: string;
   ui: ExploreCopy;
 }) {
   if (!tags.length) return null;
@@ -323,11 +322,9 @@ export function Tags({
     <ul className="explore-tags" aria-label={ui.tags}>
       {tags.map((tag) => (
         <li key={tag}>
-          <a
-            href={catalogHref(locale, { type: "all", page: 1, query: "", tag })}
-          >
-            {tag}
-          </a>
+          {/* Plain chips: a `?tag=` view is a `noindex` filter of the hub,
+              not a page worth a crawlable link from every card (A7). */}
+          <span>{tag}</span>
         </li>
       ))}
     </ul>
@@ -410,7 +407,7 @@ export function CatalogCard({
   taxonomy?: ExploreTaxonomy | null;
 }) {
   const { entry } = item;
-  const href = `/${locale}/explore/${item.type}s/${resolveSlug(entry)}`;
+  const href = recordHref(item.type, resolveSlug(entry));
   const text = cardText(entry);
   const audiences = entry.classification?.useful_for_ids ?? [];
   const titleOnCover = item.type === "bundle" && item.entry.bundle_id === "wfb_ux67rregtrwv3k5g";
@@ -458,7 +455,7 @@ export function CatalogCard({
       <PriceTag price={entry.price} locale={locale} ui={ui} className="explore-price explore-price-card" />
       {entry.tags.length > 0 && (
         <div className="explore-card-tags">
-          <Tags tags={entry.tags} locale={locale} ui={ui} />
+          <Tags tags={entry.tags} ui={ui} />
         </div>
       )}
     </article>
@@ -562,7 +559,7 @@ export async function DetailHero({
                 </div>
               )}
             </dl>
-            <Tags tags={detail.tags} locale={locale} ui={ui} />
+            <Tags tags={detail.tags} ui={ui} />
             <div className="explore-actions">
               <OpenInToone
                 url={deepLink(type, id, detail.revision_id)}
@@ -581,7 +578,7 @@ export async function DetailHero({
               <EditListingLink kind={type} id={id} locale={locale} />
             </div>
             <p className="explore-howto">
-              <a href={EXPLORE_GUIDES.setup}>{ui.setupGuide} →</a>
+              <HowToLink href={EXPLORE_GUIDES.setup} fallback="none">{ui.setupGuide} →</HowToLink>
             </p>
           </div>
           <Cover entry={coverEntry} inline />
@@ -883,11 +880,9 @@ export function RoutineDefinition({
 export function IncludedInBundles({
   detail,
   ui,
-  locale,
 }: {
   detail: RoutinePublicDetail;
   ui: ExploreCopy;
-  locale: string;
 }) {
   if (!detail.included_in_bundles?.length) return null;
   return (
@@ -896,7 +891,7 @@ export function IncludedInBundles({
       <ul className="explore-bundle-links">
         {detail.included_in_bundles.map((bundle) => (
           <li key={bundle.bundle_id}>
-            <a href={`/${locale}/explore/bundles/${resolveSlug(bundle)}`}>
+            <a href={recordHref("bundle", resolveSlug(bundle))}>
               <span className="explore-eyebrow">{ui.bundle}</span>
               <strong>{bundle.title}</strong>
               <span aria-hidden="true">→</span>
@@ -942,14 +937,14 @@ export function FeatureGuides({
           const [title, note] = text(guide);
           return (
             <li key={guide.id}>
-              <a href={guide.href}>
+              <HowToLink href={guide.href} fallback="block">
                 <span className="explore-eyebrow">{ui.featureGuideEyebrow}</span>
                 <span className="explore-feature-guide-copy">
                   <strong>{title}</strong>
                   <span className="explore-muted">{note}</span>
                 </span>
                 <span aria-hidden="true">→</span>
-              </a>
+              </HowToLink>
             </li>
           );
         })}
@@ -973,7 +968,7 @@ export function RoutineContent({
     <div className="explore-detail-body explore-width">
       <article className="explore-body">
         <RoutineDefinition detail={detail} ui={ui} />
-        <IncludedInBundles detail={detail} ui={ui} locale={locale} />
+        <IncludedInBundles detail={detail} ui={ui} />
         <FeatureGuides detail={detail} ui={ui} />
       </article>
       <aside className="explore-rail">

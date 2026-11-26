@@ -830,7 +830,7 @@
     "nav": "Tarifs",
     "pricing": {
       "metaTitle": "Tarifs de Toone Pro | Routines illimitées dans Toone pour Mac",
-      "metaDescription": "Toone est gratuit, avec {free} créations de routines par compte. Toone Pro supprime la limite : mensuel, annuel ou un paiement unique à vie.",
+      "metaDescription": "Toone Pro : création de routines illimitée sur votre Mac, et les exécutions ne sont jamais limitées. Payez au mois, à l'année ou en une seule fois. Les comptes gratuits ouvrent début 2027.",
       "eyebrow": "Toone Pro",
       "title": "Économisez vos tokens. Automatisez <outline>tout</outline>",
       "includeUnlimited": "Création de routines illimitée",
@@ -1303,9 +1303,6 @@
     "youProvide": "À fournir",
     "produces": "Résultats produits",
     "useRoutine": "Use this routine",
-    "communityRatingTitle": "Parmi les mieux notés par notre communauté",
-    "sampleRatingScore": "{score} sur 5",
-    "sampleRatingCount": "{count, plural, one {# note d’exemple} other {# notes d’exemple}}",
     "runsInToone": "Runs in Toone",
     "forLabel": "For",
     "whatYouGet": "What you get",

@@ -1,32 +1,73 @@
 import { execFileSync } from "node:child_process";
+import committedDates from "./content-dates.json";
+import { ROUTE_SOURCE_FILES } from "./route-sources";
 
 /**
- * Build-time date provenance for `lastmod` / `dateModified`.
+ * Date provenance for `lastmod` / `dateModified` (TECH-013).
  *
- * Both signals must describe when the *content* last changed, not when the
- * site was last deployed (TECH-013). Frontmatter `updated:` is hand-maintained
- * and drifts — `/en/governance` reported 2026-09-11 for copy edited 2026-09-20
- * (G2 follow-up 4) — so the commit date of the file backing a route is the
- * authority, with the hand-written date as the only fallback. There is no
- * build-date fallback: a deploy is not a content change, so an unknown date
- * stays unknown (callers omit it).
+ * Both signals describe when the *content* last changed, not when the site
+ * was last deployed. The authority is the latest author date of the files
+ * backing a route (its page and the components that render its main content,
+ * lib/route-sources.ts), and those dates are read from
+ * `lib/content-dates.json`, a manifest committed with the code (A2).
+ *
+ * Author dates, not commit dates: a rebase, cherry-pick or amend rewrites the
+ * commit date to the day it ran, while the author date stays the day the
+ * change was written. And the newest author date across a file's history, not
+ * the first entry `git log` prints: log order follows the commit graph, so
+ * after a rebase an older-authored commit can be listed above a newer one.
+ *
+ * Why a committed file and not git at build time: Vercel builds from a
+ * shallow clone (about 10 commits). In a shallow clone the oldest commit
+ * present appears to add every file, so `git log -1 -- <file>` returned a
+ * recent date for every page untouched since then: the live sitemap dated 22
+ * of 25 pages to the deploy day, and `/en/governance` said
+ * `dateModified: 2026-11-25` for copy last edited 2026-09-28 (technical audit
+ * M3, 2026-11-26). The manifest is written from full history on a developer
+ * machine (`npm run content:dates`) and `npm test` fails when it is stale
+ * (`npm run content:dates:check`), so the build never needs git.
  */
-
-const cache = new Map<string, string | null>();
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+const ROUTE_FILES = new Set(ROUTE_SOURCE_FILES);
+
 /**
- * `YYYY-MM-DD` of the last commit touching each tracked file under `dir`, in
- * one `git log` pass. next.config.ts runs this at build time and inlines the
- * result as TOONE_SOURCE_DATES, because pages render per request (the CSP
- * nonce, lib/csp.ts) and the serverless runtime has no git history. Empty when
- * git is unavailable.
+ * The files whose dates the site publishes: every page and content file, plus
+ * the components and data files a sitemap route names as its sources
+ * (lib/route-sources.ts).
  */
-export function collectSourceDates(dir: string, cwd: string = process.cwd()): Record<string, string> {
+export function isDatedSource(path: string): boolean {
+  return (
+    path.startsWith("content/") ||
+    (path.startsWith("app/[locale]/") && path.endsWith("/page.tsx")) ||
+    ROUTE_FILES.has(path)
+  );
+}
+
+/**
+ * Pathspecs that hold every dated source: `content`, `app`, and each route
+ * source outside them. No `[` in any of them: git reads those as patterns.
+ */
+export const DATED_SOURCE_ROOTS: readonly string[] = [
+  "content",
+  "app",
+  ...ROUTE_SOURCE_FILES.filter((file) => !file.startsWith("app/") && !file.startsWith("content/")),
+];
+
+/**
+ * `YYYY-MM-DD` of the newest author date among the commits touching each file
+ * under `roots`, from one `git log` pass. Used only to write and check the
+ * manifest (scripts/content/dates.ts), on a clone with full history. Empty
+ * when git is unavailable.
+ */
+export function collectSourceDates(
+  roots: string | readonly string[],
+  cwd: string = process.cwd(),
+): Record<string, string> {
   const dates: Record<string, string> = {};
   try {
-    const out = execFileSync("git", ["log", "--format=%x00%cs", "--name-only", "--", dir], {
+    const out = execFileSync("git", ["log", "--format=%x00%as", "--name-only", "--", ...[roots].flat()], {
       cwd,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
@@ -37,54 +78,28 @@ export function collectSourceDates(dir: string, cwd: string = process.cwd()): Re
       if (line.startsWith("\0")) {
         const date = line.slice(1).trim();
         current = DATE.test(date) ? date : null;
-      } else if (current && line.trim() && !(line in dates)) {
-        dates[line.trim()] = current;
+        continue;
       }
+      const file = line.trim();
+      // YYYY-MM-DD compares as text: keep the newest date seen for the file.
+      if (current && file && !(dates[file] >= current)) dates[file] = current;
     }
   } catch {
-    // No git on this host: callers fall back as before.
+    // No git on this host.
   }
   return dates;
 }
 
-/** Dates inlined at build time (next.config.ts), or an empty map. */
-function buildTimeDates(): Record<string, string> {
-  try {
-    const parsed: unknown = JSON.parse(process.env.TOONE_SOURCE_DATES || "{}");
-    return parsed && typeof parsed === "object" ? (parsed as Record<string, string>) : {};
-  } catch {
-    return {};
-  }
-}
+const MANIFEST: Readonly<Record<string, string>> = committedDates;
 
 /**
- * `YYYY-MM-DD` of the last commit touching `sourcePath`, or `null` when the
- * path is unknown, untracked, or git is not available on the build host.
- * `null` is deliberate: callers decide what to fall back to and whether to
- * report it, rather than silently receiving today's date.
+ * `YYYY-MM-DD` when the content behind `sourcePath` last changed, from the
+ * committed manifest, or `null` when the path is not in it. `null` is
+ * deliberate: callers fall back to a declared editorial date or omit the date,
+ * never today's date.
  */
-export function gitLastCommitDate(sourcePath: string | null | undefined): string | null {
+export function contentDate(sourcePath: string | null | undefined): string | null {
   if (!sourcePath) return null;
-  const cached = cache.get(sourcePath);
-  if (cached !== undefined) return cached;
-
-  const built = buildTimeDates()[sourcePath];
-  if (built && DATE.test(built)) {
-    cache.set(sourcePath, built);
-    return built;
-  }
-
-  let value: string | null = null;
-  try {
-    const out = execFileSync("git", ["log", "-1", "--format=%cs", "--", sourcePath], {
-      cwd: process.cwd(),
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-    if (DATE.test(out)) value = out;
-  } catch {
-    // git is not guaranteed on the build host; the caller's fallback applies.
-  }
-  cache.set(sourcePath, value);
-  return value;
+  const date = MANIFEST[sourcePath];
+  return typeof date === "string" && DATE.test(date) ? date : null;
 }

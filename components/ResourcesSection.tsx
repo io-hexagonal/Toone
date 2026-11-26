@@ -1,4 +1,5 @@
 import { getProductGuidePage } from "@/lib/product-showcase";
+import HowToLink from "@/components/HowToLink";
 import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 import { NEWCOMER_IDEAS_PATH, NEWCOMER_INDEX } from "@/lib/newcomer-ideas-seo";
 
@@ -27,8 +28,9 @@ export default function ResourcesSection() {
           border-radius: var(--r-m); box-shadow: 0 0 0 1px rgba(29,28,25,.09);
           background: rgba(255,255,255,.4); transition: box-shadow .2s, background-color .2s;
         }
-        .resource-preview-card:hover { background: #fff; box-shadow: var(--e2); }
-        .resource-preview-card:focus-visible { outline: 2px solid #1d1c19; outline-offset: 3px; }
+        /* Only the signed-in link lifts; signed out, the card is plain information. */
+        a.resource-preview-card:hover { background: #fff; box-shadow: var(--e2); }
+        a.resource-preview-card:focus-visible { outline: 2px solid #1d1c19; outline-offset: 3px; }
         .resource-preview-more {
           margin-top: 24px; color: rgba(29,28,25,.64); font-size: 15px; line-height: 1.6;
         }
@@ -63,11 +65,11 @@ export default function ResourcesSection() {
           <h2 id="resources-title">From install to your first run</h2>
           <p className="sub">Set up Toone, build a routine you can run and inspect, or start from an idea Toone already runs.</p>
         </div>
-        <a href="/en/how-to" className="text-link">Browse the full guide</a>
+        <HowToLink href="/en/how-to" className="text-link" fallback="none">Browse the full guide</HowToLink>
       </div>
       <div className="resource-preview-grid">
         {guides.map((guide) => (
-          <a key={guide.slug} href={`/en/how-to/${guide.slug}`} className="resource-preview-card">
+          <HowToLink key={guide.slug} href={`/en/how-to/${guide.slug}`} className="resource-preview-card" fallback="block">
             {/* The guide's section only ("Getting started"), without its step counter. */}
             <span className="resource-preview-type">{guide.eyebrow.split(" · ")[0]}</span>
             <h3>{guide.title}</h3>
@@ -75,7 +77,7 @@ export default function ResourcesSection() {
             {guide.estimatedTime ? (
               <span className="resource-preview-meta">{guide.estimatedTime}</span>
             ) : null}
-          </a>
+          </HowToLink>
         ))}
         <a href={`/en${NEWCOMER_IDEAS_PATH}`} className="resource-preview-card">
           <span className="resource-preview-type">Ideas</span>

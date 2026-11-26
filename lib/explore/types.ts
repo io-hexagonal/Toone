@@ -200,6 +200,8 @@ export type RoutinePublicDetail = {
   /** True when Toone (a platform admin) published it: show the Toone mark. */
   author_official?: boolean;
   approved_at: string;
+  /** Last change to the public record; the feed's `updated_at`. Absent on older servers. */
+  updated_at?: string | null;
   content_hash: string;
   package_schema_version: number;
   routine_schema_version: number;
@@ -277,6 +279,8 @@ export type BundlePublicDetail = {
   /** True when Toone (a platform admin) published it: show the Toone mark. */
   author_official?: boolean;
   approved_at: string;
+  /** Last change to the public record; the feed's `updated_at`. Absent on older servers. */
+  updated_at?: string | null;
   members: BundleMemberDetail[];
 } & ProfileFields;
 

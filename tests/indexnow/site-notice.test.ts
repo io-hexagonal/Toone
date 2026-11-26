@@ -12,6 +12,7 @@ import {
   sentByJournalWebhook,
 } from "../../lib/indexnow/site-notice";
 import { indexNowPayload } from "../../lib/indexnow/submit";
+import { GET as siteSitemap } from "../../app/sitemap.xml/route";
 
 const SITE = "https://trytoone.com";
 
@@ -71,6 +72,63 @@ test("first run: baseline URLs are not re-sent unless their lastmod is later tha
     [`${SITE}/en/business`, `${SITE}/en/journal/launches`],
   );
   assert.equal(selection.unchanged.length, 4);
+});
+
+test("baseline /how-to URLs are history only: candidates come from the sitemaps, which list no /how-to", async () => {
+  // The 2026-11-02 manual send included /en/how-to pages, which are now
+  // signed-in only and `noindex, nofollow`. The baseline seeds the record of
+  // what was sent; it is never a source of URLs. Every candidate comes from a
+  // sitemap entry, so a URL that no sitemap lists cannot be sent, whatever
+  // the record holds. A lastmod far in the future marks every entry changed.
+  const howTo = BASELINE_URLS.filter((url) => url.startsWith(`${SITE}/en/how-to`));
+  assert.ok(howTo.length > 20);
+  const listed = parseSitemap(await (await siteSitemap()).text());
+  for (const { url } of listed) {
+    assert.ok(url.startsWith(`${SITE}/en/`) || url === `${SITE}/en`, `non-English sitemap URL ${url}`);
+    assert.ok(!url.startsWith(`${SITE}/en/how-to`), `sitemap lists ${url}`);
+  }
+  const selection = selectChanged(
+    listed.map(({ url }) => ({ url, lastmod: "2099-01-01" })),
+    baselineState(),
+  );
+  const sent = selection.send.map((item) => item.url);
+  assert.ok(sent.length > 0);
+  for (const url of howTo) assert.ok(!sent.includes(url), `${url} would be re-sent`);
+  assert.deepEqual(sent.filter((url) => !listed.some((entry) => entry.url === url)), []);
+});
+
+test("PR #145 lastmods moving back in time are not sent; pages changed on the deploy day are", () => {
+  // Before PR #145 the shallow-clone build dated most pages to the deploy day,
+  // so the record holds those days. Afterwards the real, earlier commit dates
+  // appear: an earlier date is no change. The record keeps the later date, so
+  // the next run still sends nothing, and a future edit (dated after it) is sent.
+  const sentAt = "2026-11-25T16:00:00Z";
+  const state = markSent(
+    { version: 1, sent: {} },
+    [
+      { url: `${SITE}/en/privacy`, lastmod: "2026-11-25" },
+      { url: `${SITE}/en/about`, lastmod: "2026-11-25T15:59:00.000Z" },
+      { url: `${SITE}/en/compare`, lastmod: "2026-11-25" },
+    ],
+    sentAt,
+  );
+  const entries = [
+    { url: `${SITE}/en/privacy`, lastmod: "2026-11-11" },
+    { url: `${SITE}/en/about`, lastmod: "2026-09-28" },
+    // Changed in the PR #145 deploy itself: lastmod is the deploy day.
+    { url: `${SITE}/en/compare`, lastmod: "2026-11-26" },
+  ];
+  const selection = selectChanged(entries, state);
+  assert.deepEqual(selection.send.map((item) => item.url), [`${SITE}/en/compare`]);
+  assert.deepEqual(selection.unchanged, [`${SITE}/en/privacy`, `${SITE}/en/about`]);
+
+  const next = markSent(state, selection.send, "2026-11-26T15:00:00Z");
+  assert.equal(next.sent[`${SITE}/en/privacy`].lastmod, "2026-11-25");
+  assert.equal(selectChanged(entries, next).send.length, 0);
+  assert.deepEqual(
+    selectChanged([{ url: `${SITE}/en/privacy`, lastmod: "2026-11-27" }], next).send.map((item) => item.url),
+    [`${SITE}/en/privacy`],
+  );
 });
 
 test("a new URL is sent; missing lastmod, Journal posts, duplicates and other hosts are not", () => {

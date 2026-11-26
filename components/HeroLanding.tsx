@@ -4,6 +4,7 @@ import CreateAccountLink from "@/components/CreateAccountLink";
 import MagneticPull from "@/components/MagneticPull";
 import { CLAUDE_SPARK } from "@/components/SupportBand";
 import type { LandingAudience } from "@/components/LandingAudienceBar";
+import { linksBusinessLanding } from "@/lib/page-indexing";
 
 /**
  * Light landing hero: two-line headline (plain line, then a dotted accent
@@ -244,15 +245,18 @@ export default async function HeroLanding({ audience = "business" }: Props) {
         <div className="hl-dots" aria-hidden="true" />
 
         <div className="hl-inner">
-          <nav className="hl-audience" aria-label={t("audienceLabel")}>
-            {AUDIENCES.map((a) =>
-              a.id === audience ? (
-                <span key={a.id} aria-current="page">{t(a.labelKey)}</span>
-              ) : (
-                <Link key={a.id} href={a.href}>{t(a.labelKey)}</Link>
-              ),
-            )}
-          </nav>
+          {/* Not while the page may not link the Business landing (lib/page-indexing.ts). */}
+          {linksBusinessLanding(locale, audience) && (
+            <nav className="hl-audience" aria-label={t("audienceLabel")}>
+              {AUDIENCES.map((a) =>
+                a.id === audience ? (
+                  <span key={a.id} aria-current="page">{t(a.labelKey)}</span>
+                ) : (
+                  <Link key={a.id} href={a.href}>{t(a.labelKey)}</Link>
+                ),
+              )}
+            </nav>
+          )}
 
           <h1 className="hl-title">
             {t.rich(audience === "personal" ? "personal.heroTitle" : "heroTitle", {

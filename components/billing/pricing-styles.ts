@@ -77,6 +77,10 @@ export const PRICING_CSS = `
             }
             .pricing-button:hover { transform: translateY(-2px); }
             .pricing-button:disabled { cursor: default; opacity: .6; transform: none; }
+            /* Blank while the session is read: as tall as one line of label plus the
+               padding (14px top and bottom), so the card does not jump. 50px for
+               browsers without the lh unit. */
+            .pricing-button--pending { box-sizing: border-box; min-height: 50px; min-height: calc(28px + 1lh); }
             .pricing-owned {
               margin: auto 0 0; padding: 13px 16px; border-radius: 12px; text-align: center;
               border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.62); font-size: 14px;

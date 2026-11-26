@@ -1,7 +1,9 @@
 import { INDEXED_LOCALES } from "@/i18n/indexing";
 import { getGuideSlugs, getPublication, getRootEditorialSlugs } from "@/lib/content";
-import { gitLastCommitDate } from "@/lib/source-date";
+import { contentDate } from "@/lib/source-date";
+import { ROUTE_SOURCES, type SourcedRoute } from "@/lib/route-sources";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { BUSINESS_LANDING_INDEXED, GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 import { CREATOR_IDEAS } from "@/lib/creator-ideas";
 
 export const dynamic = "force-static";
@@ -13,75 +15,85 @@ const BASE_URL = "https://trytoone.com";
  * only English is indexed (TECH-021): the other seven locales still serve,
  * `noindex, follow`, so none of their URLs is listed and no entry carries
  * hreflang (`xhtml:link`) alternates. `/early-access` stays out: it is the
- * invitation-code gate and ships `noindex`. The public request form it links
- * to lives at `/request-access` and is listed below.
+ * invitation-code gate and ships `noindex`.
+ *
+ * Left out on 2026-11-26 because they are `noindex` (indexing plan A3, A4):
+ * `/business` (a near-copy of the home page), `/contact` and
+ * `/request-access` (utility pages), `/governance` (thin until filled in).
  */
-const LOCALIZED_ROUTES = [
-  { path: "", source: "app/[locale]/page.tsx" },
-  { path: "/resources", source: "app/[locale]/resources/page.tsx" },
-  { path: "/business", source: "app/[locale]/business/page.tsx" },
+type StaticRoute = { path: string; sources: SourcedRoute };
+
+const LOCALIZED_ROUTES: readonly StaticRoute[] = [
+  { path: "", sources: "" },
+  { path: "/resources", sources: "/resources" },
+  // Listed again once BUSINESS_LANDING_INDEXED reopens it (lib/page-indexing.ts).
+  ...(BUSINESS_LANDING_INDEXED ? [{ path: "/business", sources: "/business" as const }] : []),
   // Toone Pro plans; prices come from the API at request time.
-  { path: "/pricing", source: "app/[locale]/pricing/page.tsx" },
-] as const;
+  { path: "/pricing", sources: "/pricing" },
+];
 
 /** Listed only once the trader details are complete; until then the page is a 404. */
-const LEGAL_NOTICE_ROUTE = { path: "/legal-notice", source: "app/[locale]/legal-notice/page.tsx" } as const;
+const LEGAL_NOTICE_ROUTE: StaticRoute = { path: "/legal-notice", sources: "/legal-notice" };
 
-const ENGLISH_ONLY_ROUTES = [
-  { path: "/privacy", source: "app/[locale]/privacy/page.tsx" },
-  { path: "/terms", source: "app/[locale]/terms/page.tsx" },
+const ENGLISH_ONLY_ROUTES: readonly StaticRoute[] = [
+  { path: "/privacy", sources: "/privacy" },
+  { path: "/terms", sources: "/terms" },
   ...(TRADER_DETAILS_COMPLETE ? [LEGAL_NOTICE_ROUTE] : []),
-  { path: "/about", source: "app/[locale]/about/page.tsx" },
-  { path: "/contact", source: "app/[locale]/contact/page.tsx" },
+  { path: "/about", sources: "/about" },
   // Toone vs n8n, Make and Zapier, and AI agents on a schedule.
-  { path: "/compare", source: "app/[locale]/compare/page.tsx" },
+  { path: "/compare", sources: "/compare" },
   // Help for the Toone connector in Claude; the Connectors Directory links it.
-  { path: "/claude", source: "app/[locale]/claude/page.tsx" },
-  { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
-  // `/request-access` is the public request page of the invitation-only funnel
-  // (request -> personal code -> account). `/early-access` is the code gate
-  // itself and stays `noindex`, so it is still absent from this list. Only
-  // `/en/request-access` qualifies: the seven other locales render form-only
-  // copy and stay `noindex`, so they get no sitemap entry (TECH-013).
-  { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
+  { path: "/claude", sources: "/claude" },
+  { path: "/editorial-policy", sources: "/editorial-policy" },
   // `/explore` is the public routine and bundle directory. Its seven non-English
   // locales render translated chrome around English catalog content and are
-  // `noindex` (self-canonical), so only `/en/explore` is listed. The
-  // per-item URLs come from the API and live in `/sitemap-explore.xml`, which
-  // revalidates at runtime; this file stays `force-static` so the git-derived
-  // `lastmod` values above are computed on the build host (omitted if it has no git).
-  { path: "/explore", source: "app/[locale]/explore/page.tsx" },
+  // `noindex` (self-canonical), so only `/en/explore` is listed. Its lastmod is
+  // dated by the page file alone: the catalog it shows is live API data, and
+  // each record's own date is its lastmod in `/sitemap-explore.xml`, which
+  // revalidates at runtime. This file stays `force-static`.
+  { path: "/explore", sources: "/explore" },
   // Public routine ideas for people new to Toone. English only; the idea
-  // pages come from lib/creator-ideas.ts, so that file dates them.
-  { path: "/newcomers/ideas", source: "app/[locale]/newcomers/ideas/page.tsx" },
-  ...CREATOR_IDEAS.map((idea) => ({ path: `/newcomers/ideas/${idea.slug}`, source: "lib/creator-ideas.ts" })),
-] as const;
+  // pages are written in lib/creator-ideas.ts, one of their sources.
+  { path: "/newcomers/ideas", sources: "/newcomers/ideas" },
+  ...CREATOR_IDEAS.map((idea) => ({ path: `/newcomers/ideas/${idea.slug}`, sources: "/newcomers/ideas/[slug]" as const })),
+];
 
 /**
- * `lastmod` for a route: the date of the last commit that touched the file
- * backing it, then the page's declared editorial date if it has one. When
- * neither is known the entry is listed with no `<lastmod>` at all (TECH-013).
- * `changefreq`/`priority` were dropped — Google has ignored both since 2023
+ * `lastmod` for a route: the latest date among the files that render it, its
+ * page.tsx and the components and data files that make up its main content
+ * (lib/route-sources.ts), each dated by lib/content-dates.json (written from
+ * full git history, checked by `npm test` and CI). A page with
+ * a declared editorial date and no dated source falls back to that date. When
+ * nothing is known the entry is listed with no `<lastmod>` at all (TECH-013).
+ * `changefreq`/`priority` were dropped: Google has ignored both since 2023
  * (audit P3-2).
  *
- * The last resort used to be the build date. Vercel builds (Git and CLI
- * alike) can lack usable git history, so on 2026-11-02 39 of 46 URLs claimed
- * a change on deploy day with no content change. Google stops trusting
- * `lastmod` that is wrong, and an absent `lastmod` is valid sitemap XML, so an
- * unknown date is now omitted rather than invented. Each omission is still
- * reported as a build warning naming the URLs affected, so a renamed or
- * mistyped source path stays visible (G2 follow-up 5).
+ * Known limit: copy kept only in messages/<locale>.json does not move any
+ * `lastmod`. Those files are shared by every page, so dating pages by them
+ * would date the whole site to any one copy edit. A copy change that matters
+ * for search should ship with an edit to the page's own sources, or wait for
+ * the next one.
+ *
+ * Git is never asked at build time. Vercel builds from a shallow clone, where
+ * every file untouched in the last ~10 commits looks changed by the oldest
+ * of them, so the deploy-day dates the 2026-11-02 fix meant to remove came
+ * back through git itself (technical audit M3, 2026-11-26). An unknown date
+ * is omitted rather than invented, and reported as a build warning naming the
+ * URLs affected, so a renamed or mistyped source path stays visible.
  */
 function makeLastModified() {
   const omitted: string[] = [];
   return {
     omitted,
-    lastModified(loc: string, sourcePath: string | null, declaredDate?: string): string | null {
-      const committed = gitLastCommitDate(sourcePath);
-      if (committed) return committed;
-      if (declaredDate) return declaredDate;
+    lastModified(loc: string, sourcePaths: readonly (string | null)[], declaredDate?: string): string | null {
+      const dates = sourcePaths.map((source) => contentDate(source));
+      // YYYY-MM-DD sorts as text. A source missing from the manifest is
+      // reported, not skipped silently: the date could be too old without it.
+      const latest = dates.reduce<string | null>((max, date) => (date && (!max || date > max) ? date : max), null);
+      if (latest && !dates.includes(null)) return latest;
+      if (!latest && declaredDate) return declaredDate;
       omitted.push(loc);
-      return null;
+      return latest;
     },
   };
 }
@@ -89,9 +101,9 @@ function makeLastModified() {
 function reportOmitted(omitted: readonly string[]): void {
   if (omitted.length === 0) return;
   console.warn(
-    `[sitemap] WARNING: lastmod omitted for ${omitted.length} URL(s). Their git ` +
-      `date is unknown (source path missing or untracked, or no git history on ` +
-      `the build host), so no date is published for them:\n` +
+    `[sitemap] WARNING: lastmod omitted for ${omitted.length} URL(s). Their ` +
+      `source file has no date in lib/content-dates.json (missing, renamed or ` +
+      "not listed yet: run `npm run content:dates`), so no date is published:\n" +
       omitted.map((loc) => `  - ${loc}`).join("\n"),
   );
 }
@@ -112,7 +124,7 @@ export async function GET() {
   for (const locale of INDEXED_LOCALES) {
     for (const route of LOCALIZED_ROUTES) {
       const loc = `${BASE_URL}/${locale}${route.path}`;
-      lines.push(url(loc, lastModified(loc, route.source)));
+      lines.push(url(loc, lastModified(loc, ROUTE_SOURCES[route.sources])));
     }
   }
 
@@ -122,7 +134,7 @@ export async function GET() {
   // non-English routes redirect until qualified translations are approved.
   for (const route of ENGLISH_ONLY_ROUTES) {
     const loc = `${BASE_URL}/en${route.path}`;
-    lines.push(url(loc, lastModified(loc, route.source)));
+    lines.push(url(loc, lastModified(loc, ROUTE_SOURCES[route.sources])));
   }
 
   for (const slug of [...getGuideSlugs(), ...getRootEditorialSlugs()]) {
@@ -135,14 +147,14 @@ export async function GET() {
     }
   }
 
-  // Preserve English-only editorial surfaces whose canonical route is not in
-  // the locale guide family (currently /governance). Its `lastmod` comes from
-  // the same git date the page reports as `Article.dateModified`, so the two
-  // can no longer disagree (G2 follow-up 4).
-  const governance = getPublication("ai-agent-governance", "en");
+  // `/governance` (an English-only editorial page outside the guide family)
+  // is `noindex` until it is filled in, so it is not listed (indexing plan A4).
+  // GOVERNANCE_PAGE_INDEXED (lib/page-indexing.ts) lists it again, dated like
+  // its `Article.dateModified`.
+  const governance = GOVERNANCE_PAGE_INDEXED ? getPublication("ai-agent-governance", "en") : null;
   if (governance) {
     const loc = `${BASE_URL}/en${governance.canonicalPath}`;
-    lines.push(url(loc, lastModified(loc, governance.sourcePath, governance.updated)));
+    lines.push(url(loc, lastModified(loc, [governance.sourcePath], governance.updated)));
   }
   lines.push("</urlset>");
 

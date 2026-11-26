@@ -4,11 +4,13 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { Link } from "@/lib/navigation";
 import { getPublications } from "@/lib/content";
+import { isUnindexedPage } from "@/lib/page-indexing";
 import { getLatestPosts } from "@/lib/journal/api";
 import { PostCard } from "@/components/journal/JournalParts";
 import { type Locale } from "@/i18n/routing";
 import { localeRobots, localeVersions } from "@/i18n/indexing";
 import { openGraphLocale } from "@/i18n/open-graph";
+import HowToLink from "@/components/HowToLink";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -53,7 +55,10 @@ export default async function ResourcesPage({ params }: Props) {
   const locale = localeParam as Locale;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "resources" });
-  const publications = getPublications(locale);
+  // A page kept out of the index for now (/governance) is not listed (A7).
+  const publications = getPublications(locale).filter(
+    (publication) => !isUnindexedPage(`/en${publication.canonicalPath}`),
+  );
   // The Journal is English-only and API-driven; a failure hides the section.
   const journalPosts = await getLatestPosts(3);
   const dateFormatter = new Intl.DateTimeFormat(locale, {
@@ -203,7 +208,7 @@ export default async function ResourcesPage({ params }: Props) {
           <ul>
             {PRODUCT_GUIDES.map(([key, href]) => (
               <li key={key}>
-                <a href={href}>{t(`productGuides.${key}.title`)}</a>
+                <HowToLink href={href} fallback="text">{t(`productGuides.${key}.title`)}</HowToLink>
                 <span>{t(`productGuides.${key}.description`)}</span>
               </li>
             ))}

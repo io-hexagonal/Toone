@@ -1,0 +1,211 @@
+import assert from "node:assert/strict";
+import test, { beforeEach } from "node:test";
+import { readFileSync } from "node:fs";
+import {
+  LAST_GOOD_DETAIL_MAX_AGE_MS,
+  LAST_GOOD_MAX_AGE_MS,
+  getBundle,
+  getRoutine,
+  isMemoizedNotServed,
+  listBundles,
+  listRoutines,
+  refreshExploreMemo,
+  resetExploreMemo,
+} from "../../lib/explore/data";
+import { exploreOutage, isExploreRecordGone } from "../../lib/explore/outage";
+
+// The memos live on globalThis and persist across tests in one process.
+beforeEach(() => {
+  process.env.EXPLORE_API_BASE_URL = "https://example.test/v1";
+  resetExploreMemo();
+});
+
+const fixture = (name: string) =>
+  JSON.parse(readFileSync(new URL(`./fixtures/${name}.json`, import.meta.url), "utf8"));
+const ok = (data: unknown) => new Response(JSON.stringify({ data }));
+const status = (code: number) =>
+  new Response(JSON.stringify({ message: `upstream ${code}` }), { status: code });
+
+/** What a detail page does with a failed read: 404 (notFound) or a rethrown error (500). */
+async function pageOutcome(read: () => Promise<unknown>, record = true): Promise<"404" | "500" | "ok"> {
+  try {
+    await read();
+    return "ok";
+  } catch (error) {
+    try {
+      exploreOutage("test", error, { record });
+    } catch (thrown) {
+      const digest = (thrown as { digest?: unknown }).digest;
+      if (typeof digest === "string" && digest.startsWith("NEXT_HTTP_ERROR_FALLBACK;404")) return "404";
+      assert.equal(thrown, error, "an outage rethrows the original error");
+      return "500";
+    }
+  }
+  throw new Error("unreachable");
+}
+
+test("a 4xx on a record (other than 408/429) is not-found; 5xx, 408, 429 stay outages", async (t) => {
+  for (const [code, expected] of [
+    [400, "404"], [403, "404"], [410, "404"], [422, "404"],
+    [408, "500"], [429, "500"], [500, "500"], [502, "500"], [503, "500"],
+  ] as const) {
+    resetExploreMemo();
+    t.mock.method(globalThis, "fetch", async () => status(code));
+    assert.equal(await pageOutcome(() => getRoutine("some-routine")), expected, `routine ${code}`);
+    assert.equal(await pageOutcome(() => getBundle("some-bundle")), expected, `bundle ${code}`);
+  }
+});
+
+test("timeouts and network errors are outages, not not-found", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => {
+    throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+  });
+  assert.equal(await pageOutcome(() => getRoutine("some-routine")), "500");
+  t.mock.method(globalThis, "fetch", async () => {
+    throw new TypeError("fetch failed");
+  });
+  assert.equal(await pageOutcome(() => getRoutine("some-routine")), "500");
+});
+
+test("a record served with a 200 but unrenderable is a server error, like a broken envelope", async (t) => {
+  const routine = fixture("routine-detail");
+  t.mock.method(globalThis, "fetch", async () => ok({ ...routine, workflow_id: "not-an-id" }));
+  // A contract change breaks every record at once: 404 would drop the site's
+  // main indexable pages from Google, a 500 keeps them while it is fixed.
+  assert.equal(await pageOutcome(() => getRoutine(routine.slug)), "500", "invalid routine detail");
+  resetExploreMemo();
+  const bundle = fixture("bundle-detail");
+  t.mock.method(globalThis, "fetch", async () => ok({ ...bundle, members: "wrong" }));
+  assert.equal(await pageOutcome(() => getBundle(bundle.slug)), "500", "invalid bundle detail");
+  resetExploreMemo();
+  // No {data} envelope, or not JSON at all: a proxy or error page, not a record.
+  t.mock.method(globalThis, "fetch", async () => new Response("{}"));
+  assert.equal(await pageOutcome(() => getRoutine(routine.slug)), "500");
+  resetExploreMemo();
+  t.mock.method(globalThis, "fetch", async () => new Response("<html>Bad gateway</html>"));
+  assert.equal(await pageOutcome(() => getRoutine(routine.slug)), "500");
+});
+
+test("collection pages never turn an API error into a 404", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => status(403));
+  assert.equal(await pageOutcome(() => listRoutines(), false), "500");
+  resetExploreMemo();
+  // The catalog route itself missing is a broken deployment, not a missing record.
+  t.mock.method(globalThis, "fetch", async () => status(404));
+  const error = await listRoutines().catch((e: unknown) => e);
+  assert.equal(isExploreRecordGone(error), false);
+  assert.equal(await pageOutcome(() => Promise.reject(error), true), "500");
+});
+
+test("an outage on a URL served before renders the last good answer: records up to 6 h, lists up to a day", async (t) => {
+  const routine = fixture("routine-detail");
+  const entry = fixture("routine-entry");
+  const start = Date.UTC(2026, 10, 26, 12);
+  let now = start;
+  t.mock.method(Date, "now", () => now);
+  t.mock.method(globalThis, "fetch", async (url: URL) =>
+    url.pathname.endsWith("/workflows") ? new Response(JSON.stringify({ data: [entry] }), { headers: { "X-Total-Count": "1" } }) : ok(routine),
+  );
+  const detail = await getRoutine(routine.slug);
+  const list = await listRoutines();
+  const failures: [string, () => Promise<Response>][] = [
+    ["500", async () => status(500)],
+    ["502", async () => status(502)],
+    ["503", async () => status(503)],
+    ["408", async () => status(408)],
+    ["429", async () => status(429)],
+    ["timeout", async () => { throw new DOMException("timed out", "TimeoutError"); }],
+    ["network", async () => { throw new TypeError("fetch failed"); }],
+    ["proxy page", async () => new Response("<html>Bad gateway</html>")],
+  ];
+  now += LAST_GOOD_DETAIL_MAX_AGE_MS - 60_000;
+  for (const [label, failure] of failures) {
+    t.mock.method(globalThis, "fetch", failure);
+    assert.deepEqual(await getRoutine(routine.slug), detail, `${label}: last good detail`);
+    assert.deepEqual(await listRoutines(), list, `${label}: last good catalog`);
+  }
+  // Past 6 h a single record is no longer covered (a removed or noindexed
+  // record must not linger on other instances); lists keep their copy to 24 h.
+  now += 2 * 60_000;
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine(routine.slug), /503/, "detail copy past 6 h");
+  assert.deepEqual(await listRoutines(), list, "list copy still inside 24 h");
+  now = start + LAST_GOOD_MAX_AGE_MS - 60_000;
+  assert.deepEqual(await listRoutines(), list, "list copy just inside 24 h");
+  // A URL never served before has nothing to fall back on.
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine("never-served"), /503/);
+  // A 404 is an answer, never covered by an older copy.
+  t.mock.method(globalThis, "fetch", async () => status(404));
+  assert.equal(await getRoutine(routine.slug), null);
+});
+
+test("a last good answer older than a day is not served: the outage throws", async (t) => {
+  const routine = fixture("routine-detail");
+  let now = Date.UTC(2026, 10, 26, 12);
+  t.mock.method(Date, "now", () => now);
+  t.mock.method(globalThis, "fetch", async () => ok(routine));
+  await getRoutine(routine.slug);
+  now += LAST_GOOD_MAX_AGE_MS;
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine(routine.slug), /503/);
+  t.mock.method(globalThis, "fetch", async () => { throw new TypeError("fetch failed"); });
+  await assert.rejects(getRoutine(routine.slug), /fetch failed/);
+  // A fresh answer restarts the clock.
+  t.mock.method(globalThis, "fetch", async () => ok(routine));
+  await getRoutine(routine.slug);
+  now += 60_000;
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  assert.equal((await getRoutine(routine.slug))?.workflow_id, routine.workflow_id);
+});
+
+test("the approval webhook keeps last-good copies, clears the not-served memo, and drops a removed record's page", async (t) => {
+  const routine = fixture("routine-detail");
+  const entry = fixture("routine-entry");
+  const event = (name: string) => ({ event: name, type: "routine" as const, id: routine.workflow_id, slug: routine.slug });
+  t.mock.method(globalThis, "fetch", async (url: URL) => {
+    if (url.pathname.endsWith("/bundles")) return status(404);
+    if (url.pathname.endsWith("/workflows")) return new Response(JSON.stringify({ data: [entry] }), { headers: { "X-Total-Count": "1" } });
+    return ok(routine);
+  });
+  const detail = await getRoutine(routine.slug);
+  const byId = await getRoutine(routine.workflow_id);
+  const list = await listRoutines();
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
+  assert.ok(isMemoizedNotServed("bundles"));
+
+  refreshExploreMemo(event("approved"));
+  assert.equal(isMemoizedNotServed("bundles"), false, "a route served since must show up on the next request");
+  // Right after the webhook the data cache is cold; a blip renders the copy from before,
+  // including "this route is not served yet" for a collection that answered 404.
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  assert.deepEqual(await getRoutine(routine.slug), detail);
+  assert.deepEqual(await listRoutines(), list);
+  assert.deepEqual(await listBundles(), { items: [], total: 0, available: false });
+
+  // A removal drops the record's own pages (by slug and by id), never the lists.
+  refreshExploreMemo(event("removed"));
+  await assert.rejects(getRoutine(routine.slug), /503/);
+  await assert.rejects(getRoutine(routine.workflow_id), /503/);
+  assert.ok(byId);
+  assert.deepEqual(await listRoutines(), list);
+});
+
+test("the webhook route refreshes the memo instead of resetting it and expires every Explore tag", () => {
+  const route = readFileSync(new URL("../../app/api/revalidate/route.ts", import.meta.url), "utf8");
+  assert.match(route, /refreshExploreMemo\(event\)/);
+  assert.doesNotMatch(route, /resetExploreMemo/, "the webhook must not clear the last-good memo");
+  for (const tag of ['"explore"', "`explore:${event.slug}`", "`explore:${event.id}`"])
+    assert.ok(route.includes(`revalidateTag(${tag}, { expire: 0 })`), tag);
+});
+
+test("a record that answered 404 is never brought back by an older copy during an outage", async (t) => {
+  const routine = fixture("routine-detail");
+  t.mock.method(globalThis, "fetch", async () => ok(routine));
+  await getRoutine(routine.slug);
+  t.mock.method(globalThis, "fetch", async () => status(404));
+  assert.equal(await getRoutine(routine.slug), null);
+  refreshExploreMemo();
+  t.mock.method(globalThis, "fetch", async () => status(503));
+  await assert.rejects(getRoutine(routine.slug), /503/);
+});

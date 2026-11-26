@@ -201,15 +201,13 @@ In Toone you [write a routine in plain English](/en/how-to/features/routines), [
 - Routines run only while your Mac is online. A routine is not a hosted scheduler, so the trigger, freshness window, and missing-run rule should assume the machine can be off. You can [follow runs from an iPhone paired with that Mac](/en/how-to/features/mobile-companion).
 - Agents run on your own [Anthropic or OpenAI account](/en/how-to/getting-started/install-and-connect). Provider access, and its limits, stay under your control.
 
-Recurring routines are how [an AI-native company](/en/guides/ai-native-company) runs day to day.
-
 This page makes no claim about shipped retry, healing, delivery-guarantee, history-retention, reliability, performance, or time-saved behavior. Treat the lifecycle above as the design you are responsible for, not a guarantee any tool supplies.
 
 ## Review the contract before choosing a tool
 
 The worksheet gives a team a way to compare a proposed routine with the operating controls it needs. If the team cannot name the owner, immutable inputs, allowed effects, acceptance criteria, retry boundary, and recovery method, choosing a scheduler or agent platform will not resolve the missing decisions.
 
-Use the related guides to examine [agent governance](/en/governance), [how to bound a first rollout](/en/guides/ai-agent-adoption-roadmap), [how to choose an organization template](/en/guides/choosing-ai-agent-organization-templates), and [how organizational knowledge is owned](/en/organizational-knowledge). For worked examples, [browse the reviewed routines on Explore](/en/explore).
+Use the related guides to examine [agent governance](/en/governance) and [how to choose an organization template](/en/guides/choosing-ai-agent-organization-templates). For worked examples, [browse the reviewed routines on Explore](/en/explore).
 
 ## Who made this guide and how
 

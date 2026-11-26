@@ -4,7 +4,9 @@ import { readFileSync } from "node:fs";
 import { normalizePostDetail, normalizePostEntry } from "../../lib/journal/data";
 import {
   blogPostingSchema,
+  JOURNAL_HUB_MIN_POSTS,
   buildJournalSitemap,
+  isJournalHubIndexable,
   buildRss,
   collectionPageSchema,
   disclosureText,
@@ -97,14 +99,22 @@ test("BlogPosting carries the contract fields and mentions Explore records", () 
   assert.equal("mentions" in blogPostingSchema(detail(2)), false);
 });
 
-test("breadcrumbs: Home › Journal › hub › post, and list pages", () => {
-  const crumbs = postBreadcrumbSchema(detail(1)).itemListElement.map((item) => item.item);
+test("breadcrumbs: Home › Journal › hub › post while the hub is indexable, and list pages", () => {
+  const crumbs = postBreadcrumbSchema(detail(1), JOURNAL_HUB_MIN_POSTS).itemListElement.map((item) => item.item);
   assert.deepEqual(crumbs, [
     "https://trytoone.com/en",
     "https://trytoone.com/en/journal",
     "https://trytoone.com/en/journal/routines",
     "https://trytoone.com/en/journal/automating-launch-content-with-ai-agents",
   ]);
+  // A thin (noindex) hub, or an unknown count, is left out: Home › Journal › post (A7).
+  for (const posts of [JOURNAL_HUB_MIN_POSTS - 1, null]) {
+    assert.deepEqual(postBreadcrumbSchema(detail(1), posts).itemListElement.map((item) => item.item), [
+      "https://trytoone.com/en",
+      "https://trytoone.com/en/journal",
+      "https://trytoone.com/en/journal/automating-launch-content-with-ai-agents",
+    ]);
+  }
   const hub = hubForSegment("releases");
   assert.equal(listBreadcrumbSchema(hub, 2).itemListElement.at(-1)?.item, "https://trytoone.com/en/journal/releases/page/2");
   const collection = collectionPageSchema(null, 1, [detail(0)]);
@@ -193,7 +203,7 @@ test("RSS lastBuildDate is the newest instant, not the greatest string", () => {
   assert.match(buildRss([], new Date("2026-10-01T00:00:00Z")), /<lastBuildDate>Thu, 01 Oct 2026 00:00:00 GMT<\/lastBuildDate>/);
 });
 
-test("sitemap: published posts with updated_at, index and non-empty hubs by their own newest post; empty on outage", () => {
+test("sitemap: published posts with updated_at, the index, and hubs with 5+ posts by their own newest post; empty on outage", () => {
   const feed: JournalFeedItem[] = [
     { post_id: "jnp_aaaaaaaa", slug: "a-post", type: "release", state: "published", published_at: "2026-09-01T00:00:00Z", updated_at: "2026-09-05T00:00:00Z", retired_at: null },
     { post_id: "jnp_bbbbbbbb", slug: "b-post", type: "launch", state: "published", published_at: "2026-09-02T00:00:00Z", updated_at: "2026-09-03T00:00:00Z", retired_at: null },
@@ -203,18 +213,64 @@ test("sitemap: published posts with updated_at, index and non-empty hubs by thei
   const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc><lastmod>([^<]+)<\/lastmod>/g)].map((m) => [m[1], m[2]]);
   assert.deepEqual(entries, [
     ["https://trytoone.com/en/journal", "2026-09-05T00:00:00.000Z"],
-    ["https://trytoone.com/en/journal/releases", "2026-09-05T00:00:00.000Z"],
-    // No published spotlight: the routines hub is omitted (it is noindex).
-    // The retired launch's later date does not move the launches hub.
-    ["https://trytoone.com/en/journal/launches", "2026-09-03T00:00:00.000Z"],
+    // Hubs with fewer than 5 published posts are noindex and not listed.
     ["https://trytoone.com/en/journal/a-post", "2026-09-05T00:00:00.000Z"],
     ["https://trytoone.com/en/journal/b-post", "2026-09-03T00:00:00.000Z"],
   ]);
   assert.ok(!xml.includes("c-post"), "retired posts are not listed");
   assert.ok(!xml.includes("hreflang") && !xml.includes("xhtml"), "no hreflang alternates (TECH-021)");
   assert.ok(!xml.includes("/en/journal/routines<"), "an empty hub is not listed");
+  assert.ok(!xml.includes("/en/journal/releases<") && !xml.includes("/en/journal/launches<"), "a thin hub is not listed");
+
+  // Five published launches (the retired one does not count): the launches
+  // hub is listed, dated by its newest published post.
+  const launches: JournalFeedItem[] = [1, 2, 3, 4, 5].map((n) => ({
+    post_id: `jnp_launch0${n}`,
+    slug: `launch-${n}`,
+    type: "launch",
+    state: "published",
+    published_at: `2026-10-0${n}T00:00:00Z`,
+    updated_at: `2026-10-0${n}T12:00:00Z`,
+    retired_at: null,
+  }));
+  const withHub = buildJournalSitemap([...launches, feed[2]]);
+  assert.ok(withHub.includes("<url><loc>https://trytoone.com/en/journal/launches</loc><lastmod>2026-10-05T12:00:00.000Z</lastmod></url>"));
+  assert.ok(!buildJournalSitemap([...launches.slice(0, 4), feed[2]]).includes("/en/journal/launches<"));
+
   const onlyRetired = buildJournalSitemap([feed[2]]);
   assert.ok(!onlyRetired.includes("<url>"), "no published post: not even the index is listed");
   const empty = buildJournalSitemap(null);
   assert.ok(empty.includes("<urlset") && empty.includes("</urlset>") && !empty.includes("<url>"));
+});
+
+test("a type hub is indexable only with 5 or more posts", () => {
+  assert.equal(JOURNAL_HUB_MIN_POSTS, 5);
+  assert.equal(isJournalHubIndexable(4), false);
+  assert.equal(isJournalHubIndexable(5), true);
+  assert.equal(isJournalHubIndexable(Number.NaN), false);
+});
+
+test("a post links its hub (breadcrumb, closing links) only while the hub is indexable (A7)", () => {
+  const article = readFileSync("components/journal/JournalArticle.tsx", "utf8");
+  assert.equal(article.match(/href=\{listPath\(hub\)\}/g)?.length, 2, "two hub links");
+  assert.equal(article.match(/\{hubLinked && /g)?.length, 2, "both behind hubLinked");
+  const page = readFileSync("app/[locale]/journal/[slug]/page.tsx", "utf8");
+  assert.match(page, /const hubLinked = hubPosts !== null && isJournalHubIndexable\(hubPosts\)/);
+  assert.match(page, /postBreadcrumbSchema\(post, hubPosts\)/);
+});
+
+test("post bodies link /how-to only for signed-in readers and drop links to pages kept out of the index (A7)", () => {
+  const article = readFileSync("components/journal/JournalArticle.tsx", "utf8");
+  assert.match(article, /return <HowToLink href=\{target\} fallback="text">\{children\}<\/HowToLink>;/);
+  assert.match(article, /if \(isUnindexedPage\(target\)\) return <>\{children\}<\/>;/);
+});
+
+test("A7: the /en/journal tabs link a type hub only while it is indexable", async () => {
+  const { isJournalHubLinkable, isJournalHubIndexable } = await import("../../lib/journal/presentation");
+  assert.equal(isJournalHubLinkable(null), false, "unknown count: no link");
+  assert.equal(isJournalHubLinkable(0), false);
+  for (const n of [1, 4, 5, 12]) assert.equal(isJournalHubLinkable(n), isJournalHubIndexable(n), String(n));
+  const list = (await import("node:fs")).readFileSync("components/journal/JournalList.tsx", "utf8");
+  assert.match(list, /linkableHubs\.has\(item\.segment\) \?/, "tabs branch on linkability");
+  assert.match(list, /className="jr-tab-static"/, "unlinked tabs render as text");
 });

@@ -1,12 +1,13 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/navigation";
 import { PrivacyChoicesButton } from "@/components/PrivacyChoices";
-import LocaleLinks from "@/components/LocaleLinks";
+import LocalePicker from "@/components/LocalePicker";
 import CreateAccountLink from "@/components/CreateAccountLink";
 import SignedInLink from "@/components/SignedInLink";
 import SignedOutLink from "@/components/SignedOutLink";
 import PricingLink from "@/components/billing/PricingLink";
 import { TRADER_DETAILS_COMPLETE } from "@/lib/legal/trader";
+import { GOVERNANCE_PAGE_INDEXED } from "@/lib/page-indexing";
 
 /**
  * Site footer — dark ground closing the dark–cream–dark rhythm.
@@ -90,7 +91,7 @@ export default async function Footer({
             </div>
 
             <div className="ftr-lang">
-              <LocaleLinks />
+              <LocalePicker placement="footer" />
             </div>
           </div>
           <div className="ftr-cols">
@@ -107,7 +108,8 @@ export default async function Footer({
               <Link href="/explore">{nav("explore")}</Link>
               <Link href="/resources">{nav("resources")}</Link>
               <Link href="/journal">{nav("journal")}</Link>
-              <a href="/en/governance">{nav("governance")}</a>
+              {/* Linked only while the governance page is indexed (lib/page-indexing.ts, A7). */}
+              {GOVERNANCE_PAGE_INDEXED && <a href="/en/governance">{nav("governance")}</a>}
               <SignedInLink href="/how-to">{nav("howTo")}</SignedInLink>
             </div>
             <div>

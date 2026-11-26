@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { VERCEL_APP_HOST_PATTERN } from "./lib/vercel-host";
 import { PERMISSIONS_POLICY } from "./lib/csp";
-import { collectSourceDates } from "./lib/source-date";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -11,10 +10,6 @@ const nextConfig: NextConfig = {
   // bundles of a production build agree on whether checkout may be offered.
   env: {
     TOONE_RELEASE_BUILD: process.env.VERCEL_ENV === "production" || process.env.LEGAL_RELEASE_CHECK === "1" ? "1" : "0",
-    // Last-commit dates of the content files (lib/source-date.ts). Pages
-    // render per request for the CSP nonce, and the runtime has no git, so
-    // the dates are taken here, at build time, where git history exists.
-    TOONE_SOURCE_DATES: JSON.stringify(collectSourceDates("content")),
   },
   // Pages read content/ at request time (lib/content.ts,
   // lib/product-showcase.ts); ship it with every server function.
@@ -176,6 +171,24 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         has: [{ type: "host", value: "www.trytoone.com" }],
         destination: "https://trytoone.com/:path*",
+        permanent: true,
+      },
+      // Indexing plan A4 (2026-11-26): four thin concept pages (130-196 words,
+      // never indexed, no external links) merged into the long guides that
+      // own the same job. Every locale lands on the English page in one hop.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/guides/:slug(ai-agent-adoption-roadmap|ai-native-company)",
+        destination: "/en/ai-agent-routines",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/guides/how-agent-operations-work",
+        destination: "/en/guides/choosing-ai-agent-organization-templates",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/organizational-knowledge",
+        destination: "/en/guides/choosing-ai-agent-organization-templates",
         permanent: true,
       },
       // Workflow library was merged into the Explore guide. How-to is

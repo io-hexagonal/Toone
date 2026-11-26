@@ -112,6 +112,8 @@ Persist only the state required to resume. Microsoft's orchestration guidance re
 
 Record one source owner for every shared instruction, fact, and configuration. If two sources conflict, the organization needs a deterministic precedence or an escalation owner.
 
+Shared knowledge needs the same care as shared state. Write down the facts, rules, and reference files the roles read on every run, name who owns each one and when it is reviewed, and give each role only the part its job needs. In Toone, a project keeps its agents, routines, tools, files, and context together, and nothing leaks between projects; each agent also has custom context it reads every time it works. That keeps the knowledge next to the work instead of being re-explained in every request.
+
 ### 6. Define evidence, recovery, and maintenance
 
 Decide what proves the work is acceptable before running it. Evidence might include a required schema, a source manifest, an immutable artifact, a reviewer applying a rubric, or a state-change receipt. Match the evidence to the job and its risk. In Toone, you can [see and explain every change to a project](/en/how-to/features/project-history), with agent edits marked apart from your own.
@@ -187,11 +189,8 @@ This page deliberately makes no claim about a current Toone template registry or
 
 Organization design owns responsibility and coordination. It should link to, but not absorb, adjacent decisions:
 
-- Use [the AI-native company guide](/en/guides/ai-native-company) to check whether the job should be delegated at all.
 - Use [AI agent governance](/en/governance) to set authority, approval, and exception policy.
-- Use [organizational knowledge](/en/organizational-knowledge) to define source ownership, provenance, access, and lifecycle.
 - Use [AI agent routines](/en/ai-agent-routines) to specify recurring triggers, inputs, stop conditions, retries, and maintenance.
-- Use [the adoption roadmap](/en/guides/ai-agent-adoption-roadmap) to bound the first rollout before the design is widened.
 - Browse [reviewed routine and workflow templates](/en/explore) to compare concrete examples, then read [how to start from a reviewed template](/en/how-to/features/explore) and [add a template to your organization](/en/how-to/getting-started/import-a-routine-from-explore).
 
 The most useful next step is to complete the worksheet, then draw the responsibility and handoff map for the roles it produced. If the worksheet exposes an unresolved approval, permission, or exception boundary, continue with [AI agent governance](/en/governance) before adding roles.

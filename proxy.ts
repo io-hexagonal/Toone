@@ -23,6 +23,11 @@ const EXPLORE_HUB = /^\/([a-z]{2})\/explore\/?$/;
  * prefix: `[, prefix?, route, rest?]`. The routes are plain `/a-z-` paths.
  */
 const ENGLISH_ONLY = new RegExp(`^(?:/([a-z]{2}))?(${ENGLISH_ONLY_PATHS.join("|")})(/.*)?$`);
+/**
+ * An Explore record or bundle page, unprefixed or under a two-letter prefix:
+ * `[, prefix?, kind, rest]`.
+ */
+const EXPLORE_RECORD = /^(?:\/([a-z]{2}))?\/explore\/(routines|bundles)\/(.+)$/;
 /** Unprefixed paths of the retired AI digest. */
 const AI_DIGEST_PATH = /^\/ai-digest(\/.*)?$/;
 const JOURNAL_PREVIEW = /^\/en\/journal\/preview\//;
@@ -154,6 +159,20 @@ function route(req: NextRequest, requestHeaders: Headers | null) {
     const [, prefix, route, rest = ""] = englishOnly;
     if (prefix === undefined || (isLocale(prefix) && prefix !== routing.defaultLocale)) {
       return redirect(req, `/${routing.defaultLocale}${route}${rest}`, 308);
+    }
+  }
+
+  // A6: Explore records and bundles are English text whatever the locale, so
+  // `/{pt,es,fr,de,it,nl,ru}/explore/(routines|bundles)/*` were English pages
+  // labelled as another language. Each copy, and the unprefixed path, is one
+  // permanent 308 to the `/en` page, query kept (TECH-020; 308 is the
+  // site-wide permanent code, read by Google like a 301). The locale hubs and
+  // topic pages stay: their chrome is translated.
+  const record = pathname.match(EXPLORE_RECORD);
+  if (record) {
+    const [, prefix, kind, rest] = record;
+    if (prefix === undefined || (isLocale(prefix) && prefix !== routing.defaultLocale)) {
+      return redirect(req, `/${routing.defaultLocale}/explore/${kind}/${rest}`, 308);
     }
   }
 

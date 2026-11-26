@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
+import { exploreOutage } from "@/lib/explore/outage";
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { getBundle, findBundleByIdTail, resolveSlug, resolveCoverUrl, getExploreTaxonomy } from "@/lib/explore/api";
+import { getBundle, findBundleByIdTail, resolveSlug, resolveCoverUrl, getExploreTaxonomy, isCategoryTopicIndexable } from "@/lib/explore/api";
 import {
   exploreMetadata,
   breadcrumbSchema,
@@ -10,6 +11,7 @@ import {
   profileSchema,
   isExploreIndexable,
   SITE,
+  recordHref,
 } from "@/lib/explore/presentation";
 import { termLabel } from "@/lib/explore/taxonomy";
 import type { BundlePublicDetail } from "@/lib/explore/types";
@@ -17,7 +19,6 @@ import { ProfileBody, ProfileHero } from "@/components/explore/ProfileView";
 import FeaturedInJournal from "@/components/journal/FeaturedInJournal";
 import {
   ExploreShell,
-  ExploreUnavailable,
   DetailHero,
   DetailsCard,
   FeatureGuides,
@@ -32,10 +33,6 @@ import {
 } from "@/components/explore/ExploreView";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
-const SAMPLE_RATING_COUNTS = new Map([
-  ["wfb_ux67rregtrwv3k5g", 34],
-  ["wfb_mq35pytutf7lj72j", 37],
-]);
 
 // TE-01: rendered on the first request, then served from cache. The data
 // cache window matches, and the signed webhook expires both on approval.
@@ -66,8 +63,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       resolveCoverUrl(detail),
       { indexable: isExploreIndexable(detail) },
     );
-  } catch {
-    return { title: "Explore", robots: { index: false, follow: true } };
+  } catch (error) {
+    // Never "200 + noindex" for an outage: a server error, retried later (A8).
+    // A record the API refuses (4xx) or cannot render is a 404 (TECH-023).
+    exploreOutage("bundle metadata", error, { record: true });
   }
 }
 export default async function BundlePage({ params }: Props) {
@@ -78,17 +77,7 @@ export default async function BundlePage({ params }: Props) {
   try {
     detail = await getBundle(slug);
   } catch (error) {
-    console.error(
-      "[explore] bundle unavailable",
-      error instanceof Error ? error.name : "unknown",
-    );
-    return (
-      <ExploreUnavailable
-        ui={ui}
-        locale={locale}
-        retryHref={`/${locale}/explore/bundles/${encodeURIComponent(slug)}`}
-      />
-    );
+    exploreOutage("bundle", error, { record: true });
   }
   if (!detail) {
     const moved = await findBundleByIdTail(slug).catch(() => null);
@@ -111,10 +100,12 @@ export default async function BundlePage({ params }: Props) {
       ? await getExploreTaxonomy().catch(() => null)
       : null;
     const categoryId = detail.classification?.category_id;
-    const category = categoryId
+    // The breadcrumb's category level only while its topic page is indexable (A7).
+    const categoryLinked = !!categoryId && (await isCategoryTopicIndexable(categoryId));
+    const category = categoryId && categoryLinked
       ? { id: categoryId, label: capitalize(termLabel(taxonomy, categoryId)) }
       : null;
-    const view = { detail, profile, type: "bundle" as const, locale, ui, taxonomy };
+    const view = { detail, profile, type: "bundle" as const, locale, ui, taxonomy, categoryLinked };
     return (
       <ExploreShell>
         <JsonLd value={profileSchema(detail, profile, path)} />
@@ -134,15 +125,11 @@ export default async function BundlePage({ params }: Props) {
           }}
         />
         <JsonLd value={breadcrumbSchema(profile.search.display_title, path, category)} />
-        <ProfileHero
-          {...view}
-          coverEntry={heroCover}
-          sampleRatingCount={SAMPLE_RATING_COUNTS.get(detail.bundle_id)}
-        />
+        <ProfileHero {...view} coverEntry={heroCover} />
         <main>
           <ProfileBody
             {...view}
-            routinesInside={<RoutinesInside members={members} locale={locale} ui={ui} />}
+            routinesInside={<RoutinesInside members={members} ui={ui} />}
           />
         </main>
         <FeaturedInJournal exploreSlug={canonical} />
@@ -181,7 +168,7 @@ export default async function BundlePage({ params }: Props) {
                 <li className="explore-bundle-member" key={member.workflow_id}>
                   <a
                     className="explore-bundle-member-art"
-                    href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                    href={recordHref("routine", resolveSlug(member))}
                     tabIndex={-1}
                     aria-hidden="true"
                   >
@@ -190,14 +177,14 @@ export default async function BundlePage({ params }: Props) {
                   <div className="explore-bundle-member-copy">
                     <h3>
                       <a
-                        href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                        href={recordHref("routine", resolveSlug(member))}
                       >
                         {member.title}
                       </a>
                     </h3>
                     <p>{member.summary}</p>
                     <Counts entry={member} ui={ui} />
-                    <Tags tags={member.tags} locale={locale} ui={ui} />
+                    <Tags tags={member.tags} ui={ui} />
                     <div className="explore-bundle-member-foot">
                       <time
                         className="explore-muted"
@@ -209,7 +196,7 @@ export default async function BundlePage({ params }: Props) {
                         <span className="explore-newer">{ui.newer}</span>
                       )}
                       <a
-                        href={`/${locale}/explore/routines/${resolveSlug(member)}`}
+                        href={recordHref("routine", resolveSlug(member))}
                       >
                         {ui.viewRoutine} →
                       </a>
@@ -236,11 +223,9 @@ export default async function BundlePage({ params }: Props) {
 /** "The routines inside": each member in its plain wording, linked. */
 function RoutinesInside({
   members,
-  locale,
   ui,
 }: {
   members: BundlePublicDetail["members"];
-  locale: string;
   ui: ExploreCopy;
 }): ReactNode {
   return (
@@ -248,7 +233,7 @@ function RoutinesInside({
       <p className="explore-lede explore-muted">{ui.bundleDescription}</p>
       <ul className="explore-bundle-members">
         {members.map((member) => {
-          const href = `/${locale}/explore/routines/${resolveSlug(member)}`;
+          const href = recordHref("routine", resolveSlug(member));
           const text = cardText(member);
           return (
             <li className="explore-bundle-member" key={member.workflow_id}>

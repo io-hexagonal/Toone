@@ -4,10 +4,11 @@ import ExploreCatalog, { exploreCatalogMetadata } from "@/components/explore/Exp
 import { parseCatalogQuery } from "@/lib/explore/presentation";
 
 /**
- * TE-01: the parameter-free hub is prerendered and served from cache. The data
- * cache window matches, and the signed webhook expires both on approval.
- * Filter, search and page URLs are rewritten by `proxy.ts` to
- * `./search`, which renders per request and stays `noindex, follow`.
+ * TE-01: the parameter-free hub. Like every Explore page it renders per
+ * request (the section layout reads the request for the CSP script nonce),
+ * but its Explore API reads come from the data cache (`revalidate` window),
+ * which the signed webhook expires on approval. Filter, search and page URLs
+ * are rewritten by `proxy.ts` to `./search`, which stays `noindex, follow`.
  */
 export const revalidate = 600;
 

@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import ExploreCatalog from "./ExploreCatalog";
-import { getCatalog, getExploreTaxonomy } from "@/lib/explore/api";
+import { getExploreTaxonomy, topicListings } from "@/lib/explore/api";
 import { exploreMetadata } from "@/lib/explore/presentation";
+import { exploreOutage } from "@/lib/explore/outage";
 import {
   findTopicTerm,
   isTopicPageIndexable,
   topicPageCopy,
+  topicPageIntro,
   topicPagePath,
   topicQuery,
   type TopicKind,
@@ -23,8 +25,9 @@ async function resolveTopic(kind: TopicKind, slug: string) {
 
 /**
  * A topic page is its own canonical. It is indexable only in English and only
- * once it lists `TOPIC_PAGE_MIN_LISTINGS` approved records; below that, and on
- * any catalog failure, it stays `noindex, follow`.
+ * once it meets TOPIC-012 (a written intro and `TOPIC_PAGE_MIN_LISTINGS`
+ * distinct records, counted as routines); below that it stays
+ * `noindex, follow`. A catalog outage is a server error (A8).
  */
 export async function topicPageMetadata(kind: TopicKind, { params }: TopicPageProps): Promise<Metadata> {
   const { locale, term: slug } = await params;
@@ -32,16 +35,18 @@ export async function topicPageMetadata(kind: TopicKind, { params }: TopicPagePr
     const topic = await resolveTopic(kind, slug);
     if (!topic) return { robots: { index: false, follow: true } };
     const meta = exploreMetadata(locale, topic.path, topic.copy.heading, topic.copy.intro, null);
-    let listings = 0;
-    try {
-      listings = (await getCatalog(JSON.stringify(topic.query))).total;
-    } catch {
-      listings = 0;
+    // No written intro: never indexable, so skip the routine count (one less
+    // API call, and one less way for the page to fail).
+    if (topicPageIntro(topic.term.id) === null) {
+      meta.robots.index = false;
+      return meta;
     }
-    if (!isTopicPageIndexable(listings)) meta.robots.index = false;
+    const listings = await topicListings(topic.term.id);
+    if (!isTopicPageIndexable(topic.term.id, listings)) meta.robots.index = false;
     return meta;
-  } catch {
-    return { robots: { index: false, follow: true } };
+  } catch (error) {
+    // An outage is a server error that crawlers retry, never `noindex` (A8).
+    exploreOutage("topic metadata", error);
   }
 }
 

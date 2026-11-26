@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import HowToLink from "@/components/HowToLink";
 import { headingId } from "@/lib/content";
+import { isUnindexedPage } from "@/lib/page-indexing";
 import { resolveAssetUrl } from "@/lib/journal/data";
 import {
   assetIdFromSrc,
@@ -77,6 +79,13 @@ function markdownComponents(
     h3: ({ node, children }) => <h3 id={headingId(hastText(node as HastNode))}>{children}</h3>,
     a: ({ href = "", children }) => {
       const target = journalHref(href);
+      // Same rules as the guides (components/ArticlePage.tsx, A7): the
+      // signed-in-only /how-to guides are linked for signed-in readers only,
+      // and a page kept out of the index keeps its words but not its link.
+      if (/^\/en\/how-to(?:[/?#]|$)/.test(target)) {
+        return <HowToLink href={target} fallback="text">{children}</HowToLink>;
+      }
+      if (isUnindexedPage(target)) return <>{children}</>;
       const external = /^https?:\/\//.test(target) && !target.startsWith("https://trytoone.com/");
       return (
         <a href={target} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>
@@ -133,10 +142,16 @@ export type ArticleProps = {
   related?: JournalPostEntry[];
   /** Preview mode: a banner, no related posts, dates read as "not published". */
   preview?: { state: "draft" | "published" | "retired" } | null;
+  /**
+   * Link the post's type hub (breadcrumb and closing links): only while the
+   * hub is indexable, `isJournalHubIndexable` (A7). Otherwise the breadcrumb
+   * is Home → Journal → post and the closing links skip the hub.
+   */
+  hubLinked?: boolean;
 };
 
 /** Resolve embeds, then render. */
-export async function JournalArticle({ post, related = [], preview = null }: ArticleProps) {
+export async function JournalArticle({ post, related = [], preview = null, hubLinked = false }: ArticleProps) {
   const embeds = await resolveExploreEmbeds(extractExploreBlocks(post.body), post.explore_refs);
   const toc = journalTableOfContents(post.body).filter((item) => item.level === 2);
   const hub = hubForType(post.type);
@@ -175,8 +190,12 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
             <span aria-hidden="true">→</span>
             <a href={listPath(null)}>Journal</a>
             <span aria-hidden="true">→</span>
-            <a href={listPath(hub)}>{hub.label}</a>
-            <span aria-hidden="true">→</span>
+            {hubLinked && (
+              <>
+                <a href={listPath(hub)}>{hub.label}</a>
+                <span aria-hidden="true">→</span>
+              </>
+            )}
             <span aria-current="page">{post.title}</span>
           </nav>
           <p className="jr-eyebrow">{postEyebrow(post)}</p>
@@ -232,7 +251,7 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
             <h2>More from the Journal</h2>
             <p>Release notes, routine spotlights and launches from the team building Toone.</p>
             <div className="jr-close-links">
-              <a href={listPath(hub)}>All {hub.label.toLowerCase()} →</a>
+              {hubLinked && <a href={listPath(hub)}>All {hub.label.toLowerCase()} →</a>}
               <a href={listPath(null)}>Every post →</a>
               <RssLink />
             </div>

@@ -22,9 +22,24 @@ test("meta description cuts a single long sentence at a word boundary", () => {
 test("record schema names author, date and publisher", () => {
   const fields = recordSchemaFields({ author_name: "Ada", approved_at: "2026-09-21T00:00:00Z" });
   assert.deepEqual(fields.author, { "@type": "Person", name: "Ada" });
-  assert.equal(fields.dateModified, "2026-09-21T00:00:00Z");
+  assert.equal(fields.dateModified, "2026-09-21T00:00:00Z", "no updated_at: approved_at");
+  assert.equal(fields.datePublished, "2026-09-21T00:00:00Z");
   assert.deepEqual(fields.publisher, { "@id": `${SITE}/#organization` });
   assert.equal("author" in recordSchemaFields({ author_name: "", approved_at: "x" }), false);
+});
+
+test("record dateModified is updated_at, as in /sitemap-explore.xml; datePublished stays approved_at", () => {
+  const fields = recordSchemaFields({
+    author_name: "Ada",
+    approved_at: "2026-09-21T00:00:00Z",
+    updated_at: "2026-11-02T08:30:00Z",
+  });
+  assert.equal(fields.dateModified, "2026-11-02T08:30:00Z");
+  assert.equal(fields.datePublished, "2026-09-21T00:00:00Z");
+  for (const updated_at of [null, "", "not a date"]) {
+    const fallback = recordSchemaFields({ author_name: "Ada", approved_at: "2026-09-21T00:00:00Z", updated_at });
+    assert.equal(fallback.dateModified, "2026-09-21T00:00:00Z", `updated_at ${JSON.stringify(updated_at)}: approved_at`);
+  }
 });
 
 test("Toone-published records credit the organization, not a person", () => {

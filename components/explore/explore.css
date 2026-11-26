@@ -304,7 +304,8 @@
   margin: 14px 0 0;
   padding: 0;
 }
-.explore-tags a {
+/* Plain text chips (A7): no link, so no hover or pointer. */
+.explore-tags span {
   display: inline-block;
   padding: 6px 12px;
   border: 1px solid #d4d1c8;
@@ -315,18 +316,10 @@
   color: #4d4c45;
   background: #fff5;
 }
-.explore-tags a:hover {
-  background: #e0ddd5;
-  color: #1d1c19;
-}
-.explore-hero .explore-tags a {
+.explore-hero .explore-tags span {
   border-color: #4f4e47;
   color: #cecdc7;
   background: transparent;
-}
-.explore-hero .explore-tags a:hover {
-  background: #36362f;
-  color: #fff;
 }
 .explore-chips {
   list-style: none;
@@ -379,6 +372,10 @@
   min-width: 0;
 }
 .explore-type-option {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
   padding: 10px 16px;
   border-radius: 8px;
   color: #58584e;
@@ -424,6 +421,10 @@
   line-height: 1.3;
   text-decoration: none;
   white-space: nowrap;
+}
+button.explore-topic-option {
+  font-family: inherit;
+  cursor: pointer;
 }
 .explore-topic-option:hover,
 .explore-topic-clear:hover {
@@ -639,6 +640,13 @@
   padding: 4px 12px;
   font-size: 13px;
 }
+.explore-about-terms a {
+  color: inherit;
+  text-decoration: none;
+}
+.explore-about-terms a:hover {
+  text-decoration: underline;
+}
 .explore-about-links {
   padding-left: 18px;
   line-height: 1.8;
@@ -788,8 +796,8 @@
 .explore-body .explore-capabilities {
   padding-left: 18px;
 }
-.explore-body .explore-tags a,
 .explore-body .explore-bundle-links a,
+.explore-body .explore-bundle-links [data-howto-static],
 .explore-body .explore-bundle-member h3 a {
   text-decoration: none;
 }
@@ -1136,7 +1144,8 @@
   display: grid;
   gap: 10px;
 }
-.explore-bundle-links a {
+.explore-bundle-links a,
+.explore-bundle-links [data-howto-static] {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -1149,6 +1158,10 @@
 }
 .explore-bundle-links a:hover {
   border-color: #aaa69b;
+}
+/* Signed out, a how-to card is information, not a link: no arrow. */
+.explore-bundle-links [data-howto-static] > [aria-hidden="true"] {
+  display: none;
 }
 .explore-bundle-links .explore-eyebrow {
   margin: 0;
@@ -1780,44 +1793,6 @@
   font-size: 12px;
   line-height: 1.3;
   color: #cecdc7;
-}
-.explore-community-rating,
-.explore-community-rating + .explore-actions {
-  margin-top: 20px;
-}
-.explore-community-rating {
-  display: grid;
-  gap: 4px;
-  width: fit-content;
-  color: #dcdad3;
-  font-size: 13px;
-  line-height: 1.3;
-}
-.explore-community-rating-title {
-  font-weight: 550;
-}
-.explore-community-rating-summary {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  color: #cac2bd;
-  font-size: 12px;
-}
-.explore-community-rating-summary strong {
-  color: #f0ede6;
-  font-weight: 650;
-}
-.explore-community-rating-stars {
-  position: relative;
-  color: #93817b;
-  letter-spacing: 0.7px;
-  white-space: nowrap;
-}
-.explore-community-rating-stars > span {
-  position: absolute;
-  inset: 0 auto 0 0;
-  overflow: hidden;
-  color: #e7bd81;
 }
 /* Price (contract §5): a chip in the detail hero, a badge on card covers. */
 .explore-hero-chips .explore-price-chip {

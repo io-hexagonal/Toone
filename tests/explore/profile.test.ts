@@ -190,6 +190,9 @@ test("profile JSON-LD is a HowTo from the plain steps with tools, supplies and a
   assert.deepEqual(crumbs.itemListElement.map((c) => c.name), ["Toone", "Explore", "Marketing & sales", "Title"]);
   assert.equal(crumbs.itemListElement[2].item, `${SITE}/en/explore/category/marketing-sales`);
   assert.equal(breadcrumbSchema("Title", "/x").itemListElement.length, 3);
+  // No topic page for the id: the level is left out, never a ?category= filter URL.
+  const odd = breadcrumbSchema("Title", "/x", { id: "odd id", label: "Odd" });
+  assert.deepEqual(odd.itemListElement.map((c) => c.name), ["Toone", "Explore", "Title"]);
   // The legacy HowTo is untouched.
   assert.equal(routineSchema(fixture("routine-detail")).name, fixture("routine-detail").title);
 });

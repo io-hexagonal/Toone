@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getPostCached, listPosts } from "@/lib/journal/api";
 import {
   blogPostingSchema,
+  isJournalHubIndexable,
   postBreadcrumbSchema,
   postMetadata,
   postPath,
@@ -46,13 +47,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-/** Up to three other posts of the same type; the article never waits on a failure here. */
-async function relatedPosts(post: JournalPostDetail): Promise<JournalPostEntry[]> {
+/**
+ * Up to three other posts of the same type, and how many posts the type's hub
+ * lists (null when unknown); the article never waits on a failure here.
+ */
+async function relatedPosts(post: JournalPostDetail): Promise<{ related: JournalPostEntry[]; hubPosts: number | null }> {
   try {
-    const { items } = await listPosts({ type: post.type, limit: 4 });
-    return items.filter((item) => item.post_id !== post.post_id).slice(0, 3);
+    const { items, total } = await listPosts({ type: post.type, limit: 4 });
+    return { related: items.filter((item) => item.post_id !== post.post_id).slice(0, 3), hubPosts: total };
   } catch {
-    return [];
+    return { related: [], hubPosts: null };
   }
 }
 
@@ -70,12 +74,15 @@ export default async function JournalPostPage({ params }: Props) {
   const { post } = lookup;
   if (post.slug !== slug) permanentRedirect(postPath(post.slug));
 
-  const related = await relatedPosts(post);
+  const { related, hubPosts } = await relatedPosts(post);
+  // The hub is linked (breadcrumb and closing links) only while it is
+  // indexable; an unknown count leaves it out (A7).
+  const hubLinked = hubPosts !== null && isJournalHubIndexable(hubPosts);
   return (
     <>
       <JsonLd value={blogPostingSchema(post)} />
-      <JsonLd value={postBreadcrumbSchema(post)} />
-      <JournalArticle post={post} related={related} />
+      <JsonLd value={postBreadcrumbSchema(post, hubPosts)} />
+      <JournalArticle post={post} related={related} hubLinked={hubLinked} />
     </>
   );
 }

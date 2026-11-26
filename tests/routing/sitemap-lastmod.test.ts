@@ -17,7 +17,7 @@ function entries(xml: string): Map<string, string | null> {
   return map;
 }
 
-test("with git history, routes carry their commit date as lastmod", async () => {
+test("with git history, routes carry their content date as lastmod", async () => {
   const xml = await (await siteSitemap()).text();
   const map = entries(xml);
   for (const loc of [

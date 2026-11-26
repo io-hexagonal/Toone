@@ -9,7 +9,7 @@ Toone is an alternative to hand-wired, node-based automation such as n8n, Make a
 - [Home](https://trytoone.com/en): what Toone is, how a routine splits into automatic steps and agent steps, and the FAQ
 - [Toone vs n8n, Make and Zapier](https://trytoone.com/en/compare): how Toone compares with node-based automation and with AI agents on a schedule, and when each is the better pick
 - [About Toone](https://trytoone.com/en/about): what Toone is, who builds it, and how claims are checked
-- [Pricing](https://trytoone.com/en/pricing): free routines, and what Toone Pro adds
+- [Pricing](https://trytoone.com/en/pricing): Toone Pro plans (monthly, yearly or lifetime) and what they include; free accounts open in early 2027
 
 ## Guides
 

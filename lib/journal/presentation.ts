@@ -229,6 +229,25 @@ export function journalTitle(title: string): { absolute: string } {
 }
 
 /**
+ * A type hub (releases, routines, launches) is indexed only once it lists
+ * this many published posts. Below that it is a short list of links that
+ * repeats the index: on 2026-11-26 `/en/journal/releases` had 94 words and 2
+ * posts, `/en/journal/launches` 139 words and 3 posts, 42-59% the same as
+ * `/en/journal`. Same bar as Explore topic pages (TOPIC-012). The index
+ * itself is unaffected: it is indexed from its first post.
+ */
+export const JOURNAL_HUB_MIN_POSTS = 5;
+
+export function isJournalHubIndexable(posts: number): boolean {
+  return Number.isSafeInteger(posts) && posts >= JOURNAL_HUB_MIN_POSTS;
+}
+
+/** A hub is linked (tabs, post breadcrumbs) only while indexable; unknown counts stay unlinked (A7). */
+export function isJournalHubLinkable(posts: number | null): boolean {
+  return posts !== null && isJournalHubIndexable(posts);
+}
+
+/**
  * Index, page n and the three hubs: self-canonical, `index, follow` (§10).
  * A list with no posts at all (a hub before its first post of that type, or
  * the index before the first publish) is `noindex, follow` instead: an empty
@@ -379,13 +398,18 @@ function breadcrumbList(levels: Crumb[]) {
   };
 }
 
-/** Home › Journal › hub › post (§10). */
-export function postBreadcrumbSchema(post: Pick<JournalPostEntry, "type" | "slug" | "title">) {
+/**
+ * Home › Journal › hub › post (§10), with the hub level only while the hub is
+ * indexable (`isJournalHubIndexable` on its post count): a post never points
+ * its breadcrumb at a `noindex` hub (TECH-025, A7), so below
+ * JOURNAL_HUB_MIN_POSTS it is Home › Journal › post.
+ */
+export function postBreadcrumbSchema(post: Pick<JournalPostEntry, "type" | "slug" | "title">, hubPosts: number | null) {
   const hub = hubForType(post.type);
   return breadcrumbList([
     { name: "Toone", item: `${SITE}/en` },
     { name: "Journal", item: JOURNAL_URL },
-    { name: hub.label, item: `${SITE}${listPath(hub)}` },
+    ...(hubPosts !== null && isJournalHubIndexable(hubPosts) ? [{ name: hub.label, item: `${SITE}${listPath(hub)}` }] : []),
     { name: post.title, item: postUrl(post.slug) },
   ]);
 }
@@ -518,8 +542,10 @@ export function buildJournalSitemap(feed: JournalFeedItem[] | null): string {
   if (overall) {
     lines.push(sitemapUrl(JOURNAL_URL, iso(overall)));
     for (const hub of JOURNAL_HUBS) {
-      const latest = newest(published.filter((item) => item.type === hub.type));
-      if (latest) lines.push(sitemapUrl(`${SITE}${listPath(hub)}`, iso(latest)));
+      const ofType = published.filter((item) => item.type === hub.type);
+      const latest = newest(ofType);
+      if (latest && isJournalHubIndexable(new Set(ofType.map((item) => item.slug)).size))
+        lines.push(sitemapUrl(`${SITE}${listPath(hub)}`, iso(latest)));
     }
   }
   const seen = new Set<string>();

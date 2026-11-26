@@ -230,7 +230,10 @@ export default function PricingPlans({
   function action(plan: ProPlanId) {
     if (!checkoutEnabled) return null;
     if (!ready || (session && entitlement.kind === "loading")) {
-      return <button type="button" className="pricing-button" disabled>{t("checking")}</button>;
+      // No visible text until the session is known: the server HTML is what
+      // search engines read, and "Checking your account…" three times over is
+      // not page content (TECH-004). The label stays for assistive tech.
+      return <button type="button" className="pricing-button pricing-button--pending" disabled aria-busy="true" aria-label={t("checking")} />;
     }
     if (!session) {
       return (

@@ -1,7 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/navigation";
+import { linksBusinessLanding } from "@/lib/page-indexing";
 
 export type LandingAudience = "personal" | "business";
 
@@ -17,10 +18,13 @@ const AUDIENCES = [
 /**
  * A slim product-audience rail modelled on Truleaf's Botanics / Academia /
  * Biologicals R&D switcher. Each audience owns a real route so its landing
- * content and metadata can evolve independently.
+ * content and metadata can evolve independently. While a page may not link
+ * the Business landing (lib/page-indexing.ts), its tab is left out and the bar
+ * keeps only the current audience.
  */
 export default function LandingAudienceBar({ activeAudience }: Props) {
   const t = useTranslations("landing");
+  const linksBusiness = linksBusinessLanding(useLocale(), activeAudience);
 
   return (
     <>
@@ -71,7 +75,7 @@ export default function LandingAudienceBar({ activeAudience }: Props) {
             role="tablist"
             aria-label={t("audienceLabel")}
           >
-            {AUDIENCES.map((audience) => {
+            {AUDIENCES.filter((audience) => audience.id !== "business" || linksBusiness).map((audience) => {
               const selected = activeAudience === audience.id;
 
               if (selected) {
