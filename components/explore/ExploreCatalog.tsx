@@ -176,8 +176,10 @@ export default async function ExploreCatalog({ locale, query, topic }: {
                 .map((type) => (
                 <button
                   type="submit"
-                  name="type"
-                  value={type}
+                  /* "All" sends no `type`, so with nothing else set it lands
+                     on the clean hub, not a `?type=all` noindex copy. */
+                  name={type === "all" ? undefined : "type"}
+                  value={type === "all" ? undefined : type}
                   className="explore-type-option"
                   aria-current={query.type === type ? "true" : undefined}
                   key={type}
@@ -193,7 +195,7 @@ export default async function ExploreCatalog({ locale, query, topic }: {
             action={`/${locale}/explore`}
             role="search"
           >
-            <input type="hidden" name="type" value={query.type} />
+            {query.type !== "all" && <input type="hidden" name="type" value={query.type} />}
             {query.tag && <input type="hidden" name="tag" value={query.tag} />}
             {query.category && <input type="hidden" name="category" value={query.category} />}
             {(query.topics ?? []).map((id) => <input key={id} type="hidden" name="topic" value={id} />)}

@@ -485,3 +485,18 @@ test("hub cards use display_title, card summary, For line and results count", as
   await mode({});
   await invalidate(PROFILE_SLUG, "wfl_lnchprepqk4m2x7a");
 });
+test("the type filter's All button and the search form never ask for ?type=all", async () => {
+  const { html } = await get("/en/explore");
+  const buttons = [...html.matchAll(/<button[^>]*class="explore-type-option"[^>]*>([^<]*)</g)];
+  const all = buttons.find((m) => m[1] === "All");
+  assert.ok(all, "All button");
+  assert.doesNotMatch(all[0], /name=/);
+  // Attribute order is React's, not the source's: check each on its own.
+  const routines = buttons.find((m) => m[1] === "Routines")[0];
+  assert.match(routines, /\bname="type"/);
+  assert.match(routines, /\bvalue="routines"/);
+  assert.ok(!html.includes('name="type" value="all"'));
+  const filtered = await get("/en/explore?type=routines&q=audit");
+  assert.match(filtered.html, /<input type="hidden" name="q" value="audit"\/>/);
+  assert.match(filtered.html, /<input type="hidden" name="type" value="routines"\/>/);
+});
