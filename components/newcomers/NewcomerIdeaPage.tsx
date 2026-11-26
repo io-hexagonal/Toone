@@ -22,7 +22,7 @@ function Header() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/brand/toone-mark.svg" alt="" width={26} height={26} />toone
       </Link>
-      <Link href="/download" className={`${styles.button} ${styles.primary}`} data-umami-event="newcomer-ideas-download" data-umami-event-item="header">
+      <Link href="/create-account" className={`${styles.button} ${styles.primary}`} data-umami-event="newcomer-ideas-download" data-umami-event-item="header">
         Download Toone
       </Link>
     </header>
@@ -66,7 +66,7 @@ function SetupSteps() {
 function TryIt({ where }: { where: string }) {
   return (
     <div className={styles.actions}>
-      <Link href="/download" className={`${styles.button} ${styles.primary}`} data-umami-event="newcomer-ideas-download" data-umami-event-item={where}>
+      <Link href="/create-account" className={`${styles.button} ${styles.primary}`} data-umami-event="newcomer-ideas-download" data-umami-event-item={where}>
         Download Toone for Mac
       </Link>
       <Link href="/explore" className={styles.button}>Browse more routines on Explore</Link>
