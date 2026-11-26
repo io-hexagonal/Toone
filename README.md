@@ -1,45 +1,56 @@
-[![Toone wordmark and six-part mark on a dark background](public/assets/og/toone-og.png)](https://trytoone.com)
+[![Toone wordmark and six-part mark on a dark background](public/assets/og/toone-og.png)](https://trytoone.com/en)
 
 # Toone — the AI workspace for your agentic workflows
 
-Turn recurring work into AI workflows you can run, inspect, and improve. Describe the outcome you want in a conversation, shape it into a reusable routine with an agent, then run it with the tools and context the work needs. Follow each step and review the output before the next run.
+Toone is a macOS app for recurring work. Fixed, scripted steps run the same way every time, and AI agents step in only where a step needs judgment: reading, deciding, writing. Think Grokbot meets n8n/zapier. Describe the outcome you want in a conversation, shape it into a routine with an agent, then run it, follow each step and review the output before the next run. A step that falls short pauses so you can fix it and resume.
 
-[Explore Toone](https://trytoone.com/en) · [How-to guide](https://trytoone.com/en/how-to) · [Explore workflows](https://trytoone.com/en/explore) · [Request early access](https://trytoone.com/en/request-access)
+[Website](https://trytoone.com/en) · [Explore shared routines](https://trytoone.com/en/explore) · [Toone vs n8n, Make and Zapier](https://trytoone.com/en/compare) · [Create an account](https://trytoone.com/en/create-account)
+
+## Start from a shared routine
+
+[Explore](https://trytoone.com/en/explore) is Toone's public library of routines and bundles that people have shared. A few to start from:
+
+- [Find Funding](https://trytoone.com/en/explore/routines/find-funding-hn64ep4n): finds grants, prizes, accelerators and cloud credits that fit your startup, checked on official pages.
+- [Find and Apply to Grants](https://trytoone.com/en/explore/bundles/find-and-apply-to-grants-tf7lj72j): adds a dated application plan and drafts, and submits only what you approve.
+- [Reddit Radar](https://trytoone.com/en/explore/routines/reddit-radar-rz2orlfe): watches the subreddits you choose, drafts replies in your voice and posts only the ones you approve.
+- [Product Launch Essentials](https://trytoone.com/en/explore/bundles/product-launch-essentials-trwv3k5g): prepares your launch-site profiles and runs launch-day outreach with your approval.
+
+What's new: [auto-fix for routines in 1.0.81](https://trytoone.com/en/journal/toone-1-0-81-auto-fix-ai-workflows-routines) and [how Explore listings are reviewed](https://trytoone.com/en/journal/introducing-explore-reviewed-ai-routines).
 
 ## From an idea to a repeatable result
 
-The [product guide](https://trytoone.com/en/how-to) describes the loop behind Toone:
+The loop behind Toone:
 
-1. **Define the work.** Give a specialised agent a clear responsibility and the project context it should use. [Create an agent](https://trytoone.com/en/how-to/getting-started/create-an-agent).
-2. **Build the workflow together.** Discuss the intent, input, steps, approvals, and expected output. Toone turns that conversation into a draft routine you can review before publishing. [Create a routine](https://trytoone.com/en/how-to/getting-started/create-a-routine).
-3. **Run and observe.** Start the routine, follow its graph as steps execute, and open an agent's thread or browser session to see the work in progress. [Run and debug](https://trytoone.com/en/how-to/getting-started/run-and-debug).
-4. **Review and improve.** Inspect the saved result and run history, change an instruction, and run it again. Useful outputs and project knowledge remain available for the next run. [Understand the core concepts](https://trytoone.com/en/how-to/concepts).
+1. **Define the work.** Give a specialised agent a clear responsibility and the project context it should use.
+2. **Build the workflow together.** Discuss the intent, input, steps, approvals, and expected output. Toone turns that conversation into a draft routine you can review before publishing.
+3. **Run and observe.** Start the routine, follow its graph as steps execute, and open an agent's thread or browser session to see the work in progress.
+4. **Review and improve.** Inspect the saved result and run history, change an instruction, and run it again. Useful outputs and project knowledge remain available for the next run.
 
 ## What the workspace brings together
 
 | | |
 | --- | --- |
-| **01 / Build** | [Natural-language routines](https://trytoone.com/en/how-to/features/routines) name inputs, responsible agents, steps, completion criteria, and outputs. Compose smaller routines into larger workflows. |
-| **02 / Execute** | [Specialised agents](https://trytoone.com/en/how-to/features/orchestration) work with project files, connected tools, and [browser sessions](https://trytoone.com/en/how-to/features/browser-sessions). Follow and inspect runs while they happen. |
-| **03 / Govern** | Approval points and [Project History](https://trytoone.com/en/how-to/features/project-history) help people review decisions and changes. For Claude tool results, [Safe Mode](https://trytoone.com/en/how-to/features/safe-mode) can screen and redact configured topics. |
+| **01 / Build** | Natural-language routines name inputs, responsible agents, steps, completion criteria, and outputs. Compose smaller routines into larger workflows. |
+| **02 / Execute** | Specialised agents work with project files, connected tools, and browser sessions. Follow and inspect runs while they happen. |
+| **03 / Govern** | Approval points and Project History help people review decisions and changes. For Claude tool results, Safe Mode can screen and redact configured topics. |
 
-Each project keeps its agents, routines, tools, files, and context together. You can start with one useful workflow, then [browse reusable workflows](https://trytoone.com/en/how-to/features/explore) or add more agents as the work grows.
+Each project keeps its agents, routines, tools, files, and context together. You can start with one useful workflow, then [browse shared routines](https://trytoone.com/en/explore) or add more agents as the work grows.
 
 ## Start with one workflow
 
-The [15-minute getting-started path](https://trytoone.com/en/how-to/getting-started) walks through a complete first run:
+A complete first run takes about 15 minutes:
 
-1. [Install Toone and connect an AI provider](https://trytoone.com/en/how-to/getting-started/install-and-connect). Toone supports OpenAI Codex and Anthropic Claude; bring access to the provider you choose.
-2. [Create a project](https://trytoone.com/en/how-to/getting-started/create-a-project) to hold the work and its context.
-3. [Create an agent](https://trytoone.com/en/how-to/getting-started/create-an-agent) with one focused responsibility.
-4. [Create a routine](https://trytoone.com/en/how-to/getting-started/create-a-routine) from a useful conversation or a new draft.
-5. [Run, watch, and improve it](https://trytoone.com/en/how-to/getting-started/run-and-debug) using a small, real input.
+1. Install Toone and connect an AI provider. Toone supports OpenAI Codex and Anthropic Claude; bring access to the provider you choose.
+2. Create a project to hold the work and its context.
+3. Create an agent with one focused responsibility.
+4. Create a routine from a useful conversation or a new draft.
+5. Run, watch, and improve it using a small, real input.
 
-For the full product map, see [Core concepts](https://trytoone.com/en/how-to/concepts) and the [feature guide](https://trytoone.com/en/how-to/features).
+The full product guide opens after you sign in.
 
 ## Access
 
-Toone currently requires macOS 14 or later and is available by invitation. [Request early access](https://trytoone.com/en/request-access) to join the list. Existing account holders can [sign in](https://trytoone.com/en/signin) to obtain an installer; if you have a personal code, [redeem your invitation](https://trytoone.com/en/invite). Public installer distribution is closed.
+Toone requires macOS 14 or later and runs on your own Claude Code or OpenAI Codex. Anyone can [create an account](https://trytoone.com/en/create-account), [choose a plan](https://trytoone.com/en/pricing) and download Toone for Mac. Paid plans; free plan coming soon. Existing account holders can [sign in](https://trytoone.com/en/signin).
 
 ## This repository
 
