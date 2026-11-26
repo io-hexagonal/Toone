@@ -133,10 +133,16 @@ export type ArticleProps = {
   related?: JournalPostEntry[];
   /** Preview mode: a banner, no related posts, dates read as "not published". */
   preview?: { state: "draft" | "published" | "retired" } | null;
+  /**
+   * Link the post's type hub (breadcrumb and closing links): only while the
+   * hub is indexable, `isJournalHubIndexable` (A7). Otherwise the breadcrumb
+   * is Home → Journal → post and the closing links skip the hub.
+   */
+  hubLinked?: boolean;
 };
 
 /** Resolve embeds, then render. */
-export async function JournalArticle({ post, related = [], preview = null }: ArticleProps) {
+export async function JournalArticle({ post, related = [], preview = null, hubLinked = false }: ArticleProps) {
   const embeds = await resolveExploreEmbeds(extractExploreBlocks(post.body), post.explore_refs);
   const toc = journalTableOfContents(post.body).filter((item) => item.level === 2);
   const hub = hubForType(post.type);
@@ -175,8 +181,12 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
             <span aria-hidden="true">→</span>
             <a href={listPath(null)}>Journal</a>
             <span aria-hidden="true">→</span>
-            <a href={listPath(hub)}>{hub.label}</a>
-            <span aria-hidden="true">→</span>
+            {hubLinked && (
+              <>
+                <a href={listPath(hub)}>{hub.label}</a>
+                <span aria-hidden="true">→</span>
+              </>
+            )}
             <span aria-current="page">{post.title}</span>
           </nav>
           <p className="jr-eyebrow">{postEyebrow(post)}</p>
@@ -232,7 +242,7 @@ export async function JournalArticle({ post, related = [], preview = null }: Art
             <h2>More from the Journal</h2>
             <p>Release notes, routine spotlights and launches from the team building Toone.</p>
             <div className="jr-close-links">
-              <a href={listPath(hub)}>All {hub.label.toLowerCase()} →</a>
+              {hubLinked && <a href={listPath(hub)}>All {hub.label.toLowerCase()} →</a>}
               <a href={listPath(null)}>Every post →</a>
               <RssLink />
             </div>

@@ -99,14 +99,22 @@ test("BlogPosting carries the contract fields and mentions Explore records", () 
   assert.equal("mentions" in blogPostingSchema(detail(2)), false);
 });
 
-test("breadcrumbs: Home › Journal › hub › post, and list pages", () => {
-  const crumbs = postBreadcrumbSchema(detail(1)).itemListElement.map((item) => item.item);
+test("breadcrumbs: Home › Journal › hub › post while the hub is indexable, and list pages", () => {
+  const crumbs = postBreadcrumbSchema(detail(1), JOURNAL_HUB_MIN_POSTS).itemListElement.map((item) => item.item);
   assert.deepEqual(crumbs, [
     "https://trytoone.com/en",
     "https://trytoone.com/en/journal",
     "https://trytoone.com/en/journal/routines",
     "https://trytoone.com/en/journal/automating-launch-content-with-ai-agents",
   ]);
+  // A thin (noindex) hub, or an unknown count, is left out: Home › Journal › post (A7).
+  for (const posts of [JOURNAL_HUB_MIN_POSTS - 1, null]) {
+    assert.deepEqual(postBreadcrumbSchema(detail(1), posts).itemListElement.map((item) => item.item), [
+      "https://trytoone.com/en",
+      "https://trytoone.com/en/journal",
+      "https://trytoone.com/en/journal/automating-launch-content-with-ai-agents",
+    ]);
+  }
   const hub = hubForSegment("releases");
   assert.equal(listBreadcrumbSchema(hub, 2).itemListElement.at(-1)?.item, "https://trytoone.com/en/journal/releases/page/2");
   const collection = collectionPageSchema(null, 1, [detail(0)]);
@@ -240,4 +248,13 @@ test("a type hub is indexable only with 5 or more posts", () => {
   assert.equal(isJournalHubIndexable(4), false);
   assert.equal(isJournalHubIndexable(5), true);
   assert.equal(isJournalHubIndexable(Number.NaN), false);
+});
+
+test("a post links its hub (breadcrumb, closing links) only while the hub is indexable (A7)", () => {
+  const article = readFileSync("components/journal/JournalArticle.tsx", "utf8");
+  assert.equal(article.match(/href=\{listPath\(hub\)\}/g)?.length, 2, "two hub links");
+  assert.equal(article.match(/\{hubLinked && /g)?.length, 2, "both behind hubLinked");
+  const page = readFileSync("app/[locale]/journal/[slug]/page.tsx", "utf8");
+  assert.match(page, /const hubLinked = hubPosts !== null && isJournalHubIndexable\(hubPosts\)/);
+  assert.match(page, /postBreadcrumbSchema\(post, hubPosts\)/);
 });

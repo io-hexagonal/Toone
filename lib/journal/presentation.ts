@@ -393,13 +393,18 @@ function breadcrumbList(levels: Crumb[]) {
   };
 }
 
-/** Home › Journal › hub › post (§10). */
-export function postBreadcrumbSchema(post: Pick<JournalPostEntry, "type" | "slug" | "title">) {
+/**
+ * Home › Journal › hub › post (§10), with the hub level only while the hub is
+ * indexable (`isJournalHubIndexable` on its post count): a post never points
+ * its breadcrumb at a `noindex` hub (TECH-025, A7), so below
+ * JOURNAL_HUB_MIN_POSTS it is Home › Journal › post.
+ */
+export function postBreadcrumbSchema(post: Pick<JournalPostEntry, "type" | "slug" | "title">, hubPosts: number | null) {
   const hub = hubForType(post.type);
   return breadcrumbList([
     { name: "Toone", item: `${SITE}/en` },
     { name: "Journal", item: JOURNAL_URL },
-    { name: hub.label, item: `${SITE}${listPath(hub)}` },
+    ...(hubPosts !== null && isJournalHubIndexable(hubPosts) ? [{ name: hub.label, item: `${SITE}${listPath(hub)}` }] : []),
     { name: post.title, item: postUrl(post.slug) },
   ]);
 }

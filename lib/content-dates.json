@@ -38,7 +38,7 @@
   "app/[locale]/how-to/[...slug]/page.tsx": "2026-11-09",
   "app/[locale]/how-to/page.tsx": "2026-11-09",
   "app/[locale]/invite/page.tsx": "2026-10-25",
-  "app/[locale]/journal/[slug]/page.tsx": "2026-11-25",
+  "app/[locale]/journal/[slug]/page.tsx": "2026-11-26",
   "app/[locale]/journal/launches/page.tsx": "2026-10-01",
   "app/[locale]/journal/launches/page/[n]/page.tsx": "2026-11-25",
   "app/[locale]/journal/page.tsx": "2026-10-01",
