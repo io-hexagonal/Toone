@@ -22,7 +22,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: publication.title,
     description: publication.description,
     alternates: { canonical: url },
-    robots: localeRobots(locale),
+    // `noindex, follow` and out of the sitemap since 2026-11-26 (indexing
+    // plan A4): 207 words under a title that promises approval gates,
+    // permissions and receipts. It returns to the index once it shows them
+    // with real screenshots (approval step, Safe Mode, audit log).
+    robots: localeRobots(locale, false),
     other: localeVersions("/governance", ["en"]),
     openGraph: {
       type: "article",

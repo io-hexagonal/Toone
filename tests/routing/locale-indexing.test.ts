@@ -82,7 +82,20 @@ test("/sitemap.xml lists English URLs only, with no hreflang alternates", async 
   for (const url of urls) assert.match(url, /^https:\/\/trytoone\.com\/en(\/|$)/, url);
   assert.equal(new Set(urls).size, urls.length, "duplicate URLs");
   assert.ok(!xml.includes("xhtml") && !xml.includes("hreflang"), "sitemap carries hreflang");
-  for (const route of ["/en", "/en/resources", "/en/business"]) {
+  for (const route of ["/en", "/en/resources", "/en/pricing", "/en/explore"]) {
     assert.ok(urls.includes(`https://trytoone.com${route}`), `${route} missing`);
+  }
+  // Indexing plan A3/A4 (2026-11-26): noindex or merged, so never listed.
+  for (const route of [
+    "/en/business",
+    "/en/contact",
+    "/en/request-access",
+    "/en/governance",
+    "/en/organizational-knowledge",
+    "/en/guides/ai-agent-adoption-roadmap",
+    "/en/guides/ai-native-company",
+    "/en/guides/how-agent-operations-work",
+  ]) {
+    assert.ok(!urls.includes(`https://trytoone.com${route}`), `${route} is listed`);
   }
 });

@@ -8,6 +8,7 @@ import {
   JOURNAL_HUBS,
   collectionPageSchema,
   hubForSegment,
+  isJournalHubIndexable,
   listBreadcrumbSchema,
   listMetadata,
   listPath,
@@ -21,8 +22,8 @@ import { JournalShell, JsonLd, PostCard, RssIcon } from "./JournalParts";
 /**
  * Index (`/en/journal`), its pages (`/page/{n}`), and the three type hubs
  * with theirs (contract §2, §10). Twelve posts a page, self-canonical,
- * `index, follow` (`noindex, follow` while a list has no post at all); a page
- * past the last one is a 404.
+ * `index, follow` (`noindex, follow` while a list has no post at all, or a
+ * hub has fewer than JOURNAL_HUB_MIN_POSTS); a page past the last one is a 404.
  *
  * Outages: during `next build` a failed read renders the outage state
  * (`noindex`), so an API incident cannot block a deploy. At runtime the error
@@ -70,7 +71,9 @@ export async function journalListMetadata(
   if (!state || state.kind === "unavailable") {
     return { ...listMetadata(hub, page), robots: { index: false, follow: true } };
   }
-  return listMetadata(hub, page, { empty: state.posts.length === 0 });
+  // A hub below JOURNAL_HUB_MIN_POSTS is `noindex, follow` like an empty list.
+  const thinHub = hub !== null && !isJournalHubIndexable(state.total);
+  return listMetadata(hub, page, { empty: state.posts.length === 0 || thinHub });
 }
 
 export async function JournalList({ hub, page }: { hub: JournalHub | null; page: number }) {

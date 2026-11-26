@@ -12,57 +12,8 @@
   ],
   "items": [
     {
-      "slug": "how-agent-operations-work",
-      "canonicalPath": "/guides/how-agent-operations-work",
-      "locales": [
-        "en",
-        "pt",
-        "es",
-        "fr",
-        "de",
-        "it",
-        "nl",
-        "ru"
-      ]
-    },
-    {
-      "slug": "ai-agent-adoption-roadmap",
-      "canonicalPath": "/guides/ai-agent-adoption-roadmap",
-      "locales": [
-        "en",
-        "pt",
-        "es",
-        "fr",
-        "de",
-        "it",
-        "nl",
-        "ru"
-      ]
-    },
-    {
-      "slug": "organizational-knowledge",
-      "canonicalPath": "/organizational-knowledge",
-      "locales": [
-        "en",
-        "pt",
-        "es",
-        "fr",
-        "de",
-        "it",
-        "nl",
-        "ru"
-      ]
-    },
-    {
       "slug": "ai-agent-governance",
       "canonicalPath": "/governance",
-      "locales": [
-        "en"
-      ]
-    },
-    {
-      "slug": "ai-native-company",
-      "canonicalPath": "/guides/ai-native-company",
       "locales": [
         "en"
       ]

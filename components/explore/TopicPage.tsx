@@ -23,8 +23,9 @@ async function resolveTopic(kind: TopicKind, slug: string) {
 
 /**
  * A topic page is its own canonical. It is indexable only in English and only
- * once it lists `TOPIC_PAGE_MIN_LISTINGS` approved records; below that, and on
- * any catalog failure, it stays `noindex, follow`.
+ * once it meets TOPIC-012 (a written intro and `TOPIC_PAGE_MIN_LISTINGS`
+ * distinct records, counted as routines); below that, and on any catalog
+ * failure, it stays `noindex, follow`.
  */
 export async function topicPageMetadata(kind: TopicKind, { params }: TopicPageProps): Promise<Metadata> {
   const { locale, term: slug } = await params;
@@ -34,11 +35,11 @@ export async function topicPageMetadata(kind: TopicKind, { params }: TopicPagePr
     const meta = exploreMetadata(locale, topic.path, topic.copy.heading, topic.copy.intro, null);
     let listings = 0;
     try {
-      listings = (await getCatalog(JSON.stringify(topic.query))).total;
+      listings = (await getCatalog(JSON.stringify({ ...topic.query, type: "routines" }))).total;
     } catch {
       listings = 0;
     }
-    if (!isTopicPageIndexable(listings)) meta.robots.index = false;
+    if (!isTopicPageIndexable(topic.term.id, listings)) meta.robots.index = false;
     return meta;
   } catch {
     return { robots: { index: false, follow: true } };

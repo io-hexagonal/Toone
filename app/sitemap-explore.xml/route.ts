@@ -18,7 +18,8 @@ import { facetListings, isTopicPageIndexable, topicPagePath } from "@/lib/explor
  * CONTENT-022 (v1.7.0): every approved record is listed unless a reviewer set
  * `noindex`; the feed's `indexable` flag carries that server-side rule.
  * Topic pages (one per taxonomy term) are listed only while they are
- * indexable, that is with enough approved records; they carry no lastmod.
+ * indexable (TOPIC-012: a written intro and 5 distinct records); they carry
+ * no lastmod.
  * A feed outage yields an empty urlset (200) rather than an error: Google
  * keeps previously discovered URLs, while a 5xx would make it retry the
  * fetch and, repeated, distrust the file.
@@ -80,7 +81,7 @@ export async function GET() {
       const facets = await getExploreFacets({ type: "all", query: "", tag: "", page: 1 });
       for (const term of taxonomy.terms) {
         const path = term.active ? topicPagePath(term) : null;
-        if (path && isTopicPageIndexable(facetListings(facets, term.id)))
+        if (path && isTopicPageIndexable(term.id, facetListings(facets, term.id)))
           lines.push(`<url><loc>${BASE_URL}/en${path}</loc></url>`);
       }
     }

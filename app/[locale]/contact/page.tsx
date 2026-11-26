@@ -14,7 +14,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       "Contact Toone about corrections, product questions, partnerships, or support. Reach the team on LinkedIn, or email hello@trytoone.com with the page URL.",
     alternates: { canonical: "https://trytoone.com/en/contact" },
-    robots: localeRobots(locale),
+    // `noindex, follow` and out of the sitemap since 2026-11-26 (indexing
+    // plan A4): an 89-word utility page that answers no search. It stays
+    // live and linked for visitors.
+    robots: localeRobots(locale, false),
     other: localeVersions("/contact", ["en"]),
     // R7: og:url must equal the canonical. Without a route-level `openGraph`
     // this page inherited the root layout's card, whose og:url is the locale

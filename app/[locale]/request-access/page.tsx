@@ -16,10 +16,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // This is the public *request* page of the invitation-only funnel: leave an
   // email, receive a personal code, redeem it. `/early-access` is the code
-  // gate and stays `noindex`; this page is the indexable conversion
-  // destination, so it carries a real title/description, a self-canonical
-  // and a sitemap entry. No hreflang: English is the only indexed locale
-  // (TECH-021).
+  // gate and stays `noindex`. This page keeps a real title/description and a
+  // self-canonical, but is `noindex` with no sitemap entry (see below). No
+  // hreflang: English is the only indexed locale (TECH-021).
   //
   // The seven non-English routes render the form alone — the English content
   // block above it is not translated yet — so they stay `noindex, follow`.
@@ -51,7 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: TITLE },
     description: DESCRIPTION,
     alternates: { canonical: CANONICAL },
-    robots: localeRobots(locale),
+    // `noindex, follow` and out of the sitemap since 2026-11-26 (indexing
+    // plan A4): a 121-word form that answers no search. Playbook 02 retires
+    // it (308 to /en/pricing); until that ships it stays live for links.
+    robots: localeRobots(locale, false),
     other: localeVersions("/request-access", ["en"]),
     openGraph: {
       type: "website",

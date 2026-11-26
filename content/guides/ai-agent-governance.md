@@ -18,7 +18,7 @@ Toone brings specialised agents and repeatable workflows into one workspace. Peo
 
 Choose a useful task, provide the relevant context, and agree on the result you want. Start with work you can review easily.
 
-[The AI-native company guide](/guides/ai-native-company) shows how to pick that first task and measure the result.
+[The AI agent routines guide](/en/ai-agent-routines) has a worksheet for scoping that first task: its owner, inputs, output and review step.
 
 ## Review important decisions
 

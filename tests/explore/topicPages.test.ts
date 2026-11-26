@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  TOPIC_PAGE_INTROS,
   TOPIC_PAGE_MIN_LISTINGS,
   facetListings,
   findTopicTerm,
@@ -49,13 +50,20 @@ test("a topic page filters the catalog on exactly its term", () => {
   assert.deepEqual(topicQuery(taxonomy.terms[2]).usefulFor, ["role_founders-entrepreneurs"]);
 });
 
-test("a topic page is indexable only with enough listings", () => {
-  assert.equal(TOPIC_PAGE_MIN_LISTINGS, 3);
-  assert.equal(isTopicPageIndexable(2), false);
-  assert.equal(isTopicPageIndexable(3), true);
-  assert.equal(isTopicPageIndexable(Number.NaN), false);
-  const facets = [{ term_id: "cat_marketing-sales", routines: 2, bundles: 1 }];
-  assert.equal(facetListings(facets, "cat_marketing-sales"), 3);
+test("a topic page is indexable only with a written intro and 5 distinct records (TOPIC-012)", () => {
+  assert.equal(TOPIC_PAGE_MIN_LISTINGS, 5);
+  const intros = { "cat_marketing-sales": "Routines for a marketing team's weekly work." };
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 4, intros), false);
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 5, intros), true);
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", Number.NaN, intros), false);
+  // No written intro: noindex at any count.
+  assert.equal(isTopicPageIndexable("topic_seo-content", 50, intros), false);
+  // Nothing has a written intro yet, so no topic page is indexable today.
+  assert.deepEqual(TOPIC_PAGE_INTROS, {});
+  assert.equal(isTopicPageIndexable("cat_marketing-sales", 50), false);
+  // Bundles repeat routines already listed: only routines count as distinct.
+  const facets = [{ term_id: "cat_marketing-sales", routines: 4, bundles: 1 }];
+  assert.equal(facetListings(facets, "cat_marketing-sales"), 4);
   assert.equal(facetListings(facets, "topic_seo-content"), 0);
 });
 

@@ -13,13 +13,15 @@ const BASE_URL = "https://trytoone.com";
  * only English is indexed (TECH-021): the other seven locales still serve,
  * `noindex, follow`, so none of their URLs is listed and no entry carries
  * hreflang (`xhtml:link`) alternates. `/early-access` stays out: it is the
- * invitation-code gate and ships `noindex`. The public request form it links
- * to lives at `/request-access` and is listed below.
+ * invitation-code gate and ships `noindex`.
+ *
+ * Left out on 2026-11-26 because they are `noindex` (indexing plan A3, A4):
+ * `/business` (a near-copy of the home page), `/contact` and
+ * `/request-access` (utility pages), `/governance` (thin until filled in).
  */
 const LOCALIZED_ROUTES = [
   { path: "", source: "app/[locale]/page.tsx" },
   { path: "/resources", source: "app/[locale]/resources/page.tsx" },
-  { path: "/business", source: "app/[locale]/business/page.tsx" },
   // Toone Pro plans; prices come from the API at request time.
   { path: "/pricing", source: "app/[locale]/pricing/page.tsx" },
 ] as const;
@@ -32,18 +34,11 @@ const ENGLISH_ONLY_ROUTES = [
   { path: "/terms", source: "app/[locale]/terms/page.tsx" },
   ...(TRADER_DETAILS_COMPLETE ? [LEGAL_NOTICE_ROUTE] : []),
   { path: "/about", source: "app/[locale]/about/page.tsx" },
-  { path: "/contact", source: "app/[locale]/contact/page.tsx" },
   // Toone vs n8n, Make and Zapier, and AI agents on a schedule.
   { path: "/compare", source: "app/[locale]/compare/page.tsx" },
   // Help for the Toone connector in Claude; the Connectors Directory links it.
   { path: "/claude", source: "app/[locale]/claude/page.tsx" },
   { path: "/editorial-policy", source: "app/[locale]/editorial-policy/page.tsx" },
-  // `/request-access` is the public request page of the invitation-only funnel
-  // (request -> personal code -> account). `/early-access` is the code gate
-  // itself and stays `noindex`, so it is still absent from this list. Only
-  // `/en/request-access` qualifies: the seven other locales render form-only
-  // copy and stay `noindex`, so they get no sitemap entry (TECH-013).
-  { path: "/request-access", source: "app/[locale]/request-access/page.tsx" },
   // `/explore` is the public routine and bundle directory. Its seven non-English
   // locales render translated chrome around English catalog content and are
   // `noindex` (self-canonical), so only `/en/explore` is listed. The
@@ -135,15 +130,8 @@ export async function GET() {
     }
   }
 
-  // Preserve English-only editorial surfaces whose canonical route is not in
-  // the locale guide family (currently /governance). Its `lastmod` comes from
-  // the same git date the page reports as `Article.dateModified`, so the two
-  // can no longer disagree (G2 follow-up 4).
-  const governance = getPublication("ai-agent-governance", "en");
-  if (governance) {
-    const loc = `${BASE_URL}/en${governance.canonicalPath}`;
-    lines.push(url(loc, lastModified(loc, governance.sourcePath, governance.updated)));
-  }
+  // `/governance` (an English-only editorial page outside the guide family)
+  // is `noindex` until it is filled in, so it is not listed (indexing plan A4).
   lines.push("</urlset>");
 
   reportOmitted(omitted);

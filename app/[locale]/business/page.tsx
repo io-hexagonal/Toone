@@ -10,12 +10,12 @@ type Props = {
 };
 
 /**
- * Only English `/business` is indexed. The seven non-English variants render
- * the same translated landing copy as their locale home (audit P1-4). They
- * keep serving, `noindex, follow` with a self-canonical like every other
- * non-English page (TECH-021); they used to canonicalise to the locale home
- * while staying `index, follow`, which sent two conflicting signals (audit
- * H2). No hreflang: English is the only indexed locale.
+ * No locale of `/business` is indexed. English renders the home page's
+ * landing component with a different hero: on 2026-11-26 it was 94-98% the
+ * same text as `/en` (indexing plan A3). It stays live for visitors and
+ * links, `noindex, follow` with a self-canonical and no sitemap entry, until
+ * it has content of its own. The seven non-English variants were already
+ * `noindex, follow` (TECH-021). No hreflang.
  */
 const ENGLISH_BUSINESS_URL = "https://trytoone.com/en/business";
 
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical },
-    robots: localeRobots(locale),
+    robots: localeRobots(locale, false),
     other: localeVersions("/business"),
     openGraph: {
       type: "website",

@@ -5,9 +5,22 @@ import type { ExploreFacet, ExploreTaxonomy, TaxonomyTerm } from "./taxonomy";
  * Topic pages: one clean URL per taxonomy term (category, topic, audience),
  * listing the approved records classified under it. Unlike the hub's filter
  * and search views, which stay `noindex` (TECH-007), a topic page is its own
- * canonical and becomes indexable once it lists enough records to be useful.
+ * canonical. It becomes indexable only when it meets playbook TOPIC-012: at
+ * least 5 approved, distinct records and its own intro.
+ *
+ * "Distinct" counts routines only. Every public bundle packages routines that
+ * are also listed, so a bundle repeats jobs already on the page (CONTENT-022).
+ * On 2026-11-26 the 8-record catalog gave 4 indexable topic pages that were
+ * 62-89% the same as each other and the hub; none had its own intro.
  */
-export const TOPIC_PAGE_MIN_LISTINGS = 3;
+export const TOPIC_PAGE_MIN_LISTINGS = 5;
+
+/**
+ * Written intros, by term id. A term with no entry keeps the label-built
+ * intro and stays `noindex, follow`, whatever its record count. Add an entry
+ * (reviewed copy that says what this set of routines is for) to open a page.
+ */
+export const TOPIC_PAGE_INTROS: Readonly<Record<string, string>> = {};
 
 export type TopicKind = TaxonomyTerm["kind"];
 const SEGMENT: Record<TopicKind, string> = { category: "category", topic: "topic", useful_for: "for" };
@@ -42,14 +55,23 @@ export function topicQuery(term: { id: string; kind: TopicKind }): CatalogQuery 
   return { ...base, usefulFor: [term.id] };
 }
 
-export function isTopicPageIndexable(listings: number): boolean {
-  return Number.isSafeInteger(listings) && listings >= TOPIC_PAGE_MIN_LISTINGS;
+/** TOPIC-012: a written intro and at least 5 distinct records (routines). */
+export function isTopicPageIndexable(
+  termId: string,
+  distinctListings: number,
+  intros: Readonly<Record<string, string>> = TOPIC_PAGE_INTROS,
+): boolean {
+  return (
+    Object.hasOwn(intros, termId) &&
+    Number.isSafeInteger(distinctListings) &&
+    distinctListings >= TOPIC_PAGE_MIN_LISTINGS
+  );
 }
 
-/** Records a term lists, from the unfiltered facet counts. */
+/** Distinct records a term lists (routines; see above), from the unfiltered facet counts. */
 export function facetListings(facets: ExploreFacet[], termId: string): number {
   const facet = facets.find((f) => f.term_id === termId);
-  return facet ? facet.routines + facet.bundles : 0;
+  return facet ? facet.routines : 0;
 }
 
 /** "Marketing & sales" reads as "marketing & sales" mid-sentence; "SEO content" stays. */
@@ -62,12 +84,15 @@ function inSentence(label: string): string {
  * classifier guidance ("Prefer Data & reporting when..."), so they are never
  * shown; the copy is built from the label.
  */
-export function topicPageCopy(term: { kind: TopicKind; label: string }): { heading: string; intro: string } {
+export function topicPageCopy(term: { id?: string; kind: TopicKind; label: string }): { heading: string; intro: string } {
   const forWhom = term.kind === "useful_for";
+  const written = term.id && Object.hasOwn(TOPIC_PAGE_INTROS, term.id) ? TOPIC_PAGE_INTROS[term.id] : null;
   return {
     heading: forWhom
       ? `AI Routines & Workflow Templates for ${term.label}`
       : `${term.label} AI Routines & Workflow Templates`,
-    intro: `Reviewed routines and bundles for ${inSentence(term.label)}. Bring your own AI, add one to Toone, answer a few setup questions, then run it and review the output.`,
+    intro:
+      written ??
+      `Reviewed routines and bundles for ${inSentence(term.label)}. Bring your own AI, add one to Toone, answer a few setup questions, then run it and review the output.`,
   };
 }

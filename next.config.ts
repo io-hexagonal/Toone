@@ -178,6 +178,24 @@ const nextConfig: NextConfig = {
         destination: "https://trytoone.com/:path*",
         permanent: true,
       },
+      // Indexing plan A4 (2026-11-26): four thin concept pages (130-196 words,
+      // never indexed, no external links) merged into the long guides that
+      // own the same job. Every locale lands on the English page in one hop.
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/guides/:slug(ai-agent-adoption-roadmap|ai-native-company)",
+        destination: "/en/ai-agent-routines",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/guides/how-agent-operations-work",
+        destination: "/en/guides/choosing-ai-agent-organization-templates",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|pt|es|fr|de|it|nl|ru)?/organizational-knowledge",
+        destination: "/en/guides/choosing-ai-agent-organization-templates",
+        permanent: true,
+      },
       // Workflow library was merged into the Explore guide. How-to is
       // English-only, so every locale prefix and the bare path land on /en.
       {
