@@ -26,8 +26,9 @@ export default function ResourcesSection() {
           border-radius: var(--r-m); box-shadow: 0 0 0 1px rgba(29,28,25,.09);
           background: rgba(255,255,255,.4); transition: box-shadow .2s, background-color .2s;
         }
-        .resource-preview-card:hover { background: #fff; box-shadow: var(--e2); }
-        .resource-preview-card:focus-visible { outline: 2px solid #1d1c19; outline-offset: 3px; }
+        /* Only the signed-in link lifts; signed out, the card is plain information. */
+        a.resource-preview-card:hover { background: #fff; box-shadow: var(--e2); }
+        a.resource-preview-card:focus-visible { outline: 2px solid #1d1c19; outline-offset: 3px; }
         .resource-preview-more {
           margin-top: 24px; color: rgba(29,28,25,.64); font-size: 15px; line-height: 1.6;
         }
