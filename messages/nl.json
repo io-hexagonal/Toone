@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Nodegebaseerde automatisering",
           "like": "Zoals n8n, Make of Zapier",
-          "verdict": "Exact, maar elke node bedraad je met de hand, en AI is er gewoon een node bij."
+          "verdict": "Exact, maar elke node bedraad je <b>met de hand</b>, en AI is er gewoon een node bij."
         },
         "agents": {
           "name": "Agents op een schema",
           "like": "Zoals een ingeplande chattaak of een coderingsagent op een timer",
-          "verdict": "Flexibel, maar elke stap loopt via een model, dus elke stap kost van je AI-abonnement en kan anders uitpakken."
+          "verdict": "Flexibel, maar <b>duur</b>: elke stap loopt via een model, dus elke stap kost van je AI-abonnement en kan anders uitpakken."
         },
         "toone": {
           "name": "Toone",
           "like": "Scripts plus agents, op je Mac",
-          "verdict": "Scripts voeren de vaste stappen exact uit; agents nemen alleen de stappen die oordeelsvermogen vragen."
+          "verdict": "Scripts voeren de vaste stappen exact uit; agents nemen alleen de stappen die <b>oordeelsvermogen</b> vragen."
         }
       }
     },

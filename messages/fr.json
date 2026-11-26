@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Automatisation par nœuds",
           "like": "Comme n8n, Make ou Zapier",
-          "verdict": "Exacte, mais chaque nœud est câblé à la main, et l’IA n’est qu’un nœud de plus à configurer."
+          "verdict": "Exacte, mais chaque nœud est câblé <b>à la main</b>, et l’IA n’est qu’un nœud de plus à configurer."
         },
         "agents": {
           "name": "Agents planifiés",
           "like": "Comme une tâche de chat planifiée ou un agent de code sur minuteur",
-          "verdict": "Souple, mais chaque étape passe par un modèle : chacune puise dans votre abonnement IA et peut donner un résultat différent."
+          "verdict": "Souple, mais <b>coûteux</b> : chaque étape passe par un modèle, donc chacune puise dans votre abonnement IA et peut donner un résultat différent."
         },
         "toone": {
           "name": "Toone",
           "like": "Scripts et agents, sur votre Mac",
-          "verdict": "Les scripts exécutent les étapes fixes à l’identique ; les agents prennent seulement celles qui demandent du jugement."
+          "verdict": "Les scripts exécutent les étapes fixes à l’identique ; les agents prennent seulement celles qui demandent du <b>jugement</b>."
         }
       }
     },

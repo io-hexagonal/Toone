@@ -474,6 +474,8 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
           shape: "rectangular",
           text: "signin_with",
           logo_alignment: "left",
+          // Without this Google follows the browser's language, not the page's.
+          locale,
           width: Math.min(356, Math.max(200, parent.clientWidth || 356)),
         });
 
@@ -514,7 +516,7 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
       script?.removeEventListener("error", unavailable);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, googleVisible]);
+  }, [mode, googleVisible, locale]);
 
   return (
     <>
@@ -691,7 +693,6 @@ export default function AuthPage({ mode, onAuthenticated, initialCode, onInvitat
                 config={appleConfig}
                 locale={locale}
                 label={creating ? t("appleContinue") : t("appleSignIn")}
-                buttonType={creating ? "continue" : "sign-in"}
                 unavailableLabel={t("appleUnavailable")}
                 disabled={loading}
                 onCredential={signInWithApple}
@@ -880,7 +881,8 @@ export const AUTH_PAGE_CSS = `
               padding: 22px; display: flex; flex-direction: column; gap: 12px;
             }
             .auth-gsi { display: flex; justify-content: center; min-height: 40px; }
-            .auth-gsi > div { color-scheme: light; }
+            /* Google draws its own button (an iframe); we can only round it to the card's radius. */
+            .auth-gsi > div { color-scheme: light; border-radius: 10px; overflow: hidden; }
             .auth-gsi[aria-busy="true"]::after {
               content: ""; width: 18px; height: 18px; margin: auto;
               border: 2px solid rgba(255,255,255,0.2);
@@ -908,11 +910,18 @@ export const AUTH_PAGE_CSS = `
               color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.16);
               border-radius: 999px; padding: 2px 8px;
             }
+            /* Our own Sign in with Apple face, in the card's language: the
+               inputs' radius and hairline, Apple logo + title. */
             .auth-apple {
-              display: block; width: 100%; max-width: 356px; margin: 0 auto; padding: 0;
-              border: none; background: transparent; cursor: pointer; line-height: 0;
+              display: flex; align-items: center; justify-content: center; gap: 9px;
+              width: 100%; min-height: 44px; padding: 11px 14px; border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05);
+              color: rgba(255,255,255,0.92); cursor: pointer;
+              font-size: 14.5px; font-weight: 500; letter-spacing: -0.005em;
+              transition: background-color 0.15s ease, border-color 0.15s ease;
             }
-            .auth-apple img { display: block; width: 100%; height: auto; }
+            .auth-apple svg { width: 16px; height: 16px; margin-top: -2px; flex: none; }
+            .auth-apple:hover:not(:disabled) { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.26); }
             .auth-apple:focus-visible { outline: 2px solid rgba(255,255,255,0.8); outline-offset: 2px; }
             .auth-apple:disabled { opacity: 0.6; cursor: default; }
             .auth-apple[aria-busy="true"] { cursor: progress; }
