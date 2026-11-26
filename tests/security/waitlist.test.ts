@@ -21,10 +21,14 @@ function upstream(status: number): Sent[] {
   return sent;
 }
 
-/** A fresh module per test: the limiter lives as long as the module. */
-let n = 0;
+/**
+ * The limiter lives as long as the route module, and under tsx (this package
+ * is CommonJS) a `?query` on the import does not give a fresh module: every
+ * test shares one limiter. So the rate-limit test uses visitor IPs no other
+ * test sends from, and does not depend on test order.
+ */
 async function route() {
-  return import(`../../app/api/waitlist/route.ts?case=${n++}`) as Promise<typeof import("../../app/api/waitlist/route")>;
+  return import("../../app/api/waitlist/route");
 }
 
 function post(body: unknown, headers: Record<string, string> = {}) {
@@ -75,9 +79,11 @@ test("a foreign Origin is refused before anything else", async () => {
 test("more than 5 requests per visitor IP in 10 minutes get a 429; another visitor is unaffected", async () => {
   const { POST } = await route();
   const sent = upstream(201);
-  for (let i = 0; i < 5; i++) assert.equal((await POST(post({ email: `e${i}@example.com` }))).status, 201);
-  const sixth = await POST(post({ email: "e6@example.com" }));
+  const visitor = { "x-forwarded-for": "192.0.2.55" };
+  for (let i = 0; i < 5; i++) assert.equal((await POST(post({ email: `e${i}@example.com` }, visitor))).status, 201);
+  const sixth = await POST(post({ email: "e6@example.com" }, visitor));
   assert.equal(sixth.status, 429);
+  assert.equal(sixth.headers.get("retry-after"), "600");
   assert.equal(sent.length, 5);
   assert.equal((await POST(post({ email: "f@example.com" }, { "x-forwarded-for": "198.51.100.2" }))).status, 201);
 });

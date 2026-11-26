@@ -152,8 +152,15 @@ test("every creator idea has a unique slug, steps and safe links", async () => {
     for (const prompt of idea.prompts) {
       assert.match(prompt.text, /^Set up /, `${idea.slug}: ${prompt.label} starts with what to set up`);
       assert.match(prompt.text, /During setup, ask me for:/, `${idea.slug}: ${prompt.label} names its setup questions`);
-      assert.match(prompt.text.split("\n\n")[1], /\.html\)[^]*where I track [^]*and polish [^]*with my remarks/, `${idea.slug}: ${prompt.label} has no review page`);
-      assert.ok(prompt.text.length < 3000, `${idea.slug}: ${prompt.label} is too long`);
+      // The second paragraph sets up the page where I review runs and leave remarks;
+      // what I do there is saved as files the routine reads back.
+      const reviewPage = prompt.text.split("\n\n")[1];
+      assert.match(reviewPage, /^[A-Z][a-z]+ page \([a-z-]+\.html\)[^]*create it in this project, open it in my browser/, `${idea.slug}: ${prompt.label} has no review page`);
+      assert.match(reviewPage, /remark/, `${idea.slug}: ${prompt.label} review page takes no remarks`);
+      assert.match(reviewPage, /Save every [^.]* as a file in this project/, `${idea.slug}: ${prompt.label} review page does not save what I do there`);
+      // A guard against runaway prompts, not a hard limit: the Reddit watcher's prompt grew
+      // on purpose to about 4,600 characters (radar page, learning from edits) in d2d26f1.
+      assert.ok(prompt.text.length < 5000, `${idea.slug}: ${prompt.label} is too long`);
       assert.doesNotMatch(prompt.text, /\u2014/, `${prompt.label} uses an em dash`);
     }
     for (const link of idea.links) assert.match(link.href, /^https:\/\//, link.href);
