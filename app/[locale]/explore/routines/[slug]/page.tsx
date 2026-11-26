@@ -8,6 +8,7 @@ import {
   resolveSlug,
   resolveCoverUrl,
   getExploreTaxonomy,
+  isCategoryTopicIndexable,
 } from "@/lib/explore/api";
 import {
   exploreMetadata,
@@ -101,10 +102,12 @@ export default async function RoutinePage({ params }: Props) {
     ? await getExploreTaxonomy().catch(() => null)
     : null;
   const categoryId = detail.classification?.category_id;
-  const category = categoryId
+  // The breadcrumb's category level only while its topic page is indexable (A7).
+  const categoryLinked = !!categoryId && (await isCategoryTopicIndexable(categoryId));
+  const category = categoryId && categoryLinked
     ? { id: categoryId, label: capitalize(termLabel(taxonomy, categoryId)) }
     : null;
-  const view = { detail, profile, type: "routine" as const, locale, ui, taxonomy };
+  const view = { detail, profile, type: "routine" as const, locale, ui, taxonomy, categoryLinked };
   return (
     <ExploreShell>
       <JsonLd value={profileSchema(detail, profile, path)} />

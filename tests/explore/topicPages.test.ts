@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import {
   TOPIC_PAGE_INTROS,
   TOPIC_PAGE_MIN_LISTINGS,
@@ -81,7 +82,23 @@ test("the copy comes from the label, never the classifier description", () => {
   assert.equal(topicPageCopy(taxonomy.terms[2]).heading, "AI Routines & Workflow Templates for Founders & entrepreneurs");
 });
 
-test("the category breadcrumb links to the topic page", () => {
+test("the category breadcrumb links to the topic page, never to a filter view", () => {
   assert.equal(categoryHref("en", "cat_marketing-sales"), "/en/explore/category/marketing-sales");
-  assert.match(categoryHref("en", "odd id"), /^\/en\/explore\?/);
+  assert.equal(categoryHref("en", "odd id"), null);
+});
+
+test("record pages link the category only while its topic page is indexable (A7)", () => {
+  // The decision lives in isCategoryTopicIndexable (lib/explore/api.ts, server-only):
+  // the topic page's own rule, so with no written intro there is no category level.
+  const api = readFileSync("lib/explore/api.ts", "utf8");
+  assert.match(api, /export const isCategoryTopicIndexable = cache\(/);
+  assert.match(api, /topicPageIntro\(categoryId\) === null\) return false/);
+  assert.match(api, /isTopicPageIndexable\(categoryId, facetListings\(facets, categoryId\)\)/);
+  for (const page of ["app/[locale]/explore/routines/[slug]/page.tsx", "app/[locale]/explore/bundles/[slug]/page.tsx"]) {
+    const source = readFileSync(page, "utf8");
+    assert.match(source, /const categoryLinked = !!categoryId && \(await isCategoryTopicIndexable\(categoryId\)\)/, page);
+    assert.match(source, /const category = categoryId && categoryLinked/, page);
+  }
+  const hero = readFileSync("components/explore/ProfileView.tsx", "utf8");
+  assert.match(hero, /category && categoryLinked \? categoryHref\(locale, category\) : null/);
 });

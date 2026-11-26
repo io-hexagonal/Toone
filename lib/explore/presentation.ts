@@ -267,17 +267,22 @@ export function routineSchema(detail: RoutinePublicDetail) {
     })),
   };
 }
+/**
+ * Home → Explore → [category] → record. Pass `category` only while its topic
+ * page is indexable (`isCategoryTopicIndexable`, lib/explore/api.ts): a
+ * breadcrumb on an indexable page never points at a `noindex` URL (TECH-025,
+ * A7), so without it the level is left out rather than linked.
+ */
 export function breadcrumbSchema(
   title: string,
   path: string,
   category?: { id: string; label: string } | null,
 ) {
+  const categoryPath = category ? categoryHref("en", category.id) : null;
   const levels = [
     { name: "Toone", item: `${SITE}/en` },
     { name: "Explore", item: `${SITE}/en/explore` },
-    ...(category
-      ? [{ name: category.label, item: `${SITE}${categoryHref("en", category.id)}` }]
-      : []),
+    ...(category && categoryPath ? [{ name: category.label, item: `${SITE}${categoryPath}` }] : []),
     { name: title, item: `${SITE}/en${path}` },
   ];
   return {
@@ -290,11 +295,14 @@ export function breadcrumbSchema(
     })),
   };
 }
-/** The category's topic page (the breadcrumb's middle level); the filtered hub for an unexpected id. */
-export function categoryHref(locale: string, categoryId: string): string {
+/**
+ * The category's topic page (the breadcrumb's middle level), or null for an
+ * id with no topic page. Never the `?category=` filter view: that view is
+ * `noindex` (TECH-007), so the breadcrumb leaves the level out instead.
+ */
+export function categoryHref(locale: string, categoryId: string): string | null {
   const path = topicPagePath({ id: categoryId, kind: "category" });
-  if (path) return `/${locale}${path}`;
-  return catalogHref(locale, { type: "all", query: "", tag: "", page: 1, category: categoryId });
+  return path ? `/${locale}${path}` : null;
 }
 
 /* ---------- listing profile (contract §13) ---------- */

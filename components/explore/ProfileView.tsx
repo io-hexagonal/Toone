@@ -45,6 +45,12 @@ type Props = {
   locale: string;
   ui: ExploreCopy;
   taxonomy: ExploreTaxonomy | null;
+  /**
+   * The breadcrumb links the category's topic page only while that page is
+   * indexable (`isCategoryTopicIndexable`); otherwise the level is left out
+   * (A7). The category still shows as a chip.
+   */
+  categoryLinked?: boolean;
 };
 
 function recordId(detail: Detail) {
@@ -62,9 +68,11 @@ export function ProfileHero({
   ui,
   taxonomy,
   coverEntry,
+  categoryLinked = false,
 }: Props & { coverEntry?: CoverEntry }) {
   const id = recordId(detail);
   const category = detail.classification?.category_id;
+  const categoryTopic = category && categoryLinked ? categoryHref(locale, category) : null;
   const audiences = profile.for_whom.map((entry) => label(taxonomy, entry.useful_for_id));
   const size =
     "step_count" in detail
@@ -77,10 +85,10 @@ export function ProfileHero({
           <a href={`/${locale}`}>{ui.home}</a>
           <span aria-hidden="true">/</span>
           <a href={`/${locale}/explore`}>{ui.title}</a>
-          {category && (
+          {category && categoryTopic && (
             <>
               <span aria-hidden="true">/</span>
-              <a href={categoryHref(locale, category)}>{label(taxonomy, category)}</a>
+              <a href={categoryTopic}>{label(taxonomy, category)}</a>
             </>
           )}
           <span aria-hidden="true">/</span>

@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { exploreOutage } from "@/lib/explore/outage";
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { getBundle, findBundleByIdTail, resolveSlug, resolveCoverUrl, getExploreTaxonomy } from "@/lib/explore/api";
+import { getBundle, findBundleByIdTail, resolveSlug, resolveCoverUrl, getExploreTaxonomy, isCategoryTopicIndexable } from "@/lib/explore/api";
 import {
   exploreMetadata,
   breadcrumbSchema,
@@ -100,10 +100,12 @@ export default async function BundlePage({ params }: Props) {
       ? await getExploreTaxonomy().catch(() => null)
       : null;
     const categoryId = detail.classification?.category_id;
-    const category = categoryId
+    // The breadcrumb's category level only while its topic page is indexable (A7).
+    const categoryLinked = !!categoryId && (await isCategoryTopicIndexable(categoryId));
+    const category = categoryId && categoryLinked
       ? { id: categoryId, label: capitalize(termLabel(taxonomy, categoryId)) }
       : null;
-    const view = { detail, profile, type: "bundle" as const, locale, ui, taxonomy };
+    const view = { detail, profile, type: "bundle" as const, locale, ui, taxonomy, categoryLinked };
     return (
       <ExploreShell>
         <JsonLd value={profileSchema(detail, profile, path)} />

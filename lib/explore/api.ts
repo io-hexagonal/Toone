@@ -3,7 +3,8 @@ import "server-only";
 export * from "./data";
 
 import { cache } from "react";
-import { loadCatalogWithTaxonomy, getExploreTags } from "./data";
+import { getExploreFacets, getExploreTaxonomy, loadCatalogWithTaxonomy, getExploreTags } from "./data";
+import { facetListings, isTopicPageIndexable, topicPageIntro, topicPagePath } from "./topicPages";
 import type { CatalogQuery } from "./presentation";
 // Metadata and the page share one catalog read per request, including failures.
 export const getCatalog = cache(async (serializedQuery: string) => {
@@ -12,4 +13,28 @@ export const getCatalog = cache(async (serializedQuery: string) => {
     getExploreTags(),
   ]);
   return { ...catalog, tags };
+});
+
+/**
+ * Whether a category's topic page is indexable, by the same rule as its
+ * metadata, the hub's term links and /sitemap-explore.xml (TOPIC-012): an
+ * active term with a topic URL, a written intro and 5 routines in the
+ * unfiltered facet counts. Record pages ask it before their breadcrumb links
+ * the category (A7). A term with no intro (every term while
+ * TOPIC_PAGE_INTROS is empty) answers false with no API call; otherwise the
+ * taxonomy and facet reads are the cached ones the hub uses. Any failure
+ * answers false: the breadcrumb then skips the level, it never links a page
+ * that may be `noindex`.
+ */
+export const isCategoryTopicIndexable = cache(async (categoryId: string): Promise<boolean> => {
+  if (!topicPagePath({ id: categoryId, kind: "category" }) || topicPageIntro(categoryId) === null) return false;
+  try {
+    const taxonomy = await getExploreTaxonomy();
+    const active = taxonomy?.terms.some((term) => term.id === categoryId && term.kind === "category" && term.active);
+    if (!active) return false;
+    const facets = await getExploreFacets({ type: "all", query: "", tag: "", page: 1 });
+    return isTopicPageIndexable(categoryId, facetListings(facets, categoryId));
+  } catch {
+    return false;
+  }
 });
