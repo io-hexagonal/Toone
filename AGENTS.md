@@ -7,3 +7,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+Before committing changes to `app/[locale]/**/page.tsx`, `content/` or a component listed in `lib/route-sources.ts`, run `npm run content:dates` and commit `lib/content-dates.json` with them (CI fails on a stale manifest).
