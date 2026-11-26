@@ -304,7 +304,8 @@
   margin: 14px 0 0;
   padding: 0;
 }
-.explore-tags :is(a, span) {
+/* Plain text chips (A7): no link, so no hover or pointer. */
+.explore-tags span {
   display: inline-block;
   padding: 6px 12px;
   border: 1px solid #d4d1c8;
@@ -315,18 +316,10 @@
   color: #4d4c45;
   background: #fff5;
 }
-.explore-tags a:hover {
-  background: #e0ddd5;
-  color: #1d1c19;
-}
-.explore-hero .explore-tags :is(a, span) {
+.explore-hero .explore-tags span {
   border-color: #4f4e47;
   color: #cecdc7;
   background: transparent;
-}
-.explore-hero .explore-tags a:hover {
-  background: #36362f;
-  color: #fff;
 }
 .explore-chips {
   list-style: none;
@@ -806,7 +799,6 @@ button.explore-topic-option {
 .explore-body .explore-capabilities {
   padding-left: 18px;
 }
-.explore-body .explore-tags a,
 .explore-body .explore-bundle-links a,
 .explore-body .explore-bundle-links [data-howto-static],
 .explore-body .explore-bundle-member h3 a {
@@ -1169,6 +1161,10 @@ button.explore-topic-option {
 }
 .explore-bundle-links a:hover {
   border-color: #aaa69b;
+}
+/* Signed out, a how-to card is information, not a link: no arrow. */
+.explore-bundle-links [data-howto-static] > [aria-hidden="true"] {
+  display: none;
 }
 .explore-bundle-links .explore-eyebrow {
   margin: 0;
