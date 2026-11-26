@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Automação por nós",
           "like": "Como o n8n, o Make ou o Zapier",
-          "verdict": "Exata, mas cada nó é ligado à mão, e a IA é só mais um nó a configurar."
+          "verdict": "Exata, mas cada nó é ligado <b>à mão</b>, e a IA é só mais um nó a configurar."
         },
         "agents": {
           "name": "Agentes agendados",
           "like": "Como uma tarefa de chat agendada ou um agente de programação com temporizador",
-          "verdict": "Flexível, mas cada passo passa por um modelo, por isso cada um gasta do seu plano de IA e pode sair diferente."
+          "verdict": "Flexível, mas <b>caro</b>: cada passo passa por um modelo, por isso cada um gasta do seu plano de IA e pode sair diferente."
         },
         "toone": {
           "name": "Toone",
           "like": "Scripts e agentes, no seu Mac",
-          "verdict": "Os scripts executam os passos fixos com exatidão; os agentes assumem só os passos que pedem critério."
+          "verdict": "Os scripts executam os passos fixos com exatidão; os agentes assumem só os passos que pedem <b>critério</b>."
         }
       }
     },

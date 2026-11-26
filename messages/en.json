@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Node-based automation",
           "like": "Like n8n, Make or Zapier",
-          "verdict": "Exact, but every node is wired by hand, and AI is one more node you configure."
+          "verdict": "Exact, but every node is wired <b>by hand</b>, and AI is one more node you configure."
         },
         "agents": {
           "name": "Agents on a schedule",
           "like": "Like a scheduled chat task or a coding agent on a timer",
-          "verdict": "Flexible, but every step runs through a model, so each one draws on your AI plan and can come out different."
+          "verdict": "Flexible, but <b>expensive</b>: Every step runs through a model, so each one draws on your AI plan and can come out different."
         },
         "toone": {
           "name": "Toone",
           "like": "Scripts plus agents, on your Mac",
-          "verdict": "Scripts run the fixed steps exactly; agents take only the steps that need judgment."
+          "verdict": "Scripts run the fixed steps exactly; agents take only the steps that need <b>judgment</b>."
         }
       }
     },

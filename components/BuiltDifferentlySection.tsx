@@ -9,7 +9,7 @@ import { getTranslations } from "next-intl/server";
  *
  * The tiles reuse the How it works graph's shapes (square = automatic step,
  * rounded = agent); a dot under a tile marks a step that runs through an AI
- * model. Rivals are named only as examples of a category. The detailed table
+ * model; a short line links each step to the next. Rivals are named only as examples of a category. The detailed table
  * lives on /compare. Server-rendered, no JS.
  */
 type Tile = "node" | "ai" | "auto";
@@ -53,7 +53,8 @@ export default async function BuiltDifferentlySection() {
             }
             .bd-way--toone { background: #fff; box-shadow: var(--e2); }
             .bd-head { display: flex; flex-direction: column; gap: 4px; }
-            .bd-name { color: #1d1c19; font-size: 18px; font-weight: 600; letter-spacing: -0.012em; }
+            .bd-name { display: inline-flex; align-items: center; gap: 8px; color: #1d1c19; font-size: 18px; font-weight: 600; letter-spacing: -0.012em; }
+            .bd-name img { width: 22px; height: 22px; flex: none; }
             .bd-like { color: rgba(29,28,25,0.52); font-size: 14px; line-height: 1.45; }
             /* side by side, the strips line up even when one "like" line wraps */
             @media (min-width: 861px) { .bd-like { min-height: 2.9em; } }
@@ -67,8 +68,8 @@ export default async function BuiltDifferentlySection() {
             .bd-tile[data-t="auto"] { border-radius: 6px; background: rgba(29,28,25,0.055); color: rgba(29,28,25,0.6); }
             .bd-tile[data-t="ai"] { border-radius: 11px; background: #fff; box-shadow: var(--e1); color: rgba(29,28,25,0.75); }
             .bd-way--toone .bd-tile[data-t="ai"] { box-shadow: inset 0 0 0 1px rgba(29,28,25,0.18), 0 1px 2px rgba(29,28,25,0.06); }
-            /* the hand-wiring between nodes */
-            .bd-strip[data-k="nodes"] .bd-tile + .bd-tile::before {
+            /* the line linking each step to the next */
+            .bd-tile + .bd-tile::before {
               content: ''; position: absolute; left: -8px; top: 50%; width: 7px; height: 1px; background: rgba(29,28,25,0.28);
             }
             /* a dot under every step that runs through a model */
@@ -79,6 +80,7 @@ export default async function BuiltDifferentlySection() {
             .bd-count { color: rgba(29,28,25,0.55); font-size: 14px; font-variant-numeric: tabular-nums; }
             .bd-verdict { color: rgba(29,28,25,0.68); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
             .bd-way--toone .bd-verdict { color: #1d1c19; }
+            .bd-verdict b { color: #1d1c19; font-weight: 600; }
             .bd .text-link { display: inline-block; margin-top: 28px; }
             @media (max-width: 860px) { .bd-ways { grid-template-columns: 1fr; } }
           `,
@@ -91,7 +93,13 @@ export default async function BuiltDifferentlySection() {
         {WAYS.map((way) => (
           <li className={`bd-way${way.key === "toone" ? " bd-way--toone" : ""}`} key={way.key}>
             <div className="bd-head">
-              <span className="bd-name">{t(`ways.${way.key}.name`)}</span>
+              <span className="bd-name">
+                {way.key === "toone" && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src="/assets/brand/toone-mark-light.svg" alt="" aria-hidden="true" />
+                )}
+                {t(`ways.${way.key}.name`)}
+              </span>
               <span className="bd-like">{t(`ways.${way.key}.like`)}</span>
             </div>
             <div className="bd-strip" data-k={way.key} aria-hidden="true">
@@ -104,7 +112,7 @@ export default async function BuiltDifferentlySection() {
             <span className="bd-count">
               {t("tokens", { n: way.tiles.filter((tile) => tile === "ai").length })}
             </span>
-            <p className="bd-verdict">{t(`ways.${way.key}.verdict`)}</p>
+            <p className="bd-verdict">{t.rich(`ways.${way.key}.verdict`, { b: (chunks) => <b>{chunks}</b> })}</p>
           </li>
         ))}
       </ul>

@@ -9,7 +9,6 @@ import AppleSignInButton from "../../components/AppleSignInButton";
 import { ApiError, loginApple } from "../../lib/api";
 import {
   AppleSignInError,
-  appleButtonURL,
   appleDisplayName,
   appleOriginMatches,
   appleScriptURL,
@@ -53,16 +52,6 @@ test("Apple JS is loaded from Apple's CDN in the page locale, English otherwise"
     "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/pt_BR/appleid.auth.js",
   );
   assert.match(appleScriptURL("xx"), /\/en_US\/appleid\.auth\.js$/);
-});
-
-test("Apple button artwork comes from Apple's CDN with an approved localized title", () => {
-  const signIn = new URL(appleButtonURL("pt", "sign-in"));
-  assert.equal(signIn.origin, "https://appleid.cdn-apple.com");
-  assert.equal(signIn.pathname, "/appleid/button");
-  assert.equal(signIn.searchParams.get("locale"), "pt_BR");
-  assert.equal(signIn.searchParams.get("type"), "sign-in");
-  assert.equal(signIn.searchParams.get("color"), "white");
-  assert.equal(new URL(appleButtonURL("en", "continue")).searchParams.get("type"), "continue");
 });
 
 /* ---- Apple response handling */
@@ -192,14 +181,14 @@ test("the invitation page asks for the code before offering Apple", () => {
 test("the button component renders nothing on the server, even when configured", () => {
   const html = renderToStaticMarkup(createElement(AppleSignInButton, {
     config: { clientId: SERVICES_ID, redirectURI: REDIRECT }, locale: "en", label: "Sign in with Apple",
-    buttonType: "sign-in", unavailableLabel: "n/a", onCredential: () => {}, onFailure: () => {},
+    unavailableLabel: "n/a", onCredential: () => {}, onFailure: () => {},
   }));
   assert.equal(html, "");
 });
 
 test("the button component renders nothing without configuration", () => {
   const html = renderToStaticMarkup(createElement(AppleSignInButton, {
-    config: null, locale: "en", label: "Sign in with Apple", buttonType: "sign-in", unavailableLabel: "n/a",
+    config: null, locale: "en", label: "Sign in with Apple", unavailableLabel: "n/a",
     onCredential: () => {}, onFailure: () => {},
   }));
   assert.equal(html, "");

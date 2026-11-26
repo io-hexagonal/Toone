@@ -73,7 +73,7 @@
   "app/[locale]/terms/versioned/page.tsx": "2026-11-11",
   "app/[locale]/unsubscribe/page.tsx": "2026-11-20",
   "app/[locale]/welcome/page.tsx": "2026-11-16",
-  "components/BuiltDifferentlySection.tsx": "2026-11-25",
+  "components/BuiltDifferentlySection.tsx": "2026-11-26",
   "components/ClosingCtaBand.tsx": "2026-11-26",
   "components/FaqSection.tsx": "2026-11-26",
   "components/FeaturedOnStrip.tsx": "2026-11-25",

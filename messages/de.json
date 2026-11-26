@@ -732,17 +732,17 @@
         "nodes": {
           "name": "Knotenbasierte Automatisierung",
           "like": "Wie n8n, Make oder Zapier",
-          "verdict": "Exakt, aber jeder Knoten ist von Hand verdrahtet, und KI ist ein weiterer Knoten, den Sie konfigurieren."
+          "verdict": "Exakt, aber jeder Knoten ist <b>von Hand</b> verdrahtet, und KI ist ein weiterer Knoten, den Sie konfigurieren."
         },
         "agents": {
           "name": "Agenten nach Zeitplan",
           "like": "Wie eine geplante Chat-Aufgabe oder ein Coding-Agent mit Timer",
-          "verdict": "Flexibel, aber jeder Schritt läuft über ein Modell, belastet also Ihren KI-Tarif und kann jedes Mal anders ausfallen."
+          "verdict": "Flexibel, aber <b>teuer</b>: Jeder Schritt läuft über ein Modell, belastet also Ihren KI-Tarif und kann jedes Mal anders ausfallen."
         },
         "toone": {
           "name": "Toone",
           "like": "Skripte plus Agenten, auf Ihrem Mac",
-          "verdict": "Skripte führen die festen Schritte exakt aus; Agenten übernehmen nur die Schritte, die Urteilsvermögen brauchen."
+          "verdict": "Skripte führen die festen Schritte exakt aus; Agenten übernehmen nur die Schritte, die <b>Urteilsvermögen</b> brauchen."
         }
       }
     },
