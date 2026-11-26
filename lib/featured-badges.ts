@@ -20,6 +20,8 @@ export type FeaturedBadge = {
   height: number;
   /** The rel the directory issued; omitted when its snippet had none. */
   rel?: string;
+  /** The link title the directory issued; omitted when its snippet had none. */
+  title?: string;
   /**
    * The image is a bordered rounded rectangle. The strip trims its outer
    * 2.5px so the directory's own border (each a different weight and colour)
@@ -98,4 +100,18 @@ export const FEATURED_BADGES: readonly FeaturedBadge[] = [
     height: 54,
     style: { height: "54px", width: "auto" },
   },
+  {
+    name: "Mac App Index",
+    framed: true,
+    // Issued snippet: 224×56, with a link title and no rel. Shown 54px high
+    // (the height of every rectangular badge) → 216px wide.
+    href: "https://macappindex.com/apps/toone?ref=badge",
+    img: "https://macappindex.com/apps/toone/badge.svg?theme=light&height=56",
+    alt: "Toone on Mac App Index",
+    title: "Toone on Mac App Index",
+    width: 216,
+    height: 54,
+    style: { height: "54px", width: "auto" },
+  },
+  // To add a directory, append one entry here; the strip sizes its loop from this list.
 ];
