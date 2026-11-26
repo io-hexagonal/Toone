@@ -19,7 +19,6 @@ import {
 import {
   cardText,
   EXPLORE_GUIDES,
-  catalogHref,
   deepLink,
   requestAccessHref,
   safeMarkdownUrl,
@@ -313,11 +312,9 @@ export function Cover({
 }
 export function Tags({
   tags,
-  locale,
   ui,
 }: {
   tags: string[];
-  locale: string;
   ui: ExploreCopy;
 }) {
   if (!tags.length) return null;
@@ -458,7 +455,7 @@ export function CatalogCard({
       <PriceTag price={entry.price} locale={locale} ui={ui} className="explore-price explore-price-card" />
       {entry.tags.length > 0 && (
         <div className="explore-card-tags">
-          <Tags tags={entry.tags} locale={locale} ui={ui} />
+          <Tags tags={entry.tags} ui={ui} />
         </div>
       )}
     </article>
@@ -562,7 +559,7 @@ export async function DetailHero({
                 </div>
               )}
             </dl>
-            <Tags tags={detail.tags} locale={locale} ui={ui} />
+            <Tags tags={detail.tags} ui={ui} />
             <div className="explore-actions">
               <OpenInToone
                 url={deepLink(type, id, detail.revision_id)}
@@ -883,11 +880,9 @@ export function RoutineDefinition({
 export function IncludedInBundles({
   detail,
   ui,
-  locale,
 }: {
   detail: RoutinePublicDetail;
   ui: ExploreCopy;
-  locale: string;
 }) {
   if (!detail.included_in_bundles?.length) return null;
   return (
@@ -973,7 +968,7 @@ export function RoutineContent({
     <div className="explore-detail-body explore-width">
       <article className="explore-body">
         <RoutineDefinition detail={detail} ui={ui} />
-        <IncludedInBundles detail={detail} ui={ui} locale={locale} />
+        <IncludedInBundles detail={detail} ui={ui} />
         <FeatureGuides detail={detail} ui={ui} />
       </article>
       <aside className="explore-rail">

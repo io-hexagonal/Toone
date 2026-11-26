@@ -127,7 +127,7 @@ export default async function BundlePage({ params }: Props) {
         <main>
           <ProfileBody
             {...view}
-            routinesInside={<RoutinesInside members={members} locale={locale} ui={ui} />}
+            routinesInside={<RoutinesInside members={members} ui={ui} />}
           />
         </main>
         <FeaturedInJournal exploreSlug={canonical} />
@@ -182,7 +182,7 @@ export default async function BundlePage({ params }: Props) {
                     </h3>
                     <p>{member.summary}</p>
                     <Counts entry={member} ui={ui} />
-                    <Tags tags={member.tags} locale={locale} ui={ui} />
+                    <Tags tags={member.tags} ui={ui} />
                     <div className="explore-bundle-member-foot">
                       <time
                         className="explore-muted"
@@ -221,11 +221,9 @@ export default async function BundlePage({ params }: Props) {
 /** "The routines inside": each member in its plain wording, linked. */
 function RoutinesInside({
   members,
-  locale,
   ui,
 }: {
   members: BundlePublicDetail["members"];
-  locale: string;
   ui: ExploreCopy;
 }): ReactNode {
   return (

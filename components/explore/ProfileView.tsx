@@ -150,7 +150,7 @@ type Section = { id: string; title: string; body: ReactNode; collapsed?: boolean
 
 /** Sections in page-spec order; empty optional ones are left out. */
 function profileSections(
-  { detail, profile, locale, ui, taxonomy }: Props,
+  { detail, profile, ui, taxonomy }: Props,
   routinesInside: ReactNode,
 ): Section[] {
   const reviews = new Map(
@@ -452,7 +452,7 @@ export function ProfileBody(
             <a href={guide}>{ui.learnRoutines} →</a>
           </p>
         )}
-        {routine && <IncludedInBundles detail={routine} ui={ui} locale={locale} />}
+        {routine && <IncludedInBundles detail={routine} ui={ui} />}
         <FeatureGuides detail={detail} ui={ui} />
       </article>
       <aside className="explore-rail">
