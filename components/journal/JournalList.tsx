@@ -9,6 +9,7 @@ import {
   collectionPageSchema,
   hubForSegment,
   isJournalHubIndexable,
+  isJournalHubLinkable,
   listBreadcrumbSchema,
   listMetadata,
   listPath,
@@ -77,8 +78,30 @@ export async function journalListMetadata(
   return listMetadata(hub, page, { empty: state.posts.length === 0 || thinHub });
 }
 
+/**
+ * Whether each type hub may be linked from the tabs: only while it is
+ * indexable (A7, no links from indexable pages to `noindex` ones). The same
+ * read as the hub's own first page, so the data cache shares it. An unknown
+ * count (outage) leaves the tab unlinked and never fails the list.
+ */
+const loadLinkableHubs = cache(async (): Promise<Set<string>> => {
+  const linkable = new Set<string>();
+  await Promise.all(
+    JOURNAL_HUBS.map(async (item) => {
+      const total = await listPosts({ type: item.type, limit: JOURNAL_PAGE_SIZE })
+        .then((result) => result.total)
+        .catch(() => null);
+      if (isJournalHubLinkable(total)) linkable.add(item.segment);
+    }),
+  );
+  return linkable;
+});
+
 export async function JournalList({ hub, page }: { hub: JournalHub | null; page: number }) {
-  const state = await loadList(hub?.segment ?? null, page);
+  const [state, linkableHubs] = await Promise.all([
+    loadList(hub?.segment ?? null, page),
+    loadLinkableHubs(),
+  ]);
   if (state.kind === "ok" && page > state.pages) notFound();
   const posts = state.kind === "ok" ? state.posts : [];
   const lead = !hub && page === 1;
@@ -120,9 +143,15 @@ export async function JournalList({ hub, page }: { hub: JournalHub | null; page:
               </li>
               {JOURNAL_HUBS.map((item) => (
                 <li key={item.segment}>
-                  <a href={listPath(item)} aria-current={hub?.segment === item.segment ? "page" : undefined}>
-                    {item.label}
-                  </a>
+                  {linkableHubs.has(item.segment) ? (
+                    <a href={listPath(item)} aria-current={hub?.segment === item.segment ? "page" : undefined}>
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span className="jr-tab-static" aria-current={hub?.segment === item.segment ? "page" : undefined}>
+                      {item.label}
+                    </span>
+                  )}
                 </li>
               ))}
               <li className="jr-rss-item" style={{ marginLeft: "auto" }}>

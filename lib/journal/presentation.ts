@@ -242,6 +242,11 @@ export function isJournalHubIndexable(posts: number): boolean {
   return Number.isSafeInteger(posts) && posts >= JOURNAL_HUB_MIN_POSTS;
 }
 
+/** A hub is linked (tabs, post breadcrumbs) only while indexable; unknown counts stay unlinked (A7). */
+export function isJournalHubLinkable(posts: number | null): boolean {
+  return posts !== null && isJournalHubIndexable(posts);
+}
+
 /**
  * Index, page n and the three hubs: self-canonical, `index, follow` (§10).
  * A list with no posts at all (a hub before its first post of that type, or

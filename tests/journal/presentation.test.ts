@@ -264,3 +264,13 @@ test("post bodies link /how-to only for signed-in readers and drop links to page
   assert.match(article, /return <HowToLink href=\{target\} fallback="text">\{children\}<\/HowToLink>;/);
   assert.match(article, /if \(isUnindexedPage\(target\)\) return <>\{children\}<\/>;/);
 });
+
+test("A7: the /en/journal tabs link a type hub only while it is indexable", async () => {
+  const { isJournalHubLinkable, isJournalHubIndexable } = await import("../../lib/journal/presentation");
+  assert.equal(isJournalHubLinkable(null), false, "unknown count: no link");
+  assert.equal(isJournalHubLinkable(0), false);
+  for (const n of [1, 4, 5, 12]) assert.equal(isJournalHubLinkable(n), isJournalHubIndexable(n), String(n));
+  const list = (await import("node:fs")).readFileSync("components/journal/JournalList.tsx", "utf8");
+  assert.match(list, /linkableHubs\.has\(item\.segment\) \?/, "tabs branch on linkability");
+  assert.match(list, /className="jr-tab-static"/, "unlinked tabs render as text");
+});

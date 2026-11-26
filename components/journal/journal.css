@@ -44,14 +44,16 @@
 .jr-tabs {
   display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; padding: 0; list-style: none;
 }
-.jr-tabs a {
+.jr-tabs a,
+.jr-tabs .jr-tab-static {
   display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px;
   border: 1px solid rgba(255,255,255,0.16); border-radius: 999px;
   color: rgba(255,255,255,0.72); font-size: 13px; font-weight: 550;
   text-decoration: none; transition: border-color .2s, color .2s, background-color .2s;
 }
 .jr-tabs a:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
-.jr-tabs a[aria-current="page"] { background: #f0ede6; border-color: #f0ede6; color: #1d1c19; }
+.jr-tabs .jr-tab-static { color: rgba(255,255,255,0.5); }
+.jr-tabs :is(a, .jr-tab-static)[aria-current="page"] { background: #f0ede6; border-color: #f0ede6; color: #1d1c19; }
 .jr-rss {
   display: inline-flex; align-items: center; gap: 6px; margin-left: auto;
   color: rgba(255,255,255,0.55) !important; border-color: transparent !important;
