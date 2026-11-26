@@ -1,15 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import CreateAccountLink from "@/components/CreateAccountLink";
 import { Link } from "@/lib/navigation";
-import GlassHexagon from "@/components/GlassHexagon";
 import { TOONE_PRO_FREE_ROUTINE_CREATIONS } from "@/lib/legal/terms";
 
 /**
- * Closing ask before the FAQ: start small. The glass hexagon (the page's one
- * signature moment, bookending the hero's dots) sits above one headline,
- * three plain facts that take the risk out of trying (free routines,
- * unlimited runs, the AI plan you already have), the primary button (same
- * destination and analytics event as the hero's) and a quieter way in.
+ * Closing ask before the FAQ: start small. On the hero's dot field, one headline, three plain facts
+ * that take the risk out of trying (free routines, unlimited runs, the AI
+ * plan you already have), the primary button (same destination and
+ * analytics event as the hero's) and a quieter way in.
  */
 const FACTS = ["free", "runs", "plan"] as const;
 
@@ -23,12 +21,43 @@ export default async function ClosingCtaBand() {
         dangerouslySetInnerHTML={{
           __html: `
             .cta-band { text-align: center; }
-            .cta-band-inner { position: relative; isolation: isolate; padding: 320px 24px 24px; }
-            .glass-hex { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; }
-            .glass-hex--off { display: none; }
-            /* no WebGL: no glass, and no empty space where it would have been */
-            .cta-band-inner:has(.glass-hex--off) { padding-top: 24px; }
-            @media (max-width: 640px) { .cta-band-inner { padding-top: 250px; } }
+            .cta-band-inner { position: relative; isolation: isolate; padding: clamp(72px, 8vw, 110px) 24px; }
+            /* The hero's dot field, bookending the page: a soft ring around the
+               text, never behind it, dissolving toward every edge (no hard sides). */
+            .cta-dots {
+              position: absolute; inset: 0; z-index: -1; pointer-events: none;
+              opacity: 0.2;
+              background: linear-gradient(95deg, #2b2a27 0%, #6b6862 100%);
+              -webkit-mask-image:
+                radial-gradient(circle closest-side, #000 55%, transparent 66%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, transparent 55%, #000 80%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+              -webkit-mask-size: 6px 6px, 100% 100%, 100% 100%;
+              -webkit-mask-repeat: repeat, no-repeat, no-repeat;
+              -webkit-mask-composite: source-in;
+                      mask-image:
+                radial-gradient(circle closest-side, #000 55%, transparent 66%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, transparent 55%, #000 80%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+                      mask-size: 6px 6px, 100% 100%, 100% 100%;
+                      mask-repeat: repeat, no-repeat, no-repeat;
+                      mask-composite: intersect;
+            }
+            /* phones: the text fills the width, so the dots only frame it above and below */
+            @media (max-width: 640px) {
+              .cta-dots {
+                -webkit-mask-image:
+                  radial-gradient(circle closest-side, #000 55%, transparent 66%),
+                  linear-gradient(180deg, transparent 0%, #000 6%, transparent 16%, transparent 86%, #000 94%, transparent 100%);
+                -webkit-mask-size: 6px 6px, 100% 100%;
+                -webkit-mask-repeat: repeat, no-repeat;
+                        mask-image:
+                  radial-gradient(circle closest-side, #000 55%, transparent 66%),
+                  linear-gradient(180deg, transparent 0%, #000 6%, transparent 16%, transparent 86%, #000 94%, transparent 100%);
+                        mask-size: 6px 6px, 100% 100%;
+                        mask-repeat: repeat, no-repeat;
+              }
+            }
             .cta-band h2#cta-band-title {
               max-width: 20ch; margin: 0 auto 16px; text-wrap: balance;
             }
@@ -45,7 +74,7 @@ export default async function ClosingCtaBand() {
         }}
       />
       <div className="cta-band-inner">
-        <GlassHexagon />
+        <div className="cta-dots" aria-hidden="true" />
         <h2 id="cta-band-title">{t("title")}</h2>
         <p className="cta-sub">{t("sub")}</p>
         <ul className="cta-facts">

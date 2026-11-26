@@ -50,7 +50,7 @@ const ROWS: readonly (readonly [string, string, string, string])[] = [
   ["Steps that need judgment (research, writing, decisions)", "AI nodes you add and configure", "The model handles everything", "Agent steps, each on the model you choose, with a contract on its output"],
   ["When a step falls short", "The run stops, unless you wired a retry or error path", "You read the output and run it again", "That step pauses, retries or asks you; edit it and resume where it stopped"],
   ["Following a run", "Execution history, node by node", "A chat transcript", "A live graph of every step, while it runs"],
-  ["Where it runs", "Their cloud, or your own server (n8n)", "The assistant’s cloud or your machine", "On your Mac, in the accounts you already use"],
+  ["Where it runs", "Their cloud, or your own server (n8n)", "The assistant’s cloud or your machine", "On your Mac, in the accounts you already use; in the cloud with hosted Toone (coming soon)"],
   ["What starts a run", "Webhooks, app events and schedules, around the clock", "A schedule", "Schedules, calendar events, or you"],
   ["AI cost", "AI steps billed through the keys or credits you set up", "Every step uses the model", "Only agent steps use AI, on your own Claude Code or Codex"],
 ];
@@ -91,6 +91,11 @@ export default async function ComparePage({ params, searchParams }: Props) {
             .cmp p strong { color: #1d1c19; font-weight: 600; }
             .cmp a { color: #1d1c19; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; text-decoration-color: rgba(29,28,25,0.3); }
             .cmp a:hover { text-decoration-color: #1d1c19; }
+            .soon-chip {
+              display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px;
+              vertical-align: 1px; background: rgba(29,28,25,0.07); color: rgba(29,28,25,0.78);
+              font-size: 12.5px; font-weight: 600; line-height: 1; white-space: nowrap;
+            }
             .cmp table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 8px; font-size: 15px; }
             .cmp th, .cmp td { text-align: left; vertical-align: top; padding: 15px 16px; border-top: 1px solid rgba(29,28,25,0.1); line-height: 1.5; }
             .cmp thead th { border-top: 0; color: rgba(29,28,25,0.55); font-size: 14px; font-weight: 500; padding-bottom: 12px; }
@@ -199,9 +204,9 @@ export default async function ComparePage({ params, searchParams }: Props) {
         <h2>What Toone needs</h2>
         <p>
           A Mac, and your own Claude Code or Codex for the agent steps (the Claude or ChatGPT plan you
-          already pay for). Toone runs on your Mac, so its routines run while your Mac is awake and
-          Toone is open.
-          Running routines is never limited; see <a href="/en/pricing">pricing</a> for what Toone Pro
+          already pay for). Today Toone runs on your Mac, while it is awake and Toone is open. Hosted Toone, running
+          your routines in the cloud around the clock, is{` `}
+          <span className="soon-chip">Coming soon</span>. Running routines is never limited; see <a href="/en/pricing">pricing</a> for what Toone Pro
           adds.
         </p>
       </section>
