@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import HowToLink from "@/components/HowToLink";
 import { headingId } from "@/lib/content";
+import { isUnindexedPage } from "@/lib/page-indexing";
 import { resolveAssetUrl } from "@/lib/journal/data";
 import {
   assetIdFromSrc,
@@ -77,6 +79,13 @@ function markdownComponents(
     h3: ({ node, children }) => <h3 id={headingId(hastText(node as HastNode))}>{children}</h3>,
     a: ({ href = "", children }) => {
       const target = journalHref(href);
+      // Same rules as the guides (components/ArticlePage.tsx, A7): the
+      // signed-in-only /how-to guides are linked for signed-in readers only,
+      // and a page kept out of the index keeps its words but not its link.
+      if (/^\/en\/how-to(?:[/?#]|$)/.test(target)) {
+        return <HowToLink href={target} fallback="text">{children}</HowToLink>;
+      }
+      if (isUnindexedPage(target)) return <>{children}</>;
       const external = /^https?:\/\//.test(target) && !target.startsWith("https://trytoone.com/");
       return (
         <a href={target} target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>

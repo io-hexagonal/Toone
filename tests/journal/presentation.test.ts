@@ -258,3 +258,9 @@ test("a post links its hub (breadcrumb, closing links) only while the hub is ind
   assert.match(page, /const hubLinked = hubPosts !== null && isJournalHubIndexable\(hubPosts\)/);
   assert.match(page, /postBreadcrumbSchema\(post, hubPosts\)/);
 });
+
+test("post bodies link /how-to only for signed-in readers and drop links to pages kept out of the index (A7)", () => {
+  const article = readFileSync("components/journal/JournalArticle.tsx", "utf8");
+  assert.match(article, /return <HowToLink href=\{target\} fallback="text">\{children\}<\/HowToLink>;/);
+  assert.match(article, /if \(isUnindexedPage\(target\)\) return <>\{children\}<\/>;/);
+});
