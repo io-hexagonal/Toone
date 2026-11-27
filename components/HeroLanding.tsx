@@ -67,6 +67,9 @@ function ClaudeSpark() {
   );
 }
 
+/** Longer emphasised phrases wrap, so they get a highlight instead of the chip. */
+const ACCENT_CHIP_MAX = 18;
+
 export default async function HeroLanding({ audience = "business" }: Props) {
   const t = await getTranslations("landing");
   const locale = await getLocale();
@@ -125,27 +128,35 @@ export default async function HeroLanding({ audience = "business" }: Props) {
               color: #1d1c19; text-wrap: balance;
               margin-bottom: 26px;
             }
-            /* Second line: dot-matrix fill. The colour is clipped to the
-               letters, then masked to a grid of dots sized in em so the dots
-               scale with the type. */
-            /* The dots sit inside a crisp, unmasked outline of the same
-               letters: the same text again, drawn by CSS (stroke only) so the
-               heading's text is not duplicated. */
-            .hl-accent-wrap { position: relative; display: block; }
-            .hl-accent-wrap::after {
-              content: attr(data-text);
-              position: absolute; inset: 0; pointer-events: none;
-              color: transparent;
-              -webkit-text-stroke: 0.022em rgba(43,42,39,0.9);
+            /* The emphasised phrase sits in a dark chip with a repeat icon,
+               tilted slightly, and a small straight routine graph branches off it:
+               two step cards on dashed edges. The graph hangs outside the
+               chip (absolute), so the phrase stays centred; it is hidden
+               where there is no room beside the chip. */
+            .hl-accent-node {
+              /* Its own line, shrunk to the chip and centred. */
+              position: relative; display: table; margin: 0.1em auto 0;
             }
             .hl-accent {
-              display: block; padding-bottom: 0.06em;
-              background: linear-gradient(95deg, #2b2a27 0%, #6b6862 100%);
-              -webkit-background-clip: text; background-clip: text;
-              color: transparent;
-              -webkit-mask-image: radial-gradient(circle closest-side, #000 62%, transparent 72%);
-                      mask-image: radial-gradient(circle closest-side, #000 62%, transparent 72%);
-              -webkit-mask-size: 0.075em 0.075em; mask-size: 0.075em 0.075em;
+              display: inline-flex; align-items: center; gap: 0.22em;
+              padding: 0.02em 0.32em 0.06em 0.26em; border-radius: 0.24em;
+              background: #1d1c19; color: #f9f8f5;
+              transform: rotate(-1.5deg);
+            }
+            .hl-accent-icon { width: 0.62em; height: 0.62em; flex: none; }
+            .hl-accent-graph {
+              /* Straight, not tilted with the chip. The tilt lifts the chip's
+                 right edge a little, so the graph sits slightly higher. */
+              position: absolute; left: 100%; top: calc(50% - 0.07em); transform: translateY(-50%);
+              width: 1.6em; height: 1.1em; overflow: visible; pointer-events: none;
+            }
+            @media (max-width: 900px) { .hl-accent-graph { display: none; } }
+            /* A long phrase (other languages) wraps: a chip would stretch to
+               the full width, so it gets a plain dark highlight per line. */
+            .hl-accent-long {
+              background: #1d1c19; color: #f9f8f5;
+              padding: 0 0.18em 0.04em; border-radius: 0.18em;
+              -webkit-box-decoration-break: clone; box-decoration-break: clone;
             }
 
             .hl-tag {
@@ -260,9 +271,24 @@ export default async function HeroLanding({ audience = "business" }: Props) {
 
           <h1 className="hl-title">
             {t.rich(audience === "personal" ? "personal.heroTitle" : "heroTitle", {
-              accent: (chunks) => (
-                <span className="hl-accent-wrap" data-text={[chunks].flat().join("")}>
-                  <span className="hl-accent">{chunks}</span>
+              accent: (chunks) => [chunks].flat().join("").length > ACCENT_CHIP_MAX ? (
+                <span className="hl-accent-long">{chunks}</span>
+              ) : (
+                <span className="hl-accent-node">
+                  <span className="hl-accent">
+                    <svg className="hl-accent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M17 2l4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+                      <path d="M7 22l-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" />
+                    </svg>
+                    {chunks}
+                  </span>
+                  <svg className="hl-accent-graph" viewBox="0 0 64 44" fill="none" stroke="#1d1c19"
+                    strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+                    <path d="M0 22h8c6 0 7-12 14-12h10M8 22c6 0 7 12 14 12h10" strokeDasharray="3.5 3.5" />
+                    <rect x="34" y="4" width="28" height="12" rx="3.6" fill="#f9f8f5" />
+                    <rect x="34" y="28" width="28" height="12" rx="3.6" fill="#1d1c19" />
+                  </svg>
                 </span>
               ),
             })}
